@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.ITenantConfigInstanceDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+    <sql id="Base_Column_List">
+        id,
+        tn_id,
+        config_key,
+        config_order,
+        check_rule,
+        create_date,
+        modify_date
+    </sql>
+    <insert id="insert" parameterType="TenantConfigInstance">
+        INSERT INTO saas_tenant_config_instance (
+        tn_id,
+        config_key,
+        config_order,
+        check_rule,
+        create_date,
+        modify_date
+        ) VALUES (
+        #{tnId},
+        #{configKey},
+        #{configOrder},
+        #{checkRule},
+        #{createDate},
+        #{modifyDate}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="TenantConfigInstance">
+        UPDATE saas_tenant_config_instance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tnId!=null">
+                tn_id = #{tnId},
+            </if>
+            <if test="configKey!=null">
+                config_key = #{configKey},
+            </if>
+            <if test="configOrder!=null">
+                config_order = #{configOrder},
+            </if>
+            <if test="checkRule!=null">
+                check_rule = #{checkRule},
+            </if>
+            <if test="createDate!=null">
+                create_date = #{createDate},
+            </if>
+            <if test="modifyDate!=null">
+                modify_date = #{modifyDate},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_tenant_config_instance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.tnId!=null">
+                tn_id = #{map.tnId},
+            </if>
+            <if test="map.configKey!=null">
+                config_key = #{map.configKey},
+            </if>
+            <if test="map.configOrder!=null">
+                config_order = #{map.configOrder},
+            </if>
+            <if test="map.checkRule!=null">
+                check_rule = #{map.checkRule},
+            </if>
+            <if test="map.createDate!=null">
+                create_date = #{map.createDate},
+            </if>
+            <if test="map.modifyDate!=null">
+                modify_date = #{map.modifyDate},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_tenant_config_instance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.tnId!=null">
+                tn_id = #{update.tnId},
+            </if>
+            <if test="update.configKey!=null">
+                config_key = #{update.configKey},
+            </if>
+            <if test="update.configOrder!=null">
+                config_order = #{update.configOrder},
+            </if>
+            <if test="update.checkRule!=null">
+                check_rule = #{update.checkRule},
+            </if>
+            <if test="update.createDate!=null">
+                create_date = #{update.createDate},
+            </if>
+            <if test="update.modifyDate!=null">
+                modify_date = #{update.modifyDate},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.configKey!=null">
+                AND config_key = #{condition.configKey}
+            </if>
+            <if test="condition.configOrder!=null">
+                AND config_order = #{condition.configOrder}
+            </if>
+            <if test="condition.checkRule!=null">
+                AND check_rule = #{condition.checkRule}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+            <if test="condition.modifyDate!=null">
+                AND modify_date = #{condition.modifyDate}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_tenant_config_instance (
+                tn_id,
+                config_key,
+                config_order,
+                check_rule,
+                create_date,
+                modify_date
+        ) VALUES (
+                    #{map.tnId},
+                    #{map.configKey},
+                    #{map.configOrder},
+                    #{map.checkRule},
+                    #{map.createDate},
+                    #{map.modifyDate}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="TenantConfigInstance">
+        UPDATE saas_tenant_config_instance
+        <trim prefix="SET" suffixOverrides=",">
+            tn_id = #{tnId},
+            config_key = #{configKey},
+            config_order = #{configOrder},
+            check_rule = #{checkRule},
+            create_date = #{createDate},
+            modify_date = #{modifyDate},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_tenant_config_instance
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_tenant_config_instance
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="tnId!=null">
+                AND tn_id = #{tnId}
+            </if>
+            <if test="configKey!=null">
+                AND config_key = #{configKey}
+            </if>
+            <if test="configOrder!=null">
+                AND config_order = #{configOrder}
+            </if>
+            <if test="checkRule!=null">
+                AND check_rule = #{checkRule}
+            </if>
+            <if test="createDate!=null">
+                AND create_date = #{createDate}
+            </if>
+            <if test="modifyDate!=null">
+                AND modify_date = #{modifyDate}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_tenant_config_instance WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="TenantConfigInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_tenant_config_instance
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="TenantConfigInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_tenant_config_instance WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="TenantConfigInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_tenant_config_instance WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="TenantConfigInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_tenant_config_instance
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="TenantConfigInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_tenant_config_instance
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+            </if>
+            <if test="condition.configKey!=null">
+                ${condition.groupOp}   config_key  ${condition.config_key.op}  #{condition.config_key.data}
+            </if>
+            <if test="condition.configOrder!=null">
+                ${condition.groupOp}   config_order  ${condition.config_order.op}  #{condition.config_order.data}
+            </if>
+            <if test="condition.checkRule!=null">
+                ${condition.groupOp}   check_rule  ${condition.check_rule.op}  #{condition.check_rule.data}
+            </if>
+            <if test="condition.createDate!=null">
+                ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
+            </if>
+            <if test="condition.modifyDate!=null">
+                ${condition.groupOp}   modify_date  ${condition.modify_date.op}  #{condition.modify_date.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="TenantConfigInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_tenant_config_instance
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id like CONCAT('%', #{id} , '%')
+            </if>
+            <if test="tnId!=null">
+                AND tn_id like CONCAT('%', #{tnId} , '%')
+            </if>
+            <if test="configKey!=null">
+                AND config_key like CONCAT('%', #{configKey} , '%')
+            </if>
+            <if test="configOrder!=null">
+                AND config_order like CONCAT('%', #{configOrder} , '%')
+            </if>
+            <if test="checkRule!=null">
+                AND check_rule like CONCAT('%', #{checkRule} , '%')
+            </if>
+            <if test="createDate!=null">
+                AND create_date like CONCAT('%', #{createDate} , '%')
+            </if>
+            <if test="modifyDate!=null">
+                AND modify_date like CONCAT('%', #{modifyDate} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="TenantConfigInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_tenant_config_instance
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.configKey!=null">
+                AND config_key = #{condition.configKey}
+            </if>
+            <if test="condition.configOrder!=null">
+                AND config_order = #{condition.configOrder}
+            </if>
+            <if test="condition.checkRule!=null">
+                AND check_rule = #{condition.checkRule}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+            <if test="condition.modifyDate!=null">
+                AND modify_date = #{condition.modifyDate}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="TenantConfigInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_tenant_config_instance
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.configKey!=null">
+                AND config_key = #{condition.configKey}
+            </if>
+            <if test="condition.configOrder!=null">
+                AND config_order = #{condition.configOrder}
+            </if>
+            <if test="condition.checkRule!=null">
+                AND check_rule = #{condition.checkRule}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+            <if test="condition.modifyDate!=null">
+                AND modify_date = #{condition.modifyDate}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_tenant_config_instance
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="tnId!=null">
+               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+           </if>
+           <if test="configKey!=null">
+               ${groupOp} config_key ${config_key.op}  #{config_key.data}
+           </if>
+           <if test="configOrder!=null">
+               ${groupOp} config_order ${config_order.op}  #{config_order.data}
+           </if>
+           <if test="checkRule!=null">
+               ${groupOp} check_rule ${check_rule.op}  #{check_rule.data}
+           </if>
+           <if test="createDate!=null">
+               ${groupOp} create_date ${create_date.op}  #{create_date.data}
+           </if>
+           <if test="modifyDate!=null">
+               ${groupOp} modify_date ${modify_date.op}  #{modify_date.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_tenant_config_instance
+    </select>
+
+</mapper>
+

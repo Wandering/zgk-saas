@@ -1,0 +1,10 @@
+rootProject.name = 'zgk-saas'
+
+include 'saas-domain'
+
+include 'saas-api'
+
+include 'saas-service'
+
+include 'saas-war'
+

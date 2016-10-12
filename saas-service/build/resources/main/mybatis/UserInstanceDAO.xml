@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IUserInstanceDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+    <sql id="Base_Column_List">
+        id,
+        tn_id,
+        user_name,
+        user_pass,
+        telephone,
+        status,
+        create_date
+    </sql>
+    <insert id="insert" parameterType="UserInstance">
+        INSERT INTO saas_user_instance (
+        tn_id,
+        user_name,
+        user_pass,
+        telephone,
+        status,
+        create_date
+        ) VALUES (
+        #{tnId},
+        #{userName},
+        #{userPass},
+        #{telephone},
+        #{status},
+        #{createDate}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="UserInstance">
+        UPDATE saas_user_instance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tnId!=null">
+                tn_id = #{tnId},
+            </if>
+            <if test="userName!=null">
+                user_name = #{userName},
+            </if>
+            <if test="userPass!=null">
+                user_pass = #{userPass},
+            </if>
+            <if test="telephone!=null">
+                telephone = #{telephone},
+            </if>
+            <if test="status!=null">
+                status = #{status},
+            </if>
+            <if test="createDate!=null">
+                create_date = #{createDate},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_user_instance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.tnId!=null">
+                tn_id = #{map.tnId},
+            </if>
+            <if test="map.userName!=null">
+                user_name = #{map.userName},
+            </if>
+            <if test="map.userPass!=null">
+                user_pass = #{map.userPass},
+            </if>
+            <if test="map.telephone!=null">
+                telephone = #{map.telephone},
+            </if>
+            <if test="map.status!=null">
+                status = #{map.status},
+            </if>
+            <if test="map.createDate!=null">
+                create_date = #{map.createDate},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_user_instance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.tnId!=null">
+                tn_id = #{update.tnId},
+            </if>
+            <if test="update.userName!=null">
+                user_name = #{update.userName},
+            </if>
+            <if test="update.userPass!=null">
+                user_pass = #{update.userPass},
+            </if>
+            <if test="update.telephone!=null">
+                telephone = #{update.telephone},
+            </if>
+            <if test="update.status!=null">
+                status = #{update.status},
+            </if>
+            <if test="update.createDate!=null">
+                create_date = #{update.createDate},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.userName!=null">
+                AND user_name = #{condition.userName}
+            </if>
+            <if test="condition.userPass!=null">
+                AND user_pass = #{condition.userPass}
+            </if>
+            <if test="condition.telephone!=null">
+                AND telephone = #{condition.telephone}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_user_instance (
+                tn_id,
+                user_name,
+                user_pass,
+                telephone,
+                status,
+                create_date
+        ) VALUES (
+                    #{map.tnId},
+                    #{map.userName},
+                    #{map.userPass},
+                    #{map.telephone},
+                    #{map.status},
+                    #{map.createDate}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="UserInstance">
+        UPDATE saas_user_instance
+        <trim prefix="SET" suffixOverrides=",">
+            tn_id = #{tnId},
+            user_name = #{userName},
+            user_pass = #{userPass},
+            telephone = #{telephone},
+            status = #{status},
+            create_date = #{createDate},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_user_instance
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_user_instance
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="tnId!=null">
+                AND tn_id = #{tnId}
+            </if>
+            <if test="userName!=null">
+                AND user_name = #{userName}
+            </if>
+            <if test="userPass!=null">
+                AND user_pass = #{userPass}
+            </if>
+            <if test="telephone!=null">
+                AND telephone = #{telephone}
+            </if>
+            <if test="status!=null">
+                AND status = #{status}
+            </if>
+            <if test="createDate!=null">
+                AND create_date = #{createDate}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_user_instance WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="UserInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_user_instance
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="UserInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_user_instance WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="UserInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_user_instance WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="UserInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_user_instance
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="UserInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_user_instance
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+            </if>
+            <if test="condition.userName!=null">
+                ${condition.groupOp}   user_name  ${condition.user_name.op}  #{condition.user_name.data}
+            </if>
+            <if test="condition.userPass!=null">
+                ${condition.groupOp}   user_pass  ${condition.user_pass.op}  #{condition.user_pass.data}
+            </if>
+            <if test="condition.telephone!=null">
+                ${condition.groupOp}   telephone  ${condition.telephone.op}  #{condition.telephone.data}
+            </if>
+            <if test="condition.status!=null">
+                ${condition.groupOp}   status  ${condition.status.op}  #{condition.status.data}
+            </if>
+            <if test="condition.createDate!=null">
+                ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="UserInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_user_instance
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id like CONCAT('%', #{id} , '%')
+            </if>
+            <if test="tnId!=null">
+                AND tn_id like CONCAT('%', #{tnId} , '%')
+            </if>
+            <if test="userName!=null">
+                AND user_name like CONCAT('%', #{userName} , '%')
+            </if>
+            <if test="userPass!=null">
+                AND user_pass like CONCAT('%', #{userPass} , '%')
+            </if>
+            <if test="telephone!=null">
+                AND telephone like CONCAT('%', #{telephone} , '%')
+            </if>
+            <if test="status!=null">
+                AND status like CONCAT('%', #{status} , '%')
+            </if>
+            <if test="createDate!=null">
+                AND create_date like CONCAT('%', #{createDate} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="UserInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_user_instance
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.userName!=null">
+                AND user_name = #{condition.userName}
+            </if>
+            <if test="condition.userPass!=null">
+                AND user_pass = #{condition.userPass}
+            </if>
+            <if test="condition.telephone!=null">
+                AND telephone = #{condition.telephone}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="UserInstance">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_user_instance
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.userName!=null">
+                AND user_name = #{condition.userName}
+            </if>
+            <if test="condition.userPass!=null">
+                AND user_pass = #{condition.userPass}
+            </if>
+            <if test="condition.telephone!=null">
+                AND telephone = #{condition.telephone}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_user_instance
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="tnId!=null">
+               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+           </if>
+           <if test="userName!=null">
+               ${groupOp} user_name ${user_name.op}  #{user_name.data}
+           </if>
+           <if test="userPass!=null">
+               ${groupOp} user_pass ${user_pass.op}  #{user_pass.data}
+           </if>
+           <if test="telephone!=null">
+               ${groupOp} telephone ${telephone.op}  #{telephone.data}
+           </if>
+           <if test="status!=null">
+               ${groupOp} status ${status.op}  #{status.data}
+           </if>
+           <if test="createDate!=null">
+               ${groupOp} create_date ${create_date.op}  #{create_date.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_user_instance
+    </select>
+
+</mapper>
+
