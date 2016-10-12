@@ -58,6 +58,7 @@
     <orderEntry type="library" exported="" name="Gradle: org.codehaus.janino:commons-compiler:2.7.5" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.codehaus.janino:janino:2.7.5" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.guava:guava:17.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: jline:jline:0.9.94" level="project" />
     <orderEntry type="library" exported="" name="Gradle: io.netty:netty:3.7.0.Final" level="project" />
     <orderEntry type="library" exported="" name="Gradle: log4j:log4j:1.2.16" level="project" />
@@ -88,7 +89,6 @@
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-protocol-common:0.1.36-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-biz-common:0.1.36-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: javax.servlet:javax.servlet-api:3.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.aggregate:jetty-webapp:8.1.9.v20130131" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty:jetty-jsp:8.1.9.v20130131" level="project" />
