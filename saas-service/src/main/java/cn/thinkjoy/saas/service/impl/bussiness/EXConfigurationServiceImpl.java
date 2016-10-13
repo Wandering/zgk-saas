@@ -34,7 +34,7 @@ public class EXConfigurationServiceImpl extends AbstractPageService<IBaseDAO<Con
     public List<Configuration> selectListBydomain(String type) {
         Map paramsMap = new HashMap();
         paramsMap.put("domain", type);
-        paramsMap.put("orderBy", "order");
+        paramsMap.put("orderBy", "config_order");
         paramsMap.put("sortBy", "asc");
         return exiConfigurationDAO.selectListBydomain(paramsMap);
     }

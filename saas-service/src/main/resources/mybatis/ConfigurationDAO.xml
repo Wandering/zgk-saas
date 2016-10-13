@@ -25,12 +25,12 @@ selectList
 -->
     <sql id="Base_Column_List">
         id,
-        en_name,
-        ch_name,
-        meta_type,
-        check_rule,
+        en_name as enName,
+        ch_name as chName,
+        meta_type as metaType,
+        check_rule as checkRule,
         domain,
-        order
+        config_order as   configOrder
     </sql>
     <insert id="insert" parameterType="Configuration">
         INSERT INTO saas_configuration (
@@ -39,14 +39,14 @@ selectList
         meta_type,
         check_rule,
         domain,
-        order
+        config_order
         ) VALUES (
         #{enName},
         #{chName},
         #{metaType},
         #{checkRule},
         #{domain},
-        #{order}
+        #{configOrder}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
         SELECT LAST_INSERT_ID() AS ID
@@ -72,8 +72,8 @@ selectList
             <if test="domain!=null">
                 domain = #{domain},
             </if>
-            <if test="order!=null">
-                order = #{order},
+            <if test="configOrder!=null">
+                config_order = #{configOrder},
             </if>
         </trim>
         WHERE
@@ -98,8 +98,8 @@ selectList
             <if test="map.domain!=null">
                 domain = #{map.domain},
             </if>
-            <if test="map.order!=null">
-                order = #{map.order},
+            <if test="map.configOrder!=null">
+                config_order = #{map.configOrder},
             </if>
         </trim>
         WHERE
@@ -124,8 +124,8 @@ selectList
             <if test="update.domain!=null">
                 domain = #{update.domain},
             </if>
-            <if test="update.order!=null">
-                order = #{update.order},
+            <if test="update.configOrder!=null">
+                config_order = #{update.configOrder},
             </if>
         </trim>
 
@@ -148,8 +148,8 @@ selectList
             <if test="condition.domain!=null">
                 AND domain = #{condition.domain}
             </if>
-            <if test="condition.order!=null">
-                AND order = #{condition.order}
+            <if test="condition.configOrder!=null">
+                AND config_order = #{condition.configOrder}
             </if>
         </trim>
     </update>
@@ -161,14 +161,14 @@ selectList
                 meta_type,
                 check_rule,
                 domain,
-                order
+                config_order
         ) VALUES (
                     #{map.enName},
                     #{map.chName},
                     #{map.metaType},
                     #{map.checkRule},
                     #{map.domain},
-                    #{map.order}
+                    #{map.configOrder}
         )
     </insert>
 
@@ -181,7 +181,7 @@ selectList
             meta_type = #{metaType},
             check_rule = #{checkRule},
             domain = #{domain},
-            order = #{order},
+            config_order = #{configOrder},
         </trim>
         WHERE
         id = #{id} 
@@ -217,8 +217,8 @@ selectList
             <if test="domain!=null">
                 AND domain = #{domain}
             </if>
-            <if test="order!=null">
-                AND order = #{order}
+            <if test="configOrder!=null">
+                AND config_order = #{configOrder}
             </if>
         </trim>
     </delete>
@@ -295,8 +295,8 @@ selectList
             <if test="condition.domain!=null">
                 ${condition.groupOp}   domain  ${condition.domain.op}  #{condition.domain.data}
             </if>
-            <if test="condition.order!=null">
-                ${condition.groupOp}   order  ${condition.order.op}  #{condition.order.data}
+            <if test="condition.configOrder!=null">
+                ${condition.groupOp}   config_order  ${condition.configOrder.op}  #{condition.configOrder.data}
             </if>
 
 
@@ -333,8 +333,8 @@ selectList
             <if test="domain!=null">
                 AND domain like CONCAT('%', #{domain} , '%')
             </if>
-            <if test="order!=null">
-                AND order like CONCAT('%', #{order} , '%')
+            <if test="configOrder!=null">
+                AND config_order like CONCAT('%', #{configOrder} , '%')
             </if>
         </trim>
         <if test="orderBy!=null">
@@ -366,8 +366,8 @@ selectList
             <if test="condition.domain!=null">
                 AND domain = #{condition.domain}
             </if>
-            <if test="condition.order!=null">
-                AND order = #{condition.order}
+            <if test="condition.configOrder!=null">
+                AND config_order = #{condition.configOrder}
             </if>
         </trim>
         <if test="orderBy!=null">
@@ -398,8 +398,8 @@ selectList
             <if test="condition.domain!=null">
                 AND domain = #{condition.domain}
             </if>
-            <if test="condition.order!=null">
-                AND order = #{condition.order}
+            <if test="condition.configOrder!=null">
+                AND config_order = #{condition.configOrder}
             </if>
         </trim>
         limit 0,1
@@ -426,8 +426,8 @@ selectList
            <if test="domain!=null">
                ${groupOp} domain ${domain.op}  #{domain.data}
            </if>
-           <if test="order!=null">
-               ${groupOp} order ${order.op}  #{order.data}
+           <if test="configOrder!=null">
+               ${groupOp} config_order ${configOrder.op}  #{configOrder.data}
            </if>
 
        </where>

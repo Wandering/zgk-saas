@@ -25,12 +25,13 @@ selectList
 -->
     <sql id="Base_Column_List">
         id,
-        tn_id,
-        config_key,
-        config_order,
-        check_rule,
-        create_date,
-        modify_date
+        tn_id as tnId,
+        config_key as configKey,
+        config_order as configOrder,
+        check_rule as checkRule,
+        domain,
+        create_date as createDate,
+        modify_date  as modifyDate
     </sql>
     <insert id="insert" parameterType="TenantConfigInstance">
         INSERT INTO saas_tenant_config_instance (
@@ -38,6 +39,7 @@ selectList
         config_key,
         config_order,
         check_rule,
+        domain,
         create_date,
         modify_date
         ) VALUES (
@@ -45,6 +47,7 @@ selectList
         #{configKey},
         #{configOrder},
         #{checkRule},
+        #{domain},
         #{createDate},
         #{modifyDate}
         )
@@ -68,6 +71,9 @@ selectList
             </if>
             <if test="checkRule!=null">
                 check_rule = #{checkRule},
+            </if>
+            <if test="domain!=null">
+                domain = #{domain},
             </if>
             <if test="createDate!=null">
                 create_date = #{createDate},
@@ -95,6 +101,9 @@ selectList
             <if test="map.checkRule!=null">
                 check_rule = #{map.checkRule},
             </if>
+            <if test="map.domain!=null">
+                domain = #{map.domain},
+            </if>
             <if test="map.createDate!=null">
                 create_date = #{map.createDate},
             </if>
@@ -121,6 +130,9 @@ selectList
             <if test="update.checkRule!=null">
                 check_rule = #{update.checkRule},
             </if>
+            <if test="update.domain!=null">
+                domain = #{update.domain},
+            </if>
             <if test="update.createDate!=null">
                 create_date = #{update.createDate},
             </if>
@@ -145,6 +157,9 @@ selectList
             <if test="condition.checkRule!=null">
                 AND check_rule = #{condition.checkRule}
             </if>
+            <if test="condition.domain!=null">
+                AND domain = #{condition.domain},
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -160,6 +175,7 @@ selectList
                 config_key,
                 config_order,
                 check_rule,
+                domain,
                 create_date,
                 modify_date
         ) VALUES (
@@ -167,6 +183,7 @@ selectList
                     #{map.configKey},
                     #{map.configOrder},
                     #{map.checkRule},
+                    #{map.domain},
                     #{map.createDate},
                     #{map.modifyDate}
         )
@@ -180,6 +197,7 @@ selectList
             config_key = #{configKey},
             config_order = #{configOrder},
             check_rule = #{checkRule},
+            domain=#{domain},
             create_date = #{createDate},
             modify_date = #{modifyDate},
         </trim>
@@ -214,6 +232,10 @@ selectList
             <if test="checkRule!=null">
                 AND check_rule = #{checkRule}
             </if>
+            <if test="domain!=null">
+                AND domain = #{domain}
+            </if>
+
             <if test="createDate!=null">
                 AND create_date = #{createDate}
             </if>
@@ -292,6 +314,9 @@ selectList
             <if test="condition.checkRule!=null">
                 ${condition.groupOp}   check_rule  ${condition.check_rule.op}  #{condition.check_rule.data}
             </if>
+            <if test="condition.domain!=null">
+                ${condition.groupOp}   domain  ${condition.domain.op}  #{condition.domain.data}
+            </if>
             <if test="condition.createDate!=null">
                 ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
             </if>
@@ -330,6 +355,9 @@ selectList
             <if test="checkRule!=null">
                 AND check_rule like CONCAT('%', #{checkRule} , '%')
             </if>
+            <if test="domain!=null">
+                AND domain like CONCAT('%', #{domain} , '%')
+            </if>
             <if test="createDate!=null">
                 AND create_date like CONCAT('%', #{createDate} , '%')
             </if>
@@ -363,6 +391,9 @@ selectList
             <if test="condition.checkRule!=null">
                 AND check_rule = #{condition.checkRule}
             </if>
+            <if test="condition.domain!=null">
+                AND domain = #{condition.domain}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -395,6 +426,9 @@ selectList
             <if test="condition.checkRule!=null">
                 AND check_rule = #{condition.checkRule}
             </if>
+            <if test="condition.domain!=null">
+                AND domain = #{condition.domain}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -422,6 +456,9 @@ selectList
            </if>
            <if test="checkRule!=null">
                ${groupOp} check_rule ${check_rule.op}  #{check_rule.data}
+           </if>
+           <if test="domain!=null">
+               ${groupOp} domain ${domain.op}  #{domain.data}
            </if>
            <if test="createDate!=null">
                ${groupOp} create_date ${create_date.op}  #{create_date.data}
