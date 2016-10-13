@@ -51,7 +51,7 @@
         <!-- 自动扫描domain目录, 省掉Configuration.xml里的手工配置 -->
         <property name="typeAliasesPackage" value="cn.thinkjoy.common.managerui.domain,cn.thinkjoy.saas.domain"/>
         <!-- 显式指定Mapper文件位置 -->
-        <property name="mapperLocations" value="classpath:/mybatis/*.xml"/>
+        <property name="mapperLocations" value="classpath:/mybatis/**/*.xml"/>
     </bean>
     <!-- 扫描basePackage下接口 自动生成代理实现类 -->
     <mybatis:scan base-package="cn.thinkjoy.common.managerui.dao,cn.thinkjoy.saas.dao" factory-ref="sqlSessionFactory"/>
