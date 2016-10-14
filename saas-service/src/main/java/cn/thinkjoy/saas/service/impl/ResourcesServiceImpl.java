@@ -2,15 +2,15 @@
  * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
  *
  * Project Name: saas
- * $Id:  MenuResourceServiceImpl.java 2016-10-12 10:51:40 $
+ * $Id:  ResourcesServiceImpl.java 2016-10-14 09:50:57 $
  */
 package cn.thinkjoy.saas.service.impl;
 
 import cn.thinkjoy.common.domain.BaseDomain;
 import cn.thinkjoy.common.dao.IBaseDAO;
-import cn.thinkjoy.saas.dao.IMenuResourceDAO;
-import cn.thinkjoy.saas.domain.MenuResource;
-import cn.thinkjoy.saas.service.IMenuResourceService;
+import cn.thinkjoy.saas.dao.IResourcesDAO;
+import cn.thinkjoy.saas.domain.Resources;
+import cn.thinkjoy.saas.service.IResourcesService;
 import cn.thinkjoy.common.service.impl.AbstractPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,14 +19,14 @@ import java.util.List;
 import java.util.Map;
 
 
-@Service("MenuResourceServiceImpl")
-public class MenuResourceServiceImpl extends AbstractPageService<IBaseDAO<MenuResource>, MenuResource> implements IMenuResourceService<IBaseDAO<MenuResource>,MenuResource>{
+@Service("ResourcesServiceImpl")
+public class ResourcesServiceImpl extends AbstractPageService<IBaseDAO<Resources>, Resources> implements IResourcesService<IBaseDAO<Resources>,Resources>{
     @Autowired
-    private IMenuResourceDAO menuResourceDAO;
+    private IResourcesDAO resourcesDAO;
 
     @Override
-    public IBaseDAO<MenuResource> getDao() {
-        return menuResourceDAO;
+    public IBaseDAO<Resources> getDao() {
+        return resourcesDAO;
     }
 
 //    @Override
@@ -80,8 +80,8 @@ public class MenuResourceServiceImpl extends AbstractPageService<IBaseDAO<MenuRe
 //    }
 //
 //    @Override
-//    public List<MenuResource> findAll() {
-//        return menuResourceDAO.findAll();
+//    public List<Resources> findAll() {
+//        return resourcesDAO.findAll();
 //    }
 //
 //    @Override
@@ -135,8 +135,8 @@ public class MenuResourceServiceImpl extends AbstractPageService<IBaseDAO<MenuRe
 //    }
 //
 //    @Override
-//    protected MenuResourceDAO getDao() {
-//        return menuResourceDAO;
+//    protected ResourcesDAO getDao() {
+//        return resourcesDAO;
 //    }
 //
 //    @Override

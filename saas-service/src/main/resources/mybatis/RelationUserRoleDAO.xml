@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cn.thinkjoy.saas.dao.IRelationRoleResourceDAO">
+<mapper namespace="cn.thinkjoy.saas.dao.IRelationUserRoleDAO">
 <!--
 insert
 update
@@ -24,17 +24,17 @@ selectOne
 selectList
 -->
     <sql id="Base_Column_List">
-        id ,
-        role_id as roleId,
-        res_id as resId
+        id,
+        user_id as userId,
+        role_id as roleId
     </sql>
-    <insert id="insert" parameterType="RelationRoleResource">
-        INSERT INTO saas_relation_role_resource (
-        role_id,
-        res_id
+    <insert id="insert" parameterType="RelationUserRole">
+        INSERT INTO saas_relation_user_role (
+        user_id,
+        role_id
         ) VALUES (
-        #{roleId},
-        #{resId}
+        #{userId},
+        #{roleId}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
         SELECT LAST_INSERT_ID() AS ID
@@ -42,14 +42,14 @@ selectList
     </insert>
 
     <!-- 更新 -->
-    <update id="update" parameterType="RelationRoleResource">
-        UPDATE saas_relation_role_resource
+    <update id="update" parameterType="RelationUserRole">
+        UPDATE saas_relation_user_role
         <trim prefix="SET" suffixOverrides=",">
+            <if test="userId!=null">
+                user_id = #{userId},
+            </if>
             <if test="roleId!=null">
                 role_id = #{roleId},
-            </if>
-            <if test="resId!=null">
-                res_id = #{resId},
             </if>
         </trim>
         WHERE
@@ -57,13 +57,13 @@ selectList
     </update>
 
     <update id="updateMap">
-        UPDATE saas_relation_role_resource
+        UPDATE saas_relation_user_role
         <trim prefix="SET" suffixOverrides=",">
+            <if test="map.userId!=null">
+                user_id = #{map.userId},
+            </if>
             <if test="map.roleId!=null">
                 role_id = #{map.roleId},
-            </if>
-            <if test="map.resId!=null">
-                res_id = #{map.resId},
             </if>
         </trim>
         WHERE
@@ -71,13 +71,13 @@ selectList
     </update>
 
     <update id="updateByCondition">
-        UPDATE saas_relation_role_resource
+        UPDATE saas_relation_user_role
         <trim prefix="SET" suffixOverrides=",">
+            <if test="update.userId!=null">
+                user_id = #{update.userId},
+            </if>
             <if test="update.roleId!=null">
                 role_id = #{update.roleId},
-            </if>
-            <if test="update.resId!=null">
-                res_id = #{update.resId},
             </if>
         </trim>
 
@@ -85,31 +85,31 @@ selectList
             <if test="condition.id!=null">
                 AND id = #{condition.id}
             </if>
+            <if test="condition.userId!=null">
+                AND user_id = #{condition.userId}
+            </if>
             <if test="condition.roleId!=null">
                 AND role_id = #{condition.roleId}
-            </if>
-            <if test="condition.resId!=null">
-                AND res_id = #{condition.resId}
             </if>
         </trim>
     </update>
 
     <insert id="insertMap" >
-        INSERT INTO saas_relation_role_resource (
-                role_id,
-                res_id
+        INSERT INTO saas_relation_user_role (
+                user_id,
+                role_id
         ) VALUES (
-                    #{map.roleId},
-                    #{map.resId}
+                    #{map.userId},
+                    #{map.roleId}
         )
     </insert>
 
 
-    <update id="updateNull" parameterType="RelationRoleResource">
-        UPDATE saas_relation_role_resource
+    <update id="updateNull" parameterType="RelationUserRole">
+        UPDATE saas_relation_user_role
         <trim prefix="SET" suffixOverrides=",">
+            user_id = #{userId},
             role_id = #{roleId},
-            res_id = #{resId},
         </trim>
         WHERE
         id = #{id} 
@@ -117,7 +117,7 @@ selectList
 
     <!-- 按Id删除 -->
     <delete id="deleteById" parameterType="java.lang.Integer">
-        DELETE FROM saas_relation_role_resource
+        DELETE FROM saas_relation_user_role
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND id = #{id}
         </trim>
@@ -125,29 +125,29 @@ selectList
 
 
     <delete id="deleteByCondition" parameterType="java.util.Map">
-        DELETE FROM saas_relation_role_resource
+        DELETE FROM saas_relation_user_role
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="id!=null">
                 AND id = #{id}
             </if>
+            <if test="userId!=null">
+                AND user_id = #{userId}
+            </if>
             <if test="roleId!=null">
                 AND role_id = #{roleId}
-            </if>
-            <if test="resId!=null">
-                AND res_id = #{resId}
             </if>
         </trim>
     </delete>
 
     <delete id="deleteByProperty" parameterType="java.util.Map">
-        DELETE FROM saas_relation_role_resource WHERE
+        DELETE FROM saas_relation_user_role WHERE
         ${property} = #{value}
     </delete>
 
-    <select id="fetch" parameterType="java.lang.Integer" resultType="RelationRoleResource">
+    <select id="fetch" parameterType="java.lang.Integer" resultType="RelationUserRole">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_relation_role_resource
+        FROM saas_relation_user_role
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND id = #{id}
         </trim>
@@ -156,37 +156,37 @@ selectList
         </if>
     </select>
 
-    <select id="findOne" parameterType="java.util.Map" resultType="RelationRoleResource">
+    <select id="findOne" parameterType="java.util.Map" resultType="RelationUserRole">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_relation_role_resource WHERE
+        FROM saas_relation_user_role WHERE
         ${property} = #{value}
         LIMIT 0,1
     </select>
 
-    <select id="findList" parameterType="java.util.Map" resultType="RelationRoleResource">
+    <select id="findList" parameterType="java.util.Map" resultType="RelationUserRole">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_relation_role_resource WHERE
+        FROM saas_relation_user_role WHERE
         ${property} = #{value}
         <if test="orderBy!=null">
             ORDER BY ${orderBy} ${sortBy}
         </if>
     </select>
 
-    <select id="findAll" resultType="RelationRoleResource">
+    <select id="findAll" resultType="RelationUserRole">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_relation_role_resource
+        FROM saas_relation_user_role
         <if test="orderBy!=null">
             ORDER BY ${orderBy} ${sortBy}
         </if>
     </select>
 
-    <select id="queryPage" resultType="RelationRoleResource">
+    <select id="queryPage" resultType="RelationUserRole">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_relation_role_resource
+        FROM saas_relation_user_role
         <where>
 
             <if test="condition.whereSql != null">
@@ -196,11 +196,11 @@ selectList
             <if test="condition.id!=null">
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
+            <if test="condition.userId!=null">
+                ${condition.groupOp}   user_id  ${condition.user_id.op}  #{condition.user_id.data}
+            </if>
             <if test="condition.roleId!=null">
                 ${condition.groupOp}   role_id  ${condition.role_id.op}  #{condition.role_id.data}
-            </if>
-            <if test="condition.resId!=null">
-                ${condition.groupOp}   res_id  ${condition.res_id.op}  #{condition.res_id.data}
             </if>
 
 
@@ -214,20 +214,20 @@ selectList
         </if>
     </select>
 
-    <select id="like" parameterType="java.util.Map" resultType="RelationRoleResource">
+    <select id="like" parameterType="java.util.Map" resultType="RelationUserRole">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_relation_role_resource
+        FROM saas_relation_user_role
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="id!=null">
                 AND id like CONCAT('%', #{id} , '%')
             </if>
+            <if test="userId!=null">
+                AND user_id like CONCAT('%', #{userId} , '%')
+            </if>
             <if test="roleId!=null">
                 AND role_id like CONCAT('%', #{roleId} , '%')
             </if>
-            <if test="resId!=null">
-                AND res_id like CONCAT('%', #{resId} , '%')
-            </if>
         </trim>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -235,19 +235,19 @@ selectList
     </select>
 
 
-    <select id="queryList" parameterType="java.util.Map" resultType="RelationRoleResource">
+    <select id="queryList" parameterType="java.util.Map" resultType="RelationUserRole">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_relation_role_resource
+        FROM saas_relation_user_role
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
                 AND id = #{condition.id}
             </if>
+            <if test="condition.userId!=null">
+                AND user_id = #{condition.userId}
+            </if>
             <if test="condition.roleId!=null">
                 AND role_id = #{condition.roleId}
-            </if>
-            <if test="condition.resId!=null">
-                AND res_id = #{condition.resId}
             </if>
         </trim>
         <if test="orderBy!=null">
@@ -255,35 +255,35 @@ selectList
         </if>
     </select>
 
-    <select id="queryOne" parameterType="java.util.Map" resultType="RelationRoleResource">
+    <select id="queryOne" parameterType="java.util.Map" resultType="RelationUserRole">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_relation_role_resource
+        FROM saas_relation_user_role
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
                 AND id = #{condition.id}
             </if>
+            <if test="condition.userId!=null">
+                AND user_id = #{condition.userId}
+            </if>
             <if test="condition.roleId!=null">
                 AND role_id = #{condition.roleId}
-            </if>
-            <if test="condition.resId!=null">
-                AND res_id = #{condition.resId}
             </if>
         </trim>
         limit 0,1
     </select>
 
     <select id="count" resultType="java.lang.Integer">
-        SELECT count(id) FROM saas_relation_role_resource
+        SELECT count(id) FROM saas_relation_user_role
        <where>
            <if test="id!=null">
                ${groupOp} id ${id.op}  #{id.data}
            </if>
+           <if test="userId!=null">
+               ${groupOp} user_id ${user_id.op}  #{user_id.data}
+           </if>
            <if test="roleId!=null">
                ${groupOp} role_id ${role_id.op}  #{role_id.data}
-           </if>
-           <if test="resId!=null">
-               ${groupOp} res_id ${res_id.op}  #{res_id.data}
            </if>
 
        </where>
@@ -295,7 +295,7 @@ selectList
     <select id="selectMaxId" resultType="java.lang.Integer">
         SELECT
         MAX(id)
-        FROM saas_relation_role_resource
+        FROM saas_relation_user_role
     </select>
 
 </mapper>

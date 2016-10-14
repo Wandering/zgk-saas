@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cn.thinkjoy.saas.dao.IUserRoleDAO">
+<mapper namespace="cn.thinkjoy.saas.dao.IRolesDAO">
 <!--
 insert
 update
@@ -25,18 +25,21 @@ selectList
 -->
     <sql id="Base_Column_List">
         id,
-        role_name,
-        role_desc,
-        create_date
+        role_name as roleName,
+        role_desc as roleDesc,
+        tn_id as tnId,
+        create_date as createDate
     </sql>
-    <insert id="insert" parameterType="UserRole">
-        INSERT INTO saas_user_role (
+    <insert id="insert" parameterType="Roles">
+        INSERT INTO saas_roles (
         role_name,
         role_desc,
+        tn_id,
         create_date
         ) VALUES (
         #{roleName},
         #{roleDesc},
+        #{tnId},
         #{createDate}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
@@ -45,14 +48,17 @@ selectList
     </insert>
 
     <!-- 更新 -->
-    <update id="update" parameterType="UserRole">
-        UPDATE saas_user_role
+    <update id="update" parameterType="Roles">
+        UPDATE saas_roles
         <trim prefix="SET" suffixOverrides=",">
             <if test="roleName!=null">
                 role_name = #{roleName},
             </if>
             <if test="roleDesc!=null">
                 role_desc = #{roleDesc},
+            </if>
+            <if test="tnId!=null">
+                tn_id = #{tnId},
             </if>
             <if test="createDate!=null">
                 create_date = #{createDate},
@@ -63,13 +69,16 @@ selectList
     </update>
 
     <update id="updateMap">
-        UPDATE saas_user_role
+        UPDATE saas_roles
         <trim prefix="SET" suffixOverrides=",">
             <if test="map.roleName!=null">
                 role_name = #{map.roleName},
             </if>
             <if test="map.roleDesc!=null">
                 role_desc = #{map.roleDesc},
+            </if>
+            <if test="map.tnId!=null">
+                tn_id = #{map.tnId},
             </if>
             <if test="map.createDate!=null">
                 create_date = #{map.createDate},
@@ -80,13 +89,16 @@ selectList
     </update>
 
     <update id="updateByCondition">
-        UPDATE saas_user_role
+        UPDATE saas_roles
         <trim prefix="SET" suffixOverrides=",">
             <if test="update.roleName!=null">
                 role_name = #{update.roleName},
             </if>
             <if test="update.roleDesc!=null">
                 role_desc = #{update.roleDesc},
+            </if>
+            <if test="update.tnId!=null">
+                tn_id = #{update.tnId},
             </if>
             <if test="update.createDate!=null">
                 create_date = #{update.createDate},
@@ -103,6 +115,9 @@ selectList
             <if test="condition.roleDesc!=null">
                 AND role_desc = #{condition.roleDesc}
             </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -110,23 +125,26 @@ selectList
     </update>
 
     <insert id="insertMap" >
-        INSERT INTO saas_user_role (
+        INSERT INTO saas_roles (
                 role_name,
                 role_desc,
+                tn_id,
                 create_date
         ) VALUES (
                     #{map.roleName},
                     #{map.roleDesc},
+                    #{map.tnId},
                     #{map.createDate}
         )
     </insert>
 
 
-    <update id="updateNull" parameterType="UserRole">
-        UPDATE saas_user_role
+    <update id="updateNull" parameterType="Roles">
+        UPDATE saas_roles
         <trim prefix="SET" suffixOverrides=",">
             role_name = #{roleName},
             role_desc = #{roleDesc},
+            tn_id = #{tnId},
             create_date = #{createDate},
         </trim>
         WHERE
@@ -135,7 +153,7 @@ selectList
 
     <!-- 按Id删除 -->
     <delete id="deleteById" parameterType="java.lang.Integer">
-        DELETE FROM saas_user_role
+        DELETE FROM saas_roles
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND id = #{id}
         </trim>
@@ -143,7 +161,7 @@ selectList
 
 
     <delete id="deleteByCondition" parameterType="java.util.Map">
-        DELETE FROM saas_user_role
+        DELETE FROM saas_roles
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="id!=null">
                 AND id = #{id}
@@ -154,6 +172,9 @@ selectList
             <if test="roleDesc!=null">
                 AND role_desc = #{roleDesc}
             </if>
+            <if test="tnId!=null">
+                AND tn_id = #{tnId}
+            </if>
             <if test="createDate!=null">
                 AND create_date = #{createDate}
             </if>
@@ -161,14 +182,14 @@ selectList
     </delete>
 
     <delete id="deleteByProperty" parameterType="java.util.Map">
-        DELETE FROM saas_user_role WHERE
+        DELETE FROM saas_roles WHERE
         ${property} = #{value}
     </delete>
 
-    <select id="fetch" parameterType="java.lang.Integer" resultType="UserRole">
+    <select id="fetch" parameterType="java.lang.Integer" resultType="Roles">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_user_role
+        FROM saas_roles
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND id = #{id}
         </trim>
@@ -177,37 +198,37 @@ selectList
         </if>
     </select>
 
-    <select id="findOne" parameterType="java.util.Map" resultType="UserRole">
+    <select id="findOne" parameterType="java.util.Map" resultType="Roles">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_user_role WHERE
+        FROM saas_roles WHERE
         ${property} = #{value}
         LIMIT 0,1
     </select>
 
-    <select id="findList" parameterType="java.util.Map" resultType="UserRole">
+    <select id="findList" parameterType="java.util.Map" resultType="Roles">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_user_role WHERE
+        FROM saas_roles WHERE
         ${property} = #{value}
         <if test="orderBy!=null">
             ORDER BY ${orderBy} ${sortBy}
         </if>
     </select>
 
-    <select id="findAll" resultType="UserRole">
+    <select id="findAll" resultType="Roles">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_user_role
+        FROM saas_roles
         <if test="orderBy!=null">
             ORDER BY ${orderBy} ${sortBy}
         </if>
     </select>
 
-    <select id="queryPage" resultType="UserRole">
+    <select id="queryPage" resultType="Roles">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_user_role
+        FROM saas_roles
         <where>
 
             <if test="condition.whereSql != null">
@@ -222,6 +243,9 @@ selectList
             </if>
             <if test="condition.roleDesc!=null">
                 ${condition.groupOp}   role_desc  ${condition.role_desc.op}  #{condition.role_desc.data}
+            </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
             </if>
             <if test="condition.createDate!=null">
                 ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
@@ -238,10 +262,10 @@ selectList
         </if>
     </select>
 
-    <select id="like" parameterType="java.util.Map" resultType="UserRole">
+    <select id="like" parameterType="java.util.Map" resultType="Roles">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_user_role
+        FROM saas_roles
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="id!=null">
                 AND id like CONCAT('%', #{id} , '%')
@@ -251,6 +275,9 @@ selectList
             </if>
             <if test="roleDesc!=null">
                 AND role_desc like CONCAT('%', #{roleDesc} , '%')
+            </if>
+            <if test="tnId!=null">
+                AND tn_id like CONCAT('%', #{tnId} , '%')
             </if>
             <if test="createDate!=null">
                 AND create_date like CONCAT('%', #{createDate} , '%')
@@ -262,10 +289,10 @@ selectList
     </select>
 
 
-    <select id="queryList" parameterType="java.util.Map" resultType="UserRole">
+    <select id="queryList" parameterType="java.util.Map" resultType="Roles">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_user_role
+        FROM saas_roles
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
                 AND id = #{condition.id}
@@ -275,6 +302,9 @@ selectList
             </if>
             <if test="condition.roleDesc!=null">
                 AND role_desc = #{condition.roleDesc}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
             </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
@@ -285,10 +315,10 @@ selectList
         </if>
     </select>
 
-    <select id="queryOne" parameterType="java.util.Map" resultType="UserRole">
+    <select id="queryOne" parameterType="java.util.Map" resultType="Roles">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_user_role
+        FROM saas_roles
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
                 AND id = #{condition.id}
@@ -299,6 +329,9 @@ selectList
             <if test="condition.roleDesc!=null">
                 AND role_desc = #{condition.roleDesc}
             </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -307,7 +340,7 @@ selectList
     </select>
 
     <select id="count" resultType="java.lang.Integer">
-        SELECT count(id) FROM saas_user_role
+        SELECT count(id) FROM saas_roles
        <where>
            <if test="id!=null">
                ${groupOp} id ${id.op}  #{id.data}
@@ -317,6 +350,9 @@ selectList
            </if>
            <if test="roleDesc!=null">
                ${groupOp} role_desc ${role_desc.op}  #{role_desc.data}
+           </if>
+           <if test="tnId!=null">
+               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
            </if>
            <if test="createDate!=null">
                ${groupOp} create_date ${create_date.op}  #{create_date.data}
@@ -331,7 +367,7 @@ selectList
     <select id="selectMaxId" resultType="java.lang.Integer">
         SELECT
         MAX(id)
-        FROM saas_user_role
+        FROM saas_roles
     </select>
 
 </mapper>

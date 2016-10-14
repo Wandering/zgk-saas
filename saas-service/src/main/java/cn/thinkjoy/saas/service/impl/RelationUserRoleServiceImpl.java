@@ -2,15 +2,15 @@
  * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
  *
  * Project Name: saas
- * $Id:  UserRoleServiceImpl.java 2016-10-12 10:51:40 $
+ * $Id:  RelationUserRoleServiceImpl.java 2016-10-14 09:50:57 $
  */
 package cn.thinkjoy.saas.service.impl;
 
 import cn.thinkjoy.common.domain.BaseDomain;
 import cn.thinkjoy.common.dao.IBaseDAO;
-import cn.thinkjoy.saas.dao.IUserRoleDAO;
-import cn.thinkjoy.saas.domain.UserRole;
-import cn.thinkjoy.saas.service.IUserRoleService;
+import cn.thinkjoy.saas.dao.IRelationUserRoleDAO;
+import cn.thinkjoy.saas.domain.RelationUserRole;
+import cn.thinkjoy.saas.service.IRelationUserRoleService;
 import cn.thinkjoy.common.service.impl.AbstractPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,14 +19,14 @@ import java.util.List;
 import java.util.Map;
 
 
-@Service("UserRoleServiceImpl")
-public class UserRoleServiceImpl extends AbstractPageService<IBaseDAO<UserRole>, UserRole> implements IUserRoleService<IBaseDAO<UserRole>,UserRole>{
+@Service("RelationUserRoleServiceImpl")
+public class RelationUserRoleServiceImpl extends AbstractPageService<IBaseDAO<RelationUserRole>, RelationUserRole> implements IRelationUserRoleService<IBaseDAO<RelationUserRole>,RelationUserRole>{
     @Autowired
-    private IUserRoleDAO userRoleDAO;
+    private IRelationUserRoleDAO relationUserRoleDAO;
 
     @Override
-    public IBaseDAO<UserRole> getDao() {
-        return userRoleDAO;
+    public IBaseDAO<RelationUserRole> getDao() {
+        return relationUserRoleDAO;
     }
 
 //    @Override
@@ -80,8 +80,8 @@ public class UserRoleServiceImpl extends AbstractPageService<IBaseDAO<UserRole>,
 //    }
 //
 //    @Override
-//    public List<UserRole> findAll() {
-//        return userRoleDAO.findAll();
+//    public List<RelationUserRole> findAll() {
+//        return relationUserRoleDAO.findAll();
 //    }
 //
 //    @Override
@@ -135,8 +135,8 @@ public class UserRoleServiceImpl extends AbstractPageService<IBaseDAO<UserRole>,
 //    }
 //
 //    @Override
-//    protected UserRoleDAO getDao() {
-//        return userRoleDAO;
+//    protected RelationUserRoleDAO getDao() {
+//        return relationUserRoleDAO;
 //    }
 //
 //    @Override

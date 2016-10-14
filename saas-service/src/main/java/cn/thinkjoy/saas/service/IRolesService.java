@@ -2,7 +2,7 @@
  * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
  *
  * Project Name: saas
- * $Id:  RelationRoleResourceService.java 2016-10-14 09:50:57 $
+ * $Id:  RolesService.java 2016-10-14 09:50:58 $
  */
 
 package cn.thinkjoy.saas.service;
@@ -11,6 +11,6 @@ import cn.thinkjoy.common.domain.BaseDomain;
 import cn.thinkjoy.common.service.IBaseService;
 import cn.thinkjoy.common.service.IPageService;
 
-public interface IRelationRoleResourceService<D extends IBaseDAO<T>, T extends BaseDomain> extends IBaseService<D, T>,IPageService<D, T>{
+public interface IRolesService<D extends IBaseDAO<T>, T extends BaseDomain> extends IBaseService<D, T>,IPageService<D, T>{
 
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cn.thinkjoy.saas.dao.IMenuResourceDAO">
+<mapper namespace="cn.thinkjoy.saas.dao.IResourcesDAO">
 <!--
 insert
 update
@@ -25,20 +25,20 @@ selectList
 -->
     <sql id="Base_Column_List">
         id,
-        res_name,
-        res_parent_url,
-        res_url,
-        create_date
+        res_name as resName,
+        parent_id as parentId,
+        res_url as resUrl,
+        create_date as createDate
     </sql>
-    <insert id="insert" parameterType="MenuResource">
-        INSERT INTO saas_menu_resource (
+    <insert id="insert" parameterType="Resources">
+        INSERT INTO saas_resources (
         res_name,
-        res_parent_url,
+        parent_id,
         res_url,
         create_date
         ) VALUES (
         #{resName},
-        #{resParentUrl},
+        #{parentId},
         #{resUrl},
         #{createDate}
         )
@@ -48,14 +48,14 @@ selectList
     </insert>
 
     <!-- 更新 -->
-    <update id="update" parameterType="MenuResource">
-        UPDATE saas_menu_resource
+    <update id="update" parameterType="Resources">
+        UPDATE saas_resources
         <trim prefix="SET" suffixOverrides=",">
             <if test="resName!=null">
                 res_name = #{resName},
             </if>
-            <if test="resParentUrl!=null">
-                res_parent_url = #{resParentUrl},
+            <if test="parentId!=null">
+                parent_id = #{parentId},
             </if>
             <if test="resUrl!=null">
                 res_url = #{resUrl},
@@ -69,13 +69,13 @@ selectList
     </update>
 
     <update id="updateMap">
-        UPDATE saas_menu_resource
+        UPDATE saas_resources
         <trim prefix="SET" suffixOverrides=",">
             <if test="map.resName!=null">
                 res_name = #{map.resName},
             </if>
-            <if test="map.resParentUrl!=null">
-                res_parent_url = #{map.resParentUrl},
+            <if test="map.parentId!=null">
+                parent_id = #{map.parentId},
             </if>
             <if test="map.resUrl!=null">
                 res_url = #{map.resUrl},
@@ -89,13 +89,13 @@ selectList
     </update>
 
     <update id="updateByCondition">
-        UPDATE saas_menu_resource
+        UPDATE saas_resources
         <trim prefix="SET" suffixOverrides=",">
             <if test="update.resName!=null">
                 res_name = #{update.resName},
             </if>
-            <if test="update.resParentUrl!=null">
-                res_parent_url = #{update.resParentUrl},
+            <if test="update.parentId!=null">
+                parent_id = #{update.parentId},
             </if>
             <if test="update.resUrl!=null">
                 res_url = #{update.resUrl},
@@ -112,8 +112,8 @@ selectList
             <if test="condition.resName!=null">
                 AND res_name = #{condition.resName}
             </if>
-            <if test="condition.resParentUrl!=null">
-                AND res_parent_url = #{condition.resParentUrl}
+            <if test="condition.parentId!=null">
+                AND parent_id = #{condition.parentId}
             </if>
             <if test="condition.resUrl!=null">
                 AND res_url = #{condition.resUrl}
@@ -125,25 +125,25 @@ selectList
     </update>
 
     <insert id="insertMap" >
-        INSERT INTO saas_menu_resource (
+        INSERT INTO saas_resources (
                 res_name,
-                res_parent_url,
+                parent_id,
                 res_url,
                 create_date
         ) VALUES (
                     #{map.resName},
-                    #{map.resParentUrl},
+                    #{map.parentId},
                     #{map.resUrl},
                     #{map.createDate}
         )
     </insert>
 
 
-    <update id="updateNull" parameterType="MenuResource">
-        UPDATE saas_menu_resource
+    <update id="updateNull" parameterType="Resources">
+        UPDATE saas_resources
         <trim prefix="SET" suffixOverrides=",">
             res_name = #{resName},
-            res_parent_url = #{resParentUrl},
+            parent_id = #{parentId},
             res_url = #{resUrl},
             create_date = #{createDate},
         </trim>
@@ -153,7 +153,7 @@ selectList
 
     <!-- 按Id删除 -->
     <delete id="deleteById" parameterType="java.lang.Integer">
-        DELETE FROM saas_menu_resource
+        DELETE FROM saas_resources
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND id = #{id}
         </trim>
@@ -161,7 +161,7 @@ selectList
 
 
     <delete id="deleteByCondition" parameterType="java.util.Map">
-        DELETE FROM saas_menu_resource
+        DELETE FROM saas_resources
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="id!=null">
                 AND id = #{id}
@@ -169,8 +169,8 @@ selectList
             <if test="resName!=null">
                 AND res_name = #{resName}
             </if>
-            <if test="resParentUrl!=null">
-                AND res_parent_url = #{resParentUrl}
+            <if test="parentId!=null">
+                AND parent_id = #{parentId}
             </if>
             <if test="resUrl!=null">
                 AND res_url = #{resUrl}
@@ -182,14 +182,14 @@ selectList
     </delete>
 
     <delete id="deleteByProperty" parameterType="java.util.Map">
-        DELETE FROM saas_menu_resource WHERE
+        DELETE FROM saas_resources WHERE
         ${property} = #{value}
     </delete>
 
-    <select id="fetch" parameterType="java.lang.Integer" resultType="MenuResource">
+    <select id="fetch" parameterType="java.lang.Integer" resultType="Resources">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_menu_resource
+        FROM saas_resources
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND id = #{id}
         </trim>
@@ -198,37 +198,37 @@ selectList
         </if>
     </select>
 
-    <select id="findOne" parameterType="java.util.Map" resultType="MenuResource">
+    <select id="findOne" parameterType="java.util.Map" resultType="Resources">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_menu_resource WHERE
+        FROM saas_resources WHERE
         ${property} = #{value}
         LIMIT 0,1
     </select>
 
-    <select id="findList" parameterType="java.util.Map" resultType="MenuResource">
+    <select id="findList" parameterType="java.util.Map" resultType="Resources">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_menu_resource WHERE
+        FROM saas_resources WHERE
         ${property} = #{value}
         <if test="orderBy!=null">
             ORDER BY ${orderBy} ${sortBy}
         </if>
     </select>
 
-    <select id="findAll" resultType="MenuResource">
+    <select id="findAll" resultType="Resources">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_menu_resource
+        FROM saas_resources
         <if test="orderBy!=null">
             ORDER BY ${orderBy} ${sortBy}
         </if>
     </select>
 
-    <select id="queryPage" resultType="MenuResource">
+    <select id="queryPage" resultType="Resources">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_menu_resource
+        FROM saas_resources
         <where>
 
             <if test="condition.whereSql != null">
@@ -241,8 +241,8 @@ selectList
             <if test="condition.resName!=null">
                 ${condition.groupOp}   res_name  ${condition.res_name.op}  #{condition.res_name.data}
             </if>
-            <if test="condition.resParentUrl!=null">
-                ${condition.groupOp}   res_parent_url  ${condition.res_parent_url.op}  #{condition.res_parent_url.data}
+            <if test="condition.parentId!=null">
+                ${condition.groupOp}   parent_id  ${condition.parent_id.op}  #{condition.parent_id.data}
             </if>
             <if test="condition.resUrl!=null">
                 ${condition.groupOp}   res_url  ${condition.res_url.op}  #{condition.res_url.data}
@@ -262,10 +262,10 @@ selectList
         </if>
     </select>
 
-    <select id="like" parameterType="java.util.Map" resultType="MenuResource">
+    <select id="like" parameterType="java.util.Map" resultType="Resources">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_menu_resource
+        FROM saas_resources
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="id!=null">
                 AND id like CONCAT('%', #{id} , '%')
@@ -273,8 +273,8 @@ selectList
             <if test="resName!=null">
                 AND res_name like CONCAT('%', #{resName} , '%')
             </if>
-            <if test="resParentUrl!=null">
-                AND res_parent_url like CONCAT('%', #{resParentUrl} , '%')
+            <if test="parentId!=null">
+                AND parent_id like CONCAT('%', #{parentId} , '%')
             </if>
             <if test="resUrl!=null">
                 AND res_url like CONCAT('%', #{resUrl} , '%')
@@ -289,10 +289,10 @@ selectList
     </select>
 
 
-    <select id="queryList" parameterType="java.util.Map" resultType="MenuResource">
+    <select id="queryList" parameterType="java.util.Map" resultType="Resources">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_menu_resource
+        FROM saas_resources
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
                 AND id = #{condition.id}
@@ -300,8 +300,8 @@ selectList
             <if test="condition.resName!=null">
                 AND res_name = #{condition.resName}
             </if>
-            <if test="condition.resParentUrl!=null">
-                AND res_parent_url = #{condition.resParentUrl}
+            <if test="condition.parentId!=null">
+                AND parent_id = #{condition.parentId}
             </if>
             <if test="condition.resUrl!=null">
                 AND res_url = #{condition.resUrl}
@@ -315,10 +315,10 @@ selectList
         </if>
     </select>
 
-    <select id="queryOne" parameterType="java.util.Map" resultType="MenuResource">
+    <select id="queryOne" parameterType="java.util.Map" resultType="Resources">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_menu_resource
+        FROM saas_resources
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
                 AND id = #{condition.id}
@@ -326,8 +326,8 @@ selectList
             <if test="condition.resName!=null">
                 AND res_name = #{condition.resName}
             </if>
-            <if test="condition.resParentUrl!=null">
-                AND res_parent_url = #{condition.resParentUrl}
+            <if test="condition.parentId!=null">
+                AND parent_id = #{condition.parentId}
             </if>
             <if test="condition.resUrl!=null">
                 AND res_url = #{condition.resUrl}
@@ -340,7 +340,7 @@ selectList
     </select>
 
     <select id="count" resultType="java.lang.Integer">
-        SELECT count(id) FROM saas_menu_resource
+        SELECT count(id) FROM saas_resources
        <where>
            <if test="id!=null">
                ${groupOp} id ${id.op}  #{id.data}
@@ -348,8 +348,8 @@ selectList
            <if test="resName!=null">
                ${groupOp} res_name ${res_name.op}  #{res_name.data}
            </if>
-           <if test="resParentUrl!=null">
-               ${groupOp} res_parent_url ${res_parent_url.op}  #{res_parent_url.data}
+           <if test="parentId!=null">
+               ${groupOp} parent_id ${parent_id.op}  #{parent_id.data}
            </if>
            <if test="resUrl!=null">
                ${groupOp} res_url ${res_url.op}  #{res_url.data}
@@ -367,7 +367,7 @@ selectList
     <select id="selectMaxId" resultType="java.lang.Integer">
         SELECT
         MAX(id)
-        FROM saas_menu_resource
+        FROM saas_resources
     </select>
 
 </mapper>

@@ -2,7 +2,7 @@
  * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
  *
  * Project Name: saas
- * $Id:  UserRole.java 2016-10-12 10:51:40 $
+ * $Id:  Roles.java 2016-10-14 09:50:58 $
  */
 
 
@@ -17,12 +17,13 @@ import cn.thinkjoy.common.domain.BaseDomain;
 
 import java.util.*;
 
-public class UserRole extends BaseDomain{
+public class Roles extends BaseDomain{
     private String roleName;
     private String roleDesc;
+    private Integer tnId;
     private Date createDate;
 
-	public UserRole(){
+	public Roles(){
 	}
     public void setRoleName(String value) {
         this.roleName = value;
@@ -38,6 +39,13 @@ public class UserRole extends BaseDomain{
     public String getRoleDesc() {
         return this.roleDesc;
     }
+    public void setTnId(Integer value) {
+        this.tnId = value;
+    }
+
+    public Integer getTnId() {
+        return this.tnId;
+    }
 
     public void setCreateDate(Date value) {
         this.createDate = value;
@@ -52,6 +60,7 @@ public class UserRole extends BaseDomain{
 			.append("Id",getId())
 			.append("RoleName",getRoleName())
 			.append("RoleDesc",getRoleDesc())
+			.append("TnId",getTnId())
 			.append("CreateDate",getCreateDate())
 			.toString();
 	}
@@ -63,9 +72,9 @@ public class UserRole extends BaseDomain{
 	}
 	
 	public boolean equals(Object obj) {
-		if(obj instanceof UserRole == false) return false;
+		if(obj instanceof Roles == false) return false;
 		if(this == obj) return true;
-		UserRole other = (UserRole)obj;
+		Roles other = (Roles)obj;
 		return new EqualsBuilder()
 			.append(getId(),other.getId())
 			.isEquals();

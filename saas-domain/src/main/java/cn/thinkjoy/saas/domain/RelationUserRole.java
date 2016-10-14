@@ -2,7 +2,7 @@
  * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
  *
  * Project Name: saas
- * $Id:  RelationRoleResource.java 2016-10-14 09:50:57 $
+ * $Id:  RelationUserRole.java 2016-10-14 09:50:57 $
  */
 
 
@@ -17,12 +17,19 @@ import cn.thinkjoy.common.domain.BaseDomain;
 
 import java.util.*;
 
-public class RelationRoleResource extends BaseDomain{
+public class RelationUserRole extends BaseDomain{
+    private Integer userId;
     private Integer roleId;
-    private Integer resId;
 
-	public RelationRoleResource(){
+	public RelationUserRole(){
 	}
+    public void setUserId(Integer value) {
+        this.userId = value;
+    }
+
+    public Integer getUserId() {
+        return this.userId;
+    }
     public void setRoleId(Integer value) {
         this.roleId = value;
     }
@@ -30,19 +37,12 @@ public class RelationRoleResource extends BaseDomain{
     public Integer getRoleId() {
         return this.roleId;
     }
-    public void setResId(Integer value) {
-        this.resId = value;
-    }
-
-    public Integer getResId() {
-        return this.resId;
-    }
 
 	public String toString() {
 		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
 			.append("Id",getId())
+			.append("UserId",getUserId())
 			.append("RoleId",getRoleId())
-			.append("ResId",getResId())
 			.toString();
 	}
 	
@@ -53,9 +53,9 @@ public class RelationRoleResource extends BaseDomain{
 	}
 	
 	public boolean equals(Object obj) {
-		if(obj instanceof RelationRoleResource == false) return false;
+		if(obj instanceof RelationUserRole == false) return false;
 		if(this == obj) return true;
-		RelationRoleResource other = (RelationRoleResource)obj;
+		RelationUserRole other = (RelationUserRole)obj;
 		return new EqualsBuilder()
 			.append(getId(),other.getId())
 			.isEquals();

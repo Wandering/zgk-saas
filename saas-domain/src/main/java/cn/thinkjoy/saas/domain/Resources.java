@@ -2,7 +2,7 @@
  * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
  *
  * Project Name: saas
- * $Id:  MenuResource.java 2016-10-12 10:51:40 $
+ * $Id:  Resources.java 2016-10-14 09:50:57 $
  */
 
 
@@ -17,13 +17,13 @@ import cn.thinkjoy.common.domain.BaseDomain;
 
 import java.util.*;
 
-public class MenuResource extends BaseDomain{
+public class Resources extends BaseDomain{
     private String resName;
-    private String resParentUrl;
+    private Integer parentId;
     private String resUrl;
     private Date createDate;
 
-	public MenuResource(){
+	public Resources(){
 	}
     public void setResName(String value) {
         this.resName = value;
@@ -32,12 +32,12 @@ public class MenuResource extends BaseDomain{
     public String getResName() {
         return this.resName;
     }
-    public void setResParentUrl(String value) {
-        this.resParentUrl = value;
+    public void setParentId(Integer value) {
+        this.parentId = value;
     }
 
-    public String getResParentUrl() {
-        return this.resParentUrl;
+    public Integer getParentId() {
+        return this.parentId;
     }
     public void setResUrl(String value) {
         this.resUrl = value;
@@ -59,7 +59,7 @@ public class MenuResource extends BaseDomain{
 		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
 			.append("Id",getId())
 			.append("ResName",getResName())
-			.append("ResParentUrl",getResParentUrl())
+			.append("ParentId",getParentId())
 			.append("ResUrl",getResUrl())
 			.append("CreateDate",getCreateDate())
 			.toString();
@@ -72,9 +72,9 @@ public class MenuResource extends BaseDomain{
 	}
 	
 	public boolean equals(Object obj) {
-		if(obj instanceof MenuResource == false) return false;
+		if(obj instanceof Resources == false) return false;
 		if(this == obj) return true;
-		MenuResource other = (MenuResource)obj;
+		Resources other = (Resources)obj;
 		return new EqualsBuilder()
 			.append(getId(),other.getId())
 			.isEquals();
