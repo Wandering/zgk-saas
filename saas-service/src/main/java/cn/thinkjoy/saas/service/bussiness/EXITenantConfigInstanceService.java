@@ -60,4 +60,12 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      * @return
      */
     List<TenantConfigInstanceView> getTenantConfigListByTnIdAndType(String type, Integer tnId);
+
+    /**
+     * 获取当前租户表头 数组 - 用于导出表头excel
+     * @param type class:班级  teacher:教师
+     * @param tnId 租户ID
+     * @return
+     */
+    String[] getTenantConfigListArrByTnIdAndType(String type, Integer tnId);
 }

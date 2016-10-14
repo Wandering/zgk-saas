@@ -11,4 +11,6 @@ allprojects {
 
     freemarkerVersion = "2.3.20"
     ucmVersion = "0.0.27-SNAPSHOT"
+
+    poiVersion="3.9"
 }

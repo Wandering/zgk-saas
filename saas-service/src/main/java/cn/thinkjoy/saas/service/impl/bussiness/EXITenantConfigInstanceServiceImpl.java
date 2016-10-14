@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * Created by douzy on 16/10/13.
  */
@@ -174,6 +175,24 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
         return tenantConfigInstances;
     }
+
+    /**
+     * 获取当前租户表头 数组 - 用于导出表头excel
+     * @param type class:班级  teacher:教师
+     * @param tnId 租户ID
+     * @return
+     */
+    @Override
+    public String[] getTenantConfigListArrByTnIdAndType(String type, Integer tnId) {
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
+        String[] configArr = new String[tenantConfigInstanceViews.size()];
+        for (int i = 0; i < tenantConfigInstanceViews.size(); i++) {
+            TenantConfigInstanceView tenantConfigInstanceView = tenantConfigInstanceViews.get(i);
+            configArr[i] = tenantConfigInstanceView.getName();
+            LOGGER.info("表头[" + i + "]:" + tenantConfigInstanceView.getName());
+        }
+        return configArr;
+    }
     /**
      * 生成租户自选表头
      * @param ids  表头id集
@@ -250,6 +269,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         LOGGER.info("===============生成租户自选表头 E==============");
         return result;
     }
+
 
     /**
      * 封装租户已选表头对象

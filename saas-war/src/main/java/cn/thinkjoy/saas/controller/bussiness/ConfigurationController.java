@@ -4,6 +4,9 @@ import cn.thinkjoy.saas.domain.Configuration;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.bussiness.EXIConfigurationService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
+import cn.thinkjoy.saas.service.common.ExcelUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +28,7 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/config")
 public class ConfigurationController {
-
+    private static final Logger LOGGER= LoggerFactory.getLogger(ConfigurationController.class);
     @Resource
     EXIConfigurationService exiConfigurationService;
 
@@ -106,6 +112,61 @@ public class ConfigurationController {
         Map resultMap = new HashMap();
         resultMap.put("result", result ? "SUCCESS" : "FAIL");
         return resultMap;
+    }
+
+    /**
+     * 导出租户excel表头
+     * @param type class:班级  teacher:教师
+     * @param tnId 租户ID
+     * @return
+     */
+    @RequestMapping(value = "/export/{type}/{tnId}")
+    public String exportConfig(HttpServletRequest request,HttpServletResponse response,
+                               @PathVariable String type,
+                               @PathVariable Integer tnId) throws IOException {
+        LOGGER.info("===============导出租户excel表头 S================");
+        LOGGER.info("type:" + type);
+        LOGGER.info("tnId:" + tnId);
+        String[] columnNames = exiTenantConfigInstanceService.getTenantConfigListArrByTnIdAndType(type, tnId);
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            ExcelUtils.createWorkBook(columnNames).write(os);
+            LOGGER.info("Excel创建完成!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOGGER.info("Excel创建失败![" + e.getMessage() + "]");
+        }
+        byte[] content = os.toByteArray();
+        InputStream is = new ByteArrayInputStream(content);
+        // 设置response参数，可以打开下载页面
+        response.reset();
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String((ExcelUtils.getFileName(type, tnId) + ".xls").getBytes(), "iso-8859-1"));
+        ServletOutputStream out = response.getOutputStream();
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        try {
+            bis = new BufferedInputStream(is);
+            bos = new BufferedOutputStream(out);
+            byte[] buff = new byte[2048];
+            int bytesRead;
+            // Simple read/write loop.
+            while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+                bos.write(buff, 0, bytesRead);
+            }
+            LOGGER.info("Excel文件流导出完成");
+        } catch (final IOException e) {
+            LOGGER.info("Excel文件流导出失败![" + e.getMessage() + "]");
+            throw e;
+        } finally {
+            if (bis != null)
+                bis.close();
+            if (bos != null)
+                bos.close();
+            LOGGER.info("===============导出租户excel表头 E================");
+        }
+        return null;
     }
 }
 
