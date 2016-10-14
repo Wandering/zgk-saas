@@ -25,13 +25,13 @@ selectList
 -->
     <sql id="Base_Column_List">
         id,
-        tn_id,
-        stu_3_numbers,
-        batch_1_enrolls,
-        batch_2_enrolls,
-        batch_3_enrolls,
-        batch_4_enrolls,
-        create_date
+        tn_id as tnId,
+        stu_3_numbers as stu3numbers,
+        batch_1_enrolls as batch1enrolls,
+        batch_2_enrolls as batch2enrolls,
+        batch_3_enrolls as batch3enrolls,
+        batch_4_enrolls as batch4enrolls,
+        create_date as createDate
     </sql>
     <insert id="insert" parameterType="EnrollingRatio">
         INSERT INTO saas_enrolling_ratio (

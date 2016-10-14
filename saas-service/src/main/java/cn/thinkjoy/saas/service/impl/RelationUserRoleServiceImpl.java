@@ -2,15 +2,15 @@
  * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
  *
  * Project Name: saas
- * $Id:  RelationRoleResourceServiceImpl.java 2016-10-14 09:50:57 $
+ * $Id:  RelationUserRoleServiceImpl.java 2016-10-14 09:50:57 $
  */
 package cn.thinkjoy.saas.service.impl;
 
 import cn.thinkjoy.common.domain.BaseDomain;
 import cn.thinkjoy.common.dao.IBaseDAO;
-import cn.thinkjoy.saas.dao.IRelationRoleResourceDAO;
-import cn.thinkjoy.saas.domain.RelationRoleResource;
-import cn.thinkjoy.saas.service.IRelationRoleResourceService;
+import cn.thinkjoy.saas.dao.IRelationUserRoleDAO;
+import cn.thinkjoy.saas.domain.RelationUserRole;
+import cn.thinkjoy.saas.service.IRelationUserRoleService;
 import cn.thinkjoy.common.service.impl.AbstractPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,14 +19,14 @@ import java.util.List;
 import java.util.Map;
 
 
-@Service("RelationRoleResourceServiceImpl")
-public class RelationRoleResourceServiceImpl extends AbstractPageService<IBaseDAO<RelationRoleResource>, RelationRoleResource> implements IRelationRoleResourceService<IBaseDAO<RelationRoleResource>,RelationRoleResource>{
+@Service("RelationUserRoleServiceImpl")
+public class RelationUserRoleServiceImpl extends AbstractPageService<IBaseDAO<RelationUserRole>, RelationUserRole> implements IRelationUserRoleService<IBaseDAO<RelationUserRole>,RelationUserRole>{
     @Autowired
-    private IRelationRoleResourceDAO relationRoleResourceDAO;
+    private IRelationUserRoleDAO relationUserRoleDAO;
 
     @Override
-    public IBaseDAO<RelationRoleResource> getDao() {
-        return relationRoleResourceDAO;
+    public IBaseDAO<RelationUserRole> getDao() {
+        return relationUserRoleDAO;
     }
 
 //    @Override
@@ -80,8 +80,8 @@ public class RelationRoleResourceServiceImpl extends AbstractPageService<IBaseDA
 //    }
 //
 //    @Override
-//    public List<RelationRoleResource> findAll() {
-//        return relationRoleResourceDAO.findAll();
+//    public List<RelationUserRole> findAll() {
+//        return relationUserRoleDAO.findAll();
 //    }
 //
 //    @Override
@@ -135,8 +135,8 @@ public class RelationRoleResourceServiceImpl extends AbstractPageService<IBaseDA
 //    }
 //
 //    @Override
-//    protected RelationRoleResourceDAO getDao() {
-//        return relationRoleResourceDAO;
+//    protected RelationUserRoleDAO getDao() {
+//        return relationUserRoleDAO;
 //    }
 //
 //    @Override

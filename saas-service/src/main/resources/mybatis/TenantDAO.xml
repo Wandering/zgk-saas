@@ -25,12 +25,12 @@ selectList
 -->
     <sql id="Base_Column_List">
         id,
-        login_code,
-        login_pass,
-        tn_name,
-        tn_addr,
-        tn_extro_info,
-        create_date
+        login_code as loginCode,
+        login_pass as loginPass,
+        tn_name as tnName,
+        tn_addr as tnAddr,
+        tn_extro_info as tnExtroInfo,
+        create_date as createDate
     </sql>
     <insert id="insert" parameterType="Tenant">
         INSERT INTO saas_tenant (

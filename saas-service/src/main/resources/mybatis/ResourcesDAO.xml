@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IResourcesDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+    <sql id="Base_Column_List">
+        id,
+        res_name as resName,
+        parent_id as parentId,
+        res_url as resUrl,
+        create_date as createDate
+    </sql>
+    <insert id="insert" parameterType="Resources">
+        INSERT INTO saas_resources (
+        res_name,
+        parent_id,
+        res_url,
+        create_date
+        ) VALUES (
+        #{resName},
+        #{parentId},
+        #{resUrl},
+        #{createDate}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="Resources">
+        UPDATE saas_resources
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="resName!=null">
+                res_name = #{resName},
+            </if>
+            <if test="parentId!=null">
+                parent_id = #{parentId},
+            </if>
+            <if test="resUrl!=null">
+                res_url = #{resUrl},
+            </if>
+            <if test="createDate!=null">
+                create_date = #{createDate},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_resources
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.resName!=null">
+                res_name = #{map.resName},
+            </if>
+            <if test="map.parentId!=null">
+                parent_id = #{map.parentId},
+            </if>
+            <if test="map.resUrl!=null">
+                res_url = #{map.resUrl},
+            </if>
+            <if test="map.createDate!=null">
+                create_date = #{map.createDate},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_resources
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.resName!=null">
+                res_name = #{update.resName},
+            </if>
+            <if test="update.parentId!=null">
+                parent_id = #{update.parentId},
+            </if>
+            <if test="update.resUrl!=null">
+                res_url = #{update.resUrl},
+            </if>
+            <if test="update.createDate!=null">
+                create_date = #{update.createDate},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.resName!=null">
+                AND res_name = #{condition.resName}
+            </if>
+            <if test="condition.parentId!=null">
+                AND parent_id = #{condition.parentId}
+            </if>
+            <if test="condition.resUrl!=null">
+                AND res_url = #{condition.resUrl}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_resources (
+                res_name,
+                parent_id,
+                res_url,
+                create_date
+        ) VALUES (
+                    #{map.resName},
+                    #{map.parentId},
+                    #{map.resUrl},
+                    #{map.createDate}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="Resources">
+        UPDATE saas_resources
+        <trim prefix="SET" suffixOverrides=",">
+            res_name = #{resName},
+            parent_id = #{parentId},
+            res_url = #{resUrl},
+            create_date = #{createDate},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_resources
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_resources
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="resName!=null">
+                AND res_name = #{resName}
+            </if>
+            <if test="parentId!=null">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="resUrl!=null">
+                AND res_url = #{resUrl}
+            </if>
+            <if test="createDate!=null">
+                AND create_date = #{createDate}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_resources WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="Resources">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_resources
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="Resources">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_resources WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="Resources">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_resources WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="Resources">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_resources
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="Resources">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_resources
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.resName!=null">
+                ${condition.groupOp}   res_name  ${condition.res_name.op}  #{condition.res_name.data}
+            </if>
+            <if test="condition.parentId!=null">
+                ${condition.groupOp}   parent_id  ${condition.parent_id.op}  #{condition.parent_id.data}
+            </if>
+            <if test="condition.resUrl!=null">
+                ${condition.groupOp}   res_url  ${condition.res_url.op}  #{condition.res_url.data}
+            </if>
+            <if test="condition.createDate!=null">
+                ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="Resources">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_resources
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id like CONCAT('%', #{id} , '%')
+            </if>
+            <if test="resName!=null">
+                AND res_name like CONCAT('%', #{resName} , '%')
+            </if>
+            <if test="parentId!=null">
+                AND parent_id like CONCAT('%', #{parentId} , '%')
+            </if>
+            <if test="resUrl!=null">
+                AND res_url like CONCAT('%', #{resUrl} , '%')
+            </if>
+            <if test="createDate!=null">
+                AND create_date like CONCAT('%', #{createDate} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="Resources">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_resources
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.resName!=null">
+                AND res_name = #{condition.resName}
+            </if>
+            <if test="condition.parentId!=null">
+                AND parent_id = #{condition.parentId}
+            </if>
+            <if test="condition.resUrl!=null">
+                AND res_url = #{condition.resUrl}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="Resources">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_resources
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.resName!=null">
+                AND res_name = #{condition.resName}
+            </if>
+            <if test="condition.parentId!=null">
+                AND parent_id = #{condition.parentId}
+            </if>
+            <if test="condition.resUrl!=null">
+                AND res_url = #{condition.resUrl}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_resources
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="resName!=null">
+               ${groupOp} res_name ${res_name.op}  #{res_name.data}
+           </if>
+           <if test="parentId!=null">
+               ${groupOp} parent_id ${parent_id.op}  #{parent_id.data}
+           </if>
+           <if test="resUrl!=null">
+               ${groupOp} res_url ${res_url.op}  #{res_url.data}
+           </if>
+           <if test="createDate!=null">
+               ${groupOp} create_date ${create_date.op}  #{create_date.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_resources
+    </select>
+
+</mapper>
+
