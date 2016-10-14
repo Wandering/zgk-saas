@@ -25,11 +25,11 @@ selectList
 -->
     <sql id="Base_Column_List">
         id,
-        tn_id,
-        grade_1_classes,
-        grade_2_classes,
-        grade_3_classes,
-        create_date
+        tn_id as tnId,
+        grade_1_classes as grade1classes,
+        grade_2_classes as grade2classes,
+        grade_3_classes as grade3classes,
+        create_date as createDate
     </sql>
     <insert id="insert" parameterType="ClassRooms">
         INSERT INTO saas_class_rooms (
