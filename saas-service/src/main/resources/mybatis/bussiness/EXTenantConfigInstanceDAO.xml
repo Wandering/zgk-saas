@@ -14,6 +14,18 @@
         <result column="create_date" property="createDate" jdbcType="BIGINT" />
         <result column="modify_date" property="modifyDate" jdbcType="BIGINT" />
     </resultMap>
+    <resultMap id="TenantConfigListResultMap" type="cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="tn_id" property="tnId" jdbcType="INTEGER" />
+        <result column="ch_name" property="chName" jdbcType="VARCHAR" />
+        <result column="config_key" property="configKey" jdbcType="VARCHAR" />
+        <result column="config_order" property="configOrder" jdbcType="INTEGER" />
+        <result column="check_rule" property="checkRule" jdbcType="VARCHAR" />
+        <result column="domain" property="domain" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="BIGINT" />
+        <result column="modify_date" property="modifyDate" jdbcType="BIGINT" />
+    </resultMap>
     <sql id="Base_Column_List">
         id,
         tn_id,
@@ -23,6 +35,9 @@
         domain,
         create_date,
         modify_date
+    </sql>
+    <sql id="ConfigDefault_Join_TeantConfig">
+        left join saas_configuration config ON tenantConfig.config_key=config.id
     </sql>
     <delete id="removeTeantConfigs" parameterType="java.util.List">
 
@@ -63,5 +78,25 @@
         </foreach>
 
     </update>
+
+    <select id="selectTeanConfigList" resultMap="TenantConfigListResultMap" parameterType="java.util.Map">
+        select tenantConfig.*,config.ch_name as name from saas_tenant_config_instance  as tenantConfig
+        <include refid="ConfigDefault_Join_TeantConfig" />
+        <where>
+            <if test="id!=null">
+                and tenantConfig.id=#{id}
+            </if>
+            <if test="tnId!=null">
+                and tenantConfig.tn_id=#{tnId}
+            </if>
+            <if test="configKey!=null">
+                and tenantConfig.config_key=#{configKey}
+            </if>
+            <if test="domain!=null">
+                and tenantConfig.domain=#{domain}
+            </if>
+        </where>
+        ORDER BY tenantConfig.config_order asc
+    </select>
 
 </mapper>

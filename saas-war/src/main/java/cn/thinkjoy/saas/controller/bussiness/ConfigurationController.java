@@ -1,6 +1,7 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.saas.domain.Configuration;
+import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.bussiness.EXIConfigurationService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import org.springframework.stereotype.Controller;
@@ -42,10 +43,29 @@ public class ConfigurationController {
     }
 
     /**
+     * 查询租户表头List
+     * @param type
+     * @param tnId
+     * @return
+     */
+    @RequestMapping(value = "/get/{type}/{tnId}",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getTeantConfigList(@PathVariable String type,@PathVariable Integer tnId) {
+
+        List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceService.getTenantConfigListByTnIdAndType(type, tnId);
+
+        Map resultMap = new HashMap();
+
+        resultMap.put("configList", tenantConfigInstances);
+
+        return resultMap;
+    }
+
+    /**
      * 生成租户自选表头
      * @return
      */
-    @RequestMapping(value = "/import/{type}/{tnId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/import/{type}/{tnId}",method = RequestMethod.POST)
     @ResponseBody
     public Map InsertConfig(@PathVariable String type,@PathVariable Integer tnId,HttpServletRequest request) {
         String ids = request.getParameter("ids");
@@ -62,7 +82,7 @@ public class ConfigurationController {
      * @param ids   表头ID
      * @return
      */
-    @RequestMapping(value = "/tenant/remove/{ids}")
+    @RequestMapping(value = "/tenant/remove/{ids}",method = RequestMethod.POST)
     @ResponseBody
     public Map removeTeantConfigs(@PathVariable String ids) {
         boolean result = exiTenantConfigInstanceService.removeTeantConfigs(ids);
@@ -77,7 +97,7 @@ public class ConfigurationController {
      * @param ids  排序集   {id0}-{id1}   max size:2
      * @return
      */
-    @RequestMapping(value = "/sort/{type}/{ids}")
+    @RequestMapping(value = "/sort/{type}/{ids}",method = RequestMethod.POST)
     @ResponseBody
     public Map sortTeantConfig(@PathVariable String type,@PathVariable String ids) {
 

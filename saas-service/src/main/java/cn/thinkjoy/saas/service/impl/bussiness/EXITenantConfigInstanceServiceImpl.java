@@ -9,10 +9,12 @@ import cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO;
 import cn.thinkjoy.saas.domain.Configuration;
 import cn.thinkjoy.saas.domain.Tenant;
 import cn.thinkjoy.saas.domain.TenantConfigInstance;
+import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import cn.thinkjoy.saas.service.common.EnumUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
-import org.apache.poi.hslf.util.SystemTimeUtils;
+import com.alibaba.dubbo.common.utils.StringUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
 
 /**
  * Created by douzy on 16/10/13.
@@ -152,6 +153,26 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         LOGGER.info("===============租户表头排序 E==============");
 
         return result;
+    }
+
+    /**
+     * 查询当前租户&当前模块下的表头信息
+     * @param type class:班级  teacher:教师
+     * @param tnId 租户ID
+     * @return
+     */
+    @Override
+    public List<TenantConfigInstanceView> getTenantConfigListByTnIdAndType(String type, Integer tnId) {
+
+        if (StringUtils.isBlank(type) || tnId <= 0)
+            return null;
+
+        Map map = new HashMap();
+        map.put("domain", type);
+        map.put("tnId", tnId);
+        List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceDAO.selectTeanConfigList(map);
+
+        return tenantConfigInstances;
     }
     /**
      * 生成租户自选表头

@@ -2,8 +2,10 @@ package cn.thinkjoy.saas.dao.bussiness;
 
 import cn.thinkjoy.common.dao.IBaseDAO;
 import cn.thinkjoy.saas.domain.TenantConfigInstance;
+import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by douzy on 16/10/13.
@@ -31,4 +33,11 @@ public interface EXITenantConfigInstanceDAO extends IBaseDAO<TenantConfigInstanc
      * @return
      */
     Integer sortConfigUpdate(List<TenantConfigInstance> tenantConfigInstanceList);
+
+    /**
+     * 查询租户配置集
+     * @param map
+     * @return
+     */
+    List<TenantConfigInstanceView> selectTeanConfigList(Map map);
 }
