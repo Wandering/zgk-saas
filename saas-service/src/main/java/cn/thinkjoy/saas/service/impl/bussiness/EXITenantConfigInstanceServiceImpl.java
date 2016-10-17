@@ -309,7 +309,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         LOGGER.info("动态表创建结果:"+createResult);
         LOGGER.info("===========创建租户动态表 E===========");
 
-        return createResult > 0 ? true : false;
+        return  true;
     }
 
     /**
@@ -323,11 +323,9 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
         Integer tableCount = exiTenantConfigInstanceDAO.existTable(tableName);
 
-        if (tableCount > 0) {
-            Integer dropCount = exiTenantConfigInstanceDAO.dropTable(tableName);
-            isValid = dropCount > 0 ? true : false;
-        } else
-            isValid = true;
+        if (tableCount > 0)
+             exiTenantConfigInstanceDAO.dropTable(tableName);
+        isValid = true;
 
 
         return isValid;

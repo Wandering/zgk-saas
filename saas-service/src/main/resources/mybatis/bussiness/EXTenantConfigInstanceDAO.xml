@@ -115,7 +115,7 @@
         id int NOT NULL AUTO_INCREMENT,
         PRIMARY KEY (`id`),
         <foreach collection="configList" item="item" index="index" separator="," >
-            ${item.enName} ${item.metaType} DEFAULT NULL
+            ${item.enName} ${item.metaType}  DEFAULT NULL
         </foreach>
        )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='租户动态生成表'
     </update>
