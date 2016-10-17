@@ -99,4 +99,25 @@
         ORDER BY tenantConfig.config_order asc
     </select>
 
+    <!--查询租户是否已创建动态表-->
+    <select id="existTable" parameterType="String" resultType="Integer">
+        select count(1) from information_schema.TABLES
+        where TABLE_SCHEMA='zgk_saas'
+        and TABLE_NAME =#{tableName}
+    </select>
+
+    <update id="dropTable">
+         drop table ${tableName}
+    </update>
+
+    <update id="createConfigTable" >
+        create table ${tableName} (
+        id int NOT NULL AUTO_INCREMENT,
+        PRIMARY KEY (`id`),
+        <foreach collection="configList" item="item" index="index" separator="," >
+            ${item.enName} ${item.metaType} DEFAULT NULL
+        </foreach>
+       )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='租户动态生成表'
+    </update>
+
 </mapper>

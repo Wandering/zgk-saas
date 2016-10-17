@@ -1,8 +1,10 @@
 package cn.thinkjoy.saas.dao.bussiness;
 
 import cn.thinkjoy.common.dao.IBaseDAO;
+import cn.thinkjoy.saas.domain.Configuration;
 import cn.thinkjoy.saas.domain.TenantConfigInstance;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,7 @@ public interface EXITenantConfigInstanceDAO extends IBaseDAO<TenantConfigInstanc
 
     /**
      * 租户自选表头排序
+     *
      * @param tenantConfigInstanceList 需排序的对象集
      * @return
      */
@@ -36,8 +39,32 @@ public interface EXITenantConfigInstanceDAO extends IBaseDAO<TenantConfigInstanc
 
     /**
      * 查询租户配置集
+     *
      * @param map
      * @return
      */
     List<TenantConfigInstanceView> selectTeanConfigList(Map map);
+
+    /**
+     * 删除租户动态表
+     *
+     * @param tableName 表名
+     * @return
+     */
+    int dropTable(@Param("tableName") String tableName);
+
+    /**
+     * 查询租户是否已创建动态表
+     *
+     * @param tableName 表名
+     * @return
+     */
+    int existTable(String tableName);
+
+    /**
+     * 动态创建表
+     * @param configurations 表字段集
+     * @return
+     */
+    Integer createConfigTable(@Param("tableName") String tableName,@Param("configList")List<Configuration> configurations);
 }

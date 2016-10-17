@@ -76,7 +76,7 @@ public class ConfigurationController {
     public Map InsertConfig(@PathVariable String type,@PathVariable Integer tnId,HttpServletRequest request) {
         String ids = request.getParameter("ids");
 
-        String exMsg = exiTenantConfigInstanceService.importConfig(type,ids, tnId);
+        String exMsg = exiTenantConfigInstanceService.createConfig(type, ids, tnId);
 
         Map resultMap = new HashMap();
         resultMap.put("result", exMsg);
@@ -167,6 +167,24 @@ public class ConfigurationController {
             LOGGER.info("===============导出租户excel表头 E================");
         }
         return null;
+    }
+
+    /**
+     * 导入租户设置Excel
+     * @param type
+     * @param tnId
+     * @return
+     */
+    @RequestMapping("/import/{type}/{tnId}")
+    @ResponseBody
+    public Map importConfig(@PathVariable String type,
+                            @PathVariable Integer tnId) {
+
+        boolean result = exiTenantConfigInstanceService.createTenantCombinationTable(type, tnId);
+
+        Map resultMap = new HashMap();
+        resultMap.put("result", result ? "SUCCESS" : "FAIL");
+        return resultMap;
     }
 }
 

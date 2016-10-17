@@ -16,6 +16,11 @@ public  class ParamsUtils {
     protected static final String IDS_DIVIDE_CHAR = "-";
 
     /**
+     * 动态表名组装分隔符
+     */
+    public static final String TABLE_NAME_COMBIN_CHAR="_";
+
+    /**
      * ids 转换Array
      *
      * @return
@@ -29,5 +34,22 @@ public  class ParamsUtils {
         List<String> idsList = Arrays.asList(ids);
 
         return idsList;
+    }
+
+    /**
+     *  动态表名组装     规则: saas_{type}_{tnId}_excel
+     * @param type   class:班级  teacher:教师
+     * @param tnId   租户ID
+     * @return
+     */
+    public static String combinationTableName(String type,Integer tnId) {
+        StringBuffer stringBuffer = new StringBuffer("saas");
+        stringBuffer.append(ParamsUtils.TABLE_NAME_COMBIN_CHAR);
+        stringBuffer.append(tnId);
+        stringBuffer.append(ParamsUtils.TABLE_NAME_COMBIN_CHAR);
+        stringBuffer.append(type);
+        stringBuffer.append(ParamsUtils.TABLE_NAME_COMBIN_CHAR);
+        stringBuffer.append("excel");
+        return stringBuffer.toString();
     }
 }

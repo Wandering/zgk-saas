@@ -25,7 +25,7 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      * 2:该租户不存在
      * 3:选项集校验失败
      */
-    public String importConfig(String type, String ids, Integer tnId);
+    public String createConfig(String type, String ids, Integer tnId);
 
     /**
      * 逐条删除租户表头  by
@@ -63,9 +63,27 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
 
     /**
      * 获取当前租户表头 数组 - 用于导出表头excel
+     *
      * @param type class:班级  teacher:教师
      * @param tnId 租户ID
      * @return
      */
     String[] getTenantConfigListArrByTnIdAndType(String type, Integer tnId);
+
+    /**
+     * 租户动态表名校验  -表级别校验
+     *
+     * @param tableName 表名
+     * @return
+     */
+    boolean tableNameValid(String tableName);
+
+
+    /**
+     * 创建租户动态表
+     * @param type class:班级  teacher:教师
+     * @param tnId 租户ID
+     * @return
+     */
+    boolean createTenantCombinationTable(String type,Integer tnId);
 }

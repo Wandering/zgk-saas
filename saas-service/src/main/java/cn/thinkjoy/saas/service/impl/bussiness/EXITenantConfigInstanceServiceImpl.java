@@ -207,7 +207,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * 3:选项集校验失败
      */
     @Override
-    public String importConfig(String type,String ids,Integer tnId) {
+    public String createConfig(String type,String ids,Integer tnId) {
         String result = EnumUtil.ErrorCode.getDesc(EnumUtil.GLOBAL_SYSTEMERROR);
 
         LOGGER.info("===============生成租户自选表头 S==============");
@@ -272,6 +272,68 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
 
     /**
+     * 创建租户动态表
+     * @param type class:班级  teacher:教师
+     * @param tnId 租户ID
+     * @return
+     */
+    @Override
+    public boolean createTenantCombinationTable(String type,Integer tnId) {
+        LOGGER.info("===========创建租户动态表 S===========");
+        LOGGER.info("type:" + type);
+        LOGGER.info("tnId:" + tnId);
+        if (StringUtils.isBlank(type) || tnId <= 0)
+            return false;
+
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+        LOGGER.info("tableName:" + tableName);
+        if (StringUtils.isBlank(tableName))
+            return false;
+        boolean isValid = this.tableNameValid(tableName);
+        LOGGER.info("isValid:" + isValid);
+        if (!isValid)
+            return false;
+
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
+        List<Configuration> configurations = new ArrayList<Configuration>();
+        for (TenantConfigInstanceView tenantConfigInstanceView : tenantConfigInstanceViews) {
+            Map map = new HashMap();
+            map.put("domain", tenantConfigInstanceView.getDomain());
+            map.put("id", tenantConfigInstanceView.getConfigKey());
+            Configuration configuration = iConfigurationDAO.queryOne(map, "id", "asc");
+            configuration.setConfigOrder(tenantConfigInstanceView.getConfigOrder());
+            configurations.add(configuration);
+        }
+
+        Integer createResult = exiTenantConfigInstanceDAO.createConfigTable(tableName,configurations);
+        LOGGER.info("动态表创建结果:"+createResult);
+        LOGGER.info("===========创建租户动态表 E===========");
+
+        return createResult > 0 ? true : false;
+    }
+
+    /**
+     * 租户动态表名校验  -表级别校验  存在则删除
+     * @param tableName 表名
+     * @return
+     */
+    @Override
+    public boolean tableNameValid(String tableName) {
+        boolean isValid = false;
+
+        Integer tableCount = exiTenantConfigInstanceDAO.existTable(tableName);
+
+        if (tableCount > 0) {
+            Integer dropCount = exiTenantConfigInstanceDAO.dropTable(tableName);
+            isValid = dropCount > 0 ? true : false;
+        } else
+            isValid = true;
+
+
+        return isValid;
+    }
+
+    /**
      * 封装租户已选表头对象
      * @param configuration 租户已选配置对象
      * @param tnId 租户ID
@@ -288,4 +350,6 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         tenantConfigInstance.setModifyDate(null);
         return tenantConfigInstance;
     }
+
+
 }
