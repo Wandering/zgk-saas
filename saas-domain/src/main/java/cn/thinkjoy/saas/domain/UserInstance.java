@@ -2,7 +2,7 @@
  * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
  *
  * Project Name: saas
- * $Id:  UserInstance.java 2016-10-12 10:51:40 $
+ * $Id:  UserInstance.java 2016-10-14 14:15:50 $
  */
 
 
@@ -20,10 +20,12 @@ import java.util.*;
 public class UserInstance extends BaseDomain{
     private String tnId;
     private String userName;
+    private String userAccount;
     private String userPass;
     private String telephone;
+    private String isSuperManager;
     private Date createDate;
-    private String status;
+    private Integer status;
 
 	public UserInstance(){
 	}
@@ -41,6 +43,13 @@ public class UserInstance extends BaseDomain{
     public String getUserName() {
         return this.userName;
     }
+    public void setUserAccount(String value) {
+        this.userAccount = value;
+    }
+
+    public String getUserAccount() {
+        return this.userAccount;
+    }
     public void setUserPass(String value) {
         this.userPass = value;
     }
@@ -55,6 +64,13 @@ public class UserInstance extends BaseDomain{
     public String getTelephone() {
         return this.telephone;
     }
+    public void setIsSuperManager(String value) {
+        this.isSuperManager = value;
+    }
+
+    public String getIsSuperManager() {
+        return this.isSuperManager;
+    }
 
     public void setCreateDate(Date value) {
         this.createDate = value;
@@ -64,11 +80,11 @@ public class UserInstance extends BaseDomain{
         return this.createDate;
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -77,9 +93,11 @@ public class UserInstance extends BaseDomain{
 			.append("Id",getId())
 			.append("TnId",getTnId())
 			.append("UserName",getUserName())
+			.append("UserAccount",getUserAccount())
 			.append("UserPass",getUserPass())
 			.append("Telephone",getTelephone())
 			.append("Status",getStatus())
+			.append("IsSuperManager",getIsSuperManager())
 			.append("CreateDate",getCreateDate())
 			.toString();
 	}

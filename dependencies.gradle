@@ -13,4 +13,6 @@ allprojects {
     ucmVersion = "0.0.27-SNAPSHOT"
 
     poiVersion="3.9"
+
+    zgkSmsVersion = "0.0.3-SNAPSHOT"
 }
