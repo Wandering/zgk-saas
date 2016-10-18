@@ -78,47 +78,13 @@ public class EXUserServiceImpl implements IEXUserService {
 
         }
 
-        userInfoDto.setMeuns(convertMeuns(resources));
+        userInfoDto.setMeuns(ConvertUtil.convertMeuns(resources));
 
         // 根据用户ID查找用户角色
         List<String> roles = iexUserDAO.queryRolesByUserId(userInfoDto.getUserId());
         userInfoDto.setRoles(roles);
 
         return userInfoDto;
-    }
-
-    /**
-     * 重新组装资源菜单
-     *
-     * @param resources
-     * @return
-     */
-    private List<MeunDto> convertMeuns(List<Resources> resources){
-
-        List<MeunDto> parentMeuns = Lists.newArrayList();
-
-        // 组装一级菜单
-        for(Resources resource : resources){
-            if(resource.getParentId() == 0){
-                parentMeuns.add(ConvertUtil.convert2MeunDto(resource));
-            }
-        }
-
-        // 组装二级菜单
-        for(Resources resource : resources){
-            for(MeunDto parentMeun : parentMeuns){
-
-                if(resource.getParentId() == 0){
-                    continue;
-                }
-
-                if(resource.getParentId() == parentMeun.getMeunId()){
-                    parentMeun.getSonMeuns().add(ConvertUtil.convert2MeunDto(resource));
-                }
-            }
-        }
-
-        return parentMeuns;
     }
 
     @Override

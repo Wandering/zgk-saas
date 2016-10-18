@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 public class AccountController {
 
     @Autowired
-    private IEXUserService userService;
+    private IEXUserService iexUserService;
 
     @Autowired
     private SMSService zgkSmsService;
@@ -51,7 +51,7 @@ public class AccountController {
     @RequestMapping(value = "/login/{account}/{pwd}",method = RequestMethod.GET)
     public UserInfoDto login(@PathVariable String account, @PathVariable String pwd,HttpServletRequest request){
 
-        UserInfoDto userInfoDto = userService.login(account,pwd);
+        UserInfoDto userInfoDto = iexUserService.login(account,pwd);
 
         // 登陆成功,将用户ID存入session
         HttpSession session = request.getSession();
@@ -68,7 +68,7 @@ public class AccountController {
                                  @PathVariable String smsCode,
                                  @PathVariable String newPwd){
 
-        userService.forgetPwd(account,phone,smsCode,newPwd);
+        iexUserService.forgetPwd(account,phone,smsCode,newPwd);
     }
 
     @ResponseBody
@@ -131,7 +131,7 @@ public class AccountController {
     public void updatePwd(@PathVariable int userId,
                           @PathVariable String newPwd){
 
-        userService.updatePwd(userId,newPwd);
+        iexUserService.updatePwd(userId,newPwd);
     }
 
     @ResponseBody
@@ -146,7 +146,7 @@ public class AccountController {
                 UserInstance.class
         );
 
-        userService.createUser(
+        iexUserService.createUser(
                 instance,
                 roleId
         );
@@ -166,7 +166,7 @@ public class AccountController {
         );
         instance.setId(userId);
 
-        userService.updateUser(
+        iexUserService.updateUser(
                 instance,
                 roleId
         );
@@ -179,7 +179,7 @@ public class AccountController {
 
         // TODO 鉴权
 
-        userService.disableUser(
+        iexUserService.disableUser(
                 targetUserId,
                 state
         );
@@ -192,7 +192,7 @@ public class AccountController {
 
         // TODO 鉴权
 
-        userService.deleteUser(
+        iexUserService.deleteUser(
                 targetUserId
         );
     }
@@ -202,7 +202,7 @@ public class AccountController {
     @RequestMapping(value = "/queryUserBaseInfo/{keyword}/{tnId}",method = RequestMethod.GET)
     public List<UserBaseDto> queryUserBaseInfo(@PathVariable String keyword, @PathVariable int tnId){
 
-        List<UserBaseDto> dtos = userService.queryUserBaseInfoByKeyword(
+        List<UserBaseDto> dtos = iexUserService.queryUserBaseInfoByKeyword(
                 keyword,
                 tnId
         );
