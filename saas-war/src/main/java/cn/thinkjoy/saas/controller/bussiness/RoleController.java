@@ -10,6 +10,7 @@ import cn.thinkjoy.saas.domain.Roles;
 import cn.thinkjoy.saas.dto.MeunDto;
 import cn.thinkjoy.saas.service.IRolesService;
 import cn.thinkjoy.saas.service.bussiness.IEXRoleService;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yangguorong on 16/10/14.
@@ -34,7 +36,7 @@ public class RoleController {
     @ResponseBody
     @ApiDesc(value = "创建角色",owner = "杨国荣")
     @RequestMapping(value = "/createRole",method = RequestMethod.POST)
-    public void createRole(@RequestBody Request request) {
+    public Map<String,Object> createRole(@RequestBody Request request) {
 
         String roleName = request.getDataString("roleName");
         String roleDesc = request.getDataString("roleDesc");
@@ -51,6 +53,8 @@ public class RoleController {
                 roles,
                 meunIds
         );
+
+        return Maps.newHashMap();
     }
 
     @ResponseBody
@@ -66,7 +70,7 @@ public class RoleController {
     @ResponseBody
     @ApiDesc(value = "修改角色",owner = "杨国荣")
     @RequestMapping(value = "/updateRole",method = RequestMethod.POST)
-    public void updateRole(@RequestBody Request request) {
+    public Map<String,Object> updateRole(@RequestBody Request request) {
 
         int roleId = request.getDataInteger("roleId");
         int tnId = request.getDataInteger("tnId");
@@ -84,16 +88,20 @@ public class RoleController {
                 roles,
                 meunIds
         );
+
+        return Maps.newHashMap();
     }
 
     @ResponseBody
     @ApiDesc(value = "删除角色",owner = "杨国荣")
     @RequestMapping(value = "/deleteRole/{roleId}/{userId}",method = RequestMethod.GET)
-    public void deleteRole(@PathVariable int roleId,@PathVariable int userId) {
+    public Map<String,Object> deleteRole(@PathVariable int roleId,@PathVariable int userId) {
 
         // TODO 鉴权
 
         iexRoleService.deleteRole(roleId);
+
+        return Maps.newHashMap();
     }
 
     @ResponseBody
@@ -102,7 +110,7 @@ public class RoleController {
     public List<Roles> queryRolesByTnId(@PathVariable int tnId) {
 
         List<Roles> rolesList = iRolesService.findList(
-                "tnId",
+                "tn_id",
                 tnId,
                 Constant.ID,
                 SqlOrderEnum.DESC

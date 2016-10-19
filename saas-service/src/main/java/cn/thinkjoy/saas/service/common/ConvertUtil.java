@@ -40,7 +40,10 @@ public class ConvertUtil {
         // 组装一级菜单
         for(Resources resource : resources){
             if(resource.getParentId() == 0){
-                parentMeuns.add(convert2MeunDto(resource));
+                List<MeunDto> sonMeuns = Lists.newArrayList();
+                MeunDto meunDto = convert2MeunDto(resource);
+                meunDto.setSonMeuns(sonMeuns);
+                parentMeuns.add(meunDto);
             }
         }
 

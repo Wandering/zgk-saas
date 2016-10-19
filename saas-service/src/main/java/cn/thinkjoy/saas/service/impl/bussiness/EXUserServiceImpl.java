@@ -9,7 +9,6 @@ import cn.thinkjoy.saas.dao.bussiness.IEXUserDAO;
 import cn.thinkjoy.saas.domain.RelationUserRole;
 import cn.thinkjoy.saas.domain.Resources;
 import cn.thinkjoy.saas.domain.UserInstance;
-import cn.thinkjoy.saas.dto.MeunDto;
 import cn.thinkjoy.saas.dto.UserBaseDto;
 import cn.thinkjoy.saas.dto.UserInfoDto;
 import cn.thinkjoy.saas.enums.ErrorCode;
@@ -105,7 +104,7 @@ public class EXUserServiceImpl implements IEXUserService {
         }
 
         // 验证验证码
-        checkSmsCode(account,smsCode);
+        checkSmsCode(phone,smsCode);
 
         userInstance.setUserPass(newPwd);
         iUserInstanceDAO.update(userInstance);
@@ -114,14 +113,14 @@ public class EXUserServiceImpl implements IEXUserService {
     /**
      * 验证验证码
      *
-     * @param account
+     * @param phone
      * @param smsCode
      * @return
      */
-    private void checkSmsCode(String account, String smsCode) {
+    private void checkSmsCode(String phone, String smsCode) {
 
         // 验证码已失效
-        String key = Constant.USER_CAPTCHA_KEY + account;
+        String key = Constant.USER_CAPTCHA_KEY + phone;
         if (redis.get(key) == null) {
             ExceptionUtil.throwException(ErrorCode.SMS_CODE_INVALID);
         }
@@ -148,7 +147,7 @@ public class EXUserServiceImpl implements IEXUserService {
     public void createUser(UserInstance instance, int roleId) {
 
         UserInstance tempInstance = iUserInstanceDAO.findOne(
-                "userAccount",
+                "user_account",
                 instance.getUserAccount(),
                 Constant.ID,
                 Constant.DESC
@@ -176,7 +175,7 @@ public class EXUserServiceImpl implements IEXUserService {
         if(roleId > 0){
 
             iRelationUserRoleDAO.deleteByProperty(
-                    "userId",
+                    "user_id",
                     instance.getId()
             );
 
@@ -200,7 +199,7 @@ public class EXUserServiceImpl implements IEXUserService {
 
         // 删除用户和角色的关系
         iRelationUserRoleDAO.deleteByProperty(
-                "userId",
+                "user_id",
                 userId
         );
 

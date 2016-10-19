@@ -4,7 +4,7 @@
 <mapper namespace="cn.thinkjoy.saas.dao.bussiness.IEXUserDAO">
 
     <!-- 根据用户账号,密码查询用户信息 -->
-    <select id="queryUserInfoByAccount" parameterType="map" resultMap="cn.thinkjoy.saas.dto.UserInfoDto">
+    <select id="queryUserInfoByAccount" parameterType="map" resultType="cn.thinkjoy.saas.dto.UserInfoDto">
         SELECT
             t1.tn_name AS tnName,
             t1.tn_addr AS tnAddr,
@@ -37,7 +37,7 @@
     </select>
 
     <!-- 根据用户ID查询用户所对应的菜单集合 -->
-    <select id="queryResourcesByUserId" parameterType="long" resultMap="cn.thinkjoy.saas.domain.Resources">
+    <select id="queryResourcesByUserId" parameterType="long" resultType="cn.thinkjoy.saas.domain.Resources">
         SELECT
             t2.id AS id,
             t2.res_name AS resName,

@@ -51,7 +51,7 @@ public class EXRoleServiceImpl implements IEXRoleService {
     public void updateRole(Roles roles, String meunIds) {
 
         // 删除原有角色对应菜单关系
-        iRelationRoleResourceDAO.deleteByProperty("roleId",roles.getId());
+        iRelationRoleResourceDAO.deleteByProperty("role_id",roles.getId());
         // 批量插入角色与菜单关系
         batchInsertRoleRes(roles,meunIds);
         // 修改角色信息
@@ -61,9 +61,9 @@ public class EXRoleServiceImpl implements IEXRoleService {
     @Override
     public void deleteRole(int roleId) {
         // 删除用户与角色关系
-        iRelationUserRoleDAO.deleteByProperty("roleId",roleId);
+        iRelationUserRoleDAO.deleteByProperty("role_id",roleId);
         // 删除角色与菜单关系
-        iRelationRoleResourceDAO.deleteByProperty("roleId",roleId);
+        iRelationRoleResourceDAO.deleteByProperty("role_id",roleId);
         // 删除角色
         iRolesDAO.deleteByProperty("id",roleId);
     }

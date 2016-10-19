@@ -21,7 +21,7 @@ public class Tenant extends BaseDomain{
     private String loginCode;
     private String loginPass;
     private String tnName;
-    private Integer tnAddr;
+    private String tnAddr;
     private String tnExtroInfo;
     private Date createDate;
 
@@ -48,13 +48,15 @@ public class Tenant extends BaseDomain{
     public String getTnName() {
         return this.tnName;
     }
-    public void setTnAddr(Integer value) {
-        this.tnAddr = value;
+
+    public String getTnAddr() {
+        return tnAddr;
     }
 
-    public Integer getTnAddr() {
-        return this.tnAddr;
+    public void setTnAddr(String tnAddr) {
+        this.tnAddr = tnAddr;
     }
+
     public void setTnExtroInfo(String value) {
         this.tnExtroInfo = value;
     }

@@ -30,6 +30,14 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+    <!-- 跨域处理 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/*"/>
+            <bean class="cn.thinkjoy.saas.controller.filter.CrossInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
     <!-- @Controller, @Service, @Configuration, etc. -->
     <context:component-scan base-package="cn.thinkjoy" />
 

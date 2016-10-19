@@ -63,18 +63,20 @@ public class AccountController {
     @ResponseBody
     @ApiDesc(value = "忘记密码",owner = "杨国荣")
     @RequestMapping(value = "/forgetPwd/{account}/{phone}/{smsCode}/{newPwd}",method = RequestMethod.GET)
-    public void forgetPwd(@PathVariable String account,
+    public Map<String,Object> forgetPwd(@PathVariable String account,
                                  @PathVariable String phone,
                                  @PathVariable String smsCode,
                                  @PathVariable String newPwd){
 
         iexUserService.forgetPwd(account,phone,smsCode,newPwd);
+
+        return Maps.newHashMap();
     }
 
     @ResponseBody
     @ApiDesc(value = "发送验证码",owner = "杨国荣")
     @RequestMapping(value = "/sendSmsCode/{account}/{phone}",method = RequestMethod.GET)
-    public void sendSmsCode(@PathVariable String account,@PathVariable String phone){
+    public Map<String,Object> sendSmsCode(@PathVariable String account,@PathVariable String phone){
 
         Map<String,Object> paramMap = Maps.newHashMap();
         paramMap.put("userAccount",account);
@@ -85,15 +87,15 @@ public class AccountController {
             ExceptionUtil.throwException(ErrorCode.ACCOUNT_OR_PHONE_ERROR);
         }
 
-        String timeKey = Constant.CAPTCHA_AUTH_TIME_KEY + account;
-        String smsCodeKey = Constant.USER_CAPTCHA_KEY + account;
+        String timeKey = Constant.CAPTCHA_AUTH_TIME_KEY + phone;
+        String smsCodeKey = Constant.USER_CAPTCHA_KEY + phone;
         // 发送验证码间隔时间未到(获取验证码太频繁)
         if(redis.exists(timeKey)){
-            ExceptionUtil.throwException(ErrorCode.ACCOUNT_OR_PHONE_ERROR);
+            ExceptionUtil.throwException(ErrorCode.SMS_CODE_FREQUENCY);
         }
 
         SMSCheckCode smsCode = new SMSCheckCode();
-        smsCode.setPhone(account);
+        smsCode.setPhone(phone);
         smsCode.setCheckCode(RandomCodeUtil.generateNumCode(6));
         smsCode.setBizTarget(Constant.ZGK);
 
@@ -123,21 +125,25 @@ public class AccountController {
             // 再次发送失败,抛出异常
             ExceptionUtil.throwException(ErrorCode.SMS_CODE_FAIL);
         }
+
+        return Maps.newHashMap();
     }
 
     @ResponseBody
     @ApiDesc(value = "重设密码",owner = "杨国荣")
     @RequestMapping(value = "/updatePwd/{userId}/{newPwd}",method = RequestMethod.GET)
-    public void updatePwd(@PathVariable int userId,
+    public Map<String,Object> updatePwd(@PathVariable int userId,
                           @PathVariable String newPwd){
 
         iexUserService.updatePwd(userId,newPwd);
+
+        return Maps.newHashMap();
     }
 
     @ResponseBody
     @ApiDesc(value = "创建用户",owner = "杨国荣")
     @RequestMapping(value = "/createUser",method = RequestMethod.POST)
-    public void createUser(@RequestBody Request request){
+    public Map<String,Object> createUser(@RequestBody Request request){
 
         int roleId = request.getDataInteger("roleId");
 
@@ -150,12 +156,14 @@ public class AccountController {
                 instance,
                 roleId
         );
+
+        return Maps.newHashMap();
     }
 
     @ResponseBody
     @ApiDesc(value = "修改用户信息",owner = "杨国荣")
     @RequestMapping(value = "/updateUser",method = RequestMethod.POST)
-    public void updateUser(@RequestBody Request request){
+    public Map<String,Object> updateUser(@RequestBody Request request){
 
         int roleId = request.getDataInteger("roleId");
         int userId = request.getDataInteger("userId");
@@ -170,12 +178,14 @@ public class AccountController {
                 instance,
                 roleId
         );
+
+        return Maps.newHashMap();
     }
 
     @ResponseBody
     @ApiDesc(value = "禁用用户账号",owner = "杨国荣")
     @RequestMapping(value = "/disableUser/{targetUserId}/{currentUserId}/{state}",method = RequestMethod.GET)
-    public void disableUser(@PathVariable int targetUserId,@PathVariable int currentUserId,@PathVariable int state){
+    public Map<String,Object> disableUser(@PathVariable int targetUserId,@PathVariable int currentUserId,@PathVariable int state){
 
         // TODO 鉴权
 
@@ -183,18 +193,22 @@ public class AccountController {
                 targetUserId,
                 state
         );
+
+        return Maps.newHashMap();
     }
 
     @ResponseBody
     @ApiDesc(value = "删除用户",owner = "杨国荣")
     @RequestMapping(value = "/deleteUser/{targetUserId}/{currentUserId}",method = RequestMethod.GET)
-    public void deleteUser(@PathVariable int targetUserId,@PathVariable int currentUserId){
+    public Map<String,Object> deleteUser(@PathVariable int targetUserId,@PathVariable int currentUserId){
 
         // TODO 鉴权
 
         iexUserService.deleteUser(
                 targetUserId
         );
+
+        return Maps.newHashMap();
     }
 
     @ResponseBody
