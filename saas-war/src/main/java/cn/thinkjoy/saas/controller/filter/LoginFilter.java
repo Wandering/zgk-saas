@@ -35,12 +35,6 @@ public class LoginFilter implements Filter {
 
         logger.info("user request path : " + path);
 
-         // 无需过滤的页面
-        if(path.equals("/")){
-            chain.doFilter(servletRequest, servletResponse);
-            return;
-        }
-
          for(int i=0;i<Constant.NoFilter_Pages.length;i++){
              if (path.indexOf(Constant.NoFilter_Pages[i]) != -1) {
                  chain.doFilter(servletRequest, servletResponse);
