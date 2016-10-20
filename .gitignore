@@ -88,3 +88,5 @@
 *.iml
 /classes/
 *.class
+
+saas-war/src/main/webapp/static/node_modules
