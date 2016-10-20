@@ -7,11 +7,11 @@
     <meta name="description" content="站长素材提供Bootstrap模版,Bootstrap教程,Bootstrap中文翻译等相关Bootstrap插件下载"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <!-- basic styles -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css"/>
+    <link href="static/src/assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="static/src/assets/css/font-awesome.min.css"/>
 
     <!--[if IE 7]>
-    <link rel="stylesheet" href="assets/css/font-awesome-ie7.min.css"/>
+    <link rel="stylesheet" href="static/src/assets/css/font-awesome-ie7.min.css"/>
     <![endif]-->
 
     <!-- page specific plugin styles -->
@@ -22,29 +22,29 @@
 
     <!-- ace styles -->
 
-    <link rel="stylesheet" href="assets/css/ace.min.css"/>
-    <link rel="stylesheet" href="assets/css/ace-rtl.min.css"/>
-    <link rel="stylesheet" href="assets/css/ace-skins.min.css"/>
+    <link rel="stylesheet" href="static/src/assets/css/ace.min.css"/>
+    <link rel="stylesheet" href="static/src/assets/css/ace-rtl.min.css"/>
+    <link rel="stylesheet" href="static/src/assets/css/ace-skins.min.css"/>
 
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="assets/css/ace-ie.min.css"/>
+    <link rel="stylesheet" href="static/src/assets/css/ace-ie.min.css"/>
     <![endif]-->
 
     <!-- inline styles related to this page -->
 
     <!-- ace settings handler -->
 
-    <script src="assets/js/ace-extra.min.js"></script>
+    <script src="static/src/assets/js/ace-extra.min.js"></script>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 
     <!--[if lt IE 9]>
-    <script src="assets/js/html5shiv.js"></script>
-    <script src="assets/js/respond.min.js"></script>
+    <script src="static/src/assets/js/html5shiv.js"></script>
+    <script src="static/src/assets/js/respond.min.js"></script>
     <![endif]-->
     <script src="js/commons.js" charset="utf-8"></script>
-    <script src="js/index.js"></script>
-    <link rel="stylesheet" href="css/seting-process.css">
+    <script src="static/src/js/index.js"></script>
+    <link rel="stylesheet" href="static/src/css/seting-process.css">
 </head>
 <body>
 <div class="navbar navbar-default" id="navbar">
@@ -57,7 +57,7 @@
     <div class="navbar-container" id="navbar-container">
         <div class="navbar-header pull-left">
             <a href="#" class="navbar-brand">
-                <h1 id="logo"><img class="" src="assets/images/logo.png"/></h1> <span class="school-name">西安市高新一中</span>
+                <h1 id="logo"><img class="" src="static/src/assets/images/logo.png"/></h1> <span class="school-name">西安市高新一中</span>
             </a><!-- /.brand -->
         </div><!-- /.navbar-header -->
 
@@ -119,6 +119,7 @@
                             <button class="btn btn-primary">取消</button>
                             <button class="btn btn-info">保存</button>
                             <button class="btn btn-success">删除</button>
+
                             <button class="btn btn-warning">禁用</button>
                             <button class="btn btn-danger">重设密码</button>
                             <button class="btn btn-inverse">修改密码</button>
@@ -132,16 +133,25 @@
                             <div class="line"></div>
                             <ul class="flow-ul">
                                 <li class="list active"><span>年级设置</span></li>
-                                <li class="list"><span>教室设置</span></li>
-                                <li class="list"><span>班级设置</span></li>
-                                <li class="list"><span>升学率设置</span></li>
-                                <li class="list"><span>教师设置</span></li>
+                                <li class="list active"><span>教室设置</span></li>
+                                <li class="list active"><span>班级设置</span></li>
+                                <li class="list active"><span>升学率设置</span></li>
+                                <li class="list active"><span>教师设置</span></li>
                             </ul>
                         </div>
                         <p class="flow-tips">温馨提示：用户可以在左侧菜单，基础信息中更新设置内容</p>
 
                         <div class="main-title">
-                            <h3>年级设置</h3>
+                            <h3>教师设置</h3>
+                        </div>
+
+
+                        <div class="title-2">
+                            <span class="txt-t">教师字段设置</span>
+                            <div class="btns">
+                                <button class="btn btn-pink">添加</button>
+                                <button class="btn btn-success">批量删除</button>
+                            </div>
                         </div>
 
 
@@ -149,61 +159,71 @@
 
 
 
-
-                        <div class="setting-grade">
+                        <div class="">
                             <table id="" class="table">
                                 <thead>
                                 <tr>
                                     <th class="center">
-                                        序号
+                                        <label>
+                                            <input type="checkbox" class="ace" />
+                                            <span class="lbl"></span>
+                                        </label>
                                     </th>
-                                    <th class="center">年级简称</th>
+                                    <th class="center">排序</th>
+                                    <th class="center">字段名称</th>
+                                    <th class="center">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
+                                    <td class="center">
+                                        <label>
+                                            <input type="checkbox" class="ace" />
+                                            <span class="lbl"></span>
+                                        </label>
+                                    </td>
                                     <td class="center">1</td>
-                                    <td class="center">
-                                        <input type="text" placeholder="" class="col-xs-10 col-sm-10"/>
-                                    </td>
+                                    <td class="center">教师姓名</td>
+                                    <td class="center"><a href="">删除</a></td>
                                 </tr>
                                 <tr>
+                                    <td class="center">
+                                        <label>
+                                            <input type="checkbox" class="ace" />
+                                            <span class="lbl"></span>
+                                        </label>
+                                    </td>
                                     <td class="center">2</td>
-                                    <td class="center">
-                                        <input type="text" placeholder="" class="col-xs-10 col-sm-10"/>
-                                    </td>
+                                    <td class="center">教师姓名</td>
+                                    <td class="center"><a href="">删除</a></td>
                                 </tr>
                                 <tr>
+                                    <td class="center">
+                                        <label>
+                                            <input type="checkbox" class="ace" />
+                                            <span class="lbl"></span>
+                                        </label>
+                                    </td>
                                     <td class="center">3</td>
-                                    <td class="center">
-                                        <input type="text" placeholder="" class="col-xs-10 col-sm-10"/>
-                                    </td>
+                                    <td class="center">教师姓名</td>
+                                    <td class="center"><a href="">删除</a></td>
                                 </tr>
-                                <tr>
-                                    <td class="center">4</td>
-                                    <td class="center">
-                                        <input type="text" placeholder="" class="col-xs-10 col-sm-10"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="center">5</td>
-                                    <td class="center">
-                                        <input type="text" placeholder="" class="col-xs-10 col-sm-10"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="center">6</td>
-                                    <td class="center">
-                                        <input type="text" placeholder="" class="col-xs-10 col-sm-10"/>
-                                    </td>
-                                </tr>
+
                                 </tbody>
                             </table>
                         </div>
-                        <div class="btn-box">
-                            <button class="btn btn-return">返回</button>
-                            <button class="btn btn-info btn-save">保存并下一步</button>
+                        <div class="fun-box">
+                            <span class="txt1">导入教师数据</span>
+                            <button class="btn btn-info btn-import">导入教师数据Excel</button>
+                            <a href="" class="links">请先导出Excel模板，进行填写</a>
                         </div>
+                        <div class="btn-box">
+                            <button class="btn btn-return">返回上一步</button>
+                            <button class="btn btn-info btn-save">开始使用SaaS</button>
+                        </div>
+
+
+
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.page-content -->
@@ -226,7 +246,7 @@
 
 <!--[if !IE]> -->
 <script type="text/javascript">
-    window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>" + "<" + "script>");
+    window.jQuery || document.write("<script src='static/src/assets/js/jquery-2.0.3.min.js'>" + "<" + "script>");
 </script>
 <!-- <![endif]-->
 <!--[if IE]>
@@ -236,27 +256,27 @@
 <![endif]-->
 
 <script type="text/javascript">
-    if ("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "script>");
+    if ("ontouchend" in document) document.write("<script src='static/src/assets/js/jquery.mobile.custom.min.js'>" + "<" + "script>");
 </script>
-<script src="assets/js/bootstrap.min.js"></script>
-<script src="assets/js/typeahead-bs2.min.js"></script>
+<script src="static/src/assets/js/bootstrap.min.js"></script>
+<script src="static/src/assets/js/typeahead-bs2.min.js"></script>
 
 <!-- page specific plugin scripts -->
 
 <!--[if lte IE 8]>
-<script src="assets/js/excanvas.min.js"></script>
+<script src="static/src/assets/js/excanvas.min.js"></script>
 <![endif]-->
-<script src="assets/js/jquery-ui-1.10.3.custom.min.js"></script>
-<script src="assets/js/jquery.ui.touch-punch.min.js"></script>
-<script src="assets/js/jquery.slimscroll.min.js"></script>
-<script src="assets/js/jquery.easy-pie-chart.min.js"></script>
-<script src="assets/js/jquery.sparkline.min.js"></script>
-<script src="assets/js/flot/jquery.flot.min.js"></script>
-<script src="assets/js/flot/jquery.flot.pie.min.js"></script>
-<script src="assets/js/flot/jquery.flot.resize.min.js"></script>
+<script src="static/src/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="static/src/assets/js/jquery.ui.touch-punch.min.js"></script>
+<script src="static/src/assets/js/jquery.slimscroll.min.js"></script>
+<script src="static/src/assets/js/jquery.easy-pie-chart.min.js"></script>
+<script src="static/src/assets/js/jquery.sparkline.min.js"></script>
+<script src="static/src/assets/js/flot/jquery.flot.min.js"></script>
+<script src="static/src/assets/js/flot/jquery.flot.pie.min.js"></script>
+<script src="static/src/assets/js/flot/jquery.flot.resize.min.js"></script>
 <!-- ace scripts -->
-<script src="assets/js/ace-elements.min.js"></script>
-<script src="assets/js/ace.min.js"></script>
+<script src="static/src/assets/js/ace-elements.min.js"></script>
+<script src="static/src/assets/js/ace.min.js"></script>
 
 </body>
 </html>
