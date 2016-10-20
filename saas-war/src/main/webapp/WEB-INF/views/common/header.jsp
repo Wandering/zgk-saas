@@ -6,7 +6,7 @@
   <div class="navbar-container" id="navbar-container">
     <div class="navbar-header pull-left">
       <a href="#" class="navbar-brand">
-        <h1 id="logo"><img class="" src="assets/images/logo.png"/></h1> <span class="school-name">西安市高新一中</span>
+        <h1 id="logo"><img class="" src="<%=ctx%>/static/src/lib/assets/images/logo.png"/></h1> <span class="school-name">西安市高新一中</span>
       </a><!-- /.brand -->
     </div><!-- /.navbar-header -->
 
