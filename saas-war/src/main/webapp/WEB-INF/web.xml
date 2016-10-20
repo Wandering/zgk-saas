@@ -3,6 +3,120 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
 
+    <!--<filter>-->
+        <!--<filter-name>DruidWebStatFilter</filter-name>-->
+        <!--<filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>-->
+        <!--<init-param>-->
+            <!--<param-name>exclusions</param-name>-->
+            <!--<param-value>*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*</param-value>-->
+        <!--</init-param>-->
+    <!--</filter>-->
+    <!--<filter-mapping>-->
+        <!--<filter-name>DruidWebStatFilter</filter-name>-->
+        <!--<url-pattern>/*</url-pattern>-->
+    <!--</filter-mapping>-->
+
+    <!--&lt;!&ndash; 登陆过滤 &ndash;&gt;-->
+    <!--<filter>-->
+        <!--<filter-name>loginFilter</filter-name>-->
+        <!--<filter-class>cn.thinkjoy.saas.controller.filter.LoginFilter</filter-class>-->
+    <!--</filter>-->
+    <!--<filter-mapping>-->
+        <!--<filter-name>loginFilter</filter-name>-->
+        <!--<url-pattern>*.do</url-pattern>-->
+    <!--</filter-mapping>-->
+
+    <!--<servlet>-->
+        <!--<servlet-name>DruidStatView</servlet-name>-->
+        <!--<servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>-->
+
+        <!--<init-param>-->
+            <!--&lt;!&ndash; 允许清空统计数据 &ndash;&gt;-->
+            <!--<param-name>resetEnable</param-name>-->
+            <!--<param-value>true</param-value>-->
+        <!--</init-param>-->
+        <!--<init-param>-->
+            <!--&lt;!&ndash; 用户名 &ndash;&gt;-->
+            <!--<param-name>loginUsername</param-name>-->
+            <!--<param-value>admin</param-value>-->
+        <!--</init-param>-->
+        <!--<init-param>-->
+            <!--&lt;!&ndash; 密码 &ndash;&gt;-->
+            <!--<param-name>loginPassword</param-name>-->
+            <!--<param-value>thinkjoy</param-value>-->
+        <!--</init-param>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>DruidStatView</servlet-name>-->
+        <!--<url-pattern>/druid/*</url-pattern>-->
+    <!--</servlet-mapping>-->
+    <!--&lt;!&ndash; druid监控 start &ndash;&gt;-->
+
+    <!--&lt;!&ndash;  Spring 服务层的配置文件 &ndash;&gt;-->
+    <!--<context-param>-->
+        <!--<param-name>contextConfigLocation</param-name>-->
+        <!--<param-value>classpath:spring.xml</param-value>-->
+    <!--</context-param>-->
+
+    <!--&lt;!&ndash;  Spring 容器启动监听器 &ndash;&gt;-->
+    <!--<listener>-->
+        <!--<listener-class>org.springframework.web.context.ContextLoaderListener-->
+        <!--</listener-class>-->
+    <!--</listener>-->
+
+    <!--<servlet>-->
+        <!--<servlet-name>springmvc</servlet-name>-->
+        <!--<servlet-class>org.springframework.web.servlet.DispatcherServlet-->
+        <!--</servlet-class>-->
+        <!--<load-on-startup>1</load-on-startup>-->
+    <!--</servlet>-->
+    <!--&lt;!&ndash;为DispatcherServlet建立映射 &ndash;&gt;-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>springmvc</servlet-name>-->
+        <!--<url-pattern>/</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+    <!--<welcome-file-list>-->
+        <!--<welcome-file>/index.html</welcome-file>-->
+    <!--</welcome-file-list>-->
+
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>default</servlet-name>-->
+        <!--<url-pattern>*.css</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>default</servlet-name>-->
+        <!--<url-pattern>*.gif</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>default</servlet-name>-->
+        <!--<url-pattern>*.jpg</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>default</servlet-name>-->
+        <!--<url-pattern>*.png</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>default</servlet-name>-->
+        <!--<url-pattern>*.js</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>default</servlet-name>-->
+        <!--<url-pattern>*.swf</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+    <!-- druid监控 start -->
     <filter>
         <filter-name>DruidWebStatFilter</filter-name>
         <filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
@@ -14,16 +128,6 @@
     <filter-mapping>
         <filter-name>DruidWebStatFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
-    <!-- 登陆过滤 -->
-    <filter>
-        <filter-name>loginFilter</filter-name>
-        <filter-class>cn.thinkjoy.saas.controller.filter.LoginFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>loginFilter</filter-name>
-        <url-pattern>*.do</url-pattern>
     </filter-mapping>
 
     <servlet>
@@ -75,38 +179,24 @@
         <servlet-name>springmvc</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+    <filter>
+        <filter-name>SpringEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>SpringEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
-    <welcome-file-list>
-        <welcome-file>/index.html</welcome-file>
-    </welcome-file-list>
 
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.css</url-pattern>
-    </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.gif</url-pattern>
-    </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.jpg</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.png</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.js</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.swf</url-pattern>
-    </servlet-mapping>
 </web-app>
