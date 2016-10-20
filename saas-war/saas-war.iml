@@ -92,7 +92,6 @@
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.cloudstack:cs-cache:0.0.32-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-protocol-common:0.1.36-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-biz-common:0.1.36-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: javax.servlet:javax.servlet-api:3.1.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.aggregate:jetty-webapp:8.1.9.v20130131" level="project" />
@@ -106,5 +105,6 @@
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:javax.el:2.2.0.v201108011116" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:com.sun.el:2.2.0.v201108011116" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:org.eclipse.jdt.core:3.7.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: javax.servlet:javax.servlet-api:4.0.0-b01" level="project" />
   </component>
 </module>

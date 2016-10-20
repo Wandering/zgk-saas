@@ -13,4 +13,6 @@ allprojects {
     ucmVersion = "0.0.27-SNAPSHOT"
 
     poiVersion="3.9"
+
+    servletVersion="4.0.0-b01"
 }

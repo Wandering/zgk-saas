@@ -13,6 +13,7 @@ import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import cn.thinkjoy.saas.service.common.EnumUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
+import cn.thinkjoy.saas.service.common.ReadExcel;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.xml.bind.SchemaOutputResolver;
+import java.util.*;
 
 
 /**
@@ -278,38 +277,76 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * @return
      */
     @Override
-    public boolean createTenantCombinationTable(String type,Integer tnId) {
+    public String createTenantCombinationTable(String type,Integer tnId) {
         LOGGER.info("===========创建租户动态表 S===========");
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
         if (StringUtils.isBlank(type) || tnId <= 0)
-            return false;
+            return null;
 
         String tableName = ParamsUtils.combinationTableName(type, tnId);
         LOGGER.info("tableName:" + tableName);
         if (StringUtils.isBlank(tableName))
-            return false;
+            return null;
         boolean isValid = this.tableNameValid(tableName);
         LOGGER.info("isValid:" + isValid);
         if (!isValid)
-            return false;
+            return null;
 
-        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
-        List<Configuration> configurations = new ArrayList<Configuration>();
-        for (TenantConfigInstanceView tenantConfigInstanceView : tenantConfigInstanceViews) {
-            Map map = new HashMap();
-            map.put("domain", tenantConfigInstanceView.getDomain());
-            map.put("id", tenantConfigInstanceView.getConfigKey());
-            Configuration configuration = iConfigurationDAO.queryOne(map, "id", "asc");
-            configuration.setConfigOrder(tenantConfigInstanceView.getConfigOrder());
-            configurations.add(configuration);
+        try {
+            List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
+            List<Configuration> configurations = new ArrayList<Configuration>();
+            for (TenantConfigInstanceView tenantConfigInstanceView : tenantConfigInstanceViews) {
+                Map map = new HashMap();
+                map.put("domain", tenantConfigInstanceView.getDomain());
+                map.put("id", tenantConfigInstanceView.getConfigKey());
+                Configuration configuration = iConfigurationDAO.queryOne(map, "id", "asc");
+                configuration.setConfigOrder(tenantConfigInstanceView.getConfigOrder());
+                configurations.add(configuration);
+            }
+
+            Integer createResult = exiTenantConfigInstanceDAO.createConfigTable(tableName, configurations);
+
+            LOGGER.info("动态表创建结果:" + createResult);
+
+            return tableName;
+
+        } catch (Exception ex) {
+            return null;
+        } finally {
+            LOGGER.info("===========创建租户动态表 E===========");
         }
 
-        Integer createResult = exiTenantConfigInstanceDAO.createConfigTable(tableName,configurations);
-        LOGGER.info("动态表创建结果:"+createResult);
-        LOGGER.info("===========创建租户动态表 E===========");
+    }
 
-        return  true;
+    /**
+     * 解析excel 且将对应的值插入动态表
+     * @param type
+     * @param tnId
+     * @return
+     */
+    @Override
+    public boolean  uploadExcel(String type,Integer tnId,String excelPath) {
+        LOGGER.info("===========解析excel S===========");
+        LOGGER.info("type:" + type);
+        LOGGER.info("tnId:" + tnId);
+        String tableName = this.createTenantCombinationTable(type, tnId);
+        LOGGER.info("tableName:" + tableName);
+        if (StringUtils.isBlank(tableName))
+            return false;
+
+        ReadExcel readExcel = new ReadExcel();
+        List<LinkedHashMap<String, String>> configTeantComList = readExcel.readExcelFile(excelPath);
+        if (configTeantComList == null)
+            return false;
+        LOGGER.info("excel序列化 总数:" + configTeantComList.size());
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
+        if (tenantConfigInstanceViews == null)
+            return false;
+        Integer reuslt = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
+
+        LOGGER.info("===========解析excel E===========");
+        return (reuslt > 0 ? true : false);
     }
 
     /**
@@ -347,6 +384,16 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         tenantConfigInstance.setCreateDate(System.currentTimeMillis());
         tenantConfigInstance.setModifyDate(null);
         return tenantConfigInstance;
+    }
+
+
+    public static void main(String[] args) {
+        Map<Object,String> map = new HashMap<Object, String>();
+        map.put(1,"22");
+
+
+        System.out.print(map.get(1));
+
     }
 
 
