@@ -30,6 +30,7 @@ selectList
         tn_name as tnName,
         tn_addr as tnAddr,
         tn_extro_info as tnExtroInfo,
+        is_init as isInit,
         create_date as createDate
     </sql>
     <insert id="insert" parameterType="Tenant">
@@ -39,6 +40,7 @@ selectList
         tn_name,
         tn_addr,
         tn_extro_info,
+        is_init,
         create_date
         ) VALUES (
         #{loginCode},
@@ -46,6 +48,7 @@ selectList
         #{tnName},
         #{tnAddr},
         #{tnExtroInfo},
+        #{isInit},
         #{createDate}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
@@ -71,6 +74,9 @@ selectList
             </if>
             <if test="tnExtroInfo!=null">
                 tn_extro_info = #{tnExtroInfo},
+            </if>
+            <if test="isInit!=null">
+                is_init = #{isInit},
             </if>
             <if test="createDate!=null">
                 create_date = #{createDate},
@@ -366,6 +372,9 @@ selectList
             <if test="condition.tnExtroInfo!=null">
                 AND tn_extro_info = #{condition.tnExtroInfo}
             </if>
+            <if test="condition.isInit!=null">
+                AND is_init = #{condition.isInit}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -397,6 +406,9 @@ selectList
             </if>
             <if test="condition.tnExtroInfo!=null">
                 AND tn_extro_info = #{condition.tnExtroInfo}
+            </if>
+            <if test="condition.isInit!=null">
+                AND is_init = #{condition.isInit}
             </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}

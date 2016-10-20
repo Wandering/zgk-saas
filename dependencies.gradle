@@ -15,4 +15,5 @@ allprojects {
     poiVersion="3.9"
 
     servletVersion="4.0.0-b01"
+    zgkSmsVersion = "0.0.3-SNAPSHOT"
 }
