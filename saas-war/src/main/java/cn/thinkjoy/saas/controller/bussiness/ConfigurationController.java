@@ -1,11 +1,19 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
+import cn.thinkjoy.saas.domain.ClassRooms;
 import cn.thinkjoy.saas.domain.Configuration;
+import cn.thinkjoy.saas.domain.EnrollingRatio;
+import cn.thinkjoy.saas.domain.Grade;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
+import cn.thinkjoy.saas.service.IClassRoomsService;
+import cn.thinkjoy.saas.service.IEnrollingRatioService;
+import cn.thinkjoy.saas.service.IGradeService;
 import cn.thinkjoy.saas.service.bussiness.EXIConfigurationService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import cn.thinkjoy.saas.service.common.ExcelUtils;
 import cn.thinkjoy.saas.common.Env;
+import cn.thinkjoy.saas.service.common.ParamsUtils;
+import com.alibaba.dubbo.common.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,10 +41,105 @@ public class ConfigurationController {
     @Resource
     EXIConfigurationService exiConfigurationService;
 
+    @Resource
+    IClassRoomsService iClassRoomsService;
+
+    @Resource
+    IGradeService iGradeService;
+
+    @Resource
+    IEnrollingRatioService iEnrollingRatioService;
+
     @Autowired
     Env env;
     @Resource
     EXITenantConfigInstanceService exiTenantConfigInstanceService;
+
+
+    /**
+     * 年级设置
+     * @param tnId 租户ID
+     * @param nums 年级
+     * @return
+     */
+    @RequestMapping(value = "/class/setting/{tnId}/{nums}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map classSetting(@PathVariable Integer tnId,@PathVariable String nums) {
+        boolean result = false;
+        if (tnId > 0 && !StringUtils.isBlank(nums)) {
+            Grade grade = new Grade();
+            grade.setTnId(tnId);
+            grade.setGrade(nums);
+            Integer addResu =iGradeService.insert(grade);
+            result = addResu > 0 ? true : false;
+        }
+
+        Map resultMap = new HashMap();
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
+
+
+    /**
+     * 教室设置
+     * @param tnId 租户ID
+     * @param nums 数量集  例:  1-2-3   1:高一年级教室数量 2:高二年级教室数量 3:高三年级教室数量
+     * @return
+     */
+    @RequestMapping(value = "/classRoom/setting/{tnId}/{nums}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map classRoomSetting(@PathVariable Integer tnId,@PathVariable String nums) {
+
+        boolean result = false;
+
+        if (tnId > 0 && !StringUtils.isBlank(nums)) {
+            List<String> numArr = ParamsUtils.idsSplit(nums);
+            if (numArr.size() == 3) {
+
+                ClassRooms classRooms = new ClassRooms();
+                classRooms.setCreateDate(System.currentTimeMillis());
+                classRooms.setTnId(tnId);
+                classRooms.setGrade1classes(Integer.valueOf(numArr.get(0)));
+                classRooms.setGrade2classes(Integer.valueOf(numArr.get(1)));
+                classRooms.setGrade3classes(Integer.valueOf(numArr.get(2)));
+                Integer addResu = iClassRoomsService.insert(classRooms);
+                result = addResu > 0 ? true : false;
+            }
+        }
+        Map resultMap = new HashMap();
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
+
+    /**
+     * 升学率设置
+     * @param tnId 租户ID
+     * @param nums 数量集  例:  1-2-3-4-5   1:高三年级考生数量 2:去年一本上线人数 3:去年二本上线人数 4:去年三本上线人数 5:去年高职上线人数
+     * @return
+     */
+    @RequestMapping(value = "/enrollingRatio/setting/{tnId}/{nums}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map  enrollingRatioSetting(@PathVariable Integer tnId,@PathVariable String nums) {
+        boolean result = false;
+        if (tnId > 0 && !StringUtils.isBlank(nums)) {
+            List<String> numArr = ParamsUtils.idsSplit(nums);
+            if (numArr.size() == 5) {
+                EnrollingRatio enrollingRatio = new EnrollingRatio();
+                enrollingRatio.setTnId(tnId);
+                enrollingRatio.setStu3numbers(Integer.valueOf(numArr.get(0)));
+                enrollingRatio.setBatch1enrolls(Integer.valueOf(numArr.get(1)));
+                enrollingRatio.setBatch2enrolls(Integer.valueOf(numArr.get(2)));
+                enrollingRatio.setBatch3enrolls(Integer.valueOf(numArr.get(3)));
+                enrollingRatio.setBatch4enrolls(Integer.valueOf(numArr.get(4)));
+                enrollingRatio.setCreateDate(System.currentTimeMillis());
+                Integer addResu = iEnrollingRatioService.insert(enrollingRatio);
+                result = addResu > 0 ? true : false;
+            }
+        }
+        Map resultMap = new HashMap();
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
 
     /**
      * 获取初始化字段--type: class:班级  teacher:老师
@@ -178,26 +281,26 @@ public class ConfigurationController {
         return null;
     }
 
-    /**
-     * 导入租户设置Excel
-     *
-     * @param type
-     * @param tnId
-     * @return
-     */
-    @RequestMapping("/import/{type}/{tnId}")
-    @ResponseBody
-    public Map importConfig(@PathVariable String type,
-                            @PathVariable Integer tnId,
-                            HttpServletRequest request,
-                            HttpServletResponse response) {
-
-//        boolean result = exiTenantConfigInstanceService.createTenantCombinationTable(type, tnId);
-
-        Map resultMap = new HashMap();
-//        resultMap.put("result", result ? "SUCCESS" : "FAIL");
-        return resultMap;
-    }
+//    /**
+//     * 导入租户设置Excel
+//     *
+//     * @param type
+//     * @param tnId
+//     * @return
+//     */
+//    @RequestMapping("/import/{type}/{tnId}")
+//    @ResponseBody
+//    public Map importConfig(@PathVariable String type,
+//                            @PathVariable Integer tnId,
+//                            HttpServletRequest request,
+//                            HttpServletResponse response) {
+//
+////        boolean result = exiTenantConfigInstanceService.createTenantCombinationTable(type, tnId);
+//
+//        Map resultMap = new HashMap();
+////        resultMap.put("result", result ? "SUCCESS" : "FAIL");
+//        return resultMap;
+//    }
 
     /**
      * excel模板上传
@@ -231,5 +334,6 @@ public class ConfigurationController {
         resultMap.put("result", result ? "SUCCESS" : "FAIL");
         return resultMap;
     }
+
 }
 
