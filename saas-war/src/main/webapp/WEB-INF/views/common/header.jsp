@@ -5,17 +5,13 @@
   </script>
   <div class="navbar-container" id="navbar-container">
     <div class="navbar-header pull-left">
-      <a href="#" class="navbar-brand">
-        <h1 id="logo"><img class="" src="<%=ctx%>/static/src/lib/assets/images/logo.png"/></h1> <span class="school-name">西安市高新一中</span>
+      <a href="javascript:;" class="navbar-brand">
+        <h1 id="logo"><img class="" src="<%=ctx%>/static/src/lib/assets/images/logo.png"/></h1> <span class="school-name" id="header-school-name"></span>
       </a><!-- /.brand -->
     </div><!-- /.navbar-header -->
 
     <div class="navbar-header pull-right" role="navigation">
       <ul class="nav ace-nav">
-
-
-
-
 
 
         <li class="light-blue">
@@ -40,7 +36,7 @@
             </li>
             <li class="divider"></li>
             <li>
-              <a href="#">
+              <a href="javascript:;" id="logout-btn">
                 <i class="icon-off"></i>
                 退出
               </a>

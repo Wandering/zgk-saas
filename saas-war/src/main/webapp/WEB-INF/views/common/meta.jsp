@@ -1,6 +1,6 @@
 <%
     String path = request.getContextPath();
-    String ctx = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path + "/";
+    String ctx = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <meta name="keywords" content="" />
@@ -18,24 +18,17 @@
 
 <!-- fonts -->
 
-<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" />
+<%--<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" />--%>
 
 <!-- ace styles -->
 
 <link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/ace.min.css" />
-<link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/ace-rtl.min.css" />
-<link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/ace-skins.min.css" />
 
 <!--[if lte IE 8]>
   <link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/ace-ie.min.css" />
 <![endif]-->
 
 <!-- inline styles related to this page -->
-
-<!-- ace settings handler -->
-
-<script src="<%=ctx%>/static/src/lib/assets/js/ace-extra.min.js"></script>
-
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 
 <!--[if lt IE 9]>

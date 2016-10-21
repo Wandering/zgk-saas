@@ -16,7 +16,7 @@
         <span class="menu-text"> 首页 </span>
       </a>
     </li>
-    <li>
+    <li style="dn">
       <a href="#" class="dropdown-toggle">
         <i class="icon-desktop"></i>
         <span class="menu-text">高考改革 </span>
