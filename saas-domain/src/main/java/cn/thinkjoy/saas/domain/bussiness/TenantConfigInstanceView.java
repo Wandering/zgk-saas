@@ -15,6 +15,7 @@ public class TenantConfigInstanceView  extends BaseDomain {
     private String checkRule;
     private String domain;
     private String name;
+    private String enName;
     private Long createDate;
     private Long modifyDate;
 
@@ -65,6 +66,14 @@ public class TenantConfigInstanceView  extends BaseDomain {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEnName() {
+        return enName;
+    }
+
+    public void setEnName(String enName) {
+        this.enName = enName;
     }
 
     public Long getCreateDate() {

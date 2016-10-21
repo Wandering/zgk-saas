@@ -85,5 +85,14 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      * @param tnId 租户ID
      * @return
      */
-    boolean createTenantCombinationTable(String type,Integer tnId);
+    String createTenantCombinationTable(String type,Integer tnId);
+
+    /**
+     *解析excel
+     * @param type
+     * @param tnId
+     * @param excelPath
+     * @return
+     */
+    boolean  uploadExcel(String type,Integer tnId,String excelPath);
 }

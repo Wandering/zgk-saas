@@ -9,20 +9,18 @@
 
 package cn.thinkjoy.saas.domain;
 
+import cn.thinkjoy.common.domain.BaseDomain;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import cn.thinkjoy.common.domain.BaseDomain;
-
-import java.util.*;
 
 public class ClassRooms extends BaseDomain{
     private Integer tnId;
     private Integer grade1classes;
     private Integer grade2classes;
     private Integer grade3classes;
-    private Date createDate;
+    private Long createDate;
 
 	public ClassRooms(){
 	}
@@ -55,11 +53,11 @@ public class ClassRooms extends BaseDomain{
         return this.grade3classes;
     }
 
-    public void setCreateDate(Date value) {
+    public void setCreateDate(Long value) {
         this.createDate = value;
     }
 
-    public Date getCreateDate() {
+    public Long getCreateDate() {
         return this.createDate;
     }
 

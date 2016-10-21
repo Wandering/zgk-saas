@@ -23,6 +23,7 @@
         <result column="check_rule" property="checkRule" jdbcType="VARCHAR" />
         <result column="domain" property="domain" jdbcType="VARCHAR" />
         <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="enName" property="enName" jdbcType="VARCHAR" />
         <result column="create_date" property="createDate" jdbcType="BIGINT" />
         <result column="modify_date" property="modifyDate" jdbcType="BIGINT" />
     </resultMap>
@@ -80,7 +81,7 @@
     </update>
 
     <select id="selectTeanConfigList" resultMap="TenantConfigListResultMap" parameterType="java.util.Map">
-        select tenantConfig.*,config.ch_name as name from saas_tenant_config_instance  as tenantConfig
+        select tenantConfig.*,config.ch_name as name,config.en_name as enName from saas_tenant_config_instance  as tenantConfig
         <include refid="ConfigDefault_Join_TeantConfig" />
         <where>
             <if test="id!=null">
@@ -119,5 +120,26 @@
         </foreach>
        )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='租户动态生成表'
     </update>
+
+    <insert id="insertTenantConfigCom" useGeneratedKeys="true">
+
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+
+        INSERT INTO ${tableName} (
+            <foreach collection="configKeyList" item="item" index="index" separator="," >
+                ${item.enName}
+            </foreach>
+        )VALUES
+            <foreach collection="configValueList" item="item" index="index" separator="," >
+                (
+                    <foreach collection="item.keys" item="itemMap" index="indexMap" separator=",">
+                        #{item[${itemMap}]}
+                    </foreach>
+                )
+            </foreach>
+    </insert>
 
 </mapper>

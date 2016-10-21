@@ -6,6 +6,7 @@ import cn.thinkjoy.saas.domain.TenantConfigInstance;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,8 +64,18 @@ public interface EXITenantConfigInstanceDAO extends IBaseDAO<TenantConfigInstanc
 
     /**
      * 动态创建表
+     *
      * @param configurations 表字段集
      * @return
      */
-    Integer createConfigTable(@Param("tableName") String tableName,@Param("configList")List<Configuration> configurations);
+    Integer createConfigTable(@Param("tableName") String tableName, @Param("configList") List<Configuration> configurations);
+
+    /**
+     * 解析excel 将数据插入租户动态表
+     * @param tableName  租户动态表名
+     * @param configurations 租户自定义表头集
+     * @param configValueList 租户excel上传数据集
+     * @return
+     */
+    Integer insertTenantConfigCom(@Param("tableName") String tableName, @Param("configKeyList") List<TenantConfigInstanceView> configurations, @Param("configValueList") List<LinkedHashMap<String, String>> configValueList);
 }
