@@ -44,7 +44,7 @@
                         <div class="title-2">
                             <span class="txt-t"></span>
                             <div class="btns">
-                                <button class="btn btn-pink">添加账号</button>
+                                <button class="btn btn-pink" id="addRole-btn">添加账号</button>
                                 <button class="btn btn-inverse">修改密码</button>
                                 <button class="btn btn-success">删除</button>
                             </div>
@@ -124,5 +124,6 @@
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp"%>
+<script src="<%=ctx%>/static/src/js/account/role-management.js"></script>
 </body>
 </html>

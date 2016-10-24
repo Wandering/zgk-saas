@@ -15,6 +15,22 @@ public class WebCotroller {
     public ModelAndView index() {
         return new ModelAndView("/index");
     }
+    /**
+     * login
+     * 登录
+     */
+    @RequestMapping("/login")
+    public ModelAndView login() {
+        return new ModelAndView("/login/login");
+    }
+    /**
+     * forgot-password
+     * 重设面貌
+     */
+    @RequestMapping("/forgot-password")
+    public ModelAndView forgotPassword() {
+        return new ModelAndView("/login/forgot-password");
+    }
 
 
     /**

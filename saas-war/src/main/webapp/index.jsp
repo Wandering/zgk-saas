@@ -8,11 +8,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>SAAS</title>
 </head>
 <body>
 <script>
-    window.location.href="/index";
+    window.location.href="/login";
 </script>
 </body>
 </html>

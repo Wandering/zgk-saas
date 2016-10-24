@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="<%=ctx%>/static/src/css/seting-process.css"/>
 </head>
 <body>
+
 <%@ include file="./../common/header.jsp"%>
 <div class="main-container" id="main-container">
     <script type="text/javascript">
@@ -75,37 +76,37 @@
                                 <tr>
                                     <td class="center">1</td>
                                     <td class="center">
-                                        <input type="text" placeholder="" class="col-xs-10 col-sm-10"/>
+                                        <input type="text" id="seting-process1-1" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="center">2</td>
                                     <td class="center">
-                                        <input type="text" placeholder="" class="col-xs-10 col-sm-10"/>
+                                        <input type="text" id="seting-process1-2" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="center">3</td>
                                     <td class="center">
-                                        <input type="text" placeholder="" class="col-xs-10 col-sm-10"/>
+                                        <input type="text" id="seting-process1-3" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="center">4</td>
                                     <td class="center">
-                                        <input type="text" placeholder="" class="col-xs-10 col-sm-10"/>
+                                        <input type="text" id="seting-process1-4" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="center">5</td>
                                     <td class="center">
-                                        <input type="text" placeholder="" class="col-xs-10 col-sm-10"/>
+                                        <input type="text" id="seting-process1-5" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="center">6</td>
                                     <td class="center">
-                                        <input type="text" placeholder="" class="col-xs-10 col-sm-10"/>
+                                        <input type="text" id="seting-process1-6" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -113,7 +114,7 @@
                         </div>
                         <div class="btn-box">
                             <a class="btn btn-return">返回</a>
-                            <a class="btn btn-info btn-save" href="/seting-process2">保存并下一步</a>
+                            <a class="btn btn-info btn-save seting-process1-btn" id="seting-process1-btn" href="javascript:;">保存并下一步</a>
                         </div>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -123,5 +124,6 @@
 </div><!-- /.main-container -->
 
 <%@ include file="./../common/footer.jsp"%>
+<script src="<%=ctx%>/static/src/js/basis-settings/seting-process1.js"></script>
 </body>
 </html>
