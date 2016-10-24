@@ -43,6 +43,7 @@ $('#login-btn').on('click', function () {
             var isInit = data.isInit;
             var isSuperManager = data.isSuperManager;
             Common.cookie.setCookie('tnName',data.tnName);
+            Common.cookie.setCookie('tnId',data.userId);
             if(isInit=='0'){
                 //if(isSuperManager=="1"){
                     window.location.href='/seting-process1';

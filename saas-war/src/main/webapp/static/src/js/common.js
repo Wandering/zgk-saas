@@ -3,6 +3,9 @@ var Common = {
         this.loginInfo();
         this.logout();
     },
+    url:{
+
+    },
     cookie:{
         /*
          *功能：设置Cookie
