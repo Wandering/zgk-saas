@@ -25,6 +25,9 @@
 		<script type="text/javascript">
 			if("ontouchend" in document) document.write("<script src='<%=ctx%>/static/src/lib/assets/js/jquery.mobile.custom.min.js'>"+"<"+"script>");
 		</script>
+
+        <%--layer弹层--%>
+        <script src="<%=ctx%>/static/src/lib/layer/layer.js"></script>
 		<script src="<%=ctx%>/static/src/lib/assets/js/bootstrap.min.js"></script>
 		<script src="<%=ctx%>/static/src/lib/assets/js/ace.min.js"></script>
 		<script src="<%=ctx%>/static/src/js/common.js"></script>
