@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="<%=ctx%>/static/src/css/seting-process.css"/>
 </head>
 <body>
+
 <%@ include file="./../common/header.jsp"%>
 <div class="main-container" id="main-container">
     <script type="text/javascript">
