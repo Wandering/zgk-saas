@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.EXIClassRoomDAO">
+    <sql id="Base_Column_List">
+        id,
+        tn_id as tnId,
+        grade_id as gradeId,
+        number,
+        create_date as createDate
+    </sql>
+
+    <select id="selectClassRoomByTnId" parameterType="java.util.Map" resultType="ClassRooms">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_class_rooms
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="tnId!=null">
+                AND tn_id = #{tnId}
+            </if>
+            <if test="gradeId!=null">
+                AND grade_id = #{gradeId}
+            </if>
+            <if test="number!=null">
+                AND number = #{number}
+            </if>
+            <if test="createDate!=null">
+                AND create_date = #{createDate}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <insert id="addClassRoom" useGeneratedKeys="true" parameterType="java.util.List">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        insert into saas_class_rooms(
+            tn_id,
+            grade_id,
+            number,
+            create_date
+        )
+        values
+        <foreach collection="ClassRoomsList" item="item" index="index" separator="," >
+            (#{item.tnId},#{item.gradeId},#{item.number},#{item.createDate})
+        </foreach>
+    </insert>
+
+</mapper>
