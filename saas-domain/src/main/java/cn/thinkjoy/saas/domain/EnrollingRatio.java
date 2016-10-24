@@ -22,6 +22,7 @@ public class EnrollingRatio extends BaseDomain{
     private Integer batch2enrolls;
     private Integer batch3enrolls;
     private Integer batch4enrolls;
+    private Integer year;
     private Long createDate;
 
 	public EnrollingRatio(){
@@ -69,6 +70,14 @@ public class EnrollingRatio extends BaseDomain{
         return this.batch4enrolls;
     }
 
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
     public void setCreateDate(Long value) {
         this.createDate = value;
     }
@@ -86,6 +95,7 @@ public class EnrollingRatio extends BaseDomain{
 			.append("Batch2enrolls",getBatch2enrolls())
 			.append("Batch3enrolls",getBatch3enrolls())
 			.append("Batch4enrolls",getBatch4enrolls())
+            .append("Year",getYear())
 			.append("CreateDate",getCreateDate())
 			.toString();
 	}

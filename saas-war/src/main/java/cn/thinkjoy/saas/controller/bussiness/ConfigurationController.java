@@ -1,5 +1,6 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
+import cn.thinkjoy.saas.common.Env;
 import cn.thinkjoy.saas.domain.ClassRooms;
 import cn.thinkjoy.saas.domain.Configuration;
 import cn.thinkjoy.saas.domain.EnrollingRatio;
@@ -7,11 +8,11 @@ import cn.thinkjoy.saas.domain.Grade;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.IClassRoomsService;
 import cn.thinkjoy.saas.service.IEnrollingRatioService;
-import cn.thinkjoy.saas.service.IGradeService;
+import cn.thinkjoy.saas.service.bussiness.EXIClassRoomService;
 import cn.thinkjoy.saas.service.bussiness.EXIConfigurationService;
+import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import cn.thinkjoy.saas.service.common.ExcelUtils;
-import cn.thinkjoy.saas.common.Env;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
@@ -45,7 +46,11 @@ public class ConfigurationController {
     IClassRoomsService iClassRoomsService;
 
     @Resource
-    IGradeService iGradeService;
+    EXIClassRoomService exiClassRoomService;
+
+    @Resource
+    EXIGradeService exiGradeService;
+
 
     @Resource
     IEnrollingRatioService iEnrollingRatioService;
@@ -62,50 +67,58 @@ public class ConfigurationController {
      * @param nums 年级
      * @return
      */
-    @RequestMapping(value = "/class/setting/{tnId}/{nums}",method = RequestMethod.POST)
+    @RequestMapping(value = "/class/setting/{tnId}/{nums}",method = RequestMethod.GET)
     @ResponseBody
     public Map classSetting(@PathVariable Integer tnId,@PathVariable String nums) {
-        boolean result = false;
-        if (tnId > 0 && !StringUtils.isBlank(nums)) {
-            Grade grade = new Grade();
-            grade.setTnId(tnId);
-            grade.setGrade(nums);
-            Integer addResu =iGradeService.insert(grade);
-            result = addResu > 0 ? true : false;
-        }
-
+        boolean result =exiGradeService.AddGrade(tnId,nums);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
     }
 
+    /**
+     * 查询年级列表
+     * @param tnId
+     * @return
+     */
+    @RequestMapping(value = "/grade/get/{tnId}",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getGradeByTnId(@PathVariable Integer tnId) {
+        Map map = new HashMap();
+        map.put("tnId", tnId);
+        Grade grade = exiGradeService.selectGradeByTnId(map);
+        Map resultMap = new HashMap();
+        resultMap.put("grade", grade);
+        return resultMap;
+    }
 
+    /**
+     * 教室查询
+     * @param tnId
+     * @return
+     */
+    @RequestMapping(value = "/classRoom/get/{tnId}",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getClassRoomByTnId(@PathVariable Integer tnId) {
+        Map map = new HashMap();
+        map.put("tnId", tnId);
+
+        ClassRooms classRooms = exiClassRoomService.selectClassRoomByTnId(map);
+        Map resultMap = new HashMap();
+        resultMap.put("classRoom", classRooms);
+        return resultMap;
+    }
     /**
      * 教室设置
      * @param tnId 租户ID
-     * @param nums 数量集  例:  1-2-3   1:高一年级教室数量 2:高二年级教室数量 3:高三年级教室数量
+     * @param nums 数量集  例:  1:1-2:2-3:3   1:高一年级:教室数量 2:高二年级:教室数量 3:高三年级:教室数量
      * @return
      */
-    @RequestMapping(value = "/classRoom/setting/{tnId}/{nums}",method = RequestMethod.POST)
+    @RequestMapping(value = "/classRoom/setting/{tnId}/{nums}",method = RequestMethod.GET)
     @ResponseBody
     public Map classRoomSetting(@PathVariable Integer tnId,@PathVariable String nums) {
 
-        boolean result = false;
-
-        if (tnId > 0 && !StringUtils.isBlank(nums)) {
-            List<String> numArr = ParamsUtils.idsSplit(nums);
-            if (numArr.size() == 3) {
-
-                ClassRooms classRooms = new ClassRooms();
-                classRooms.setCreateDate(System.currentTimeMillis());
-                classRooms.setTnId(tnId);
-                classRooms.setGrade1classes(Integer.valueOf(numArr.get(0)));
-                classRooms.setGrade2classes(Integer.valueOf(numArr.get(1)));
-                classRooms.setGrade3classes(Integer.valueOf(numArr.get(2)));
-                Integer addResu = iClassRoomsService.insert(classRooms);
-                result = addResu > 0 ? true : false;
-            }
-        }
+        boolean result = exiClassRoomService.addClassRoom(tnId, nums);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
@@ -127,6 +140,7 @@ public class ConfigurationController {
                 EnrollingRatio enrollingRatio = new EnrollingRatio();
                 enrollingRatio.setTnId(tnId);
                 enrollingRatio.setStu3numbers(Integer.valueOf(numArr.get(0)));
+                enrollingRatio.setYear(ParamsUtils.getYear()-1);
                 enrollingRatio.setBatch1enrolls(Integer.valueOf(numArr.get(1)));
                 enrollingRatio.setBatch2enrolls(Integer.valueOf(numArr.get(2)));
                 enrollingRatio.setBatch3enrolls(Integer.valueOf(numArr.get(3)));
