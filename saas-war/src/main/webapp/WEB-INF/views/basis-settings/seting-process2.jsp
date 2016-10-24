@@ -94,7 +94,7 @@
                         </div>
                         <div class="btn-box">
                             <a class="btn btn-return" href="/seting-process1">返回上一步</a>
-                            <a class="btn btn-info btn-save" href="/seting-process3">保存并下一步</a>
+                            <a class="btn btn-info btn-save" href="javascript:;" id="seting-process2-btn">保存并下一步</a>
                         </div>
 
 
@@ -105,5 +105,6 @@
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp"%>
+<script src="<%=ctx%>/static/src/js/basis-settings/seting-process2.js"></script>
 </body>
 </html>

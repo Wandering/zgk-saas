@@ -1,15 +1,15 @@
+var tnId = Common.cookie.getCookie('tnId');
+Common.ajaxFun('/config/grade/get/'+ tnId +'.do', 'GET', {}, function (res) {
+    console.log(res)
+
+}, function (res) {
+    alert("出错了");
+}, 'true');
+
+
 
 
 $('#seting-process1-btn').on('click', function () {
-    var setingProcess11 = $('#seting-process1-1').val(),
-        setingProcess12 = $('#seting-process1-2').val(),
-        setingProcess13 = $('#seting-process1-3').val(),
-        setingProcess14 = $('#seting-process1-4').val(),
-        setingProcess15 = $('#seting-process1-5').val(),
-        setingProcess16 = $('#seting-process1-6').val();
-    var tnId = Common.cookie.getCookie('tnId');
-
-    var nums = '';
     var numsArr = [];
     $('.seting-process1-input').each(function(i,v){
 
@@ -25,7 +25,6 @@ $('#seting-process1-btn').on('click', function () {
         alert('至少添加一项');
         return false;
     }
-
     Common.ajaxFun('/config/class/setting/' + tnId + '/'+ numsArr +'.do', 'POST', {
         'tnId' : tnId,
         'nums': numsArr
