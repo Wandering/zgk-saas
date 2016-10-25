@@ -36,7 +36,7 @@ public class ManageController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/grade/add/{tnId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/grade/add/{tnId}",method = RequestMethod.POST)
     @ResponseBody
     public Map addGrade(@PathVariable Integer tnId,HttpServletRequest request) {
 
@@ -57,7 +57,7 @@ public class ManageController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/grade/modify/{tnId}/{gid}",method = RequestMethod.GET)
+    @RequestMapping(value = "/grade/modify/{tnId}/{gid}",method = RequestMethod.POST)
     @ResponseBody
     public Map modifyGrade(@PathVariable Integer tnId,
                            @PathVariable Integer gId,
@@ -77,7 +77,7 @@ public class ManageController {
      * 删除年级
      * @return
      */
-    @RequestMapping(value = "/grade/delete/{gid}",method = RequestMethod.GET)
+    @RequestMapping(value = "/grade/delete/{gid}",method = RequestMethod.POST)
     @ResponseBody
     public Map deleteGrade(@PathVariable Integer gId,
                            HttpServletRequest request) {
@@ -96,7 +96,7 @@ public class ManageController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/classRoom/add/{tnId}/{gId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/classRoom/add/{tnId}/{gId}",method = RequestMethod.POST)
     @ResponseBody
     public Map addClassRoom(@PathVariable Integer tnId,
                             @PathVariable Integer gId,
