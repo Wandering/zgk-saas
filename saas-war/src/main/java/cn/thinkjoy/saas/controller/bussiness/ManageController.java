@@ -160,4 +160,20 @@ public class ManageController {
         return resultMap;
     }
 
+
+    /**
+     * 新增升学率
+     * @param tnId
+     * @return
+     */
+    @RequestMapping(value = "/enrollingRatio/add/{tnId}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map addEnrollingRatio(@PathVariable Integer tnId) {
+        boolean result = false;
+
+        Map resultMap = new HashMap();
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
+
 }
