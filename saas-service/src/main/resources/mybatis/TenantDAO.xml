@@ -25,8 +25,6 @@ selectList
 -->
     <sql id="Base_Column_List">
         id,
-        login_code as loginCode,
-        login_pass as loginPass,
         tn_name as tnName,
         tn_addr as tnAddr,
         tn_extro_info as tnExtroInfo,
@@ -35,16 +33,12 @@ selectList
     </sql>
     <insert id="insert" parameterType="Tenant">
         INSERT INTO saas_tenant (
-        login_code,
-        login_pass,
         tn_name,
         tn_addr,
         tn_extro_info,
         is_init,
         create_date
         ) VALUES (
-        #{loginCode},
-        #{loginPass},
         #{tnName},
         #{tnAddr},
         #{tnExtroInfo},
@@ -60,12 +54,6 @@ selectList
     <update id="update" parameterType="Tenant">
         UPDATE saas_tenant
         <trim prefix="SET" suffixOverrides=",">
-            <if test="loginCode!=null">
-                login_code = #{loginCode},
-            </if>
-            <if test="loginPass!=null">
-                login_pass = #{loginPass},
-            </if>
             <if test="tnName!=null">
                 tn_name = #{tnName},
             </if>
@@ -89,12 +77,6 @@ selectList
     <update id="updateMap">
         UPDATE saas_tenant
         <trim prefix="SET" suffixOverrides=",">
-            <if test="map.loginCode!=null">
-                login_code = #{map.loginCode},
-            </if>
-            <if test="map.loginPass!=null">
-                login_pass = #{map.loginPass},
-            </if>
             <if test="map.tnName!=null">
                 tn_name = #{map.tnName},
             </if>
@@ -115,12 +97,6 @@ selectList
     <update id="updateByCondition">
         UPDATE saas_tenant
         <trim prefix="SET" suffixOverrides=",">
-            <if test="update.loginCode!=null">
-                login_code = #{update.loginCode},
-            </if>
-            <if test="update.loginPass!=null">
-                login_pass = #{update.loginPass},
-            </if>
             <if test="update.tnName!=null">
                 tn_name = #{update.tnName},
             </if>
@@ -139,12 +115,6 @@ selectList
             <if test="condition.id!=null">
                 AND id = #{condition.id}
             </if>
-            <if test="condition.loginCode!=null">
-                AND login_code = #{condition.loginCode}
-            </if>
-            <if test="condition.loginPass!=null">
-                AND login_pass = #{condition.loginPass}
-            </if>
             <if test="condition.tnName!=null">
                 AND tn_name = #{condition.tnName}
             </if>
@@ -162,15 +132,11 @@ selectList
 
     <insert id="insertMap" >
         INSERT INTO saas_tenant (
-                login_code,
-                login_pass,
                 tn_name,
                 tn_addr,
                 tn_extro_info,
                 create_date
         ) VALUES (
-                    #{map.loginCode},
-                    #{map.loginPass},
                     #{map.tnName},
                     #{map.tnAddr},
                     #{map.tnExtroInfo},
@@ -182,8 +148,6 @@ selectList
     <update id="updateNull" parameterType="Tenant">
         UPDATE saas_tenant
         <trim prefix="SET" suffixOverrides=",">
-            login_code = #{loginCode},
-            login_pass = #{loginPass},
             tn_name = #{tnName},
             tn_addr = #{tnAddr},
             tn_extro_info = #{tnExtroInfo},
@@ -207,12 +171,6 @@ selectList
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="id!=null">
                 AND id = #{id}
-            </if>
-            <if test="loginCode!=null">
-                AND login_code = #{loginCode}
-            </if>
-            <if test="loginPass!=null">
-                AND login_pass = #{loginPass}
             </if>
             <if test="tnName!=null">
                 AND tn_name = #{tnName}
@@ -286,12 +244,6 @@ selectList
             <if test="condition.id!=null">
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
-            <if test="condition.loginCode!=null">
-                ${condition.groupOp}   login_code  ${condition.login_code.op}  #{condition.login_code.data}
-            </if>
-            <if test="condition.loginPass!=null">
-                ${condition.groupOp}   login_pass  ${condition.login_pass.op}  #{condition.login_pass.data}
-            </if>
             <if test="condition.tnName!=null">
                 ${condition.groupOp}   tn_name  ${condition.tn_name.op}  #{condition.tn_name.data}
             </if>
@@ -324,12 +276,6 @@ selectList
             <if test="id!=null">
                 AND id like CONCAT('%', #{id} , '%')
             </if>
-            <if test="loginCode!=null">
-                AND login_code like CONCAT('%', #{loginCode} , '%')
-            </if>
-            <if test="loginPass!=null">
-                AND login_pass like CONCAT('%', #{loginPass} , '%')
-            </if>
             <if test="tnName!=null">
                 AND tn_name like CONCAT('%', #{tnName} , '%')
             </if>
@@ -356,12 +302,6 @@ selectList
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
                 AND id = #{condition.id}
-            </if>
-            <if test="condition.loginCode!=null">
-                AND login_code = #{condition.loginCode}
-            </if>
-            <if test="condition.loginPass!=null">
-                AND login_pass = #{condition.loginPass}
             </if>
             <if test="condition.tnName!=null">
                 AND tn_name = #{condition.tnName}
@@ -392,12 +332,6 @@ selectList
             <if test="condition.id!=null">
                 AND id = #{condition.id}
             </if>
-            <if test="condition.loginCode!=null">
-                AND login_code = #{condition.loginCode}
-            </if>
-            <if test="condition.loginPass!=null">
-                AND login_pass = #{condition.loginPass}
-            </if>
             <if test="condition.tnName!=null">
                 AND tn_name = #{condition.tnName}
             </if>
@@ -422,12 +356,6 @@ selectList
        <where>
            <if test="id!=null">
                ${groupOp} id ${id.op}  #{id.data}
-           </if>
-           <if test="loginCode!=null">
-               ${groupOp} login_code ${login_code.op}  #{login_code.data}
-           </if>
-           <if test="loginPass!=null">
-               ${groupOp} login_pass ${login_pass.op}  #{login_pass.data}
            </if>
            <if test="tnName!=null">
                ${groupOp} tn_name ${tn_name.op}  #{tn_name.data}
