@@ -1,15 +1,14 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
+import cn.thinkjoy.saas.domain.EnrollingRatio;
 import cn.thinkjoy.saas.service.bussiness.EXIClassRoomService;
 import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
+import cn.thinkjoy.saas.service.bussiness.IEXEnrollingRatioService;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +28,9 @@ public class ManageController {
 
     @Resource
     EXIClassRoomService exiClassRoomService;
+
+    @Resource
+    IEXEnrollingRatioService iexEnrollingRatioService;
 
     /**
      * 新增年级
@@ -163,17 +165,30 @@ public class ManageController {
 
     /**
      * 新增升学率
-     * @param tnId
      * @return
      */
-    @RequestMapping(value = "/enrollingRatio/add/{tnId}",method = RequestMethod.POST)
+    @RequestMapping(value = "/enrollingRatio/add",method = RequestMethod.POST)
     @ResponseBody
-    public Map addEnrollingRatio(@PathVariable Integer tnId) {
-        boolean result = false;
-
+    public Map addEnrollingRatio(@ModelAttribute EnrollingRatio enrollingRatio) {
+        boolean result = iexEnrollingRatioService.addEnrollingRatio(enrollingRatio);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
     }
+
+    /**
+     * 更新升学率
+     * @param enrollingRatio
+     * @return
+     */
+    @RequestMapping(value = "/enrollingRatio/modify",method = RequestMethod.POST)
+    @ResponseBody
+    public Map updateEnrollingRatio(@ModelAttribute EnrollingRatio enrollingRatio){
+        boolean result = iexEnrollingRatioService.updateEnrollingRatio(enrollingRatio);
+        Map resultMap = new HashMap();
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
+
 
 }
