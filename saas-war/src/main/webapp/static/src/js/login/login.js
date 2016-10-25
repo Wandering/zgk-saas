@@ -44,22 +44,22 @@ $('#login-btn').on('click', function () {
             Common.cookie.setCookie('tnName', data.tnName);
             Common.cookie.setCookie('tnId', data.userId);
             switch (isInit) {
-                case '0':
+                case 0:
                     window.location.href = '/index';
                     break;
-                case '1':
+                case 1:
                     window.location.href = '/seting-process1';
                     break;
-                case '2':
+                case 2:
                     window.location.href = '/seting-process2';
                     break;
-                case '3':
+                case 3:
                     window.location.href = '/seting-process3';
                     break;
-                case '4':
+                case 4:
                     window.location.href = '/seting-process4';
                     break;
-                case '5':
+                case 5:
                     window.location.href = '/seting-process5';
                     break;
                 default:

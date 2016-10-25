@@ -32,7 +32,7 @@ $('#seting-process4-btn').on('click', function () {
 
 
     var nums = gradeAllNumV + '-' + oneBatchNumV + '-' + twoBatchNumV + '-' + threeBatchNumV + '-' + fourBatchNumV;
-    Common.ajaxFun('/config/classRoom/setting/'+ tnId +'/'+ nums +'.do', 'POST', {
+    Common.ajaxFun('/config/classRoom/setting/'+ tnId +'/'+ nums +'.do', 'GET', {
         'tnId' : tnId,
         'nums': nums
     }, function (res) {

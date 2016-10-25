@@ -138,5 +138,6 @@
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp"%>
+<script src="<%=ctx%>/static/src/js/basis-settings/seting-process5.js"></script>
 </body>
 </html>
