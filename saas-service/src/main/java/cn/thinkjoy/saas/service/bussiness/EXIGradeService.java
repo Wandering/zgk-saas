@@ -2,6 +2,7 @@ package cn.thinkjoy.saas.service.bussiness;
 
 import cn.thinkjoy.saas.domain.Grade;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,7 +22,7 @@ public interface EXIGradeService {
      * @param map
      * @return
      */
-    Grade selectGradeByTnId(Map map);
+    List<Grade> selectGradeByTnId(Map map);
 
     /**
      * 设置年级

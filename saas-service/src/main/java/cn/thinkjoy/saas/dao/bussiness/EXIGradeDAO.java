@@ -26,7 +26,7 @@ public interface EXIGradeDAO {
      * @param map
      * @return
      */
-    Grade selectGradeByTnId(Map map);
+    List<Grade> selectGradeByTnId(Map map);
 
     /**
      * 新增年级
@@ -41,4 +41,5 @@ public interface EXIGradeDAO {
      * @return
      */
     Integer deleteByMap(Map map);
+
 }

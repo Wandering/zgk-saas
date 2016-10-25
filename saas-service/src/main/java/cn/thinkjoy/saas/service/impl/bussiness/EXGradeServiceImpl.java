@@ -80,7 +80,7 @@ public class EXGradeServiceImpl implements EXIGradeService {
      * @return
      */
     @Override
-    public Grade selectGradeByTnId(Map map) {
+    public List<Grade> selectGradeByTnId(Map map) {
         return exiGradeDAO.selectGradeByTnId(map);
     }
 

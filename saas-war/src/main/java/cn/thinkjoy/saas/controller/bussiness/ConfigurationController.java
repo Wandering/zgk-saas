@@ -86,9 +86,9 @@ public class ConfigurationController {
     public Map getGradeByTnId(@PathVariable Integer tnId) {
         Map map = new HashMap();
         map.put("tnId", tnId);
-        Grade grade = exiGradeService.selectGradeByTnId(map);
+        List<Grade> grades = exiGradeService.selectGradeByTnId(map);
         Map resultMap = new HashMap();
-        resultMap.put("grade", grade);
+        resultMap.put("grades", grades);
         return resultMap;
     }
 
