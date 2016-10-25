@@ -5,6 +5,8 @@
     <meta charset="utf-8" />
     <title>SAAS 角色管理</title>
     <%@ include file="./../common/meta.jsp"%>
+    <link rel="stylesheet" href="<%=ctx%>/static/src/lib/ztree/zTreeStyle.css">
+
 </head>
 <body>
 <%@ include file="./../common/header.jsp"%>
@@ -44,12 +46,13 @@
                         <div class="title-2">
                             <span class="txt-t"></span>
                             <div class="btns">
-                                <button class="btn btn-pink" id="addRole-btn">添加账号</button>
-                                <button class="btn btn-inverse">修改密码</button>
+                                <button class="btn btn-pink" id="addRole-btn">添加角色</button>
+                                <button class="btn btn-inverse">修改</button>
                                 <button class="btn btn-success">删除</button>
                             </div>
                         </div>
 
+                        <ul id="treeDemo" class="ztree"></ul>
 
                         <div class="">
                             <table id="" class="table">
@@ -111,8 +114,6 @@
                                     <td class="center">所有权限</td>
                                     <td class="center">2015.9.23 16:38</td>
                                 </tr>
-
-
                                 </tbody>
                             </table>
                         </div>
@@ -124,6 +125,8 @@
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp"%>
+<script src="<%=ctx%>/static/src/lib/ztree/jquery.ztree.core.js"></script>
+<script src="<%=ctx%>/static/src/lib/ztree/jquery.ztree.excheck.js"></script>
 <script src="<%=ctx%>/static/src/js/account/role-management.js"></script>
 </body>
 </html>
