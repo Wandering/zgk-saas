@@ -49,6 +49,7 @@
     }
   }
 }
+
 .flow-tips{
   font-size:14px;
   color: #4A4A4A;
@@ -63,4 +64,10 @@
 }
 .setting-grade .table td{
   height:67px;
+}
+.add-label{
+  padding:30px 20px 0;
+  label{
+    margin:0 35px 10px 0;
+  }
 }

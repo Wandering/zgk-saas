@@ -113,7 +113,6 @@
                             </table>
                         </div>
                         <div class="btn-box">
-                            <a class="btn btn-return">返回</a>
                             <a class="btn btn-info btn-save seting-process1-btn" id="seting-process1-btn" href="javascript:;">保存并下一步</a>
                         </div>
                     </div><!-- /.col -->

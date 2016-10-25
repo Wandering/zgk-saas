@@ -1,4 +1,10 @@
 $('#addRole-btn').on('click',function(){
+
+
+
+
+
+
     var contentHtml = [];
     contentHtml.push('<form class="form-horizontal" role="form">');
     contentHtml.push('<div class="form-group">');
@@ -14,17 +20,25 @@ $('#addRole-btn').on('click',function(){
     contentHtml.push('</div>');
     contentHtml.push('</div>');
     contentHtml.push('</form>');
-    Common.modal("addRole","添加角色",contentHtml.join(''),"内容","");
-    $('#addRole').modal();
+    //Common.modal("addRole","添加角色",contentHtml.join(''),"内容","");
+
+    layer.open({
+        type: 1,
+        title:'添加角色',
+        offset: 'auto',
+        area: ['362px','500px'],
+        shadeClose: true, //点击遮罩关闭
+        content: contentHtml.join('')
+    });
 });
 
 
-
-Common.ajaxFun('/getMeunsByRoleId/1.do','GET',{
-    'roleId':'1'
-},function (res) {
-    console.log(res)
-
-}, function (res) {
-    alert("出错了");
-}, 'true');
+//
+//Common.ajaxFun('/getMeunsByRoleId/1.do','GET',{
+//    'roleId':'1'
+//},function (res) {
+//    console.log(res)
+//
+//}, function (res) {
+//    alert("出错了");
+//}, 'true');
