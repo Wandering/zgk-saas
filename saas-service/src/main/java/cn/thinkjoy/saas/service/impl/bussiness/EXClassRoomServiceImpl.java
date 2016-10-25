@@ -4,6 +4,7 @@ import cn.thinkjoy.saas.dao.IClassRoomsDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIClassRoomDAO;
 import cn.thinkjoy.saas.domain.ClassRooms;
 import cn.thinkjoy.saas.service.bussiness.EXIClassRoomService;
+import cn.thinkjoy.saas.service.bussiness.IEXTenantService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
 
     @Resource
     EXIClassRoomDAO exiClassRoomDAO;
+
+    @Resource
+    IEXTenantService iexTenantService;
 
     /**
      * 根据字段查找一个教室对象
@@ -81,7 +85,8 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
             result = addResu > 0 ? true : false;
 
         }
-
+        if (result)
+            iexTenantService.stepSetting(tnId);
         return result;
     }
 

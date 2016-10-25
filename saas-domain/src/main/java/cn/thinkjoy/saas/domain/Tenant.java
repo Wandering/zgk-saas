@@ -23,6 +23,7 @@ public class Tenant extends BaseDomain{
     private String tnName;
     private String tnAddr;
     private String tnExtroInfo;
+    private Integer isInit;
     private Date createDate;
 
 	public Tenant(){
@@ -63,6 +64,14 @@ public class Tenant extends BaseDomain{
 
     public String getTnExtroInfo() {
         return this.tnExtroInfo;
+    }
+
+    public Integer getIsInit() {
+        return isInit;
+    }
+
+    public void setIsInit(Integer isInit) {
+        this.isInit = isInit;
     }
 
     public void setCreateDate(Date value) {

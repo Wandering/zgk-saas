@@ -8,10 +8,7 @@ import cn.thinkjoy.saas.domain.Grade;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.IClassRoomsService;
 import cn.thinkjoy.saas.service.IEnrollingRatioService;
-import cn.thinkjoy.saas.service.bussiness.EXIClassRoomService;
-import cn.thinkjoy.saas.service.bussiness.EXIConfigurationService;
-import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
-import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
+import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExcelUtils;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
@@ -51,6 +48,8 @@ public class ConfigurationController {
     @Resource
     EXIGradeService exiGradeService;
 
+    @Resource
+    IEXTenantService iexTenantService;
 
     @Resource
     IEnrollingRatioService iEnrollingRatioService;
@@ -149,6 +148,8 @@ public class ConfigurationController {
                 Integer addResu = iEnrollingRatioService.insert(enrollingRatio);
                 result = addResu > 0 ? true : false;
             }
+            if(result)
+                iexTenantService.stepSetting(tnId);
         }
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
@@ -342,12 +343,16 @@ public class ConfigurationController {
             String realPath = env.getProp("configuration.excel.upload.url");
             FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
             result = exiTenantConfigInstanceService.uploadExcel(type, tnId, realPath + myfile.getOriginalFilename());
+            if (result)
+                iexTenantService.stepSetting(tnId);
         }
         LOGGER.info("==================excel上传 E==================");
         Map resultMap = new HashMap();
         resultMap.put("result", result ? "SUCCESS" : "FAIL");
         return resultMap;
     }
+
+
 
 }
 
