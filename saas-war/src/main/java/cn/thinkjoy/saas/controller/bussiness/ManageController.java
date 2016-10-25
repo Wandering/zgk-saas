@@ -1,9 +1,11 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.saas.domain.EnrollingRatio;
+import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 import cn.thinkjoy.saas.service.bussiness.EXIClassRoomService;
 import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.bussiness.IEXEnrollingRatioService;
+import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +34,9 @@ public class ManageController {
 
     @Resource
     IEXEnrollingRatioService iexEnrollingRatioService;
+
+    @Resource
+    IEXTenantCustomService iexTenantCustomService;
 
     /**
      * 新增年级
@@ -191,4 +197,59 @@ public class ManageController {
     }
 
 
+    /**
+     * 新增租户自定义表头数据
+     * @param type 模块名
+     * @param tnId 租户ID
+     * @param teantCustomList 数据集
+     * @return
+     */
+    @RequestMapping(value = "/{type}/{tnId}/add",method = RequestMethod.POST)
+    @ResponseBody
+    public Map addTeantCustom(@PathVariable String type,
+                              @PathVariable Integer tnId,
+                              @ModelAttribute List<TeantCustom> teantCustomList) {
+        boolean result = iexTenantCustomService.addTeantCustom(type, tnId, teantCustomList);
+        Map resultMap = new HashMap();
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
+
+    /**
+     * 更新租户自定义表头数据
+     * @param type 模块名
+     * @param tnId 租户ID
+     * @param pri  主键
+     * @param teantCustomList 数据集
+     * @return
+     */
+    @RequestMapping(value = "/{type}/{tnId}/{pri}/modify",method = RequestMethod.POST)
+    @ResponseBody
+    public Map modifyTeantCustom(@PathVariable String type,
+                              @PathVariable Integer tnId,
+                              @PathVariable Integer pri,
+                              @ModelAttribute List<TeantCustom> teantCustomList) {
+        boolean result = iexTenantCustomService.modifyTeantCustom(type, tnId, pri, teantCustomList);
+        Map resultMap = new HashMap();
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
+
+    /**
+     * 删除租户自定义表头数据
+     * @param type 模块名
+     * @param tnId 租户ID
+     * @param pri  主键
+     * @return
+     */
+    @RequestMapping(value = "/{type}/{tnId}/{pri}/remove",method = RequestMethod.POST)
+    @ResponseBody
+    public Map removeTenantCustom(@PathVariable String type,
+                                  @PathVariable Integer tnId,
+                                  @PathVariable Integer pri) {
+        boolean result = iexTenantCustomService.removeTenantCustom(type, tnId, pri);
+        Map resultMap = new HashMap();
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
 }
