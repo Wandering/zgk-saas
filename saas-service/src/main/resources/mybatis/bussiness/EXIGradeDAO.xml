@@ -54,4 +54,22 @@
         limit 0,1
     </select>
 
+    <delete id="deleteByMap" parameterType="java.util.Map">
+        DELETE FROM saas_grade
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="tnId!=null">
+                AND tnId = #{tnId}
+            </if>
+            <if test="grade!=null">
+                AND grade = #{grade}
+            </if>
+            <if test="gOrder!=null">
+                AND g_order = #{gOrder}
+            </if>
+        </trim>
+    </delete>
+
 </mapper>

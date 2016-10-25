@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,27 +58,14 @@ public class EXGradeServiceImpl implements EXIGradeService {
                 grades.add(g);
             }
 
+            Map delMap = new HashMap();
+            delMap.put("tnId", tnId);
+
+            deleteByMap(delMap);
+
             Integer addResu = exiGradeDAO.addGrade(grades);
 
             result = addResu > 0 ? true : false;
-//
-//            Map map = new HashMap();
-//            map.put("tnId", tnId);
-//            Grade selGrade = selectGradeByTnId(map);
-//
-//            //insert
-//            if (selGrade == null) {
-//                Grade grade = new Grade();
-//                grade.setTnId(tnId);
-//                grade.setGrade(nums);
-//                Integer addResu = iGradeDAO.insert(grade);
-//                result = addResu > 0 ? true : false;
-//            } else//update
-//            {
-//                selGrade.setGrade(nums);
-//                Integer updResu = iGradeDAO.update(selGrade);
-//                result = updResu > 0 ? true : false;
-//            }
         }
 
         return result;
@@ -147,5 +135,39 @@ public class EXGradeServiceImpl implements EXIGradeService {
         LOGGER.info("===============年级拖动排序 E==============");
 
         return result;
+    }
+
+    /**
+     * 新增年级
+     * @param grade
+     * @return
+     */
+    @Override
+    public boolean insertGrade(Integer tnId,String gradeName) {
+        Grade grade = new Grade();
+        grade.setTnId(tnId);
+        grade.setGrade(gradeName);
+        grade.setgOrder(0);
+        Integer result = iGradeDAO.insert(grade);
+        return (result > 0 ? true : false);
+    }
+    @Override
+    public boolean updateGrade(Integer tnId,String gradeName,Integer gid) {
+        Grade grade = new Grade();
+        grade.setTnId(tnId);
+        grade.setGrade(gradeName);
+        grade.setgOrder(0);
+        grade.setId(gid);
+        Integer result = iGradeDAO.update(grade);
+        return (result > 0 ? true : false);
+    }
+    /**
+     * 删除年级
+     * @param map
+     * @return
+     */
+    @Override
+    public Integer deleteByMap(Map map) {
+        return exiGradeDAO.deleteByMap(map);
     }
 }

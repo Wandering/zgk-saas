@@ -36,6 +36,16 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
 
     }
 
+    @Override
+    public boolean addClassRoom(Integer tnId,Integer gradeId,Integer classRoomNum) {
+        ClassRooms classRooms = new ClassRooms();
+        classRooms.setTnId(tnId);
+        classRooms.setCreateDate(System.currentTimeMillis());
+        classRooms.setNumber(classRoomNum);
+        classRooms.setGradeId(gradeId);
+        return (iClassRoomsDAO.insert(classRooms) > 0 ? true : false);
+    }
+
     /**
      * 新增教室设置
      * @param tnId   租户ID
@@ -73,5 +83,32 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
         }
 
         return result;
+    }
+
+    /**
+     * 更新教室
+     * @param num 教室数量
+     * @param gid 年级ID
+     * @param cid 教室标识
+     * @return
+     */
+    @Override
+    public boolean updateClassRoom(Integer num,Integer gid,Integer cid) {
+
+        ClassRooms classRooms = new ClassRooms();
+        classRooms.setGradeId(gid);
+        classRooms.setNumber(num);
+        classRooms.setId(cid);
+        return (iClassRoomsDAO.update(classRooms) > 0 ? true : false);
+    }
+
+    /**
+     * 删除教室
+     * @param cid 教室标识
+     * @return
+     */
+    @Override
+    public boolean removeClassRoom(Integer cid) {
+        return (iClassRoomsDAO.deleteById(cid) > 0 ? true : false);
     }
 }
