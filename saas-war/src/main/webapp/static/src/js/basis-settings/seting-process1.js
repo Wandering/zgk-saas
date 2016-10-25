@@ -9,12 +9,13 @@ $('#seting-process1-btn').on('click', function () {
         }
     });
     numsArr = numsArr.join('');
-    console.log(numsArr.substring(1, numsArr.length));
+    numsArr = numsArr.substring(1, numsArr.length);
+    //console.log(numsArr.substring(1, numsArr.length));
     if (numsArr == '') {
         layer.tips('至少添加一项!', that);
         return false;
     }
-    Common.ajaxFun('/config/class/setting/' + tnId + '/' + numsArr + '.do', 'POST', {
+    Common.ajaxFun('/config/class/setting/' + tnId + '/' + numsArr + '.do', 'GET', {
         'tnId': tnId,
         'nums': numsArr
     }, function (res) {
@@ -29,5 +30,5 @@ $('#seting-process1-btn').on('click', function () {
         }
     }, function (res) {
         alert("出错了");
-    }, 'true');
+    });
 });
