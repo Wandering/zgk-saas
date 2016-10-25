@@ -11,6 +11,8 @@ public class Grade extends BaseDomain {
 
     private String grade;
 
+    private Integer gOrder;
+
     public Integer getTnId() {
         return tnId;
     }
@@ -25,5 +27,13 @@ public class Grade extends BaseDomain {
 
     public void setGrade(String grade) {
         this.grade = grade;
+    }
+
+    public Integer getgOrder() {
+        return gOrder;
+    }
+
+    public void setgOrder(Integer gOrder) {
+        this.gOrder = gOrder;
     }
 }
