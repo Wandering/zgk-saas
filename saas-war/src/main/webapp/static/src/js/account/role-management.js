@@ -1,4 +1,64 @@
-$('#addRole-btn').on('click',function(){
+var setting = {
+    check: {
+        enable: true
+    },
+    data: {
+        simpleData: {
+            enable: true
+        }
+    },
+    view:{
+        showIcon:false
+    }
+};
+
+var zNodes = [];
+
+Common.ajaxFun('/role/getMeunsByRoleId/-1.do', 'GET', {}, function (res) {
+    console.log(res)
+    $.each(res.bizData,function(i,v){
+        zNodes.push()
+    })
+
+
+}, function (res) {
+    alert("出错了");
+}, 'true');
+//
+//var zNodes = [
+//    {id: 1, pId: 0, name: "随意勾选 1", open: true},
+//    {id: 11, pId: 1, name: "随意勾选 1-1"},
+//    {id: 12, pId: 1, name: "随意勾选 1-2"},
+//    {id: 2, pId: 0, name: "随意勾选 2", open: true},
+//    {id: 21, pId: 2, name: "随意勾选 2-1"},
+//    {id: 22, pId: 2, name: "随意勾选 2-2"},
+//    {id: 23, pId: 2, name: "随意勾选 2-3"}
+//];
+
+
+$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+
+function RoleManagementFun() {
+    this.init();
+}
+
+RoleManagementFun.prototype = {
+    constructor: RoleManagementFun,
+    init: function () {
+        this.getAllPermissions();
+    },
+    getAllPermissions: function () {
+
+    },
+    renderTree: function () {
+
+    }
+};
+
+var RoleManagementIns = new RoleManagementFun();
+
+$('#addRole-btn').on('click', function () {
 
     var contentHtml = [];
     contentHtml.push('<form class="form-horizontal" role="form">');
@@ -19,9 +79,9 @@ $('#addRole-btn').on('click',function(){
 
     layer.open({
         type: 1,
-        title:'添加角色',
+        title: '添加角色',
         offset: 'auto',
-        area: ['362px','500px'],
+        area: ['362px', '500px'],
         shadeClose: true, //点击遮罩关闭
         content: contentHtml.join('')
     });
@@ -29,11 +89,3 @@ $('#addRole-btn').on('click',function(){
 
 
 //
-Common.ajaxFun('/getMeunsByRoleId/-1.do','GET',{
-    'roleId':'-1'
-},function (res) {
-    console.log(res)
-
-}, function (res) {
-    alert("出错了");
-}, 'true');

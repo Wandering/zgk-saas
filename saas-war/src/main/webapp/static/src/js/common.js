@@ -3,10 +3,8 @@ var Common = {
         this.loginInfo();
         this.logout();
     },
-    url:{
-
-    },
-    cookie:{
+    url: {},
+    cookie: {
         /*
          *功能：设置Cookie
          *cookieName 必选项，cookie名称
@@ -16,7 +14,7 @@ var Common = {
          *domain cookie域，可选项
          *secure 安全性，指定Cookie是否只能通过https协议访问，一般的Cookie使用HTTP协议既可访问，如果设置了Secure（没有值），则只有当使用https协议连接时cookie才可以被页面访问
          */
-        setCookie : function (cookieName, cookieValue, seconds, path, domain, secure) {
+        setCookie: function (cookieName, cookieValue, seconds, path, domain, secure) {
             var expires = new Date();
             var seconds = arguments[2] ? arguments[2] : (3600 * 5);
             expires.setTime(expires.getTime() + seconds * 1000);
@@ -45,33 +43,7 @@ var Common = {
             }
         }
     },
-    modal: function (ele, title, content, footer) {
-        var dialogModalArr = [];
-        dialogModalArr.push('<div class="modal fade" id="' + ele + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">');
-        dialogModalArr.push('<div class="modal-dialog">');
-        dialogModalArr.push('<div class="modal-content">');
-        dialogModalArr.push('<div class="modal-header">');
-        dialogModalArr.push('<button type="button" class="close dialogModal-close-btn" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>');
-        dialogModalArr.push('<h4 class="modal-title" id="myModalLabel">' + title + '</h4>');
-        dialogModalArr.push('</div>');
-        dialogModalArr.push('<div class="modal-body">');
-        dialogModalArr.push(content);
-        dialogModalArr.push('</div>');
-        if (footer) {
-            dialogModalArr.push(footer);
-        }
-        dialogModalArr.push('</div>');
-        dialogModalArr.push('</div>');
-        dialogModalArr.push('</div>');
-        $('body').append(dialogModalArr.join(''));
-        $(".dialogModal-close-btn").click(function () {
-            $("#" + ele).remove();
-            $('.modal-backdrop').remove();
-            $("body").removeClass('modal-open');
-        });
-    },
     ajaxFun: function (url, method, reqData, callback, callbackError, isasync) {
-        var data = {};
         var isasyncB = null;
         if (isasync) {
             isasyncB = false;
@@ -81,21 +53,21 @@ var Common = {
         $.ajax({
             url: url,
             type: method,
-            data: data || {},
+            data: reqData || {},
             async: isasyncB,
             success: callback,
             error: callbackError
         });
     },
-    loginInfo:function(){
+    loginInfo: function () {
         $('#header-school-name').text(this.cookie.getCookie('tnName'));
     },
-    logout:function(){
+    logout: function () {
         // 登出
         $('#logout-btn').on('click', function () {
             alert(232)
             Common.cookie.delCookie('tnName');
-            window.location.href='/login';
+            window.location.href = '/login';
         });
     }
 };
