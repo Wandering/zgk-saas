@@ -1,4 +1,3 @@
-
 /**
  {
   "bizData": {
@@ -36,22 +35,36 @@
 $('#login-btn').on('click', function () {
     var username = $('#user-name').val();
     var pwd = $('#password').val();
-    Common.ajaxFun('/account/login/'+ username +'/'+ pwd +'.do', 'GET', {}, function (res) {
+    Common.ajaxFun('/account/login/' + username + '/' + pwd + '.do', 'GET', {}, function (res) {
         console.log(res)
-        if(res.rtnCode=="0000000"){
+        if (res.rtnCode == "0000000") {
             var data = res.bizData;
             var isInit = data.isInit;
             var isSuperManager = data.isSuperManager;
-            Common.cookie.setCookie('tnName',data.tnName);
-            Common.cookie.setCookie('tnId',data.userId);
-            if(isInit=='0'){
-                //if(isSuperManager=="1"){
-                    window.location.href='/seting-process1';
-                //}
-            }else{
-                window.location.href='/index';
+            Common.cookie.setCookie('tnName', data.tnName);
+            Common.cookie.setCookie('tnId', data.userId);
+            switch (isInit) {
+                case '0':
+                    window.location.href = '/index';
+                    break;
+                case '1':
+                    window.location.href = '/seting-process1';
+                    break;
+                case '2':
+                    window.location.href = '/seting-process2';
+                    break;
+                case '3':
+                    window.location.href = '/seting-process3';
+                    break;
+                case '4':
+                    window.location.href = '/seting-process4';
+                    break;
+                case '5':
+                    window.location.href = '/seting-process5';
+                    break;
+                default:
+                    break;
             }
-
         }
     }, function (res) {
         alert("出错了");

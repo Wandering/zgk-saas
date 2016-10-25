@@ -61,7 +61,7 @@
                         <div class="title-2">
                             <span class="txt-t">班级字段设置</span>
                             <div class="btns">
-                                <button class="btn btn-pink">添加</button>
+                                <button class="btn btn-pink" id="add-btn">添加</button>
                                 <button class="btn btn-success">批量删除</button>
                             </div>
                         </div>
@@ -86,41 +86,18 @@
                                     <th class="center">操作</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="class-template">
                                 <tr>
                                     <td class="center">
                                         <label>
                                             <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
+                                            <span class="lbl">111</span>
                                         </label>
                                     </td>
                                     <td class="center">1</td>
                                     <td class="center">教师姓名</td>
                                     <td class="center"><a href="">删除</a></td>
                                 </tr>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">2</td>
-                                    <td class="center">教师姓名</td>
-                                    <td class="center"><a href="">删除</a></td>
-                                </tr>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">3</td>
-                                    <td class="center">教师姓名</td>
-                                    <td class="center"><a href="">删除</a></td>
-                                </tr>
-
                                 </tbody>
                             </table>
                         </div>
@@ -130,8 +107,7 @@
                             <a href="" class="links">请先导出Excel模板，进行填写</a>
                         </div>
                         <div class="btn-box">
-                            <a class="btn btn-return" href="/seting-process2">返回上一步</a>
-                            <a class="btn btn-info btn-save" href="/seting-process4">保存并下一步</a>
+                            <a class="btn btn-info btn-save" href="javascript:;" id="seting-process3-btn">保存并下一步</a>
                         </div>
 
 
@@ -143,5 +119,6 @@
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp"%>
+<script src="<%=ctx%>/static/src/js/basis-settings/seting-process3.js"></script>
 </body>
 </html>

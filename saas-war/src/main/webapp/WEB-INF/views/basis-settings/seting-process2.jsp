@@ -70,7 +70,7 @@
                                 <label class="col-sm-3 control-label no-padding-right" for="form-grade1">
                                     高一年级教室数量 </label>
                                 <div class="col-sm-9">
-                                    <input type="text" id="form-grade1" placeholder=""
+                                    <input type="text" id="form-grade1" placeholder="0--100以内"
                                            class="col-xs-10 col-xs-10 col-sm-10"/>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
                                 <label class="col-sm-3 control-label no-padding-right" for="form-grade2">
                                     高一年级教室数量 </label>
                                 <div class="col-sm-9">
-                                    <input type="text" id="form-grade2" placeholder=""
+                                    <input type="text" id="form-grade2" placeholder="0--100以内"
                                            class="col-xs-10 col-xs-10 col-sm-10"/>
                                 </div>
                             </div>
@@ -86,14 +86,13 @@
                                 <label class="col-sm-3 control-label no-padding-right" for="form-grade3">
                                     高一年级教室数量 </label>
                                 <div class="col-sm-9">
-                                    <input type="text" id="form-grade3" placeholder=""
+                                    <input type="text" id="form-grade3" placeholder="0--100以内"
                                            class="col-xs-10 col-xs-10 col-sm-10"/>
                                 </div>
                             </div>
                                 </form>
                         </div>
                         <div class="btn-box">
-                            <a class="btn btn-return" href="/seting-process1">返回上一步</a>
                             <a class="btn btn-info btn-save" href="javascript:;" id="seting-process2-btn">保存并下一步</a>
                         </div>
 

@@ -120,7 +120,6 @@
                                     <td class="center">教师姓名</td>
                                     <td class="center"><a href="">删除</a></td>
                                 </tr>
-
                                 </tbody>
                             </table>
                         </div>
@@ -130,19 +129,14 @@
                             <a href="" class="links">请先导出Excel模板，进行填写</a>
                         </div>
                         <div class="btn-box">
-                            <a class="btn btn-return" href="/seting-process4">返回上一步</a>
-                            <a class="btn btn-info btn-save" href="/index">开始使用SaaS</a>
+                            <a class="btn btn-info btn-save" href="javascript:;" id="seting-process5-btn">开始使用SaaS</a>
                         </div>
-
-
-
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.page-content -->
         </div><!-- /.main-content -->
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
-
 <%@ include file="./../common/footer.jsp"%>
 </body>
 </html>

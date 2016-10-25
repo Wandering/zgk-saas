@@ -67,50 +67,49 @@
                         <div class="setting-grade">
                             <form class="form-horizontal" role="form">
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right" for="form-grade1">
+                                    <label class="col-sm-3 control-label no-padding-right" for="grade-all-num">
                                         高三年级考生数量 </label>
                                     <div class="col-sm-9">
-                                        <input type="text" id="form-grade1" placeholder=""
+                                        <input type="text" id="grade-all-num" placeholder=""
                                                class="col-xs-10 col-xs-10 col-sm-10"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right" for="form-grade2">
+                                    <label class="col-sm-3 control-label no-padding-right" for="one-batch-num">
                                         去年一本上线人数 </label>
                                     <div class="col-sm-9">
-                                        <input type="text" id="form-grade2" placeholder=""
+                                        <input type="text" id="one-batch-num" placeholder=""
                                                class="col-xs-10 col-xs-10 col-sm-10"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right" for="form-grade3">
+                                    <label class="col-sm-3 control-label no-padding-right" for="two-batch-num">
                                         去年二本上线人数 </label>
                                     <div class="col-sm-9">
-                                        <input type="text" id="form-grade3" placeholder=""
+                                        <input type="text" id="two-batch-num" placeholder=""
                                                class="col-xs-10 col-xs-10 col-sm-10"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right" for="form-grade4">
+                                    <label class="col-sm-3 control-label no-padding-right" for="three-batch-num">
                                         去年三本上线人数 </label>
                                     <div class="col-sm-9">
-                                        <input type="text" id="form-grade4" placeholder=""
+                                        <input type="text" id="three-batch-num" placeholder=""
                                                class="col-xs-10 col-xs-10 col-sm-10"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right" for="form-grade5">
+                                    <label class="col-sm-3 control-label no-padding-right" for="four-batch-num">
                                         去年高职上线人数 </label>
                                     <div class="col-sm-9">
-                                        <input type="text" id="form-grade5" placeholder=""
+                                        <input type="text" id="four-batch-num" placeholder=""
                                                class="col-xs-10 col-xs-10 col-sm-10"/>
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div class="btn-box">
-                            <a class="btn btn-return" href="/seting-process3">返回上一步</a>
-                            <a class="btn btn-info btn-save" href="/seting-process5">保存并下一步</a>
+                            <a class="btn btn-info btn-save" href="javascript:;" id="seting-process4-btn">保存并下一步</a>
                         </div>
 
 
@@ -121,5 +120,6 @@
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp"%>
+<script src="<%=ctx%>/static/src/js/basis-settings/seting-process4.js"></script>
 </body>
 </html>
