@@ -34,4 +34,11 @@ public interface EXIGradeDAO {
      * @return
      */
     Integer addGrade(@Param("grads")List<Grade> grades);
+
+    /**
+     * 删除年级
+     * @param map
+     * @return
+     */
+    Integer deleteByMap(Map map);
 }

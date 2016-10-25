@@ -67,7 +67,7 @@ public class ConfigurationController {
      * @param nums 年级
      * @return
      */
-    @RequestMapping(value = "/class/setting/{tnId}/{nums}",method = RequestMethod.GET)
+    @RequestMapping(value = "/class/setting/{tnId}/{nums}",method = RequestMethod.POST)
     @ResponseBody
     public Map classSetting(@PathVariable Integer tnId,@PathVariable String nums) {
         boolean result =exiGradeService.AddGrade(tnId,nums);
@@ -114,7 +114,7 @@ public class ConfigurationController {
      * @param nums 数量集  例:  1:1-2:2-3:3   1:高一年级:教室数量 2:高二年级:教室数量 3:高三年级:教室数量
      * @return
      */
-    @RequestMapping(value = "/classRoom/setting/{tnId}/{nums}",method = RequestMethod.GET)
+    @RequestMapping(value = "/classRoom/setting/{tnId}/{nums}",method = RequestMethod.POST)
     @ResponseBody
     public Map classRoomSetting(@PathVariable Integer tnId,@PathVariable String nums) {
 
