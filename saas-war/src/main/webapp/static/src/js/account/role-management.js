@@ -1,10 +1,5 @@
 $('#addRole-btn').on('click',function(){
 
-
-
-
-
-
     var contentHtml = [];
     contentHtml.push('<form class="form-horizontal" role="form">');
     contentHtml.push('<div class="form-group">');
@@ -34,11 +29,11 @@ $('#addRole-btn').on('click',function(){
 
 
 //
-//Common.ajaxFun('/getMeunsByRoleId/1.do','GET',{
-//    'roleId':'1'
-//},function (res) {
-//    console.log(res)
-//
-//}, function (res) {
-//    alert("出错了");
-//}, 'true');
+Common.ajaxFun('/getMeunsByRoleId/-1.do','GET',{
+    'roleId':'-1'
+},function (res) {
+    console.log(res)
+
+}, function (res) {
+    alert("出错了");
+}, 'true');

@@ -15,7 +15,7 @@ $('#seting-process1-btn').on('click', function () {
         layer.tips('至少添加一项!', that);
         return false;
     }
-    Common.ajaxFun('/config/class/setting/' + tnId + '/' + numsArr + '.do', 'GET', {
+    Common.ajaxFun('/config/class/setting/' + tnId + '/' + numsArr + '.do', 'POST', {
         'tnId': tnId,
         'nums': numsArr
     }, function (res) {

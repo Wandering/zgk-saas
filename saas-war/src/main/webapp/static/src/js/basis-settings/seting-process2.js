@@ -1,6 +1,60 @@
 var tnId = Common.cookie.getCookie('tnId');
+
+
+function SetingProcess2(){
+    this.init();
+}
+
+
+SetingProcess2.prototype = {
+    constructor:SetingProcess2,
+    init:function(){
+        console.log(this.getGrade());
+    },
+    getGrade:function(){
+        var that = this;
+        //var gradeGroup;
+        Common.ajaxFun('/config/grade/get/'+ tnId +'.do', 'GET', {
+            'tnId' : tnId
+        }, function (res) {
+            //console.log(res)
+            if(res.rtnCode=="0000000"){
+                //gradeGroup = res;
+                that.renderList(res);
+            }
+        }, function (res) {
+            alert("出错了");
+        },true);
+        //return gradeGroup;
+    },
+    renderList:function(data){
+        console.log(data);
+        var gradeArr = [];
+
+        $('#grade-group').append(data);
+    }
+};
+
+
+var SetingProcess2Obj = new SetingProcess2();
+
+
+
+
+
+
+
+
+
 $('#seting-process2-btn').on('click', function () {
     var that = $(this);
+
+
+
+
+
+
+
     var formGrade1V = $.trim($('#form-grade1').val());
     var formGrade2V = $.trim($('#form-grade2').val());
     var formGrade3V = $.trim($('#form-grade3').val());
@@ -21,7 +75,7 @@ $('#seting-process2-btn').on('click', function () {
     }
 
     var nums = formGrade1V + '-' + formGrade2V + '-' + formGrade3V
-    Common.ajaxFun('/config/classRoom/setting/'+ tnId +'/'+ nums +'.do', 'GET', {
+    Common.ajaxFun('/config/classRoom/setting/'+ tnId +'/'+ nums +'.do', 'POST', {
         'tnId' : tnId,
         'nums': nums
     }, function (res) {
