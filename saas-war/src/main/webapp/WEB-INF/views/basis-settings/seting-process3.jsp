@@ -62,22 +62,16 @@
                             <span class="txt-t">班级字段设置</span>
                             <div class="btns">
                                 <button class="btn btn-pink" id="add-btn">添加</button>
-                                <button class="btn btn-success">批量删除</button>
+                                <button class="btn btn-success" id="del-batch-btn">批量删除</button>
                             </div>
                         </div>
-
-
-
-
-
-
                         <div class="">
                             <table id="" class="table">
                                 <thead>
                                 <tr>
                                     <th class="center">
                                         <label>
-                                            <input type="checkbox" class="ace" />
+                                            <input type="checkbox" class="ace" id="checkAll" />
                                             <span class="lbl"></span>
                                         </label>
                                     </th>
@@ -87,24 +81,32 @@
                                 </tr>
                                 </thead>
                                 <tbody id="class-template">
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl">111</span>
-                                        </label>
-                                    </td>
-                                    <td class="center">1</td>
-                                    <td class="center">教师姓名</td>
-                                    <td class="center"><a href="">删除</a></td>
-                                </tr>
+                                <%--<tr>--%>
+                                    <%--<td class="center">--%>
+                                        <%--<label>--%>
+                                            <%--<input type="checkbox" class="ace" />--%>
+                                            <%--<span class="lbl">111</span>--%>
+                                        <%--</label>--%>
+                                    <%--</td>--%>
+                                    <%--<td class="center">1</td>--%>
+                                    <%--<td class="center">教师姓名</td>--%>
+                                    <%--<td class="center"><span class="disabled">删除</span></td>--%>
+                                <%--</tr>--%>
                                 </tbody>
                             </table>
                         </div>
                         <div class="fun-box">
                             <span class="txt1">导入教师数据</span>
-                            <button class="btn btn-info btn-import">导入教师数据Excel</button>
-                            <a href="" class="links">请先导出Excel模板，进行填写</a>
+                            <!--dom结构部分-->
+                            <span id="uploader-demo">
+                                <!--用来存放item-->
+                                <span id="fileList" class="uploader-list"></span>
+                                <%--<div id="filePicker">选择文件</div>--%>
+                                <button class="btn btn-info btn-import" id="btn-import">导入教师数据Excel</button>
+                            </span>
+
+
+                            <a href="javascript:;" class="links" id="export-excel-btn">请先导出Excel模板，进行填写</a>
                         </div>
                         <div class="btn-box">
                             <a class="btn btn-info btn-save" href="javascript:;" id="seting-process3-btn">保存并下一步</a>
@@ -119,6 +121,13 @@
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp"%>
+<link rel="stylesheet" type="text/css" href="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.css">
+<script type="text/javascript" src="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.js"></script>
+<script>
+    var BASE_URL = '<%=ctx%>/static/src/lib/';
+    var rootPath = '<%=ctx%>';
+</script>
+<script src="<%=ctx%>/static/src/lib/assets/js/jquery-ui-1.12.1.js"></script>
 <script src="<%=ctx%>/static/src/js/basis-settings/seting-process3.js"></script>
 </body>
 </html>
