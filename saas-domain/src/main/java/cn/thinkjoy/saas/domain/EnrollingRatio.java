@@ -9,13 +9,11 @@
 
 package cn.thinkjoy.saas.domain;
 
+import cn.thinkjoy.common.domain.BaseDomain;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import cn.thinkjoy.common.domain.BaseDomain;
-
-import java.util.*;
 
 public class EnrollingRatio extends BaseDomain{
     private Integer tnId;
@@ -24,7 +22,8 @@ public class EnrollingRatio extends BaseDomain{
     private Integer batch2enrolls;
     private Integer batch3enrolls;
     private Integer batch4enrolls;
-    private Date createDate;
+    private Integer year;
+    private Long createDate;
 
 	public EnrollingRatio(){
 	}
@@ -71,11 +70,19 @@ public class EnrollingRatio extends BaseDomain{
         return this.batch4enrolls;
     }
 
-    public void setCreateDate(Date value) {
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public void setCreateDate(Long value) {
         this.createDate = value;
     }
 
-    public Date getCreateDate() {
+    public Long getCreateDate() {
         return this.createDate;
     }
 
@@ -88,6 +95,7 @@ public class EnrollingRatio extends BaseDomain{
 			.append("Batch2enrolls",getBatch2enrolls())
 			.append("Batch3enrolls",getBatch3enrolls())
 			.append("Batch4enrolls",getBatch4enrolls())
+            .append("Year",getYear())
 			.append("CreateDate",getCreateDate())
 			.toString();
 	}

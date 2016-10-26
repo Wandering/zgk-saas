@@ -9,6 +9,11 @@ dependencies {
     compile group: "cn.thinkjoy.cloudstack", name: "cs-clustermanager-client", version: "$thinkjoyCloudstackVersion", changing: true
 
     compile "org.apache.poi:poi:$poiVersion"
+    compile "javax.servlet:javax.servlet-api:$servletVersion"
+//    compile "mysql:mysql-connector-java:$mysqlConnectorVersion"
+//
+//    compile "com.alibaba:dubbo:$dubboVersion"
+//    compile "com.101tec:zkclient:$dubboZKClientVersion"
 
     compile project(':saas-api')
 

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO">
+
+    <resultMap id="Base_Result_Mapper" type="cn.thinkjoy.saas.domain.Grade">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="tnId" property="tnId" jdbcType="INTEGER" />
+        <result column="grade" property="grade" jdbcType="VARCHAR" />
+        <result column="g_order" property="gOrder" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,
+        tnId,
+        grade,
+        g_order as gOrder
+    </sql>
+    <update id="gradeSortUpdate"  parameterType="java.util.List">
+
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update saas_grade
+            <set>
+                g_order=${item.gOrder}
+            </set>
+            where id = ${item.id}
+        </foreach>
+
+    </update>
+    <insert id="addGrade" useGeneratedKeys="true" parameterType="java.util.List">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        insert into saas_grade(
+            tnId,
+            grade,
+            g_order
+        )
+        values
+        <foreach collection="grads" item="item" index="index" separator="," >
+            (#{item.tnId},#{item.grade},#{item.gOrder})
+        </foreach>
+    </insert>
+    <select id="selectGradeByTnId" parameterType="java.util.Map" resultMap="Base_Result_Mapper">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_grade
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="grade!=null">
+                AND grade = #{grade}
+            </if>
+            <if test="gOrder!=null">
+                AND g_order = #{gOrder}
+            </if>
+            <if test="tnId!=null">
+                AND tnId=#{tnId}
+            </if>
+        </trim>
+    </select>
+
+    <delete id="deleteByMap" parameterType="java.util.Map">
+        DELETE FROM saas_grade
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="tnId!=null">
+                AND tnId = #{tnId}
+            </if>
+            <if test="grade!=null">
+                AND grade = #{grade}
+            </if>
+            <if test="gOrder!=null">
+                AND g_order = #{gOrder}
+            </if>
+        </trim>
+    </delete>
+
+</mapper>

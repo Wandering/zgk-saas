@@ -57,6 +57,14 @@ public class Tenant extends BaseDomain{
         return this.isInit;
     }
 
+    public Integer getIsInit() {
+        return isInit;
+    }
+
+    public void setIsInit(Integer isInit) {
+        this.isInit = isInit;
+    }
+
     public void setCreateDate(Date value) {
         this.createDate = value;
     }
