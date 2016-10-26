@@ -346,7 +346,7 @@ public class ConfigurationController {
             FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
             result = exiTenantConfigInstanceService.uploadExcel(type, tnId, realPath + myfile.getOriginalFilename());
             if (result)
-                iexTenantService.stepSetting(tnId, (type=="teacher"?true:false));
+                iexTenantService.stepSetting(tnId, (type.equals("teacher")?true:false));
         }
         LOGGER.info("==================excel上传 E==================");
         Map resultMap = new HashMap();
