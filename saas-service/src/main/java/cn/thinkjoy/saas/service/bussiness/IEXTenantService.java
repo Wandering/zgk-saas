@@ -8,5 +8,5 @@ public interface IEXTenantService {
      * 当前租户步骤设置
      * @return
      */
-    boolean stepSetting(Integer tnId);
+    boolean stepSetting(Integer tnId,boolean isLast);
 }

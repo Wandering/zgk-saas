@@ -149,7 +149,7 @@ public class ConfigurationController {
                 result = addResu > 0 ? true : false;
             }
             if(result)
-                iexTenantService.stepSetting(tnId);
+                iexTenantService.stepSetting(tnId,false);
         }
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
@@ -344,7 +344,7 @@ public class ConfigurationController {
             FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
             result = exiTenantConfigInstanceService.uploadExcel(type, tnId, realPath + myfile.getOriginalFilename());
             if (result)
-                iexTenantService.stepSetting(tnId);
+                iexTenantService.stepSetting(tnId,true);
         }
         LOGGER.info("==================excel上传 E==================");
         Map resultMap = new HashMap();

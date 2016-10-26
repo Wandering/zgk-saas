@@ -72,7 +72,7 @@ public class EXGradeServiceImpl implements EXIGradeService {
             result = addResu > 0 ? true : false;
         }
         if (result)
-            iexTenantService.stepSetting(tnId);
+            iexTenantService.stepSetting(tnId,false);
 
 
         return result;
