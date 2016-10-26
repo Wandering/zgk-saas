@@ -11,7 +11,6 @@ $('#seting-process4-btn').on('click', function () {
         layer.tips('请输入正确的数字!', '#grade-all-num');
         return false;
     }
-
     if (!re.test(oneBatchNumV) || oneBatchNumV=='') {
         layer.tips('请输入正确的数字!', '#one-batch-num');
         return false;
@@ -28,14 +27,8 @@ $('#seting-process4-btn').on('click', function () {
         layer.tips('请输入正确的数字!', '#four-batch-num');
         return false;
     }
-
-
-
     var nums = gradeAllNumV + '-' + oneBatchNumV + '-' + twoBatchNumV + '-' + threeBatchNumV + '-' + fourBatchNumV;
-    Common.ajaxFun('/config/classRoom/setting/'+ tnId +'/'+ nums +'.do', 'POST', {
-        'tnId' : tnId,
-        'nums': nums
-    }, function (res) {
+    Common.ajaxFun('/config/enrollingRatio/setting/'+ tnId +'/'+ nums +'.do', 'POST', {}, function (res) {
         console.log(res)
         if(res.rtnCode=="0000000"){
             if(res.bizData.result=="SUCCESS"){

@@ -43,6 +43,7 @@ $('#login-btn').on('click', function () {
             var isSuperManager = data.isSuperManager;
             Common.cookie.setCookie('tnName', data.tnName);
             Common.cookie.setCookie('tnId', data.userId);
+            Common.cookie.setCookie('isInit', isInit);
             switch (isInit) {
                 case 0:
                     window.location.href = '/index';
@@ -67,6 +68,6 @@ $('#login-btn').on('click', function () {
             }
         }
     }, function (res) {
-        alert("出错了");
+        layer.msg('出错了');
     }, 'true');
 });

@@ -25,22 +25,6 @@
             <div class="page-content">
                 <div class="row">
                     <div class="col-xs-12">
-
-                        <div class="btn-box">
-                            <button class="btn disabled">禁用</button>
-                            <button class="btn btn-primary">取消</button>
-                            <button class="btn btn-info">保存</button>
-                            <button class="btn btn-success">删除</button>
-
-                            <button class="btn btn-warning">禁用</button>
-                            <button class="btn btn-danger">重设密码</button>
-                            <button class="btn btn-inverse">修改密码</button>
-                            <button class="btn btn-pink">添加账号</button>
-                            <button class="btn btn-return">返回</button>
-                            <button class="btn btn-info btn-save">保存并下一步</button>
-                        </div>
-
-
                         <div class="flow-box">
                             <div class="line"></div>
                             <ul class="flow-ul">
@@ -96,13 +80,13 @@
                             </table>
                         </div>
                         <div class="fun-box">
-                            <span class="txt1">导入教师数据</span>
+                            <span class="txt1">导入班级数据</span>
                             <!--dom结构部分-->
                             <span id="uploader-demo">
                                 <!--用来存放item-->
                                 <span id="fileList" class="uploader-list"></span>
                                 <%--<div id="filePicker">选择文件</div>--%>
-                                <button class="btn btn-info btn-import" id="btn-import">导入教师数据Excel</button>
+                                <button class="btn btn-info btn-import" id="btn-import">导入班级数据Excel</button>
                             </span>
 
 
