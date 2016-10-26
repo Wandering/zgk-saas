@@ -213,10 +213,12 @@ public class ConfigurationController {
      * @param ids 表头ID
      * @return
      */
-    @RequestMapping(value = "/tenant/remove/{ids}", method = RequestMethod.POST)
+    @RequestMapping(value = "/tenant/remove/{type}/{tnId}/{ids}", method = RequestMethod.POST)
     @ResponseBody
-    public Map removeTeantConfigs(@PathVariable String ids) {
-        boolean result = exiTenantConfigInstanceService.removeTeantConfigs(ids);
+    public Map removeTeantConfigs(@PathVariable String type,
+                                  @PathVariable Integer tnId,
+                                  @PathVariable String ids) {
+        boolean result = exiTenantConfigInstanceService.removeTeantConfigs(type,tnId,ids);
         Map resultMap = new HashMap();
         resultMap.put("result", result ? "SUCCESS" : "FAIL");
         return resultMap;

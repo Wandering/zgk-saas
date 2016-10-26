@@ -2,6 +2,7 @@ package cn.thinkjoy.saas.service.bussiness;
 
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -36,4 +37,13 @@ public interface IEXTenantCustomService {
      * @return
      */
     boolean removeTenantCustom(String type,Integer tnId,Integer pri);
+
+
+    /**
+     * 查询租户自定义表头数据
+     * @param type 模块分类
+     * @param tnId 租户ID
+     * @return
+     */
+    List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId);
 }

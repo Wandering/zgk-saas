@@ -8,6 +8,7 @@ import com.alibaba.dubbo.common.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -18,6 +19,7 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 
     @Resource
     IEXTeantCustomDAO iexTeantCustomDAO;
+
 
     /**
      * 租户自定义表头数据添加
@@ -88,5 +90,26 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         Integer result = iexTeantCustomDAO.removeTenantCustom(tableName, pri);
 
         return (result > 0 ? true : false);
+    }
+
+    /**
+     * 查询租户自定义表头数据
+     * @param type 模块分类
+     * @param tnId 租户ID
+     * @return
+     */
+    @Override
+    public List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId) {
+        if (tnId <= 0)
+            return null;
+
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+
+        if (StringUtils.isBlank(tableName))
+            return null;
+
+        List<LinkedHashMap<String, Object>> tenantCustoms = iexTeantCustomDAO.getTenantCustom(tableName);
+
+        return tenantCustoms;
     }
 }

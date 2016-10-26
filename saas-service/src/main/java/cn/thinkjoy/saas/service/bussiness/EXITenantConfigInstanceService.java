@@ -40,7 +40,7 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      *
      * @param ids
      */
-    boolean removeTeantConfigs(String ids);
+    boolean removeTeantConfigs(String type,Integer tnId, String ids);
 
     /**
      * 租户表头排序
@@ -70,6 +70,7 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      */
     String[] getTenantConfigListArrByTnIdAndType(String type, Integer tnId);
 
+
     /**
      * 租户动态表名校验  -表级别校验
      *
@@ -95,4 +96,13 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      * @return
      */
     boolean  uploadExcel(String type,Integer tnId,String excelPath);
+
+
+    /**
+     * 用户动态表是否已经创建
+     * @param type class:班级  teacher:教师
+     * @param tnId  租户ID
+     * @return
+     */
+    boolean isExsitsTeantCustomTable(String type,Integer tnId);
 }
