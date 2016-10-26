@@ -72,12 +72,14 @@
   }
 }
 
-#class-template span.del-btn{
+#class-template span.del-btn,
+#teacher-template span.del-btn{
   color: #428bca;
   text-decoration: underline;
   cursor: pointer;
 }
-#class-template span.disabled{
+#class-template span.disabled,
+#teacher-template span.disabled{
   color: #ccc;
   text-decoration: none;
   cursor: text;
