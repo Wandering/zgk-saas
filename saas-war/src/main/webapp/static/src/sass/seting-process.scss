@@ -71,3 +71,16 @@
     margin:0 35px 10px 0;
   }
 }
+
+#class-template span.del-btn{
+  color: #428bca;
+  text-decoration: underline;
+  cursor: pointer;
+}
+#class-template span.disabled{
+  color: #ccc;
+  text-decoration: none;
+  cursor: text;
+  outline: 0;
+}
+
