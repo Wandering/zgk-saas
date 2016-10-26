@@ -90,4 +90,4 @@
 *.class
 saas-war/saas-war.iml
 saas-war/src/main/webapp/static/node_modules
-build/tmp/war/*
+saas-war/build/
