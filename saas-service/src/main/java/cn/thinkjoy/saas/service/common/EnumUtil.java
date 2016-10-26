@@ -5,6 +5,14 @@ package cn.thinkjoy.saas.service.common;
  */
 public class EnumUtil {
 
+    //excel 下拉框锁定  班级类型
+    public static final String[] CLASS_TYPE_ARR={"重点班","普通班"};
+
+    //excel 班级类型字段
+    public static final String CLASS_MAJOR_TYPE="班级类型";
+    //excel 所属年级字段
+    public static final String CLASS_GRADE="所属年级";
+
     /**
      * 错误编码   规则: 【业务块描述-错误描述】
      */

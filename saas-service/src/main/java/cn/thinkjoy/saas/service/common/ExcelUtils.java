@@ -88,7 +88,7 @@ public class ExcelUtils {
      * @param columnNames excel的列名
      * @param data excel 值
      */
-    public static Workbook createWorkBook(String columnNames[],List<LinkedHashMap<String,Object>> data) {
+    public static Workbook createWorkBook(String columnNames[],List<LinkedHashMap<String,Object>> data,List<Map<Integer,Object>> selList) {
         LOGGER.info("===============创建excel文档 S===============");
         // 创建excel工作簿
         Workbook wb = new HSSFWorkbook();
@@ -97,7 +97,14 @@ public class ExcelUtils {
 
         String[] textlist = { "列表1", "列表2", "列表3", "列表4", "列表5" };
 
-        sheet = setHSSFValidation(sheet, textlist, 1, 500, 0, 0);// 第一列的前50
+        if(selList!=null&&selList.size()>0) {
+            for(int i=0;i<selList.size();i++) {
+                Map<Integer, Object> selMap = selList.get(i);
+                for (Map.Entry<Integer, Object> entry : selMap.entrySet()) {
+                    sheet = setHSSFValidation(sheet, (String[])entry.getValue(), 1, 500, entry.getKey(), entry.getKey());// 第一列的前50
+                }
+            }
+        }
 
         LOGGER.info("sheet创建");
         LOGGER.info("column总数:"+columnNames.length);
