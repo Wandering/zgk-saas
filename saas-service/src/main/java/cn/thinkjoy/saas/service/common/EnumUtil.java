@@ -26,6 +26,8 @@ public class EnumUtil {
     public static final  Integer  IMPORTCONFIG_CONFIGSVALIDERROR=10003;
     //清空租户表头历史数据出错
     public static final  Integer  IMPORTCONFIG_REMOVEHISTORYERROR=10004;
+    //当前租户已上传模板,表头无法修改!
+    public static final Integer   IMPORTCONFIG_TEANTCUSTOM_EXCEL=10005;
     /**
      * ====================配置导入 错误编码=================
      */
@@ -40,8 +42,8 @@ public class EnumUtil {
         PARAMSERROR("参数错误", IMPORTCONFIG_PARAMSERROR),
         TEANTNULL("该租户不存在", IMPORTCONFIG_TEANTNULL),
         CONFIGSVALIDERROR("选项集校验失败", IMPORTCONFIG_CONFIGSVALIDERROR),
-        REMOVEHISTORYERROR("清空租户表头历史数据错误",IMPORTCONFIG_REMOVEHISTORYERROR);
-
+        REMOVEHISTORYERROR("清空租户表头历史数据错误",IMPORTCONFIG_REMOVEHISTORYERROR),
+        TEANTCUSTOM_EXCEL("当前租户已上传模板,表头无法修改!",IMPORTCONFIG_TEANTCUSTOM_EXCEL);
 
 
         private int value;

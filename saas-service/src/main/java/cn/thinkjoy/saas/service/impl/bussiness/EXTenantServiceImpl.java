@@ -25,13 +25,13 @@ public class EXTenantServiceImpl implements IEXTenantService {
      * @return
      */
     @Override
-    public boolean stepSetting(Integer tnId) {
+    public boolean stepSetting(Integer tnId,boolean isLast) {
         Map map = new HashMap();
         map.put("id", tnId);
         Tenant tenant = iTenantDAO.queryOne(map, "id", "asc");
         if (tenant == null)
             return false;
-        Integer step = tenant.getIsInit() + 1;
+        Integer step = isLast ? 0 : tenant.getIsInit() + 1;
         tenant.setIsInit(step);
         return (iTenantDAO.update(tenant) > 0 ? true : false);
     }

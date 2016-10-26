@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.xml.bind.SchemaOutputResolver;
 import java.util.*;
 
 
@@ -92,10 +91,15 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * @param ids 需要删除的表头ID串  -号分隔
      */
     @Override
-    public boolean removeTeantConfigs(String ids) {
+    public boolean removeTeantConfigs(String type,Integer tnId,String ids) {
         List<String> idsList = ParamsUtils.idsSplit(ids);
         if (idsList == null)
             return false;
+
+        if(isExsitsTeantCustomTable(type,tnId)) {
+            LOGGER.info("该租户已上传模板,表头无法修改!");
+            return false;
+        }
         return exiTenantConfigInstanceDAO.removeTeantConfigs(idsList) > 0 ? true : false;
     }
 
@@ -217,6 +221,10 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         if (tnId <= 0 || idsList == null) {
             LOGGER.info("result:1[参数错误]");
             return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_PARAMSERROR);
+        }
+        if(isExsitsTeantCustomTable(type,tnId)) {
+            LOGGER.info("该租户已上传模板,表头无法修改!");
+            return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_TEANTCUSTOM_EXCEL);
         }
 
         if (isExistConfigDataByTnId(type,tnId)) {
@@ -384,6 +392,13 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         tenantConfigInstance.setCreateDate(System.currentTimeMillis());
         tenantConfigInstance.setModifyDate(null);
         return tenantConfigInstance;
+    }
+
+    @Override
+    public boolean isExsitsTeantCustomTable(String type,Integer tnId){
+        String tableName=ParamsUtils.combinationTableName(type,tnId);
+        Integer count=exiTenantConfigInstanceDAO.existTable(tableName);
+        return (count>0?true:false);
     }
 
 

@@ -149,7 +149,7 @@ public class ConfigurationController {
                 result = addResu > 0 ? true : false;
             }
             if(result)
-                iexTenantService.stepSetting(tnId);
+                iexTenantService.stepSetting(tnId,false);
         }
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
@@ -213,10 +213,12 @@ public class ConfigurationController {
      * @param ids 表头ID
      * @return
      */
-    @RequestMapping(value = "/tenant/remove/{ids}", method = RequestMethod.POST)
+    @RequestMapping(value = "/tenant/remove/{type}/{tnId}/{ids}", method = RequestMethod.POST)
     @ResponseBody
-    public Map removeTeantConfigs(@PathVariable String ids) {
-        boolean result = exiTenantConfigInstanceService.removeTeantConfigs(ids);
+    public Map removeTeantConfigs(@PathVariable String type,
+                                  @PathVariable Integer tnId,
+                                  @PathVariable String ids) {
+        boolean result = exiTenantConfigInstanceService.removeTeantConfigs(type,tnId,ids);
         Map resultMap = new HashMap();
         resultMap.put("result", result ? "SUCCESS" : "FAIL");
         return resultMap;
@@ -344,7 +346,7 @@ public class ConfigurationController {
             FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
             result = exiTenantConfigInstanceService.uploadExcel(type, tnId, realPath + myfile.getOriginalFilename());
             if (result)
-                iexTenantService.stepSetting(tnId);
+                iexTenantService.stepSetting(tnId,true);
         }
         LOGGER.info("==================excel上传 E==================");
         Map resultMap = new HashMap();

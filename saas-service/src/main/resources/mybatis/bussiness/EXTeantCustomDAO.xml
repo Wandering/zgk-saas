@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO">
+
+    <insert id="insertTenantCustom" useGeneratedKeys="true">
+
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+
+        INSERT INTO ${tableName} (
+            <foreach collection="teantCustomList" item="item" index="index" separator="," >
+                ${item.key}
+            </foreach>
+        )VALUES
+            (
+                <foreach collection="teantCustomList" item="item" index="index" separator=",">
+                    #{item.value}
+                </foreach>
+            )
+    </insert>
+
+    <update id="updateTenantCustom">
+        update ${tableName}
+            <set>
+                <foreach collection="teantCustomList" item="item" index="index"  separator=",">
+                    ${item.key}=#{item.value}
+                </foreach>
+            </set>
+        where id = ${pri}
+    </update>
+
+    <delete id="removeTenantCustom">
+         DELETE FROM ${tableName} where id=#{pri}
+    </delete>
+
+    <select id="getTenantCustom" resultType="java.util.LinkedHashMap">
+         select * from ${tableName} order by id asc
+    </select>
+</mapper>

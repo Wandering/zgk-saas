@@ -86,7 +86,7 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
 
         }
         if (result)
-            iexTenantService.stepSetting(tnId);
+            iexTenantService.stepSetting(tnId,false);
         return result;
     }
 
