@@ -29,7 +29,9 @@ selectList
         tn_addr as tnAddr,
         tn_extro_info as tnExtroInfo,
         is_init as isInit,
-        create_date as createDate
+        create_date as createDate,
+        tn_logo as tnLogo,
+        county_id as countyId
     </sql>
     <insert id="insert" parameterType="Tenant">
         INSERT INTO saas_tenant (
@@ -37,13 +39,17 @@ selectList
         tn_addr,
         tn_extro_info,
         is_init,
-        create_date
+        create_date,
+        tn_logo,
+        county_id
         ) VALUES (
         #{tnName},
         #{tnAddr},
         #{tnExtroInfo},
         #{isInit},
-        #{createDate}
+        #{createDate},
+        #{tnLogo},
+        #{countyId}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
         SELECT LAST_INSERT_ID() AS ID
@@ -69,6 +75,12 @@ selectList
             <if test="createDate!=null">
                 create_date = #{createDate},
             </if>
+            <if test="tnLogo!=null">
+                tn_logo = #{tnLogo},
+            </if>
+            <if test="countyId!=null">
+                county_id = #{countyId},
+            </if>
         </trim>
         WHERE
         id = #{id}
@@ -86,8 +98,17 @@ selectList
             <if test="map.tnExtroInfo!=null">
                 tn_extro_info = #{map.tnExtroInfo},
             </if>
+            <if test="map.isInit!=null">
+                is_init = #{map.isInit},
+            </if>
             <if test="map.createDate!=null">
                 create_date = #{map.createDate},
+            </if>
+            <if test="map.tnLogo!=null">
+                tn_logo = #{map.tnLogo},
+            </if>
+            <if test="map.countyId!=null">
+                county_id = #{map.countyId},
             </if>
         </trim>
         WHERE
@@ -106,8 +127,17 @@ selectList
             <if test="update.tnExtroInfo!=null">
                 tn_extro_info = #{update.tnExtroInfo},
             </if>
+            <if test="update.isInit!=null">
+                is_init = #{update.isInit},
+            </if>
             <if test="update.createDate!=null">
                 create_date = #{update.createDate},
+            </if>
+            <if test="update.tnLogo!=null">
+                tn_logo = #{update.tnLogo},
+            </if>
+            <if test="update.countyId!=null">
+                county_id = #{update.countyId},
             </if>
         </trim>
 
@@ -124,8 +154,17 @@ selectList
             <if test="condition.tnExtroInfo!=null">
                 AND tn_extro_info = #{condition.tnExtroInfo}
             </if>
+            <if test="condition.isInit!=null">
+                AND is_init = #{condition.isInit}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
+            </if>
+            <if test="condition.tnLogo!=null">
+                AND tn_logo = #{condition.tnLogo}
+            </if>
+            <if test="condition.countyId!=null">
+                AND county_id = #{condition.countyId}
             </if>
         </trim>
     </update>
@@ -135,12 +174,18 @@ selectList
                 tn_name,
                 tn_addr,
                 tn_extro_info,
-                create_date
+                is_init,
+                create_date,
+                tn_logo,
+                county_id
         ) VALUES (
                     #{map.tnName},
                     #{map.tnAddr},
                     #{map.tnExtroInfo},
-                    #{map.createDate}
+                    #{map.isInit},
+                    #{map.createDate},
+                    #{map.tnLogo},
+                    #{map.countyId}
         )
     </insert>
 
@@ -151,7 +196,10 @@ selectList
             tn_name = #{tnName},
             tn_addr = #{tnAddr},
             tn_extro_info = #{tnExtroInfo},
+            is_init = #{isInit},
             create_date = #{createDate},
+            tn_logo = #{tnLogo},
+            county_id = #{countyId},
         </trim>
         WHERE
         id = #{id} 
@@ -181,8 +229,17 @@ selectList
             <if test="tnExtroInfo!=null">
                 AND tn_extro_info = #{tnExtroInfo}
             </if>
+            <if test="isInit!=null">
+                AND is_init = #{isInit}
+            </if>
             <if test="createDate!=null">
                 AND create_date = #{createDate}
+            </if>
+            <if test="tnLogo!=null">
+                AND tn_logo = #{tnLogo}
+            </if>
+            <if test="countyId!=null">
+                AND county_id = #{countyId}
             </if>
         </trim>
     </delete>
@@ -253,8 +310,17 @@ selectList
             <if test="condition.tnExtroInfo!=null">
                 ${condition.groupOp}   tn_extro_info  ${condition.tn_extro_info.op}  #{condition.tn_extro_info.data}
             </if>
+            <if test="condition.isInit!=null">
+                ${condition.groupOp}   is_init  ${condition.is_init.op}  #{condition.is_init.data}
+            </if>
             <if test="condition.createDate!=null">
                 ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
+            </if>
+            <if test="condition.tnLogo!=null">
+                ${condition.groupOp}   tn_logo  ${condition.tn_logo.op}  #{condition.tn_logo.data}
+            </if>
+            <if test="condition.countyId!=null">
+                ${condition.groupOp}   county_id  ${condition.county_id.op}  #{condition.county_id.data}
             </if>
 
 
@@ -285,8 +351,17 @@ selectList
             <if test="tnExtroInfo!=null">
                 AND tn_extro_info like CONCAT('%', #{tnExtroInfo} , '%')
             </if>
+            <if test="isInit!=null">
+                AND is_init like CONCAT('%', #{isInit} , '%')
+            </if>
             <if test="createDate!=null">
                 AND create_date like CONCAT('%', #{createDate} , '%')
+            </if>
+            <if test="tnLogo!=null">
+                AND tn_logo like CONCAT('%', #{tnLogo} , '%')
+            </if>
+            <if test="countyId!=null">
+                AND county_id like CONCAT('%', #{countyId} , '%')
             </if>
         </trim>
         <if test="orderBy!=null">
@@ -318,6 +393,12 @@ selectList
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
+            <if test="condition.tnLogo!=null">
+                AND tn_logo = #{condition.tnLogo}
+            </if>
+            <if test="condition.countyId!=null">
+                AND county_id = #{condition.countyId}
+            </if>
         </trim>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -347,6 +428,12 @@ selectList
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
+            <if test="condition.tnLogo!=null">
+                AND tn_logo = #{condition.tnLogo}
+            </if>
+            <if test="condition.countyId!=null">
+                AND county_id = #{condition.countyId}
+            </if>
         </trim>
         limit 0,1
     </select>
@@ -366,8 +453,17 @@ selectList
            <if test="tnExtroInfo!=null">
                ${groupOp} tn_extro_info ${tn_extro_info.op}  #{tn_extro_info.data}
            </if>
+           <if test="isInit!=null">
+               ${groupOp} is_init ${is_init.op}  #{is_init.data}
+           </if>
            <if test="createDate!=null">
                ${groupOp} create_date ${create_date.op}  #{create_date.data}
+           </if>
+           <if test="tnLogo!=null">
+               ${groupOp} tn_logo ${tn_logo.op}  #{tn_logo.data}
+           </if>
+           <if test="countyId!=null">
+               ${groupOp} county_id ${county_id.op}  #{county_id.data}
            </if>
 
        </where>
