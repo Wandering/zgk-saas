@@ -1,7 +1,10 @@
 package cn.thinkjoy.saas.service.common;
 
+import org.apache.poi.hssf.usermodel.DVConstraint;
+import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddressList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,6 +94,11 @@ public class ExcelUtils {
         Workbook wb = new HSSFWorkbook();
         // 创建第一个sheet（页），并命名
         Sheet sheet = wb.createSheet("sheet1");
+
+        String[] textlist = { "列表1", "列表2", "列表3", "列表4", "列表5" };
+
+        sheet = setHSSFValidation(sheet, textlist, 1, 500, 0, 0);// 第一列的前50
+
         LOGGER.info("sheet创建");
         LOGGER.info("column总数:"+columnNames.length);
         // 手动设置列宽。第一个参数表示要为第几列设；，第二个参数表示列的宽度，n为列高的像素数。
@@ -125,7 +133,7 @@ public class ExcelUtils {
             cell.setCellValue(columnNames[i]);
             cell.setCellStyle(cs);
         }
-
+        LOGGER.info("data总数："+data.size());
         for(int j=0;j<data.size();j++) {
             Row rowData = sheet.createRow((short) (j+1));
 
@@ -135,7 +143,11 @@ public class ExcelUtils {
                 Map.Entry element = (Map.Entry) iter.next();
                 Object strKey = element.getKey();
                 Object strObj = element.getValue();
-                System.out.println("myMap.get(\"" + strKey + "\")=" + strObj);
+                LOGGER.info(l+"行key:"+strKey);
+                LOGGER.info(l+"行value:"+strObj);
+                if (strKey.equals("id"))
+                    continue;
+
                 Cell cell = rowData.createCell(l);
                 cell.setCellValue(strObj.toString());
                 l++;
@@ -144,6 +156,38 @@ public class ExcelUtils {
         }
         LOGGER.info("===============创建excel文档 E===============");
         return wb;
+    }
+    /**
+     * 设置某些列的值只能输入预制的数据,显示下拉框.
+     *
+     * @param sheet
+     *            要设置的sheet.
+     * @param textlist
+     *            下拉框显示的内容
+     * @param firstRow
+     *            开始行
+     * @param endRow
+     *            结束行
+     * @param firstCol
+     *            开始列
+     * @param endCol
+     *            结束列
+     * @return 设置好的sheet.
+     */
+    public static Sheet setHSSFValidation(Sheet sheet,
+                                              String[] textlist, int firstRow, int endRow, int firstCol,
+                                              int endCol) {
+        // 加载下拉列表内容
+        DVConstraint constraint = DVConstraint
+                .createExplicitListConstraint(textlist);
+        // 设置数据有效性加载在哪个单元格上,四个参数分别是：起始行、终止行、起始列、终止列
+        CellRangeAddressList regions = new CellRangeAddressList(firstRow,
+                endRow, firstCol, endCol);
+        // 数据有效性对象
+        HSSFDataValidation data_validation_list = new HSSFDataValidation(
+                regions, constraint);
+        sheet.addValidationData(data_validation_list);
+        return sheet;
     }
 
 }

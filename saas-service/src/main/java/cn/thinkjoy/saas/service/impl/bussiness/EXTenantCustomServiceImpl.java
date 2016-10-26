@@ -110,6 +110,7 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 
         List<LinkedHashMap<String, Object>> tenantCustoms = iexTeantCustomDAO.getTenantCustom(tableName);
 
+
         return tenantCustoms;
     }
 }
