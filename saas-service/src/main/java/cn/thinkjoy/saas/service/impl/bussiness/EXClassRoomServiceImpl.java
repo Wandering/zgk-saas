@@ -109,11 +109,14 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
 
     /**
      * 删除教室
-     * @param cid 教室标识
+     * @param ids 教室标识
      * @return
      */
     @Override
-    public boolean removeClassRoom(Integer cid) {
-        return (iClassRoomsDAO.deleteById(cid) > 0 ? true : false);
+    public boolean removeClassRoom(String ids) {
+        List<String> idsList = ParamsUtils.idsSplit(ids);
+        if (idsList == null)
+            return false;
+        return (exiClassRoomDAO.removeClassRooms(idsList) > 0);
     }
 }

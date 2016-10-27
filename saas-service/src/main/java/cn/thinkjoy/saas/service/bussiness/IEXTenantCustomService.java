@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public interface IEXTenantCustomService {
 
+
+
     /**
      * 新增租户自定义表头数据
      * @param type 模块分类
@@ -37,7 +39,7 @@ public interface IEXTenantCustomService {
      * @param pri 租户ID
      * @return
      */
-    boolean removeTenantCustom(String type,Integer tnId,Integer pri);
+    boolean removeTenantCustom(String type,Integer tnId,String pri);
 
 
     /**

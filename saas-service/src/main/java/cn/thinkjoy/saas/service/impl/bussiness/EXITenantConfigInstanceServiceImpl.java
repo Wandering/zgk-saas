@@ -97,7 +97,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             return false;
 
         if(isExsitsTeantCustomTable(type,tnId)) {
-            LOGGER.info("该租户已上传模板,表头无法修改!");
+            LOGGER.info("该字段已经使用，请勿移除!");
             return false;
         }
         return exiTenantConfigInstanceDAO.removeTeantConfigs(idsList) > 0 ? true : false;

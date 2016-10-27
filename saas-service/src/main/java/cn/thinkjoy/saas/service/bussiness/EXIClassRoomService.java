@@ -46,8 +46,8 @@ public interface EXIClassRoomService {
 
     /**
      * 删除教室
-     * @param cid 教室标识
+     * @param ids 教室标识
      * @return
      */
-    boolean removeClassRoom(Integer cid);
+    boolean removeClassRoom(String ids);
 }
