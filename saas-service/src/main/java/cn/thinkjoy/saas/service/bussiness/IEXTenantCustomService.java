@@ -36,10 +36,10 @@ public interface IEXTenantCustomService {
      * 删除租户自定义表头数据
      * @param type 模块分类
      * @param tnId 租户ID
-     * @param pri 租户ID
+     * @param ids 租户ID
      * @return
      */
-    boolean removeTenantCustom(String type,Integer tnId,String pri);
+    boolean removeTenantCustom(String type,Integer tnId,String ids);
 
 
     /**

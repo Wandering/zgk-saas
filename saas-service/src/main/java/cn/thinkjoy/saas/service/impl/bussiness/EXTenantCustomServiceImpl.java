@@ -79,7 +79,7 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
      *  租户自定义表头数据删除
      * @param type 模块分类
      * @param tnId 租户ID
-     * @param pri 租户ID
+     * @param ids 租户ID
      * @return
      */
     @Override
