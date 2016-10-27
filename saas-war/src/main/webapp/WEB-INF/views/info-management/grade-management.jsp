@@ -45,8 +45,8 @@
                         <div class="title-2">
                             <span class="txt-t"></span>
                             <div class="btns">
-                                <button class="btn btn-pink" id="addRole-btn">添加年级</button>
-                                <button class="btn btn-inverse">修改</button>
+                                <button class="btn btn-pink" id="add-btn">添加年级</button>
+                                <button class="btn btn-inverse" id="modify-btn">修改</button>
                                 <button class="btn btn-success">删除</button>
                             </div>
                         </div>
@@ -59,7 +59,7 @@
                                 <tr>
                                     <th class="center">
                                         <label>
-                                            <input type="checkbox" class="ace" />
+                                            <input type="checkbox" class="ace" id="checkAll" />
                                             <span class="lbl"></span>
                                         </label>
                                     </th>
@@ -67,17 +67,17 @@
                                     <th class="center">年级简介</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">1</td>
-                                    <td class="center">1</td>
-                                </tr>
+                                <tbody id="grade-list" class="check-template">
+                                <%--<tr>--%>
+                                    <%--<td class="center">--%>
+                                        <%--<label>--%>
+                                            <%--<input type="checkbox" class="ace" />--%>
+                                            <%--<span class="lbl"></span>--%>
+                                        <%--</label>--%>
+                                    <%--</td>--%>
+                                    <%--<td class="center">1</td>--%>
+                                    <%--<td class="center">1</td>--%>
+                                <%--</tr>--%>
                                 </tbody>
                             </table>
                         </div>
@@ -89,6 +89,6 @@
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp"%>
-<script src="<%=ctx%>/static/src/js/info-management/class-management.js"></script>
+<script src="<%=ctx%>/static/src/js/info-management/grade-management.js"></script>
 </body>
 </html>
