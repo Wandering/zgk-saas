@@ -39,7 +39,7 @@ public interface IEXTenantCustomService {
      * @param pri 租户ID
      * @return
      */
-    boolean removeTenantCustom(String type,Integer tnId,Integer pri);
+    boolean removeTenantCustom(String type,Integer tnId,String pri);
 
 
     /**

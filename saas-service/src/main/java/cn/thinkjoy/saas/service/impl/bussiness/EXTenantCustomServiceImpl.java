@@ -83,9 +83,9 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
      * @return
      */
     @Override
-    public boolean removeTenantCustom(String type,Integer tnId,Integer pri) {
+    public boolean removeTenantCustom(String type,Integer tnId,String ids) {
 
-        if (tnId <= 0 || pri <= 0)
+        if (tnId <= 0 || StringUtils.isBlank(ids))
             return false;
 
         String tableName = ParamsUtils.combinationTableName(type, tnId);
@@ -93,9 +93,13 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         if (StringUtils.isBlank(tableName))
             return false;
 
-        Integer result = iexTeantCustomDAO.removeTenantCustom(tableName, pri);
+        List<String> idsList = ParamsUtils.idsSplit(ids);
 
-        return (result > 0 ? true : false);
+
+        Integer result = iexTeantCustomDAO.removeTenantCustomList(tableName, idsList);
+        //.removeTenantCustom(tableName, pri);
+
+        return (result > 0);
     }
 
     /**

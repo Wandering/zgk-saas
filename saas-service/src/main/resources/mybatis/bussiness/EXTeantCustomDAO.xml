@@ -39,4 +39,14 @@
     <select id="getTenantCustom" resultType="java.util.LinkedHashMap">
          select * from ${tableName} order by id asc
     </select>
+
+    <delete id="removeTenantCustomList" >
+
+        DELETE FROM ${tableName} where id in
+
+        <foreach item="idItem" collection="ids" open="(" separator="," close=")">
+            #{idItem}
+        </foreach>
+
+    </delete>
 </mapper>

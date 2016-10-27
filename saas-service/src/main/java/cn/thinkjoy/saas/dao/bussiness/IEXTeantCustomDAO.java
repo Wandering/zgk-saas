@@ -51,4 +51,12 @@ public interface IEXTeantCustomDAO {
      * @return
      */
     List<LinkedHashMap<String, Object>> getTenantCustom(@Param("tableName") String tableName);
+
+    /**
+     * 批量删除
+     * @param tableName
+     * @param ids
+     * @return
+     */
+    Integer removeTenantCustomList(@Param("tableName") String tableName,@Param("ids")List<String> ids);
 }

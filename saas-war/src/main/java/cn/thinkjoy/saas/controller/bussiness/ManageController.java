@@ -242,12 +242,12 @@ public class ManageController {
      * @param pri  主键
      * @return
      */
-    @RequestMapping(value = "/{type}/{tnId}/{pri}/remove",method = RequestMethod.POST)
+    @RequestMapping(value = "/{type}/{tnId}/{ids}/remove",method = RequestMethod.POST)
     @ResponseBody
     public Map removeTenantCustom(@PathVariable String type,
                                   @PathVariable Integer tnId,
-                                  @PathVariable Integer pri) {
-        boolean result = iexTenantCustomService.removeTenantCustom(type, tnId, pri);
+                                  @PathVariable String ids) {
+        boolean result = iexTenantCustomService.removeTenantCustom(type, tnId, ids);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
