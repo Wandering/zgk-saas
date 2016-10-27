@@ -39,6 +39,15 @@ public interface EXIGradeService {
      */
     Integer deleteByMap(Map map);
 
+
+    /**
+     * 批量删除年级
+     * @param tnId 租户ID
+     * @param ids 年级标识
+     * @return
+     */
+    boolean removeGrades(String ids);
+
     /**
      * 新增年级
      * @param tnId 租户ID

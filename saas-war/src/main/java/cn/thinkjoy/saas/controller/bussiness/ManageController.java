@@ -90,16 +90,14 @@ public class ManageController {
      * 删除年级
      * @return
      */
-    @RequestMapping(value = "/grade/delete/{gid}",method = RequestMethod.POST)
+    @RequestMapping(value = "/grade/delete/{ids}",method = RequestMethod.POST)
     @ResponseBody
-    public Map deleteGrade(@PathVariable Integer gId,
+    public Map deleteGrade(@PathVariable String ids,
                            HttpServletRequest request) {
 
-        Map map = new HashMap();
-        map.put("id", gId);
-        Integer result = exiGradeService.deleteByMap(map);
+        boolean result = exiGradeService.removeGrades(ids);
         Map resultMap = new HashMap();
-        resultMap.put("result", (result > 0 ? "SUCCESS" : "FAIL"));
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
     }
 
@@ -158,16 +156,13 @@ public class ManageController {
 
     /**
      * 删除教室
-     * @param cid 教室标识
+     * @param ids 教室标识
      * @return
      */
-    @RequestMapping(value = "/classRoom/delete/{cid}",method = RequestMethod.POST)
+    @RequestMapping(value = "/classRoom/delete/{ids}",method = RequestMethod.POST)
     @ResponseBody
-    public Map deleteClassRoom(@PathVariable Integer cid) {
-        boolean result = false;
-        if (cid > 0) {
-            result = exiClassRoomService.removeClassRoom(cid);
-        }
+    public Map deleteClassRoom(@PathVariable String ids) {
+        boolean result = exiClassRoomService.removeClassRoom(ids);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
@@ -253,6 +248,22 @@ public class ManageController {
                                   @PathVariable Integer tnId,
                                   @PathVariable Integer pri) {
         boolean result = iexTenantCustomService.removeTenantCustom(type, tnId, pri);
+        Map resultMap = new HashMap();
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
+
+    /**
+     * 获取租户自定义数据
+     * @param type
+     * @param tnId
+     * @return
+     */
+    @RequestMapping(value = "/{type}/{tnId}/getTenantCustomData",method = RequestMethod.GET)
+    @ResponseBody
+    public Map  getTenantCustomData(@PathVariable String type,
+                                    @PathVariable Integer tnId) {
+        boolean result = false;
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;

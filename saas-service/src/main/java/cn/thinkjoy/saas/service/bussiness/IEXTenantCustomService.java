@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public interface IEXTenantCustomService {
 
+
+
     /**
      * 新增租户自定义表头数据
      * @param type 模块分类

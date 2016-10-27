@@ -177,4 +177,17 @@ public class EXGradeServiceImpl implements EXIGradeService {
     public Integer deleteByMap(Map map) {
         return exiGradeDAO.deleteByMap(map);
     }
+
+    /**
+     * 年级批量删除
+     * @param ids 年级标识
+     * @return
+     */
+    @Override
+    public boolean removeGrades(String ids) {
+        List<String> idsList = ParamsUtils.idsSplit(ids);
+        if (idsList == null)
+            return false;
+        return (exiGradeDAO.removeGrades(idsList) > 0);
+    }
 }

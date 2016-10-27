@@ -42,4 +42,11 @@ public interface EXIGradeDAO {
      */
     Integer deleteByMap(Map map);
 
+    /**
+     * 年级批量删除
+     * @param ids
+     * @return
+     */
+    Integer removeGrades(List<String> ids);
+
 }
