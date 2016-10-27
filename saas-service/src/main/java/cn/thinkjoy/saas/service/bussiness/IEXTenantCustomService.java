@@ -4,6 +4,7 @@ import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by douzy on 16/10/25.
@@ -46,4 +47,12 @@ public interface IEXTenantCustomService {
      * @return
      */
     List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId);
+
+
+    /**
+     * excel内添加select
+     * @param columnNames
+     * @return
+     */
+    List<Map<Integer,Object>> isExcelAddSelect(Integer tnId ,String[] columnNames);
 }

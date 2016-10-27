@@ -52,6 +52,7 @@ public  class ParamsUtils {
 
         return a.get(Calendar.YEAR);
     }
+
     /**
      *  动态表名组装     规则: saas_{type}_{tnId}_excel
      * @param type   class:班级  teacher:教师

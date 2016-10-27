@@ -278,11 +278,13 @@ public class ManageController {
         LOGGER.info("tnId:" + tnId);
         String[] columnNames = exiTenantConfigInstanceService.getTenantConfigListArrByTnIdAndType(type, tnId);
         List<LinkedHashMap<String, Object>> tenantCustoms=iexTenantCustomService.getTenantCustom(type, tnId);
+        List<Map<Integer,Object>> maps=iexTenantCustomService.isExcelAddSelect(tnId, columnNames);
+
 
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
-            ExcelUtils.createWorkBook(columnNames,tenantCustoms).write(os);
+            ExcelUtils.createWorkBook(columnNames,tenantCustoms,maps).write(os);
             LOGGER.info("Excel创建完成!");
         } catch (IOException e) {
             e.printStackTrace();

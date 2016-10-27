@@ -46,6 +46,9 @@ public class ConfigurationController {
     EXIClassRoomService exiClassRoomService;
 
     @Resource
+    IEXTenantCustomService iexTenantCustomService;
+
+    @Resource
     EXIGradeService exiGradeService;
 
     @Resource
@@ -257,10 +260,10 @@ public class ConfigurationController {
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
         String[] columnNames = exiTenantConfigInstanceService.getTenantConfigListArrByTnIdAndType(type, tnId);
-
+        List<Map<Integer,Object>> maps=iexTenantCustomService.isExcelAddSelect(tnId, columnNames);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
-            ExcelUtils.createWorkBook(columnNames).write(os);
+            ExcelUtils.createWorkBook(columnNames,maps).write(os);
             LOGGER.info("Excel创建完成!");
         } catch (IOException e) {
             e.printStackTrace();
