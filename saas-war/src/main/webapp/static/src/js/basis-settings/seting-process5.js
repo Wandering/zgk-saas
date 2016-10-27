@@ -76,9 +76,12 @@ SetingProcess5.prototype = {
         });
         ids = ids.join('');
         ids = ids.substring(1, ids.length);
+        console.log(ids)
         Common.ajaxFun('/config/import/teacher/' + tnId + '.do', 'POST', {
             'ids': ids
         }, function (res) {
+
+            console.log(res)
             if (res.rtnCode == "0000000") {
                 if (res.bizData.result == "SUCCESS") {
                     that.getTeacherList();
@@ -214,8 +217,8 @@ $(function () {
         window.location.href = '/config/export/teacher/' + tnId + '.do';
     });
     // 下一流程
-    $('#seting-process3-btn').on('click',function(){
-        window.location.href='/seting-process4'
+    $('#seting-process5-btn').on('click',function(){
+        window.location.href='/index';
     })
 });
 

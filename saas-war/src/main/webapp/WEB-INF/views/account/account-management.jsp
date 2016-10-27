@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <title>SAAS 账号管理</title>
     <%@ include file="./../common/meta.jsp"%>
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/role-management.css">
 </head>
 <body>
 <%@ include file="./../common/header.jsp"%>
@@ -45,8 +46,8 @@
                         <div class="title-2">
                             <span class="txt-t"></span>
                             <div class="btns">
-                                <button class="btn btn-pink">添加账号</button>
-                                <button class="btn btn-inverse">修改密码</button>
+                                <button class="btn btn-pink" id="addAccount-btn">添加账号</button>
+                                <button class="btn btn-inverse">修改账号</button>
                                 <button class="btn btn-danger">重设密码</button>
                                 <button class="btn btn-warning">禁用</button>
                                 <button class="btn btn-success">删除</button>
@@ -145,5 +146,6 @@
 </div><!-- /.main-container -->
 
 <%@ include file="./../common/footer.jsp"%>
+<script src="<%=ctx%>/static/src/js/account/account-management.js"></script>
 </body>
 </html>
