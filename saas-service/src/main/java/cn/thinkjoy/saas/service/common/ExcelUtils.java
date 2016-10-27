@@ -38,12 +38,16 @@ public class ExcelUtils {
      *
      * @param columnNames excel的列名
      */
-    public static Workbook createWorkBook(String columnNames[]) {
+    public static Workbook createWorkBook(String columnNames[],List<Map<Integer,Object>> selList) {
         LOGGER.info("===============创建excel文档 S===============");
         // 创建excel工作簿
         Workbook wb = new HSSFWorkbook();
         // 创建第一个sheet（页），并命名
         Sheet sheet = wb.createSheet("sheet1");
+
+
+        sheet=lockSelect(sheet,selList);
+
         LOGGER.info("sheet创建");
         LOGGER.info("column总数:"+columnNames.length);
         // 手动设置列宽。第一个参数表示要为第几列设；，第二个参数表示列的宽度，n为列高的像素数。
@@ -95,16 +99,7 @@ public class ExcelUtils {
         // 创建第一个sheet（页），并命名
         Sheet sheet = wb.createSheet("sheet1");
 
-        String[] textlist = { "列表1", "列表2", "列表3", "列表4", "列表5" };
-
-        if(selList!=null&&selList.size()>0) {
-            for(int i=0;i<selList.size();i++) {
-                Map<Integer, Object> selMap = selList.get(i);
-                for (Map.Entry<Integer, Object> entry : selMap.entrySet()) {
-                    sheet = setHSSFValidation(sheet, (String[])entry.getValue(), 1, 500, entry.getKey(), entry.getKey());// 第一列的前50
-                }
-            }
-        }
+        sheet=lockSelect(sheet,selList);
 
         LOGGER.info("sheet创建");
         LOGGER.info("column总数:"+columnNames.length);
@@ -131,7 +126,6 @@ public class ExcelUtils {
         cs.setBorderBottom(CellStyle.BORDER_THIN);
         cs.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         cs.setFillPattern(CellStyle.SOLID_FOREGROUND);
-
         cs.setAlignment(CellStyle.ALIGN_CENTER);
 
         //设置列名
@@ -164,6 +158,26 @@ public class ExcelUtils {
         LOGGER.info("===============创建excel文档 E===============");
         return wb;
     }
+
+    /**
+     * 下拉框锁定
+     * @param sheet
+     * @param selList
+     * @return
+     */
+    private static Sheet lockSelect(Sheet sheet,List<Map<Integer,Object>> selList) {
+        if (selList != null && selList.size() > 0) {
+            for (int i = 0; i < selList.size(); i++) {
+                Map<Integer, Object> selMap = selList.get(i);
+                for (Map.Entry<Integer, Object> entry : selMap.entrySet()) {
+                    sheet = setHSSFValidation(sheet, (String[]) entry.getValue(), 1, 5000, entry.getKey(), entry.getKey());// 第一列的前50
+                }
+            }
+        }
+
+        return sheet;
+    }
+
     /**
      * 设置某些列的值只能输入预制的数据,显示下拉框.
      *

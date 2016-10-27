@@ -144,6 +144,9 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
                         List<Grade> grades = exiGradeDAO.selectGradeByTnId(gradeMap);
                         value = converGradesArr(grades);
                         break;
+                    case EnumUtil.CLASS_ENROLL_YEAR://入学年份
+                        value=getEnrollYear(2012,2020);
+                        break;
                 }
 
                 if(!(value==null)) {
@@ -156,6 +159,32 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         return lockSelectList;
     }
 
+
+    /**
+     * 入学年份
+     * @param start
+     * @param end
+     * @return
+     */
+    private String[] getEnrollYear(Integer start,Integer end) {
+
+        Integer size = end - start;
+
+        String[] arr = new String[size+1];
+
+        for (int i = 0; i <= size; i++) {
+            arr[i] = start + "";
+            start++;
+        }
+
+        return arr;
+    }
+
+    /**
+     * 所属年级
+     * @param grades
+     * @return
+     */
     private String[] converGradesArr(List<Grade> grades) {
         String[] arr=new String[grades.size()];
 
