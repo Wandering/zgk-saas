@@ -66,19 +66,19 @@ public class ManageController {
     /**
      * 更新年级
      * @param tnId  租户ID
-     * @param gId 年级标识
+     * @param gid 年级标识
      * @param request
      * @return
      */
     @RequestMapping(value = "/grade/modify/{tnId}/{gid}",method = RequestMethod.POST)
     @ResponseBody
     public Map modifyGrade(@PathVariable Integer tnId,
-                           @PathVariable Integer gId,
+                           @PathVariable Integer gid,
                            HttpServletRequest request) {
 
         String gradeName = request.getParameter("gradeName");
 
-        boolean result = exiGradeService.updateGrade(tnId, gradeName,gId);
+        boolean result = exiGradeService.updateGrade(tnId, gradeName,gid);
 
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));

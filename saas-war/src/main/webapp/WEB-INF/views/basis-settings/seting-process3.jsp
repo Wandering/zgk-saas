@@ -55,7 +55,7 @@
                                 <tr>
                                     <th class="center">
                                         <label>
-                                            <input type="checkbox" class="ace" id="checkAll" />
+                                            <input type="checkbox" class="ace checkAll" id="checkAll" />
                                             <span class="lbl"></span>
                                         </label>
                                     </th>
@@ -64,7 +64,7 @@
                                     <th class="center">操作</th>
                                 </tr>
                                 </thead>
-                                <tbody id="class-template">
+                                <tbody id="class-template" class="check-template">
                                 <%--<tr>--%>
                                     <%--<td class="center">--%>
                                         <%--<label>--%>

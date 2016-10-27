@@ -45,7 +45,7 @@
                         <div class="title-2">
                             <span class="txt-t"></span>
                             <div class="btns">
-                                <button class="btn btn-pink" id="addRole-btn">添加教室</button>
+                                <button class="btn btn-pink" id="add-btn">添加教室</button>
                                 <button class="btn btn-inverse">修改</button>
                                 <button class="btn btn-success">删除</button>
                             </div>
@@ -91,6 +91,6 @@
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp"%>
-<script src="<%=ctx%>/static/src/js/info-management/class-management.js"></script>
+<script src="<%=ctx%>/static/src/js/info-management/classroom-management.js"></script>
 </body>
 </html>

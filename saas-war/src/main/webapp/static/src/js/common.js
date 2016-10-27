@@ -2,6 +2,7 @@ var Common = {
     init: function () {
         this.loginInfo();
         this.logout();
+        this.checkAll();
     },
     url: {},
     cookie: {
@@ -80,6 +81,68 @@ var Common = {
             Common.cookie.delCookie('tnName');
             window.location.href = '/login';
         });
-    }
+    },
+    checkAll:function(){
+        // 全选
+        $('#checkAll').on('click', function () {
+            if ($(this).is(':checked')) {
+                $('.check-template :checkbox').prop('checked', true);
+            } else {
+                $('.check-template :checkbox').prop('checked', false);
+            }
+        });
+        $(".check-template").on('click', ':checkbox', function () {
+            allchk();
+        });
+        function allchk() {
+            var chknum = $(".check-template :checkbox").size();//选项总个数
+            var chk = 0;
+            $(".check-template").find(':checkbox').each(function () {
+                if ($(this).prop("checked") == true) {
+                    chk++;
+                }
+            });
+            if (chknum == chk) {//全选
+                $("#checkAll").prop("checked", true);
+            } else {//不全选
+                $("#checkAll").prop("checked", false);
+            }
+        }
+    },
+    getClassRoom:function(){  // 获取教室
+        var classRoom = '';
+        Common.ajaxFun('/config/classRoom/get/'+ tnId +'.do', 'GET', {}, function (res) {
+            //console.log(res)
+            if (res.rtnCode == "0000000") {
+                classRoom = res
+            }
+        }, function (res) {
+            alert("出错了");
+        }, true);
+        return classRoom;
+    },
+    getGrade:function(){  // 获取年级
+        var gradeV = '';
+        Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
+                gradeV = res;
+            }
+        }, function (res) {
+            alert("出错了");
+        }, true);
+        return gradeV;
+    },
+    initClass:function(){  // 获取年级
+        var gradeV = '';
+        Common.ajaxFun('/config/getInit/'+ tnId +'.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
+                gradeV = res;
+            }
+        }, function (res) {
+            alert("出错了");
+        }, true);
+        return gradeV;
+    },
+
 };
 Common.init();
