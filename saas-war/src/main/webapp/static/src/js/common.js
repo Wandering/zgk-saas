@@ -43,20 +43,31 @@ var Common = {
             }
         }
     },
-    ajaxFun: function (url, method, reqData, callback, callbackError, isasync) {
+    ajaxFun: function (url, method, reqData, callback, callbackError, isasync,acceptType) {
         var isasyncB = null;
         if (isasync) {
             isasyncB = false;
         } else {
             isasyncB = true;
         }
+        var headers=null;
+        if(acceptType){
+            headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }else{
+            headers='';
+        }
+
         $.ajax({
             url: url,
             type: method,
             data: reqData || {},
             async: isasyncB,
             success: callback,
-            error: callbackError
+            error: callbackError,
+            headers:headers
         });
     },
     loginInfo: function () {

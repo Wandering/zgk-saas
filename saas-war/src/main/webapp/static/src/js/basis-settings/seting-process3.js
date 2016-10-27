@@ -22,7 +22,7 @@ SetingProcess3.prototype = {
                     classTemplate.push('<span class="lbl"></span>');
                     classTemplate.push('</label>');
                     classTemplate.push('</td>');
-                    classTemplate.push('<td class="center index">' + (i + 1) + '</td>');
+                    classTemplate.push('<td class="center index" indexId="' + v.id + '">' + (i + 1) + '</td>');
                     classTemplate.push('<td class="center key-name">' + v.name + '</td>');
                     classTemplate.push('<td class="center"><span deldata="' + v.id + '" class="del-btn">删除</span></td>');
                     classTemplate.push('</tr>');
@@ -112,8 +112,23 @@ SetingProcess3.prototype = {
                 return $helper;
             },
             updateIndex = function (e, ui) {
+                var ids = [];
                 $('td.index', ui.item.parent()).each(function (i) {
                     $(this).html(i + 1);
+                    ids.push("-" + $(this).attr('indexId'));
+                });
+                ids = ids.join('');
+                ids = ids.substring(1, ids.length);
+                Common.ajaxFun('/config/sort/class/'+ ids +'.do', 'POST', {}, function (res) {
+                    if (res.rtnCode == "0000000") {
+                        if (res.bizData.result == "SUCCESS") {
+                            layer.msg('排序成功');
+                        }else{
+                            layer.msg(res.bizData.result);
+                        }
+                    }
+                }, function (res) {
+                    alert("出错了");
                 });
             };
         $("#class-template").sortable({

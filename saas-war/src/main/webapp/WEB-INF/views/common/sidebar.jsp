@@ -24,7 +24,7 @@
       </a>
       <ul class="submenu">
         <li>
-          <a href="">
+          <a href="/class-management">
             <i class="icon-double-angle-right"></i>
             班级管理
           </a>
@@ -69,28 +69,40 @@
       </a>
       <ul class="submenu">
         <li>
-          <a href="">
+          <a href="/grade-management">
+            <i class="icon-double-angle-right"></i>
+            年级管理
+          </a>
+        </li>
+        <li>
+          <a href="/class-management">
             <i class="icon-double-angle-right"></i>
             班级管理
           </a>
         </li>
 
         <li>
-          <a href="">
+          <a href="/classroom-management">
             <i class="icon-double-angle-right"></i>
-            学生管理
+            教室管理
           </a>
         </li>
         <li>
-          <a href="">
+          <a href="/teacher-management">
             <i class="icon-double-angle-right"></i>
             教师管理
           </a>
         </li>
         <li>
-          <a href="">
+          <a href="/graduation-rates-management">
             <i class="icon-double-angle-right"></i>
-            学校录取比例设置
+            升学率管理
+          </a>
+        </li>
+        <li>
+          <a href="/student-management">
+            <i class="icon-double-angle-right"></i>
+            学生管理
           </a>
         </li>
       </ul>
