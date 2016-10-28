@@ -1,6 +1,7 @@
 package cn.thinkjoy.saas.common;
 
 import cn.thinkjoy.common.domain.BaseDomain;
+import cn.thinkjoy.common.protocol.Request;
 import cn.thinkjoy.common.protocol.RequestT;
 import cn.thinkjoy.common.restful.ITypeReference;
 import cn.thinkjoy.common.restful.RawTypeReference;
@@ -21,8 +22,8 @@ public class TypeReferenceMaps implements ITypeReference {
 
     private Map<String, TypeReference> typeReferenceMaps = Maps.newHashMap();
     public void init(){
-        typeReferenceMaps.put("/admin/saas/role/test", new TypeReference<RequestT<BaseDomain>>(){});
-        typeReferenceMaps.put("/user/login", RawTypeReference.stringTypeReference);
+//        typeReferenceMaps.put("/admin/saas/role/test", new TypeReference<RequestT<BaseDomain>>(){});
+        typeReferenceMaps.put("/role/createRole.do",new TypeReference<Request>() {});
     }
 
     @Override
