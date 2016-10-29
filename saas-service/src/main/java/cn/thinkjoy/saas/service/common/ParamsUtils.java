@@ -1,15 +1,19 @@
 package cn.thinkjoy.saas.service.common;
 
+import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by douzy on 16/10/13.
  */
 public  class ParamsUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ParamsUtils.class);
 
     /**
      * ids 分隔符
@@ -68,5 +72,97 @@ public  class ParamsUtils {
         stringBuffer.append(ParamsUtils.TABLE_NAME_COMBIN_CHAR);
         stringBuffer.append("excel");
         return stringBuffer.toString();
+    }
+
+    /**
+     * excel数据格式校验
+     * @param excelValues
+     * @param tenantConfigInstanceViews
+     * @return
+     */
+    public static boolean excelValueValid(List<LinkedHashMap<String, String>> excelValues,List<TenantConfigInstanceView> tenantConfigInstanceViews) {
+
+        LOGGER.info("================excel数据格式校验 S================");
+        boolean result = false;
+
+        if (excelValues == null || tenantConfigInstanceViews == null)
+            return result;
+        Integer excelLen=excelValues.size();
+
+        LOGGER.info("excel集大小:"+excelLen);
+        LOGGER.info("表头集大小:"+tenantConfigInstanceViews.size());
+
+        for (int x = 0; x < excelLen; x++) {
+
+            LinkedHashMap<String, String> rowsMap = excelValues.get(x);
+
+            Iterator iter = rowsMap.entrySet().iterator();
+
+            int y = 0;
+
+            while (iter.hasNext()) {
+
+                Map.Entry entry = (Map.Entry) iter.next();
+                String key = entry.getKey().toString();
+                String val = entry.getValue().toString();
+
+                TenantConfigInstanceView tenantConfigInstanceView = tenantConfigInstanceViews.get(y);
+
+                String checkRuleStr = tenantConfigInstanceView.getCheckRule();
+
+                LOGGER.info("原始正则:" + checkRuleStr);
+                String regularStr = getConverReg(checkRuleStr);
+                LOGGER.info("转换正则:" + regularStr);
+
+                LOGGER.info(x + "行-" + key + "列 value:" + val + "");
+                boolean valid = (StringUtils.isBlank(regularStr) ? true : isRegValid(regularStr, val));
+                LOGGER.info("校验结果:" + valid);
+                if (!valid)
+                    return result;
+                y++;
+            }
+        }
+        result = true;
+        LOGGER.info("================excel数据格式校验 E================");
+        return result;
+
+    }
+
+    /**
+     * 正则匹配结果
+     * @param reg  正则
+     * @param str
+     * @return
+     */
+    private static boolean isRegValid(String reg,String str) {
+        Pattern pattern = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(str);
+        return matcher.matches();
+    }
+
+    /**
+     * js正则转换java正则
+     * @param regStr 正则
+     * @return
+     */
+    private static String getConverReg(String regStr) {
+        if (StringUtils.isBlank(regStr))
+            return null;
+        return regStr.replace("/", "").replace("\\", "\\");
+    }
+
+    public static void main(String[] arg){
+        String regStr="^\\s*[\\s\\S]{1,12}\\s*$";
+
+
+        System.out.println(regStr.replace("/", "").replace("\\", "\\"));
+
+//
+//        String s="^\\s*[\\\\s\\\\S]{1,10}\\\\s*$";
+//        String str="1234567";
+//        Pattern pattern = Pattern.compile(s,Pattern.CASE_INSENSITIVE);
+//        Matcher matcher = pattern.matcher(str);
+//        System.out.println(matcher.matches());
+
     }
 }
