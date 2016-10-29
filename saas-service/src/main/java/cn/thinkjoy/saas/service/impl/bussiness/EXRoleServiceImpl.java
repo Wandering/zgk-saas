@@ -81,7 +81,7 @@ public class EXRoleServiceImpl implements IEXRoleService {
         List<RelationRoleResource> resources = Lists.newArrayList();
         for(int i=0;i<meunIdArr.length;i++){
             RelationRoleResource resource = new RelationRoleResource();
-            resource.setRoleId((int)roles.getId());
+            resource.setRoleId(Integer.valueOf(roles.getId().toString()));
             resource.setResId(Integer.valueOf(meunIdArr[i]));
             resources.add(resource);
         }

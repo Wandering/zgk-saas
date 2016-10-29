@@ -20,46 +20,42 @@
                      http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
 
 
-    <!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射   请求映射-->
-    <!--<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />-->
+    <bean
+            class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
+        <property name="caseSensitive" value="true" />
+    </bean>
+
     <mvc:default-servlet-handler />
+    <!-- Enables the Spring MVC @Controller programming model -->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <ref bean="fastJsonHttpMessageConverter" />
+        </mvc:message-converters>
+    </mvc:annotation-driven>
 
-    <!--<mvc:default-servlet-handler />-->
-    <!--&lt;!&ndash; Enables the Spring MVC @Controller programming model &ndash;&gt;-->
-    <!--<mvc:annotation-driven>-->
-        <!--<mvc:message-converters>-->
-            <!--<ref bean="fastJsonHttpMessageConverter" />-->
-        <!--</mvc:message-converters>-->
-    <!--</mvc:annotation-driven>-->
+    <!--启动Spring MVC的注解功能，完成请求和注解POJO的映射-->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" >
+        <property name="messageConverters">
+            <list>
+                <ref bean="fastJsonHttpMessageConverter" /><!-- json转换器 -->
+            </list>
+        </property>
+    </bean>
 
-    <!--&lt;!&ndash; @Controller, @Service, @Configuration, etc. &ndash;&gt;-->
-    <!--<context:component-scan base-package="cn.thinkjoy" />-->
+    <bean id="fastJsonHttpMessageConverter"
+          class="cn.thinkjoy.common.restful.ExtFastJsonHttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>application/json;charset=utf-8</value>
+                <value>text/html; charset=utf-8</value>
+                <value>application/xml; charset=utf-8</value>
+            </list>
+        </property>
+        <property name="iTypeReference" ref="typeReferenceMaps" />
+    </bean>
 
-    <!--<bean-->
-		<!--class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">-->
-		<!--<property name="caseSensitive" value="true" />-->
-	<!--</bean>-->
+    <bean id="typeReferenceMaps" class="cn.thinkjoy.saas.common.TypeReferenceMaps" init-method="init"/>
 
-    <!--&lt;!&ndash; 启动Spring MVC的注解功能，完成请求和注解POJO的映射 &ndash;&gt;-->
-    <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" >-->
-        <!--<property name="messageConverters">-->
-            <!--<list>-->
-                <!--<ref bean="fastJsonHttpMessageConverter" />&lt;!&ndash; json转换器 &ndash;&gt;-->
-            <!--</list>-->
-        <!--</property>-->
-    <!--</bean>-->
-
-    <!--<bean id="fastJsonHttpMessageConverter"-->
-          <!--class="cn.thinkjoy.common.restful.ExtFastJsonHttpMessageConverter">-->
-        <!--<property name="supportedMediaTypes">-->
-            <!--<list>-->
-                <!--<value>application/json; charset=utf-8</value>-->
-            <!--</list>-->
-        <!--</property>-->
-        <!--<property name="iTypeReference" ref="typeReferenceMaps" />-->
-    <!--</bean>-->
-
-    <!--<bean id="typeReferenceMaps" class="cn.thinkjoy.saas.common.TypeReferenceMaps" init-method="init"/>-->
 
     <!-- freemarker的配置 -->
     <!-- FreeMarker视图解析   如返回student。。在这里配置后缀名ftl和视图解析器。。-->
@@ -91,13 +87,6 @@
     </bean>
 
 
-    <!-- Enables the Spring MVC @Controller programming model -->
-    <mvc:annotation-driven>
-        <mvc:message-converters>
-            <ref bean="fastJsonHttpMessageConverter" />
-        </mvc:message-converters>
-    </mvc:annotation-driven>
-
     <!-- @Controller, @Service, @Configuration, etc. -->
     <context:component-scan base-package="cn.thinkjoy" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
@@ -107,24 +96,6 @@
 
     <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
         <property name="caseSensitive" value="true" />
-    </bean>
-
-    <!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
-    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" >
-        <property name="messageConverters">
-            <list>
-                <ref bean="fastJsonHttpMessageConverter" /><!-- json转换器 -->
-            </list>
-        </property>
-    </bean>
-
-    <bean id="fastJsonHttpMessageConverter"
-          class="cn.thinkjoy.common.restful.ExtFastJsonHttpMessageConverter">
-        <property name="supportedMediaTypes">
-            <list>
-                <value>application/json; charset=utf-8</value>
-            </list>
-        </property>
     </bean>
 
 
