@@ -45,8 +45,6 @@ public class ReadExcel {
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String> ();
                 for (int j = 0; j <= row.getPhysicalNumberOfCells(); j++) {
                     if (row.getCell(j) != null) {
-                        // 注意：一定要设成这个，否则可能会出现乱码
-//                      row.getCell(j).setEncoding(HSSFCell.ENCODING_UTF_16);
                         String str = getCellValue(row.getCell(j));
                         LOGGER.info(i + "行-" + j + "列:" + str);
                         map.put(j+"", str);
@@ -99,6 +97,7 @@ public class ReadExcel {
                 value = String.valueOf(cell.getErrorCellValue());
                 break;
             default:
+
                 System.out.println("default");
                 break;
         }
