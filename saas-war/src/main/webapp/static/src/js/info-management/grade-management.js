@@ -63,7 +63,37 @@ GradeManagement.prototype = {
         });
     },
     deleteGrade:function(){
-
+        var that = this;
+        var checkedLen = $("#grade-list :checkbox:checked").size();
+        if(checkedLen=="0"){
+            layer.tips('至少选择一项', $('.del-btn'));
+            return false;
+        }
+        var selItem = [];
+        $('#grade-list').find('input[type="checkbox"]').each(function (i, v) {
+            if ($(this).is(':checked') == true) {
+                selItem.push('-' + $(this).attr('gradeid'));
+            }
+        });
+        selItem = selItem.join('');
+        selItem = selItem.substring(1, selItem.length);
+        layer.confirm('确定删除?', {
+            btn: ['确定', '关闭'] //按钮
+        }, function () {
+            Common.ajaxFun('/manage/grade/delete/'+ selItem +'.do', 'POST', {}, function (res) {
+                if (res.rtnCode == "0000000") {
+                    if(res.bizData.result="SUCCESS"){
+                        layer.closeAll();
+                        $('#grade-list').html('');
+                        that.getGrade();
+                    }
+                }
+            }, function (res) {
+                alert("出错了");
+            });
+        }, function () {
+            layer.closeAll();
+        });
     }
 };
 var GradeManagementIns = new GradeManagement();
@@ -130,4 +160,8 @@ $('#modify-btn').on('click',function () {
 
 $('body').on('click','.close-btn',function(){
     layer.closeAll();
+});
+
+$('body').on('click', '.del-btn', function () {
+    GradeManagementIns.deleteGrade()
 });

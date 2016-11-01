@@ -138,4 +138,13 @@ public class WebCotroller {
         return new ModelAndView("/info-management/student-management");
     }
 
+    /**
+     * student-management
+     * 上传文件
+     */
+    @RequestMapping("/uploadFile")
+    public ModelAndView uploadFile() {
+        return new ModelAndView("/upload/uploadFile");
+    }
+
 }

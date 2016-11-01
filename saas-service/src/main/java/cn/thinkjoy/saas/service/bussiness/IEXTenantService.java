@@ -9,4 +9,11 @@ public interface IEXTenantService {
      * @return
      */
     boolean stepSetting(Integer tnId,boolean isLast);
+
+    /**
+     * 获取租户当前步骤
+     * @param tnId 租户ID
+     * @return
+     */
+    Integer getStep(Integer tnId);
 }

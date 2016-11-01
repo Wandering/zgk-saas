@@ -7,26 +7,12 @@ function classRoomManagement() {
 classRoomManagement.prototype = {
     constructor: classRoomManagement,
     init: function () {
-        this.getGrade();
+        this.getClassRoom();
     },
     getClassRoom:function(){
-        Common.ajaxFun('/config/classRoom/get/'+ tnId +'.do', 'GET', {
-            'tnId': tnId
-        }, function (res) {
-            //console.log(res)
-            if (res.rtnCode == "0000000") {
-                that.renderList(res);
-            }
-        }, function (res) {
-            alert("出错了");
-        }, true);
-    },
-    getGrade: function () {
         var that = this;
-        Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {
-            'tnId': tnId
-        }, function (res) {
-            //console.log(res)
+        Common.ajaxFun('/config/classRoom/get/'+ tnId +'.do', 'GET', {}, function (res) {
+            console.log(res)
             if (res.rtnCode == "0000000") {
                 that.renderList(res);
             }
@@ -38,7 +24,7 @@ classRoomManagement.prototype = {
         console.log(data);
         if (data.rtnCode == "0000000") {
             var gradeArr = [];
-            $.each(data.bizData.grades, function (i, v) {
+            $.each(data.bizData.classRoom, function (i, v) {
                 gradeArr.push('<tr>');
                 gradeArr.push('<td class="center">');
                 gradeArr.push('<label>');
@@ -48,19 +34,38 @@ classRoomManagement.prototype = {
                 gradeArr.push('</td>');
                 gradeArr.push('<td class="center">'+ (i+1) +'</td>');
                 gradeArr.push('<td class="center">'+ v.grade +'</td>');
+                gradeArr.push('<td class="center">'+ v.number +'</td>');
                 gradeArr.push('</tr>');
             });
             $('#grade-list').append(gradeArr.join(''));
         }
+    },
+    getGrade: function () {
+        var that = this;
+        Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {
+            'tnId': tnId
+        }, function (res) {
+            //console.log(res)
+            if (res.rtnCode == "0000000") {
+                var grade = [];
+                grade.push('<option value="00">请选择年级</option>')
+                $.each(res.bizData.grades,function(i,v){
+                    grade.push('<option value="'+ v.id +'">'+ v.grade +'</option>')
+                });
+                $('#grade-list').append(grade.join(''));
+            }
+        }, function (res) {
+            alert("出错了");
+        }, true);
     },
     addGrade:function(title){
         var that = this;
         var contentHtml = [];
         contentHtml.push('<div class="form-horizontal grade-layer">');
         contentHtml.push('<div class="form-group">');
-        contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="grade-name"> 教室数量 </label>');
+        contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="classroom-num"> 教室数量 </label>');
         contentHtml.push('<div class="col-sm-8">');
-        contentHtml.push('<input type="text" id="grade-name" placeholder="输入教室数量" class="col-xs-10 col-sm-10" />');
+        contentHtml.push('<input type="text" id="classroom-num" placeholder="输入教室数量" class="col-xs-10 col-sm-10" />');
         contentHtml.push('</div>');
         contentHtml.push('</div>');
         contentHtml.push('<div class="form-group">');
@@ -79,6 +84,7 @@ classRoomManagement.prototype = {
             area: ['362px', '230px'],
             content: contentHtml.join('')
         });
+        that.getGrade();
     },
     deleteGrade:function(){
 
@@ -87,18 +93,19 @@ classRoomManagement.prototype = {
 var classRoomManagementIns = new classRoomManagement();
 $('#add-btn').on('click',function(){
     classRoomManagementIns.addGrade('添加教室');
-
-
-
 });
 $('body').on('click','.save-btn',function () {
-    var gradeName = $.trim($('#grade-name').val());
+    var classroomNum = $.trim($('#classroom-num').val());
+    var gradeV = $('#grade-list').val();
     var gradeid = $(this).attr('gradeid');
-    if(gradeName==""){
-        layer.tips('请填写年级名称!', $('#grade-name'));
+    if(classroomNum==""){
+        layer.tips('请填写教室数量!', $('#classroom-num'));
         return false;
     }
-
+    if(gradeV=="00"){
+        layer.tips('请选择年级!', $('#classroom-num'));
+        return false;
+    }
     if(!gradeid){
         Common.ajaxFun('/manage/grade/add/'+ tnId +'.do', 'POST',{
             gradeName:gradeName
@@ -115,7 +122,7 @@ $('body').on('click','.save-btn',function () {
             alert("出错了");
         });
     }else{
-        Common.ajaxFun('/manage/grade/modify/'+ tnId +'/'+ gradeid +'.do', 'POST',{
+        Common.ajaxFun('/manage/classRoom/add/'+ tnId +'/{gId}.do', 'POST',{
             gradeName:gradeName
         }, function (res) {
             console.log(res)
