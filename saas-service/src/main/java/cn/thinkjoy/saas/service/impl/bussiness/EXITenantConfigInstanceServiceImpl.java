@@ -349,7 +349,14 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
         if (tenantConfigInstanceViews == null)
             return false;
-        Integer reuslt = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
+
+        boolean excelValid = ParamsUtils.excelValueValid(configTeantComList, tenantConfigInstanceViews);
+
+
+        Integer reuslt = 0;
+
+        if (excelValid)
+            reuslt = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
 
         LOGGER.info("===========解析excel E===========");
         return (reuslt > 0 ? true : false);

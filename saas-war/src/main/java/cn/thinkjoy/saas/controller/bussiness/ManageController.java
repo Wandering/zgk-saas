@@ -239,7 +239,7 @@ public class ManageController {
      * 删除租户自定义表头数据
      * @param type 模块名
      * @param tnId 租户ID
-     * @param pri  主键
+     * @param ids  主键
      * @return
      */
     @RequestMapping(value = "/{type}/{tnId}/{ids}/remove",method = RequestMethod.POST)
