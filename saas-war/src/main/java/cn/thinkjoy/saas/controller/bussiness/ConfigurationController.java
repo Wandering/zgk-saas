@@ -8,7 +8,6 @@ import cn.thinkjoy.saas.domain.Grade;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.IClassRoomsService;
 import cn.thinkjoy.saas.service.IEnrollingRatioService;
-import cn.thinkjoy.saas.service.ITenantService;
 import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExcelUtils;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
@@ -51,9 +50,6 @@ public class ConfigurationController {
 
     @Resource
     EXIGradeService exiGradeService;
-
-    @Resource
-    IEXTenantService iexTenantService;
 
     @Resource
     IEnrollingRatioService iEnrollingRatioService;
