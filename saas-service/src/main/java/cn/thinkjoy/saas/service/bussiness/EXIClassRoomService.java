@@ -23,4 +23,31 @@ public interface EXIClassRoomService {
      * @return
      */
      boolean addClassRoom(Integer tnId, String nums);
+
+    /**
+     * 新增教室
+     * @param tnId
+     * @param gradeId
+     * @param classRoomNum
+     * @return
+     */
+    boolean addClassRoom(Integer tnId,Integer gradeId,Integer classRoomNum);
+
+
+    /**
+     * 更新教室
+     * @param num 教室数量
+     * @param gid 年级ID
+     * @param cid 教室标识
+     * @return
+     */
+    boolean updateClassRoom(Integer num,Integer gid,Integer cid);
+
+
+    /**
+     * 删除教室
+     * @param ids 教室标识
+     * @return
+     */
+    boolean removeClassRoom(String ids);
 }

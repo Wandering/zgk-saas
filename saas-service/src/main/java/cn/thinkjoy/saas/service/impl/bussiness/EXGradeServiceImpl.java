@@ -4,6 +4,7 @@ import cn.thinkjoy.saas.dao.IGradeDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO;
 import cn.thinkjoy.saas.domain.Grade;
 import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
+import cn.thinkjoy.saas.service.bussiness.IEXTenantService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +27,9 @@ public class EXGradeServiceImpl implements EXIGradeService {
 
     @Resource
     EXIGradeDAO exiGradeDAO;
+
+    @Resource
+    IEXTenantService iexTenantService;
 
     @Resource
     IGradeDAO iGradeDAO;
@@ -57,28 +62,18 @@ public class EXGradeServiceImpl implements EXIGradeService {
                 grades.add(g);
             }
 
+            Map delMap = new HashMap();
+            delMap.put("tnId", tnId);
+
+            deleteByMap(delMap);
+
             Integer addResu = exiGradeDAO.addGrade(grades);
 
             result = addResu > 0 ? true : false;
-//
-//            Map map = new HashMap();
-//            map.put("tnId", tnId);
-//            Grade selGrade = selectGradeByTnId(map);
-//
-//            //insert
-//            if (selGrade == null) {
-//                Grade grade = new Grade();
-//                grade.setTnId(tnId);
-//                grade.setGrade(nums);
-//                Integer addResu = iGradeDAO.insert(grade);
-//                result = addResu > 0 ? true : false;
-//            } else//update
-//            {
-//                selGrade.setGrade(nums);
-//                Integer updResu = iGradeDAO.update(selGrade);
-//                result = updResu > 0 ? true : false;
-//            }
         }
+        if (result)
+            iexTenantService.stepSetting(tnId,false);
+
 
         return result;
     }
@@ -92,7 +87,7 @@ public class EXGradeServiceImpl implements EXIGradeService {
      * @return
      */
     @Override
-    public Grade selectGradeByTnId(Map map) {
+    public List<Grade> selectGradeByTnId(Map map) {
         return exiGradeDAO.selectGradeByTnId(map);
     }
 
@@ -147,5 +142,52 @@ public class EXGradeServiceImpl implements EXIGradeService {
         LOGGER.info("===============年级拖动排序 E==============");
 
         return result;
+    }
+
+    /**
+     * 新增年级
+     * @param grade
+     * @return
+     */
+    @Override
+    public boolean insertGrade(Integer tnId,String gradeName) {
+        Grade grade = new Grade();
+        grade.setTnId(tnId);
+        grade.setGrade(gradeName);
+        grade.setgOrder(0);
+        Integer result = iGradeDAO.insert(grade);
+        return (result > 0 ? true : false);
+    }
+    @Override
+    public boolean updateGrade(Integer tnId,String gradeName,Integer gid) {
+        Grade grade = new Grade();
+        grade.setTnId(tnId);
+        grade.setGrade(gradeName);
+        grade.setgOrder(0);
+        grade.setId(gid);
+        Integer result = iGradeDAO.update(grade);
+        return (result > 0 ? true : false);
+    }
+    /**
+     * 删除年级
+     * @param map
+     * @return
+     */
+    @Override
+    public Integer deleteByMap(Map map) {
+        return exiGradeDAO.deleteByMap(map);
+    }
+
+    /**
+     * 年级批量删除
+     * @param ids 年级标识
+     * @return
+     */
+    @Override
+    public boolean removeGrades(String ids) {
+        List<String> idsList = ParamsUtils.idsSplit(ids);
+        if (idsList == null)
+            return false;
+        return (exiGradeDAO.removeGrades(idsList) > 0);
     }
 }

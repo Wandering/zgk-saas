@@ -49,6 +49,7 @@
     }
   }
 }
+
 .flow-tips{
   font-size:14px;
   color: #4A4A4A;
@@ -64,3 +65,24 @@
 .setting-grade .table td{
   height:67px;
 }
+.add-label{
+  padding:30px 20px 0;
+  label{
+    margin:0 35px 10px 0;
+  }
+}
+
+#class-template span.del-btn,
+#teacher-template span.del-btn{
+  color: #428bca;
+  text-decoration: underline;
+  cursor: pointer;
+}
+#class-template span.disabled,
+#teacher-template span.disabled{
+  color: #ccc;
+  text-decoration: none;
+  cursor: text;
+  outline: 0;
+}
+

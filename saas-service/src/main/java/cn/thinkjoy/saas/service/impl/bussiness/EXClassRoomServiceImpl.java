@@ -4,6 +4,7 @@ import cn.thinkjoy.saas.dao.IClassRoomsDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIClassRoomDAO;
 import cn.thinkjoy.saas.domain.ClassRooms;
 import cn.thinkjoy.saas.service.bussiness.EXIClassRoomService;
+import cn.thinkjoy.saas.service.bussiness.IEXTenantService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
     @Resource
     EXIClassRoomDAO exiClassRoomDAO;
 
+    @Resource
+    IEXTenantService iexTenantService;
+
     /**
      * 根据字段查找一个教室对象
      *
@@ -34,6 +38,16 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
     public ClassRooms selectClassRoomByTnId(Map map) {
         return exiClassRoomDAO.selectClassRoomByTnId(map);
 
+    }
+
+    @Override
+    public boolean addClassRoom(Integer tnId,Integer gradeId,Integer classRoomNum) {
+        ClassRooms classRooms = new ClassRooms();
+        classRooms.setTnId(tnId);
+        classRooms.setCreateDate(System.currentTimeMillis());
+        classRooms.setNumber(classRoomNum);
+        classRooms.setGradeId(gradeId);
+        return (iClassRoomsDAO.insert(classRooms) > 0 ? true : false);
     }
 
     /**
@@ -71,7 +85,38 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
             result = addResu > 0 ? true : false;
 
         }
-
+        if (result)
+            iexTenantService.stepSetting(tnId,false);
         return result;
+    }
+
+    /**
+     * 更新教室
+     * @param num 教室数量
+     * @param gid 年级ID
+     * @param cid 教室标识
+     * @return
+     */
+    @Override
+    public boolean updateClassRoom(Integer num,Integer gid,Integer cid) {
+
+        ClassRooms classRooms = new ClassRooms();
+        classRooms.setGradeId(gid);
+        classRooms.setNumber(num);
+        classRooms.setId(cid);
+        return (iClassRoomsDAO.update(classRooms) > 0 ? true : false);
+    }
+
+    /**
+     * 删除教室
+     * @param ids 教室标识
+     * @return
+     */
+    @Override
+    public boolean removeClassRoom(String ids) {
+        List<String> idsList = ParamsUtils.idsSplit(ids);
+        if (idsList == null)
+            return false;
+        return (exiClassRoomDAO.removeClassRooms(idsList) > 0);
     }
 }

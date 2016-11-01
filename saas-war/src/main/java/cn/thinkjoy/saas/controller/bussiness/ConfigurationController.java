@@ -8,10 +8,7 @@ import cn.thinkjoy.saas.domain.Grade;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.IClassRoomsService;
 import cn.thinkjoy.saas.service.IEnrollingRatioService;
-import cn.thinkjoy.saas.service.bussiness.EXIClassRoomService;
-import cn.thinkjoy.saas.service.bussiness.EXIConfigurationService;
-import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
-import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
+import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExcelUtils;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
@@ -49,8 +46,13 @@ public class ConfigurationController {
     EXIClassRoomService exiClassRoomService;
 
     @Resource
+    IEXTenantCustomService iexTenantCustomService;
+
+    @Resource
     EXIGradeService exiGradeService;
 
+    @Resource
+    IEXTenantService iexTenantService;
 
     @Resource
     IEnrollingRatioService iEnrollingRatioService;
@@ -67,7 +69,7 @@ public class ConfigurationController {
      * @param nums 年级
      * @return
      */
-    @RequestMapping(value = "/class/setting/{tnId}/{nums}",method = RequestMethod.GET)
+    @RequestMapping(value = "/class/setting/{tnId}/{nums}",method = RequestMethod.POST)
     @ResponseBody
     public Map classSetting(@PathVariable Integer tnId,@PathVariable String nums) {
         boolean result =exiGradeService.AddGrade(tnId,nums);
@@ -86,9 +88,9 @@ public class ConfigurationController {
     public Map getGradeByTnId(@PathVariable Integer tnId) {
         Map map = new HashMap();
         map.put("tnId", tnId);
-        Grade grade = exiGradeService.selectGradeByTnId(map);
+        List<Grade> grades = exiGradeService.selectGradeByTnId(map);
         Map resultMap = new HashMap();
-        resultMap.put("grade", grade);
+        resultMap.put("grades", grades);
         return resultMap;
     }
 
@@ -114,7 +116,7 @@ public class ConfigurationController {
      * @param nums 数量集  例:  1:1-2:2-3:3   1:高一年级:教室数量 2:高二年级:教室数量 3:高三年级:教室数量
      * @return
      */
-    @RequestMapping(value = "/classRoom/setting/{tnId}/{nums}",method = RequestMethod.GET)
+    @RequestMapping(value = "/classRoom/setting/{tnId}/{nums}",method = RequestMethod.POST)
     @ResponseBody
     public Map classRoomSetting(@PathVariable Integer tnId,@PathVariable String nums) {
 
@@ -149,6 +151,8 @@ public class ConfigurationController {
                 Integer addResu = iEnrollingRatioService.insert(enrollingRatio);
                 result = addResu > 0 ? true : false;
             }
+            if(result)
+                iexTenantService.stepSetting(tnId,false);
         }
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
@@ -212,10 +216,12 @@ public class ConfigurationController {
      * @param ids 表头ID
      * @return
      */
-    @RequestMapping(value = "/tenant/remove/{ids}", method = RequestMethod.POST)
+    @RequestMapping(value = "/tenant/remove/{type}/{tnId}/{ids}", method = RequestMethod.POST)
     @ResponseBody
-    public Map removeTeantConfigs(@PathVariable String ids) {
-        boolean result = exiTenantConfigInstanceService.removeTeantConfigs(ids);
+    public Map removeTeantConfigs(@PathVariable String type,
+                                  @PathVariable Integer tnId,
+                                  @PathVariable String ids) {
+        boolean result = exiTenantConfigInstanceService.removeTeantConfigs(type,tnId,ids);
         Map resultMap = new HashMap();
         resultMap.put("result", result ? "SUCCESS" : "FAIL");
         return resultMap;
@@ -254,10 +260,10 @@ public class ConfigurationController {
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
         String[] columnNames = exiTenantConfigInstanceService.getTenantConfigListArrByTnIdAndType(type, tnId);
-
+        List<Map<Integer,Object>> maps=iexTenantCustomService.isExcelAddSelect(tnId, columnNames);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
-            ExcelUtils.createWorkBook(columnNames).write(os);
+            ExcelUtils.createWorkBook(columnNames,maps).write(os);
             LOGGER.info("Excel创建完成!");
         } catch (IOException e) {
             e.printStackTrace();
@@ -342,12 +348,16 @@ public class ConfigurationController {
             String realPath = env.getProp("configuration.excel.upload.url");
             FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
             result = exiTenantConfigInstanceService.uploadExcel(type, tnId, realPath + myfile.getOriginalFilename());
+            if (result)
+                iexTenantService.stepSetting(tnId, (type.equals("teacher")?true:false));
         }
         LOGGER.info("==================excel上传 E==================");
         Map resultMap = new HashMap();
         resultMap.put("result", result ? "SUCCESS" : "FAIL");
         return resultMap;
     }
+
+
 
 }
 

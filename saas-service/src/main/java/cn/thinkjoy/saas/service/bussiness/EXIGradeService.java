@@ -2,6 +2,7 @@ package cn.thinkjoy.saas.service.bussiness;
 
 import cn.thinkjoy.saas.domain.Grade;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,7 +22,7 @@ public interface EXIGradeService {
      * @param map
      * @return
      */
-    Grade selectGradeByTnId(Map map);
+    List<Grade> selectGradeByTnId(Map map);
 
     /**
      * 设置年级
@@ -30,4 +31,37 @@ public interface EXIGradeService {
      * @return
      */
     boolean AddGrade(Integer tnId,String nums);
+
+    /**
+     * 删除年级
+     * @param map
+     * @return
+     */
+    Integer deleteByMap(Map map);
+
+
+    /**
+     * 批量删除年级
+     * @param tnId 租户ID
+     * @param ids 年级标识
+     * @return
+     */
+    boolean removeGrades(String ids);
+
+    /**
+     * 新增年级
+     * @param tnId 租户ID
+     * @param gradeName 年级名称
+     * @return
+     */
+    boolean insertGrade(Integer tnId,String gradeName);
+
+    /**
+     * 更新年级
+     * @param tnId 租户ID
+     * @param gradeName 年级名称
+     * @param gid 年级标识
+     * @return
+     */
+    boolean updateGrade(Integer tnId,String gradeName,Integer gid);
 }
