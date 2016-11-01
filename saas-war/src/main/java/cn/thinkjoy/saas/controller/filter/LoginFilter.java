@@ -47,8 +47,8 @@ public class LoginFilter implements Filter {
 
         // 判断如果没有取到员工信息,就跳转到登陆页面
         if (userId == null || "".equals(userId)) {
-            // TODO 须重定向至登陆页面
-            ExceptionUtil.throwException(ErrorCode.NOT_LOGIN);
+            // 须重定向至登陆页面
+            servletResponse.sendRedirect("/login");
         } else {
             chain.doFilter(request, response);
         }

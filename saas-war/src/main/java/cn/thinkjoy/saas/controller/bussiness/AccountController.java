@@ -22,7 +22,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -56,6 +58,8 @@ public class AccountController {
         // 登陆成功,将用户ID存入session
         HttpSession session = request.getSession();
         session.setAttribute("userId",userInfoDto.getUserId());
+        // session过期时间
+        session.setMaxInactiveInterval(4*30*60);
 
         return userInfoDto;
     }
@@ -63,12 +67,12 @@ public class AccountController {
     @ResponseBody
     @ApiDesc(value = "用户退出登陆",owner = "杨国荣")
     @RequestMapping(value = "/loginOut",method = RequestMethod.GET)
-    public Map<String,Object> loginOut(HttpServletRequest request){
+    public void loginOut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         HttpSession session = request.getSession();
         session.removeAttribute("userId");
 
-        return Maps.newHashMap();
+        response.sendRedirect("/login");
     }
 
     @ResponseBody

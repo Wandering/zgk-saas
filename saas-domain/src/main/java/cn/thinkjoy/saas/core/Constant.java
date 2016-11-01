@@ -7,7 +7,7 @@ package cn.thinkjoy.saas.core;
  */
 public class Constant {
 
-    public static final String [] NoFilter_Pages = {"/account/login","/account/forgetPwd","/account/sendSmsCode"};
+    public static final String [] NoFilter_Pages = {"/account/login","/account/forgetPwd","/account/sendSmsCode","/account/loginOut"};
 
     public static final String ID = "id";
 
