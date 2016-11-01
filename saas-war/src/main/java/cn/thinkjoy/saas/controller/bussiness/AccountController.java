@@ -126,7 +126,9 @@ public class AccountController {
             ExceptionUtil.throwException(ErrorCode.SMS_CODE_FAIL);
         }
 
-        return Maps.newHashMap();
+        Map<String,Object> returnMap = Maps.newHashMap();
+        returnMap.put("time",redis.get(timeKey));
+        return returnMap;
     }
 
     @ResponseBody
