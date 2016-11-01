@@ -51,6 +51,7 @@
     <orderEntry type="library" exported="" name="Gradle: ch.qos.logback:logback-classic:1.1.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.codehaus.janino:commons-compiler:2.7.5" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.codehaus.janino:janino:2.7.5" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: jline:jline:0.9.94" level="project" />
     <orderEntry type="library" exported="" name="Gradle: io.netty:netty:3.7.0.Final" level="project" />
     <orderEntry type="library" exported="" name="Gradle: log4j:log4j:1.2.16" level="project" />
@@ -84,7 +85,6 @@
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-biz-common:0.1.36-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.apache.commons:commons-lang3:3.3.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-security-common:0.1.36-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.springframework:spring-test:4.1.0.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
