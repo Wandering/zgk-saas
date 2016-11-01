@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 登录</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/login.css">
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/login/login.css">
 </head>
 <body>
 <div class="navbar navbar-default" id="navbar">
