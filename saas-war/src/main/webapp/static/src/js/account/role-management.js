@@ -7,10 +7,19 @@ function RoleManagementFun() {
 RoleManagementFun.prototype = {
     constructor: RoleManagementFun,
     init: function () {
-        this.getAllPermissions();
+        this.getAllRole();
     },
-    getAllPermissions: function () {
-
+    getAllRole: function () {
+        console.log(Common.getFormatTime('1477984847000'))
+        Common.ajaxFun('/role/queryRolesByTnId/'+ tnId +'.do', 'GET', {}, function (res) {
+            var myTemplate = Handlebars.compile($("#role-template").html());
+            Handlebars.registerHelper('FormatTime',function(num){
+                return Common.getFormatTime(num);
+            });
+            $('#role-tbody').html(myTemplate(res));
+        }, function (res) {
+            alert("出错了");
+        });
     },
     renderTree: function () {
         Array.prototype.remove = function(val) {
@@ -154,11 +163,11 @@ $('body').on('click','.save-btn',function () {
             "meunIds":idData
         }
     };
-    console.log(datas)
+    console.log(JSON.stringify(datas))
     Common.ajaxFun('/role/createRole.do', 'POST',JSON.stringify(datas), function (res) {
         console.log(res)
         if (res.rtnCode == "0000000") {
-
+            layer.closeAll();
         }
     }, function (res) {
         alert("出错了");
@@ -168,9 +177,4 @@ $('body').on('click','.save-btn',function () {
 
 });
 
-
-$('body').on('click','.close-btn',function(){
-        layer.closeAll();
-});
-
-//
+// 删除

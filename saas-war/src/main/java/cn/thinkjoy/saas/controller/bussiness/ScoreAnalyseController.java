@@ -1,24 +1,40 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
-import cn.thinkjoy.saas.common.RandomValue;
+import cn.thinkjoy.common.exception.BizException;
+import cn.thinkjoy.saas.common.*;
+import cn.thinkjoy.saas.domain.Exam;
+import cn.thinkjoy.saas.service.IExamDetailService;
+import cn.thinkjoy.saas.service.IExamService;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by liusven on 2016/10/31.
@@ -27,6 +43,28 @@ import java.util.Set;
 @RequestMapping("/scoreAnalyse")
 public class ScoreAnalyseController
 {
+    @Autowired
+    Env env;
+    @Autowired
+    IExamService examService;
+    @Autowired
+    IExamDetailService examDetailService;
+    private static Map<Integer, String> headerMap = new HashMap<>();
+
+    static {
+        headerMap.put(1, "studentName");
+        headerMap.put(2, "className");
+        headerMap.put(3, "yuWenScore");
+        headerMap.put(4, "shuXueScore");
+        headerMap.put(5, "yingYuScore");
+        headerMap.put(6, "wuLiScore");
+        headerMap.put(7, "huaXueScore");
+        headerMap.put(8, "shengWuScore");
+        headerMap.put(9, "zhengZhiScore");
+        headerMap.put(10, "diLiScore");
+        headerMap.put(11, "liShiScore");
+        headerMap.put(12, "commonScore");
+    }
 
     @RequestMapping(value = "/downloadModel", method = RequestMethod.GET)
     @ResponseBody
@@ -78,11 +116,12 @@ public class ScoreAnalyseController
         Font f = wb.createFont();
         f.setColor(IndexedColors.BLACK.getIndex());
         f.setFontName("微软雅黑");
-        if(isHeader)
+        if (isHeader)
         {
             f.setFontHeightInPoints((short)14);
             f.setBoldweight(Font.BOLDWEIGHT_BOLD);
-        }else
+        }
+        else
         {
             f.setFontHeightInPoints((short)11);
             f.setBoldweight(Font.BOLDWEIGHT_NORMAL);
@@ -94,7 +133,7 @@ public class ScoreAnalyseController
         style.setBorderBottom(CellStyle.BORDER_THIN);
         style.setAlignment(CellStyle.ALIGN_CENTER);
         style.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
-        if(isHeader)
+        if (isHeader)
         {
             style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
             style.setFillPattern(CellStyle.SOLID_FOREGROUND);
@@ -139,12 +178,12 @@ public class ScoreAnalyseController
             columnMap.put(2, RandomValue.getScore(60, 150));
             columnMap.put(3, RandomValue.getScore(60, 150));
             columnMap.put(4, RandomValue.getScore(60, 150));
-            for (int j =5; j< 12; j++)
+            for (int j = 5; j < 12; j++)
             {
                 columnMap.put(j, "");
             }
             Set<Integer> randomIndexs = RandomValue.getIndex();
-            for (Integer index: randomIndexs)
+            for (Integer index : randomIndexs)
             {
                 columnMap.put(index, RandomValue.getScore(60, 120));
             }
@@ -168,5 +207,102 @@ public class ScoreAnalyseController
         RegionUtil.setBorderLeft(border, region, sheet, wb);
         RegionUtil.setBorderRight(border, region, sheet, wb);
         RegionUtil.setBorderTop(border, region, sheet, wb);
+    }
+
+    @RequestMapping("/uploadData")
+    @ResponseBody
+    public Map uploadExcel(HttpServletRequest request)
+    {
+        Map<String, String> resultMap = new HashMap<>();
+        try
+        {
+            resultMap.put("filePath", UploadUtil.uploadFile(request));
+        }
+        catch (IOException e)
+        {
+            throw new BizException("0000111", "上传错误，请重新上传！");
+        }
+        return resultMap;
+    }
+
+    @RequestMapping("/addExam")
+    @ResponseBody
+    public Exam addExam(Exam exam)
+    {
+        exam.setCreateDate(TimeUtil.getTimeStamp("yyyy-MM-dd HH:mm:ss sss"));
+        examService.add(exam);
+        String excelPath = exam.getUploadFilePath();
+        String fileType = excelPath.substring(excelPath.lastIndexOf(".") + 1, excelPath.length());
+        InputStream is = null;
+        Workbook wb = null;
+        try {
+            URL url = new URL(excelPath);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            is = new DataInputStream(conn.getInputStream());
+
+            if (fileType.equals("xls")) {
+                wb = new HSSFWorkbook(is);
+            } else if (fileType.equals("xlsx")) {
+                wb = new XSSFWorkbook(is);
+            } else {
+                examService.delete(exam.getId());
+            }
+            int sheetSize = wb.getNumberOfSheets();
+            if(sheetSize>0)
+            {
+                Sheet sheet = wb.getSheetAt(0);
+                List<Map<String, String>> sheetList = new ArrayList<>();//对应sheet页
+                int rowSize = sheet.getLastRowNum() + 1;
+                if(rowSize>=3)
+                {
+                    for (int j = 1; j < rowSize; j++) {//遍历行
+                        Row row = sheet.getRow(j);
+                        if (row == null) {//略过空行
+                            continue;
+                        }
+                        int cellSize = row.getLastCellNum();//行中有多少个单元格，也就是有多少列
+                        if(cellSize == headerMap.size())
+                        {
+                            Map<String, String> rowMap = new HashMap<>();//对应一个数据行
+                            for (int k = 1; k <= cellSize; k++) {
+                                Cell cell = row.getCell(k-1);
+                                String key = headerMap.get(k);
+                                String value = null;
+                                if (cell != null) {
+                                    value = cell.toString();
+                                }
+                                rowMap.put(key, value);
+                            }
+                            sheetList.add(rowMap);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+            if (wb != null) {
+                try
+                {
+                    wb.close();
+                }
+                catch (IOException e)
+                {
+                }
+            }
+            if (is != null) {
+                try
+                {
+                    is.close();
+                }
+                catch (IOException e)
+                {
+                }
+            }
+        }
+        return exam;
     }
 }
