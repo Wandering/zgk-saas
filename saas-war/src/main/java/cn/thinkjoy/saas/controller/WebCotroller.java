@@ -89,5 +89,28 @@ public class WebCotroller {
     public ModelAndView roleManagement() {
         return new ModelAndView("/account/role-management");
     }
-
+    /**
+     * grade-settings
+     * 年级管理
+     */
+    @RequestMapping("/grade-management")
+    public ModelAndView gradeManagement() {
+        return new ModelAndView("base-info/grade-management");
+    }
+    /**
+     * class-management
+     * 班级管理
+     */
+    @RequestMapping("/class-management")
+    public ModelAndView classManagement() {
+        return new ModelAndView("base-info/class-management");
+    }
+    /**
+     * classroot-management
+     * 教室管理
+     */
+    @RequestMapping("/classroom-management")
+    public ModelAndView classroomManagement() {
+        return new ModelAndView("base-info/classroom-management");
+    }
 }
