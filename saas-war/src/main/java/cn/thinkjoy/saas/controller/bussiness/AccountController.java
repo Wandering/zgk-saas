@@ -61,6 +61,17 @@ public class AccountController {
     }
 
     @ResponseBody
+    @ApiDesc(value = "用户退出登陆",owner = "杨国荣")
+    @RequestMapping(value = "/loginOut",method = RequestMethod.GET)
+    public Map<String,Object> loginOut(HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+        session.removeAttribute("userId");
+
+        return Maps.newHashMap();
+    }
+
+    @ResponseBody
     @ApiDesc(value = "忘记密码",owner = "杨国荣")
     @RequestMapping(value = "/forgetPwd/{account}/{phone}/{smsCode}/{newPwd}",method = RequestMethod.GET)
     public Map<String,Object> forgetPwd(@PathVariable String account,
@@ -127,7 +138,7 @@ public class AccountController {
         }
 
         Map<String,Object> returnMap = Maps.newHashMap();
-        returnMap.put("time",redis.get(timeKey));
+        returnMap.put("time",60);
         return returnMap;
     }
 
