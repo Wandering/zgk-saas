@@ -165,7 +165,7 @@ public class EXUserServiceImpl implements IEXUserService {
 
         RelationUserRole userRole = new RelationUserRole();
         userRole.setRoleId(roleId);
-        userRole.setUserId((int)instance.getId());
+        userRole.setUserId(Integer.valueOf(instance.getId().toString()));
         iRelationUserRoleDAO.insert(userRole);
     }
 
@@ -181,7 +181,7 @@ public class EXUserServiceImpl implements IEXUserService {
 
             RelationUserRole userRole = new RelationUserRole();
             userRole.setRoleId(roleId);
-            userRole.setUserId((int)instance.getId());
+            userRole.setUserId(Integer.valueOf(instance.getId().toString()));
             iRelationUserRoleDAO.insert(userRole);
         }
     }

@@ -25,4 +25,12 @@ public interface EXIClassRoomDAO {
      * @return
      */
     Integer addClassRoom(@Param("ClassRoomsList")List<ClassRooms> classRoomsList);
+
+
+    /**
+     * 删除教室
+     * @param ids
+     * @return
+     */
+    Integer removeClassRooms(List<String> ids);
 }

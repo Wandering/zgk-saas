@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.xml.bind.SchemaOutputResolver;
 import java.util.*;
 
 
@@ -92,10 +91,15 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * @param ids 需要删除的表头ID串  -号分隔
      */
     @Override
-    public boolean removeTeantConfigs(String ids) {
+    public boolean removeTeantConfigs(String type,Integer tnId,String ids) {
         List<String> idsList = ParamsUtils.idsSplit(ids);
         if (idsList == null)
             return false;
+
+        if(isExsitsTeantCustomTable(type,tnId)) {
+            LOGGER.info("该字段已经使用，请勿移除!");
+            return false;
+        }
         return exiTenantConfigInstanceDAO.removeTeantConfigs(idsList) > 0 ? true : false;
     }
 
@@ -117,38 +121,36 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         if (idsList == null)
             return false;
 
-        //调换表头顺序 必须保证ids size 为2
-        if (idsList.size() == 2) {
-            List<TenantConfigInstance> tenantConfigInstances = new ArrayList<TenantConfigInstance>();
+        List<TenantConfigInstance> tenantConfigInstances = new ArrayList<TenantConfigInstance>();
 
-            for (int i = 0; i < idsList.size(); i++) {
-                Map map = new HashMap();
-                map.put("id", idsList.get(i));
-                map.put("domain", type);
-                TenantConfigInstance tenantConfigInstance = iTenantConfigInstanceDAO.queryOne(map, "id", "asc");
-                if (tenantConfigInstance == null)
-                    return false;
-                tenantConfigInstances.add(tenantConfigInstance);
-            }
-
-            List<TenantConfigInstance> sortResultTenantConfigInstances = new ArrayList<TenantConfigInstance>();
-            TenantConfigInstance tenantConfigInstanceStart = tenantConfigInstances.get(0);
-            TenantConfigInstance tenantConfigInstanceEnd = tenantConfigInstances.get(1);
-            //存储一个order
-            Integer temp = tenantConfigInstanceStart.getConfigOrder();
-            //调换另一个对象的order
-            tenantConfigInstanceStart.setConfigOrder(tenantConfigInstanceEnd.getConfigOrder());
-            tenantConfigInstanceStart.setModifyDate(System.currentTimeMillis());
-            //调换temporder
-            tenantConfigInstanceEnd.setConfigOrder(temp);
-            tenantConfigInstanceEnd.setModifyDate(System.currentTimeMillis());
-
-            sortResultTenantConfigInstances.add(tenantConfigInstanceStart);
-            sortResultTenantConfigInstances.add(tenantConfigInstanceEnd);
-
-            Integer sortResult = exiTenantConfigInstanceDAO.sortConfigUpdate(sortResultTenantConfigInstances);
-            result = sortResult > 0 ? true : false;
+        for (int i = 0; i < idsList.size(); i++) {
+            Map map = new HashMap();
+            map.put("id", idsList.get(i));
+            map.put("domain", type);
+            TenantConfigInstance tenantConfigInstance = iTenantConfigInstanceDAO.queryOne(map, "id", "asc");
+            if (tenantConfigInstance == null)
+                return false;
+            tenantConfigInstance.setConfigOrder(i);
+            tenantConfigInstances.add(tenantConfigInstance);
         }
+//
+//        List<TenantConfigInstance> sortResultTenantConfigInstances = new ArrayList<TenantConfigInstance>();
+//        TenantConfigInstance tenantConfigInstanceStart = tenantConfigInstances.get(0);
+//        TenantConfigInstance tenantConfigInstanceEnd = tenantConfigInstances.get(1);
+//        //存储一个order
+//        Integer temp = tenantConfigInstanceStart.getConfigOrder();
+//        //调换另一个对象的order
+//        tenantConfigInstanceStart.setConfigOrder(tenantConfigInstanceEnd.getConfigOrder());
+//        tenantConfigInstanceStart.setModifyDate(System.currentTimeMillis());
+//        //调换temporder
+//        tenantConfigInstanceEnd.setConfigOrder(temp);
+//        tenantConfigInstanceEnd.setModifyDate(System.currentTimeMillis());
+//
+//        sortResultTenantConfigInstances.add(tenantConfigInstanceStart);
+//        sortResultTenantConfigInstances.add(tenantConfigInstanceEnd);
+
+        Integer sortResult = exiTenantConfigInstanceDAO.sortConfigUpdate(tenantConfigInstances);
+        result = sortResult > 0 ? true : false;
 
         LOGGER.info("===============租户表头排序 E==============");
 
@@ -217,6 +219,10 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         if (tnId <= 0 || idsList == null) {
             LOGGER.info("result:1[参数错误]");
             return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_PARAMSERROR);
+        }
+        if(isExsitsTeantCustomTable(type,tnId)) {
+            LOGGER.info("该租户已上传模板,表头无法修改!");
+            return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_TEANTCUSTOM_EXCEL);
         }
 
         if (isExistConfigDataByTnId(type,tnId)) {
@@ -343,7 +349,14 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
         if (tenantConfigInstanceViews == null)
             return false;
-        Integer reuslt = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
+
+        boolean excelValid = ParamsUtils.excelValueValid(configTeantComList, tenantConfigInstanceViews);
+
+
+        Integer reuslt = 0;
+
+        if (excelValid)
+            reuslt = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
 
         LOGGER.info("===========解析excel E===========");
         return (reuslt > 0 ? true : false);
@@ -384,6 +397,13 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         tenantConfigInstance.setCreateDate(System.currentTimeMillis());
         tenantConfigInstance.setModifyDate(null);
         return tenantConfigInstance;
+    }
+
+    @Override
+    public boolean isExsitsTeantCustomTable(String type,Integer tnId){
+        String tableName=ParamsUtils.combinationTableName(type,tnId);
+        Integer count=exiTenantConfigInstanceDAO.existTable(tableName);
+        return (count>0?true:false);
     }
 
 

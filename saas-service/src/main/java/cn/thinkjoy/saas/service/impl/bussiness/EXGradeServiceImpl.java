@@ -4,6 +4,7 @@ import cn.thinkjoy.saas.dao.IGradeDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO;
 import cn.thinkjoy.saas.domain.Grade;
 import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
+import cn.thinkjoy.saas.service.bussiness.IEXTenantService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import org.slf4j.Logger;
@@ -26,6 +27,9 @@ public class EXGradeServiceImpl implements EXIGradeService {
 
     @Resource
     EXIGradeDAO exiGradeDAO;
+
+    @Resource
+    IEXTenantService iexTenantService;
 
     @Resource
     IGradeDAO iGradeDAO;
@@ -67,6 +71,9 @@ public class EXGradeServiceImpl implements EXIGradeService {
 
             result = addResu > 0 ? true : false;
         }
+        if (result)
+            iexTenantService.stepSetting(tnId,false);
+
 
         return result;
     }
@@ -169,5 +176,18 @@ public class EXGradeServiceImpl implements EXIGradeService {
     @Override
     public Integer deleteByMap(Map map) {
         return exiGradeDAO.deleteByMap(map);
+    }
+
+    /**
+     * 年级批量删除
+     * @param ids 年级标识
+     * @return
+     */
+    @Override
+    public boolean removeGrades(String ids) {
+        List<String> idsList = ParamsUtils.idsSplit(ids);
+        if (idsList == null)
+            return false;
+        return (exiGradeDAO.removeGrades(idsList) > 0);
     }
 }

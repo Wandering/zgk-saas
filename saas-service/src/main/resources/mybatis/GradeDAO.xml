@@ -35,7 +35,7 @@
         g_order
         ) VALUES (
         #{tnId},
-        #{grade}
+        #{grade},
         #{gOrder}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">

@@ -90,27 +90,61 @@ public class WebCotroller {
         return new ModelAndView("/account/role-management");
     }
     /**
-     * grade-settings
+     * grade-management
      * 年级管理
      */
     @RequestMapping("/grade-management")
     public ModelAndView gradeManagement() {
-        return new ModelAndView("base-info/grade-management");
+        return new ModelAndView("/info-management/grade-management");
     }
     /**
      * class-management
-     * 班级管理
+     * 年级管理
      */
     @RequestMapping("/class-management")
     public ModelAndView classManagement() {
-        return new ModelAndView("base-info/class-management");
+        return new ModelAndView("/info-management/class-management");
     }
     /**
-     * classroot-management
+     * classroom-management
      * 教室管理
      */
     @RequestMapping("/classroom-management")
     public ModelAndView classroomManagement() {
-        return new ModelAndView("base-info/classroom-management");
+        return new ModelAndView("/info-management/classroom-management");
     }
+    /**
+     * teacher-management
+     * 教师管理
+     */
+    @RequestMapping("/teacher-management")
+    public ModelAndView teacherManagement() {
+        return new ModelAndView("/info-management/teacher-management");
+    }
+    /**
+     * graduation-rates-management
+     * 升学率管理
+     */
+    @RequestMapping("/graduation-rates-management")
+    public ModelAndView graduationRatesManagement() {
+        return new ModelAndView("/info-management/graduation-rates-management");
+    }
+    /**
+     * student-management
+     * 学生管理
+     */
+    @RequestMapping("/student-management")
+    public ModelAndView studentManagement() {
+        return new ModelAndView("/info-management/student-management");
+    }
+
+    /**
+     * student-management
+     * 上传文件
+     */
+    @RequestMapping("/uploadFile")
+    public ModelAndView uploadFile() {
+        return new ModelAndView("/upload/uploadFile");
+    }
+
 }
