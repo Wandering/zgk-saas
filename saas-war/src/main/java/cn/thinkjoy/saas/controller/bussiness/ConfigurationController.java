@@ -368,7 +368,7 @@ public class ConfigurationController {
      * @param tnId 租户ID
      * @return
      */
-    @RequestMapping(value = "/get/step/{tnId}")
+    @RequestMapping(value = "/get/step/{tnId}",method = RequestMethod.GET)
     @ResponseBody
     public Map getStep(@PathVariable Integer tnId) {
 
