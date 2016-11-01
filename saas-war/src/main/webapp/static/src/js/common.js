@@ -3,6 +3,7 @@ var Common = {
         this.loginInfo();
         this.logout();
         this.checkAll();
+        this.renderMenu();
     },
     url: {},
     cookie: {
@@ -77,7 +78,9 @@ var Common = {
     logout: function () {
         // 登出
         $('#logout-btn').on('click', function () {
-            alert(232)
+            Common.cookie.delCookie('isInit');
+            Common.cookie.delCookie('meuns');
+            Common.cookie.delCookie('tnId');
             Common.cookie.delCookie('tnName');
             window.location.href = '/login';
         });
@@ -143,6 +146,37 @@ var Common = {
         }, true);
         return gradeV;
     },
+    renderMenu:function(){
+        var meuns = Common.cookie.getCookie('meuns');
+        //console.log(JSON.parse(meuns));
+
+        //var meunsArr = [];
+        //$.each(JSON.parse(meuns),function(i,v){
+        //    meunsArr.push(v.meunName);
+        //    //console.log(v)
+        //    //var str1 = $('.menu-text').text();
+        //    //var str2 = v.meunName;
+        //    //console.log(str1==str2)
+        //
+        //});
+        //$.each($('.menu-text'),function(n,k){
+        //    //console.log(n)
+        //    console.log($(k).text()+"=="+ meunsArr[n])
+        //})
+
+
+
+
+        //console.log(meunsArr)
+
+
+
+
+
+
+
+    }
+
 
 };
 Common.init();

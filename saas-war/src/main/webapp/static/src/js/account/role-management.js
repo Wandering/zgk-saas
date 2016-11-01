@@ -154,7 +154,7 @@ $('body').on('click','.save-btn',function () {
             "meunIds":idData
         }
     };
-    console.log(datas)
+    console.log(JSON.stringify(datas))
     Common.ajaxFun('/role/createRole.do', 'POST',JSON.stringify(datas), function (res) {
         console.log(res)
         if (res.rtnCode == "0000000") {
