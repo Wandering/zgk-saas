@@ -1,6 +1,7 @@
 /*
  * saas找回密码
  * @wiki:http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=44436391
+ * @UI:http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=42223952
  * */
 var ForgotPassword = {
     init: function () {
@@ -20,20 +21,23 @@ var ForgotPassword = {
             if (paramData) {
                 Common.ajaxFun('account/sendSmsCode/' + paramData.account + '/' + paramData.phone + '.do', 'GET', {}, function (res) {
                     if (res.rtnCode == "0000000") {
-                        var timerCount = 60,
-                            $msmTimer = null,
+                        res.bizData.time = 60;
+                        var timerCount = res.bizData.time;
+                        var $msmTimer = null,
                             $verificationBtn = $('#verification-btn');
-                        $verificationBtn.attr('disabled', true).text(timerCount + 's后重新获取');
+                        $verificationBtn.attr('disabled', true).text(timerCount + 's后获取');
                         $msmTimer = setInterval(function () {
                             timerCount--;
+                            $verificationBtn.text(timerCount + 's后获取');
                             if (timerCount <= 0) {
-                                clearTimeout($msmTimer);
                                 $verificationBtn.text('重新获取');
                                 $verificationBtn.attr('disabled', false);
+                                clearTimeout($msmTimer);
                             }
-                            $verificationBtn.text(timerCount + 's后重新获取');
                         }, 1000)
-                    } else {
+                    } else if(res.rtnCode === '0000003') {
+                        layer.msg('同一手机号60秒内不能重复获取');
+                    }else{
                         layer.msg(res.msg)
                     }
                 });
