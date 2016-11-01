@@ -3,6 +3,10 @@ var Common = {
         this.loginInfo();
         this.logout();
         this.checkAll();
+        this.renderMenu();
+        $('body').on('click','.close-btn',function(){
+            layer.closeAll();
+        });
     },
     url: {},
     cookie: {
@@ -77,7 +81,9 @@ var Common = {
     logout: function () {
         // 登出
         $('#logout-btn').on('click', function () {
-            alert(232)
+            Common.cookie.delCookie('isInit');
+            Common.cookie.delCookie('meuns');
+            Common.cookie.delCookie('tnId');
             Common.cookie.delCookie('tnName');
             window.location.href = '/login';
         });
@@ -143,6 +149,55 @@ var Common = {
         }, true);
         return gradeV;
     },
+    renderMenu:function(){
+        var meuns = Common.cookie.getCookie('meuns');
+        //console.log(JSON.parse(meuns));
+
+        //var meunsArr = [];
+        //$.each(JSON.parse(meuns),function(i,v){
+        //    meunsArr.push(v.meunName);
+        //    //console.log(v)
+        //    //var str1 = $('.menu-text').text();
+        //    //var str2 = v.meunName;
+        //    //console.log(str1==str2)
+        //
+        //});
+        //$.each($('.menu-text'),function(n,k){
+        //    //console.log(n)
+        //    console.log($(k).text()+"=="+ meunsArr[n])
+        //})
+
+
+
+
+        //console.log(meunsArr)
+
+    },
+    getFormatTime:function (timestamp,formatStr) {
+        var newDate = new Date();
+        newDate.setTime(timestamp);
+        return newDate.Format(formatStr || "yyyy-MM-dd hh:mm:ss");
+    }
+
+
 
 };
 Common.init();
+
+Date.prototype.Format = function (fmt) {
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt))
+        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt))
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+};
