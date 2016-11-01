@@ -50,16 +50,13 @@
                                 <button class="btn btn-success">删除</button>
                             </div>
                         </div>
-
-
-
                         <div class="">
                             <table id="" class="table">
                                 <thead>
                                 <tr>
                                     <th class="center">
                                         <label>
-                                            <input type="checkbox" class="ace" />
+                                            <input type="checkbox" id="checkAll" class="ace" />
                                             <span class="lbl"></span>
                                         </label>
                                     </th>
@@ -68,51 +65,22 @@
                                     <th class="center">创建时间</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">管理员</td>
-                                    <td class="center">所有权限</td>
-                                    <td class="center">2015.9.23 16:38</td>
-                                </tr>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">管理员</td>
-                                    <td class="center">所有权限</td>
-                                    <td class="center">2015.9.23 16:38</td>
-                                </tr>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">管理员</td>
-                                    <td class="center">所有权限</td>
-                                    <td class="center">2015.9.23 16:38</td>
-                                </tr>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">管理员</td>
-                                    <td class="center">所有权限</td>
-                                    <td class="center">2015.9.23 16:38</td>
-                                </tr>
+                                <tbody id="role-tbody" class="check-template">
+                                <script id="role-template" type="text/x-handlebars-template">
+                                    {{#each bizData}}
+                                    <tr>
+                                        <td class="center">
+                                            <label>
+                                                <input type="checkbox" dataid="{{id}}" class="ace" />
+                                                <span class="lbl"></span>
+                                            </label>
+                                        </td>
+                                        <td class="center">{{roleName}}</td>
+                                        <td class="center">{{roleDesc}}</td>
+                                        <td class="center">{{FormatTime createDate}}</td>
+                                    </tr>
+                                    {{/each}}
+                                </script>
                                 </tbody>
                             </table>
                         </div>

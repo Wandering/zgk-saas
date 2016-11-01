@@ -22,4 +22,11 @@ dependencies {
         exclude group: 'cn.thinkjoy.common', module: 'thinkjoy-mu-common'
         exclude group: 'org.springframework'
     }
+
+    compile ("cn.thinkjoy.gk:zgk-api:$gkVersion"){
+        exclude group: 'cn.thinkjoy.common', module: 'thinkjoy-mu-common'
+        exclude group: 'org.springframework'
+    }
+
+    compile group:"cn.thinkjoy.gaokao360",name:"gaokao360-api",version:"$gk360Version", changing: true
 }
