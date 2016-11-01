@@ -35,4 +35,17 @@ public class EXTenantServiceImpl implements IEXTenantService {
         tenant.setIsInit(step);
         return (iTenantDAO.update(tenant) > 0 ? true : false);
     }
+
+    /**
+     * 获取租户当前步骤
+     * @param tnId 租户ID
+     * @return
+     */
+    @Override
+    public Integer getStep(Integer tnId) {
+        Map map = new HashMap();
+        map.put("id", tnId);
+        Tenant tenant = iTenantDAO.queryOne(map, "id", "asc");
+        return (tenant == null ? 1 : tenant.getIsInit());
+    }
 }
