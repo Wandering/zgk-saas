@@ -97,14 +97,14 @@ public class DataQueryController {
     }
 
 
-    @RequestMapping(value = "/getYears.do",method = RequestMethod.GET)
+    @RequestMapping(value = "/getYears",method = RequestMethod.GET)
     @ResponseBody
     public List getYears(@RequestParam(value = "provinceId") long provinceId){
         return iUniversityApi.getEnrollingYearsByProvinceId(provinceId);
     }
 
     @ApiDesc(value = "获取分数线", owner = "杨永平")
-    @RequestMapping(value = "/getGkAdmissionLineList.do",method = RequestMethod.GET)
+    @RequestMapping(value = "/getGkAdmissionLineList",method = RequestMethod.GET)
     @ResponseBody
     public BizData4Page<GkAdmissionLine> getGkAdmissionLineList(@ApiParam(param="queryparam", desc="标题模糊查询",required = false) @RequestParam(required = false) String queryparam,
                                                                 @ApiParam(param="year", desc="年份",required = false) @RequestParam(required = false) String year,
