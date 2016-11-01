@@ -14,4 +14,7 @@
     <!-- 智高考专有短信服务 -->
     <dubbo:reference id="zgkSmsService" interface="cn.thinkjoy.sms.api.SMSService" check="false" retries="0" timeout="600000" />
 
+    <dubbo:reference id="iuniversityApi" interface="cn.thinkjoy.gk.api.IUniversityApi" check="false" retries="0" timeout="600000" />
+    <dubbo:reference id="imajoredApi" interface="cn.thinkjoy.gk.api.IMajoredApi" check="false" retries="0" timeout="600000" />
+    <dubbo:reference id="gkAdmissionLineService" interface="cn.thinkjoy.zgk.remote.IGkAdmissionLineService" check="false" retries="0" timeout="60000"/>
 </beans>

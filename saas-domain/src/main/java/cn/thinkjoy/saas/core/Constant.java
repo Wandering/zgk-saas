@@ -19,6 +19,14 @@ public class Constant {
 
     public static final String CAPTCHA_AUTH_TIME_KEY = "gk_captcha_auth_time_";
 
+    public static final String PROVINCE_KEY = "province_list_key";
+
+    public static final String DATA_DICT_KEY = "data_dict_list_";
+
+    public static final String CONDITION_KEY = "zgk_mpc_key_%s_%s";
+
+    public static final int TOKEN_EXPIRE_TIME = 60*60;
+
     /**
      * 用户默认密码 111111
      */
