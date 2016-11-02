@@ -33,22 +33,23 @@ import java.util.*;
  */
 public class UploadUtil
 {
-    public static String uploadFile(HttpServletRequest request) throws IOException
+    public static String uploadFile(HttpServletRequest request)
+        throws IOException
     {
         String filePath = "";
-        CommonsMultipartResolver multipartResolver=new CommonsMultipartResolver(
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
             request.getSession().getServletContext());
-        if(multipartResolver.isMultipart(request))
+        if (multipartResolver.isMultipart(request))
         {
-            MultipartHttpServletRequest multiRequest=(MultipartHttpServletRequest)request;
-            Iterator iter=multiRequest.getFileNames();
-            while(iter.hasNext())
+            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest)request;
+            Iterator iter = multiRequest.getFileNames();
+            while (iter.hasNext())
             {
-                MultipartFile uploadFile=multiRequest.getFile(iter.next().toString());
-                if(uploadFile!=null)
+                MultipartFile uploadFile = multiRequest.getFile(iter.next().toString());
+                if (uploadFile != null)
                 {
                     String path = Thread.currentThread().getContextClassLoader().getResource("").toString();
-                    path=path.substring(1, path.indexOf("classes")).replaceFirst("ile:","");
+                    path = path.substring(1, path.indexOf("classes")).replaceFirst("ile:", "");
                     File distFile = new File(path + uploadFile.getOriginalFilename());
                     uploadFile.transferTo(distFile);
                     MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
@@ -86,14 +87,15 @@ public class UploadUtil
         String fileType = excelPath.substring(excelPath.lastIndexOf(".") + 1, excelPath.length());
         InputStream is = null;
         Workbook wb = null;
-        try {
+        try
+        {
             URL url = new URL(excelPath);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             is = new DataInputStream(conn.getInputStream());
             wb = getWorkbook(exam, examService, fileType, is, wb);
             assert wb != null;
             int sheetSize = wb.getNumberOfSheets();
-            if(sheetSize>0)
+            if (sheetSize > 0)
             {
                 setData(exam, examDetailService, headerMap, wb);
             }
@@ -102,14 +104,16 @@ public class UploadUtil
         {
             e.printStackTrace();
         }
-        finally {
+        finally
+        {
             closeResource(is, wb);
         }
     }
 
     private static void closeResource(InputStream is, Workbook wb)
     {
-        if (wb != null) {
+        if (wb != null)
+        {
             try
             {
                 wb.close();
@@ -118,7 +122,8 @@ public class UploadUtil
             {
             }
         }
-        if (is != null) {
+        if (is != null)
+        {
             try
             {
                 is.close();
@@ -154,30 +159,37 @@ public class UploadUtil
         Sheet sheet = wb.getSheetAt(0);
         List<Map<String, String>> sheetList = new ArrayList<>();//对应sheet页
         int rowSize = sheet.getLastRowNum() + 1;
-        if(rowSize>=3)
+        if (rowSize >= 3)
         {
-            for (int j = 2; j < rowSize; j++) {
+            for (int j = 2; j < rowSize; j++)
+            {
                 Row row = sheet.getRow(j);
-                if (row == null) {
+                if (row == null)
+                {
                     continue;
                 }
                 int cellSize = row.getLastCellNum();
-                if(cellSize == headerMap.size())
+                if (cellSize == headerMap.size())
                 {
                     Map<String, String> rowMap = new HashMap<>();
                     int totleScore = 0;
                     StringBuilder stringBuffer = new StringBuilder();
-                    for (int k = 1; k <= cellSize; k++) {
+                    for (int k = 1; k <= cellSize; k++)
+                    {
                         totleScore = getCellData(headerMap, row, rowMap, totleScore, stringBuffer, k);
                     }
-                    rowMap.put("examId", exam.getId()+"");
-                    rowMap.put("totleScore", totleScore +"");
+                    rowMap.put("examId", exam.getId() + "");
+                    rowMap.put("totleScore", totleScore + "");
                     rowMap.put("selectCourses", stringBuffer.substring(1));
                     sheetList.add(rowMap);
                 }
             }
-            for (Map<String, String> data: sheetList)
+            Collections.sort(sheetList, (o1, o2) -> Integer.parseInt(o2.get("totleScore"))
+                - Integer.parseInt(o1.get("totleScore")));
+            for (int i=1; i<=sheetList.size(); i++)
             {
+                Map<String, String> data = sheetList.get(i-1);
+                data.put("classRank", i + "");
                 examDetailService.insertMap(data);
             }
         }
@@ -186,22 +198,24 @@ public class UploadUtil
     private static int getCellData(Map<Integer, String> headerMap, Row row, Map<String, String> rowMap, int totleScore,
         StringBuilder stringBuffer, int k)
     {
-        Cell cell = row.getCell(k-1);
+        Cell cell = row.getCell(k - 1);
         String key = headerMap.get(k);
         String value = null;
-        if (cell != null) {
+        if (cell != null)
+        {
             value = cell.toString();
-            if(k>=3)
+            if (k >= 3)
             {
                 int intValue;
                 try
                 {
                     intValue = Integer.parseInt(value);
-                    if(k>=6)
+                    if (k >= 6)
                     {
                         stringBuffer.append(",").append(k - 5);
                     }
-                }catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     intValue = 0;
                 }
