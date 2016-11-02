@@ -47,7 +47,7 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
         classRooms.setCreateDate(System.currentTimeMillis());
         classRooms.setNumber(classRoomNum);
         classRooms.setGradeId(gradeId);
-        return (iClassRoomsDAO.insert(classRooms) > 0 ? true : false);
+        return (exiClassRoomDAO.insertClassRoom(classRooms) > 0 ? true : false);
     }
 
     /**
@@ -118,5 +118,14 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
         if (idsList == null)
             return false;
         return (exiClassRoomDAO.removeClassRooms(idsList) > 0);
+    }
+
+
+    /**
+     * 新增教室设置
+     * @return
+     */
+    public boolean insertClassRoom(ClassRooms classRooms) {
+        return (exiClassRoomDAO.insertClassRoom(classRooms) > 0);
     }
 }
