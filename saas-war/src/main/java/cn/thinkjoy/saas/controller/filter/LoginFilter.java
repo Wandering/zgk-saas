@@ -43,10 +43,10 @@ public class LoginFilter implements Filter {
          }
 
         // 从session里取用户ID
-        Object userId = session.getAttribute("userId");
+        Object userInfoDto = session.getAttribute(Constant.USER_SESSION_KEY);
 
         // 判断如果没有取到员工信息,就跳转到登陆页面
-        if (userId == null || "".equals(userId)) {
+        if (userInfoDto == null || "".equals(userInfoDto)) {
             // 须重定向至登陆页面
             servletResponse.sendRedirect("/login");
         } else {

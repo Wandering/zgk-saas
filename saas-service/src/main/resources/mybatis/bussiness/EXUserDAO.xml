@@ -9,6 +9,7 @@
             t1.tn_name AS tnName,
             t1.tn_addr AS tnAddr,
             t1.is_init AS isInit,
+            t1.county_id as countyId,
             t0.id AS userId,
             t0.user_name AS userName,
             t0.user_account AS userAccount,

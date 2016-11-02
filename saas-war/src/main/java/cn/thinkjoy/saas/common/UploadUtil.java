@@ -184,8 +184,8 @@ public class UploadUtil
                     sheetList.add(rowMap);
                 }
             }
-            Collections.sort(sheetList, (o1, o2) -> Integer.parseInt(o2.get("totleScore"))
-                - Integer.parseInt(o1.get("totleScore")));
+//            Collections.sort(sheetList, (o1, o2) -> Integer.parseInt(o2.get("totleScore"))
+//                - Integer.parseInt(o1.get("totleScore")));
             for (int i=1; i<=sheetList.size(); i++)
             {
                 Map<String, String> data = sheetList.get(i-1);
