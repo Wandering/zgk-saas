@@ -223,6 +223,7 @@ $('body').on('click', '.save-btn', function () {
             if (res.rtnCode == "0000000") {
                 layer.closeAll();
                 RoleManagementIns.getAllRole();
+                layer.msg('修改成功!');
             }
         }, function (res) {
             alert("出错了");
@@ -234,6 +235,7 @@ $('body').on('click', '.save-btn', function () {
             if (res.rtnCode == "0000000") {
                 layer.closeAll();
                 RoleManagementIns.getAllRole();
+                layer.msg('添加成功!');
             }
         }, function (res) {
             alert("出错了");
