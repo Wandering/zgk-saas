@@ -201,8 +201,8 @@ public class AccountController {
 
     @ResponseBody
     @ApiDesc(value = "禁用用户账号",owner = "杨国荣")
-    @RequestMapping(value = "/disableUser/{targetUserId}/{currentUserId}/{state}",method = RequestMethod.GET)
-    public Map<String,Object> disableUser(@PathVariable int targetUserId,@PathVariable int currentUserId,@PathVariable int state){
+    @RequestMapping(value = "/disableUser/{targetUserId}/{state}",method = RequestMethod.GET)
+    public Map<String,Object> disableUser(@PathVariable int targetUserId,@PathVariable int state){
 
         // TODO 鉴权
 
@@ -216,8 +216,8 @@ public class AccountController {
 
     @ResponseBody
     @ApiDesc(value = "删除用户",owner = "杨国荣")
-    @RequestMapping(value = "/deleteUser/{targetUserId}/{currentUserId}",method = RequestMethod.GET)
-    public Map<String,Object> deleteUser(@PathVariable int targetUserId,@PathVariable int currentUserId){
+    @RequestMapping(value = "/deleteUser/{targetUserId}",method = RequestMethod.GET)
+    public Map<String,Object> deleteUser(@PathVariable int targetUserId){
 
         // TODO 鉴权
 
