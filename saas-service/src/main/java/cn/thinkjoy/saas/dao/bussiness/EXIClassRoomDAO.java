@@ -2,6 +2,7 @@ package cn.thinkjoy.saas.dao.bussiness;
 
 import cn.thinkjoy.saas.domain.ClassRooms;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.type.IntegerTypeHandler;
 
 import java.util.List;
 import java.util.Map;
@@ -33,4 +34,11 @@ public interface EXIClassRoomDAO {
      * @return
      */
     Integer removeClassRooms(List<String> ids);
+
+    /**
+     * 新增教室设置
+     * @param classRooms
+     * @return
+     */
+    Integer insertClassRoom(ClassRooms classRooms);
 }
