@@ -24,6 +24,9 @@ public class TypeReferenceMaps implements ITypeReference {
     public void init(){
 //        typeReferenceMaps.put("/admin/saas/role/test", new TypeReference<RequestT<BaseDomain>>(){});
         typeReferenceMaps.put("/role/createRole.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/role/updateRole.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/account/createUser.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/account/updateUser.do",new TypeReference<Request>() {});
     }
 
     @Override
