@@ -31,7 +31,11 @@
   "ts": 1477014129206
 }
  */
-
+/*
+ * saas登陆
+ * @wiki:http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=44436391
+ * @UI:http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=42223952
+ * */
 $('#login-btn').on('click', function () {
     var username = $('#user-name').val();
     var pwd = $('#password').val();
@@ -203,8 +207,6 @@ $('#login-btn').on('click', function () {
             Common.cookie.setCookie('isInit', isInit);
 
 
-
-
             Common.cookie.setCookie('meuns', JSON.stringify(meuns));
 
             switch (isInit) {
@@ -229,6 +231,8 @@ $('#login-btn').on('click', function () {
                 default:
                     break;
             }
+        } else {
+            layer.msg(res.msg);
         }
     }, function (res) {
         layer.msg('出错了');

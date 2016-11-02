@@ -5,36 +5,25 @@ import cn.thinkjoy.saas.common.*;
 import cn.thinkjoy.saas.domain.Exam;
 import cn.thinkjoy.saas.service.IExamDetailService;
 import cn.thinkjoy.saas.service.IExamService;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static cn.thinkjoy.saas.common.UploadUtil.saveExcelData;
 
 /**
  * Created by liusven on 2016/10/31.
@@ -231,78 +220,7 @@ public class ScoreAnalyseController
     {
         exam.setCreateDate(TimeUtil.getTimeStamp("yyyy-MM-dd HH:mm:ss sss"));
         examService.add(exam);
-        String excelPath = exam.getUploadFilePath();
-        String fileType = excelPath.substring(excelPath.lastIndexOf(".") + 1, excelPath.length());
-        InputStream is = null;
-        Workbook wb = null;
-        try {
-            URL url = new URL(excelPath);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            is = new DataInputStream(conn.getInputStream());
-
-            if (fileType.equals("xls")) {
-                wb = new HSSFWorkbook(is);
-            } else if (fileType.equals("xlsx")) {
-                wb = new XSSFWorkbook(is);
-            } else {
-                examService.delete(exam.getId());
-            }
-            int sheetSize = wb.getNumberOfSheets();
-            if(sheetSize>0)
-            {
-                Sheet sheet = wb.getSheetAt(0);
-                List<Map<String, String>> sheetList = new ArrayList<>();//对应sheet页
-                int rowSize = sheet.getLastRowNum() + 1;
-                if(rowSize>=3)
-                {
-                    for (int j = 1; j < rowSize; j++) {//遍历行
-                        Row row = sheet.getRow(j);
-                        if (row == null) {//略过空行
-                            continue;
-                        }
-                        int cellSize = row.getLastCellNum();//行中有多少个单元格，也就是有多少列
-                        if(cellSize == headerMap.size())
-                        {
-                            Map<String, String> rowMap = new HashMap<>();//对应一个数据行
-                            for (int k = 1; k <= cellSize; k++) {
-                                Cell cell = row.getCell(k-1);
-                                String key = headerMap.get(k);
-                                String value = null;
-                                if (cell != null) {
-                                    value = cell.toString();
-                                }
-                                rowMap.put(key, value);
-                            }
-                            sheetList.add(rowMap);
-                        }
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        finally {
-            if (wb != null) {
-                try
-                {
-                    wb.close();
-                }
-                catch (IOException e)
-                {
-                }
-            }
-            if (is != null) {
-                try
-                {
-                    is.close();
-                }
-                catch (IOException e)
-                {
-                }
-            }
-        }
+        saveExcelData(exam, examService, examDetailService, headerMap);
         return exam;
     }
 }
