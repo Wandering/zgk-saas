@@ -217,18 +217,29 @@ $('body').on('click', '.save-btn', function () {
         }
     };
     if(updateId){
-        datas['data']['roleId']= updateId
+        datas['data']['roleId']= updateId;
+        Common.ajaxFun('/role/updateRole.do', 'POST', JSON.stringify(datas), function (res) {
+            console.log(res)
+            if (res.rtnCode == "0000000") {
+                layer.closeAll();
+                RoleManagementIns.getAllRole();
+            }
+        }, function (res) {
+            alert("出错了");
+        }, null, true);
+    }else{
+        console.log(JSON.stringify(datas))
+        Common.ajaxFun('/role/createRole.do', 'POST', JSON.stringify(datas), function (res) {
+            console.log(res)
+            if (res.rtnCode == "0000000") {
+                layer.closeAll();
+                RoleManagementIns.getAllRole();
+            }
+        }, function (res) {
+            alert("出错了");
+        }, null, true);
     }
-    console.log(JSON.stringify(datas))
-    Common.ajaxFun('/role/createRole.do', 'POST', JSON.stringify(datas), function (res) {
-        console.log(res)
-        if (res.rtnCode == "0000000") {
-            layer.closeAll();
-            RoleManagementIns.getAllRole();
-        }
-    }, function (res) {
-        alert("出错了");
-    }, null, true);
+
 });
 
 // 删除
