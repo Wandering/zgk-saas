@@ -50,4 +50,12 @@ public interface EXIClassRoomService {
      * @return
      */
     boolean removeClassRoom(String ids);
+
+    /**
+     * 新增教室
+     * @return
+     */
+    boolean insertClassRoom(ClassRooms classRooms);
+
+
 }

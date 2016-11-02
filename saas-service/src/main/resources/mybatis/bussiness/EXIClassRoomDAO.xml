@@ -60,4 +60,21 @@
 
     </delete>
 
+    <insert id="insertClassRoom" parameterType="ClassRooms">
+        INSERT INTO saas_class_rooms (
+        tn_id,
+        grade_id,
+        number,
+        create_date
+        ) VALUES (
+        #{tnId},
+        #{gradeId},
+        #{number},
+        #{createDate}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
 </mapper>
