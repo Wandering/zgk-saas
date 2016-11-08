@@ -1,13 +1,5 @@
 var tnId = Common.cookie.getCookie('tnId');
-Common.ajaxFun('/config/get/step/'+ tnId +'.do', 'GET', {}, function (res) {
-    console.log(res)
-    if (res.rtnCode == "0000000") {
-
-    }
-}, function (res) {
-    alert("出错了");
-});
-
+Common.flowSteps();
 
 
 $('#seting-process4-btn').on('click', function () {
