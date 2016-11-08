@@ -7,6 +7,7 @@ import cn.thinkjoy.gk.api.IMajoredApi;
 import cn.thinkjoy.gk.api.IUniversityApi;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.Province;
+import cn.thinkjoy.saas.dto.UserInfoDto;
 import cn.thinkjoy.saas.service.IProvinceService;
 import cn.thinkjoy.zgk.common.QueryUtil;
 import cn.thinkjoy.zgk.domain.BizData4Page;
@@ -26,6 +27,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -56,11 +60,16 @@ public class DataQueryController {
     @Autowired
     private RedisRepository<String, Object> redis;
 
+    /**
+     * 获取所有省份
+     *
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/getProvinceList",method = RequestMethod.GET)
     public List<Province> getProvinceList(){
 
-        Object object = redis.exists(Constant.PROVINCE_KEY);
+        Object object = redis.get(Constant.PROVINCE_KEY);
         if (object == null) {
             List<Province> list = provinceService.findAll();
             redis.set(Constant.PROVINCE_KEY, JSONArray.toJSON(list));
@@ -70,24 +79,62 @@ public class DataQueryController {
         return JSONArray.parseArray(object.toString(),Province.class);
     }
 
+    /**
+     * 根据年份和区域获取批次
+     *
+     * @param year
+     * @param areaId
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
     @ResponseBody
     @RequestMapping(value = "/getBatchByYearAndArea",method = RequestMethod.GET)
-    public List<Map<String,Object>> getBatchByYearAndArea(@RequestParam String year,@RequestParam String areaId,@RequestParam long provinceId){
+    public List<Map<String,Object>> getBatchByYearAndArea(@RequestParam String year,@RequestParam String areaId,HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
 
         Map<String,Object> map = new HashMap<>();
         map.put("year",year);
         map.put("areaId",areaId);
-        map.put("currAreaId",provinceId);
+        map.put("currAreaId",getUserProvinceId(request,response));
 
         return iUniversityApi.getBatchByYearAndArea(map) ;
     }
 
+    /**
+     * 获取当前用户的省份ID
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    private long getUserProvinceId(HttpServletRequest request,HttpServletResponse response)
+            throws IOException {
+        UserInfoDto dto = JSON.parseObject(
+                request.getSession().getAttribute(Constant.USER_SESSION_KEY).toString(),
+                UserInfoDto.class
+        );
+        if(dto == null){
+            response.sendRedirect("/login");
+        }
+        return Long.valueOf(dto.getCountyId()/10000+"0000");
+    }
+
+    /**
+     * 获取院校特征
+     *
+     * @param type
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "getRemoteDataDictList", method = RequestMethod.GET)
     public List getDataDictList(@RequestParam(value = "type", required = true) String type) {
 
         String key = Constant.DATA_DICT_KEY + type;
-        Object object = redis.exists(key);
+        Object object = redis.get(key);
         if (object == null) {
             List list = iUniversityApi.getDataDictList(type);
             redis.set(key, JSONArray.toJSON(list));
@@ -97,6 +144,12 @@ public class DataQueryController {
     }
 
 
+    /**
+     * 根据省份ID获取录取年份
+     *
+     * @param provinceId
+     * @return
+     */
     @RequestMapping(value = "/getYears",method = RequestMethod.GET)
     @ResponseBody
     public List getYears(@RequestParam(value = "provinceId") long provinceId){
@@ -108,7 +161,7 @@ public class DataQueryController {
     @ResponseBody
     public BizData4Page<GkAdmissionLine> getGkAdmissionLineList(@ApiParam(param="queryparam", desc="标题模糊查询",required = false) @RequestParam(required = false) String queryparam,
                                                                 @ApiParam(param="year", desc="年份",required = false) @RequestParam(required = false) String year,
-                                                                @ApiParam(param="areaId", desc="页数",required = false) @RequestParam(required = false) String areaId,
+                                                                @ApiParam(param="areaId", desc="区域ID",required = false) @RequestParam(required = false) String areaId,
                                                                 @ApiParam(param="property", desc="院校特征",required = false) @RequestParam(required = false) String property,
                                                                 @ApiParam(param="batch", desc="批次",required = false) @RequestParam(required = false) Integer batch,
                                                                 @ApiParam(param="type", desc="科类",required = false) @RequestParam(defaultValue = "1",required = false) Integer type,
@@ -194,10 +247,17 @@ public class DataQueryController {
         return propertysMap;
     }
 
+    /**
+     * 专业招生信息条件查询
+     *
+     * @param universityId
+     * @return
+     */
     @RequestMapping(value = "/getMpConditions", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, List<String>> getMpcConditions(@RequestParam long universityId,@RequestParam long provinceId)
-    {
+    public Map<String, List<String>> getMpcConditions(@RequestParam long universityId,HttpServletRequest request,HttpServletResponse response)
+            throws IOException {
+        long provinceId = getUserProvinceId(request,response);
         String key = String.format(Constant.CONDITION_KEY, universityId, provinceId);
         if(redis.exists(key))
         {
@@ -205,7 +265,7 @@ public class DataQueryController {
         }
         Map<String, String> paramMap = new LinkedHashMap<>();
         paramMap.put("areaId", String.valueOf(provinceId));
-        paramMap.put("universityId",provinceId+"");
+        paramMap.put("universityId",universityId+"");
         List<Map<String, Object>> list = iUniversityApi.getMajorPlanConditions(paramMap);
         Map<String, List<String>> resultMap = new LinkedHashMap<>();
         for (Map<String, Object> map: list) {
@@ -245,14 +305,23 @@ public class DataQueryController {
         return iMajoredApi.getCategoryMajoredList(categoryId);
     }
 
+    /**
+     * 根据专业查询开设院校
+     *
+     * @param majoredId
+     * @param majorType
+     * @param page
+     * @param rows
+     * @return
+     */
     @RequestMapping(value = "/getMajorOpenUniversityList",method = RequestMethod.GET)
     @ResponseBody
     public Object getMajorOpenUniversityList(@RequestParam(value = "majoredId",required = true)String majoredId,
                                              @RequestParam(value = "majorType",required = true,defaultValue = "1")Integer majorType,
-                                             @RequestParam(value = "offset",required = false,defaultValue = "0")Integer offset,
+                                             @RequestParam(value = "page",required = false,defaultValue = "0")Integer page,
                                              @RequestParam(value = "rows",required = false,defaultValue = "10")Integer rows){
 
-        List<Map<String,Object>> getUniversityList=iMajoredApi.getMajorOpenUniversityList(majoredId,majorType,offset,rows);
+        List<Map<String,Object>> getUniversityList=iMajoredApi.getMajorOpenUniversityList(majoredId,majorType,page,rows);
         int count=iMajoredApi.getMajorOpenUniversityCount(majoredId, majorType);
         for (Map<String, Object> university : getUniversityList) {
             String[] propertys=new String[1];

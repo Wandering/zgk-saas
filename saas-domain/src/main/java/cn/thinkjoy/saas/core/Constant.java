@@ -25,6 +25,8 @@ public class Constant {
 
     public static final String CONDITION_KEY = "zgk_mpc_key_%s_%s";
 
+    public static final String USER_SESSION_KEY = "user_info_dto";
+
     public static final int TOKEN_EXPIRE_TIME = 60*60;
 
     /**
