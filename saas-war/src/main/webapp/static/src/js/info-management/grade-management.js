@@ -1,6 +1,5 @@
 var tnId = Common.cookie.getCookie('tnId');
 
-
 function GradeManagement() {
     this.init();
 }
