@@ -9,20 +9,6 @@
         </fileset>
       </configuration>
     </facet>
-    <facet type="web" name="Web Gradle : saas-war-0.0.1-SNAPSHOT.war">
-      <configuration>
-        <descriptors>
-          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/src/main/webapp/WEB-INF/web.xml" />
-        </descriptors>
-        <webroots>
-          <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
-        </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/src/main/java" />
-          <root url="file://$MODULE_DIR$/src/main/resources" />
-        </sourceRoots>
-      </configuration>
-    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/build/classes/main" />
@@ -38,7 +24,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="saas-service" exported="" />
-    <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-domain-common:0.1.36-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.freemarker:freemarker:2.3.20" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-web-common:0.1.36-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-lang:commons-lang:2.6" level="project" />
@@ -105,5 +90,6 @@
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:javax.el:2.2.0.v201108011116" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:com.sun.el:2.2.0.v201108011116" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:org.eclipse.jdt.core:3.7.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-domain-common:0.1.43-SNAPSHOT" level="project" />
   </component>
 </module>
