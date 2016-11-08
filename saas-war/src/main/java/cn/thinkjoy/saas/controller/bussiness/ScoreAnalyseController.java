@@ -1,24 +1,29 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
-import cn.thinkjoy.saas.common.RandomValue;
+import cn.thinkjoy.common.exception.BizException;
+import cn.thinkjoy.saas.common.*;
+import cn.thinkjoy.saas.domain.Exam;
+import cn.thinkjoy.saas.service.IExamDetailService;
+import cn.thinkjoy.saas.service.IExamService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+import static cn.thinkjoy.saas.common.UploadUtil.saveExcelData;
 
 /**
  * Created by liusven on 2016/10/31.
@@ -27,6 +32,28 @@ import java.util.Set;
 @RequestMapping("/scoreAnalyse")
 public class ScoreAnalyseController
 {
+    @Autowired
+    Env env;
+    @Autowired
+    IExamService examService;
+    @Autowired
+    IExamDetailService examDetailService;
+    private static Map<Integer, String> headerMap = new HashMap<>();
+
+    static {
+        headerMap.put(1, "studentName");
+        headerMap.put(2, "className");
+        headerMap.put(3, "yuWenScore");
+        headerMap.put(4, "shuXueScore");
+        headerMap.put(5, "yingYuScore");
+        headerMap.put(6, "wuLiScore");
+        headerMap.put(7, "huaXueScore");
+        headerMap.put(8, "shengWuScore");
+        headerMap.put(9, "zhengZhiScore");
+        headerMap.put(10, "diLiScore");
+        headerMap.put(11, "liShiScore");
+        headerMap.put(12, "commonScore");
+    }
 
     @RequestMapping(value = "/downloadModel", method = RequestMethod.GET)
     @ResponseBody
@@ -78,11 +105,12 @@ public class ScoreAnalyseController
         Font f = wb.createFont();
         f.setColor(IndexedColors.BLACK.getIndex());
         f.setFontName("微软雅黑");
-        if(isHeader)
+        if (isHeader)
         {
             f.setFontHeightInPoints((short)14);
             f.setBoldweight(Font.BOLDWEIGHT_BOLD);
-        }else
+        }
+        else
         {
             f.setFontHeightInPoints((short)11);
             f.setBoldweight(Font.BOLDWEIGHT_NORMAL);
@@ -94,7 +122,7 @@ public class ScoreAnalyseController
         style.setBorderBottom(CellStyle.BORDER_THIN);
         style.setAlignment(CellStyle.ALIGN_CENTER);
         style.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
-        if(isHeader)
+        if (isHeader)
         {
             style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
             style.setFillPattern(CellStyle.SOLID_FOREGROUND);
@@ -139,12 +167,12 @@ public class ScoreAnalyseController
             columnMap.put(2, RandomValue.getScore(60, 150));
             columnMap.put(3, RandomValue.getScore(60, 150));
             columnMap.put(4, RandomValue.getScore(60, 150));
-            for (int j =5; j< 12; j++)
+            for (int j = 5; j < 12; j++)
             {
                 columnMap.put(j, "");
             }
             Set<Integer> randomIndexs = RandomValue.getIndex();
-            for (Integer index: randomIndexs)
+            for (Integer index : randomIndexs)
             {
                 columnMap.put(index, RandomValue.getScore(60, 120));
             }
@@ -168,5 +196,31 @@ public class ScoreAnalyseController
         RegionUtil.setBorderLeft(border, region, sheet, wb);
         RegionUtil.setBorderRight(border, region, sheet, wb);
         RegionUtil.setBorderTop(border, region, sheet, wb);
+    }
+
+    @RequestMapping("/uploadData")
+    @ResponseBody
+    public Map uploadExcel(HttpServletRequest request)
+    {
+        Map<String, String> resultMap = new HashMap<>();
+        try
+        {
+            resultMap.put("filePath", UploadUtil.uploadFile(request));
+        }
+        catch (IOException e)
+        {
+            throw new BizException("0000111", "上传错误，请重新上传！");
+        }
+        return resultMap;
+    }
+
+    @RequestMapping("/addExam")
+    @ResponseBody
+    public Exam addExam(Exam exam)
+    {
+        exam.setCreateDate(TimeUtil.getTimeStamp("yyyy-MM-dd HH:mm:ss sss"));
+        examService.add(exam);
+        saveExcelData(exam, examService, examDetailService, headerMap);
+        return exam;
     }
 }

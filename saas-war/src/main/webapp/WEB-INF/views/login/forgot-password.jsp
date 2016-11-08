@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 找回密码</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/login.css">
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/login/forgot-password.css">
 </head>
 <body>
 <div class="navbar navbar-default" id="navbar">
@@ -33,14 +33,14 @@
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right" for="account">登录账号</label>
                                         <div class="col-sm-9">
-                                            <input type="text" id="account"  placeholder="输入登录账号"
+                                            <input type="text" id="account"  placeholder="输入登录账号1~12位 "
                                                    class="col-xs-10 col-sm-5 input-txt"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right" for="phone">联系电话</label>
                                         <div class="col-sm-9">
-                                            <input type="text" id="phone" placeholder="输入联系电话"
+                                            <input type="text" id="phone" placeholder="输入联系电话11位 "
                                                    class="col-xs-10 col-sm-5 input-txt"/>
                                         </div>
                                     </div>
@@ -55,14 +55,14 @@
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right" for="reset-pwd">重设密码</label>
                                         <div class="col-sm-9">
-                                            <input type="text" id="reset-pwd" placeholder="重设密码"
+                                            <input type="password" id="reset-pwd" placeholder="重设密码至少6位"
                                                    class="col-xs-10 col-sm-5 input-txt"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right" for="confirm">确认密码</label>
                                         <div class="col-sm-9">
-                                            <input type="text" id="confirm" placeholder="确认密码"
+                                            <input type="password" id="confirm" placeholder="确认密码至少6位"
                                                    class="col-xs-10 col-sm-5 input-txt"/>
                                         </div>
                                     </div>

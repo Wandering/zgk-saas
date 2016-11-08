@@ -47,7 +47,7 @@
                             <div class="btns">
                                 <button class="btn btn-pink" id="add-btn">添加年级</button>
                                 <button class="btn btn-inverse" id="modify-btn">修改</button>
-                                <button class="btn btn-success">删除</button>
+                                <button class="btn btn-success del-btn" id="del-btn">删除</button>
                             </div>
                         </div>
 
@@ -64,7 +64,7 @@
                                         </label>
                                     </th>
                                     <th class="center">编号</th>
-                                    <th class="center">年级简介</th>
+                                    <th class="center">年级名称</th>
                                 </tr>
                                 </thead>
                                 <tbody id="grade-list" class="check-template">

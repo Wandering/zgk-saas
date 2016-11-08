@@ -46,74 +46,26 @@
                             <span class="txt-t"></span>
                             <div class="btns">
                                 <button class="btn btn-pink" id="addRole-btn">添加角色</button>
-                                <button class="btn btn-inverse">修改</button>
-                                <button class="btn btn-success">删除</button>
+                                <button class="btn btn-inverse" id="modify-btn">修改</button>
+                                <button class="btn btn-success" id="close-btn">删除</button>
                             </div>
                         </div>
-
-
-
                         <div class="">
                             <table id="" class="table">
                                 <thead>
                                 <tr>
                                     <th class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
+                                        <%--<label>--%>
+                                            <%--<input type="checkbox" id="checkAll" class="ace" />--%>
+                                            <%--<span class="lbl"></span>--%>
+                                        <%--</label>--%>
                                     </th>
                                     <th class="center">角色名称</th>
                                     <th class="center">角色内容</th>
                                     <th class="center">创建时间</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">管理员</td>
-                                    <td class="center">所有权限</td>
-                                    <td class="center">2015.9.23 16:38</td>
-                                </tr>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">管理员</td>
-                                    <td class="center">所有权限</td>
-                                    <td class="center">2015.9.23 16:38</td>
-                                </tr>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">管理员</td>
-                                    <td class="center">所有权限</td>
-                                    <td class="center">2015.9.23 16:38</td>
-                                </tr>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">管理员</td>
-                                    <td class="center">所有权限</td>
-                                    <td class="center">2015.9.23 16:38</td>
-                                </tr>
-                                </tbody>
+                                <tbody id="role-tbody" class="check-template"></tbody>
                             </table>
                         </div>
                         <!-- PAGE CONTENT ENDS -->
@@ -123,6 +75,21 @@
         </div><!-- /.main-content -->
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
+<script id="role-template" type="text/x-handlebars-template">
+    {{#each bizData}}
+    <tr>
+        <td class="center">
+            <label>
+                <input type="checkbox" roleid="{{id}}" roleName="{{roleName}}" roleDesc="{{roleDesc}}" class="ace" />
+                <span class="lbl"></span>
+            </label>
+        </td>
+        <td class="center">{{roleName}}</td>
+        <td class="center">{{roleDesc}}</td>
+        <td class="center">{{FormatTime createDate}}</td>
+    </tr>
+    {{/each}}
+</script>
 <%@ include file="./../common/footer.jsp"%>
 <link rel="stylesheet" href="<%=ctx%>/static/src/lib/ztree/zTreeStyle.css">
 <script src="<%=ctx%>/static/src/lib/ztree/jquery.ztree.core.js"></script>

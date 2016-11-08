@@ -54,6 +54,11 @@ public class UserInfoDto implements Serializable {
     private int status;
 
     /**
+     * 区域Id
+     */
+    private long countyId;
+
+    /**
      * 角色集合
      */
     private List<String> roles;
@@ -149,6 +154,14 @@ public class UserInfoDto implements Serializable {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public long getCountyId() {
+        return countyId;
+    }
+
+    public void setCountyId(long countyId) {
+        this.countyId = countyId;
     }
 
     @Override
