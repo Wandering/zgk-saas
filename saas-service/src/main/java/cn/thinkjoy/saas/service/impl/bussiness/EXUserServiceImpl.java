@@ -65,8 +65,7 @@ public class EXUserServiceImpl implements IEXUserService {
         if("1".equals(userInfoDto.getIsSuperManager())){
 
             resources = iResourcesDAO.findAll(
-                    Constant.ID,
-                    Constant.DESC
+                    Constant.ID,"ASC"
             );
 
         }else {

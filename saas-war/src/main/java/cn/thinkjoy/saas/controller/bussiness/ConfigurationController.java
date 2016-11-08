@@ -380,5 +380,29 @@ public class ConfigurationController {
     }
 
 
+    /**
+     * 入学年份
+     * @return
+     */
+    @RequestMapping(value = "/get/school/year",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getInSchoolYear() {
+
+        Integer end = 2020, start = 2012;
+
+        Integer size = end - start;
+
+        String[] arr = new String[size + 1];
+
+        for (int i = 0; i <= size; i++) {
+            arr[i] = start + "";
+            start++;
+        }
+
+        Map resultMap = new HashMap();
+        resultMap.put("result", arr);
+        return resultMap;
+    }
+
 }
 
