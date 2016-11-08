@@ -10,7 +10,6 @@ Common.ajaxFun('/config/get/step/'+ tnId +'.do', 'GET', {}, function (res) {
 
 
 
-
 $('#seting-process4-btn').on('click', function () {
     var that = $(this);
     var gradeAllNumV = $.trim($('#grade-all-num').val());
