@@ -57,7 +57,7 @@ public class AccountController {
 
         // 登陆成功,将用户ID存入session
         HttpSession session = request.getSession();
-        session.setAttribute("userId",userInfoDto.getUserId());
+        session.setAttribute(Constant.USER_SESSION_KEY,JSON.toJSON(userInfoDto));
         // session过期时间
         session.setMaxInactiveInterval(4*30*60);
 
@@ -70,7 +70,7 @@ public class AccountController {
     public void loginOut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         HttpSession session = request.getSession();
-        session.removeAttribute("userId");
+        session.removeAttribute(Constant.USER_SESSION_KEY);
 
         response.sendRedirect("/login");
     }
