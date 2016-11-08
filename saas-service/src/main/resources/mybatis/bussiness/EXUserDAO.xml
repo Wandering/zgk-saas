@@ -73,8 +73,10 @@
             t0.id = t1.user_id
         AND t1.role_id = t2.id
         AND t0.tn_id = #{tnId}
-        AND (t0.user_name LIKE CONCAT('%', #{keyword} , '%')
-        OR t0.telephone LIKE CONCAT('%', #{keyword} , '%'))
+        <if test="keyword != null and keyword != '' and keyword != 'null'">
+            AND (t0.user_name LIKE CONCAT('%', #{keyword} , '%')
+            OR t0.telephone LIKE CONCAT('%', #{keyword} , '%'))
+        </if>
     </select>
 
 </mapper>

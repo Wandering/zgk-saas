@@ -22,6 +22,7 @@ public class Resources extends BaseDomain{
     private Integer parentId;
     private String resUrl;
     private Date createDate;
+    private String iconUrl;
 
 	public Resources(){
 	}
@@ -55,7 +56,15 @@ public class Resources extends BaseDomain{
         return this.createDate;
     }
 
-	public String toString() {
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
+    }
+
+    public String toString() {
 		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
 			.append("Id",getId())
 			.append("ResName",getResName())

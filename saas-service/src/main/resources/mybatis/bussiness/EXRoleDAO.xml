@@ -21,7 +21,8 @@
             t1.id AS id,
             t1.res_name AS resName,
             t1.res_url AS resUrl,
-            t1.parent_id AS parentId
+            t1.parent_id AS parentId,
+            t1.icon_url as iconUrl
         FROM
             saas_relation_role_resource t0,
             saas_resources t1
