@@ -84,16 +84,12 @@
                                     <th class="center">年级</th>
                                     <th class="center">考试时间</th>
                                     <th class="center">成绩上传时间</th>
-                                    <th class="center">状态</th>
-                                    <th class="center">创建时间</th>
+                                    <th class="center"></th>
                                 </tr>
                                 </thead>
                                 <tbody id="account-tbody"></tbody>
                             </table>
                         </div>
-
-
-
                         <!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -114,8 +110,7 @@
         <td class="center">{{userName}}</td>
         <td class="center">{{telephone}}</td>
         <td class="center">管理员</td>
-        <td class="center">启用</td>
-        <td class="center">2015.9.23 16:38</td>
+        <td class="center"></td>
     </tr>
     {{/each}}
 </script>
