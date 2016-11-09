@@ -24,6 +24,7 @@ public class ConvertUtil {
         meunDto.setMeunId(Integer.valueOf(resources.getId().toString()));
         meunDto.setMeunName(resources.getResName());
         meunDto.setMeunUrl(resources.getResUrl());
+        meunDto.setIconUrl(resources.getIconUrl());
         return meunDto;
     }
 
