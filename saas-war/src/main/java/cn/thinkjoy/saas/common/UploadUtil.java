@@ -218,10 +218,17 @@ public class UploadUtil
         }
     }
 
-    private static void sortList(List<Map<String, String>> sheetList, String sortBy, String sortColumn)
+    private static void sortList(List<Map<String, String>> sheetList, final String sortBy, String sortColumn)
     {
-        Collections.sort(sheetList, (o1, o2) -> Integer.parseInt(o2.get(sortBy))
-            - Integer.parseInt(o1.get(sortBy)));
+        Collections.sort(sheetList, new Comparator<Map<String, String>>()
+        {
+            @Override
+            public int compare(Map<String, String> o1, Map<String, String> o2)
+            {
+                return Integer.parseInt(o2.get(sortBy))
+                    - Integer.parseInt(o1.get(sortBy));
+            }
+        });
         for (int i=1; i<=sheetList.size(); i++)
         {
             Map<String, String> data = sheetList.get(i-1);

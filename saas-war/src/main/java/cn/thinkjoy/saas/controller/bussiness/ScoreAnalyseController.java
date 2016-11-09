@@ -326,7 +326,7 @@ public class ScoreAnalyseController
     @ResponseBody
     public List<Map<String, Object>> getOverLineNumberDetail(@RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
-        @RequestParam(value = "orderBy", required = true) String orderBy)
+        @RequestParam(value = "orderBy", required = true) final String orderBy)
     {
         String examId = examDetailService.getLastExamIdByGrade(grade);
         if(StringUtils.isEmpty(examId))
@@ -347,9 +347,9 @@ public class ScoreAnalyseController
             if (null == mp)
             {
                 mp = new HashMap<>();
-                mp.put("batchOne", new ArrayList<>());
-                mp.put("batchTwo", new ArrayList<>());
-                mp.put("batchThr", new ArrayList<>());
+                mp.put("batchOne", new ArrayList<ExamDetail>());
+                mp.put("batchTwo", new ArrayList<ExamDetail>());
+                mp.put("batchThr", new ArrayList<ExamDetail>());
                 classInfoMap.put(className, mp);
             }
             int gradeRank = Integer.parseInt(detail.getGradeRank());
@@ -380,8 +380,15 @@ public class ScoreAnalyseController
                 examDetailListMap.get("batchThr").size() - examDetailListMap.get("batchTwo").size());
             resultList.add(resultMap);
         }
-        Collections.sort(resultList, (o1, o2) -> Integer.parseInt(o2.get(orderBy) + "") -
-            Integer.parseInt(o1.get(orderBy) + ""));
+        Collections.sort(resultList, new Comparator<Map<String, Object>>()
+        {
+            @Override
+            public int compare(Map<String, Object> o1, Map<String, Object> o2)
+            {
+                return Integer.parseInt(o2.get(orderBy) + "") -
+                    Integer.parseInt(o1.get(orderBy) + "");
+            }
+        });
         return resultList;
     }
 
@@ -429,9 +436,9 @@ public class ScoreAnalyseController
             }
         }
         Map<String, List<ExamDetail>> batchMap = new LinkedHashMap<>();
-        batchMap.put("batchOne", new ArrayList<>());
-        batchMap.put("batchTwo", new ArrayList<>());
-        batchMap.put("batchThr", new ArrayList<>());
+        batchMap.put("batchOne", new ArrayList<ExamDetail>());
+        batchMap.put("batchTwo", new ArrayList<ExamDetail>());
+        batchMap.put("batchThr", new ArrayList<ExamDetail>());
         Map<String, Object> selectCourseMap = new HashMap<>();
         for (ExamDetail detail : detailList)
         {
