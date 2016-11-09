@@ -156,4 +156,32 @@ public class WebCotroller {
         return new ModelAndView("/row-course/row-course");
     }
 
+    /**
+     * results-management
+     * 成绩管理
+     */
+    @RequestMapping("/results-management")
+    public ModelAndView resultsManagement() {
+        return new ModelAndView("/results-analysis/results-management");
+    }
+
+    /**
+     * school-results-analysis
+     * 学校成绩分析
+     */
+    @RequestMapping("/school-results-analysis")
+    public ModelAndView schoolResultsAnalysis() {
+        return new ModelAndView("/results-analysis/school-results-analysis");
+    }
+
+    /**
+     * class-results-analysis
+     * 班级成绩分析
+     */
+    @RequestMapping("/class-results-analysis")
+    public ModelAndView classResultsAnalysis() {
+        return new ModelAndView("/results-analysis/class-results-analysis");
+    }
+
+
 }

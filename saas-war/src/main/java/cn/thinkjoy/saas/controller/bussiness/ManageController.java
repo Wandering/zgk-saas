@@ -1,7 +1,7 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.saas.domain.EnrollingRatio;
-import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
+import cn.thinkjoy.saas.domain.bussiness.TeantCustomsView;
 import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExcelUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
@@ -208,8 +208,8 @@ public class ManageController {
     @ResponseBody
     public Map addTeantCustom(@PathVariable String type,
                               @PathVariable Integer tnId,
-                              @ModelAttribute List<TeantCustom> teantCustomList) {
-        boolean result = iexTenantCustomService.addTeantCustom(type, tnId, teantCustomList);
+                              @RequestBody TeantCustomsView teantCustomList) {
+        boolean result = iexTenantCustomService.addTeantCustom(type, tnId, teantCustomList.getTeantCustomList());
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
@@ -228,8 +228,8 @@ public class ManageController {
     public Map modifyTeantCustom(@PathVariable String type,
                               @PathVariable Integer tnId,
                               @PathVariable Integer pri,
-                              @ModelAttribute List<TeantCustom> teantCustomList) {
-        boolean result = iexTenantCustomService.modifyTeantCustom(type, tnId, pri, teantCustomList);
+                              @RequestBody TeantCustomsView teantCustomList) {
+        boolean result = iexTenantCustomService.modifyTeantCustom(type, tnId, pri, teantCustomList.getTeantCustomList());
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
@@ -265,7 +265,8 @@ public class ManageController {
                                     @PathVariable Integer tnId) {
         boolean result = false;
         Map resultMap = new HashMap();
-        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        List<LinkedHashMap<String,Object>> tenantCustom=iexTenantCustomService.getTenantCustom(type, tnId);
+        resultMap.put("result", tenantCustom);
         return resultMap;
     }
 
