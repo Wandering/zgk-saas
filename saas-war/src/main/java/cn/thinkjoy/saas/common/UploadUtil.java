@@ -218,7 +218,7 @@ public class UploadUtil
         }
     }
 
-    private static void sortList(List<Map<String, String>> sheetList, String sortBy, String sortColumn)
+    private static void sortList(List<Map<String, String>> sheetList, final String sortBy, String sortColumn)
     {
         Collections.sort(sheetList, new Comparator<Map<String, String>>()
         {
