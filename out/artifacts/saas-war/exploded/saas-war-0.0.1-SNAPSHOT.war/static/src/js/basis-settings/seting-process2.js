@@ -1,5 +1,11 @@
 var tnId = Common.cookie.getCookie('tnId');
 
+Common.flowSteps();
+
+
+
+
+
 
 function SetingProcess2() {
     this.init();
