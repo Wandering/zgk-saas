@@ -9,9 +9,7 @@ ResultsManagementFun.prototype = {
     init: function () {
     },
     getResultsList: function (grade) {
-        Common.ajaxFun('/scoreAnalyse/listExam.do', 'GET', {
-            'grade' : grade
-        }, function (res) {
+        Common.ajaxFun('/scoreAnalyse/listExam?grade'+grade, 'GET', {}, function (res) {
             console.log(res)
             //var myTemplate = Handlebars.compile($("#role-template").html());
             //Handlebars.registerHelper('FormatTime', function (num) {
