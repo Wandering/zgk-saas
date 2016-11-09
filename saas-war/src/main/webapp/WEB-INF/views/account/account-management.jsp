@@ -73,9 +73,7 @@
                                     <th class="center">创建时间</th>
                                 </tr>
                                 </thead>
-                                <tbody id="account-tbody">
-
-                                </tbody>
+                                <tbody id="account-tbody"></tbody>
                             </table>
                         </div>
 
