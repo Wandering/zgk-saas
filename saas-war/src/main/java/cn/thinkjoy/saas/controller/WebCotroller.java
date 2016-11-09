@@ -147,4 +147,13 @@ public class WebCotroller {
         return new ModelAndView("/upload/uploadFile");
     }
 
+    /**
+     * row-course
+     * 上传文件
+     */
+    @RequestMapping("/row-course")
+    public ModelAndView rowCourse() {
+        return new ModelAndView("/row-course/row-course");
+    }
+
 }

@@ -28,19 +28,22 @@ selectList
         res_name as resName,
         parent_id as parentId,
         res_url as resUrl,
-        create_date as createDate
+        create_date as createDate,
+        icon_url as iconUrl
     </sql>
     <insert id="insert" parameterType="Resources">
         INSERT INTO saas_resources (
         res_name,
         parent_id,
         res_url,
-        create_date
+        create_date,
+        icon_url
         ) VALUES (
         #{resName},
         #{parentId},
         #{resUrl},
-        #{createDate}
+        #{createDate},
+        #{iconUrl}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
         SELECT LAST_INSERT_ID() AS ID
