@@ -502,5 +502,22 @@ selectList
         FROM saas_exam
     </select>
 
+    <insert id="batchInsertData" useGeneratedKeys="true">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO ${tableName} (
+        <foreach collection="columnList" item="columnName" index="index" separator="," >
+            ${columnName}
+        </foreach>
+        )VALUES
+        <foreach collection="valueList" item="item" index="index" separator="," >
+            (
+            <foreach collection="item.keys" item="key" index="index" separator=",">
+                #{item.${key}}
+            </foreach>
+            )
+        </foreach>
+    </insert>
 </mapper>
 

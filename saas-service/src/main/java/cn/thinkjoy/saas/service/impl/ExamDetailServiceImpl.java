@@ -29,6 +29,23 @@ public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDeta
         return examDetailDAO;
     }
 
+    @Override
+    public List<Map<String, Object>> getOverLineNumberByDate(Map<String, String> paramMap)
+    {
+        return examDetailDAO.getOverLineNumberByDate(paramMap);
+    }
+
+    @Override
+    public Map<String, Object> getEnrollingNumberInfo(Map<String, String> paramMap)
+    {
+        return examDetailDAO.getEnrollingNumberInfo(paramMap);
+    }
+
+    @Override
+    public String getLastExamIdByGrade(String grade)
+    {
+        return examDetailDAO.getLastExamIdByGrade(grade);
+    }
 //    @Override
 //    public void insert(BaseDomain entity) {
 //

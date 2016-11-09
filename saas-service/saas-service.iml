@@ -22,7 +22,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="1.7" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="saas-api" exported="" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.cloudstack:cs-clustermanager-client:0.0.32-SNAPSHOT" level="project" />
@@ -103,5 +103,9 @@
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-biz-common:0.1.43-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.sms:sms-domain:0.0.4-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.gk:zgk-api:0.0.35-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.sms:sms-api:0.0.3-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-protocol-common:0.1.36-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-biz-common:0.1.36-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.sms:sms-domain:0.0.3-SNAPSHOT" level="project" />
   </component>
 </module>

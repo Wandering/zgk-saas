@@ -265,7 +265,8 @@ public class ManageController {
                                     @PathVariable Integer tnId) {
         boolean result = false;
         Map resultMap = new HashMap();
-        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        List<LinkedHashMap<String,Object>> tenantCustom=iexTenantCustomService.getTenantCustom(type, tnId);
+        resultMap.put("result", tenantCustom);
         return resultMap;
     }
 

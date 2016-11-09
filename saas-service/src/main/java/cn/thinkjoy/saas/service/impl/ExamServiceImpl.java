@@ -15,6 +15,7 @@ import cn.thinkjoy.common.service.impl.AbstractPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,13 @@ public class ExamServiceImpl extends AbstractPageService<IBaseDAO<Exam>, Exam> i
     @Override
     public IBaseDAO<Exam> getDao() {
         return examDAO;
+    }
+
+    @Override
+    public Integer batchInsertData(String tableName, List<String> columnList,
+        List<LinkedHashMap<String, String>> valueList)
+    {
+        return examDAO.batchInsertData(tableName, columnList, valueList);
     }
 
 //    @Override
