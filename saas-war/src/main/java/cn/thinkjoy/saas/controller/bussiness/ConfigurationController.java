@@ -5,6 +5,7 @@ import cn.thinkjoy.saas.domain.ClassRooms;
 import cn.thinkjoy.saas.domain.Configuration;
 import cn.thinkjoy.saas.domain.EnrollingRatio;
 import cn.thinkjoy.saas.domain.Grade;
+import cn.thinkjoy.saas.domain.bussiness.ClassRoomView;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.IClassRoomsService;
 import cn.thinkjoy.saas.service.IEnrollingRatioService;
@@ -107,7 +108,7 @@ public class ConfigurationController {
         Map map = new HashMap();
         map.put("tnId", tnId);
 
-        ClassRooms classRooms = exiClassRoomService.selectClassRoomByTnId(map);
+        List<ClassRoomView> classRooms = exiClassRoomService.selectClassRoomByTnId(map);
         Map resultMap = new HashMap();
         resultMap.put("classRoom", classRooms);
         return resultMap;

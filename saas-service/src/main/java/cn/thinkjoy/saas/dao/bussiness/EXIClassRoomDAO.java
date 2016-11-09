@@ -1,8 +1,8 @@
 package cn.thinkjoy.saas.dao.bussiness;
 
 import cn.thinkjoy.saas.domain.ClassRooms;
+import cn.thinkjoy.saas.domain.bussiness.ClassRoomView;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.type.IntegerTypeHandler;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ public interface EXIClassRoomDAO {
      * @param map
      * @return
      */
-    ClassRooms selectClassRoomByTnId(Map map);
+    List<ClassRoomView> selectClassRoomByTnId(Map map);
 
     /**
      * 新增教室设置

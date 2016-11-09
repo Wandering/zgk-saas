@@ -3,6 +3,7 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 import cn.thinkjoy.saas.dao.IClassRoomsDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIClassRoomDAO;
 import cn.thinkjoy.saas.domain.ClassRooms;
+import cn.thinkjoy.saas.domain.bussiness.ClassRoomView;
 import cn.thinkjoy.saas.service.bussiness.EXIClassRoomService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
@@ -35,7 +36,7 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
      * @return
      */
     @Override
-    public ClassRooms selectClassRoomByTnId(Map map) {
+    public List<ClassRoomView> selectClassRoomByTnId(Map map) {
         return exiClassRoomDAO.selectClassRoomByTnId(map);
 
     }
