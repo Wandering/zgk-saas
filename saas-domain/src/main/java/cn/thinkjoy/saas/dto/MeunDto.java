@@ -24,6 +24,11 @@ public class MeunDto implements Serializable {
     private String meunUrl;
 
     /**
+     * 菜单图标集合
+     */
+    private String iconUrl;
+
+    /**
      * 子菜单集合
      */
     private List<MeunDto> sonMeuns;
@@ -60,12 +65,21 @@ public class MeunDto implements Serializable {
         this.sonMeuns = sonMeuns;
     }
 
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
+    }
+
     @Override
     public String toString() {
         return "MeunDto{" +
                 "meunId=" + meunId +
                 ", meunName='" + meunName + '\'' +
                 ", meunUrl='" + meunUrl + '\'' +
+                ", iconUrl='" + iconUrl + '\'' +
                 ", sonMeuns=" + sonMeuns +
                 '}';
     }
