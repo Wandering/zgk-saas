@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IConfigurationDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+    <sql id="Base_Column_List">
+        id,
+        en_name as enName,
+        ch_name as chName,
+        meta_type as metaType,
+        check_rule as checkRule,
+        domain,
+        config_order as   configOrder
+    </sql>
+    <insert id="insert" parameterType="Configuration">
+        INSERT INTO saas_configuration (
+        en_name,
+        ch_name,
+        meta_type,
+        check_rule,
+        domain,
+        config_order
+        ) VALUES (
+        #{enName},
+        #{chName},
+        #{metaType},
+        #{checkRule},
+        #{domain},
+        #{configOrder}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="Configuration">
+        UPDATE saas_configuration
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="enName!=null">
+                en_name = #{enName},
+            </if>
+            <if test="chName!=null">
+                ch_name = #{chName},
+            </if>
+            <if test="metaType!=null">
+                meta_type = #{metaType},
+            </if>
+            <if test="checkRule!=null">
+                check_rule = #{checkRule},
+            </if>
+            <if test="domain!=null">
+                domain = #{domain},
+            </if>
+            <if test="configOrder!=null">
+                config_order = #{configOrder},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_configuration
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.enName!=null">
+                en_name = #{map.enName},
+            </if>
+            <if test="map.chName!=null">
+                ch_name = #{map.chName},
+            </if>
+            <if test="map.metaType!=null">
+                meta_type = #{map.metaType},
+            </if>
+            <if test="map.checkRule!=null">
+                check_rule = #{map.checkRule},
+            </if>
+            <if test="map.domain!=null">
+                domain = #{map.domain},
+            </if>
+            <if test="map.configOrder!=null">
+                config_order = #{map.configOrder},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_configuration
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.enName!=null">
+                en_name = #{update.enName},
+            </if>
+            <if test="update.chName!=null">
+                ch_name = #{update.chName},
+            </if>
+            <if test="update.metaType!=null">
+                meta_type = #{update.metaType},
+            </if>
+            <if test="update.checkRule!=null">
+                check_rule = #{update.checkRule},
+            </if>
+            <if test="update.domain!=null">
+                domain = #{update.domain},
+            </if>
+            <if test="update.configOrder!=null">
+                config_order = #{update.configOrder},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.enName!=null">
+                AND en_name = #{condition.enName}
+            </if>
+            <if test="condition.chName!=null">
+                AND ch_name = #{condition.chName}
+            </if>
+            <if test="condition.metaType!=null">
+                AND meta_type = #{condition.metaType}
+            </if>
+            <if test="condition.checkRule!=null">
+                AND check_rule = #{condition.checkRule}
+            </if>
+            <if test="condition.domain!=null">
+                AND domain = #{condition.domain}
+            </if>
+            <if test="condition.configOrder!=null">
+                AND config_order = #{condition.configOrder}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_configuration (
+                en_name,
+                ch_name,
+                meta_type,
+                check_rule,
+                domain,
+                config_order
+        ) VALUES (
+                    #{map.enName},
+                    #{map.chName},
+                    #{map.metaType},
+                    #{map.checkRule},
+                    #{map.domain},
+                    #{map.configOrder}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="Configuration">
+        UPDATE saas_configuration
+        <trim prefix="SET" suffixOverrides=",">
+            en_name = #{enName},
+            ch_name = #{chName},
+            meta_type = #{metaType},
+            check_rule = #{checkRule},
+            domain = #{domain},
+            config_order = #{configOrder},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_configuration
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_configuration
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="enName!=null">
+                AND en_name = #{enName}
+            </if>
+            <if test="chName!=null">
+                AND ch_name = #{chName}
+            </if>
+            <if test="metaType!=null">
+                AND meta_type = #{metaType}
+            </if>
+            <if test="checkRule!=null">
+                AND check_rule = #{checkRule}
+            </if>
+            <if test="domain!=null">
+                AND domain = #{domain}
+            </if>
+            <if test="configOrder!=null">
+                AND config_order = #{configOrder}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_configuration WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="Configuration">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_configuration
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="Configuration">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_configuration WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="Configuration">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_configuration WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="Configuration">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_configuration
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="Configuration">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_configuration
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.enName!=null">
+                ${condition.groupOp}   en_name  ${condition.en_name.op}  #{condition.en_name.data}
+            </if>
+            <if test="condition.chName!=null">
+                ${condition.groupOp}   ch_name  ${condition.ch_name.op}  #{condition.ch_name.data}
+            </if>
+            <if test="condition.metaType!=null">
+                ${condition.groupOp}   meta_type  ${condition.meta_type.op}  #{condition.meta_type.data}
+            </if>
+            <if test="condition.checkRule!=null">
+                ${condition.groupOp}   check_rule  ${condition.check_rule.op}  #{condition.check_rule.data}
+            </if>
+            <if test="condition.domain!=null">
+                ${condition.groupOp}   domain  ${condition.domain.op}  #{condition.domain.data}
+            </if>
+            <if test="condition.configOrder!=null">
+                ${condition.groupOp}   config_order  ${condition.configOrder.op}  #{condition.configOrder.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="Configuration">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_configuration
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id like CONCAT('%', #{id} , '%')
+            </if>
+            <if test="enName!=null">
+                AND en_name like CONCAT('%', #{enName} , '%')
+            </if>
+            <if test="chName!=null">
+                AND ch_name like CONCAT('%', #{chName} , '%')
+            </if>
+            <if test="metaType!=null">
+                AND meta_type like CONCAT('%', #{metaType} , '%')
+            </if>
+            <if test="checkRule!=null">
+                AND check_rule like CONCAT('%', #{checkRule} , '%')
+            </if>
+            <if test="domain!=null">
+                AND domain like CONCAT('%', #{domain} , '%')
+            </if>
+            <if test="configOrder!=null">
+                AND config_order like CONCAT('%', #{configOrder} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="Configuration">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_configuration
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.enName!=null">
+                AND en_name = #{condition.enName}
+            </if>
+            <if test="condition.chName!=null">
+                AND ch_name = #{condition.chName}
+            </if>
+            <if test="condition.metaType!=null">
+                AND meta_type = #{condition.metaType}
+            </if>
+            <if test="condition.checkRule!=null">
+                AND check_rule = #{condition.checkRule}
+            </if>
+            <if test="condition.domain!=null">
+                AND domain = #{condition.domain}
+            </if>
+            <if test="condition.configOrder!=null">
+                AND config_order = #{condition.configOrder}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="Configuration">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_configuration
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.enName!=null">
+                AND en_name = #{condition.enName}
+            </if>
+            <if test="condition.chName!=null">
+                AND ch_name = #{condition.chName}
+            </if>
+            <if test="condition.metaType!=null">
+                AND meta_type = #{condition.metaType}
+            </if>
+            <if test="condition.checkRule!=null">
+                AND check_rule = #{condition.checkRule}
+            </if>
+            <if test="condition.domain!=null">
+                AND domain = #{condition.domain}
+            </if>
+            <if test="condition.configOrder!=null">
+                AND config_order = #{condition.configOrder}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_configuration
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="enName!=null">
+               ${groupOp} en_name ${en_name.op}  #{en_name.data}
+           </if>
+           <if test="chName!=null">
+               ${groupOp} ch_name ${ch_name.op}  #{ch_name.data}
+           </if>
+           <if test="metaType!=null">
+               ${groupOp} meta_type ${meta_type.op}  #{meta_type.data}
+           </if>
+           <if test="checkRule!=null">
+               ${groupOp} check_rule ${check_rule.op}  #{check_rule.data}
+           </if>
+           <if test="domain!=null">
+               ${groupOp} domain ${domain.op}  #{domain.data}
+           </if>
+           <if test="configOrder!=null">
+               ${groupOp} config_order ${configOrder.op}  #{configOrder.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_configuration
+    </select>
+
+</mapper>
+

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO">
+
+    <resultMap id="Base_Result_Mapper" type="cn.thinkjoy.saas.domain.TenantConfigInstance">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="tn_id" property="tnId" jdbcType="INTEGER" />
+        <result column="ch_name" property="chName" jdbcType="VARCHAR" />
+        <result column="config_key" property="configKey" jdbcType="VARCHAR" />
+        <result column="config_order" property="configOrder" jdbcType="INTEGER" />
+        <result column="check_rule" property="checkRule" jdbcType="VARCHAR" />
+        <result column="domain" property="domain" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="BIGINT" />
+        <result column="modify_date" property="modifyDate" jdbcType="BIGINT" />
+    </resultMap>
+    <resultMap id="TenantConfigListResultMap" type="cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="tn_id" property="tnId" jdbcType="INTEGER" />
+        <result column="ch_name" property="chName" jdbcType="VARCHAR" />
+        <result column="config_key" property="configKey" jdbcType="VARCHAR" />
+        <result column="config_order" property="configOrder" jdbcType="INTEGER" />
+        <result column="check_rule" property="checkRule" jdbcType="VARCHAR" />
+        <result column="domain" property="domain" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="enName" property="enName" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="BIGINT" />
+        <result column="modify_date" property="modifyDate" jdbcType="BIGINT" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,
+        tn_id,
+        config_key,
+        config_order,
+        check_rule,
+        domain,
+        create_date,
+        modify_date
+    </sql>
+    <sql id="ConfigDefault_Join_TeantConfig">
+        left join saas_configuration config ON tenantConfig.config_key=config.id
+    </sql>
+    <delete id="removeTeantConfigs" parameterType="java.util.List">
+
+        DELETE FROM saas_tenant_config_instance where id in
+
+        <foreach item="idItem" collection="list" open="(" separator="," close=")">
+            #{idItem}
+        </foreach>
+
+    </delete>
+    <insert id="addConfigs" useGeneratedKeys="true" parameterType="java.util.List">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        insert into saas_tenant_config_instance(
+        tn_id,
+        config_key,
+        config_order,
+        check_rule,
+        domain,
+        create_date,
+        modify_date)
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.tnId},#{item.configKey},#{item.configOrder},#{item.checkRule},#{item.domain},#{item.createDate},#{item.modifyDate})
+        </foreach>
+    </insert>
+
+    <update id="sortConfigUpdate"  parameterType="java.util.List">
+
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update saas_tenant_config_instance
+            <set>
+                config_order=${item.configOrder}
+            </set>
+            where id = ${item.id}
+        </foreach>
+
+    </update>
+
+    <select id="selectTeanConfigList" resultMap="TenantConfigListResultMap" parameterType="java.util.Map">
+        select tenantConfig.*,config.ch_name as name,config.en_name as enName from saas_tenant_config_instance  as tenantConfig
+        <include refid="ConfigDefault_Join_TeantConfig" />
+        <where>
+            <if test="id!=null">
+                and tenantConfig.id=#{id}
+            </if>
+            <if test="tnId!=null">
+                and tenantConfig.tn_id=#{tnId}
+            </if>
+            <if test="configKey!=null">
+                and tenantConfig.config_key=#{configKey}
+            </if>
+            <if test="domain!=null">
+                and tenantConfig.domain=#{domain}
+            </if>
+        </where>
+        ORDER BY tenantConfig.config_order asc
+    </select>
+
+    <!--查询租户是否已创建动态表-->
+    <select id="existTable" parameterType="String" resultType="Integer">
+        select count(1) from information_schema.TABLES
+        where TABLE_SCHEMA='zgk_saas'
+        and TABLE_NAME =#{tableName}
+    </select>
+
+    <update id="dropTable">
+         drop table ${tableName}
+    </update>
+
+    <update id="createConfigTable" >
+        create table ${tableName} (
+        id int NOT NULL AUTO_INCREMENT,
+        PRIMARY KEY (`id`),
+        <foreach collection="configList" item="item" index="index" separator="," >
+            ${item.enName} ${item.metaType}  DEFAULT NULL
+        </foreach>
+       )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='租户动态生成表'
+    </update>
+
+    <insert id="insertTenantConfigCom" useGeneratedKeys="true">
+
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+
+        INSERT INTO ${tableName} (
+            <foreach collection="configKeyList" item="item" index="index" separator="," >
+                ${item.enName}
+            </foreach>
+        )VALUES
+            <foreach collection="configValueList" item="item" index="index" separator="," >
+                (
+                    <foreach collection="item.keys" item="itemMap" index="indexMap" separator=",">
+                        #{item[${itemMap}]}
+                    </foreach>
+                )
+            </foreach>
+    </insert>
+
+</mapper>

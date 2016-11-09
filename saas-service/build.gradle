@@ -1,0 +1,32 @@
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile "org.springframework:spring-test:$springTestVersion"
+
+
+
+    compile group: "cn.thinkjoy.common", name: "thinkjoy-mus-common", version: "$thinkjoyCommonVersion", changing: true
+    //自动注册自己到cmc
+    compile group: "cn.thinkjoy.cloudstack", name: "cs-clustermanager-client", version: "$thinkjoyCloudstackVersion", changing: true
+
+    compile "org.apache.poi:poi:$poiVersion"
+    compile "javax.servlet:javax.servlet-api:$servletVersion"
+//    compile "mysql:mysql-connector-java:$mysqlConnectorVersion"
+//
+//    compile "com.alibaba:dubbo:$dubboVersion"
+//    compile "com.101tec:zkclient:$dubboZKClientVersion"
+
+    compile project(':saas-api')
+
+    // 智高考专有短信服务
+    compile ("cn.thinkjoy.sms:sms-api:$zgkSmsVersion"){
+        exclude group: 'cn.thinkjoy.common', module: 'thinkjoy-mu-common'
+        exclude group: 'org.springframework'
+    }
+
+    compile ("cn.thinkjoy.gk:zgk-api:$gkVersion"){
+        exclude group: 'cn.thinkjoy.common', module: 'thinkjoy-mu-common'
+        exclude group: 'org.springframework'
+    }
+
+    compile group:"cn.thinkjoy.gaokao360",name:"gaokao360-api",version:"$gk360Version", changing: true
+}

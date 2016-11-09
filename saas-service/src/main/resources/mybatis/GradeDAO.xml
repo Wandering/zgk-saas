@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IGradeDAO">
+    <!--
+    insert
+    update
+    updateNull
+    deleteById
+    deleteByCondition
+    deleteByProperty
+    fetch
+    findOne
+    findList
+    findAll
+    queryPage
+    like
+    queryList
+    queryOne
+    count
+    selectMaxId
+    updateOrSave
+    selectOne
+    selectList
+    -->
+    <sql id="Base_Column_List">
+        id,
+        grade,
+        g_order as gOrder
+    </sql>
+    <insert id="insert" parameterType="Tenant">
+        INSERT INTO saas_grade (
+        tnId,
+        grade,
+        g_order
+        ) VALUES (
+        #{tnId},
+        #{grade},
+        #{gOrder}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="Grade">
+        UPDATE saas_grade
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="grade!=null">
+                grade = #{grade},
+            </if>
+            <if test="tnId!=null">
+                tnId = #{tnId},
+            </if>
+            <if test="gOrder!=null">
+                g_order = #{gOrder},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+
+    <select id="findAll" resultType="Grade">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_grade
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+
+</mapper>
+
