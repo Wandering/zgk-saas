@@ -380,8 +380,15 @@ public class ScoreAnalyseController
                 examDetailListMap.get("batchThr").size() - examDetailListMap.get("batchTwo").size());
             resultList.add(resultMap);
         }
-        Collections.sort(resultList, (o1, o2) -> Integer.parseInt(o2.get(orderBy) + "") -
-            Integer.parseInt(o1.get(orderBy) + ""));
+        Collections.sort(resultList, new Comparator<Map<String, Object>>()
+        {
+            @Override
+            public int compare(Map<String, Object> o1, Map<String, Object> o2)
+            {
+                return Integer.parseInt(o2.get(orderBy) + "") -
+                    Integer.parseInt(o1.get(orderBy) + "");
+            }
+        });
         return resultList;
     }
 
