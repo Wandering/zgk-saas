@@ -11,11 +11,11 @@ AccountManagementFun.prototype = {
     },
     getAccountList: function () {
         Common.ajaxFun('/account/queryUserBaseInfo/null/'+ tnId +'.do', 'GET', {}, function (res) {
-            var myTemplate = Handlebars.compile($("#role-template").html());
+            var myTemplate = Handlebars.compile($("#account-template").html());
             Handlebars.registerHelper('FormatTime', function (num) {
                 return Common.getFormatTime(num);
             });
-            $('#role-tbody').html(myTemplate(res));
+            $('#account-tbody').html(myTemplate(res));
         }, function (res) {
             alert("出错了");
         });
