@@ -1,7 +1,9 @@
 package cn.thinkjoy.saas.service.bussiness;
 
 import cn.thinkjoy.saas.domain.ClassRooms;
+import cn.thinkjoy.saas.domain.bussiness.ClassRoomView;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,7 +16,7 @@ public interface EXIClassRoomService {
      * @param map
      * @return
      */
-    ClassRooms selectClassRoomByTnId(Map map);
+    List<ClassRoomView> selectClassRoomByTnId(Map map);
 
     /**
      * 新增教室设置
