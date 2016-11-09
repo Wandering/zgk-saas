@@ -5,16 +5,16 @@
         <meta charset="utf-8" />
         <title>SAAS 角色管理</title>
         <%@ include file="./../common/meta.jsp"%>
-        <link rel="stylesheet" href="<%=ctx%>/static/src/css/info-management.css" />
+        <link rel="stylesheet" href="<%=ctx%>/static/src/css/.css" />
     </head>
     <body>
-        <div class="main-content" style="height: 482px;background-color: #fff;">
+        <div class="main-content">
             <div class="page-content">
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="title-2">
                             <span class="txt-t"></span>
-                            <div class="btns" style="margin-bottom: 20px;">
+                            <div class="btns">
                                 <button class="btn btn-pink" id="addRole-btn">添加</button>
                                 <button class="btn btn-success">批量删除</button>
                             </div>
