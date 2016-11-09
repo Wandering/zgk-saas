@@ -1,0 +1,62 @@
+@import "../common/common";
+
+.student-add-box {
+  padding: 35px 30px;
+  .f50, .f70, .f20 {
+    width: 50%;
+    float: left;
+    display: block;
+  }
+  .f70 {
+    width: 83%;
+  }
+  .f20 {
+    width: 15%;
+  }
+  select {
+    min-width: 110px;
+  }
+  li {
+    margin-bottom: 15px;
+    span {
+      margin-right: 6px;
+      display: inline-block;
+      width: 55px;
+    }
+  }
+  #subject-list {
+    label{
+      margin-right: 10px;
+      margin-bottom: 15px;
+      .lbl{
+        &:before{
+          margin-right: 6px;
+        }
+      }
+    }
+  }
+  .input-common-w{
+    width: 300px;
+  }
+  #sex-type{
+    margin-bottom: 10px;
+    label{
+      margin-right: 20px;
+      .lbl{
+        &:before{
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+}
+
+
+.opt-btn-box{
+  margin-top: 30px;
+  .save-btn{
+    margin-left: 80px;
+    margin-right: 45px;
+  }
+}
+
