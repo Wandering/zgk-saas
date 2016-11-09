@@ -99,11 +99,19 @@ public class WebCotroller {
     }
     /**
      * class-management
-     * 年级管理
+     * 班级管理
      */
     @RequestMapping("/class-management")
     public ModelAndView classManagement() {
         return new ModelAndView("/info-management/class-management");
+    }
+    /**
+     * class-settings
+     * 班级设置
+     */
+    @RequestMapping("/class-settings")
+    public ModelAndView classSettings() {
+        return new ModelAndView("/info-management/class-settings");
     }
     /**
      * classroom-management

@@ -10,7 +10,6 @@ function ClassManagement () {
     this.tnId = tnId;
     this.type = 'class';
     this.columnArr = [];
-    this.init();
 }
 ClassManagement.prototype = {
     constructor: ClassManagement,
@@ -53,15 +52,17 @@ ClassManagement.prototype = {
  * @constructor
  */
 function AddClassManagement () {
-    //ClassManagement.call(this);
-    this.init();
+    ClassManagement.call(this);
 }
 AddClassManagement.prototype = new ClassManagement();
 AddClassManagement.prototype.constructor = AddClassManagement;
-AddClassManagement.prototype.init = function () {
-    console.info('长度: ' + this.columnArr.length);
-    $.each(this.columnArr, function (i, k) {
-        console.info(k.name + ', ' + k.enName);
+AddClassManagement.prototype.init = function (columnArr) {
+    var that = this;
+    $.each(columnArr, function (i, k) {
+        that.columnArr.push({
+            name: k.name,
+            enName: k.enName
+        });
     });
 };
 AddClassManagement.prototype.getGrade = function () {
@@ -88,16 +89,31 @@ AddClassManagement.prototype.renderGradeSelect = function (data) {
 AddClassManagement.prototype.addClass = function (title) {
     var that = this;
     var contentHtml = [];
+    //contentHtml.push('<div class="add-class-box">');
+    //contentHtml.push('<ul>');
+    //contentHtml.push('<li><span>选择年级</span><select id="select-grade"><option value="00">选择年级</option></select></li>');
+    //contentHtml.push('<li><span>入学年份</span><select id="select-year"><option value="00">入学年份</option><option>2016年</option><option>2015年</option></select></li>');
+    //contentHtml.push('<li><span>班级名称</span><input type="text" id="class-name" /></li>');
+    //contentHtml.push('<li><span>班级类型</span><input type="text" id="class-type" /></li>');
+    //contentHtml.push('<li><span>班级科类</span><input type="text" id="class-subject" /></li>');
+    //contentHtml.push('<li><span>班级编号</span><input type="text" id="class-number" /></li>');
+    //contentHtml.push('<li><span class="three-word">班主任</span><input type="text" class="class-teache" id="class-teacher" /></li>');
+    //contentHtml.push('<li><span>班级人数</span><input type="text" id="class-count" /></li>');
+    //contentHtml.push('<li><div class="opt-btn-box"><button class="btn btn-red" id="add-btn">确认添加</button><button class="btn btn-cancel cancel-btn">取消</button></div></li>');
+    //contentHtml.push('</ul>');
+    //contentHtml.push('</div>');
     contentHtml.push('<div class="add-class-box">');
     contentHtml.push('<ul>');
-    contentHtml.push('<li><span>选择年级</span><select id="select-grade"><option value="00">选择年级</option></select></li>');
-    contentHtml.push('<li><span>入学年份</span><select id="select-year"><option value="00">入学年份</option><option>2016年</option><option>2015年</option></select></li>');
-    contentHtml.push('<li><span>班级名称</span><input type="text" id="class-name" /></li>');
-    contentHtml.push('<li><span>班级类型</span><input type="text" id="class-type" /></li>');
-    contentHtml.push('<li><span>班级科类</span><input type="text" id="class-subject" /></li>');
-    contentHtml.push('<li><span>班级编号</span><input type="text" id="class-number" /></li>');
-    contentHtml.push('<li><span class="three-word">班主任</span><input type="text" class="class-teache" id="class-teacher" /></li>');
-    contentHtml.push('<li><span>班级人数</span><input type="text" id="class-count" /></li>');
+    $.each(that.columnArr, function (i, k) {
+        if (k.enName != 'class_grade' && k.enName != 'class_year') {
+            contentHtml.push('<li><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
+        } else {
+            contentHtml.push('<li><span>' + k.name + '</span><select id="' + k.enName + '"><option value="00">' + k.enName + '</option></select></li>');
+            if (k.enName == 'class_grade') {
+                that.getGrade();
+            }
+        }
+    });
     contentHtml.push('<li><div class="opt-btn-box"><button class="btn btn-red" id="add-btn">确认添加</button><button class="btn btn-cancel cancel-btn">取消</button></div></li>');
     contentHtml.push('</ul>');
     contentHtml.push('</div>');
@@ -105,10 +121,9 @@ AddClassManagement.prototype.addClass = function (title) {
         type: 1,
         title: '<span style="color: #CB171D;font-size: 14px;">' + title + "</span>",
         offset: 'auto',
-        area: ['362px', '533px'],
+        area: ['362px', 'auto'],
         content: contentHtml.join('')
     });
-    this.getGrade();
 };
 
 /**
@@ -127,9 +142,11 @@ UpdateClassManagement.prototype = {
 };
 
 var classManagement = new ClassManagement();
+classManagement.init();
 
 //创建添加班级对象
 var addClassManagement = new AddClassManagement();
+addClassManagement.init(classManagement.columnArr);
 
 //添加班级按钮操作
 $(document).on("click", "#addRole-btn", function () {
@@ -143,9 +160,42 @@ $(document).on("click", "#updateRole-btn", function () {
 
 //确认操作按钮
 $(document).on("click", "#add-btn", function () {
-    layer.closeAll();
+    var postData = new Array();
+    //postData.push('[');
+    //$.each(addClassManagement.columnArr, function (i, k) {
+    //    if (i != addClassManagement.columnArr.length - 1) {
+    //        postData.push('{' + '"' + k.enName + '"' + ': ' + '"' + $('#' + k.enName).val().trim() + '"' + '},');
+    //    } else {
+    //        postData.push('{' + '"' + k.enName + '"' + ': ' + '"' + $('#' + k.enName).val().trim() + '"' + '}');
+    //    }
+    //
+    //});
+    //postData.push(']');
+    $.each(addClassManagement.columnArr, function (i, k) {
+        postData.push({id:i,key:k.enName,value:$('#' + k.enName).val().trim()});
+    });
+    console.info(JSON.stringify(postData));
+    Common.ajaxFun('/manage/' + addClassManagement.type + '/' + tnId + '/add.do', 'POST', JSON.stringify(postData), function (res) {
+        if (res.rtnCode == "0000000") {
+            layer.closeAll();
+        }
+    }, function (res) {
+        layer.msg("出错了");
+    }, true,true);
 });
 //取消操作按钮(关闭对话框)
 $(document).on("click", ".cancel-btn", function () {
     layer.closeAll();
+});
+
+//班级设置操作
+$(document).on('click', '#class-settings-btn', function () {
+    layer.open({
+        type: 2,
+        title: '班级设置',
+        shadeClose: true,
+        shade: 0.8,
+        area: ['60%', '70%'],
+        content: '/class-settings'
+    });
 });
