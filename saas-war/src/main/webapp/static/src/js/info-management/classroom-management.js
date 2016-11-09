@@ -12,7 +12,6 @@ classRoomManagement.prototype = {
     getClassRoom:function () {
         var that = this;
         Common.ajaxFun('/config/classRoom/get/'+ tnId +'.do', 'GET', {}, function (res) {
-            console.log(res)
             if (res.rtnCode == "0000000") {
                 that.renderList(res);
             }
@@ -36,7 +35,7 @@ classRoomManagement.prototype = {
                 gradeArr.push('<td class="center">'+ v.number +'</td>');
                 gradeArr.push('</tr>');
             });
-            $('#grade-list').append(gradeArr.join(''));
+            $('#classroom-table tbody').append(gradeArr.join(''));
         }
     },
     getGrade: function () {
@@ -44,7 +43,6 @@ classRoomManagement.prototype = {
         Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {
             'tnId': tnId
         }, function (res) {
-            //console.log(res)
             if (res.rtnCode == "0000000") {
                 var grade = [];
                 grade.push('<option value="00">请选择年级</option>')

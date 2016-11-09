@@ -500,75 +500,30 @@ selectList
     </select>
 
     <select id="queryPage" resultType="ExamDetail">
-        SELECT
-        <if test="selector!=null">
-            <trim prefixOverrides=",">
-                        <if test="selector.id!=null">
-                            , id
-                        </if>
-                        <if test="selector.examId!=null">
-                            , examId
-                        </if>
-                        <if test="selector.studentName!=null">
-                            , studentName
-                        </if>
-                        <if test="selector.className!=null">
-                            , className
-                        </if>
-                        <if test="selector.yuWenScore!=null">
-                            , yuWenScore
-                        </if>
-                        <if test="selector.shuXueScore!=null">
-                            , shuXueScore
-                        </if>
-                        <if test="selector.yingYuScore!=null">
-                            , yingYuScore
-                        </if>
-                        <if test="selector.wuLiScore!=null">
-                            , wuLiScore
-                        </if>
-                        <if test="selector.huaXueScore!=null">
-                            , huaXueScore
-                        </if>
-                        <if test="selector.shengWuScore!=null">
-                            , shengWuScore
-                        </if>
-                        <if test="selector.zhengZhiScore!=null">
-                            , zhengZhiScore
-                        </if>
-                        <if test="selector.diLiScore!=null">
-                            , diLiScore
-                        </if>
-                        <if test="selector.liShiScore!=null">
-                            , liShiScore
-                        </if>
-                        <if test="selector.commonScore!=null">
-                            , commonScore
-                        </if>
-                        <if test="selector.totleScore!=null">
-                            , totleScore
-                        </if>
-                        <if test="selector.classRank!=null">
-                            , classRank
-                        </if>
-                        <if test="selector.gradeRank!=null">
-                            , gradeRank
-                        </if>
-                        <if test="selector.selectCourses!=null">
-                            , selectCourses
-                        </if>
-            </trim>
-        </if>
-        <if test="selector==null">
-        <include refid="Base_Column_List" />
-        </if>
-        FROM saas_exam_detail
+        SELECT  detail.id as id ,
+                examId as examId ,
+                studentName as studentName ,
+                className as className ,
+                yuWenScore as yuWenScore ,
+                shuXueScore as shuXueScore ,
+                yingYuScore as yingYuScore ,
+                wuLiScore as wuLiScore ,
+                huaXueScore as huaXueScore ,
+                shengWuScore as shengWuScore ,
+                zhengZhiScore as zhengZhiScore ,
+                diLiScore as diLiScore ,
+                liShiScore as liShiScore ,
+                commonScore as commonScore ,
+                totleScore as totleScore ,
+                classRank as classRank ,
+                gradeRank as gradeRank ,
+                selectCourses as selectCourses
+                FROM saas_exam_detail detail
+                inner join saas_exam exam on detail.examId= exam.id
         <where>
-
             <if test="condition.whereSql != null">
                 and id in (#{condition.whereSql})
             </if>
-
             <if test="condition.id!=null">
                 ${condition.groupOp}   ${condition.id.field}  ${condition.id.op}  #{condition.id.data}
             </if>
@@ -623,8 +578,9 @@ selectList
             <if test="condition.selectCourses!=null">
                 ${condition.groupOp}   ${condition.selectCourses.field}  ${condition.selectCourses.op}  #{condition.selectCourses.data}
             </if>
-
-
+            <if test="condition.grade!=null">
+                ${condition.groupOp}   ${condition.grade.field}  ${condition.grade.op}  #{condition.grade.data}
+            </if>
     </where>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -1078,5 +1034,29 @@ selectList
         FROM saas_exam_detail
     </select>
 
+    <select id="getOverLineNumberByDate" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select exam.id,exam.examTime,count(1) as total
+        from saas_exam exam
+        inner join saas_exam_detail detail on exam.id=detail.examId
+        where exam.grade=${grade} and CAST(detail.totleScore as SIGNED)>=${lineScore}
+        group by exam.id,exam.examTime
+        order by exam.examTime asc
+    </select>
+
+    <select id="getEnrollingNumberInfo"  parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT batch_1_enrolls as batchOne, batch_2_enrolls as batchTwo, batch_3_enrolls as batchThr
+        FROM saas_enrolling_ratio ratio
+        where ratio.tn_id=${tnId}
+        order by ratio.year desc,ratio.create_date DESC
+        limit 1
+    </select>
+
+    <select id="getLastExamIdByGrade" parameterType="java.lang.String" resultType="java.lang.String">
+        select exam.id
+        from saas_exam exam
+        where exam.grade=#{grade}
+        order by exam.examTime desc
+        limit 1
+    </select>
 </mapper>
 
