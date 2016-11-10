@@ -150,7 +150,7 @@ var StudentSetting = {
                 layer.open({
                     type: 1,
                     content: $("#sub-student-setting").html(),
-                    area: 'auto',
+                    area: ['100%','100%'],
                     maxmin: false
                 })
             )
@@ -239,7 +239,7 @@ var StudentSetting = {
                         layer.open({
                             type: 1,
                             content: $("#sub-student-setting").html(),
-                            area: 'auto',
+                            area: ['100%','100%'],
                             maxmin: false,
                             cancel:function(){
                                 $('#field').html(''); //清空
@@ -271,7 +271,7 @@ var StudentSetting = {
                         layer.open({
                             type: 1,
                             content: $("#sub-student-setting").html(),
-                            area: 'auto',
+                            area: ['100%','100%'],
                             maxmin: false,
                             cancel:function(){
                                 StudentManage.studentTable();
