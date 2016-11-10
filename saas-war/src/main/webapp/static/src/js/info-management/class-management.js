@@ -160,7 +160,7 @@ $(document).on("click", "#updateRole-btn", function () {
 
 //确认操作按钮
 $(document).on("click", "#add-btn", function () {
-    var postData = new Array();
+    var postData = [];
     //postData.push('[');
     //$.each(addClassManagement.columnArr, function (i, k) {
     //    if (i != addClassManagement.columnArr.length - 1) {
@@ -172,16 +172,24 @@ $(document).on("click", "#add-btn", function () {
     //});
     //postData.push(']');
     $.each(addClassManagement.columnArr, function (i, k) {
-        postData.push({id:i,key:k.enName,value:$('#' + k.enName).val().trim()});
+        postData.push({"id":i,"key":k.enName,"value":$('#' + k.enName).val().trim()});
     });
-    console.info(JSON.stringify(postData));
-    Common.ajaxFun('/manage/' + addClassManagement.type + '/' + tnId + '/add.do', 'POST', JSON.stringify(postData), function (res) {
+    console.info(JSON.stringify({teantCustomList:postData}));
+    var datas = {
+        "clientInfo": {},
+        "style": "",
+        "data": {
+            "teantCustomList": postData
+        }
+    };
+    //' + addClassManagement.type + '/' + tnId + '
+    Common.ajaxFun('/manage/teant/custom/add.do', 'POST',JSON.stringify(datas), function (res) {
         if (res.rtnCode == "0000000") {
             layer.closeAll();
         }
     }, function (res) {
         layer.msg("出错了");
-    }, true,true);
+    }, null,true);
 });
 //取消操作按钮(关闭对话框)
 $(document).on("click", ".cancel-btn", function () {
