@@ -73,65 +73,7 @@
                                     <th class="center">创建时间</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">jiajing</td>
-                                    <td class="center">贾静</td>
-                                    <td class="center">18127365627</td>
-                                    <td class="center">管理员</td>
-                                    <td class="center">启用</td>
-                                    <td class="center">2015.9.23 16:38</td>
-                                </tr>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">jiajing</td>
-                                    <td class="center">贾静</td>
-                                    <td class="center">18127365627</td>
-                                    <td class="center">管理员</td>
-                                    <td class="center">启用</td>
-                                    <td class="center">2015.9.23 16:38</td>
-                                </tr>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">jiajing</td>
-                                    <td class="center">贾静</td>
-                                    <td class="center">18127365627</td>
-                                    <td class="center">管理员</td>
-                                    <td class="center">启用</td>
-                                    <td class="center">2015.9.23 16:38</td>
-                                </tr>
-                                <tr>
-                                    <td class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td class="center">jiajing</td>
-                                    <td class="center">贾静</td>
-                                    <td class="center">18127365627</td>
-                                    <td class="center">管理员</td>
-                                    <td class="center">启用</td>
-                                    <td class="center">2015.9.23 16:38</td>
-                                </tr>
-
-                                </tbody>
+                                <tbody id="account-tbody"></tbody>
                             </table>
                         </div>
 
@@ -144,7 +86,24 @@
         </div><!-- /.main-content -->
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
-
+<script id="account-template" type="text/x-handlebars-template">
+    {{#each bizData}}
+    <tr>
+        <td class="center">
+            <label>
+                <input type="checkbox" class="ace" />
+                <span class="lbl"></span>
+            </label>
+        </td>
+        <td class="center">{{userAccount}}</td>
+        <td class="center">{{userName}}</td>
+        <td class="center">{{telephone}}</td>
+        <td class="center">管理员</td>
+        <td class="center">启用</td>
+        <td class="center">2015.9.23 16:38</td>
+    </tr>
+    {{/each}}
+</script>
 <%@ include file="./../common/footer.jsp"%>
 <script src="<%=ctx%>/static/src/js/account/account-management.js"></script>
 </body>

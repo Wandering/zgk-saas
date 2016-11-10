@@ -64,7 +64,7 @@
                                         </label>
                                     </th>
                                     <th class="center">编号</th>
-                                    <th class="center">年级简介</th>
+                                    <th class="center">年级名称</th>
                                 </tr>
                                 </thead>
                                 <tbody id="grade-list" class="check-template">

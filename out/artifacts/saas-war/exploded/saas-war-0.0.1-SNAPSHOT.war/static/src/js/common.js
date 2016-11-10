@@ -8,6 +8,36 @@ var Common = {
             layer.closeAll();
         });
     },
+    getLinkey: function(name) {
+        var reg = new RegExp("(^|\\?|&)" + name + "=([^&]*)(\\s|&|$)", "i");
+        if (reg.test(window.location.href)) return unescape(RegExp.$2.replace(/\+/g, " "));
+        return "";
+    },
+    provinceKey: function () {
+        var key;
+        var urlDomain = window.location.hostname + '';
+        var urlArr = urlDomain.split('.');
+        key = urlArr[0];
+        return key;
+    },
+    flowSteps:function(){
+        var pathName = window.location.pathname;
+        var pathNum = pathName.slice((pathName.length-1),pathName.length);
+        var tnId = this.cookie.getCookie('tnId');
+        Common.ajaxFun('/config/get/step/'+ tnId +'.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
+                if(pathNum!=res.bizData.result){
+                    if(res.bizData.result =='0'){
+                        window.location.href='/index';
+                    }else{
+                        window.location.href='/seting-process'+res.bizData.result;
+                    }
+                }
+            }
+        }, function (res) {
+            layer.msg('出错了');
+        });
+    },
     url: {},
     cookie: {
         /*
@@ -150,37 +180,56 @@ var Common = {
         return gradeV;
     },
     renderMenu:function(){
-        var meuns = Common.cookie.getCookie('meuns');
-        //console.log(JSON.parse(meuns));
+        var pathName = window.location.pathname;
+        console.log(pathName)
+        var siderMenu = $.parseJSON(Common.cookie.getCookie('siderMenu'));
+        var menus = [];
+        menus.push('<li class="nav-li" style="display: block;">');
+        menus.push('<a href="index.html">');
+        menus.push('<i class="icon-home"></i>');
+        menus.push('<span class="menu-text">首页</span>');
+        menus.push('</a>');
+        menus.push('</li>');
+        $.each(siderMenu,function(i,v){
 
-        //var meunsArr = [];
-        //$.each(JSON.parse(meuns),function(i,v){
-        //    meunsArr.push(v.meunName);
-        //    //console.log(v)
-        //    //var str1 = $('.menu-text').text();
-        //    //var str2 = v.meunName;
-        //    //console.log(str1==str2)
-        //
-        //});
-        //$.each($('.menu-text'),function(n,k){
-        //    //console.log(n)
-        //    console.log($(k).text()+"=="+ meunsArr[n])
-        //})
-
-
-
-
-        //console.log(meunsArr)
-
+            if(pathName==v.meunUrl){
+                menus.push('<li class="nav-li active">');
+            }else{
+                menus.push('<li class="nav-li">');
+            }
+            if(v.sonMeuns.length==0){
+                menus.push('<a href="'+ v.meunUrl +'" class="dropdown-toggle" id="'+ v.meunId +'">');
+            }else{
+                menus.push('<a href="javascript:;" class="dropdown-toggle" id="'+ v.meunId +'">');
+            }
+            menus.push('<i class="icon-desktop"></i>');
+            menus.push('<span class="menu-text">'+ v.meunName +'</span>');
+            menus.push('</a>');
+            //console.log("子菜单:"+v.sonMeuns.length)
+            if(v.sonMeuns.length>0){
+                //console.log(v.sonMeuns)
+                menus.push('<ul class="submenu">');
+                $.each(v.sonMeuns,function(k,m){
+                    if(pathName == m.meunUrl){
+                        menus.push('<li class="active">');
+                    }else{
+                        menus.push('<li>');
+                    }
+                    menus.push('<a href="'+ m.meunUrl +'" id="'+ m.meunId +'"><i class="icon-double-angle-right"></i>'+ m.meunName +'</a>');
+                    menus.push('</li>');
+                });
+                menus.push('</ul>');
+            }
+            menus.push('</li>');
+        });
+        $('#nav-list').append(menus.join(''));
+        $('body').find('.submenu li.active').parents('li.nav-li').addClass('open active');
     },
     getFormatTime:function (timestamp,formatStr) {
         var newDate = new Date();
         newDate.setTime(timestamp);
         return newDate.Format(formatStr || "yyyy-MM-dd hh:mm:ss");
     }
-
-
-
 };
 Common.init();
 

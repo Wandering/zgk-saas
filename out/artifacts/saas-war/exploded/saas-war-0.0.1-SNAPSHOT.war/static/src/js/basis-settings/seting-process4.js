@@ -1,4 +1,7 @@
 var tnId = Common.cookie.getCookie('tnId');
+//Common.flowSteps();
+
+
 $('#seting-process4-btn').on('click', function () {
     var that = $(this);
     var gradeAllNumV = $.trim($('#grade-all-num').val());
