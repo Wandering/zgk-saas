@@ -349,18 +349,22 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         }
 
         String tableName = ParamsUtils.combinationTableName(type, tnId);
-        for (String configId : idsList) {
-            Map map = new HashMap();
-            map.put("id", configId);
-            map.put("domain", type);
-            Configuration configuration = iConfigurationDAO.queryOne(map, "id", "asc");
+
+        Integer result=exiTenantConfigInstanceDAO.removeTeantConfigs(idsList);
+        if(result>0) {
+            for (String configId : idsList) {
+                Map map = new HashMap();
+                map.put("id", configId);
+                map.put("domain", type);
+                Configuration configuration = iConfigurationDAO.queryOne(map, "id", "asc");
 
 
-            Map paramsMap = new HashMap();
-            paramsMap.put("tableName", tableName);
-            paramsMap.put("columnName", configuration.getEnName());
-            exiTenantConfigInstanceDAO.removeColumn(paramsMap);
+                Map paramsMap = new HashMap();
+                paramsMap.put("tableName", tableName);
+                paramsMap.put("columnName", configuration.getEnName());
+                exiTenantConfigInstanceDAO.removeColumn(paramsMap);
 
+            }
         }
             LOGGER.info("===============删除表头 E==============");
 
