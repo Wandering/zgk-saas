@@ -19,7 +19,7 @@ import cn.thinkjoy.common.domain.BaseDomain;
 
 import java.util.*;
 
-public class ExamDetail extends BaseDomain<Long>{
+public class ExamDetail extends BaseDomain<Long> implements Comparable{
     /**  */
     private Long examId;
     /**  */
@@ -202,7 +202,9 @@ public class ExamDetail extends BaseDomain<Long>{
 	
 	public int hashCode() {
 		return new HashCodeBuilder()
-			.append(getId())
+            .append(getId())
+            .append(getExamId())
+			.append(getStudentName())
 			.toHashCode();
 	}
 	
@@ -212,7 +214,15 @@ public class ExamDetail extends BaseDomain<Long>{
 		ExamDetail other = (ExamDetail)obj;
 		return new EqualsBuilder()
 			.append(getId(),other.getId())
+			.append(getExamId(),other.getExamId())
+            .append(getStudentName(),other.getStudentName())
 			.isEquals();
 	}
+
+    @Override
+    public int compareTo(Object o)
+    {
+        return this.getId().intValue() - ((ExamDetail)o).getId().intValue();
+    }
 }
 
