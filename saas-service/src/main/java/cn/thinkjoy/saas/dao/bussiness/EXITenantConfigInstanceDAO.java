@@ -97,4 +97,5 @@ public interface EXITenantConfigInstanceDAO extends IBaseDAO<TenantConfigInstanc
      * @return
      */
     Integer insertTenantConfigCom(@Param("tableName") String tableName, @Param("configKeyList") List<TenantConfigInstanceView> configurations, @Param("configValueList") List<LinkedHashMap<String, String>> configValueList);
+
 }
