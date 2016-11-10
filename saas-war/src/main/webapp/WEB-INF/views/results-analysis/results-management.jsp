@@ -70,8 +70,8 @@
                             </div>
                             <div class="btns">
                                 <button class="btn btn-danger" id="uploadResultsBtn">上传成绩</button>
-                                <button class="btn btn-inverse">修改</button>
-                                <button class="btn btn-success">删除</button>
+                                <button class="btn btn-inverse" id="modify-btn">修改</button>
+                                <button class="btn btn-success" id="close-btn">删除</button>
                             </div>
                         </div>
                         <div class="">
@@ -88,59 +88,13 @@
                                     <th class="center">年级</th>
                                     <th class="center">考试时间</th>
                                     <th class="center">成绩上传时间</th>
-                                    <th class="center"></th>
+                                    <th class="center">下载成绩</th>
+                                    <th class="center">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody id="results-tbody"></tbody>
                             </table>
                         </div>
-
-                        <div id="uploadLayer" class="uploadLayer">
-                            <div class="form-horizontal upload-layer">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right" for="examName"> 考试名称 </label>
-                                    <div class="col-sm-9">
-                                        <input type="text" id="examName" placeholder="输入考试名称"
-                                               class="col-xs-10 col-sm-10"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right" for="sel-grade">
-                                        年级 </label>
-                                    <div class="col-sm-9">
-                                        <select class="sel-role col-xs-10 col-sm-10" id="sel-grade">
-                                            <option value="00">选择年级</option>
-                                            <option value="1">1年级</option>
-                                            <option value="2">2年级</option>
-                                            <option value="3">3年级</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right" for="account-name">
-                                        考试时间 </label>
-                                    <div class="col-sm-9">
-                                        <input class="col-xs-10 col-sm-10 date-picker" id="account-name" type="text"
-                                               placeholder="选择考试时间" data-date-format="yyyy-mm-dd"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right" for="account-phone">
-                                        添加成绩 </label>
-                                    <div class="col-sm-9">
-                                        <button class="btn btn-pink">添加账号</button>(智能上传一个文件)
-                                        <p><a href="">请先导出Excel模板,进行填写</a></p>
-                                        <p>温馨提示:上传与模板不一致的成绩单,系统无法识别</p>
-                                    </div>
-                                </div>
-                                <div class="btn-box">
-                                    <button class="btn btn-info save-btn">保存</button>
-                                    <button class="btn btn-primary close-btn">取消</button>
-                                </div>
-                            </div>
-                        </div>
-
-
                         <!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -153,7 +107,7 @@
     <tr>
         <td class="center">
             <label>
-                <input type="checkbox" class="ace"/>
+                <input type="checkbox" id="{{id}}" examName="{{examName}}" examTime="{{examTime}}" uploadFilePath="{{uploadFilePath}}" class="ace"/>
                 <span class="lbl"></span>
             </label>
         </td>
@@ -162,12 +116,21 @@
         <td class="center">{{examTime}}</td>
         <td class="center">{{createDate}}</td>
         <td class="center"><a href="{{uploadFilePath}}" target="_blank">{{excel uploadFilePath}}</a></td>
+        <td class="center"><a href="javascript:;" class="look-details">查看明细</a></td>
     </tr>
     {{/each}}
 </script>
+
+
 <%@ include file="./../common/footer.jsp" %>
 <link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/datepicker.css">
 <script src="<%=ctx%>/static/src/lib/assets/js/date-time/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.css">
+<script type="text/javascript" src="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.js"></script>
+<script>
+    var BASE_URL = '<%=ctx%>/static/src/lib/';
+    var rootPath = '<%=ctx%>';
+</script>
 <script src="<%=ctx%>/static/src/js/results-analysis/results-management.js"></script>
 </body>
 </html>
