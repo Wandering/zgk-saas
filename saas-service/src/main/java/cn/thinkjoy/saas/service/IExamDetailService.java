@@ -17,5 +17,5 @@ import java.util.Map;
 public interface IExamDetailService<D extends IBaseDAO<T>, T extends BaseDomain> extends IBaseService<D, T>,IPageService<D, T>{
     List<Map<String, Object>> getOverLineNumberByDate(Map<String, String> paramMap);
     Map<String, Object> getEnrollingNumberInfo(Map<String, String> paramMap);
-    String getLastExamIdByGrade(String grade);
+    List<String> getLastExamIdByGrade(Map<String, Object> paramMap);
 }
