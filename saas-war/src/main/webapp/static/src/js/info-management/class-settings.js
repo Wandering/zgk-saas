@@ -32,7 +32,7 @@ ClassSettings.prototype = {
             that.ids.push(k.configKey);
             classHtml.push('<tr>');
             classHtml.push('<td class="center"><label><input type="checkbox" class="ace" /><span class="lbl"></span></label></td>');
-            classHtml.push('<td class="center index" indexId="' + k.configOrder + '">' + (k.configOrder + 1) + '</td>');
+            classHtml.push('<td class="center index" indexid="' + k.configOrder + '">' + k.configKey + '</td>');
             classHtml.push('<td class="center">' + k.name + '</td>');
             classHtml.push('<td class="center"><a href="javascript: void(0);" class="remove-link">移除</a></td>');
             classHtml.push('</tr>');
@@ -53,7 +53,7 @@ ClassSettings.prototype = {
                 var ids = [];
                 $('td.index', ui.item.parent()).each(function (i) {
                     $(this).html(i + 1);
-                    ids.push("-" + $(this).attr('indexId'));
+                    ids.push("-" + $(this).attr('indexid'));
                 });
                 ids = ids.join('');
                 ids = ids.substring(1, ids.length);

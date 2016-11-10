@@ -90,6 +90,14 @@ public class WebCotroller {
         return new ModelAndView("/account/role-management");
     }
     /**
+     * course-guide
+     * 选课指导
+     */
+    @RequestMapping("/course-guide")
+    public ModelAndView courseGuide() {
+        return new ModelAndView("/info-management/course-guide");
+    }
+    /**
      * grade-management
      * 年级管理
      */
