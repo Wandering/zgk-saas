@@ -1,10 +1,7 @@
 package cn.thinkjoy.saas.common;
 
-import cn.thinkjoy.common.domain.BaseDomain;
 import cn.thinkjoy.common.protocol.Request;
-import cn.thinkjoy.common.protocol.RequestT;
 import cn.thinkjoy.common.restful.ITypeReference;
-import cn.thinkjoy.common.restful.RawTypeReference;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Maps;
 
@@ -24,6 +21,15 @@ public class TypeReferenceMaps implements ITypeReference {
     public void init(){
 //        typeReferenceMaps.put("/admin/saas/role/test", new TypeReference<RequestT<BaseDomain>>(){});
         typeReferenceMaps.put("/role/createRole.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/role/updateRole.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/account/createUser.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/account/updateUser.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/manage/teant/custom/data/add.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/manage/teant/custom/data/modify.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/manage/enrollingRatio/add.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/manage/enrollingRatio/modify.do",new TypeReference<Request>() {});
+
+
     }
 
     @Override

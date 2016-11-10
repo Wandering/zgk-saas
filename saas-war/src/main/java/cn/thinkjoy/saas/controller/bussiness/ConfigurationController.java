@@ -5,6 +5,7 @@ import cn.thinkjoy.saas.domain.ClassRooms;
 import cn.thinkjoy.saas.domain.Configuration;
 import cn.thinkjoy.saas.domain.EnrollingRatio;
 import cn.thinkjoy.saas.domain.Grade;
+import cn.thinkjoy.saas.domain.bussiness.ClassRoomView;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.IClassRoomsService;
 import cn.thinkjoy.saas.service.IEnrollingRatioService;
@@ -52,11 +53,10 @@ public class ConfigurationController {
     EXIGradeService exiGradeService;
 
     @Resource
-    IEXTenantService iexTenantService;
-
-    @Resource
     IEnrollingRatioService iEnrollingRatioService;
 
+    @Resource
+    IEXTenantService iexTenantService;
     @Autowired
     Env env;
     @Resource
@@ -65,14 +65,15 @@ public class ConfigurationController {
 
     /**
      * 年级设置
+     *
      * @param tnId 租户ID
      * @param nums 年级
      * @return
      */
-    @RequestMapping(value = "/class/setting/{tnId}/{nums}",method = RequestMethod.POST)
+    @RequestMapping(value = "/class/setting/{tnId}/{nums}", method = RequestMethod.POST)
     @ResponseBody
-    public Map classSetting(@PathVariable Integer tnId,@PathVariable String nums) {
-        boolean result =exiGradeService.AddGrade(tnId,nums);
+    public Map classSetting(@PathVariable Integer tnId, @PathVariable String nums) {
+        boolean result = exiGradeService.AddGrade(tnId, nums);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
@@ -80,10 +81,11 @@ public class ConfigurationController {
 
     /**
      * 查询年级列表
+     *
      * @param tnId
      * @return
      */
-    @RequestMapping(value = "/grade/get/{tnId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/grade/get/{tnId}", method = RequestMethod.GET)
     @ResponseBody
     public Map getGradeByTnId(@PathVariable Integer tnId) {
         Map map = new HashMap();
@@ -96,29 +98,32 @@ public class ConfigurationController {
 
     /**
      * 教室查询
+     *
      * @param tnId
      * @return
      */
-    @RequestMapping(value = "/classRoom/get/{tnId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/classRoom/get/{tnId}", method = RequestMethod.GET)
     @ResponseBody
     public Map getClassRoomByTnId(@PathVariable Integer tnId) {
         Map map = new HashMap();
         map.put("tnId", tnId);
 
-        ClassRooms classRooms = exiClassRoomService.selectClassRoomByTnId(map);
+        List<ClassRoomView> classRooms = exiClassRoomService.selectClassRoomByTnId(map);
         Map resultMap = new HashMap();
         resultMap.put("classRoom", classRooms);
         return resultMap;
     }
+
     /**
      * 教室设置
+     *
      * @param tnId 租户ID
      * @param nums 数量集  例:  1:1-2:2-3:3   1:高一年级:教室数量 2:高二年级:教室数量 3:高三年级:教室数量
      * @return
      */
-    @RequestMapping(value = "/classRoom/setting/{tnId}/{nums}",method = RequestMethod.POST)
+    @RequestMapping(value = "/classRoom/setting/{tnId}/{nums}", method = RequestMethod.POST)
     @ResponseBody
-    public Map classRoomSetting(@PathVariable Integer tnId,@PathVariable String nums) {
+    public Map classRoomSetting(@PathVariable Integer tnId, @PathVariable String nums) {
 
         boolean result = exiClassRoomService.addClassRoom(tnId, nums);
         Map resultMap = new HashMap();
@@ -128,13 +133,14 @@ public class ConfigurationController {
 
     /**
      * 升学率设置
+     *
      * @param tnId 租户ID
      * @param nums 数量集  例:  1-2-3-4-5   1:高三年级考生数量 2:去年一本上线人数 3:去年二本上线人数 4:去年三本上线人数 5:去年高职上线人数
      * @return
      */
-    @RequestMapping(value = "/enrollingRatio/setting/{tnId}/{nums}",method = RequestMethod.POST)
+    @RequestMapping(value = "/enrollingRatio/setting/{tnId}/{nums}", method = RequestMethod.POST)
     @ResponseBody
-    public Map  enrollingRatioSetting(@PathVariable Integer tnId,@PathVariable String nums) {
+    public Map enrollingRatioSetting(@PathVariable Integer tnId, @PathVariable String nums) {
         boolean result = false;
         if (tnId > 0 && !StringUtils.isBlank(nums)) {
             List<String> numArr = ParamsUtils.idsSplit(nums);
@@ -142,7 +148,7 @@ public class ConfigurationController {
                 EnrollingRatio enrollingRatio = new EnrollingRatio();
                 enrollingRatio.setTnId(tnId);
                 enrollingRatio.setStu3numbers(Integer.valueOf(numArr.get(0)));
-                enrollingRatio.setYear(ParamsUtils.getYear()-1);
+                enrollingRatio.setYear(ParamsUtils.getYear() - 1);
                 enrollingRatio.setBatch1enrolls(Integer.valueOf(numArr.get(1)));
                 enrollingRatio.setBatch2enrolls(Integer.valueOf(numArr.get(2)));
                 enrollingRatio.setBatch3enrolls(Integer.valueOf(numArr.get(3)));
@@ -151,8 +157,8 @@ public class ConfigurationController {
                 Integer addResu = iEnrollingRatioService.insert(enrollingRatio);
                 result = addResu > 0 ? true : false;
             }
-            if(result)
-                iexTenantService.stepSetting(tnId,false);
+            if (result)
+                iexTenantService.stepSetting(tnId, false);
         }
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
@@ -221,7 +227,7 @@ public class ConfigurationController {
     public Map removeTeantConfigs(@PathVariable String type,
                                   @PathVariable Integer tnId,
                                   @PathVariable String ids) {
-        boolean result = exiTenantConfigInstanceService.removeTeantConfigs(type,tnId,ids);
+        boolean result = exiTenantConfigInstanceService.removeTeantConfigs(type, tnId, ids);
         Map resultMap = new HashMap();
         resultMap.put("result", result ? "SUCCESS" : "FAIL");
         return resultMap;
@@ -260,10 +266,10 @@ public class ConfigurationController {
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
         String[] columnNames = exiTenantConfigInstanceService.getTenantConfigListArrByTnIdAndType(type, tnId);
-        List<Map<Integer,Object>> maps=iexTenantCustomService.isExcelAddSelect(tnId, columnNames);
+        List<Map<Integer, Object>> maps = iexTenantCustomService.isExcelAddSelect(tnId, columnNames);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
-            ExcelUtils.createWorkBook(columnNames,maps).write(os);
+            ExcelUtils.createWorkBook(columnNames, maps).write(os);
             LOGGER.info("Excel创建完成!");
         } catch (IOException e) {
             e.printStackTrace();
@@ -336,7 +342,7 @@ public class ConfigurationController {
                            @PathVariable String type,
                            @PathVariable Integer tnId,
                            @RequestParam("inputFile") MultipartFile myfile) throws IOException {
-        boolean result=false;
+        boolean result = false;
         LOGGER.info("==================excel上传 S==================");
         if (myfile.isEmpty()) {
             LOGGER.info("文件未上传");
@@ -349,7 +355,7 @@ public class ConfigurationController {
             FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
             result = exiTenantConfigInstanceService.uploadExcel(type, tnId, realPath + myfile.getOriginalFilename());
             if (result)
-                iexTenantService.stepSetting(tnId, (type.equals("teacher")?true:false));
+                iexTenantService.stepSetting(tnId, (type.equals("teacher") ? true : false));
         }
         LOGGER.info("==================excel上传 E==================");
         Map resultMap = new HashMap();
@@ -357,7 +363,47 @@ public class ConfigurationController {
         return resultMap;
     }
 
+    /**
+     * 获取租户当前步骤
+     *
+     * @param tnId 租户ID
+     * @return
+     */
+    @RequestMapping(value = "/get/step/{tnId}",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getStep(@PathVariable Integer tnId) {
 
+        Integer step=iexTenantService.getStep(tnId);
+
+        Map resultMap = new HashMap();
+        resultMap.put("result", step);
+        return resultMap;
+    }
+
+
+    /**
+     * 入学年份
+     * @return
+     */
+    @RequestMapping(value = "/get/school/year",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getInSchoolYear() {
+
+        Integer end = 2020, start = 2012;
+
+        Integer size = end - start;
+
+        String[] arr = new String[size + 1];
+
+        for (int i = 0; i <= size; i++) {
+            arr[i] = start + "";
+            start++;
+        }
+
+        Map resultMap = new HashMap();
+        resultMap.put("result", arr);
+        return resultMap;
+    }
 
 }
 

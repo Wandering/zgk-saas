@@ -63,6 +63,25 @@ public interface EXITenantConfigInstanceDAO extends IBaseDAO<TenantConfigInstanc
     int existTable(String tableName);
 
     /**
+     * 查询列是否存在
+     * @param map
+     * @return
+     */
+    int existColumn(Map map);
+
+    /**
+     * 新增列
+     * @param map
+     */
+    void addColumn(Map map);
+
+    /**
+     * 删除列
+     * @param map
+     */
+    void removeColumn(Map map);
+
+    /**
      * 动态创建表
      *
      * @param configurations 表字段集
@@ -78,4 +97,5 @@ public interface EXITenantConfigInstanceDAO extends IBaseDAO<TenantConfigInstanc
      * @return
      */
     Integer insertTenantConfigCom(@Param("tableName") String tableName, @Param("configKeyList") List<TenantConfigInstanceView> configurations, @Param("configValueList") List<LinkedHashMap<String, String>> configValueList);
+
 }

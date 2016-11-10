@@ -1,5 +1,6 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
+import cn.thinkjoy.common.protocol.Request;
 import cn.thinkjoy.saas.domain.EnrollingRatio;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 import cn.thinkjoy.saas.service.bussiness.*;
@@ -175,7 +176,8 @@ public class ManageController {
      */
     @RequestMapping(value = "/enrollingRatio/add",method = RequestMethod.POST)
     @ResponseBody
-    public Map addEnrollingRatio(@ModelAttribute EnrollingRatio enrollingRatio) {
+    public Map addEnrollingRatio(@RequestBody Request request) {
+        EnrollingRatio enrollingRatio =(EnrollingRatio)request.getData().get("enrollingRatio");
         boolean result = iexEnrollingRatioService.addEnrollingRatio(enrollingRatio);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
@@ -183,13 +185,47 @@ public class ManageController {
     }
 
     /**
+     * 管理租户自定义表头
+     * @param type
+     * @param tnId
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/import/{type}/{tnId}", method = RequestMethod.POST)
+    @ResponseBody
+    public Map addTenantCustomConfig(@PathVariable String type, @PathVariable Integer tnId, HttpServletRequest request){
+        String ids = request.getParameter("ids");
+        String exMsg = exiTenantConfigInstanceService.createColumn(type, ids, tnId);
+        Map resultMap = new HashMap();
+        resultMap.put("result", exMsg);
+        return resultMap;
+    }
+
+    /**
+     * 删除租户表头
+     *
+     * @param ids 表头ID
+     * @return
+     */
+    @RequestMapping(value = "/tenant/remove/{type}/{tnId}/{ids}", method = RequestMethod.POST)
+    @ResponseBody
+    public Map removeTeantConfigs(@PathVariable String type,
+                                  @PathVariable Integer tnId,
+                                  @PathVariable String ids) {
+        String result = exiTenantConfigInstanceService.removeColumn(type, ids,tnId);
+        Map resultMap = new HashMap();
+        resultMap.put("result", result);
+        return resultMap;
+    }
+
+    /**
      * 更新升学率
-     * @param enrollingRatio
      * @return
      */
     @RequestMapping(value = "/enrollingRatio/modify",method = RequestMethod.POST)
     @ResponseBody
-    public Map updateEnrollingRatio(@ModelAttribute EnrollingRatio enrollingRatio){
+    public Map updateEnrollingRatio(@RequestBody Request request){
+        EnrollingRatio enrollingRatio =(EnrollingRatio)request.getData().get("enrollingRatio");
         boolean result = iexEnrollingRatioService.updateEnrollingRatio(enrollingRatio);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
@@ -199,17 +235,16 @@ public class ManageController {
 
     /**
      * 新增租户自定义表头数据
-     * @param type 模块名
-     * @param tnId 租户ID
-     * @param teantCustomList 数据集
      * @return
      */
-    @RequestMapping(value = "/{type}/{tnId}/add",method = RequestMethod.POST)
+    @RequestMapping(value = "/teant/custom/data/add",method = RequestMethod.POST)
     @ResponseBody
-    public Map addTeantCustom(@PathVariable String type,
-                              @PathVariable Integer tnId,
-                              @ModelAttribute List<TeantCustom> teantCustomList) {
-        boolean result = iexTenantCustomService.addTeantCustom(type, tnId, teantCustomList);
+    public Map addTeantCustom(@RequestBody Request request) {
+        Map params=request.getData();
+        List<TeantCustom> teantCustoms=(List<TeantCustom>) params.get("teantCustomList");
+        String type=params.get("type").toString();
+        Integer tnId=request.getDataInteger("tnId");
+        boolean result = iexTenantCustomService.addTeantCustom(type, tnId, teantCustoms);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
@@ -217,19 +252,17 @@ public class ManageController {
 
     /**
      * 更新租户自定义表头数据
-     * @param type 模块名
-     * @param tnId 租户ID
-     * @param pri  主键
-     * @param teantCustomList 数据集
      * @return
      */
-    @RequestMapping(value = "/{type}/{tnId}/{pri}/modify",method = RequestMethod.POST)
+    @RequestMapping(value = "/teant/custom/data/modify",method = RequestMethod.POST)
     @ResponseBody
-    public Map modifyTeantCustom(@PathVariable String type,
-                              @PathVariable Integer tnId,
-                              @PathVariable Integer pri,
-                              @ModelAttribute List<TeantCustom> teantCustomList) {
-        boolean result = iexTenantCustomService.modifyTeantCustom(type, tnId, pri, teantCustomList);
+    public Map modifyTeantCustom(@RequestBody Request request) {
+        Map params=request.getData();
+        List<TeantCustom> teantCustoms=(List<TeantCustom>) params.get("teantCustomList");
+        String type=params.get("type").toString();
+        Integer tnId=request.getDataInteger("tnId"),
+         pri=request.getDataInteger("pri");
+        boolean result = iexTenantCustomService.modifyTeantCustom(type, tnId, pri, teantCustoms);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
@@ -265,7 +298,8 @@ public class ManageController {
                                     @PathVariable Integer tnId) {
         boolean result = false;
         Map resultMap = new HashMap();
-        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        List<LinkedHashMap<String,Object>> tenantCustom=iexTenantCustomService.getTenantCustom(type, tnId);
+        resultMap.put("result", tenantCustom);
         return resultMap;
     }
 

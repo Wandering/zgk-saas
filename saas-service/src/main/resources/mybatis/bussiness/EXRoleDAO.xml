@@ -18,10 +18,11 @@
     <!-- 根据角色ID获取角色对应菜单 -->
     <select id="getResourcesByRoleId" parameterType="int" resultType="cn.thinkjoy.saas.domain.Resources">
         SELECT
-            t2.id AS id,
-            t2.res_name AS resName,
-            t2.res_url AS resUrl,
-            t2.parent_id AS parentId
+            t1.id AS id,
+            t1.res_name AS resName,
+            t1.res_url AS resUrl,
+            t1.parent_id AS parentId,
+            t1.icon_url as iconUrl
         FROM
             saas_relation_role_resource t0,
             saas_resources t1

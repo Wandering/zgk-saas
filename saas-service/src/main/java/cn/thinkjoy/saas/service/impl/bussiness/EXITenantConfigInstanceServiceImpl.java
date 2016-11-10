@@ -275,6 +275,106 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         return result;
     }
 
+    /**
+     *  新增表头
+     * @param type
+     * @param ids
+     * @param tnId
+     * @return
+     */
+    @Override
+    public String createColumn(String type,String ids,Integer tnId) {
+
+        LOGGER.info("===============新增租户自选表头 S==============");
+        LOGGER.info("ids:" + ids);
+        LOGGER.info("tnId:" + tnId);
+
+        List<String> idsList = ParamsUtils.idsSplit(ids);
+        if (tnId <= 0 || idsList == null) {
+            LOGGER.info("result:1[参数错误]");
+            return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_PARAMSERROR);
+        }
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+
+        for (String configId : idsList) {
+
+            Map map = new HashMap();
+            map.put("id", configId);
+            map.put("domain", type);
+            Configuration configuration = iConfigurationDAO.queryOne(map, "id", "asc");
+
+
+            Map paramsMap = new HashMap();
+            paramsMap.put("tableName", tableName);
+            paramsMap.put("columnName", configuration.getEnName());
+            Integer isExist = exiTenantConfigInstanceDAO.existColumn(paramsMap);
+
+            if (isExist > 0)
+                continue;
+
+            List<TenantConfigInstance> tenantConfigInstances = new ArrayList<TenantConfigInstance>();
+            TenantConfigInstance tenantConfigInstance = configStructure(configuration, tnId);
+            tenantConfigInstances.add(tenantConfigInstance);
+
+            Integer addResult = exiTenantConfigInstanceDAO.addConfigs(tenantConfigInstances);
+
+            Map addMap = new HashMap();
+            addMap.put("tableName", tableName);
+            addMap.put("columnName", configuration.getEnName());
+            addMap.put("columnType", configuration.getMetaType());
+            exiTenantConfigInstanceDAO.addColumn(addMap);
+        }
+
+        LOGGER.info("===============新增租户自选表头 E==============");
+        return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_SUCCESS);
+    }
+
+    /**
+     * 删除表头
+     * @param type
+     * @param ids
+     * @param tnId
+     * @return
+     */
+    @Override
+    public String removeColumn(String type,String ids,Integer tnId) {
+        LOGGER.info("===============删除表头 S==============");
+        LOGGER.info("ids:" + ids);
+        LOGGER.info("tnId:" + tnId);
+
+        List<String> idsList = ParamsUtils.idsSplit(ids);
+        if (tnId <= 0 || idsList == null) {
+            LOGGER.info("result:1[参数错误]");
+            return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_PARAMSERROR);
+        }
+
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+
+
+        for (String configId : idsList) {
+            Map map = new HashMap();
+            map.put("id", configId);
+            map.put("domain", type);
+            TenantConfigInstance tenantConfigInstance = iTenantConfigInstanceDAO.queryOne(map, "id", "asc");
+
+            Map configMap = new HashMap();
+            configMap.put("id", tenantConfigInstance.getConfigKey());
+            configMap.put("domain", type);
+            Configuration configuration = iConfigurationDAO.queryOne(configMap, "id", "asc");
+
+
+            Map paramsMap = new HashMap();
+            paramsMap.put("tableName", tableName);
+            paramsMap.put("columnName", configuration.getEnName());
+            exiTenantConfigInstanceDAO.removeColumn(paramsMap);
+
+        }
+        Integer result = exiTenantConfigInstanceDAO.removeTeantConfigs(idsList);
+        LOGGER.info("===============删除表头 E==============");
+
+        return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_SUCCESS);
+    }
+
 
     /**
      * 创建租户动态表

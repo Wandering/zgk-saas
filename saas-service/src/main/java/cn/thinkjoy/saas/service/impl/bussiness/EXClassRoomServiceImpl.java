@@ -3,6 +3,7 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 import cn.thinkjoy.saas.dao.IClassRoomsDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIClassRoomDAO;
 import cn.thinkjoy.saas.domain.ClassRooms;
+import cn.thinkjoy.saas.domain.bussiness.ClassRoomView;
 import cn.thinkjoy.saas.service.bussiness.EXIClassRoomService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
@@ -35,7 +36,7 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
      * @return
      */
     @Override
-    public ClassRooms selectClassRoomByTnId(Map map) {
+    public List<ClassRoomView> selectClassRoomByTnId(Map map) {
         return exiClassRoomDAO.selectClassRoomByTnId(map);
 
     }
@@ -47,7 +48,7 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
         classRooms.setCreateDate(System.currentTimeMillis());
         classRooms.setNumber(classRoomNum);
         classRooms.setGradeId(gradeId);
-        return (iClassRoomsDAO.insert(classRooms) > 0 ? true : false);
+        return (exiClassRoomDAO.insertClassRoom(classRooms) > 0 ? true : false);
     }
 
     /**
@@ -118,5 +119,14 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
         if (idsList == null)
             return false;
         return (exiClassRoomDAO.removeClassRooms(idsList) > 0);
+    }
+
+
+    /**
+     * 新增教室设置
+     * @return
+     */
+    public boolean insertClassRoom(ClassRooms classRooms) {
+        return (exiClassRoomDAO.insertClassRoom(classRooms) > 0);
     }
 }

@@ -99,11 +99,19 @@ public class WebCotroller {
     }
     /**
      * class-management
-     * 年级管理
+     * 班级管理
      */
     @RequestMapping("/class-management")
     public ModelAndView classManagement() {
         return new ModelAndView("/info-management/class-management");
+    }
+    /**
+     * class-settings
+     * 班级设置
+     */
+    @RequestMapping("/class-settings")
+    public ModelAndView classSettings() {
+        return new ModelAndView("/info-management/class-settings");
     }
     /**
      * classroom-management
@@ -137,5 +145,85 @@ public class WebCotroller {
     public ModelAndView studentManagement() {
         return new ModelAndView("/info-management/student-management");
     }
+
+    /**
+     * student-management
+     * 上传文件
+     */
+    @RequestMapping("/uploadFile")
+    public ModelAndView uploadFile() {
+        return new ModelAndView("/upload/uploadFile");
+    }
+
+    /**
+     * row-course
+     * 上传文件
+     */
+    @RequestMapping("/row-course")
+    public ModelAndView rowCourse() {
+        return new ModelAndView("/row-course/row-course");
+    }
+
+    /**
+     * results-management
+     * 成绩管理
+     */
+    @RequestMapping("/results-management")
+    public ModelAndView resultsManagement() {
+        return new ModelAndView("/results-analysis/results-management");
+    }
+
+    /**
+     * school-results-analysis
+     * 学校成绩分析
+     */
+    @RequestMapping("/school-results-analysis")
+    public ModelAndView schoolResultsAnalysis() {
+        return new ModelAndView("/results-analysis/school-results-analysis");
+    }
+
+    /**
+     * class-results-analysis
+     * 班级成绩分析
+     */
+    @RequestMapping("/class-results-analysis")
+    public ModelAndView classResultsAnalysis() {
+        return new ModelAndView("/results-analysis/class-results-analysis");
+    }
+    /**
+     * course-guide
+     * 选课指导
+     */
+    @RequestMapping("/course-guide")
+    public ModelAndView courseGuide() {
+        return new ModelAndView("/school-reform/course-guide");
+    }
+    /**
+     * trinity
+     * 三位一体
+     */
+    @RequestMapping("/trinity")
+    public ModelAndView trinity() {
+        return new ModelAndView("/school-reform/trinity");
+    }
+
+    /**
+     * course-analysis
+     * 课程分析
+     */
+    @RequestMapping("/course-analysis")
+    public ModelAndView courseAnalysis() {
+        return new ModelAndView("/school-reform/course-analysis");
+    }
+
+    /**
+     * policy-interpret
+     * 政策解读
+     */
+    @RequestMapping("/policy-interpret")
+    public ModelAndView policyInterpret() {
+        return new ModelAndView("/school-reform/policy-interpret");
+    }
+
 
 }
