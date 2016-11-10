@@ -204,10 +204,11 @@ $(function () {
     // 查看详情
     $('body').on('click','.look-details',function(){
         var index = layer.open({
-            type: 2,
-            content: 'http://layim.layui.com',
-            area: ['320px', '195px'],
-            maxmin: true
+            title:'成绩明细',
+            type: 1,
+            content: '1111',
+            area: ['100%','100%'],
+            maxmin: false
         });
         layer.full(index);
     })
