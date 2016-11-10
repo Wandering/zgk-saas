@@ -1,0 +1,85 @@
+@import "../common/common";
+
+.student-add-box {
+  padding: 35px 30px;
+  .f50, .f70, .f20 {
+    width: 50%;
+    float: left;
+    display: block;
+  }
+  .f70 {
+    width: 83%;
+  }
+  .f20 {
+    width: 15%;
+  }
+  select {
+    width: 110px;
+  }
+  li {
+    margin-bottom: 15px;
+    span {
+      margin-right: 6px;
+      display: inline-block;
+      width: 55px;
+    }
+  }
+  #subject-list {
+    label{
+      margin-right: 10px;
+      margin-bottom: 15px;
+      .lbl{
+        &:before{
+          margin-right: 6px;
+        }
+      }
+    }
+  }
+  .input-common-w{
+    width: 300px;
+  }
+  #sex-type{
+    margin-bottom: 10px;
+    label{
+      margin-right: 20px;
+      .lbl{
+        &:before{
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+}
+
+
+.opt-btn-box{
+  margin-top: 30px;
+  .save-btn{
+    margin-left: 80px;
+    margin-right: 45px;
+  }
+}
+
+
+
+//选择添加字段
+#sub-choose-field{
+  padding: 20px 30px;
+  label{
+    margin-right: 20px;
+    width: 100px;
+  }
+  .btn-info{
+    margin-top: 15px;
+    position: absolute;
+    left: 50%;
+    margin-left: -40px;
+  }
+  .lbl{
+    &:before{
+      margin-right: 8px;
+    }
+  }
+}
+
+

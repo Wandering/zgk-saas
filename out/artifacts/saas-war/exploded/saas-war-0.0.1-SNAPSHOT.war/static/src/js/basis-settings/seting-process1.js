@@ -1,4 +1,15 @@
 var tnId = Common.cookie.getCookie('tnId');
+
+//Common.flowSteps();
+
+
+
+
+
+
+
+
+
 $('#seting-process1-btn').on('click', function () {
     var that = $(this);
     var numsArr = [];

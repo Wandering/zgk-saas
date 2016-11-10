@@ -1,7 +1,7 @@
 var tnId = Common.cookie.getCookie('tnId');
 
 
-Common.flowSteps();
+//Common.flowSteps();
 
 
 
@@ -156,34 +156,6 @@ $(function () {
     $('#add-btn').on('click', function () {
         SetingProcess3Obj.initClassItem()
     });
-
-
-    // 全选
-    //$('#checkAll').on('click', function () {
-    //    if ($(this).is(':checked')) {
-    //        $('#class-template :checkbox').prop('checked', true);
-    //    } else {
-    //        $('#class-template :checkbox').prop('checked', false);
-    //    }
-    //});
-    //$("#class-template").on('click', ':checkbox', function () {
-    //    allchk();
-    //});
-    //function allchk() {
-    //    var chknum = $("#class-template :checkbox").size();//选项总个数
-    //    var chk = 0;
-    //    $("#class-template").find(':checkbox').each(function () {
-    //        if ($(this).prop("checked") == true) {
-    //            chk++;
-    //        }
-    //    });
-    //    if (chknum == chk) {//全选
-    //        $("#checkAll").prop("checked", true);
-    //    } else {//不全选
-    //        $("#checkAll").prop("checked", false);
-    //    }
-    //}
-
 
 // 添加班级字段确定
     $('body').on('click', '#sel-confirm', function () {
