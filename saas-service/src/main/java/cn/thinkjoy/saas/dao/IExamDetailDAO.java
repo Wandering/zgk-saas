@@ -9,7 +9,14 @@ package cn.thinkjoy.saas.dao;
 import cn.thinkjoy.common.dao.IBaseDAO;
 import cn.thinkjoy.saas.domain.ExamDetail;
 
+import java.util.List;
+import java.util.Map;
+
 public interface IExamDetailDAO extends IBaseDAO<ExamDetail>{
 	
+    List<Map<String, Object>> getOverLineNumberByDate(Map<String, String> paramMap);
 
+    Map<String, Object> getEnrollingNumberInfo(Map<String, String> paramMap);
+
+    List<String> getLastExamIdByGrade(Map<String, Object> paramMap);
 }

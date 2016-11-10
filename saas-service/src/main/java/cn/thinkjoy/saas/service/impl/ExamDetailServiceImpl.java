@@ -6,7 +6,6 @@
  */
 package cn.thinkjoy.saas.service.impl;
 
-import cn.thinkjoy.common.domain.BaseDomain;
 import cn.thinkjoy.common.dao.IBaseDAO;
 import cn.thinkjoy.saas.dao.IExamDetailDAO;
 import cn.thinkjoy.saas.domain.ExamDetail;
@@ -29,6 +28,23 @@ public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDeta
         return examDetailDAO;
     }
 
+    @Override
+    public List<Map<String, Object>> getOverLineNumberByDate(Map<String, String> paramMap)
+    {
+        return examDetailDAO.getOverLineNumberByDate(paramMap);
+    }
+
+    @Override
+    public Map<String, Object> getEnrollingNumberInfo(Map<String, String> paramMap)
+    {
+        return examDetailDAO.getEnrollingNumberInfo(paramMap);
+    }
+
+    @Override
+    public List<String> getLastExamIdByGrade(Map<String, Object> paramMap)
+    {
+        return examDetailDAO.getLastExamIdByGrade(paramMap);
+    }
 //    @Override
 //    public void insert(BaseDomain entity) {
 //

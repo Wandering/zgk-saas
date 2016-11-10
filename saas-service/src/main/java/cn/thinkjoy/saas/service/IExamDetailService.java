@@ -11,6 +11,11 @@ import cn.thinkjoy.common.domain.BaseDomain;
 import cn.thinkjoy.common.service.IBaseService;
 import cn.thinkjoy.common.service.IPageService;
 
-public interface IExamDetailService<D extends IBaseDAO<T>, T extends BaseDomain> extends IBaseService<D, T>,IPageService<D, T>{
+import java.util.List;
+import java.util.Map;
 
+public interface IExamDetailService<D extends IBaseDAO<T>, T extends BaseDomain> extends IBaseService<D, T>,IPageService<D, T>{
+    List<Map<String, Object>> getOverLineNumberByDate(Map<String, String> paramMap);
+    Map<String, Object> getEnrollingNumberInfo(Map<String, String> paramMap);
+    List<String> getLastExamIdByGrade(Map<String, Object> paramMap);
 }

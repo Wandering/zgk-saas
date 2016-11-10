@@ -27,10 +27,9 @@
                             <li>
                                 <a href="#">首页</a>
                             </li>
-                            <li class="active">控制台</li>
+                            <li class="active">班级管理</li>
                         </ul><!-- .breadcrumb -->
                     </div>
-
                     <div class="page-content">
                         <div class="row">
                             <div class="col-xs-12">
@@ -46,7 +45,7 @@
                                         <button class="btn btn-success">删除</button>
                                         <button class="btn btn-warning">模板下载</button>
                                         <button class="btn btn-warning">批量上传</button>
-                                        <button class="btn btn-warning">班级设置</button>
+                                        <button class="btn btn-warning" id="class-settings-btn">班级设置</button>
                                     </div>
                                 </div>
                                 <div>

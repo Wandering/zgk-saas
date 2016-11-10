@@ -1,7 +1,6 @@
 package cn.thinkjoy.saas.common;
 
 import cn.thinkjoy.saas.domain.Exam;
-import cn.thinkjoy.saas.service.IExamDetailService;
 import cn.thinkjoy.saas.service.IExamService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
@@ -33,6 +32,18 @@ import java.util.*;
  */
 public class UploadUtil
 {
+    private static Map<Integer, String> courseMap = new HashMap<>();
+
+    static {
+        courseMap.put(1, "物理");
+        courseMap.put(2, "化学");
+        courseMap.put(3, "生物");
+        courseMap.put(4, "政治");
+        courseMap.put(5, "地理");
+        courseMap.put(6, "历史");
+        courseMap.put(7, "通用技术");
+    }
+
     public static String uploadFile(HttpServletRequest request)
         throws IOException
     {
@@ -48,8 +59,7 @@ public class UploadUtil
                 MultipartFile uploadFile = multiRequest.getFile(iter.next().toString());
                 if (uploadFile != null)
                 {
-                    String path = Thread.currentThread().getContextClassLoader().getResource("").toString();
-                    path = path.substring(1, path.indexOf("classes")).replaceFirst("ile:", "");
+                    String path = request.getSession().getServletContext().getRealPath("upload"); ;
                     File distFile = new File(path + uploadFile.getOriginalFilename());
                     uploadFile.transferTo(distFile);
                     MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
@@ -80,8 +90,7 @@ public class UploadUtil
         return filePath;
     }
 
-    public static void saveExcelData(Exam exam, IExamService examService, IExamDetailService examDetailService,
-        Map<Integer, String> headerMap)
+    public static void saveExcelData(Exam exam, IExamService examService, List<String> headerList)
     {
         String excelPath = exam.getUploadFilePath();
         String fileType = excelPath.substring(excelPath.lastIndexOf(".") + 1, excelPath.length());
@@ -92,17 +101,17 @@ public class UploadUtil
             URL url = new URL(excelPath);
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             is = new DataInputStream(conn.getInputStream());
-            wb = getWorkbook(exam, examService, fileType, is, wb);
+            wb = getWorkbook(exam, examService, fileType, is);
             assert wb != null;
             int sheetSize = wb.getNumberOfSheets();
             if (sheetSize > 0)
             {
-                setData(exam, examDetailService, headerMap, wb);
+                setData(exam, examService, headerList, wb);
             }
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            examService.delete(exam.getId());
         }
         finally
         {
@@ -134,10 +143,10 @@ public class UploadUtil
         }
     }
 
-    private static Workbook getWorkbook(Exam exam, IExamService examService, String fileType, InputStream is,
-        Workbook wb)
+    private static Workbook getWorkbook(Exam exam, IExamService examService, String fileType, InputStream is)
         throws IOException
     {
+        Workbook wb = null;
         switch (fileType)
         {
             case "xls":
@@ -153,11 +162,12 @@ public class UploadUtil
         return wb;
     }
 
-    private static void setData(Exam exam, IExamDetailService examDetailService, Map<Integer, String> headerMap,
+    private static void setData(Exam exam, IExamService examService, List<String> headerList,
         Workbook wb)
     {
         Sheet sheet = wb.getSheetAt(0);
-        List<Map<String, String>> sheetList = new ArrayList<>();//对应sheet页
+        List<Map<String, String>> sheetList = new ArrayList<>();
+        Map<String, List<Map<String, String>>> classDataMap = new HashMap<>();
         int rowSize = sheet.getLastRowNum() + 1;
         if (rowSize >= 3)
         {
@@ -169,37 +179,68 @@ public class UploadUtil
                     continue;
                 }
                 int cellSize = row.getLastCellNum();
-                if (cellSize == headerMap.size())
+                if (cellSize == headerList.size()-1)
                 {
-                    Map<String, String> rowMap = new HashMap<>();
-                    int totleScore = 0;
+                    Map<String, String> rowMap = new LinkedHashMap<>();
+                    rowMap.put("examId", exam.getId() + "");
+                    int totalScore = 0;
                     StringBuilder stringBuffer = new StringBuilder();
                     for (int k = 1; k <= cellSize; k++)
                     {
-                        totleScore = getCellData(headerMap, row, rowMap, totleScore, stringBuffer, k);
+                        totalScore = getCellData(headerList, row, rowMap, totalScore, stringBuffer, k);
                     }
-                    rowMap.put("examId", exam.getId() + "");
-                    rowMap.put("totleScore", totleScore + "");
+                    rowMap.put("totleScore", totalScore + "");
                     rowMap.put("selectCourses", stringBuffer.substring(1));
-                    sheetList.add(rowMap);
+                    String className = row.getCell(1).toString();
+                    List<Map<String, String>> classData = classDataMap.get(className);
+                    if(null == classData)
+                    {
+                        classData = new ArrayList<>();
+                        classDataMap.put(className, classData);
+                    }
+                    classData.add(rowMap);
                 }
             }
-//            Collections.sort(sheetList, (o1, o2) -> Integer.parseInt(o2.get("totleScore"))
-//                - Integer.parseInt(o1.get("totleScore")));
-            for (int i=1; i<=sheetList.size(); i++)
+            for (Map.Entry<String, List<Map<String, String>>> classDataEntry : classDataMap.entrySet())
             {
-                Map<String, String> data = sheetList.get(i-1);
-                data.put("classRank", i + "");
-                examDetailService.insertMap(data);
+                List<Map<String, String>> classData = classDataEntry.getValue();
+                sortList(classData, "totleScore", "classRank");
+                sheetList.addAll(classData);
             }
+            sortList(sheetList, "totleScore", "gradeRank");
+            List<String> columnList = new ArrayList<>();
+            columnList.addAll(headerList);
+            columnList.add("totleScore");
+            columnList.add("selectCourses");
+            columnList.add("classRank");
+            columnList.add("gradeRank");
+            examService.batchInsertData("saas_exam_detail", columnList, sheetList);
         }
     }
 
-    private static int getCellData(Map<Integer, String> headerMap, Row row, Map<String, String> rowMap, int totleScore,
+    private static void sortList(List<Map<String, String>> sheetList, final String sortBy, String sortColumn)
+    {
+        Collections.sort(sheetList, new Comparator<Map<String, String>>()
+        {
+            @Override
+            public int compare(Map<String, String> o1, Map<String, String> o2)
+            {
+                return Integer.parseInt(o2.get(sortBy))
+                    - Integer.parseInt(o1.get(sortBy));
+            }
+        });
+        for (int i=1; i<=sheetList.size(); i++)
+        {
+            Map<String, String> data = sheetList.get(i-1);
+            data.put(sortColumn, i + "");
+        }
+    }
+
+    private static int getCellData(List<String> headerList, Row row, Map<String, String> rowMap, int totalScore,
         StringBuilder stringBuffer, int k)
     {
         Cell cell = row.getCell(k - 1);
-        String key = headerMap.get(k);
+        String key = headerList.get(k);
         String value = null;
         if (cell != null)
         {
@@ -212,17 +253,17 @@ public class UploadUtil
                     intValue = Integer.parseInt(value);
                     if (k >= 6)
                     {
-                        stringBuffer.append(",").append(k - 5);
+                        stringBuffer.append("@").append(courseMap.get(k - 5));
                     }
                 }
                 catch (Exception e)
                 {
                     intValue = 0;
                 }
-                totleScore += intValue;
+                totalScore += intValue;
             }
         }
         rowMap.put(key, value);
-        return totleScore;
+        return totalScore;
     }
 }

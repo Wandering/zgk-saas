@@ -107,6 +107,19 @@
         and TABLE_NAME =#{tableName}
     </select>
 
+    <select id="existColumn" parameterType="java.util.Map" resultType="Integer">
+        SELECT count(1) FROM(
+        select COLUMN_NAME from information_schema.COLUMNS
+        where TABLE_SCHEMA='zgk_saas'
+        and TABLE_NAME=#{tableName}
+        and COLUMN_NAME=#{columnName})t
+    </select>
+    <update id="addColumn" parameterType="java.util.Map">
+        alter table ${tableName} add column ${columnName} ${columnType};
+    </update>
+    <update id="removeColumn">
+        alter table ${tableName} drop column ${columnName}
+    </update>
     <update id="dropTable">
          drop table ${tableName}
     </update>
