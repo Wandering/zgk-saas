@@ -159,7 +159,6 @@ public class EXUserServiceImpl implements IEXUserService {
         instance.setUserPass(Constant.DEFULT_PWD);
         instance.setCreateDate(new Date());
         instance.setIsSuperManager("0");
-        instance.setStatus(0);
         iUserInstanceDAO.insert(instance);
 
         RelationUserRole userRole = new RelationUserRole();
