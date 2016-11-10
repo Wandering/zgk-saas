@@ -1,7 +1,6 @@
 var tnId = Common.cookie.getCookie('tnId');
 
-Common.flowSteps();
-
+//Common.flowSteps();
 
 
 
