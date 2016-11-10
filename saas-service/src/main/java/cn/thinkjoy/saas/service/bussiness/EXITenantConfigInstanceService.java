@@ -28,6 +28,24 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
     public String createConfig(String type, String ids, Integer tnId);
 
     /**
+     * 新增表头
+     * @param type
+     * @param ids
+     * @param tnId
+     * @return
+     */
+    public String createColumn(String type,String ids,Integer tnId);
+
+
+    /**
+     * 删除表头
+     * @param type
+     * @param ids
+     * @param tnId
+     * @return
+     */
+    public String removeColumn(String type,String ids,Integer tnId);
+    /**
      * 逐条删除租户表头  by
      *
      * @param id 表头ID

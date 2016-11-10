@@ -99,6 +99,7 @@ var Common = {
             url: url,
             type: method,
             data: reqData || {},
+            dataType:"json",
             async: isasyncB,
             success: callback,
             error: callbackError,

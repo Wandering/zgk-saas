@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <title>SAAS 角色管理</title>
         <%@ include file="./../common/meta.jsp"%>
-        <link rel="stylesheet" href="<%=ctx%>/static/src/css/.css" />
+        <link rel="stylesheet" href="<%=ctx%>/static/src/css/class-settings.css" />
     </head>
     <body>
         <div class="main-content">
@@ -15,31 +15,25 @@
                         <div class="title-2">
                             <span class="txt-t"></span>
                             <div class="btns">
-                                <button class="btn btn-pink" id="addRole-btn">添加</button>
-                                <button class="btn btn-success">批量删除</button>
+                                <button class="btn btn-pink opt-btn" id="addColumn-btn">添加</button>
+                                <button class="btn btn-success opt-btn">批量删除</button>
                             </div>
                             <div class="main-title"></div>
                         </div>
                         <div>
                             <table id="class-table" class="table">
                                 <thead>
-                                    <%--<tr>--%>
-                                        <%--<th class="center">--%>
-                                            <%--<label>--%>
-                                                <%--<input type="checkbox" class="ace" />--%>
-                                                <%--<span class="lbl"></span>--%>
-                                            <%--</label>--%>
-                                        <%--</th>--%>
-                                        <%--<th class="center">编号</th>--%>
-                                        <%--<th class="center">班级名称</th>--%>
-                                        <%--<th class="center">班级类型</th>--%>
-                                        <%--<th class="center">班级编号</th>--%>
-                                        <%--<th class="center">入学年份</th>--%>
-                                        <%--<th class="center">班主任</th>--%>
-                                        <%--<th class="center">所属年级</th>--%>
-                                        <%--<th class="center">班级科类</th>--%>
-                                        <%--<th class="center">班级人数</th>--%>
-                                    <%--</tr>--%>
+                                    <tr>
+                                        <th class="center">
+                                            <label>
+                                                <input type="checkbox" class="ace" />
+                                                <span class="lbl"></span>
+                                            </label>
+                                        </th>
+                                        <th class="center">排序</th>
+                                        <th class="center">字段名称</th>
+                                        <th class="center"></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
 
@@ -50,7 +44,13 @@
                 </div>
             </div>
         </div>
+        <script id="column-list-data-template" type="text/x-handlebars-template">
+            {{#each this}}
+            <li><input type="checkbox" class='class-column' columnid="{{id}}" id="{{enName}}" /><label for="{{enName}}">{{chName}}</label></li>
+            {{/each}}
+        </script>
         <%@ include file="./../common/footer.jsp"%>
+        <script src="<%=ctx%>/static/src/lib/assets/js/jquery-ui-1.12.1.js"></script>
         <script src="<%=ctx%>/static/src/js/info-management/class-settings.js"></script>
     </body>
 </html>
