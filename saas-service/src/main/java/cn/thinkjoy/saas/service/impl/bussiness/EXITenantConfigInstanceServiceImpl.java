@@ -337,7 +337,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * @return
      */
     @Override
-    public String removeColumn(String type,String ids,Integer tnId){
+    public String removeColumn(String type,String ids,Integer tnId) {
         LOGGER.info("===============删除表头 S==============");
         LOGGER.info("ids:" + ids);
         LOGGER.info("tnId:" + tnId);
@@ -350,23 +350,27 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
         String tableName = ParamsUtils.combinationTableName(type, tnId);
 
-        Integer result=exiTenantConfigInstanceDAO.removeTeantConfigs(idsList);
-        if(result>0) {
-            for (String configId : idsList) {
-                Map map = new HashMap();
-                map.put("id", configId);
-                map.put("domain", type);
-                Configuration configuration = iConfigurationDAO.queryOne(map, "id", "asc");
+
+        for (String configId : idsList) {
+            Map map = new HashMap();
+            map.put("id", configId);
+            map.put("domain", type);
+            TenantConfigInstance tenantConfigInstance = iTenantConfigInstanceDAO.queryOne(map, "id", "asc");
+
+            Map configMap = new HashMap();
+            configMap.put("id", tenantConfigInstance.getConfigKey());
+            configMap.put("domain", type);
+            Configuration configuration = iConfigurationDAO.queryOne(configMap, "id", "asc");
 
 
-                Map paramsMap = new HashMap();
-                paramsMap.put("tableName", tableName);
-                paramsMap.put("columnName", configuration.getEnName());
-                exiTenantConfigInstanceDAO.removeColumn(paramsMap);
+            Map paramsMap = new HashMap();
+            paramsMap.put("tableName", tableName);
+            paramsMap.put("columnName", configuration.getEnName());
+            exiTenantConfigInstanceDAO.removeColumn(paramsMap);
 
-            }
         }
-            LOGGER.info("===============删除表头 E==============");
+        Integer result = exiTenantConfigInstanceDAO.removeTeantConfigs(idsList);
+        LOGGER.info("===============删除表头 E==============");
 
         return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_SUCCESS);
     }

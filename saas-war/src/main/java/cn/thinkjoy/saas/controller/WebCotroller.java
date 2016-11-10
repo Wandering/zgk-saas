@@ -198,6 +198,40 @@ public class WebCotroller {
     public ModelAndView classResultsAnalysis() {
         return new ModelAndView("/results-analysis/class-results-analysis");
     }
+    /**
+     * course-guide
+     * 选课指导
+     */
+    @RequestMapping("/course-guide")
+    public ModelAndView courseGuide() {
+        return new ModelAndView("/school-reform/course-guide");
+    }
+    /**
+     * trinity
+     * 三位一体
+     */
+    @RequestMapping("/trinity")
+    public ModelAndView trinity() {
+        return new ModelAndView("/school-reform/trinity");
+    }
+
+    /**
+     * course-analysis
+     * 课程分析
+     */
+    @RequestMapping("/course-analysis")
+    public ModelAndView courseAnalysis() {
+        return new ModelAndView("/school-reform/course-analysis");
+    }
+
+    /**
+     * policy-interpret
+     * 政策解读
+     */
+    @RequestMapping("/policy-interpret")
+    public ModelAndView policyInterpret() {
+        return new ModelAndView("/school-reform/policy-interpret");
+    }
 
 
 }
