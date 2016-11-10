@@ -191,7 +191,7 @@ public class ManageController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/import/{type}/{tnId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/import/{type}/{tnId}", method = RequestMethod.POST)
     @ResponseBody
     public Map addTenantCustomConfig(@PathVariable String type, @PathVariable Integer tnId, HttpServletRequest request){
         String ids = request.getParameter("ids");

@@ -295,6 +295,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_PARAMSERROR);
         }
         String tableName = ParamsUtils.combinationTableName(type, tnId);
+
         for (String configId : idsList) {
 
             Map map = new HashMap();
@@ -310,12 +311,20 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
             if (isExist > 0)
                 continue;
+
+            List<TenantConfigInstance> tenantConfigInstances = new ArrayList<TenantConfigInstance>();
+            TenantConfigInstance tenantConfigInstance = configStructure(configuration, tnId);
+            tenantConfigInstances.add(tenantConfigInstance);
+
+            Integer addResult = exiTenantConfigInstanceDAO.addConfigs(tenantConfigInstances);
+
             Map addMap = new HashMap();
             addMap.put("tableName", tableName);
             addMap.put("columnName", configuration.getEnName());
             addMap.put("columnType", configuration.getMetaType());
             exiTenantConfigInstanceDAO.addColumn(addMap);
         }
+
         LOGGER.info("===============新增租户自选表头 E==============");
         return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_SUCCESS);
     }
@@ -340,18 +349,22 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         }
 
         String tableName = ParamsUtils.combinationTableName(type, tnId);
-        for (String configId : idsList) {
-            Map map = new HashMap();
-            map.put("id", configId);
-            map.put("domain", type);
-            Configuration configuration = iConfigurationDAO.queryOne(map, "id", "asc");
+
+        Integer result=exiTenantConfigInstanceDAO.removeTeantConfigs(idsList);
+        if(result>0) {
+            for (String configId : idsList) {
+                Map map = new HashMap();
+                map.put("id", configId);
+                map.put("domain", type);
+                Configuration configuration = iConfigurationDAO.queryOne(map, "id", "asc");
 
 
-            Map paramsMap = new HashMap();
-            paramsMap.put("tableName", tableName);
-            paramsMap.put("columnName", configuration.getEnName());
-            exiTenantConfigInstanceDAO.removeColumn(paramsMap);
+                Map paramsMap = new HashMap();
+                paramsMap.put("tableName", tableName);
+                paramsMap.put("columnName", configuration.getEnName());
+                exiTenantConfigInstanceDAO.removeColumn(paramsMap);
 
+            }
         }
             LOGGER.info("===============删除表头 E==============");
 
