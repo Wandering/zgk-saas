@@ -158,14 +158,23 @@ RoleManagementFun.prototype = {
         contentHtml.push('</div>');
         contentHtml.push('<div class="btn-box"><button class="btn btn-info save-btn">保存</button><button class="btn btn-primary close-btn">取消</button></div>');
         contentHtml.push('</div>');
-        //Common.modal("addRole","添加角色",contentHtml.join(''),"内容","");
-        layer.open({
-            type: 1,
-            title: '添加角色',
-            offset: 'auto',
-            area: ['362px', '420px'],
-            content: contentHtml.join('')
-        });
+        if(roleId) {
+            layer.open({
+                type: 1,
+                title: '修改角色',
+                offset: 'auto',
+                area: ['362px', '420px'],
+                content: contentHtml.join('')
+            });
+        }else{
+            layer.open({
+                type: 1,
+                title: '添加角色',
+                offset: 'auto',
+                area: ['362px', '420px'],
+                content: contentHtml.join('')
+            });
+        }
         that.renderTree(roleId);
     },
     deleteRole: function (roleId) {

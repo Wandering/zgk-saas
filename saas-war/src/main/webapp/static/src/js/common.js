@@ -230,6 +230,12 @@ var Common = {
         var newDate = new Date();
         newDate.setTime(timestamp);
         return newDate.Format(formatStr || "yyyy-MM-dd hh:mm:ss");
+    },
+    getPageName:function(urls){
+        var strUrl = urls;
+        var arrUrl = strUrl.split("/");
+        var strPage = arrUrl[arrUrl.length - 1];
+        return strPage;
     }
 };
 Common.init();
