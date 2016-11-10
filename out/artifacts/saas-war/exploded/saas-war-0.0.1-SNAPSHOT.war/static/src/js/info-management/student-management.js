@@ -261,6 +261,9 @@ var StudentSetting = {
         var that = this;
         $(document).on('click','.student-setting-remove-head',function(){
             var idsData = $(this).attr('data-id');
+            removeField(idsData)
+        })
+        var removeField = function(idsData){
             Common.ajaxFun('/manage/tenant/remove/student/'+StudentSetting.tnId+'/'+idsData+'.do', 'POST', {}, function (res) {
                 if (res.rtnCode == "0000000") {
                     that.fetchTableHeader();
@@ -282,7 +285,7 @@ var StudentSetting = {
             }, function (res) {
                 layer.msg("出错了");
             }, true);
-        })
+        }
     },
     tableDrag: function () {
         // 表格排序
