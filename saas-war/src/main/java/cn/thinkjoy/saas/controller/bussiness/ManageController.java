@@ -185,6 +185,40 @@ public class ManageController {
     }
 
     /**
+     * 管理租户自定义表头
+     * @param type
+     * @param tnId
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/import/{type}/{tnId}", method = RequestMethod.GET)
+    @ResponseBody
+    public Map addTenantCustomConfig(@PathVariable String type, @PathVariable Integer tnId, HttpServletRequest request){
+        String ids = request.getParameter("ids");
+        String exMsg = exiTenantConfigInstanceService.createColumn(type, ids, tnId);
+        Map resultMap = new HashMap();
+        resultMap.put("result", exMsg);
+        return resultMap;
+    }
+
+    /**
+     * 删除租户表头
+     *
+     * @param ids 表头ID
+     * @return
+     */
+    @RequestMapping(value = "/tenant/remove/{type}/{tnId}/{ids}", method = RequestMethod.POST)
+    @ResponseBody
+    public Map removeTeantConfigs(@PathVariable String type,
+                                  @PathVariable Integer tnId,
+                                  @PathVariable String ids) {
+        String result = exiTenantConfigInstanceService.removeColumn(type, ids,tnId);
+        Map resultMap = new HashMap();
+        resultMap.put("result", result);
+        return resultMap;
+    }
+
+    /**
      * 更新升学率
      * @return
      */
