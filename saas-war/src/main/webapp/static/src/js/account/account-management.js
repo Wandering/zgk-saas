@@ -55,7 +55,6 @@ AccountManagementFun.prototype = {
         contentHtml.push('<label><input name="start-radio" type="radio" value="2" class="ace" /><span class="lbl"> 禁用</span></label>');
         contentHtml.push('</div>');
         contentHtml.push('</div>');
-
         contentHtml.push('<div class="btn-box"><button class="btn btn-info save-btn">保存</button><button class="btn btn-primary close-btn">取消</button></div>');
         contentHtml.push('</div>');
         //Common.modal("addRole","添加角色",contentHtml.join(''),"内容","");
