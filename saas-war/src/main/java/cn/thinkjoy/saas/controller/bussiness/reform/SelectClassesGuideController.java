@@ -92,19 +92,25 @@ public class SelectClassesGuideController {
      */
     @RequestMapping("getPlanEnrollingByProperty")
     @ResponseBody
-    public Map<String,Object> getPlanEnrollingByProperty(@RequestParam("subject")String subject,
-                                                         @RequestParam(value = "offset",required = false,defaultValue = "0")String offset,
-                                                         @RequestParam(value = "rows",required = false,defaultValue = "10")String rows) {
+    public Map<String,Object> getPlanEnrollingByProperty(@RequestParam("subject")String subject) {
         Map<String,Object> paramMap=new HashMap<>();
         paramMap.put("areaId","330000");
         paramMap.put("year","2016");
         paramMap.put("subject",subject);
         paramMap.put("property","211");
-        paramMap.put("offset",offset);
-        paramMap.put("rows",rows);
         Map<String,Object> returnMap=new HashMap<>();
-        returnMap.put("planEnrollingByProperty", iSelectClassesGuideService.selectPlanEnrollingByProperty(paramMap));
-        returnMap.put("count",iSelectClassesGuideService.selectPlanEnrollingByPropertyCount(paramMap));
+        List<PlanEnrollingDto> planEnrollingDtoList= iSelectClassesGuideService.selectPlanEnrollingByProperty(paramMap);
+        int number1=0;
+        int number2=0;
+        for(PlanEnrollingDto planEnrollingDto:planEnrollingDtoList){
+            if(planEnrollingDto.getProperty().contains("985")){
+                number1=number1+Integer.valueOf(planEnrollingDto.getPlanEnrolling());
+            }else {
+                number2 = number2 + Integer.valueOf(planEnrollingDto.getPlanEnrolling());
+            }
+        }
+        returnMap.put("985高校",number1);
+        returnMap.put("211工程",number2);
         return returnMap;
     }
 
