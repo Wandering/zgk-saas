@@ -253,6 +253,67 @@ public class ScoreAnalyseController
         return examService.findList("grade", grade, "createDate", SqlOrderEnum.DESC);
     }
 
+    @RequestMapping("/deleteExam")
+    @ResponseBody
+    public Boolean deleteExam(@RequestParam(value = "examId", required = true) String examId)
+    {
+        Boolean result;
+        try
+        {
+            examService.delete(examId);
+            examDetailService.deleteByProperty("examId", examId);
+            result = true;
+        }catch (Exception e)
+        {
+            result =false;
+        }
+        return result;
+    }
+
+    @RequestMapping("/getExamById")
+    @ResponseBody
+    public Exam getExamById(@RequestParam(value = "examId", required = true)String examId)
+    {
+        return (Exam)examService.fetch(examId);
+    }
+
+    @RequestMapping("/modifyExam")
+    @ResponseBody
+    public Boolean modifyExam(Exam exam)
+    {
+        Boolean result;
+        Exam originExam = (Exam)examService.fetch(exam.getId());
+        if(null != originExam)
+        {
+            originExam.setExamName(exam.getExamName());
+            originExam.setExamTime(exam.getExamTime());
+            originExam.setGrade(exam.getGrade());
+            examService.update(originExam);
+            result = true;
+        }else {
+            result = false;
+        }
+        return result;
+    }
+
+
+    @RequestMapping("/deleteExamDetail")
+    @ResponseBody
+    public Boolean deleteExamDetail(@RequestParam(value = "examDetailId", required = false) String examDetailId)
+    {
+
+        Boolean result;
+        try
+        {
+            examDetailService.delete(examDetailId);
+            result = true;
+        }catch (Exception e)
+        {
+            result =false;
+        }
+        return result;
+    }
+
     @RequestMapping("/getExamDetailById")
     @ResponseBody
     public ExamDetail getExamDetailById(@RequestParam(value = "id", required = false) String id)
