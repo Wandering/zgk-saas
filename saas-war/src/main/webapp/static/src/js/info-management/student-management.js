@@ -116,8 +116,13 @@ var StudentManage = {
         }, true);
         Common.ajaxFun('/manage/student/' + this.tnId + '/getTenantCustomData.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
-                console.info(res);
-                //studentTableData.body = res.bizData.configList;
+                var tplArr = [];
+                Handlebars.registerHelper('hideId',function(v){
+                    tplArr.push('<td class="center">'+v+'</td>')
+                    return tplArr.slice(1,tplArr.length);
+                })
+                studentTableData.body = res.bizData.result;
+                console.info(studentTableData);
             }
         }, function (res) {
             layer.msg("出错了");
@@ -150,7 +155,7 @@ var StudentSetting = {
                 layer.open({
                     type: 1,
                     content: $("#sub-student-setting").html(),
-                    area: 'auto',
+                    area: ['100%','100%'],
                     maxmin: false
                 })
             )
@@ -194,6 +199,7 @@ var StudentSetting = {
         Common.ajaxFun('/config/getInit/student.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var tpl = [];
+                $('#field').html('');
                 $.each(res.bizData.configList, function (i, v) {
                     tpl.push('<label for="li-' + v.id + '">');
                     var isCheck = false;
@@ -234,12 +240,11 @@ var StudentSetting = {
                 if (res.rtnCode == "0000000") {
                     that.fetchTableHeader();
                     layer.closeAll();
-                    $('#field').html(''); // 清空
                     layer.full(
                         layer.open({
                             type: 1,
                             content: $("#sub-student-setting").html(),
-                            area: 'auto',
+                            area: ['100%','100%'],
                             maxmin: false,
                             cancel:function(){
                                 $('#field').html(''); //清空
@@ -259,8 +264,16 @@ var StudentSetting = {
     * */
     removeTableHeaderField:function(){
         var that = this;
+        var idsData = null;
         $(document).on('click','.student-setting-remove-head',function(){
-            var idsData = $(this).attr('data-id');
+            idsData = $(this).attr('data-id');
+            removeField(idsData)
+        })
+        $(document).on('click','#sub-student-remove',function(){
+            idsData = $(this).attr('data-id');
+            removeField(idsData)
+        })
+        var removeField = function(idsData){
             Common.ajaxFun('/manage/tenant/remove/student/'+StudentSetting.tnId+'/'+idsData+'.do', 'POST', {}, function (res) {
                 if (res.rtnCode == "0000000") {
                     that.fetchTableHeader();
@@ -271,7 +284,7 @@ var StudentSetting = {
                         layer.open({
                             type: 1,
                             content: $("#sub-student-setting").html(),
-                            area: 'auto',
+                            area: ['100%','100%'],
                             maxmin: false,
                             cancel:function(){
                                 StudentManage.studentTable();
@@ -282,7 +295,7 @@ var StudentSetting = {
             }, function (res) {
                 layer.msg("出错了");
             }, true);
-        })
+        }
     },
     tableDrag: function () {
         // 表格排序

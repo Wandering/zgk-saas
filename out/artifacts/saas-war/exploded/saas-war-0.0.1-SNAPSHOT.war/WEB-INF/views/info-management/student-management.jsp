@@ -75,23 +75,26 @@
                                                 <span class="lbl"></span>
                                             </label>
                                         </th>
+                                        <th class="center">编号</th>
                                         {{#each this.header}}
                                         <th class="center">{{name}}</th>
                                         {{/each}}
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace"/>
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        {{#each this.header}}
-                                        <td class="center">1</td>
-                                        {{/each}}
-                                    </tr>
+                                    {{#each this.body}}
+                                        <tr>
+                                            <td class="center">
+                                                <label>
+                                                    <input type="checkbox" class="ace"/>
+                                                    <span class="lbl"></span>
+                                                </label>
+                                            </td>
+                                            {{#each this}}
+                                            <td class="center">{{this}}</td>
+                                            {{/each }}
+                                        </tr>
+                                    {{/each}}
                                     </tbody>
                                 </table>
                             </script>
