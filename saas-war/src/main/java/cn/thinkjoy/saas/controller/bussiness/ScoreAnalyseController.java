@@ -367,6 +367,21 @@ public class ScoreAnalyseController
         return examDetailService.queryPage(condition, offset, rows, "CAST(gradeRank as SIGNED)", SqlOrderEnum.ASC);
     }
 
+    @RequestMapping("/getTotalCountByExamId")
+    @ResponseBody
+    public Integer getTotalCountByExamId(@RequestParam(value = "examId", required = false) String examId)
+    {
+        Map<String, Object> condition = Maps.newHashMap();
+        condition.put("groupOp", "and");
+        if (!StringUtil.isNulOrBlank(examId))
+        {
+            ConditionsUtil.setCondition(condition, "examId", "=", examId);
+        }else {
+            throw new BizException("1110001","examId不能为空！");
+        }
+        return examDetailService.count(condition);
+    }
+
     @RequestMapping("/getOverLineNumberByDate")
     @ResponseBody
     public List<Map<String, Object>> getOverLineNumberByDate(
@@ -686,34 +701,11 @@ public class ScoreAnalyseController
     @RequestMapping("/getMostAttentionNumberDetail")
     @ResponseBody
     public Map<String, Object> getMostAttentionNumberDetail(
-        @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "examId", required = true) String examId,
         @RequestParam(value = "batchName", required = true) String batchName)
     {
         Map<String, Object> resultMap = new HashMap<>();
-        Map<String, Object> numberMap = getNumberMap(tnId);
-        int batchNumber = Integer.parseInt(numberMap.get(batchName) + "");
-        List<ExamDetail> detailList = examDetailService.findList("examId", examId);
-        int batchLowScore = 0;
-        for (ExamDetail detail : detailList)
-        {
-            int gradeRank = Integer.parseInt(detail.getGradeRank());
 
-            if (gradeRank == batchNumber)
-            {
-                batchLowScore = Integer.parseInt(detail.getTotleScore()) - 20;
-            }
-        }
-        List<ExamDetail> batchDetailList = new ArrayList<>();
-//        for (ExamDetail detail : detailList)
-//        {
-//            fixSelectCourse(detail, lastExamId);
-//            int totalScore = Integer.parseInt(detail.getTotleScore());
-//            if (totalScore <= batchLowScore)
-//            {
-//                batchDetailList.add(detail);
-//            }
-//        }
         return resultMap;
     }
 
