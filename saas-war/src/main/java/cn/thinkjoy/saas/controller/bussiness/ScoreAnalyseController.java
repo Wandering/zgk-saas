@@ -340,22 +340,25 @@ public class ScoreAnalyseController
 
     @RequestMapping("/listExamDetail")
     @ResponseBody
-    public List<ExamDetail> listExamDetail(@RequestParam(value = "examId", required = false) String examId,
+    public Map<String, Object> listExamDetail(@RequestParam(value = "examId", required = true) String examId,
         @RequestParam(value = "id", required = false) String id,
         @RequestParam(value = "grade", required = false) String grade,
         @RequestParam(value = "offset", required = true) int offset,
         @RequestParam(value = "rows", required = true) int rows)
     {
+        Map<String, Object> resultMap = new HashMap<>();
         if (rows > 50)
         {
             rows = 50;
         }
         Map<String, Object> condition = Maps.newHashMap();
         condition.put("groupOp", "and");
-        if (!StringUtil.isNulOrBlank(examId))
+        if (StringUtil.isNulOrBlank(examId))
         {
-            ConditionsUtil.setCondition(condition, "examId", "=", examId);
+            throw new BizException("1110001","examId不能为空！");
         }
+        ConditionsUtil.setCondition(condition, "examId", "=", examId);
+        int count = examDetailService.count(condition);
         if (!StringUtil.isNulOrBlank(id))
         {
             ConditionsUtil.setCondition(condition, "id", "=", id);
@@ -364,7 +367,10 @@ public class ScoreAnalyseController
         {
             ConditionsUtil.setCondition(condition, "grade", "=", grade);
         }
-        return examDetailService.queryPage(condition, offset, rows, "CAST(gradeRank as SIGNED)", SqlOrderEnum.ASC);
+        resultMap.put("count", count);
+        List<ExamDetail> resultList = examDetailService.queryPage(condition, offset, rows, "CAST(gradeRank as SIGNED)", SqlOrderEnum.ASC);
+        resultMap.put("list", resultList);
+        return resultMap;
     }
 
     @RequestMapping("/getTotalCountByExamId")
