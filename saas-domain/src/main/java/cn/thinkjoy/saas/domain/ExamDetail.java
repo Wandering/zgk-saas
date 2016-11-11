@@ -1,14 +1,3 @@
-/*
- * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
- *
- * Project Name: saas
- * $Id:  ExamDetail.java 2016-11-01 14:30:28 $
- */
-
-
-
-
-
 package cn.thinkjoy.saas.domain;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -16,8 +5,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import cn.thinkjoy.common.domain.BaseDomain;
-
-import java.util.*;
 
 public class ExamDetail extends BaseDomain<Long> implements Comparable{
     /**  */

@@ -18,5 +18,9 @@ public interface IExamDetailDAO extends IBaseDAO<ExamDetail>{
 
     Map<String, Object> getEnrollingNumberInfo(Map<String, String> paramMap);
 
+    Map<String, Object> getAvgScoresByExamId(Map<String, String> paramMap);
+
     List<String> getLastExamIdByGrade(Map<String, Object> paramMap);
+
+    void deleteWeakScoresByDetailId(Map<String, Object> paramMap);
 }

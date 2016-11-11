@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.reform.SelectClassesGuideDAO">
+
+    <!-- 科目分析 -->
+    <select id="selectUniversityAndMajorNumber" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.UniversityAndMajorNumberDto">
+        select count(zz.id) as majorNumber , count(DISTINCT uu.id) as universityNumber
+        from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
+          INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
+          INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+        where zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
+    </select>
+
+    <!-- 输入院校名 -->
+    <select id="selectMajorByUniversityNameAndBatch" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.MajorDto">
+        select zz.majorCode as majorCode,zz.major as majorName,uu.id as universityId,uu.name as universityName,uu.rank as rank,dd.name as batchName,tmp.planEnrolling as planNumber,uu.property as property, zz.selectSubject as selSubject
+          from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
+          INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
+          INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+          left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=tmp.batch
+        where zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%') and tmp.batch=#{batch} and uu.name like concat('%',#{universityName},'%')
+        order by if(isnull(uu.rank),10000,uu.rank) asc
+        limit ${offset}, ${rows}
+    </select>
+
+    <select id="selectMajorByUniversityNameAndBatchCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(zz.majorCode)
+          from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
+          INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
+          INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+        where zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%') and tmp.batch=#{batch} and uu.name like concat('%',#{universityName},'%')
+    </select>
+
+    <!-- 211,包含了985 -->
+    <select id="selectPlanEnrollingByProperty" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.PlanEnrollingDto">
+        select   uu.property as property,tmp.planEnrolling as planEnrolling
+        from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
+          INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
+          INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+        where zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%') and uu.property like CONCAT('%',#{property},'%')
+        limit ${offset}, ${rows}
+    </select>
+    <select id="selectPlanEnrollingByPropertyCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select   count(uu.property)
+        from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
+          INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
+          INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+        where zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%') and uu.property like CONCAT('%',#{property},'%')
+    </select>
+
+    <!-- 按批次分析 -->
+    <select id="selectAnalysisBatch" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.AnalysisDto">
+        select dd.name as batchName,sum(tmp.planEnrolling) as number
+        from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
+        INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
+        INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+        left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=tmp.batch
+        where zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
+        group by tmp.batch
+    </select>
+    <select id="selectAnalysisBatchCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(DISTINCT tmp.batch)
+        from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
+        INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
+        INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+        where zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
+    </select>
+
+    <!-- 按专业类别分析 -->
+    <select id="selectAnalysisDiscipline" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.AnalysisDto">
+        select bb.discipline_name as disciplineName,sum(tmp.planEnrolling) as number
+        from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
+        INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
+        INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+		INNER join zgk2.zgk_major_base bb on bb.major_code=tmp.majorCode
+        where zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
+        group by bb.discipline_code
+    </select>
+    <select id="selectAnalysisDisciplineCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(DISTINCT bb.discipline_code)
+        from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
+        INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
+        INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+		INNER join zgk2.zgk_major_base bb on bb.major_code=tmp.majorCode
+        where zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
+    </select>
+
+    <select id="queryDictList" parameterType="java.util.Map" resultType="java.util.Map">
+        select  dictId as id,name
+        from zgk2.zgk_data_dict where type=#{type}
+    </select>
+
+</mapper>

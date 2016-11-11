@@ -105,8 +105,12 @@ AddClassManagement.prototype.addClass = function (title) {
     contentHtml.push('<div class="add-class-box">');
     contentHtml.push('<ul>');
     $.each(that.columnArr, function (i, k) {
-        if (k.enName != 'class_grade' && k.enName != 'class_year') {
-            contentHtml.push('<li><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
+        if (k.enName != 'class_grade' && k.enName != 'class_in_year') {
+            if (k.enName != 'class_boss') {
+                contentHtml.push('<li><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
+            } else {
+                contentHtml.push('<li><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
+            }
         } else {
             contentHtml.push('<li><span>' + k.name + '</span><select id="' + k.enName + '"><option value="00">' + k.enName + '</option></select></li>');
             if (k.enName == 'class_grade') {
