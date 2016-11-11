@@ -38,7 +38,6 @@
           INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
           INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
         where zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%') and uu.property like CONCAT('%',#{property},'%')
-        limit ${offset}, ${rows}
     </select>
     <select id="selectPlanEnrollingByPropertyCount" parameterType="java.util.Map" resultType="java.lang.Integer">
         select   count(uu.property)

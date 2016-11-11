@@ -253,6 +253,67 @@ public class ScoreAnalyseController
         return examService.findList("grade", grade, "createDate", SqlOrderEnum.DESC);
     }
 
+    @RequestMapping("/deleteExam")
+    @ResponseBody
+    public Boolean deleteExam(@RequestParam(value = "examId", required = true) String examId)
+    {
+        Boolean result;
+        try
+        {
+            examService.delete(examId);
+            examDetailService.deleteByProperty("examId", examId);
+            result = true;
+        }catch (Exception e)
+        {
+            result =false;
+        }
+        return result;
+    }
+
+    @RequestMapping("/getExamById")
+    @ResponseBody
+    public Exam getExamById(@RequestParam(value = "examId", required = true)String examId)
+    {
+        return (Exam)examService.fetch(examId);
+    }
+
+    @RequestMapping("/modifyExam")
+    @ResponseBody
+    public Boolean modifyExam(Exam exam)
+    {
+        Boolean result;
+        Exam originExam = (Exam)examService.fetch(exam.getId());
+        if(null != originExam)
+        {
+            originExam.setExamName(exam.getExamName());
+            originExam.setExamTime(exam.getExamTime());
+            originExam.setGrade(exam.getGrade());
+            examService.update(originExam);
+            result = true;
+        }else {
+            result = false;
+        }
+        return result;
+    }
+
+
+    @RequestMapping("/deleteExamDetail")
+    @ResponseBody
+    public Boolean deleteExamDetail(@RequestParam(value = "examDetailId", required = false) String examDetailId)
+    {
+
+        Boolean result;
+        try
+        {
+            examDetailService.delete(examDetailId);
+            result = true;
+        }catch (Exception e)
+        {
+            result =false;
+        }
+        return result;
+    }
+
     @RequestMapping("/getExamDetailById")
     @ResponseBody
     public ExamDetail getExamDetailById(@RequestParam(value = "id", required = false) String id)
@@ -279,22 +340,25 @@ public class ScoreAnalyseController
 
     @RequestMapping("/listExamDetail")
     @ResponseBody
-    public List<ExamDetail> listExamDetail(@RequestParam(value = "examId", required = false) String examId,
+    public Map<String, Object> listExamDetail(@RequestParam(value = "examId", required = true) String examId,
         @RequestParam(value = "id", required = false) String id,
         @RequestParam(value = "grade", required = false) String grade,
         @RequestParam(value = "offset", required = true) int offset,
         @RequestParam(value = "rows", required = true) int rows)
     {
+        Map<String, Object> resultMap = new HashMap<>();
         if (rows > 50)
         {
             rows = 50;
         }
         Map<String, Object> condition = Maps.newHashMap();
         condition.put("groupOp", "and");
-        if (!StringUtil.isNulOrBlank(examId))
+        if (StringUtil.isNulOrBlank(examId))
         {
-            ConditionsUtil.setCondition(condition, "examId", "=", examId);
+            throw new BizException("1110001","examId不能为空！");
         }
+        ConditionsUtil.setCondition(condition, "examId", "=", examId);
+        int count = examDetailService.count(condition);
         if (!StringUtil.isNulOrBlank(id))
         {
             ConditionsUtil.setCondition(condition, "id", "=", id);
@@ -303,7 +367,25 @@ public class ScoreAnalyseController
         {
             ConditionsUtil.setCondition(condition, "grade", "=", grade);
         }
-        return examDetailService.queryPage(condition, offset, rows, "CAST(gradeRank as SIGNED)", SqlOrderEnum.ASC);
+        resultMap.put("count", count);
+        List<ExamDetail> resultList = examDetailService.queryPage(condition, offset, rows, "CAST(gradeRank as SIGNED)", SqlOrderEnum.ASC);
+        resultMap.put("list", resultList);
+        return resultMap;
+    }
+
+    @RequestMapping("/getTotalCountByExamId")
+    @ResponseBody
+    public Integer getTotalCountByExamId(@RequestParam(value = "examId", required = false) String examId)
+    {
+        Map<String, Object> condition = Maps.newHashMap();
+        condition.put("groupOp", "and");
+        if (!StringUtil.isNulOrBlank(examId))
+        {
+            ConditionsUtil.setCondition(condition, "examId", "=", examId);
+        }else {
+            throw new BizException("1110001","examId不能为空！");
+        }
+        return examDetailService.count(condition);
     }
 
     @RequestMapping("/getOverLineNumberByDate")
@@ -625,34 +707,11 @@ public class ScoreAnalyseController
     @RequestMapping("/getMostAttentionNumberDetail")
     @ResponseBody
     public Map<String, Object> getMostAttentionNumberDetail(
-        @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "examId", required = true) String examId,
         @RequestParam(value = "batchName", required = true) String batchName)
     {
         Map<String, Object> resultMap = new HashMap<>();
-        Map<String, Object> numberMap = getNumberMap(tnId);
-        int batchNumber = Integer.parseInt(numberMap.get(batchName) + "");
-        List<ExamDetail> detailList = examDetailService.findList("examId", examId);
-        int batchLowScore = 0;
-        for (ExamDetail detail : detailList)
-        {
-            int gradeRank = Integer.parseInt(detail.getGradeRank());
 
-            if (gradeRank == batchNumber)
-            {
-                batchLowScore = Integer.parseInt(detail.getTotleScore()) - 20;
-            }
-        }
-        List<ExamDetail> batchDetailList = new ArrayList<>();
-//        for (ExamDetail detail : detailList)
-//        {
-//            fixSelectCourse(detail, lastExamId);
-//            int totalScore = Integer.parseInt(detail.getTotleScore());
-//            if (totalScore <= batchLowScore)
-//            {
-//                batchDetailList.add(detail);
-//            }
-//        }
         return resultMap;
     }
 
