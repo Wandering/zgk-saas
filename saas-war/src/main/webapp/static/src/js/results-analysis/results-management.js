@@ -85,20 +85,50 @@ ResultsManagementFun.prototype = {
             'rows':10
         }, function (res) {
             console.log(res)
-            var myTemplate = Handlebars.compile($("body #details-template").html());
-            $('body #details-tbody').html(myTemplate(res));
+            //var myTemplate = Handlebars.compile($("body #details-template").html());
+            //$('body #details-tbody').html(myTemplate(res));
 
-
-            //显示分页
-            laypage({
-                cont: 'details-page', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
-                pages: res.pages, //通过后台拿到的总页数
-                curr: curr || 1, //当前页
-                jump: function(obj, first){ //触发分页后的回调
-                    if(!first){ //点击跳页触发函数自身，并传递当前页：obj.curr
-                    }
+            var nums = 2; //每页出现的数量
+            //var pages = Math.ceil(data.length/nums); //得到总页数
+            var thisDate = function(curr){
+                alert(curr)
+                var html = [],
+                    last = curr*nums - 1;
+                last = last >= res.bizData.length ? (res.bizData.length-1) : last;
+                for(var i = (curr*nums - nums); i <= last; i++){
+                    html.push('<tr>');
+                    html.push('<td class="center">');
+                    html.push('<label>');
+                    html.push('<input type="checkbox" class="ace"/>');
+                    html.push('<span class="lbl"></span>');
+                    html.push('</label>');
+                    html.push('</td>');
+                    html.push('<td class="center">'+ res.bizData[i].className +'</td>');
+                    html.push('</tr>');
                 }
-            });
+                return html.join('');
+            };
+            //调用分页
+            laypage({
+                cont: 'biuuu_city',
+                pages: 10,
+                jump: function(obj){
+                    $('#details-tbody').html(thisDate(obj.curr));
+                }
+            })
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -107,8 +137,6 @@ ResultsManagementFun.prototype = {
         }, function (res) {
             alert("出错了");
         });
-
-
     }
 };
 
@@ -177,8 +205,6 @@ $(function () {
                 alert("出错了");
             });
         }
-
-
     });
 
     // 修改
@@ -236,6 +262,7 @@ $(function () {
         layer.full(index);
         ResultsManagementIns.detailsList(examId,grade);
     })
+    ResultsManagementIns.detailsList(15,1);
 });
 
 

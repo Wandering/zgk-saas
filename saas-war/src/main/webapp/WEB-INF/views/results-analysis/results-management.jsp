@@ -99,10 +99,7 @@
                     </div><!-- /.col -->
                 </div><!-- /.row -->
 
-
-
-
-                <div class="row" style="display: none;" id="details-main">
+                <div class="row" style="display: block;" id="details-main">
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
                         <div class="main-title">
@@ -144,11 +141,14 @@
                                 </script>
                                 </tbody>
                             </table>
+                            <ul id="biuuu_city_list"></ul>
+
+                            <div id="biuuu_city"></div>
+
 
                         </div>
                         <!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
-                    <div id="details-page"></div>
                 </div><!-- /.row -->
             </div><!-- /.page-content -->
         </div><!-- /.main-content -->
