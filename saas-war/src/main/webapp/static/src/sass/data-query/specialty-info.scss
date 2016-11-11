@@ -1,0 +1,23 @@
+@import "data-query-common";
+.common-select{
+  .tab-li{
+    border-left: 1px solid $border;
+    overflow: hidden;
+    li{
+      float: left;
+      display: block;
+      height: 30px;
+      line-height: 30px;
+      padding: 0 20px;
+      border:1px solid $border;
+      border-left: none;
+      color: $border;
+      cursor: pointer ;
+    }
+    .active{
+      background: $mainColor;
+      color: #fff;
+      border-color: $mainColor;
+    }
+  }
+}
