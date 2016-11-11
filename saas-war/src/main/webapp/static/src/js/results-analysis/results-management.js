@@ -77,17 +77,38 @@ ResultsManagementFun.prototype = {
         });
         uploadFun();
     },
-    deleteResults:function(){
-        var that = this;
-        //Common.ajaxFun('/role/deleteRole/' + roleId + '/' + tnId + '.do', 'GET', {}, function (res) {
-        //    if (res.rtnCode == "0000000") {
-        //        layer.closeAll();
-        //        layer.msg('删除成功!');
-        //        that.getAllRole();
-        //    }
-        //}, function (res) {
-        //    alert("出错了");
-        //});
+    detailsList:function(id,grade,curr){
+        Common.ajaxFun('/scoreAnalyse/listExamDetail', 'GET', {
+            'examId':id,
+            'grade': grade,
+            'offset':curr || 1,
+            'rows':10
+        }, function (res) {
+            console.log(res)
+            var myTemplate = Handlebars.compile($("body #details-template").html());
+            $('body #details-tbody').html(myTemplate(res));
+
+
+            //显示分页
+            laypage({
+                cont: 'details-page', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
+                pages: res.pages, //通过后台拿到的总页数
+                curr: curr || 1, //当前页
+                jump: function(obj, first){ //触发分页后的回调
+                    if(!first){ //点击跳页触发函数自身，并传递当前页：obj.curr
+                    }
+                }
+            });
+
+
+
+
+
+        }, function (res) {
+            alert("出错了");
+        });
+
+
     }
 };
 
@@ -203,17 +224,18 @@ $(function () {
 
     // 查看详情
     $('body').on('click','.look-details',function(){
+        var examId = $(this).attr('urlId');
+        var grade = $(this).attr('grade');
         var index = layer.open({
             title:'成绩明细',
             type: 1,
-            content: '1111',
+            content: $('#details-main').html(),
             area: ['100%','100%'],
             maxmin: false
         });
         layer.full(index);
+        ResultsManagementIns.detailsList(examId,grade);
     })
-
-
 });
 
 
