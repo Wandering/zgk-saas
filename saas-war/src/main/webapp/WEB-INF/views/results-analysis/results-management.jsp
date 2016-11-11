@@ -126,26 +126,10 @@
                                 </tr>
                                 </thead>
                                 <tbody id="details-tbody">
-                                <script id="details-template" type="text/x-handlebars-template">
-                                    {{#each bizData}}
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace"/>
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">{{className}}</td>
-                                    </tr>
-                                    {{/each}}
-                                </script>
+
                                 </tbody>
                             </table>
-                            <ul id="biuuu_city_list"></ul>
-
-                            <div id="biuuu_city"></div>
-
-
+                            <div id="pager" ></div>
                         </div>
                         <!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
@@ -159,7 +143,8 @@
     <tr>
         <td class="center">
             <label>
-                <input type="checkbox" id="{{id}}" examName="{{examName}}" examTime="{{examTime}}" uploadFilePath="{{uploadFilePath}}" class="ace"/>
+                <input type="checkbox" id="{{id}}" examName="{{examName}}" examTime="{{examTime}}"
+                       uploadFilePath="{{uploadFilePath}}" class="ace"/>
                 <span class="lbl"></span>
             </label>
         </td>
@@ -168,13 +153,25 @@
         <td class="center">{{examTime}}</td>
         <td class="center">{{createDate}}</td>
         <td class="center"><a href="{{uploadFilePath}}" target="_blank">{{excel uploadFilePath}}</a></td>
-        <td class="center"><a href="javascript:;" urlId="{{id}}" grade="{{grade}}" examName="{{examName}}" examTime="{{examTime}}" uploadFilePath="{{uploadFilePath}}" class="look-details">查看明细</a></td>
+        <td class="center"><a href="javascript:;" urlId="{{id}}" grade="{{grade}}" examName="{{examName}}"
+                              examTime="{{examTime}}" uploadFilePath="{{uploadFilePath}}" class="look-details">查看明细</a>
+        </td>
     </tr>
     {{/each}}
 </script>
-
-
-
+<script id="details-template" type="text/x-handlebars-template">
+    {{#each bizData.list}}
+    <tr>
+        <td class="center">
+            <label>
+                <input type="checkbox" class="ace"/>
+                <span class="lbl"></span>
+            </label>
+        </td>
+        <td class="center">{{className}}</td>
+    </tr>
+    {{/each}}
+</script>
 
 <%@ include file="./../common/footer.jsp" %>
 <link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/datepicker.css">
@@ -185,8 +182,7 @@
     var BASE_URL = '<%=ctx%>/static/src/lib/';
     var rootPath = '<%=ctx%>';
 </script>
-<link rel="stylesheet" type="text/css" href="<%=ctx%>/static/src/lib/laypage/skin/laypage.css">
-<script src="<%=ctx%>/static/src/lib/laypage/laypage.js"></script>
+<script src="<%=ctx%>/static/src/lib/jquery.page/jquery.page.js"></script>
 <script src="<%=ctx%>/static/src/js/results-analysis/results-management.js"></script>
 </body>
 </html>

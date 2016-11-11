@@ -77,67 +77,21 @@ ResultsManagementFun.prototype = {
         });
         uploadFun();
     },
-    detailsList:function(id,grade,curr){
+    detailsList:function(id,grade,Pn,rows){
+        var that = this;
         Common.ajaxFun('/scoreAnalyse/listExamDetail', 'GET', {
             'examId':id,
             'grade': grade,
-            'offset':curr || 1,
-            'rows':10
+            'offset':Pn,
+            'rows':rows
         }, function (res) {
             console.log(res)
-            //var myTemplate = Handlebars.compile($("body #details-template").html());
-            //$('body #details-tbody').html(myTemplate(res));
-
-            var nums = 2; //每页出现的数量
-            //var pages = Math.ceil(data.length/nums); //得到总页数
-            var thisDate = function(curr){
-                alert(curr)
-                var html = [],
-                    last = curr*nums - 1;
-                last = last >= res.bizData.length ? (res.bizData.length-1) : last;
-                for(var i = (curr*nums - nums); i <= last; i++){
-                    html.push('<tr>');
-                    html.push('<td class="center">');
-                    html.push('<label>');
-                    html.push('<input type="checkbox" class="ace"/>');
-                    html.push('<span class="lbl"></span>');
-                    html.push('</label>');
-                    html.push('</td>');
-                    html.push('<td class="center">'+ res.bizData[i].className +'</td>');
-                    html.push('</tr>');
-                }
-                return html.join('');
-            };
-            //调用分页
-            laypage({
-                cont: 'biuuu_city',
-                pages: 10,
-                jump: function(obj){
-                    $('#details-tbody').html(thisDate(obj.curr));
-                }
-            })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            var myTemplate = Handlebars.compile($("body #details-template").html());
+            $('body #details-tbody').html(myTemplate(res));
         }, function (res) {
             alert("出错了");
         });
-    }
+    },
 };
 
 var ResultsManagementIns = new ResultsManagementFun();
@@ -257,13 +211,44 @@ $(function () {
             type: 1,
             content: $('#details-main').html(),
             area: ['100%','100%'],
-            maxmin: false
+            maxmin: false,
+            success:function(layero, index){
+                console.log(layero);
+                console.log(index);
+                $("body").find('#pager').pager({
+                    pagenumber: 0,
+                    pagecount: 15,
+                    buttonClickCallback: PageClick
+                });
+
+            }
         });
         layer.full(index);
-        ResultsManagementIns.detailsList(examId,grade);
-    })
-    ResultsManagementIns.detailsList(15,1);
+
+        //console.log($('#details-main').html())
+
+
+
+
+
+    });
+
+
+
+
+
 });
+
+
+PageClick = function (pageclickednumber) {
+    $("body").find('#pager').pager({
+        pagenumber: pageclickednumber,
+        pagecount: 15,
+        buttonClickCallback: PageClick
+    });
+    ResultsManagementIns.detailsList(15,1,pageclickednumber,10);
+    //$("#result").html("Clicked Page " + pageclickednumber);
+}
 
 
 function uploadFun(){
