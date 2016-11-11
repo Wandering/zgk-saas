@@ -73,34 +73,46 @@
                             </dl>
                         </div>
                         <div class="professional-detail">
-                            <h3 class="sub-title">互联网/IT</h3>
-                            <ul class="tab-detail-title">
-                                <li class="active">计算机软件</li>
-                                <li>计算机软件111323</li>
-                                <li>计算机软件32</li>
-                            </ul>
-                            <ul class="tab-detail-content">
-                                <li>
-                                    <dl>
-                                        <dt>
-                                            <span class="sub-name"><a href="/data-occupational-detail.html?id=40">硬件工程师</a></span>
-                                        </dt>
-                                        <dd>
-                                            <p>硬件工程师是指从事维护硬件运行，修理硬件故障的专业技术人员。</p>
-                                        </dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>
-                                            <span class="sub-name"><a href="/data-occupational-detail.html?id=40">1232323</a></span>
-                                        </dt>
-                                        <dd>
-                                            <p>硬件工程师是指从事维护硬件运行，修理硬件故障的专业技术人员。</p>
-                                        </dd>
-                                    </dl>
-                                </li>
-                                <li class="dh">内容2</li>
-                                <li class="dh">内容3</li>
-                            </ul>
+                            <p class="title">专业门类：(经济学)</p>
+
+                            <dl class="tab-detail-li">
+                                <dt>经济学(6)</dt>
+                                <dd>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                </dd>
+                            </dl>
+                            <dl class="tab-detail-li">
+                                <dt>经济学(6)</dt>
+                                <dd>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                </dd>
+                            </dl>
+                            <dl class="tab-detail-li">
+                                <dt>经济学(6)</dt>
+                                <dd>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                    <span>经济学1223</span>
+                                </dd>
+                            </dl>
+
+
                         </div>
 
                         <%--////////////////////////////////////////////--%>

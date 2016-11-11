@@ -26,7 +26,7 @@ a, a:hover, a:focus {
       height: 30px;
       line-height: 30px;
       width: 210px;
-      border-radius: 3px !important;
+      border-radius: 2px !important;
       padding: 0 10px;
       box-sizing: border-box;
       border: 1px solid $border;
@@ -41,15 +41,15 @@ a, a:hover, a:focus {
       border: 1px solid $mainColor;
       background: #fff;
       outline: none;
-      border-radius: 3px !important;
+      border-radius: 2px !important;
       box-sizing: border-box;
     }
   }
 }
 
 .common-select {
-  margin-bottom: 40px;
   overflow: hidden;
+  border-bottom: 1px dashed $border;
   dt, dd {
     float: left;
   }
@@ -60,6 +60,7 @@ a, a:hover, a:focus {
       float: left;
       margin-right: 20px;
       cursor: pointer;
+      margin-bottom: 10px;
     }
     .active {
       color: $mainColor;

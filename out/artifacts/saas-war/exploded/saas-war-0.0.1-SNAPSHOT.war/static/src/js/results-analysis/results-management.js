@@ -77,39 +77,21 @@ ResultsManagementFun.prototype = {
         });
         uploadFun();
     },
-    detailsList:function(id,grade,curr){
+    detailsList:function(id,grade,Pn,rows){
+        var that = this;
         Common.ajaxFun('/scoreAnalyse/listExamDetail', 'GET', {
             'examId':id,
             'grade': grade,
-            'offset':curr || 1,
-            'rows':10
+            'offset':Pn,
+            'rows':rows
         }, function (res) {
             console.log(res)
             var myTemplate = Handlebars.compile($("body #details-template").html());
             $('body #details-tbody').html(myTemplate(res));
-
-
-            //显示分页
-            laypage({
-                cont: 'details-page', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
-                pages: res.pages, //通过后台拿到的总页数
-                curr: curr || 1, //当前页
-                jump: function(obj, first){ //触发分页后的回调
-                    if(!first){ //点击跳页触发函数自身，并传递当前页：obj.curr
-                    }
-                }
-            });
-
-
-
-
-
         }, function (res) {
             alert("出错了");
         });
-
-
-    }
+    },
 };
 
 var ResultsManagementIns = new ResultsManagementFun();
@@ -177,8 +159,6 @@ $(function () {
                 alert("出错了");
             });
         }
-
-
     });
 
     // 修改
@@ -231,12 +211,44 @@ $(function () {
             type: 1,
             content: $('#details-main').html(),
             area: ['100%','100%'],
-            maxmin: false
+            maxmin: false,
+            success:function(layero, index){
+                console.log(layero);
+                console.log(index);
+                $("body").find('#pager').pager({
+                    pagenumber: 0,
+                    pagecount: 15,
+                    buttonClickCallback: PageClick
+                });
+
+            }
         });
         layer.full(index);
-        ResultsManagementIns.detailsList(examId,grade);
-    })
+
+        //console.log($('#details-main').html())
+
+
+
+
+
+    });
+
+
+
+
+
 });
+
+
+PageClick = function (pageclickednumber) {
+    $("body").find('#pager').pager({
+        pagenumber: pageclickednumber,
+        pagecount: 15,
+        buttonClickCallback: PageClick
+    });
+    ResultsManagementIns.detailsList(15,1,pageclickednumber,10);
+    //$("#result").html("Clicked Page " + pageclickednumber);
+}
 
 
 function uploadFun(){
