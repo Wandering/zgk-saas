@@ -1058,5 +1058,22 @@ selectList
         order by exam.examTime desc
         limit 0,${limitNumber}
     </select>
+    
+    <select id="getAvgScoresByExamId" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select
+        ROUND(AVG(IF(d.yuWenScore='', null, d.yuWenScore)), 2) 语文,
+        ROUND(AVG(IF(d.shuXueScore='', null, d.shuXueScore)), 2) 数学,
+        ROUND(AVG(IF(d.yingYuScore='', null, d.yingYuScore)), 2) 英语,
+        ROUND(AVG(IF(d.wuLiScore='', null, d.wuLiScore)), 2) 物理,
+        ROUND(AVG(IF(d.huaXueScore='', null, d.huaXueScore)), 2) 化学,
+        ROUND(AVG(IF(d.shengWuScore='', null, d.shengWuScore)), 2) 生物,
+        ROUND(AVG(IF(d.zhengZhiScore='', null, d.zhengZhiScore)), 2) 政治,
+        ROUND(AVG(IF(d.diLiScore='', null, d.diLiScore)), 2) 地理,
+        ROUND(AVG(IF(d.liShiScore='', null, d.liShiScore)), 2) 历史,
+        ROUND(AVG(IF(d.commonScore='', null, d.commonScore)), 2) 通用技术
+        from saas_exam_detail d
+        where d.examId = #{examId}
+    </select>
+
 </mapper>
 

@@ -2,14 +2,15 @@
  * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
  *
  * Project Name: saas
- * $Id:  ExamDetailServiceImpl.java 2016-11-01 11:03:42 $
+ * $Id:  ExamStuWeakCourseServiceImpl.java 2016-11-10 17:35:30 $
  */
 package cn.thinkjoy.saas.service.impl;
 
+import cn.thinkjoy.common.domain.BaseDomain;
 import cn.thinkjoy.common.dao.IBaseDAO;
-import cn.thinkjoy.saas.dao.IExamDetailDAO;
-import cn.thinkjoy.saas.domain.ExamDetail;
-import cn.thinkjoy.saas.service.IExamDetailService;
+import cn.thinkjoy.saas.dao.IExamStuWeakCourseDAO;
+import cn.thinkjoy.saas.domain.ExamStuWeakCourse;
+import cn.thinkjoy.saas.service.IExamStuWeakCourseService;
 import cn.thinkjoy.common.service.impl.AbstractPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,45 +19,16 @@ import java.util.List;
 import java.util.Map;
 
 
-@Service("ExamDetailServiceImpl")
-public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDetail>, ExamDetail> implements IExamDetailService<IBaseDAO<ExamDetail>,ExamDetail>{
+@Service("ExamStuWeakCourseServiceImpl")
+public class ExamStuWeakCourseServiceImpl extends AbstractPageService<IBaseDAO<ExamStuWeakCourse>, ExamStuWeakCourse> implements IExamStuWeakCourseService<IBaseDAO<ExamStuWeakCourse>,ExamStuWeakCourse>{
     @Autowired
-    private IExamDetailDAO examDetailDAO;
+    private IExamStuWeakCourseDAO examStuWeakCourseDAO;
 
     @Override
-    public IBaseDAO<ExamDetail> getDao() {
-        return examDetailDAO;
+    public IBaseDAO<ExamStuWeakCourse> getDao() {
+        return examStuWeakCourseDAO;
     }
 
-    @Override
-    public List<Map<String, Object>> getOverLineNumberByDate(Map<String, String> paramMap)
-    {
-        return examDetailDAO.getOverLineNumberByDate(paramMap);
-    }
-
-    @Override
-    public Map<String, Object> getEnrollingNumberInfo(Map<String, String> paramMap)
-    {
-        return examDetailDAO.getEnrollingNumberInfo(paramMap);
-    }
-
-    @Override
-    public List<String> getLastExamIdByGrade(Map<String, Object> paramMap)
-    {
-        return examDetailDAO.getLastExamIdByGrade(paramMap);
-    }
-
-    @Override
-    public Map<String, Object> getAvgScoresByExamId(Map<String, String> paramMap)
-    {
-        return examDetailDAO.getAvgScoresByExamId(paramMap);
-    }
-
-    @Override
-    public void deleteWeakScoresByDetailId(Map<String, Object> paramMap)
-    {
-        examDetailDAO.deleteWeakScoresByDetailId(paramMap);
-    }
 //    @Override
 //    public void insert(BaseDomain entity) {
 //
@@ -108,8 +80,8 @@ public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDeta
 //    }
 //
 //    @Override
-//    public List<ExamDetail> findAll() {
-//        return examDetailDAO.findAll();
+//    public List<ExamStuWeakCourse> findAll() {
+//        return examStuWeakCourseDAO.findAll();
 //    }
 //
 //    @Override
@@ -163,8 +135,8 @@ public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDeta
 //    }
 //
 //    @Override
-//    protected ExamDetailDAO getDao() {
-//        return examDetailDAO;
+//    protected ExamStuWeakCourseDAO getDao() {
+//        return examStuWeakCourseDAO;
 //    }
 //
 //    @Override
