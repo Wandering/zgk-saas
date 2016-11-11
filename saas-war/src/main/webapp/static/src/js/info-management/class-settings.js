@@ -34,7 +34,7 @@ ClassSettings.prototype = {
             classHtml.push('<td class="center"><label><input type="checkbox" class="ace" /><span class="lbl"></span></label></td>');
             classHtml.push('<td class="center index" indexid="' + k.configOrder + '">' + k.configKey + '</td>');
             classHtml.push('<td class="center">' + k.name + '</td>');
-            classHtml.push('<td class="center"><a href="javascript: void(0);" class="remove-link">移除</a></td>');
+            classHtml.push('<td class="center"><a href="javascript: void(0);" id="' + k.configKey + '" class="remove-link remove-column">移除</a></td>');
             classHtml.push('</tr>');
         });
         $('#class-table tbody').html(classHtml.join(''));
@@ -174,6 +174,11 @@ ColumnSettings.prototype = {
         });
     }
 };
+
+$(document).on('click', '.remove-column', function () {
+   var id = $(this).attr('id');
+   alert('remove id: ' + id);
+});
 
 //(选择添加字段对话框内的)确定选择按钮
 $(document).on('click', '.class-settings-box .choose-btn', function () {
