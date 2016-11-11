@@ -190,6 +190,20 @@ public class WebCotroller {
     public ModelAndView classResultsAnalysis() {
         return new ModelAndView("/results-analysis/class-results-analysis");
     }
+
+    /**
+     * results-details
+     * 成绩明细
+     */
+    @RequestMapping("/results-details")
+    public ModelAndView resultsDetails() {
+        return new ModelAndView("/results-analysis/results-details");
+    }
+
+
+
+
+
     /**
      * course-guide
      * 选课指导
@@ -223,6 +237,38 @@ public class WebCotroller {
     @RequestMapping("/policy-interpret")
     public ModelAndView policyInterpret() {
         return new ModelAndView("/school-reform/policy-interpret");
+    }
+    /**
+     * school-admission
+     * 院校录取数据
+     */
+    @RequestMapping("/school-admission")
+    public ModelAndView schoolAdmission() {
+        return new ModelAndView("/data-query/school-admission");
+    }
+    /**
+     * school-admission
+     * 院院校招生计划
+     */
+    @RequestMapping("/school-recruit")
+    public ModelAndView schoolRecruit() {
+        return new ModelAndView("/data-query/school-recruit");
+    }
+    /**
+     * specialty-info
+     * 专业信息
+     */
+    @RequestMapping("/specialty-info")
+    public ModelAndView specialtyInfo() {
+        return new ModelAndView("/data-query/specialty-info");
+    }
+    /**
+     * professional-info
+     * 职业信息
+     */
+    @RequestMapping("/professional-info")
+    public ModelAndView professionalInfo() {
+        return new ModelAndView("/data-query/professional-info");
     }
 
 
