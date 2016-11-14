@@ -31,7 +31,10 @@ selectList
         check_rule as checkRule,
         domain,
         create_date as createDate,
-        modify_date  as modifyDate
+        modify_date  as modifyDate,
+        data_type as dataType,
+        data_url as dataUrl,
+        data_value as dataValue
     </sql>
     <insert id="insert" parameterType="TenantConfigInstance">
         INSERT INTO saas_tenant_config_instance (
@@ -41,7 +44,10 @@ selectList
         check_rule,
         domain,
         create_date,
-        modify_date
+        modify_date,
+        data_type,
+        data_url,
+        data_value
         ) VALUES (
         #{tnId},
         #{configKey},
@@ -49,7 +55,10 @@ selectList
         #{checkRule},
         #{domain},
         #{createDate},
-        #{modifyDate}
+        #{modifyDate},
+        #{dataType},
+        #{dataUrl},
+        #{dataValue}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
         SELECT LAST_INSERT_ID() AS ID
@@ -81,6 +90,15 @@ selectList
             <if test="modifyDate!=null">
                 modify_date = #{modifyDate},
             </if>
+            <if test="dataType!=null">
+                data_type = #{dataType},
+            </if>
+            <if test="dataUrl!=null">
+                data_url = #{dataUrl},
+            </if>
+            <if test="dataValue!=null">
+                data_value = #{dataValue}
+            </if>
         </trim>
         WHERE
         id = #{id}
@@ -109,6 +127,15 @@ selectList
             </if>
             <if test="map.modifyDate!=null">
                 modify_date = #{map.modifyDate},
+            </if>
+            <if test="map.dataType!=null">
+                data_type = #{map.dataType},
+            </if>
+            <if test="map.dataUrl!=null">
+                data_url = #{map.dataUrl},
+            </if>
+            <if test="map.dataValue!=null">
+                data_value = #{map.dataValue},
             </if>
         </trim>
         WHERE
@@ -139,6 +166,15 @@ selectList
             <if test="update.modifyDate!=null">
                 modify_date = #{update.modifyDate},
             </if>
+            <if test="update.dataType!=null">
+                data_type = #{update.dataType},
+            </if>
+            <if test="update.dataUrl!=null">
+                data_url = #{update.dataUrl},
+            </if>
+            <if test="update.dataValue!=null">
+                data_value = #{update.dataValue},
+            </if>
         </trim>
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -166,6 +202,15 @@ selectList
             <if test="condition.modifyDate!=null">
                 AND modify_date = #{condition.modifyDate}
             </if>
+            <if test="condition.dataType!=null">
+                AND data_type = #{condition.dataType}
+            </if>
+            <if test="condition.dataUrl!=null">
+                AND data_url = #{condition.dataUrl}
+            </if>
+            <if test="condition.dataValue!=null">
+                AND data_value = #{condition.dataValue}
+            </if>
         </trim>
     </update>
 
@@ -177,7 +222,10 @@ selectList
                 check_rule,
                 domain,
                 create_date,
-                modify_date
+                modify_date,
+                data_type,
+                data_url,
+                data_value
         ) VALUES (
                     #{map.tnId},
                     #{map.configKey},
@@ -185,7 +233,10 @@ selectList
                     #{map.checkRule},
                     #{map.domain},
                     #{map.createDate},
-                    #{map.modifyDate}
+                    #{map.modifyDate},
+                    #{map.dataType},
+                    #{map.dataUrl},
+                    #{map.dataValue}
         )
     </insert>
 
@@ -200,6 +251,9 @@ selectList
             domain=#{domain},
             create_date = #{createDate},
             modify_date = #{modifyDate},
+            data_type = #{dataType},
+            data_url = #{dataUrl},
+            data_value = #{dataValue}
         </trim>
         WHERE
         id = #{id} 
@@ -241,6 +295,15 @@ selectList
             </if>
             <if test="modifyDate!=null">
                 AND modify_date = #{modifyDate}
+            </if>
+            <if test="dataType!=null">
+                AND data_type = #{dataType}
+            </if>
+            <if test="dataUrl!=null">
+                AND data_url = #{dataUrl}
+            </if>
+            <if test="dataValue!=null">
+                AND data_value = #{dataValue}
             </if>
         </trim>
     </delete>
@@ -323,6 +386,15 @@ selectList
             <if test="condition.modifyDate!=null">
                 ${condition.groupOp}   modify_date  ${condition.modify_date.op}  #{condition.modify_date.data}
             </if>
+            <if test="condition.dataType!=null">
+                ${condition.groupOp}   data_type  ${condition.data_type.op}  #{condition.data_type.data}
+            </if>
+            <if test="condition.dataUrl!=null">
+                ${condition.groupOp}   data_url  ${condition.data_url.op}  #{condition.data_url.data}
+            </if>
+            <if test="condition.dataValue!=null">
+                ${condition.groupOp}   data_value  ${condition.data_value.op}  #{condition.data_value.data}
+            </if>
 
 
     </where>
@@ -364,6 +436,16 @@ selectList
             <if test="modifyDate!=null">
                 AND modify_date like CONCAT('%', #{modifyDate} , '%')
             </if>
+            <if test="dataType!=null">
+                AND data_type like CONCAT('%', #{dataType} , '%')
+            </if>
+            <if test="dataUrl!=null">
+                AND data_url like CONCAT('%', #{dataUrl} , '%')
+            </if>
+            <if test="dataValue!=null">
+                AND data_value like CONCAT('%', #{dataValue} , '%')
+            </if>
+
         </trim>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -400,6 +482,17 @@ selectList
             <if test="condition.modifyDate!=null">
                 AND modify_date = #{condition.modifyDate}
             </if>
+            <if test="condition.dataType!=null">
+                AND data_type = #{condition.dataType}
+            </if>
+            <if test="condition.dataUrl!=null">
+                AND data_url = #{condition.dataUrl}
+            </if>
+            <if test="condition.dataValue!=null">
+                AND data_value = #{condition.dataValue}
+            </if>
+
+
         </trim>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -435,6 +528,17 @@ selectList
             <if test="condition.modifyDate!=null">
                 AND modify_date = #{condition.modifyDate}
             </if>
+
+            <if test="condition.dataType!=null">
+                AND data_type = #{condition.dataType}
+            </if>
+            <if test="condition.dataUrl!=null">
+                AND data_url = #{condition.dataUrl}
+            </if>
+            <if test="condition.dataValue!=null">
+                AND data_value = #{condition.dataValue}
+            </if>
+
         </trim>
         limit 0,1
     </select>
@@ -465,6 +569,16 @@ selectList
            </if>
            <if test="modifyDate!=null">
                ${groupOp} modify_date ${modify_date.op}  #{modify_date.data}
+           </if>
+
+           <if test="dataType!=null">
+               ${groupOp} data_type ${data_type.op}  #{data_type.data}
+           </if>
+           <if test="dataUrl!=null">
+               ${groupOp} data_url ${data_url.op}  #{data_url.data}
+           </if>
+           <if test="dataValue!=null">
+               ${groupOp} data_value ${data_value.op}  #{data_value.data}
            </if>
 
        </where>

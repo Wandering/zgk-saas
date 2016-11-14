@@ -119,19 +119,19 @@ ul {
     }
 }
 .plan-enroll {
-    height: 250px;
+    height: 280px;
     clear: both;
     margin-top: 37px;
     position: relative;
     .university-total {
-        width: 419px;
+        width: 440px;
         height: 100%;
         float: left;
     }
     .plan-total {
-        width: -webkit-calc(100% - 419px);
-        width: -moz-calc(100% - 419px);
-        width: calc(100% - 419px);
+        width: -webkit-calc(100% - 440px);
+        width: -moz-calc(100% - 440px);
+        width: calc(100% - 440px);
         height: 100%;
         float: left;
         position: relative;
@@ -139,6 +139,7 @@ ul {
 }
 .history-enroll-data {
     padding-top: 28px;
+    margin-bottom: 50px;
     .title {
         font-size: 14px;
         color: #4A4A4A;
@@ -156,6 +157,19 @@ ul {
                     border-bottom: 1px solid #E0E3E8;
                     text-align: center;
                     vertical-align: middle;
+                }
+            }
+        }
+        tbody {
+            line-height: 38px;
+            tr {
+                td {
+                    text-align: center;
+                    vertical-align: middle;
+                    border-right: 1px solid #E0E3E8;
+                    border-bottom: 1px solid #E0E3E8;
+                    font-size: 14px;
+                    color: #4A4A4A;
                 }
             }
         }
