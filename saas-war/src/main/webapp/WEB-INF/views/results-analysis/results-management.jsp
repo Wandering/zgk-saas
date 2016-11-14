@@ -36,8 +36,6 @@
                     </li>
                     <li class="active">学校成绩管理</li>
                 </ul><!-- .breadcrumb -->
-
-
             </div>
 
             <div class="page-content">
@@ -98,16 +96,66 @@
                         <!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
                 </div><!-- /.row -->
+
+                <div class="row" style="display: none;" id="details-main">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="main-title">
+                            <h3>成绩明细</h3>
+                        </div>
+                        <div class="title-2">
+                            <div class="btns">
+                                <button class="btn btn-inverse" id="details-modify-btn">修改</button>
+                                <button class="btn btn-success" id="details-close-btn">删除</button>
+                                <a target="_blank" href="javascript:;" class="btn btn-danger" id="details-download-btn">下载</a>
+                            </div>
+                        </div>
+                        <div class="">
+                            <table id="" class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="center" rowspan="2"></th>
+                                    <th class="center" rowspan="2">姓名</th>
+                                    <th class="center" rowspan="2">班级</th>
+                                    <th class="center" colspan="3">主课</th>
+                                    <th class="center" colspan="7">选课</th>
+                                    <th class="center" rowspan="2">班级排名</th>
+                                    <th class="center" rowspan="2">年级排名</th>
+                                </tr>
+                                <tr>
+                                    <th class="center">语文</th>
+                                    <th class="center">数学</th>
+                                    <th class="center">英语</th>
+                                    <th class="center">物理</th>
+                                    <th class="center">化学</th>
+                                    <th class="center">生物</th>
+                                    <th class="center">政治</th>
+                                    <th class="center">地理</th>
+                                    <th class="center">历史</th>
+                                    <th class="center">通用技术</th>
+                                </tr>
+                                </thead>
+                                <tbody id="details-tbody">
+
+                                </tbody>
+                            </table>
+                            <div class="tcdPageCode"></div>
+                        </div>
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
             </div><!-- /.page-content -->
         </div><!-- /.main-content -->
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
+
 <script id="results-template" type="text/x-handlebars-template">
     {{#each bizData}}
     <tr>
         <td class="center">
             <label>
-                <input type="checkbox" id="{{id}}" examName="{{examName}}" examTime="{{examTime}}" uploadFilePath="{{uploadFilePath}}" class="ace"/>
+                <input type="checkbox" id="{{id}}" examName="{{examName}}" examTime="{{examTime}}"
+                       uploadFilePath="{{uploadFilePath}}" class="ace"/>
                 <span class="lbl"></span>
             </label>
         </td>
@@ -116,11 +164,110 @@
         <td class="center">{{examTime}}</td>
         <td class="center">{{createDate}}</td>
         <td class="center"><a href="{{uploadFilePath}}" target="_blank">{{excel uploadFilePath}}</a></td>
-        <td class="center"><a href="javascript:;" class="look-details">查看明细</a></td>
+        <td class="center"><a href="javascript:;" urlId="{{id}}" grade="{{grade}}" examName="{{examName}}"
+                              examTime="{{examTime}}" uploadFilePath="{{uploadFilePath}}" class="look-details">查看明细</a>
+        </td>
     </tr>
     {{/each}}
 </script>
-
+<script id="details-template" type="text/x-handlebars-template">
+    {{#each bizData.list}}
+    <tr>
+        <td class="center">
+            <label>
+                <input type="checkbox" dataid="{{id}}" class="ace"/>
+                <span class="lbl"></span>
+            </label>
+        </td>
+        <td class="center">{{studentName}}</td>
+        <td class="center">{{className}}</td>
+        <td class="center">
+            {{#if yuWenScore}}
+            {{yuWenScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if shuXueScore}}
+            {{shuXueScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if yingYuScore}}
+            {{yingYuScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if wuLiScore}}
+            {{wuLiScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if huaXueScore}}
+            {{huaXueScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if shengWuScore}}
+            {{shengWuScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if zhengZhiScore}}
+            {{zhengZhiScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if diLiScore}}
+            {{diLiScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if liShiScore}}
+            {{liShiScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if commonScore}}
+            {{commonScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if classRank}}
+            {{classRank}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if gradeRank}}
+            {{gradeRank}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+    </tr>
+    {{/each}}
+</script>
 
 <%@ include file="./../common/footer.jsp" %>
 <link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/datepicker.css">
@@ -131,6 +278,19 @@
     var BASE_URL = '<%=ctx%>/static/src/lib/';
     var rootPath = '<%=ctx%>';
 </script>
+
+<script src="<%=ctx%>/static/src/lib/jquery.page/jquery.page.js"></script>
 <script src="<%=ctx%>/static/src/js/results-analysis/results-management.js"></script>
+<style>
+    *{ margin:0; padding:0; list-style:none;}
+    a{ text-decoration:none;}
+    a:hover{ text-decoration:none;}
+    .tcdPageCode{padding: 15px 20px;text-align: left;color: #ccc;text-align:center;}
+    .tcdPageCode a{display: inline-block;color: #428bca;display: inline-block;height: 25px;	line-height: 25px;	padding: 0 10px;border: 1px solid #ddd;	margin: 0 2px;border-radius: 4px;vertical-align: middle;}
+    .tcdPageCode a:hover{text-decoration: none;border: 1px solid #428bca;}
+    .tcdPageCode span.current{display: inline-block;height: 25px;line-height: 25px;padding: 0 10px;margin: 0 2px;color: #fff;background-color: #428bca;	border: 1px solid #428bca;border-radius: 4px;vertical-align: middle;}
+    .tcdPageCode span.disabled{	display: inline-block;height: 25px;line-height: 25px;padding: 0 10px;margin: 0 2px;	color: #bfbfbf;background: #f2f2f2;border: 1px solid #bfbfbf;border-radius: 4px;vertical-align: middle;}
+</style>
+
 </body>
 </html>

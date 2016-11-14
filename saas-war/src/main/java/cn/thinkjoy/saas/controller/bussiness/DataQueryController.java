@@ -1,20 +1,19 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.cloudstack.cache.RedisRepository;
+import cn.thinkjoy.common.domain.view.BizData4Page;
 import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.restful.apigen.annotation.ApiParam;
 import cn.thinkjoy.gk.api.IMajoredApi;
 import cn.thinkjoy.gk.api.IUniversityApi;
+import cn.thinkjoy.gk.domain.GkAdmissionLine;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.Province;
 import cn.thinkjoy.saas.dto.UserInfoDto;
 import cn.thinkjoy.saas.service.IProvinceService;
 import cn.thinkjoy.zgk.common.QueryUtil;
-import cn.thinkjoy.zgk.domain.BizData4Page;
-import cn.thinkjoy.zgk.domain.GkAdmissionLine;
 import cn.thinkjoy.zgk.domain.GkProfessional;
 import cn.thinkjoy.zgk.dto.GkProfessionDTO;
-import cn.thinkjoy.zgk.remote.IGkAdmissionLineService;
 import cn.thinkjoy.zgk.remote.IGkProfessionalService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -51,8 +50,8 @@ public class DataQueryController {
     @Autowired
     private IMajoredApi iMajoredApi;
 
-    @Autowired
-    private IGkAdmissionLineService getGkAdmissionLineList;
+//    @Autowired
+//    private IGkAdmissionLineService getGkAdmissionLineList;
 
     @Autowired
     private IGkProfessionalService gkProfessionalService;
@@ -83,7 +82,7 @@ public class DataQueryController {
      * 根据年份和区域获取批次
      *
      * @param year
-     * @param areaId
+     * @param provinceId
      * @param request
      * @param response
      * @return
@@ -91,13 +90,12 @@ public class DataQueryController {
      */
     @ResponseBody
     @RequestMapping(value = "/getBatchByYearAndArea",method = RequestMethod.GET)
-    public List<Map<String,Object>> getBatchByYearAndArea(@RequestParam String year,@RequestParam String areaId,HttpServletRequest request, HttpServletResponse response)
+    public List<Map<String,Object>> getBatchByYearAndArea(@RequestParam String year,@RequestParam String provinceId,HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-
 
         Map<String,Object> map = new HashMap<>();
         map.put("year",year);
-        map.put("areaId",areaId);
+        map.put("areaId",provinceId);
         map.put("currAreaId",getUserProvinceId(request,response));
 
         return iUniversityApi.getBatchByYearAndArea(map) ;
@@ -147,12 +145,13 @@ public class DataQueryController {
     /**
      * 根据省份ID获取录取年份
      *
-     * @param provinceId
      * @return
      */
     @RequestMapping(value = "/getYears",method = RequestMethod.GET)
     @ResponseBody
-    public List getYears(@RequestParam(value = "provinceId") long provinceId){
+    public List getYears(HttpServletRequest request,HttpServletResponse response)
+            throws IOException {
+        long provinceId = getUserProvinceId(request,response);
         return iUniversityApi.getEnrollingYearsByProvinceId(provinceId);
     }
 
@@ -199,7 +198,8 @@ public class DataQueryController {
         map.put("sortBy","asc");
 
 
-        BizData4Page<GkAdmissionLine> bizData4Page=getGkAdmissionLineList.getGkAdmissionLineList(map,page,rows);
+//        BizData4Page<GkAdmissionLine> bizData4Page=getGkAdmissionLineList.getGkAdmissionLineList(map,page,rows);
+        BizData4Page<GkAdmissionLine> bizData4Page=iUniversityApi.getAdmissionLineList(map,page,rows);
         for(GkAdmissionLine gkAdmissionLine:bizData4Page.getRows()){
             String[] propertys2= null;
             Map<String,Object> propertyMap=new HashMap();
@@ -375,7 +375,7 @@ public class DataQueryController {
     @ApiDesc(value = "获取职业列表", owner = "杨永平")
     @RequestMapping(value = "/getProfessionalList",method = RequestMethod.GET)
     @ResponseBody
-    public BizData4Page<GkProfessional> getProfessionalList(@ApiParam(param="queryparam", desc="搜索框查询字段") @RequestParam(required = false) String queryparam,
+    public cn.thinkjoy.zgk.domain.BizData4Page<GkProfessional> getProfessionalList(@ApiParam(param="queryparam", desc="搜索框查询字段") @RequestParam(required = false) String queryparam,
                                                             @ApiParam(param="professionTypeId", desc="大类型") @RequestParam(required = false) Integer professionTypeId,
                                                             @ApiParam(param="professionSubTypeId", desc="子类型") @RequestParam(required = false) Integer professionSubTypeId,
                                                             @ApiParam(param="page", desc="当前页数") @RequestParam(defaultValue = "1",required = false) Integer page,

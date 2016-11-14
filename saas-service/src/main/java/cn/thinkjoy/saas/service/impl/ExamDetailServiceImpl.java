@@ -45,6 +45,18 @@ public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDeta
     {
         return examDetailDAO.getLastExamIdByGrade(paramMap);
     }
+
+    @Override
+    public Map<String, Object> getAvgScoresByExamId(Map<String, String> paramMap)
+    {
+        return examDetailDAO.getAvgScoresByExamId(paramMap);
+    }
+
+    @Override
+    public void deleteWeakScoresByDetailId(Map<String, Object> paramMap)
+    {
+        examDetailDAO.deleteWeakScoresByDetailId(paramMap);
+    }
 //    @Override
 //    public void insert(BaseDomain entity) {
 //

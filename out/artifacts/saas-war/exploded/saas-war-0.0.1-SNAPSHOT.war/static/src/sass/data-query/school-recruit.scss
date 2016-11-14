@@ -1,0 +1,69 @@
+@charset "utf-8";
+@import "../common/common";
+@import "data-query-common";
+
+/*
+院校招生计划
+*/
+.school-base-info {
+  margin-top: 24px;
+  .top{
+    .icon-flags{
+      position: relative;
+      top:4px;
+      margin:0 5px 0 20px;
+    }
+    .collect{
+      margin-left: 20px;
+    }
+  }
+  .school {
+    font-size: 20px;
+  }
+  #property {
+    margin: 10px 0;
+  }
+  .bottom {
+    overflow: hidden;
+    .bottom-common-li {
+      float: left;
+      min-width: 250px;
+      margin-bottom: 6px;
+    }
+  }
+}
+
+.student-enroll-table {
+  .title {
+    font-size: 16px;
+    float: left;
+    height: 40px;
+    line-height: 40px;
+  }
+  .sub-title {
+    margin-top: 23px;
+  }
+  .select-condition {
+    float: right;
+  }
+  .table-list {
+    width: 100%;
+    border: 1px solid #979797;
+    th {
+      background: #ededed;
+      text-align: center;
+    }
+    tr {
+      text-align: center;
+      height: 40px;
+    }
+  }
+  .load-more {
+    text-align: center;
+    color: $mainColor;
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+}

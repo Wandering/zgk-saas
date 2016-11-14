@@ -47,10 +47,9 @@
                             <span class="txt-t"></span>
                             <div class="btns">
                                 <button class="btn btn-pink" id="addAccount-btn">添加账号</button>
-                                <button class="btn btn-inverse">修改账号</button>
-                                <button class="btn btn-danger">重设密码</button>
-                                <button class="btn btn-warning">禁用</button>
-                                <button class="btn btn-success">删除</button>
+                                <button class="btn btn-inverse" id="modify-btn">修改账号</button>
+                                <button class="btn btn-danger" id="resetPass-btn">重设密码</button>
+                                <button class="btn btn-success" id="close-btn">删除</button>
                             </div>
                         </div>
 
@@ -59,12 +58,7 @@
                             <table id="" class="table">
                                 <thead>
                                 <tr>
-                                    <th class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </th>
+                                    <th class="center"></th>
                                     <th class="center">登陆账号</th>
                                     <th class="center">用户名</th>
                                     <th class="center">联系方式</th>
@@ -76,9 +70,6 @@
                                 <tbody id="account-tbody"></tbody>
                             </table>
                         </div>
-
-
-
                         <!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -91,16 +82,16 @@
     <tr>
         <td class="center">
             <label>
-                <input type="checkbox" class="ace" />
+                <input type="checkbox" role="{{role}}" roleId="{{roleId}}" status="{{status}}" telephone="{{telephone}}" userAccount="{{userAccount}}" userId="{{userId}}" userName="{{userName}}" class="ace" />
                 <span class="lbl"></span>
             </label>
         </td>
         <td class="center">{{userAccount}}</td>
         <td class="center">{{userName}}</td>
         <td class="center">{{telephone}}</td>
-        <td class="center">管理员</td>
-        <td class="center">启用</td>
-        <td class="center">2015.9.23 16:38</td>
+        <td class="center">{{role}}</td>
+        <td class="center">{{statusV status}}</td>
+        <td class="center">{{FormatTime createDate}}</td>
     </tr>
     {{/each}}
 </script>

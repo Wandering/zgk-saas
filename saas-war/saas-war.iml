@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module external.linked.project.id=":saas-war" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="cn.thinkjoy.saas" external.system.module.version="0.0.1-SNAPSHOT" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
-    <facet type="Spring" name="Spring">
-      <configuration>
-        <fileset id="fileset" name="Spring Application Context" removed="false">
-          <file>file://$MODULE_DIR$/src/main/resources/spring.xml</file>
-          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/springmvc-servlet.xml</file>
-        </fileset>
-      </configuration>
-    </facet>
     <facet type="web" name="Web Gradle : saas-war-0.0.1-SNAPSHOT.war">
       <configuration>
         <descriptors>
@@ -27,7 +19,6 @@
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/build/classes/main" />
     <output-test url="file://$MODULE_DIR$/build/classes/test" />
-    <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
@@ -36,7 +27,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
-    <orderEntry type="jdk" jdkName="1.7" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="saas-service" exported="" />
     <orderEntry type="library" exported="" name="Gradle: org.freemarker:freemarker:2.3.20" level="project" />
@@ -61,6 +52,7 @@
     <orderEntry type="library" exported="" name="Gradle: ch.qos.logback:logback-classic:1.1.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.codehaus.janino:commons-compiler:2.7.5" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.codehaus.janino:janino:2.7.5" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.google.guava:guava:18.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: jline:jline:0.9.94" level="project" />
     <orderEntry type="library" exported="" name="Gradle: io.netty:netty:3.7.0.Final" level="project" />
@@ -89,15 +81,12 @@
     <orderEntry type="library" exported="" name="Gradle: org.apache.commons:commons-proxy:1.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.cloudstack:cs-monitor-client:0.0.32-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.cloudstack:cs-cache:0.0.32-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: javax.servlet:javax.servlet-api:4.0.0-b01" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.aggregate:jetty-webapp:8.1.9.v20130131" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty:jetty-jsp:8.1.9.v20130131" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-domain-common:0.1.43-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.guava:guava:18.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: javax.servlet:javax.servlet-api:4.0.0-b01" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-protocol-common:0.1.43-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-biz-common:0.1.43-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016:orbit" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:javax.servlet.jsp:2.2.0.v201112011158:orbit" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:org.apache.jasper.glassfish:2.2.2.v201112011158:orbit" level="project" />
@@ -106,5 +95,7 @@
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:javax.el:2.2.0.v201108011116:orbit" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:com.sun.el:2.2.0.v201108011116:orbit" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:org.eclipse.jdt.core:3.7.1:orbit" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-protocol-common:0.1.43-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-biz-common:0.1.43-SNAPSHOT" level="project" />
   </component>
 </module>

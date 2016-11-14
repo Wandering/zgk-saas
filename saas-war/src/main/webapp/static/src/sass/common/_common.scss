@@ -1,3 +1,4 @@
+@import "sprites";
 .dh{
   display: none;
 }
@@ -5,4 +6,10 @@ ul,li{
   list-style: none;
   padding: 0;
   margin: 0;
+}
+.fl{
+  float: left;
+}
+.fr{
+  float: right;
 }

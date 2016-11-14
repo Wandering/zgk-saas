@@ -99,7 +99,6 @@ var Common = {
             url: url,
             type: method,
             data: reqData || {},
-            dataType:"json",
             async: isasyncB,
             success: callback,
             error: callbackError,
@@ -182,49 +181,50 @@ var Common = {
     },
     renderMenu:function(){
         var pathName = window.location.pathname;
-        console.log(pathName)
-        var siderMenu = $.parseJSON(Common.cookie.getCookie('siderMenu'));
-        var menus = [];
-        menus.push('<li class="nav-li" style="display: block;">');
-        menus.push('<a href="index.html">');
-        menus.push('<i class="icon-home"></i>');
-        menus.push('<span class="menu-text">首页</span>');
-        menus.push('</a>');
-        menus.push('</li>');
-        $.each(siderMenu,function(i,v){
-
-            if(pathName==v.meunUrl){
-                menus.push('<li class="nav-li active">');
-            }else{
-                menus.push('<li class="nav-li">');
-            }
-            if(v.sonMeuns.length==0){
-                menus.push('<a href="'+ v.meunUrl +'" class="dropdown-toggle" id="'+ v.meunId +'">');
-            }else{
-                menus.push('<a href="javascript:;" class="dropdown-toggle" id="'+ v.meunId +'">');
-            }
-            menus.push('<i class="icon-desktop"></i>');
-            menus.push('<span class="menu-text">'+ v.meunName +'</span>');
+        if(Common.cookie.getCookie('siderMenu')){
+            var siderMenu = $.parseJSON(Common.cookie.getCookie('siderMenu'));
+            var menus = [];
+            menus.push('<li class="nav-li" style="display: block;">');
+            menus.push('<a href="index.html">');
+            menus.push('<i class="icon-home"></i>');
+            menus.push('<span class="menu-text">首页</span>');
             menus.push('</a>');
-            //console.log("子菜单:"+v.sonMeuns.length)
-            if(v.sonMeuns.length>0){
-                //console.log(v.sonMeuns)
-                menus.push('<ul class="submenu">');
-                $.each(v.sonMeuns,function(k,m){
-                    if(pathName == m.meunUrl){
-                        menus.push('<li class="active">');
-                    }else{
-                        menus.push('<li>');
-                    }
-                    menus.push('<a href="'+ m.meunUrl +'" id="'+ m.meunId +'"><i class="icon-double-angle-right"></i>'+ m.meunName +'</a>');
-                    menus.push('</li>');
-                });
-                menus.push('</ul>');
-            }
             menus.push('</li>');
-        });
-        $('#nav-list').append(menus.join(''));
-        $('body').find('.submenu li.active').parents('li.nav-li').addClass('open active');
+            $.each(siderMenu,function(i,v){
+
+                if(pathName==v.meunUrl){
+                    menus.push('<li class="nav-li active">');
+                }else{
+                    menus.push('<li class="nav-li">');
+                }
+                if(v.sonMeuns.length==0){
+                    menus.push('<a href="'+ v.meunUrl +'" class="dropdown-toggle" id="'+ v.meunId +'">');
+                }else{
+                    menus.push('<a href="javascript:;" class="dropdown-toggle" id="'+ v.meunId +'">');
+                }
+                menus.push('<i class="icon-desktop"></i>');
+                menus.push('<span class="menu-text">'+ v.meunName +'</span>');
+                menus.push('</a>');
+                //console.log("子菜单:"+v.sonMeuns.length)
+                if(v.sonMeuns.length>0){
+                    //console.log(v.sonMeuns)
+                    menus.push('<ul class="submenu">');
+                    $.each(v.sonMeuns,function(k,m){
+                        if(pathName == m.meunUrl){
+                            menus.push('<li class="active">');
+                        }else{
+                            menus.push('<li>');
+                        }
+                        menus.push('<a href="'+ m.meunUrl +'" id="'+ m.meunId +'"><i class="icon-double-angle-right"></i>'+ m.meunName +'</a>');
+                        menus.push('</li>');
+                    });
+                    menus.push('</ul>');
+                }
+                menus.push('</li>');
+            });
+            $('#nav-list').append(menus.join(''));
+            $('body').find('.submenu li.active').parents('li.nav-li').addClass('open active');
+        }
     },
     getFormatTime:function (timestamp,formatStr) {
         var newDate = new Date();
