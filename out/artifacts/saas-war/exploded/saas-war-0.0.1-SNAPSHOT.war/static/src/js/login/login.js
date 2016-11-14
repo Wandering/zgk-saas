@@ -15,7 +15,6 @@ $('#login-btn').on('click', function () {
             Common.cookie.setCookie('tnId', data.userId);
             Common.cookie.setCookie('isInit', data.isInit);
             Common.cookie.setCookie('siderMenu', siderMenuJson);
-            Common.cookie.setCookie('countyId', data.countyId);
             if(data.isInit==0){
                 window.location.href = '/index';
             }else{
