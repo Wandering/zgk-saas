@@ -74,12 +74,11 @@
                                     <span>招生年份</span>
                                     <span>&gt;&nbsp;&nbsp;</span>
                                 </dt>
-                                <dd>
-                                    <span>2013</span>
-                                    <span>2014</span>
-                                    <span>2015</span>
-                                    <span>2016</span>
+                                <dd id="year-list">
                                 </dd>
+                                <script type="text/x-handlebars-template" id="year-list-tpl">
+                                    {{#each this}}{{{firstActive this}}}{{/each}}
+                                </script>
                             </dl>
                         </div>
                         <div class="common-select">
@@ -88,13 +87,14 @@
                                     <span>录取批次</span>
                                     <span>&gt;&nbsp;&nbsp;</span>
                                 </dt>
-                                <dd>
-                                    <span class="active">全部</span>
-                                    <span>本科一批</span>
-                                    <span>本科二批</span>
-                                    <span>本科三批</span>
-                                    <span>高职专科批</span>
+                                <dd id="batch-list">
                                 </dd>
+                                <script type="text/x-handlebars-template" id="batch-list-tpl">
+                                    <span class="active">全部</span>
+                                    {{#each this}}
+                                    <span dictid="{{dictid}}">{{name}}</span>
+                                    {{/each}}
+                                </script>
                             </dl>
                         </div>
                         <div class="common-select">
@@ -103,14 +103,13 @@
                                     <span>院校特征</span>
                                     <span>&gt;&nbsp;&nbsp;</span>
                                 </dt>
-                                <dd>
+                                <dd id="feature-list"></dd>
+                                <script type="text/x-handlebars-template" id="feature-list-tpl">
                                     <span class="active">全部</span>
-                                    <span>985</span>
-                                    <span>211</span>
-                                    <span>有研究生院</span>
-                                    <span>含国防生</span>
-                                    <span>卓越计划</span>
-                                </dd>
+                                    {{#each this}}
+                                    <span dictid="{{dictId}}">{{name}}</span>
+                                    {{/each}}
+                                </script>
                             </dl>
                         </div>
                         <div class="admission-detail">
