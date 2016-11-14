@@ -152,7 +152,9 @@ public class DataQueryController {
      */
     @RequestMapping(value = "/getYears",method = RequestMethod.GET)
     @ResponseBody
-    public List getYears(@RequestParam(value = "provinceId") long provinceId){
+    public List getYears(@RequestParam(value = "provinceId") long provinceId,HttpServletRequest request,HttpServletResponse response)
+            throws IOException {
+        provinceId = getUserProvinceId(request,response);
         return iUniversityApi.getEnrollingYearsByProvinceId(provinceId);
     }
 
