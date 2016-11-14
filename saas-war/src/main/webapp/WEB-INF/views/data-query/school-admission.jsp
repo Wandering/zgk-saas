@@ -57,57 +57,15 @@
                                     <span>院校属地</span>
                                     <span>&gt;&nbsp;&nbsp;</span>
                                 </dt>
-                                <dd>
-                                    <span class="active">全部</span>
-                                    <span>天津市</span>
-                                    <span>河北省</span>
-                                    <span>山西省</span>
-                                    <span>内蒙古自治区</span>
-                                    <span>辽宁省</span>
-                                    <span>吉林省</span>
-                                    <span>黑龙江省</span>
-                                    <span>上海市</span>
-                                    <span>江苏省</span>
-                                    <span>浙江省</span>
-                                    <span>安徽省</span>
-                                    <span>福建省</span>
-                                    <span>江西省</span>
-                                    <span>山东省</span>
-                                    <span>河南省</span>
-                                    <span>全部</span>
-                                    <span>天津市</span>
-                                    <span>河北省</span>
-                                    <span>山西省</span>
-                                    <span>内蒙古自治区</span>
-                                    <span>辽宁省</span>
-                                    <span>吉林省</span>
-                                    <span>黑龙江省</span>
-                                    <span>上海市</span>
-                                    <span>江苏省</span>
-                                    <span>浙江省</span>
-                                    <span>安徽省</span>
-                                    <span>福建省</span>
-                                    <span>江西省</span>
-                                    <span>山东省</span>
-                                    <span>河南省</span>
-                                    <span>全部</span>
-                                    <span>天津市</span>
-                                    <span>河北省</span>
-                                    <span>山西省</span>
-                                    <span>内蒙古自治区</span>
-                                    <span>辽宁省</span>
-                                    <span>吉林省</span>
-                                    <span>黑龙江省</span>
-                                    <span>上海市</span>
-                                    <span>江苏省</span>
-                                    <span>浙江省</span>
-                                    <span>安徽省</span>
-                                    <span>福建省</span>
-                                    <span>江西省</span>
-                                    <span>山东省</span>
-                                    <span>河南省</span>
-                                    <span>湖北省</span>
+                                <dd  id="province-list">
+
                                 </dd>
+                                <script type="text/x-handlebars-template" id="province-list-tpl">
+                                    <span class="active">全部</span>
+                                    {{#each this}}
+                                    <span code="{{code}}" provinceId="id">{{name}}</span>
+                                    {{/each}}
+                                </script>
                             </dl>
                         </div>
                         <div class="common-select">

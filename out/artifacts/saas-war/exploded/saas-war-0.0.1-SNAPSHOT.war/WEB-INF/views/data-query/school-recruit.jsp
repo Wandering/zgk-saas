@@ -48,9 +48,10 @@
                         <div class="school-base-info">
                             <div class="top">
                                 <span class="school">北京大学</span>
-                                <i class="icon-flag"></i>全国排名：<span class="national-rank">1</span>
+                                <i class="icon-flags"></i>全国排名：<span class="national-rank">1</span>
                                 <a class="collect" href="javascript:void(0)" type="1" sid="1">
-                                    <i class="icon-heart"></i>已收藏 </a>
+                                    <i class="icon-collect-yes"></i>已收藏
+                                </a>
                             </div>
                             <div class="middle">
                                 <div id="property">
@@ -59,14 +60,13 @@
                                 </div>
                             </div>
                             <div class="bottom">
-                                <i class="icon-location"></i>
-                                <b>所在省份：</b><span class="province">北京市</span>
-                                <b>院校隶属：</b><span class="belong">教育部</span>
-                                <b>院校类型：</b><span class="school-type">综合</span>
-                                <b>学历层次：</b><span class="education-level">本科</span>
-                                <b>联系电话：</b><span class="education-level">029-12232435</span>
-                                <b>院校地址：</b><span class="education-level">北京市海淀区颐和园</span>
-                                <b>院校网址：</b><span class="education-level">http://www.pku.edu.cn</span>
+                                <div class="bottom-common-li"><b>所在省份：</b><span class="province">北京市</span></div>
+                                <div class="bottom-common-li"><b>院校隶属：</b><span class="belong">教育部</span></div>
+                                <div class="bottom-common-li"><b>院校类型：</b><span class="school-type">综合</span></div>
+                                <div class="bottom-common-li"><b>学历层次：</b><span class="education-level">本科</span></div>
+                                <div class="bottom-common-li"><b>联系电话：</b><span class="education-level">029-12232435</span></div>
+                                <div class="bottom-common-li"><b>院校地址：</b><span class="education-level">北京市海淀区颐和园</span></div>
+                                <div class="bottom-common-li"><b>院校网址：</b><span class="education-level">http://www.pku.edu.cn</span></div>
                             </div>
                         </div>
 
@@ -119,7 +119,9 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            <div class="load-more">加载更多</div>
                         </div>
+
 
 
                         <%--////////////////////////////////////////////--%>
