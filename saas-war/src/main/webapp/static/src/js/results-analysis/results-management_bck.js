@@ -8,8 +8,6 @@ ResultsManagementFun.prototype = {
     constructor: ResultsManagementFun,
     init: function () {
     },
-    count:function(){
-    },
     getResultsList: function (grade) {
         Common.ajaxFun('/scoreAnalyse/listExam', 'GET', {
             'grade': grade
@@ -87,13 +85,13 @@ ResultsManagementFun.prototype = {
             'offset':Pn,
             'rows':rows
         }, function (res) {
-            $(".tcdPageCode").attr('count',parseInt(Math.ceil(res.bizData.count/rows)));
+            console.log(res)
             var myTemplate = Handlebars.compile($("body #details-template").html());
             $('body #details-tbody').html(myTemplate(res));
         }, function (res) {
             alert("出错了");
-        },'true');
-    }
+        });
+    },
 };
 
 var ResultsManagementIns = new ResultsManagementFun();
@@ -215,23 +213,42 @@ $(function () {
             area: ['100%','100%'],
             maxmin: false,
             success:function(layero, index){
-                $('#details-main').remove();
-                ResultsManagementIns.detailsList(examId,grade,0,10);
-                $(".tcdPageCode").createPage({
-                    pageCount:$(".tcdPageCode").attr('count'),
-                    current:1,
-                    backFn:function(p){
-                        ResultsManagementIns.detailsList(examId,grade,(p-1)*10,10);
-                    }
+                console.log(layero);
+                console.log(index);
+                $("body").find('#pager').pager({
+                    pagenumber: 0,
+                    pagecount: 15,
+                    buttonClickCallback: PageClick
                 });
+
             }
         });
         layer.full(index);
 
+        //console.log($('#details-main').html())
+
+
+
+
+
     });
+
+
+
+
 
 });
 
+
+PageClick = function (pageclickednumber) {
+    $("body").find('#pager').pager({
+        pagenumber: pageclickednumber,
+        pagecount: 15,
+        buttonClickCallback: PageClick
+    });
+    ResultsManagementIns.detailsList(15,1,pageclickednumber,10);
+    //$("#result").html("Clicked Page " + pageclickednumber);
+}
 
 
 function uploadFun(){

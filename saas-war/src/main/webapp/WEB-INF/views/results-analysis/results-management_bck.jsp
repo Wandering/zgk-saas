@@ -98,6 +98,42 @@
                         <!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
                 </div><!-- /.row -->
+
+                <div class="row" style="display: block;" id="details-main">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="main-title">
+                            <h3>成绩明细</h3>
+                        </div>
+                        <div class="title-2">
+                            <div class="btns">
+                                <button class="btn btn-inverse" id="details-modify-btn">修改</button>
+                                <button class="btn btn-success" id="details-close-btn">删除</button>
+                                <button class="btn btn-danger" id="details-download-btn">下载</button>
+                            </div>
+                        </div>
+                        <div class="">
+                            <table id="" class="table">
+                                <thead>
+                                <tr>
+                                    <th class="center">
+                                        <label>
+                                            <input type="checkbox" class="ace"/>
+                                            <span class="lbl"></span>
+                                        </label>
+                                    </th>
+                                    <th class="center">姓名</th>
+                                </tr>
+                                </thead>
+                                <tbody id="details-tbody">
+
+                                </tbody>
+                            </table>
+                            <div class="tcdPageCode"></div>
+                        </div>
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
             </div><!-- /.page-content -->
         </div><!-- /.main-content -->
     </div><!-- /.main-container-inner -->
@@ -107,7 +143,8 @@
     <tr>
         <td class="center">
             <label>
-                <input type="checkbox" id="{{id}}" examName="{{examName}}" examTime="{{examTime}}" uploadFilePath="{{uploadFilePath}}" class="ace"/>
+                <input type="checkbox" id="{{id}}" examName="{{examName}}" examTime="{{examTime}}"
+                       uploadFilePath="{{uploadFilePath}}" class="ace"/>
                 <span class="lbl"></span>
             </label>
         </td>
@@ -116,11 +153,25 @@
         <td class="center">{{examTime}}</td>
         <td class="center">{{createDate}}</td>
         <td class="center"><a href="{{uploadFilePath}}" target="_blank">{{excel uploadFilePath}}</a></td>
-        <td class="center"><a href="javascript:;" class="look-details">查看明细</a></td>
+        <td class="center"><a href="javascript:;" urlId="{{id}}" grade="{{grade}}" examName="{{examName}}"
+                              examTime="{{examTime}}" uploadFilePath="{{uploadFilePath}}" class="look-details">查看明细</a>
+        </td>
     </tr>
     {{/each}}
 </script>
-
+<script id="details-template" type="text/x-handlebars-template">
+    {{#each bizData.list}}
+    <tr>
+        <td class="center">
+            <label>
+                <input type="checkbox" class="ace"/>
+                <span class="lbl"></span>
+            </label>
+        </td>
+        <td class="center">{{className}}</td>
+    </tr>
+    {{/each}}
+</script>
 
 <%@ include file="./../common/footer.jsp" %>
 <link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/datepicker.css">
@@ -131,6 +182,8 @@
     var BASE_URL = '<%=ctx%>/static/src/lib/';
     var rootPath = '<%=ctx%>';
 </script>
+
+<script src="<%=ctx%>/static/src/lib/jquery.page/jquery.page.js"></script>
 <script src="<%=ctx%>/static/src/js/results-analysis/results-management.js"></script>
 </body>
 </html>
