@@ -87,7 +87,7 @@ ResultsManagementFun.prototype = {
             'offset':Pn,
             'rows':rows
         }, function (res) {
-            $(".tcdPageCode").attr('count',res.bizData.count);
+            $(".tcdPageCode").attr('count',parseInt(Math.ceil(res.bizData.count/rows)));
             var myTemplate = Handlebars.compile($("body #details-template").html());
             $('body #details-tbody').html(myTemplate(res));
         }, function (res) {
@@ -215,12 +215,13 @@ $(function () {
             area: ['100%','100%'],
             maxmin: false,
             success:function(layero, index){
-                ResultsManagementIns.detailsList(examId,grade,0,5);
+                $('#details-main').remove();
+                ResultsManagementIns.detailsList(examId,grade,0,10);
                 $(".tcdPageCode").createPage({
                     pageCount:$(".tcdPageCode").attr('count'),
                     current:1,
                     backFn:function(p){
-                        ResultsManagementIns.detailsList(examId,grade,(p-1),5);
+                        ResultsManagementIns.detailsList(examId,grade,(p-1)*10,10);
                     }
                 });
             }
