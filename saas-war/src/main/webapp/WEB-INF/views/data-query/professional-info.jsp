@@ -31,12 +31,12 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        首页
+                        <a href="/index.html">首页</a>
                     </li>
                     <li>
-                        数据查询
+                        <a href="/school-admission">数据查询</a>
                     </li>
-                    <li class="active"><a href="#">职业信息</a></li>
+                    <li class="active">职业信息</li>
                 </ul><!-- .breadcrumb -->
             </div>
 
@@ -57,90 +57,42 @@
                                     <span>职业分类</span>
                                     <span>&gt;&nbsp;&nbsp;</span>
                                 </dt>
-                                <dd>
-                                    <span class="active">全部</span>
-                                    <span>天津市</span>
-                                    <span>河北省</span>
-                                    <span>山西省</span>
-                                    <span>内蒙古自治区</span>
-                                    <span>辽宁省</span>
-                                    <span>吉林省</span>
-                                    <span>黑龙江省</span>
-                                    <span>上海市</span>
-                                    <span>江苏省</span>
-                                    <span>浙江省</span>
-                                    <span>安徽省</span>
-                                    <span>福建省</span>
-                                    <span>江西省</span>
-                                    <span>山东省</span>
-                                    <span>河南省</span>
-                                    <span>全部</span>
-                                    <span>天津市</span>
-                                    <span>河北省</span>
-                                    <span>山西省</span>
-                                    <span>内蒙古自治区</span>
-                                    <span>辽宁省</span>
-                                    <span>吉林省</span>
-                                    <span>黑龙江省</span>
-                                    <span>上海市</span>
-                                    <span>江苏省</span>
-                                    <span>浙江省</span>
-                                    <span>安徽省</span>
-                                    <span>福建省</span>
-                                    <span>江西省</span>
-                                    <span>山东省</span>
-                                    <span>河南省</span>
-                                    <span>全部</span>
-                                    <span>天津市</span>
-                                    <span>河北省</span>
-                                    <span>山西省</span>
-                                    <span>内蒙古自治区</span>
-                                    <span>辽宁省</span>
-                                    <span>吉林省</span>
-                                    <span>黑龙江省</span>
-                                    <span>上海市</span>
-                                    <span>江苏省</span>
-                                    <span>浙江省</span>
-                                    <span>安徽省</span>
-                                    <span>福建省</span>
-                                    <span>江西省</span>
-                                    <span>山东省</span>
-                                    <span>河南省</span>
-                                    <span>湖北省</span>
+                                <dd id="profession-category">
                                 </dd>
+                                <script id="profession-category-tpl" type="text/x-handlebars-template">
+                                    <span class="active" pid="">全部</span>
+                                    {{#each this}}
+                                    <span pid="{{id}}">{{Type}}</span>
+                                    {{/each}}
+                                </script>
                             </dl>
                         </div>
                         <div class="professional-detail">
-                            <h3 class="sub-title">互联网/IT</h3>
-                            <ul class="tab-detail-title">
-                                <li class="active">计算机软件</li>
-                                <li>计算机软件111323</li>
-                                <li>计算机软件32</li>
+                            <h3 class="sub-title">全部</h3>
+                            <ul class="tab-detail-title" id="detail-title">
+                                <li class="active">全部</li>
                             </ul>
-                            <ul class="tab-detail-content">
+                            <script id="detail-title-tpl" type="text/x-handlebars-template">
+                                {{#each this}}
+                                {{{firstActive this}}}
+                                {{/each}}
+                            </script>
+                            <ul class="tab-detail-content" id="tab-detail-content"></ul>
+                            <script type="text/x-handlebars-template" id="tab-detail-content-tpl">
                                 <li>
+                                    {{#each this.rows}}
                                     <dl>
                                         <dt>
-                                            <span class="sub-name"><a href="/data-occupational-detail.html?id=40">硬件工程师</a></span>
+                                            <span class="sub-name"><a href="javascript:void(0)" pid="{{id}}">{{professionName}}</a></span>
                                         </dt>
                                         <dd>
-                                            <p>硬件工程师是指从事维护硬件运行，修理硬件故障的专业技术人员。</p>
+                                            <p>{{professionShort}}</p>
                                         </dd>
                                     </dl>
-                                    <dl>
-                                        <dt>
-                                            <span class="sub-name"><a href="/data-occupational-detail.html?id=40">1232323</a></span>
-                                        </dt>
-                                        <dd>
-                                            <p>硬件工程师是指从事维护硬件运行，修理硬件故障的专业技术人员。</p>
-                                        </dd>
-                                    </dl>
+                                    {{/each}}
                                 </li>
-                                <li class="dh">内容2</li>
-                                <li class="dh">内容3</li>
-                            </ul>
+                            </script>
                         </div>
-
                         <%--////////////////////////////////////////////--%>
                     </div>
                     <!-- PAGE CONTENT ENDS -->

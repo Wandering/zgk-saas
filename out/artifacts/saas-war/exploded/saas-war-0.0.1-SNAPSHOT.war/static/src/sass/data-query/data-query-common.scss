@@ -1,12 +1,5 @@
 @import "../common/common";
 
-$border: #bfbfbf;
-$mainColor: #cb171d;
-
-a, a:hover, a:focus {
-  color: #333;
-}
-
 .common-title {
   overflow: hidden;
   margin-bottom: 20px;
@@ -65,6 +58,23 @@ a, a:hover, a:focus {
     .active {
       color: $mainColor;
     }
+  }
+  //&:la {
+  //  border-bottom-color: #fff;
+  //}
+}
+
+
+.table-list {
+  width: 100%;
+  border: 1px solid #e0e3e8;
+  th {
+    background: #f2f4f6;
+    text-align: center;
+  }
+  tr {
+    text-align: center;
+    height: 40px;
   }
 }
 

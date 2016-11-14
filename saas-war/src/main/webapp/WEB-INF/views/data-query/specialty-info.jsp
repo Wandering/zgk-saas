@@ -31,12 +31,12 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        首页
+                        <a href="/index.html">首页</a>
                     </li>
                     <li>
-                        数据查询
+                        <a href="/school-admission">数据查询</a>
                     </li>
-                    <li class="active"><a href="#">专业信息</a></li>
+                    <li class="active">专业信息</li>
                 </ul><!-- .breadcrumb -->
             </div>
 
