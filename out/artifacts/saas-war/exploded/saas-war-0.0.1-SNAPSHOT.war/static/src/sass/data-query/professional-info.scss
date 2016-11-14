@@ -1,0 +1,39 @@
+@import "data-query-common";
+
+.professional-detail {
+  .sub-title {
+    font-size: 16px;
+  }
+  .tab-detail-title {
+    overflow: hidden;
+    border-left: 1px solid $border;
+    border-bottom: 1px solid $border;
+    box-sizing: border-box;
+    li {
+      float: left;
+      display: block;
+      height: 30px;
+      line-height: 30px;
+      padding: 0 10px;
+      background: #fff;
+      color: #b5b5b5;
+      border: 1px solid $border;
+      cursor: pointer;
+      border-left: none;
+      border-bottom: none;
+      box-sizing: border-box;
+    }
+    &:last-of-type{
+      border-right: 1px solid $border;
+    }
+    .active{
+      box-sizing: border-box;
+      background: $mainColor;
+      color: #fff;
+      border: 1px solid $mainColor;
+    }
+  }
+  .tab-detail-content {
+      padding: 20px 0;
+  }
+}

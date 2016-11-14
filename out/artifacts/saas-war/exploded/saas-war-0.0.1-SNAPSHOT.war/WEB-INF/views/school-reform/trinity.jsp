@@ -28,8 +28,6 @@
                     </li>
                     <li class="active">控制台</li>
                 </ul><!-- .breadcrumb -->
-
-
             </div>
 
             <div class="page-content">

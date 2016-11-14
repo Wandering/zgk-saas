@@ -15586,3 +15586,44 @@ h1#logo{
     color: #CB171D;
     font-size:14px;
 }
+/*//分页*/
+  /*#pager ul.pages {*/
+      /*display:block;*/
+      /*border:none;*/
+      /*text-transform:uppercase;*/
+      /*font-size:10px;*/
+      /*margin:10px 0 50px;*/
+      /*padding:0;*/
+  /*}*/
+
+/*#pager ul.pages li {*/
+    /*list-style:none;*/
+    /*float:left;*/
+    /*border:1px solid #ccc;*/
+    /*text-decoration:none;*/
+    /*margin:0 5px 0 0;*/
+    /*padding:5px;*/
+/*}*/
+
+/*#pager ul.pages li:hover {*/
+    /*border:1px solid #003f7e;*/
+/*}*/
+
+/*#pager ul.pages li.pgEmpty {*/
+    /*border:1px solid #eee;*/
+    /*color:#eee;*/
+/*}*/
+
+/*#pager ul.pages li.pgCurrent {*/
+    /*border:1px solid #003f7e;*/
+    /*color:#000;*/
+    /*font-weight:700;*/
+    /*background-color:#eee;*/
+/*}*/
+
+
+.tcdPageCode{padding: 15px 20px;text-align: left;color: #ccc;text-align:center;}
+.tcdPageCode a{display: inline-block;color: #428bca;display: inline-block;height: 25px;	line-height: 25px;	padding: 0 10px;border: 1px solid #ddd;	margin: 0 2px;border-radius: 4px;vertical-align: middle;}
+.tcdPageCode a:hover{text-decoration: none;border: 1px solid #428bca;}
+.tcdPageCode span.current{display: inline-block;height: 25px;line-height: 25px;padding: 0 10px;margin: 0 2px;color: #fff;background-color: #428bca;	border: 1px solid #428bca;border-radius: 4px;vertical-align: middle;}
+.tcdPageCode span.disabled{	display: inline-block;height: 25px;line-height: 25px;padding: 0 10px;margin: 0 2px;	color: #bfbfbf;background: #f2f2f2;border: 1px solid #bfbfbf;border-radius: 4px;vertical-align: middle;}
