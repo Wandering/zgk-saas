@@ -1,0 +1,50 @@
+.enroll-total {
+    height: 280px;
+    clear: both;
+    margin-top: 37px;
+    position: relative;
+    .enroll-university-total {
+        width: 440px;
+        height: 100%;
+        float: left;
+    }
+    .enroll-plan-total {
+        width: -webkit-calc(100% - 440px);
+        width: -moz-calc(100% - 440px);
+        width: calc(100% - 440px);
+        height: 100%;
+        float: left;
+        position: relative;
+    }
+}
+.enroll-university-detail-table {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 60px;
+    border: 1px solid #E0E3E8;
+    font-size: 14px;
+    color: #4A4A4A;
+    thead {
+        line-height: 38px;
+        background: #F2F4F6;
+        tr {
+            th {
+                text-align: center;
+                vertical-align: middle;
+                border-right: 1px solid #E0E3E8;
+                border-bottom: 1px solid #E0E3E8;
+            }
+        }
+    }
+    tbody {
+        line-height: 38px;
+        tr {
+            td {
+                text-align: center;
+                vertical-align: middle;
+                border-right: 1px solid #E0E3E8;
+                border-bottom: 1px solid #E0E3E8;
+            }
+        }
+    }
+}

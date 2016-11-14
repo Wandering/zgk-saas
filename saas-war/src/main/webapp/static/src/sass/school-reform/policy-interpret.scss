@@ -1,0 +1,211 @@
+div,table,ul,li,span {
+    padding: 0;
+    margin: 0;
+}
+table {
+    width: 100%;
+}
+.score-component {
+    .title {
+        font-size: 14px;
+        color: #4A4A4A;
+        font-weight: bold;
+        margin: 27px 0 12px 0;
+    }
+    .score-component-table {
+        border: 1px solid #E0E3E8;
+        font-size: 14px;
+        color: #4A4A4A;
+        thead {
+            line-height: 39px;
+            background: #F2F4F6;
+            border: 1px solid #E0E3E8;
+            tr {
+                th {
+                    text-align: center;
+                    vertical-align: middle;
+                    border-right: 1px solid #E0E3E8;
+                    border-bottom: 1px solid #E0E3E8;
+                    font-weight: bold;
+                }
+            }
+        }
+        tbody {
+            line-height: 50px;
+            tr {
+                td {
+                    text-align: center;
+                    vertical-align: middle;
+                    border-right: 1px solid #E0E3E8;
+                    border-bottom: 1px solid #E0E3E8;
+                }
+            }
+        }
+    }
+}
+.score-rule {
+    .score-rule-table {
+        border: 1px solid #E0E3E8;
+        font-size: 14px;
+        color: #4A4A4A;
+        margin-top: 31px;
+        thead {
+            line-height: 38px;
+            background: #F2F4F6;
+            border: 1px solid #E0E3E8;
+            tr {
+                th {
+                    text-align: center;
+                    vertical-align: middle;
+                    border-right: 1px solid #E0E3E8;
+                    border-bottom: 1px solid #E0E3E8;
+                    font-weight: bold;
+                }
+            }
+        }
+        tbody {
+            line-height: 38px;
+            tr {
+                td {
+                    text-align: center;
+                    vertical-align: middle;
+                    border-right: 1px solid #E0E3E8;
+                    border-bottom: 1px solid #E0E3E8;
+                }
+            }
+        }
+        .gray-bg {
+            background: #F2F4F6;
+            font-weight: bold;
+        }
+    }
+}
+.level-divide {
+    margin-top: 27px;
+    .title {
+        font-size: 14px;
+        color: #4A4A4A;
+        font-weight: bold;
+    }
+    .level-divide-table {
+        border: 1px solid #E0E3E8;
+        font-size: 14px;
+        color: #4A4A4A;
+        margin-top: 16px;
+        thead {
+            line-height: 38px;
+            background: #F2F4F6;
+            border: 1px solid #E0E3E8;
+            tr {
+                th {
+                    text-align: center;
+                    vertical-align: middle;
+                    border-right: 1px solid #E0E3E8;
+                    border-bottom: 1px solid #E0E3E8;
+                    font-weight: bold;
+                }
+            }
+        }
+        tbody {
+            line-height: 38px;
+            tr {
+                td {
+                    text-align: center;
+                    vertical-align: middle;
+                    border-right: 1px solid #E0E3E8;
+                    border-bottom: 1px solid #E0E3E8;
+                }
+            }
+        }
+        .gray-bg {
+            background: #F2F4F6;
+            font-weight: bold;
+        }
+    }
+}
+
+.subject-level-divide {
+    margin-top: 27px;
+    .title {
+        font-size: 14px;
+        color: #4A4A4A;
+        font-weight: bold;
+    }
+    .subject-level-divide-table {
+        border: 1px solid #E0E3E8;
+        font-size: 14px;
+        color: #4A4A4A;
+        margin-top: 16px;
+        thead {
+            line-height: 38px;
+            background: #F2F4F6;
+            border: 1px solid #E0E3E8;
+            tr {
+                th {
+                    text-align: center;
+                    vertical-align: middle;
+                    border-right: 1px solid #E0E3E8;
+                    border-bottom: 1px solid #E0E3E8;
+                    font-weight: bold;
+                }
+            }
+        }
+        tbody {
+            line-height: 38px;
+            tr {
+                td {
+                    text-align: center;
+                    vertical-align: middle;
+                    border-right: 1px solid #E0E3E8;
+                    border-bottom: 1px solid #E0E3E8;
+                }
+            }
+        }
+        .gray-bg {
+            background: #F2F4F6;
+            font-weight: bold;
+        }
+    }
+}
+.exam-time {
+    font-size: 14px;
+    color: #4A4A4A;
+    .tips {
+        margin-top: 19px;
+    }
+    .title {
+        margin-top: 22px;
+        font-weight: bold;
+    }
+    .exam-time-table {
+        width: 100%;
+        font-size: 14px;
+        color: #4A4A4A;
+        margin-top: 21px;
+        border: 1px solid #E0E3E8;
+        thead {
+            height: 39px;
+            line-height: 39px;
+            background: #F2F4F6;
+            tr {
+                th {
+                    text-align: center;
+                    vertical-align: middle;
+                    border-right: 1px solid #E0E3E8;
+                    border-bottom: 1px solid #E0E3E8;
+                }
+            }
+        }
+        tbody {
+            tr {
+                line-height: 50px;
+                td {
+                    text-align: center;
+                    vertical-align: middle;
+                    border-right: 1px solid #E0E3E8;
+                    border-bottom: 1px solid #E0E3E8;
+                }
+            }
+        }
+    }
+}
