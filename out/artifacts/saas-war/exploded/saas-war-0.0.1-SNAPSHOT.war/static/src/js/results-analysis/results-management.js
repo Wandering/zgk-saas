@@ -8,6 +8,8 @@ ResultsManagementFun.prototype = {
     constructor: ResultsManagementFun,
     init: function () {
     },
+    count:function(){
+    },
     getResultsList: function (grade) {
         Common.ajaxFun('/scoreAnalyse/listExam', 'GET', {
             'grade': grade
@@ -77,17 +79,20 @@ ResultsManagementFun.prototype = {
         });
         uploadFun();
     },
-    deleteResults:function(){
+    detailsList:function(id,grade,Pn,rows){
         var that = this;
-        //Common.ajaxFun('/role/deleteRole/' + roleId + '/' + tnId + '.do', 'GET', {}, function (res) {
-        //    if (res.rtnCode == "0000000") {
-        //        layer.closeAll();
-        //        layer.msg('删除成功!');
-        //        that.getAllRole();
-        //    }
-        //}, function (res) {
-        //    alert("出错了");
-        //});
+        Common.ajaxFun('/scoreAnalyse/listExamDetail', 'GET', {
+            'examId':id,
+            'grade': grade,
+            'offset':Pn,
+            'rows':rows
+        }, function (res) {
+            $(".tcdPageCode").attr('count',parseInt(Math.ceil(res.bizData.count/rows)));
+            var myTemplate = Handlebars.compile($("body #details-template").html());
+            $('body #details-tbody').html(myTemplate(res));
+        }, function (res) {
+            alert("出错了");
+        },'true');
     }
 };
 
@@ -156,8 +161,6 @@ $(function () {
                 alert("出错了");
             });
         }
-
-
     });
 
     // 修改
@@ -203,18 +206,32 @@ $(function () {
 
     // 查看详情
     $('body').on('click','.look-details',function(){
+        var examId = $(this).attr('urlId');
+        var grade = $(this).attr('grade');
         var index = layer.open({
             title:'成绩明细',
             type: 1,
-            content: '1111',
+            content: $('#details-main').html(),
             area: ['100%','100%'],
-            maxmin: false
+            maxmin: false,
+            success:function(layero, index){
+                $('#details-main').remove();
+                ResultsManagementIns.detailsList(examId,grade,0,10);
+                $(".tcdPageCode").createPage({
+                    pageCount:$(".tcdPageCode").attr('count'),
+                    current:1,
+                    backFn:function(p){
+                        ResultsManagementIns.detailsList(examId,grade,(p-1)*10,10);
+                    }
+                });
+            }
         });
         layer.full(index);
-    })
 
+    });
 
 });
+
 
 
 function uploadFun(){

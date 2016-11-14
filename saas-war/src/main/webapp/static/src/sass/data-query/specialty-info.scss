@@ -1,0 +1,52 @@
+@import "data-query-common";
+.common-select{
+  margin-bottom: 0!important;
+  border-bottom: none!important;
+  .tab-li{
+    border-left: 1px solid $border;
+    overflow: hidden;
+    li{
+      float: left;
+      display: block;
+      height: 30px;
+      line-height: 30px;
+      padding: 0 20px;
+      border:1px solid $border;
+      border-left: none;
+      color: $border;
+      cursor: pointer ;
+    }
+    .active{
+      background: $mainColor;
+      color: #fff;
+      border-color: $mainColor;
+    }
+  }
+  .select{
+    padding-bottom: 20px;
+    padding-top:10px;
+    border-bottom: 1px dashed $border;
+    overflow: hidden;
+  }
+}
+
+.professional-detail{
+  .title{
+    font-size: 14px;
+  }
+  .tab-detail-li{
+    overflow: hidden;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 15px;
+    dd{
+      span{
+        display: block;
+        float: left;
+        margin-right: 25px;
+      }
+    }
+  }
+  dl{
+    margin-bottom: 0!important;
+  }
+}

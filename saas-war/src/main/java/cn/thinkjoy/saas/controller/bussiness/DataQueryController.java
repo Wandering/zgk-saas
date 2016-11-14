@@ -83,7 +83,7 @@ public class DataQueryController {
      * 根据年份和区域获取批次
      *
      * @param year
-     * @param areaId
+     * @param provinceId
      * @param request
      * @param response
      * @return
@@ -91,13 +91,12 @@ public class DataQueryController {
      */
     @ResponseBody
     @RequestMapping(value = "/getBatchByYearAndArea",method = RequestMethod.GET)
-    public List<Map<String,Object>> getBatchByYearAndArea(@RequestParam String year,@RequestParam String areaId,HttpServletRequest request, HttpServletResponse response)
+    public List<Map<String,Object>> getBatchByYearAndArea(@RequestParam String year,@RequestParam String provinceId,HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-
 
         Map<String,Object> map = new HashMap<>();
         map.put("year",year);
-        map.put("areaId",areaId);
+        map.put("areaId",provinceId);
         map.put("currAreaId",getUserProvinceId(request,response));
 
         return iUniversityApi.getBatchByYearAndArea(map) ;
@@ -147,12 +146,13 @@ public class DataQueryController {
     /**
      * 根据省份ID获取录取年份
      *
-     * @param provinceId
      * @return
      */
     @RequestMapping(value = "/getYears",method = RequestMethod.GET)
     @ResponseBody
-    public List getYears(@RequestParam(value = "provinceId") long provinceId){
+    public List getYears(HttpServletRequest request,HttpServletResponse response)
+            throws IOException {
+        long provinceId = getUserProvinceId(request,response);
         return iUniversityApi.getEnrollingYearsByProvinceId(provinceId);
     }
 
