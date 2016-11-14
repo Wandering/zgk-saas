@@ -73,7 +73,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="subject-require"><span class="require-num">234所院校的678个专业对物理有要求</span><a href="javascript: void(0);" class="red-link">查看院校详情</a></div>
+                            <div class="subject-require"><span class="require-num">234所院校的678个专业对物理有要求</span><a href="javascript: void(0);" id='university-detail' class="red-link">查看院校详情</a></div>
                             <ul class="plan-to-enroll">
                                 <li>985院校招生计划人数：876人</li>
                                 <li>211院校招生计划人数：876人</li>

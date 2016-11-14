@@ -1,6 +1,31 @@
 /**
  * Created by machengcheng on 16/11/11.
  */
+function UniversityDetail () {
+
+}
+UniversityDetail.prototype = {
+    constructor: UniversityDetail,
+    init: function () {
+
+    },
+    showBox: function (title) {
+        var that = this;
+        var contentHtml = [];
+        layer.open({
+            type: 1,
+            title: '<span style="color: #CB171D;font-size: 14px;">' + title + "</span>",
+            offset: 'auto',
+            area: ['543px', '490px'],
+            content: contentHtml.join('')
+        });
+    }
+};
+
+$(document).on('click', '#university-detail', function () {
+    var universityDetail = new UniversityDetail();
+    universityDetail.showBox('院校详情');
+});
 
 batchAnalysis();
 majorTypeAnalysis();
