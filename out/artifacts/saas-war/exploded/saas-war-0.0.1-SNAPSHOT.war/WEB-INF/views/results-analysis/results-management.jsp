@@ -99,7 +99,7 @@
                     </div><!-- /.col -->
                 </div><!-- /.row -->
 
-                <div class="row" style="display: block;" id="details-main">
+                <div class="row" style="display: none;" id="details-main">
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
                         <div class="main-title">
@@ -197,16 +197,5 @@
     .tcdPageCode span.disabled{	display: inline-block;height: 25px;line-height: 25px;padding: 0 10px;margin: 0 2px;	color: #bfbfbf;background: #f2f2f2;border: 1px solid #bfbfbf;border-radius: 4px;vertical-align: middle;}
 </style>
 
-<%--<script src="http://www.jq22.com/demo/jQueryPager20160918/js/jquery-1.8.3.min.js"></script>--%>
-<%--<script src="http://www.jq22.com/demo/jQueryPager20160918/js/jquery.page.js"></script>--%>
-<%--<script>--%>
-    <%--$(".tcdPageCode").createPage({--%>
-        <%--pageCount:100,--%>
-        <%--current:1,--%>
-        <%--backFn:function(p){--%>
-            <%--//console.log(p);--%>
-        <%--}--%>
-    <%--});--%>
-<%--</script>--%>
 </body>
 </html>

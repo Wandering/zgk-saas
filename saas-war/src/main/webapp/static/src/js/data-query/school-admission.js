@@ -9,8 +9,10 @@
 
 var SchoolAdmission = {
     init: function () {
+        this.areaId = Common.cookie.getCookie('countyId');
         this.getProvince();
-        this.getYear(Common.cookie.getCookie('countyId')); //省份id
+        this.getYear();
+        this.getBatchByYearAndArea(new Date().getFullYear(),'2013');
     },
     //获取省份
     getProvince: function () {
@@ -23,17 +25,17 @@ var SchoolAdmission = {
     },
     //根据省份ID获取录取年份
     getYear: function (provinceId) {
-        Common.ajaxFun('/data/getYears.do', 'GET', {'provinceId': provinceId}, function (res) {
+        Common.ajaxFun('/data/getYears.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 console.info(res);
             }
         });
     },
     //根据年份和区域获取批次
-    getYear: function (provinceId) {
+    getBatchByYearAndArea: function (year,provinceId) {
         Common.ajaxFun('/data/getBatchByYearAndArea.do', 'GET', {
-            year: "2014",
-            areaId: Common.cookie.getCookie('countyId')
+            year: year,
+            provinceId: provinceId,
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 console.info(res);
