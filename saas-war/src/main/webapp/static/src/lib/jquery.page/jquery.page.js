@@ -75,9 +75,8 @@
 				});
 				//下一页
 				obj.on("click","a.nextPage",function(){
-					console.log($('span.current').text())
+					var num = obj.find("span.current").text()
 					var current = parseInt(obj.children("span.current").text());
-					console.log(current)
 					ms.fillHtml(obj,{"current":parseInt(current)+1,"pageCount":args.pageCount});
 					if(typeof(args.backFn)=="function"){
 						args.backFn(parseInt(current)+1);
