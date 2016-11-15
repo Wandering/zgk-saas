@@ -76,27 +76,53 @@
                                 {{{firstActive this}}}
                                 {{/each}}
                             </script>
-                            <ul class="tab-detail-content" id="tab-detail-content"></ul>
+                            <div class="tab-detail-content" id="tab-detail-content"></div>
                             <script type="text/x-handlebars-template" id="tab-detail-content-tpl">
-                                <li>
-                                    {{#each this.rows}}
-                                    <dl>
-                                        <dt>
-                                            <span class="sub-name"><a href="javascript:void(0)" pid="{{id}}">{{#if professionName}}{{professionName}}{{else}}数据整理中{{/if}}</a></span>
-                                        </dt>
-                                        <dd>
-                                            <p>{{#if professionShort}}{{professionShort}}{{else}}数据整理中{{/if}}</p>
-                                        </dd>
-                                    </dl>
-                                    {{/each}}
-                                </li>
+                                {{#each this.rows}}
+                                <dl>
+                                    <dt>
+                                        <span class="sub-name"><a href="javascript:void(0)" pid="{{id}}">{{#if
+                                            professionName}}{{professionName}}{{else}}数据整理中{{/if}}</a></span>
+                                    </dt>
+                                    <dd>
+                                        <p>{{#if professionShort}}{{professionShort}}{{else}}数据整理中{{/if}}</p>
+                                    </dd>
+                                </dl>
+                                {{/each}}
                             </script>
-                            <img src="/static/src/img/loading.gif" class="table-loading-img" id="professional-loading-img">
+                            <img src="/static/src/img/loading.gif" class="table-loading-img"
+                                 id="professional-loading-img">
                             <div id="professional-load-more" class="load-more dh" page-no="1">
                                 加载更多
                             </div>
                         </div>
                         <%--////////////////////////////////////////////--%>
+                    </div>
+                    <%--
+                    职业信息详情
+                    --%>
+                    <div class="dh" id="professional-detail">
+                        <div class="professional-detail-content" id="detail-content">
+
+                        </div>
+                        <script id="detail-content-tpl" type="text/x-handlebars-template">
+                            <dl class="select">
+                                <h4>{{this.gkProfessional.professionName}}</h4>
+                                <dt>
+                                    <span>相关专业</span>
+                                    <span>&gt;&nbsp;&nbsp;</span>
+                                </dt>
+                                <dd><span>{{this.gkProfessionDetail.relateMajor}}</span></dd>
+                            </dl>
+                            <h5>职业介绍</h5>
+                            <p>{{this.gkProfessionDetail.introduction}}</p>
+                            <h5>职业前景</h5>
+                            <p>{{this.gkProfessionDetail.vocationalDemand}}</p>
+                            <h5>工作内容</h5>
+                            <p>{{this.gkProfessionDetail.workContent}}</p>
+                            <h5>从业要求</h5>
+                            <p>{{this.gkProfessionDetail.careerProspects}}</p>
+                        </script>
                     </div>
                     <!-- PAGE CONTENT ENDS -->
                 </div><!-- /.col -->
