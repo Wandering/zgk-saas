@@ -34,7 +34,7 @@ ClassSettings.prototype = {
             classHtml.push('<td class="center"><label><input type="checkbox" class="ace" /><span class="lbl"></span></label></td>');
             classHtml.push('<td class="center index" indexid="' + k.configOrder + '">' + k.configKey + '</td>');
             classHtml.push('<td class="center">' + k.name + '</td>');
-            classHtml.push('<td class="center"><a href="javascript: void(0);" id="' + k.configKey + '" class="remove-link remove-column">移除</a></td>');
+            classHtml.push('<td class="center"><a href="javascript: void(0);" id="' + k.id + '" class="remove-link remove-column">移除</a></td>');
             classHtml.push('</tr>');
         });
         $('#class-table tbody').html(classHtml.join(''));
@@ -45,10 +45,11 @@ ClassSettings.prototype = {
 
         } else {
             //删除租户表头
-            Common.ajaxFun('/config/tenant/remove/' + that.type + '/' + tnId + '/' + ids +'.do', 'POST', {}, function (res) {
+            Common.ajaxFun('/manage/tenant/remove/' + that.type + '/' + tnId + '/' + ids +'.do', 'POST', {}, function (res) {
                 if (res.rtnCode == "0000000") {
                     if (res.bizData.result == "SUCCESS") {
                         layer.msg('删除成功', {time: 1000});
+                        that.getClass();
                     }else{
                         layer.msg(res.bizData.result);
                     }
