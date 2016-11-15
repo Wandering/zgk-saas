@@ -36,7 +36,7 @@ var SchoolRecruit = {
     //根据省份ID获取录取年份
     getYear: function (provinceId) {
         Common.ajaxFun('/data/getYears.do', 'GET', {
-            provinceId: provinceId,
+            schoolProId: provinceId,
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var str = '';
@@ -100,7 +100,7 @@ var SchoolRecruit = {
             if (res.rtnCode == "0000000") {
                 var dataJson = res.bizData;
                 //总记录数 - 每页条数*第几页数 > 每页条数 [ 展示加载更多 ]
-                if (dataJson.records - that.params.rows * that.params.page > that.params.rows) {
+                if (dataJson.records - that.params.rows * (that.params.page-1) > that.params.rows) {
                     $('#recruit-load-more').show();
                 }
                 var template = Handlebars.compile($('#school-admission-plan-tpl').html());
@@ -137,6 +137,7 @@ var SchoolRecruit = {
 
             $(this).addClass('active').siblings().removeClass('active');
             that.params.year = $(this).text();
+            that.getBatchByYearAndArea(that.params.year, that.params.areaId);
             that.getCollegeUniversitiesEnrollment(that.params);
         })
 
@@ -182,6 +183,21 @@ var SchoolRecruit = {
     }
 }
 SchoolRecruit.init();
+
+
+/*
+ * =========================================================
+ * 数据查询 - 院校招生详情
+ * =========================================================
+ * */
+var SchoolRecruitDetail = {
+    init:function(){
+
+    }
+}
+SchoolRecruitDetail.init();
+
+
 
 
 

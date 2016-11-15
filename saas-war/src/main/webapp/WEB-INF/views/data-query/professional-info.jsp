@@ -70,7 +70,7 @@
                         <div class="professional-detail">
                             <h3 class="sub-title">全部</h3>
                             <ul class="tab-detail-title" id="detail-title">
-                                <li class="active">全部</li>
+                                <li class="active" pid="">全部</li>
                             </ul>
                             <script id="detail-title-tpl" type="text/x-handlebars-template">
                                 {{#each this}}
@@ -83,15 +83,19 @@
                                     {{#each this.rows}}
                                     <dl>
                                         <dt>
-                                            <span class="sub-name"><a href="javascript:void(0)" pid="{{id}}">{{professionName}}</a></span>
+                                            <span class="sub-name"><a href="javascript:void(0)" pid="{{id}}">{{#if professionName}}{{professionName}}{{else}}数据整理中{{/if}}</a></span>
                                         </dt>
                                         <dd>
-                                            <p>{{professionShort}}</p>
+                                            <p>{{#if professionShort}}{{professionShort}}{{else}}数据整理中{{/if}}</p>
                                         </dd>
                                     </dl>
                                     {{/each}}
                                 </li>
                             </script>
+                            <img src="/static/src/img/loading.gif" class="table-loading-img" id="professional-loading-img">
+                            <div id="professional-load-more" class="load-more dh" page-no="1">
+                                加载更多
+                            </div>
                         </div>
                         <%--////////////////////////////////////////////--%>
                     </div>
