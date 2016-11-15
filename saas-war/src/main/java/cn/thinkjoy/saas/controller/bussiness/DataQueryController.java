@@ -149,10 +149,10 @@ public class DataQueryController {
      */
     @RequestMapping(value = "/getYears",method = RequestMethod.GET)
     @ResponseBody
-    public List getYears(HttpServletRequest request,HttpServletResponse response)
+    public List getYears(@RequestParam(value = "schoolProId") long schoolProId, HttpServletRequest request,HttpServletResponse response)
             throws IOException {
-        long provinceId = getUserProvinceId(request,response);
-        return iUniversityApi.getEnrollingYearsByProvinceId(provinceId);
+        long currentProId = getUserProvinceId(request,response);
+        return iUniversityApi.getEnrollingYearsByProvinceId(currentProId,schoolProId);
     }
 
     @ApiDesc(value = "获取分数线", owner = "杨永平")
