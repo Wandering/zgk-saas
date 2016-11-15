@@ -750,4 +750,23 @@ public class ScoreAnalyseController
         }
         return examIds.get(0);
     }
+
+    @RequestMapping("/getMostAdvancedNumbers")
+    @ResponseBody
+    public List<Map<String, Object>> getMostAdvancedNumbers(
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "stepStart", required = true) Integer stepStart,
+        @RequestParam(value = "stepEnd", required = true) Integer stepEnd)
+    {
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        Map<String, Object> map1 = new LinkedHashMap<>();
+        map1.put("className", "三年一班");
+        map1.put("advancedNumber", "16");
+        resultList.add(map1);
+        Map<String, Object> map2 = new LinkedHashMap<>();
+        map2.put("className", "三年二班");
+        map2.put("advancedNumber", "11");
+        resultList.add(map2);
+        return resultList;
+    }
 }
