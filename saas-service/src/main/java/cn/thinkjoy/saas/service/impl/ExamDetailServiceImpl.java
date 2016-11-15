@@ -75,6 +75,12 @@ public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDeta
     {
         return examDetailDAO.getMostAttentionPage(paramMap);
     }
+
+    @Override
+    public List<String> getClassesNameByGrade(Map<String, String> paramMap)
+    {
+        return examDetailDAO.getClassesNameByGrade(paramMap);
+    }
 //    @Override
 //    public void insert(BaseDomain entity) {
 //

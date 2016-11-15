@@ -184,12 +184,12 @@ var Common = {
         if(Common.cookie.getCookie('siderMenu')){
             var siderMenu = $.parseJSON(Common.cookie.getCookie('siderMenu'));
             var menus = [];
-            menus.push('<li class="nav-li" style="display: block;">');
-            menus.push('<a href="index.html">');
-            menus.push('<i class="icon-home"></i>');
-            menus.push('<span class="menu-text">首页</span>');
-            menus.push('</a>');
-            menus.push('</li>');
+            //menus.push('<li class="nav-li" style="display: block;">');
+            //menus.push('<a href="index.html">');
+            //menus.push('<i class="icon-home"></i>');
+            //menus.push('<span class="menu-text">首页</span>');
+            //menus.push('</a>');
+            //menus.push('</li>');
             $.each(siderMenu,function(i,v){
 
                 if(pathName==v.meunUrl){
