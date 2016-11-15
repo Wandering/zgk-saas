@@ -137,6 +137,7 @@ var SchoolRecruit = {
 
             $(this).addClass('active').siblings().removeClass('active');
             that.params.year = $(this).text();
+            that.getBatchByYearAndArea(that.params.year,that.params.areaId);
             that.getCollegeUniversitiesEnrollment(that.params);
         })
 
