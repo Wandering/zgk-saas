@@ -119,19 +119,19 @@ ul {
     }
 }
 .plan-enroll {
-    height: 250px;
+    height: 280px;
     clear: both;
     margin-top: 37px;
     position: relative;
     .university-total {
-        width: 419px;
+        width: 440px;
         height: 100%;
         float: left;
     }
     .plan-total {
-        width: -webkit-calc(100% - 419px);
-        width: -moz-calc(100% - 419px);
-        width: calc(100% - 419px);
+        width: -webkit-calc(100% - 440px);
+        width: -moz-calc(100% - 440px);
+        width: calc(100% - 440px);
         height: 100%;
         float: left;
         position: relative;
@@ -139,6 +139,7 @@ ul {
 }
 .history-enroll-data {
     padding-top: 28px;
+    margin-bottom: 50px;
     .title {
         font-size: 14px;
         color: #4A4A4A;
@@ -159,7 +160,81 @@ ul {
                 }
             }
         }
+        tbody {
+            line-height: 38px;
+            tr {
+                td {
+                    text-align: center;
+                    vertical-align: middle;
+                    border-right: 1px solid #E0E3E8;
+                    border-bottom: 1px solid #E0E3E8;
+                    font-size: 14px;
+                    color: #4A4A4A;
+                }
+            }
+        }
     }
+}
+.search-condition {
+    margin: 16px 0 15px 0;
+    text-align: center;
+    input[type='text'] {
+        width: 268px;
+        height: 28px;
+        border: 1px solid #D5D9DF;
+        border-radius: 2px;
+    }
+    select, select:focus {
+        width: 124px;
+        height: 28px;
+        margin: 0 7px 0 6px;
+        outline: 0;
+        background: #FFFFFF;
+        border: 1px solid #D5D9DF;
+        border-radius: 2px;
+    }
+}
+.results-table {
+    width: 481px;
+    margin: 0 auto;
+    border: 1px solid #E0E3E8;
+    font-size: 12px;
+    color: #4A4A4A;
+    thead {
+        background: #F2F4F6;
+        line-height: 40px;
+        tr {
+            th {
+                text-align: center;
+                vertical-align: middle;
+                border-right: 1px solid #E0E3E8;
+                border-bottom: 1px solid #E0E3E8;
+                font-weight: bold;
+                line-height: 18px;
+            }
+        }
+    }
+    tbody {
+        line-height: 28px;
+        tr {
+            td {
+                text-align: center;
+                vertical-align: middle;
+                border-right: 1px solid #E0E3E8;
+                border-bottom: 1px solid #E0E3E8;
+            }
+        }
+    }
+}
+.red-btn, .red-btn:focus, .red-btn:hover {
+    width: 74px;
+    height: 28px;
+    background: #CB171D;
+    border-radius: 2px;
+    font-size: 12px;
+    color: #FFFFFF;
+    border: 0;
+    outline: 0;
 }
 a.red-link:link,
 a.red-link:visited,
@@ -168,4 +243,67 @@ a.red-link:hover {
     color: #CB171D;
     outline: 0;
     text-decoration: underline;
+}
+.pagination-bar {
+    .pagination-info {
+        display: inline-block;
+        float: left;
+        margin-top: 40px;
+        margin-left: 28px;
+        text-align: center;
+        font-size: 14px;
+        color: #9B9B9B;
+    }
+    .pagination {
+        display: inline-block;
+        float: right;
+        margin-top: 40px;
+        margin-right: 14px;
+        text-align: center;
+        a:link,
+        a:visited,
+        a:hover {
+            padding: 9px 15px 10px 15px;
+            margin-right: 10px !important;
+            font-size: 14px;
+            color: #575757;
+            letter-spacing: -0.66px;
+            border: 1px solid #ddd;
+            background: #EFF2F5;
+            border-radius: 2px;
+            text-decoration: none;
+            outline: 0;
+        }
+        a.pageNum {
+            cursor: auto;
+            color: #9B9B9B;
+            background: #fff;
+        }
+        .disabled {
+            padding: 9px 15px 10px 15px;
+            margin-right: 10px !important;
+            font-size: 14px;
+            letter-spacing: -0.66px;
+            border-radius: 2px;
+            color: #ccc;
+            border: 1px solid #ddd;
+            background: #EFF2F5;
+        }
+        span {
+            margin-right: 10px !important;
+        }
+        .current {
+            padding: 9px 15px 10px 15px;
+            margin-right: 10px !important;
+            font-size: 14px;
+            letter-spacing: -0.66px;
+            border-radius: 2px;
+            color: #fff;
+            background: #D80C18;
+            border: 1px solid #D80C18;
+        }
+        a:last-of-type {
+            margin-left: 10px !important;
+        }
+    }
 }

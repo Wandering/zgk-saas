@@ -3,6 +3,7 @@
 		init:function(obj,args){
 			return (function(){
 				ms.fillHtml(obj,args);
+                ms.unbindEvent(obj);
 				ms.bindEvent(obj,args);
 			})();
 		},
@@ -53,6 +54,16 @@
 					obj.remove('.nextPage');
 					obj.append('<span class="disabled">下一页</span>');
 				}
+			})();
+		},
+		//解绑事件
+		unbindEvent:function(obj){
+			return (function(){
+				obj.unbind("click");
+				//上一页
+				obj.unbind("click");
+				//下一页
+				obj.unbind("click");
 			})();
 		},
 		//绑定事件

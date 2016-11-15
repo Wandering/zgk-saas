@@ -31,12 +31,12 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        首页
+                        <a href="/index.html">首页</a>
                     </li>
                     <li>
-                        数据查询
+                        <a href="/school-admission">数据查询</a>
                     </li>
-                    <li class="active"><a href="#">专业信息</a></li>
+                    <li class="active">专业信息</li>
                 </ul><!-- .breadcrumb -->
             </div>
 
@@ -53,68 +53,34 @@
                         </div>
                         <div class="common-select">
                             <ul class="tab-li">
-                                <li class="active">本科专业</li>
-                                <li>专科专业</li>
+                                <li class="active" type="1">本科专业</li>
+                                <li type="2">专科专业</li>
                             </ul>
-                            <dl class="select">
+                            <dl class="select" id="majored-category"></dl>
+                            <script id="majored-category-tpl" type="text/x-handlebars-template">
                                 <dd>
-                                    <span class="active">天津市</span>
-                                    <span>河北省</span>
-                                    <span>山西省</span>
-                                    <span>内蒙古自治区</span>
-                                    <span>辽宁省</span>
-                                    <span>吉林省</span>
-                                    <span>黑龙江省</span>
-                                    <span>上海市</span>
-                                    <span>江苏省</span>
-                                    <span>浙江省</span>
-                                    <span>安徽省</span>
+                                    {{#each this.childList}}
+                                    {{{firstActive this}}}
+                                    {{/each}}
                                 </dd>
-                            </dl>
+                            </script>
                         </div>
                         <div class="professional-detail">
-                            <p class="title">专业门类：(经济学)</p>
-
-                            <dl class="tab-detail-li">
-                                <dt>经济学(6)</dt>
-                                <dd>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                </dd>
-                            </dl>
-                            <dl class="tab-detail-li">
-                                <dt>经济学(6)</dt>
-                                <dd>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                </dd>
-                            </dl>
-                            <dl class="tab-detail-li">
-                                <dt>经济学(6)</dt>
-                                <dd>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                    <span>经济学1223</span>
-                                </dd>
-                            </dl>
-
-
+                            <div id="sub-majored-category"></div>
                         </div>
-
+                        <script type="text/x-handlebars-template" id="sub-majored-category-tpl">
+                            <p class="title" t-id="{{id}}">专业门类：({{name}})</p>
+                            {{#each this.childList}}
+                            <dl class="tab-detail-li">
+                                <dt m-id="{{id}}">{{name}}({{majoredNumber}})</dt>
+                                <dd>
+                                    {{#each this.childList}}
+                                    <span b-id="{{id}}">{{name}}</span>
+                                    {{/each}}
+                                </dd>
+                            </dl>
+                            {{/each}}
+                        </script>
                         <%--////////////////////////////////////////////--%>
                     </div>
                     <!-- PAGE CONTENT ENDS -->

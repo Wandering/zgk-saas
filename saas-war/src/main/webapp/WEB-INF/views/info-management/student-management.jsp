@@ -31,15 +31,13 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        首页
+                        <a href="/index.html">首页</a>
                     </li>
                     <li>
-                        基础信息管理
+                        <a href="/student-management">基础信息管理</a>
                     </li>
-                    <li class="active"><a href="#">学生管理</a></li>
+                    <li class="active">学生管理</li>
                 </ul><!-- .breadcrumb -->
-
-
             </div>
 
             <div class="page-content">

@@ -1,21 +1,24 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.cloudstack.cache.RedisRepository;
+import cn.thinkjoy.common.domain.view.BizData4Page;
+import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.restful.apigen.annotation.ApiParam;
 import cn.thinkjoy.gk.api.IMajoredApi;
 import cn.thinkjoy.gk.api.IUniversityApi;
+import cn.thinkjoy.gk.domain.GkAdmissionLine;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.Province;
 import cn.thinkjoy.saas.dto.UserInfoDto;
+import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.service.IProvinceService;
+import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.zgk.common.QueryUtil;
-import cn.thinkjoy.zgk.domain.BizData4Page;
-import cn.thinkjoy.zgk.domain.GkAdmissionLine;
 import cn.thinkjoy.zgk.domain.GkProfessional;
 import cn.thinkjoy.zgk.dto.GkProfessionDTO;
-import cn.thinkjoy.zgk.remote.IGkAdmissionLineService;
 import cn.thinkjoy.zgk.remote.IGkProfessionalService;
+import cn.thinkjoy.zgk.remote.IUniversityService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.Maps;
@@ -52,7 +55,7 @@ public class DataQueryController {
     private IMajoredApi iMajoredApi;
 
     @Autowired
-    private IGkAdmissionLineService getGkAdmissionLineList;
+    private IUniversityService universityService;
 
     @Autowired
     private IGkProfessionalService gkProfessionalService;
@@ -94,6 +97,9 @@ public class DataQueryController {
     public List<Map<String,Object>> getBatchByYearAndArea(@RequestParam String year,@RequestParam String provinceId,HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
+        if(provinceId == null || "".equals(provinceId)){
+            provinceId = "-1";
+        }
         Map<String,Object> map = new HashMap<>();
         map.put("year",year);
         map.put("areaId",provinceId);
@@ -112,8 +118,14 @@ public class DataQueryController {
      */
     private long getUserProvinceId(HttpServletRequest request,HttpServletResponse response)
             throws IOException {
+
+        Object object = request.getSession().getAttribute(Constant.USER_SESSION_KEY);
+        if(object == null){
+            response.sendRedirect("/login");
+        }
+
         UserInfoDto dto = JSON.parseObject(
-                request.getSession().getAttribute(Constant.USER_SESSION_KEY).toString(),
+                object.toString(),
                 UserInfoDto.class
         );
         if(dto == null){
@@ -150,10 +162,15 @@ public class DataQueryController {
      */
     @RequestMapping(value = "/getYears",method = RequestMethod.GET)
     @ResponseBody
-    public List getYears(HttpServletRequest request,HttpServletResponse response)
+    public List getYears(@RequestParam(value = "schoolProId") String schoolProId, HttpServletRequest request,HttpServletResponse response)
             throws IOException {
-        long provinceId = getUserProvinceId(request,response);
-        return iUniversityApi.getEnrollingYearsByProvinceId(provinceId);
+
+        long tmpSchoolProId = -1l;
+        if(schoolProId != null && !"".equals(schoolProId)){
+            tmpSchoolProId = Long.valueOf(schoolProId);
+        }
+        long currentProId = getUserProvinceId(request,response);
+        return iUniversityApi.getEnrollingYearsByProvinceId(currentProId,tmpSchoolProId);
     }
 
     @ApiDesc(value = "获取分数线", owner = "杨永平")
@@ -199,7 +216,8 @@ public class DataQueryController {
         map.put("sortBy","asc");
 
 
-        BizData4Page<GkAdmissionLine> bizData4Page=getGkAdmissionLineList.getGkAdmissionLineList(map,page,rows);
+//        BizData4Page<GkAdmissionLine> bizData4Page=getGkAdmissionLineList.getGkAdmissionLineList(map,page,rows);
+        BizData4Page<GkAdmissionLine> bizData4Page=iUniversityApi.getAdmissionLineList(map,page,rows);
         for(GkAdmissionLine gkAdmissionLine:bizData4Page.getRows()){
             String[] propertys2= null;
             Map<String,Object> propertyMap=new HashMap();
@@ -375,7 +393,7 @@ public class DataQueryController {
     @ApiDesc(value = "获取职业列表", owner = "杨永平")
     @RequestMapping(value = "/getProfessionalList",method = RequestMethod.GET)
     @ResponseBody
-    public BizData4Page<GkProfessional> getProfessionalList(@ApiParam(param="queryparam", desc="搜索框查询字段") @RequestParam(required = false) String queryparam,
+    public cn.thinkjoy.zgk.domain.BizData4Page<GkProfessional> getProfessionalList(@ApiParam(param="queryparam", desc="搜索框查询字段") @RequestParam(required = false) String queryparam,
                                                             @ApiParam(param="professionTypeId", desc="大类型") @RequestParam(required = false) Integer professionTypeId,
                                                             @ApiParam(param="professionSubTypeId", desc="子类型") @RequestParam(required = false) Integer professionSubTypeId,
                                                             @ApiParam(param="page", desc="当前页数") @RequestParam(defaultValue = "1",required = false) Integer page,
@@ -399,5 +417,77 @@ public class DataQueryController {
     public GkProfessionDTO getProfessionalInfo(@ApiParam(param="id", desc="主键ID",required = true) @RequestParam("id") String id){
         GkProfessionDTO gkProfessionDTO=gkProfessionalService.getProfessionalInfo(new HashMap<String, Object>(),id);
         return gkProfessionDTO;
+    }
+
+    @RequestMapping(value = "getRemoteUniversityById", method = RequestMethod.GET)
+    @ResponseBody
+    public Object getUniversityDTOById(@RequestParam(value = "universityId", required = true) long universityId) {
+        String key = "zgk_uy:" + universityId;
+        Object object = redis.get(key);
+        if (object == null || "null".equals(object)) {
+            Map<String, Object> map = (Map<String, Object>) universityService.getUniversityById(universityId);
+            Map<String, Object> propertyMap = new HashMap();
+            if (StringUtils.isNotEmpty(map.get("property").toString())) {
+                String[] propertys = map.get("property").toString().toString().split(",");
+                Map<String, Object> propertysMap = getPropertys();
+
+                for (String str : propertys) {
+                    Iterator<String> propertysIterator = propertysMap.keySet().iterator();
+                    while (propertysIterator.hasNext()) {
+                        String tmpkey = propertysIterator.next();
+                        String value = propertysMap.get(tmpkey).toString();
+                        if (str.indexOf(value) > -1) {
+                            propertyMap.put(tmpkey, value);
+                        }
+                    }
+                }
+            }
+            map.put("propertys", propertyMap);
+            redis.set(key, JSON.toJSONString(map));
+            return map;
+        }
+        return JSON.parseObject(object.toString(), Object.class);
+    }
+
+    /**
+     * 招生计划列表获取
+     *
+     * @param universityId
+     * @param year
+     * @param batch
+     * @param universityMajorType
+     * @param page
+     * @param rows
+     * @return
+     */
+    @RequestMapping(value = "getUniversityMajorEnrollingPlanList", method = RequestMethod.GET)
+    @ResponseBody
+    public List getUniversityMajorEnrollingPlanList(@RequestParam(value = "universityId", required = true) long universityId,
+                                                    @RequestParam(value = "year", required = false) String year,//年份
+                                                    @RequestParam(value = "batch", required = false) Integer batch,//批次
+                                                    @RequestParam(value = "universityMajorType", required = false) String universityMajorType,//科类
+                                                    @RequestParam(value = "page") Integer page,
+                                                    @RequestParam(value = "rows") Integer rows,
+                                                    HttpServletRequest request,
+                                                    HttpServletResponse response) throws IOException {
+        if (rows>50){
+            ExceptionUtil.throwException(ErrorCode.ROWS_TOO_LONG);
+        }
+        Map<String, Object> condition = Maps.newHashMap();
+        condition.put("universityId", String.valueOf(universityId));
+        if (StringUtils.isNotBlank(year)) {
+            condition.put("year", year);
+        }
+        if (batch != null) {
+            condition.put("batch", batch);
+        }
+        if (StringUtils.isNotBlank(universityMajorType)) {
+            condition.put("majorType", universityMajorType);
+        }
+        condition.put("areaId",getUserProvinceId(request,response));
+        condition.put("offset", page-1);
+        condition.put("rows", rows);
+        List ll = iUniversityApi.getUniversityMajorEnrollingPlanList(condition);
+        return ll;
     }
 }

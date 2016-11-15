@@ -27,6 +27,7 @@
                         <li>
                             <a href="#">首页</a>
                         </li>
+                        <li>高考改革</li>
                         <li class="active">选课指导</li>
                     </ul>
                 </div>
@@ -72,7 +73,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="subject-require"><span class="require-num">234所院校的678个专业对物理有要求</span><a href="javascript: void(0);" class="red-link">查看院校详情</a></div>
+                            <div class="subject-require"><span class="require-num">234所院校的678个专业对物理有要求</span><a href="javascript: void(0);" id='university-detail' class="red-link">查看院校详情</a></div>
                             <ul class="plan-to-enroll">
                                 <li>985院校招生计划人数：876人</li>
                                 <li>211院校招生计划人数：876人</li>
@@ -145,10 +146,10 @@
                             </div>
                             <div class="plan-enroll">
                                 <div class="university-total">
-                                    <div id="enrollTotalChart" style="width: 100%;height: 250px;"></div>
+                                    <div id="enrollTotalChart" style="width: 100%;height: 280px;"></div>
                                 </div>
                                 <div class="plan-total">
-                                    <div id="planTotalLineChart" style="width: 100%;height: 250px;"></div>
+                                    <div id="planTotalLineChart" style="width: 100%;height: 280px;"></div>
                                 </div>
                             </div>
                         </div>
@@ -179,7 +180,29 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>2014年</td>
+                                            <td colspan="2">2014年</td>
+                                            <td>234</td>
+                                            <td>12345</td>
+                                            <td>234</td>
+                                            <td>12345</td>
+                                            <td>234</td>
+                                            <td>12345</td>
+                                            <td>234</td>
+                                            <td>12345</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">2015年</td>
+                                            <td>231</td>
+                                            <td>12345</td>
+                                            <td>231</td>
+                                            <td>12345</td>
+                                            <td>231</td>
+                                            <td>12345</td>
+                                            <td>231</td>
+                                            <td>12345</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">2016年</td>
                                             <td>234</td>
                                             <td>12345</td>
                                             <td>234</td>

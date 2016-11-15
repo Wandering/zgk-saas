@@ -85,6 +85,7 @@ GradeManagement.prototype = {
                         layer.closeAll();
                         $('#grade-list').html('');
                         that.getGrade();
+                        $('#checkAll').prop('checked', false);
                     }
                 }
             }, function (res) {
@@ -162,5 +163,5 @@ $('body').on('click','.close-btn',function(){
 });
 
 $('body').on('click', '.del-btn', function () {
-    GradeManagementIns.deleteGrade()
+    GradeManagementIns.deleteGrade();
 });

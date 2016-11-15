@@ -57,6 +57,30 @@ public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDeta
     {
         examDetailDAO.deleteWeakScoresByDetailId(paramMap);
     }
+
+    @Override
+    public List<Map<String, Object>> getMostAttentionNumberChart(Map<String, String> paramMap)
+    {
+        return examDetailDAO.getMostAttentionNumberChart(paramMap);
+    }
+
+    @Override
+    public List<Map<String, Object>> getMostAttentionCourseChart(Map<String, String> paramMap)
+    {
+        return examDetailDAO.getMostAttentionCourseChart(paramMap);
+    }
+
+    @Override
+    public List<Map<String, Object>> getMostAttentionPage(Map<String, String> paramMap)
+    {
+        return examDetailDAO.getMostAttentionPage(paramMap);
+    }
+
+    @Override
+    public List<String> getClassesNameByGrade(Map<String, String> paramMap)
+    {
+        return examDetailDAO.getClassesNameByGrade(paramMap);
+    }
 //    @Override
 //    public void insert(BaseDomain entity) {
 //

@@ -23,6 +23,9 @@ public class TenantConfigInstance extends BaseDomain{
     private String domain;
     private Long createDate;
     private Long modifyDate;
+    private String dataType;
+    private String dataUrl;
+    private String dataValue;
 
 	public TenantConfigInstance(){
 	}
@@ -79,7 +82,31 @@ public class TenantConfigInstance extends BaseDomain{
         return this.modifyDate;
     }
 
-	public String toString() {
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getDataUrl() {
+        return dataUrl;
+    }
+
+    public void setDataUrl(String dataUrl) {
+        this.dataUrl = dataUrl;
+    }
+
+    public String getDataValue() {
+        return dataValue;
+    }
+
+    public void setDataValue(String dataValue) {
+        this.dataValue = dataValue;
+    }
+
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("Id", getId())
                 .append("TnId", getTnId())
@@ -89,6 +116,9 @@ public class TenantConfigInstance extends BaseDomain{
                 .append("Domain", getDomain())
                 .append("CreateDate", getCreateDate())
                 .append("ModifyDate", getModifyDate())
+                .append("DataType", getDataType())
+                .append("DataUrl",getDataUrl())
+                .append("DataValue",getDataValue())
                 .toString();
     }
 	

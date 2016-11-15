@@ -91,3 +91,6 @@
 saas-war/saas-war.iml
 saas-war/src/main/webapp/static/node_modules
 saas-war/build/
+saas-api/build/
+saas-domain/build/
+saas-service/build/

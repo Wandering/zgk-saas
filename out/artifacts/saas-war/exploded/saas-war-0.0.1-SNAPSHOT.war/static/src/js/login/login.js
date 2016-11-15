@@ -15,11 +15,10 @@ $('#login-btn').on('click', function () {
             Common.cookie.setCookie('tnId', data.userId);
             Common.cookie.setCookie('isInit', data.isInit);
             Common.cookie.setCookie('siderMenu', siderMenuJson);
-            Common.cookie.setCookie('countyId', data.countyId);
             if(data.isInit==0){
                 window.location.href = '/index';
             }else{
-                window.location.href = '/seting-process'+isInit;
+                window.location.href = '/seting-process'+data.isInit;
             }
         } else {
             layer.msg(res.msg);

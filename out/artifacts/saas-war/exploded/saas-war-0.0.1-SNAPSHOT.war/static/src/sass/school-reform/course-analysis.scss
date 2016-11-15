@@ -1,0 +1,116 @@
+div, ul, li {
+    padding: 0;
+    margin: 0;
+}
+ul {
+    list-style: none;
+}
+.course-analysis-box {
+    margin-top: 24px;
+    .course-analysis-list {
+        position: relative;
+        li {
+            float: left;
+            margin-right: 40px;
+            input[type='checkbox'] {
+                background: #CB171D;
+            }
+            label {
+                margin-left: 9px;
+                margin-top: 7px;
+            }
+        }
+    }
+}
+.single-course-analysis-box {
+    font-size: 14px;
+    color: #4A4A4A;
+    .single-course-analysis-list {
+        margin-top: 21px;
+        li {
+            float: left;
+            margin-right: 40px;
+            input[type='radio'] {
+                background: #CB171D;
+            }
+            label {
+                margin-left: 9px;
+                margin-top: 7px;
+            }
+        }
+    }
+    .single-course-info {
+        clear: both;
+        .item {
+            display: inline-block;
+            margin-top: 16px;
+            margin-right: 50px;
+        }
+    }
+}
+.part-course-analysis {
+    .title {
+        font-size: 14px;
+        font-weight: bold;
+        color: #4A4A4A;
+        margin: 28px 0 20px 0;
+    }
+    .analysis-ratio {
+        font-size: 14px;
+        color: #4A4A4A;
+        .total-student {
+            float: left;
+        }
+        .ratio-detail {
+            display: inline-block;
+            width: 400px;
+            height: 26px;
+            position: relative;
+            left: 14px;
+            top: -2px;
+            float: left;
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+            background: #EFF4F7;
+            font-size: 14px;
+            .ratio-left {
+                display: inline-block;
+                width: 47.5%;
+                height: 26px;
+                line-height: 26px;
+                padding-left: 8px;
+                background: #EA6264;
+                color: #FFFFFF;
+            }
+            .ratio-right {
+                display: inline-block;
+                width: 52.5%;
+                height: 26px;
+                line-height: 26px;
+            }
+        }
+    }
+}
+.group-course-analysis-box {
+    font-size: 14px;
+    color: #4A4A4A;
+    .group-course-analysis-list {
+        margin-top: 17px;
+        li {
+            float: left;
+            margin-right: 40px;
+            input[type='radio'] {
+                background: #CB171D;
+            }
+            label {
+                margin-left: 9px;
+                margin-top: 7px;
+            }
+        }
+    }
+    #groupCourseAnalysisBar {
+        position: relative;
+        top: 30px;
+    }
+}
