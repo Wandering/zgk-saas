@@ -5,16 +5,14 @@
  * @api:http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=44447916
  *
  * */
-
-
-
-
 var SchoolRecruit = {
     init: function () {
         this.areaId = Common.cookie.getCookie('countyId');
         this.getProvince();
-        this.getYear();
+        this.getYear('');
         this.getRemoteDataDictList();
+        this.getBatchByYearAndArea('', '');
+
         this.params = {
             year: "",
             areaId: "",
@@ -24,7 +22,6 @@ var SchoolRecruit = {
             page: $('#recruit-load-more').attr('page-no'),
             rows: "10"
         };
-        this.getCollegeUniversitiesEnrollment(this.params);
         this.eventListen();
     },
     //获取省份
@@ -38,22 +35,24 @@ var SchoolRecruit = {
     },
     //根据省份ID获取录取年份
     getYear: function (provinceId) {
-        Common.ajaxFun('/data/getYears.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/data/getYears.do', 'GET', {
+            provinceId: provinceId,
+        }, function (res) {
             if (res.rtnCode == "0000000") {
                 var str = '';
                 if (res.bizData.length == 0) {
                     $('#year-list').html('<span>暂无</span>');
                     return false;
                 }
-                Handlebars.registerHelper('firstActive', function (data, options) {
-                    if (options.data.index == 0) {
-                        //初始化渲染批次
-                        SchoolRecruit.getBatchByYearAndArea(data, '-1');
-                        return '<span class="active">' + data + '</span>'
-                    } else {
-                        return '<span>' + data + '</span>'
-                    }
-                })
+                //Handlebars.registerHelper('firstActive', function (data, options) {
+                //    if (options.data.index == 0) {
+                //初始化渲染批次
+                //SchoolRecruit.getBatchByYearAndArea(res.bizData[0], '-1');
+                //        return '<span class="active">' + data + '</span>'
+                //    } else {
+                //        return '<span>' + data + '</span>'
+                //    }
+                //})
                 var template = Handlebars.compile($('#year-list-tpl').html());
                 $('#year-list').html(template(res.bizData))
             }
@@ -78,6 +77,7 @@ var SchoolRecruit = {
     },
     //院校特征
     getRemoteDataDictList: function () {
+        var that = this;
         Common.ajaxFun('/data/getRemoteDataDictList.do', 'GET', {
             type: 'FEATURE',
         }, function (res) {
@@ -88,6 +88,7 @@ var SchoolRecruit = {
                 }
                 var template = Handlebars.compile($('#feature-list-tpl').html());
                 $('#feature-list').html(template(res.bizData))
+                that.getCollegeUniversitiesEnrollment(that.params);
             }
         });
     },
@@ -107,7 +108,7 @@ var SchoolRecruit = {
                 $('#table-loading-img').hide();
             } else {
                 layer.msg(res.msg);
-                $('.layui-layer-msg').css('left','56%');
+                $('.layui-layer-msg').css('left', '56%');
             }
         });
     },
@@ -115,30 +116,55 @@ var SchoolRecruit = {
         //院校所属地
         var that = this;
         $(document).on('click', '#province-list span', function () {
+            $('#school-admission-plan').html('');
+            $('#recruit-load-more').hide();
+            that.params = {
+                'year': '',
+                'property': '',
+                'batch': '',
+                'areaId': $(this).attr('provinceid'),
+            }
+
             $(this).addClass('active').siblings().removeClass('active');
-            that.params.areaId = $(this).attr('provinceid');
+            that.getYear(that.params.areaId);
             that.getCollegeUniversitiesEnrollment(that.params);
         })
+
         //招生年份
         $(document).on('click', '#year-list span', function () {
+            $('#school-admission-plan').html('');
+            $('#recruit-load-more').hide();
+
             $(this).addClass('active').siblings().removeClass('active');
             that.params.year = $(this).text();
             that.getCollegeUniversitiesEnrollment(that.params);
         })
+
         //录取批次
         $(document).on('click', '#batch-list span', function () {
+            $('#school-admission-plan').html('');
+            $('#recruit-load-more').hide();
+
             $(this).addClass('active').siblings().removeClass('active');
             that.params.batch = $(this).attr('dictid');
             that.getCollegeUniversitiesEnrollment(that.params);
         })
-        //录取批次
+
+        //院校特征
         $(document).on('click', '#feature-list span', function () {
+            $('#school-admission-plan').html('');
+            $('#recruit-load-more').hide();
+
             $(this).addClass('active').siblings().removeClass('active');
             that.params.property = $(this).attr('dictid')
             that.getCollegeUniversitiesEnrollment(that.params);
         })
+
         //文理切换
         $(document).on('click', '.tab-detail-title li', function () {
+            $('#school-admission-plan').html('');
+            $('#recruit-load-more').hide();
+
             $(this).addClass('active').siblings().removeClass('active');
             $(this).attr('page-no', 1);
             $('#recruit-load-more').hide();
@@ -146,6 +172,7 @@ var SchoolRecruit = {
             that.params.type = $(this).attr('type')
             that.getCollegeUniversitiesEnrollment(that.params);
         })
+        //加载更多
         $(document).on('click', '#recruit-load-more', function () {
             var nowPage = parseInt($(this).attr('page-no'));
             $(this).attr('page-no', nowPage + 1).hide();
