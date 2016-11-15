@@ -69,20 +69,18 @@
                             <div id="sub-majored-category"></div>
                         </div>
                         <script type="text/x-handlebars-template" id="sub-majored-category-tpl">
-                            <p class="title">专业门类：({{name}})</p>
+                            <p class="title" t-id="{{id}}">专业门类：({{name}})</p>
                             {{#each this.childList}}
                             <dl class="tab-detail-li">
-                                <dt>{{name}}({{majoredNumber}})</dt>
+                                <dt m-id="{{id}}">{{name}}({{majoredNumber}})</dt>
                                 <dd>
                                     {{#each this.childList}}
-                                    <span>{{name}}</span>
+                                    <span b-id="{{id}}">{{name}}</span>
                                     {{/each}}
                                 </dd>
                             </dl>
                             {{/each}}
-
                         </script>
-
                         <%--////////////////////////////////////////////--%>
                     </div>
                     <!-- PAGE CONTENT ENDS -->
