@@ -18,7 +18,7 @@ $('#login-btn').on('click', function () {
             if(data.isInit==0){
                 window.location.href = '/index';
             }else{
-                window.location.href = '/seting-process'+ data.isInit;
+                window.location.href = '/seting-process'+data.isInit;
             }
         } else {
             layer.msg(res.msg);

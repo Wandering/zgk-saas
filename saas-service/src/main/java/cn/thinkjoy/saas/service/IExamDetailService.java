@@ -27,4 +27,10 @@ public interface IExamDetailService<D extends IBaseDAO<T>, T extends BaseDomain>
     Map<String, Object> getAvgScoresByExamId(Map<String, String> paramMap);
 
     void deleteWeakScoresByDetailId(Map<String, Object> paramMap);
+
+    List<Map<String, Object>> getMostAttentionNumberChart(Map<String, String> paramMap);
+
+    List<Map<String, Object>> getMostAttentionCourseChart(Map<String, String> paramMap);
+
+    List<Map<String, Object>> getMostAttentionPage(Map<String, String> paramMap);
 }
