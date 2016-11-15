@@ -1,6 +1,63 @@
 @import "../common/common";
 @import "data-query-common";
 
-#province-list{
+#province-list {
   min-height: 84px;
 }
+
+.common-select {
+  display: none;
+}
+
+.admission-detail {
+  margin-top: 40px;
+  .tab-detail-title {
+    margin-bottom: 20px;
+    overflow: hidden;
+    border-left: 1px solid $border;
+    border-bottom: 1px solid $border;
+    box-sizing: border-box;
+    li {
+      float: left;
+      display: block;
+      height: 30px;
+      line-height: 30px;
+      padding: 0 10px;
+      background: #fff;
+      color: #b5b5b5;
+      border: 1px solid $border;
+      cursor: pointer;
+      border-left: none;
+      border-bottom: none;
+      box-sizing: border-box;
+    }
+    .active {
+      box-sizing: border-box;
+      background: $mainColor;
+      color: #fff;
+      border: 1px solid $mainColor;
+    }
+  }
+}
+
+.table-loading-img{
+  height: 30px;
+  position: relative;
+  top:20px;
+  left: 52%;
+  margin-bottom: 30px;
+}
+
+.load-more {
+  text-align: center;
+  color: $mainColor;
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+  margin-top: 20px;
+  position: absolute;
+  left: 51.3%;
+  border: none;
+  background-color: #fff;
+}
+

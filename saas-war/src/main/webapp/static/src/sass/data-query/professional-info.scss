@@ -23,10 +23,10 @@
       border-bottom: none;
       box-sizing: border-box;
     }
-    &:last-of-type{
+    &:last-of-type {
       border-right: 1px solid $border;
     }
-    .active{
+    .active {
       box-sizing: border-box;
       background: $mainColor;
       color: #fff;
@@ -34,6 +34,13 @@
     }
   }
   .tab-detail-content {
-      padding: 20px 0;
+    padding: 20px 0;
+  }
+  .sub-name{
+    a{
+      font-size: 15px;
+      color: #333;
+    }
   }
 }
+

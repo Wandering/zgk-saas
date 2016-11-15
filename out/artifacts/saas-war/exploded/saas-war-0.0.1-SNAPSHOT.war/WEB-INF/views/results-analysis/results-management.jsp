@@ -36,8 +36,6 @@
                     </li>
                     <li class="active">学校成绩管理</li>
                 </ul><!-- .breadcrumb -->
-
-
             </div>
 
             <div class="page-content">
@@ -109,20 +107,32 @@
                             <div class="btns">
                                 <button class="btn btn-inverse" id="details-modify-btn">修改</button>
                                 <button class="btn btn-success" id="details-close-btn">删除</button>
-                                <button class="btn btn-danger" id="details-download-btn">下载</button>
+                                <a target="_blank" href="javascript:;" class="btn btn-danger" id="details-download-btn">下载</a>
                             </div>
                         </div>
                         <div class="">
-                            <table id="" class="table">
+                            <table id="" class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <th class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace"/>
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </th>
-                                    <th class="center">姓名</th>
+                                    <th class="center" rowspan="2"></th>
+                                    <th class="center" rowspan="2">姓名</th>
+                                    <th class="center" rowspan="2">班级</th>
+                                    <th class="center" colspan="3">主课</th>
+                                    <th class="center" colspan="7">选课</th>
+                                    <th class="center" rowspan="2">班级排名</th>
+                                    <th class="center" rowspan="2">年级排名</th>
+                                </tr>
+                                <tr>
+                                    <th class="center">语文</th>
+                                    <th class="center">数学</th>
+                                    <th class="center">英语</th>
+                                    <th class="center">物理</th>
+                                    <th class="center">化学</th>
+                                    <th class="center">生物</th>
+                                    <th class="center">政治</th>
+                                    <th class="center">地理</th>
+                                    <th class="center">历史</th>
+                                    <th class="center">通用技术</th>
                                 </tr>
                                 </thead>
                                 <tbody id="details-tbody">
@@ -165,11 +175,96 @@
     <tr>
         <td class="center">
             <label>
-                <input type="checkbox" class="ace"/>
+                <input type="checkbox" dataid="{{id}}" class="ace"/>
                 <span class="lbl"></span>
             </label>
         </td>
+        <td class="center">{{studentName}}</td>
         <td class="center">{{className}}</td>
+        <td class="center">
+            {{#if yuWenScore}}
+            {{yuWenScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if shuXueScore}}
+            {{shuXueScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if yingYuScore}}
+            {{yingYuScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if wuLiScore}}
+            {{wuLiScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if huaXueScore}}
+            {{huaXueScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if shengWuScore}}
+            {{shengWuScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if zhengZhiScore}}
+            {{zhengZhiScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if diLiScore}}
+            {{diLiScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if liShiScore}}
+            {{liShiScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if commonScore}}
+            {{commonScore}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if classRank}}
+            {{classRank}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
+        <td class="center">
+            {{#if gradeRank}}
+            {{gradeRank}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
     </tr>
     {{/each}}
 </script>

@@ -22,6 +22,9 @@ public class Configuration extends BaseDomain{
     private String checkRule;
     private String domain;
     private Integer configOrder;
+    private String dataType;
+    private String dataUrl;
+    private String dataValue;
 
 	public Configuration(){
 	}
@@ -68,15 +71,42 @@ public class Configuration extends BaseDomain{
         return this.configOrder;
     }
 
-	public String toString() {
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getDataUrl() {
+        return dataUrl;
+    }
+
+    public void setDataUrl(String dataUrl) {
+        this.dataUrl = dataUrl;
+    }
+
+    public String getDataValue() {
+        return dataValue;
+    }
+
+    public void setDataValue(String dataValue) {
+        this.dataValue = dataValue;
+    }
+
+    public String toString() {
 		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
 			.append("Id",getId())
-			.append("EnName",getEnName())
+			.append("EnName", getEnName())
 			.append("ChName",getChName())
 			.append("MetaType",getMetaType())
 			.append("CheckRule",getCheckRule())
 			.append("Domain",getDomain())
 			.append("ConfigOrder",getConfigOrder())
+            .append("DataType", getDataType())
+            .append("DataUrl",getDataUrl())
+            .append("DataValue",getDataValue())
 			.toString();
 	}
 	

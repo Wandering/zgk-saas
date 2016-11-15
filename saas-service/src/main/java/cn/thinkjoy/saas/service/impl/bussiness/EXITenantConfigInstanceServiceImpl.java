@@ -296,6 +296,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         }
         String tableName = ParamsUtils.combinationTableName(type, tnId);
 
+
         for (String configId : idsList) {
 
             Map map = new HashMap();
@@ -324,6 +325,10 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             addMap.put("columnType", configuration.getMetaType());
             exiTenantConfigInstanceDAO.addColumn(addMap);
         }
+        List<TenantConfigInstanceView> tenantConfigInstanceViews=getTenantConfigListByTnIdAndType(type,tnId);
+
+
+
 
         LOGGER.info("===============新增租户自选表头 E==============");
         return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_SUCCESS);
@@ -495,6 +500,9 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         tenantConfigInstance.setTnId(tnId);
         tenantConfigInstance.setDomain(configuration.getDomain());
         tenantConfigInstance.setCreateDate(System.currentTimeMillis());
+        tenantConfigInstance.setDataType(configuration.getDataType());
+        tenantConfigInstance.setDataUrl(configuration.getDataUrl());
+        tenantConfigInstance.setDataValue(configuration.getDataValue());
         tenantConfigInstance.setModifyDate(null);
         return tenantConfigInstance;
     }

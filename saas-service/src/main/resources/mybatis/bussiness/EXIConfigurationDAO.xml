@@ -11,6 +11,9 @@
         <result column="check_rule" property="checkRule" jdbcType="VARCHAR" />
         <result column="domain" property="domain" jdbcType="VARCHAR" />
         <result column="config_order" property="configOrder" jdbcType="INTEGER" />
+        <result column="data_type" property="dataType" jdbcType="VARCHAR" />
+        <result column="data_url" property="dataUrl" jdbcType="VARCHAR" />
+        <result column="data_value" property="dataValue" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -20,7 +23,10 @@
         meta_type,
         check_rule,
         `domain`,
-        config_order
+        config_order,
+        data_type,
+        data_url,
+        data_value
     </sql>
 
     <!--获取初始化字段 by domain-->

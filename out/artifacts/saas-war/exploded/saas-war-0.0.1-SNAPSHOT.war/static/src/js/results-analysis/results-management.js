@@ -8,7 +8,7 @@ ResultsManagementFun.prototype = {
     constructor: ResultsManagementFun,
     init: function () {
     },
-    count:function(){
+    count: function () {
     },
     getResultsList: function (grade) {
         Common.ajaxFun('/scoreAnalyse/listExam', 'GET', {
@@ -24,15 +24,15 @@ ResultsManagementFun.prototype = {
             alert("出错了");
         });
     },
-    uploadResults: function (id,examName,examTime,uploadFilePath) {
+    uploadResults: function (id, examName, examTime, uploadFilePath) {
         var contentHtml = [];
         contentHtml.push('<div class="form-horizontal upload-layer">');
         contentHtml.push('<div class="form-group">');
         contentHtml.push('<label class="col-sm-3 control-label no-padding-right" for="examName"> 考试名称 </label>');
         contentHtml.push('<div class="col-sm-9">');
-        if(examName){
-            contentHtml.push('<input type="text" id="examName" value="'+ examName +'" placeholder="输入考试名称" class="col-xs-10 col-sm-10"/>');
-        }else{
+        if (examName) {
+            contentHtml.push('<input type="text" id="examName" value="' + examName + '" placeholder="输入考试名称" class="col-xs-10 col-sm-10"/>');
+        } else {
             contentHtml.push('<input type="text" id="examName" placeholder="输入考试名称" class="col-xs-10 col-sm-10"/>');
         }
         contentHtml.push('</div>');
@@ -40,59 +40,236 @@ ResultsManagementFun.prototype = {
         contentHtml.push('<div class="form-group">');
         contentHtml.push('<label class="col-sm-3 control-label no-padding-right" for="account-name">考试时间 </label>');
         contentHtml.push('<div class="col-sm-9">');
-        if(examTime){
-            contentHtml.push('<input class="col-xs-10 col-sm-10 date-picker" value="'+ examTime +'" readonly="readonly" id="exam-date" type="text" placeholder="选择考试时间" data-date-format="yyyy-mm-dd"/>');
-        }else{
+        if (examTime) {
+            contentHtml.push('<input class="col-xs-10 col-sm-10 date-picker" value="' + examTime + '" readonly="readonly" id="exam-date" type="text" placeholder="选择考试时间" data-date-format="yyyy-mm-dd"/>');
+        } else {
             contentHtml.push('<input class="col-xs-10 col-sm-10 date-picker" readonly="readonly" id="exam-date" type="text" placeholder="选择考试时间" data-date-format="yyyy-mm-dd"/>');
         }
         contentHtml.push('</div>');
         contentHtml.push('</div>');
-        contentHtml.push('<div class="form-group">');
-        contentHtml.push('<label class="col-sm-3 control-label no-padding-right">添加成绩 </label>');
-        contentHtml.push('<div class="col-sm-9">');
-        contentHtml.push('<span id="uploader-demo">');
-        contentHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
-        contentHtml.push('<button class="btn btn-pink" id="btn-import">添加</button>');
-        contentHtml.push('</span>');
-        contentHtml.push('<p><a target="_blank" href="/scoreAnalyse/downloadModel">请先导出Excel模板,进行填写</a></p>');
-        contentHtml.push('<p>温馨提示:上传与模板不一致的成绩单,系统无法识别</p>');
-        contentHtml.push('</div>');
-        contentHtml.push('</div>');
+        if(!id){
+            contentHtml.push('<div class="form-group add-results">');
+            contentHtml.push('<label class="col-sm-3 control-label no-padding-right">添加成绩 </label>');
+            contentHtml.push('<div class="col-sm-9">');
+            contentHtml.push('<span id="uploader-demo">');
+            contentHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
+            contentHtml.push('<button class="btn btn-pink" id="btn-import">添加</button>');
+            contentHtml.push('</span>');
+            contentHtml.push('<p><a target="_blank" href="/scoreAnalyse/downloadModel">请先导出Excel模板,进行填写</a></p>');
+            contentHtml.push('<p>温馨提示:上传与模板不一致的成绩单,系统无法识别</p>');
+            contentHtml.push('</div>');
+            contentHtml.push('</div>');
+        }
         contentHtml.push('<div class="btn-box">');
-        if(uploadFilePath){
-            contentHtml.push('<button class="btn btn-info save-btn" dataid="'+ id +'" filePath="'+ uploadFilePath +'">保存</button>');
-        }else{
+        if (uploadFilePath) {
+            contentHtml.push('<button class="btn btn-info save-btn" dataid="' + id + '" filePath="' + uploadFilePath + '">保存</button>');
+        } else {
             contentHtml.push('<button class="btn btn-info save-btn">保存</button>');
         }
         contentHtml.push('<button class="btn btn-primary close-btn">取消</button>');
         contentHtml.push('</div>');
         contentHtml.push('</div>');
-        layer.open({
-            type: 1,
-            title: '上传成绩',
-            offset: 'auto',
-            area: ['362px', '350px'],
-            content: contentHtml.join('')
-        });
+        if(id){
+            layer.open({
+                type: 1,
+                title: '上传成绩',
+                offset: 'auto',
+                area: ['362px', '230px'],
+                content: contentHtml.join('')
+            });
+
+        }else{
+            layer.open({
+                type: 1,
+                title: '上传成绩',
+                offset: 'auto',
+                area: ['362px', '350px'],
+                content: contentHtml.join('')
+            });
+            uploadFun();
+        }
         $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
-        uploadFun();
     },
-    detailsList:function(id,grade,Pn,rows){
+    detailsList: function (uploadfilepath,id, grade, Pn, rows) {
         var that = this;
         Common.ajaxFun('/scoreAnalyse/listExamDetail', 'GET', {
-            'examId':id,
+            'examId': id,
             'grade': grade,
-            'offset':Pn,
-            'rows':rows
+            'offset': Pn,
+            'rows': rows
         }, function (res) {
-            $(".tcdPageCode").attr('count',parseInt(Math.ceil(res.bizData.count/rows)));
+            $(".tcdPageCode").attr('count', parseInt(Math.ceil(res.bizData.count / rows)));
             var myTemplate = Handlebars.compile($("body #details-template").html());
             $('body #details-tbody').html(myTemplate(res));
+            $('body #details-download-btn').attr('href',uploadfilepath);
+
         }, function (res) {
             alert("出错了");
-        },'true');
+        }, 'true');
+    },
+    detailsModify: function (className,classRank,commonScore,diLiScore,examId,gradeRank,huaXueScore,id,liShiScore,selectCourses,shengWuScore,shuXueScore,studentName,totleScore,wuLiScore,yingYuScore,yuWenScore,zhengZhiScore) {
+        var contentHtml = [];
+        contentHtml.push('<div class="form-horizontal upload-layer">');
+        contentHtml.push('<div class="form-group">');
+        contentHtml.push('<label class="col-sm-3 control-label no-padding-right" for="name"> 姓名 </label>');
+        contentHtml.push('<div class="col-sm-9">');
+        contentHtml.push('<input type="text" id="name" value="'+ studentName +'" placeholder="输入姓名" class="col-xs-10 col-sm-10"/>');
+        contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        contentHtml.push('<div class="form-group">');
+        contentHtml.push('<label class="col-sm-3 control-label no-padding-right" for="class"> 班级 </label>');
+        contentHtml.push('<div class="col-sm-9">');
+        contentHtml.push('<input type="text" id="班级" value="'+ className +'" placeholder="输入班级" class="col-xs-10 col-sm-10"/>');
+        contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        contentHtml.push('<div class="form-group ">');
+        contentHtml.push('<label class="col-sm-3 control-label no-padding-right"> 主课成绩 </label>');
+        contentHtml.push('<div class="col-sm-9 form-inline main-subject">');
+            contentHtml.push('<div class="form-group col-sm-3 no-padding-right no-padding-left">');
+                contentHtml.push('<label class="col-sm-6 control-label no-padding-right no-padding-left" for="subject-yuwen"> 语文 </label>');
+                contentHtml.push('<div class="col-sm-6 no-padding-right no-padding-left">');
+                contentHtml.push('<input type="text" id="subject-yuwen" value="'+ yuWenScore +'" placeholder="" class="col-xs-12 col-sm-12 center no-padding-right no-padding-left"/>');
+                contentHtml.push('</div>');
+            contentHtml.push('</div>');
+            contentHtml.push('<div class="form-group col-sm-3 no-padding-right no-padding-left">');
+                contentHtml.push('<label class="col-sm-6 control-label no-padding-right no-padding-left" for="subject-shuxue"> 数学 </label>');
+                contentHtml.push('<div class="col-sm-6 no-padding-right no-padding-left">');
+                contentHtml.push('<input type="text" id="subject-shuxue" value="'+ shuXueScore +'" placeholder="" class="col-xs-12 col-sm-12 center no-padding-right no-padding-left"/>');
+                contentHtml.push('</div>');
+            contentHtml.push('</div>');
+            contentHtml.push('<div class="form-group col-sm-3 no-padding-right no-padding-left">');
+                contentHtml.push('<label class="col-sm-6 control-label no-padding-right no-padding-left" for="subject-yingyu"> 英语 </label>');
+                contentHtml.push('<div class="col-sm-6 no-padding-right no-padding-left">');
+                contentHtml.push('<input type="text" id="subject-yingyu" value="'+ yingYuScore +'" placeholder="" class="col-xs-12 col-sm-12 center no-padding-right no-padding-left"/>');
+                contentHtml.push('</div>');
+            contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        contentHtml.push('<div class="form-group ">');
+        contentHtml.push('<label class="col-sm-3 control-label no-padding-right"> 选课成绩 </label>');
+        contentHtml.push('<div class="col-sm-9 form-inline main-subject">');
+            contentHtml.push('<div class="form-group col-sm-3 no-padding-right no-padding-left">');
+                contentHtml.push('<label class="col-sm-6 control-label no-padding-right no-padding-left" for="subject-wuli"> 物理 </label>');
+                contentHtml.push('<div class="col-sm-6 no-padding-right no-padding-left">');
+                contentHtml.push('<input type="text" id="subject-wuli" value="'+ wuLiScore +'" placeholder="" class="col-xs-12 col-sm-12 center no-padding-right no-padding-left"/>');
+                contentHtml.push('</div>');
+            contentHtml.push('</div>');
+            contentHtml.push('<div class="form-group col-sm-3 no-padding-right no-padding-left">');
+                contentHtml.push('<label class="col-sm-6 control-label no-padding-right no-padding-left" for="subject-huaxue"> 化学 </label>');
+                contentHtml.push('<div class="col-sm-6 no-padding-right no-padding-left">');
+                contentHtml.push('<input type="text" id="subject-huaxue" value="'+ huaXueScore +'" placeholder="" class="col-xs-12 col-sm-12 center no-padding-right no-padding-left"/>');
+                contentHtml.push('</div>');
+            contentHtml.push('</div>');
+            contentHtml.push('<div class="form-group col-sm-3 no-padding-right no-padding-left">');
+                contentHtml.push('<label class="col-sm-6 control-label no-padding-right no-padding-left" for="subject-shengwu"> 生物 </label>');
+                contentHtml.push('<div class="col-sm-6 no-padding-right no-padding-left">');
+                contentHtml.push('<input type="text" id="subject-shengwu" value="'+ shengWuScore +'" placeholder="" class="col-xs-12 col-sm-12 center no-padding-right no-padding-left"/>');
+                contentHtml.push('</div>');
+            contentHtml.push('</div>');
+            contentHtml.push('<div class="form-group col-sm-3 no-padding-right no-padding-left">');
+                contentHtml.push('<label class="col-sm-6 control-label no-padding-right no-padding-left" for="subject-zhengzhi"> 政治 </label>');
+                contentHtml.push('<div class="col-sm-6 no-padding-right no-padding-left">');
+                contentHtml.push('<input type="text" id="subject-zhengzhi" value="'+ zhengZhiScore +'" placeholder="" class="col-xs-12 col-sm-12 center no-padding-right no-padding-left"/>');
+                contentHtml.push('</div>');
+            contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        contentHtml.push('<div class="form-group ">');
+        contentHtml.push('<label class="col-sm-3 control-label no-padding-right"> </label>');
+        contentHtml.push('<div class="col-sm-9 form-inline main-subject">');
+            contentHtml.push('<div class="form-group col-sm-3 no-padding-right no-padding-left">');
+                contentHtml.push('<label class="col-sm-6 control-label no-padding-right no-padding-left" for="subject-dili"> 地理 </label>');
+                contentHtml.push('<div class="col-sm-6 no-padding-right no-padding-left">');
+                contentHtml.push('<input type="text" id="subject-dili" value="'+ diLiScore +'" placeholder="" class="col-xs-12 col-sm-12 center no-padding-right no-padding-left"/>');
+                contentHtml.push('</div>');
+            contentHtml.push('</div>');
+            contentHtml.push('<div class="form-group col-sm-3 no-padding-right no-padding-left">');
+                contentHtml.push('<label class="col-sm-6 control-label no-padding-right no-padding-left" for="subject-lishi"> 历史 </label>');
+                contentHtml.push('<div class="col-sm-6 no-padding-right no-padding-left">');
+                contentHtml.push('<input type="text" id="subject-lishi" value="'+ liShiScore +'" placeholder="" class="col-xs-12 col-sm-12 center no-padding-right no-padding-left"/>');
+                contentHtml.push('</div>');
+            contentHtml.push('</div>');
+            contentHtml.push('<div class="form-group col-sm-6 no-padding-right no-padding-left">');
+                contentHtml.push('<label class="col-sm-5 control-label no-padding-right no-padding-left" for="subject-jishu"> 通用技术 </label>');
+                contentHtml.push('<div class="col-sm-3 no-padding-right no-padding-left">');
+                contentHtml.push('<input type="text" id="subject-jishu" value="'+ commonScore +'" placeholder="" class="col-xs-12 col-sm-12 center no-padding-right no-padding-left"/>');
+                contentHtml.push('</div>');
+            contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        contentHtml.push('<div class="form-group">');
+        contentHtml.push('<label class="col-sm-3 control-label no-padding-right" for="top-class"> 班级排名 </label>');
+        contentHtml.push('<div class="col-sm-9">');
+        contentHtml.push('<input type="text" id="top-class" value="'+ classRank +'" placeholder="输入班级排名" class="col-xs-10 col-sm-10"/>');
+        contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        contentHtml.push('<div class="form-group">');
+        contentHtml.push('<label class="col-sm-3 control-label no-padding-right" for="top-grade"> 年级排名 </label>');
+        contentHtml.push('<div class="col-sm-9">');
+        contentHtml.push('<input type="text" id="top-grade" value="'+ gradeRank +'" placeholder="输入年级排名" class="col-xs-10 col-sm-10"/>');
+        contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        contentHtml.push('<div class="btn-box">');
+        contentHtml.push('<button class="btn btn-info save-btn">提交</button>');
+        contentHtml.push('<button class="btn btn-primary close-btn">取消</button>');
+        contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        layer.open({
+            type: 1,
+            title: '修改',
+            offset: 'auto',
+            area: ['600px', '450px'],
+            content: contentHtml.join('')
+        });
+    },
+    deleteExam: function (id) {
+        var that = this;
+        Common.ajaxFun('/scoreAnalyse/deleteExam', 'GET', {
+            'examId':id
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                layer.closeAll();
+                layer.msg('删除成功!');
+                var radioV = $('input[name="results-radio"]:checked').val();
+                that.getResultsList(radioV);
+            }
+        }, function (res) {
+            alert("出错了1");
+        });
+    },
+    detailsModifyFun:function(id){
+        var that = this;
+        Common.ajaxFun('/scoreAnalyse/getExamDetailById', 'GET', {
+            'id':id
+        }, function (res) {
+            console.log(res)
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData;
+                var className = data.className,
+                    classRank = data.classRank,
+                    commonScore = data.commonScore,
+                    diLiScore = data.diLiScore,
+                    examId = data.examId,
+                    gradeRank = data.gradeRank,
+                    huaXueScore = data.huaXueScore,
+                    id = data.id,
+                    liShiScore = data.liShiScore,
+                    selectCourses = data.selectCourses,
+                    shengWuScore = data.shengWuScore,
+                    shuXueScore = data.shuXueScore,
+                    studentName = data.studentName,
+                    totleScore = data.totleScore,
+                    wuLiScore = data.wuLiScore,
+                    yingYuScore = data.yingYuScore,
+                    yuWenScore = data.yuWenScore,
+                    zhengZhiScore = data.zhengZhiScore;
+                that.detailsModify(className,classRank,commonScore,diLiScore,examId,gradeRank,huaXueScore,id,liShiScore,selectCourses,shengWuScore,shuXueScore,studentName,totleScore,wuLiScore,yingYuScore,yuWenScore,zhengZhiScore);
+            }
+        }, function (res) {
+            alert("出错了");
+        });
     }
 };
 
@@ -129,15 +306,18 @@ $(function () {
             layer.tips('请选择考试时间!', $('#exam-date'));
             return false;
         }
-        if(filePath=='' || filePath == undefined){
+        if (filePath == '' || filePath == undefined) {
             layer.tips('请添加成绩!', $('#btn-import'));
             return false;
         }
-        if(dataid){
-            Common.ajaxFun('/scoreAnalyse/getExamDetailById', 'GET', {
-                'id':dataid
+        if (dataid) {
+            Common.ajaxFun('/scoreAnalyse/modifyExam', 'GET', {
+                'id': dataid,
+                'examName': examName,
+                'examTime': examDate,
+                'grade': radioV
             }, function (res) {
-                if(res.rtnCode=="0000000"){
+                if (res.rtnCode == "0000000") {
                     layer.closeAll();
                     ResultsManagementIns.getResultsList(radioV);
                     layer.msg('修改成功!');
@@ -145,14 +325,14 @@ $(function () {
             }, function (res) {
                 alert("出错了");
             });
-        }else{
+        } else {
             Common.ajaxFun('/scoreAnalyse/addExam.do', 'GET', {
-                'examName':examName,
-                'examTime':examDate,
-                'grade':radioV,
-                'uploadFilePath':filePath
+                'examName': examName,
+                'examTime': examDate,
+                'grade': radioV,
+                'uploadFilePath': filePath
             }, function (res) {
-                if(res.rtnCode=="0000000"){
+                if (res.rtnCode == "0000000") {
                     layer.closeAll();
                     ResultsManagementIns.getResultsList(radioV);
                     layer.msg('添加成功!');
@@ -179,7 +359,7 @@ $(function () {
         var examName = resultsChecked.attr('examName');
         var examTime = resultsChecked.attr('examTime');
         var uploadFilePath = resultsChecked.attr('uploadFilePath');
-        ResultsManagementIns.uploadResults(id,examName,examTime,uploadFilePath);
+        ResultsManagementIns.uploadResults(id, examName, examTime, uploadFilePath);
     });
 
     // 删除
@@ -196,8 +376,8 @@ $(function () {
         layer.confirm('确定删除?', {
             btn: ['确定', '关闭'] //按钮
         }, function () {
-            var roleId = $('#results-tbody input:checked').attr('roleid');
-            RoleManagementIns.deleteRole(roleId);
+            var id = $('#results-tbody input:checked').attr('id');
+            ResultsManagementIns.deleteExam(id);
         }, function () {
             layer.closeAll();
         });
@@ -205,36 +385,51 @@ $(function () {
 
 
     // 查看详情
-    $('body').on('click','.look-details',function(){
+    $('body').on('click', '.look-details', function () {
         var examId = $(this).attr('urlId');
         var grade = $(this).attr('grade');
+        var uploadfilepath = $(this).attr('uploadfilepath');
         var index = layer.open({
-            title:'成绩明细',
+            title: '成绩明细',
             type: 1,
             content: $('#details-main').html(),
-            area: ['100%','100%'],
+            area: ['100%', '100%'],
             maxmin: false,
-            success:function(layero, index){
-                $('#details-main').remove();
-                ResultsManagementIns.detailsList(examId,grade,0,10);
+            success: function (layero, index) {
+                //$('#details-main').remove();
+                ResultsManagementIns.detailsList(uploadfilepath,examId, grade, 0, 10);
                 $(".tcdPageCode").createPage({
-                    pageCount:$(".tcdPageCode").attr('count'),
-                    current:1,
-                    backFn:function(p){
-                        ResultsManagementIns.detailsList(examId,grade,(p-1)*10,10);
+                    pageCount: $(".tcdPageCode").attr('count'),
+                    current: 1,
+                    backFn: function (p) {
+                        ResultsManagementIns.detailsList(uploadfilepath,examId, grade, (p - 1) * 10, 10);
                     }
                 });
             }
         });
         layer.full(index);
-
     });
+
+    $('body').on('click', '#details-modify-btn', function () {
+        var checkboxLen = $('#details-tbody input:checked').length;
+        if (checkboxLen == 0) {
+            layer.tips('选择一项', $(this));
+            return false;
+        }
+        if (checkboxLen > 1) {
+            layer.tips('删除只能选择一项', $(this));
+            return false;
+        }
+        var detailsChecked = $('#details-tbody input:checked');
+        var id = detailsChecked.attr('dataid');
+        ResultsManagementIns.detailsModifyFun(id);
+    });
+
 
 });
 
 
-
-function uploadFun(){
+function uploadFun() {
     jQuery(function () {
         var $ = jQuery,
             $list = $('#fileList'),
@@ -314,9 +509,9 @@ function uploadFun(){
         });
 
         // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-        uploader.on('uploadSuccess', function (file,response) {
+        uploader.on('uploadSuccess', function (file, response) {
             $('#' + file.id).addClass('upload-state-done');
-            $('.save-btn').attr('filePath',response.bizData.filePath);
+            $('.save-btn').attr('filePath', response.bizData.filePath);
             layer.msg('上传成功!');
 
         });
