@@ -60,7 +60,7 @@ public class AccountController {
         HttpSession session = request.getSession();
         session.setAttribute(Constant.USER_SESSION_KEY,JSON.toJSON(userInfoDto));
         // session过期时间
-        session.setMaxInactiveInterval(4*30*60);
+        session.setMaxInactiveInterval(4*60*60);
 
         return userInfoDto;
     }
