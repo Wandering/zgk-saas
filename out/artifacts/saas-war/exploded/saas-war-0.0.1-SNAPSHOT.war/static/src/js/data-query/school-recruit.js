@@ -11,7 +11,7 @@ var SchoolRecruit = {
         this.getProvince();
         this.getYear('');
         this.getRemoteDataDictList();
-        this.getBatchByYearAndArea('', '');
+        this.getBatchByYearAndArea('', '-1');
 
         this.params = {
             year: "",
