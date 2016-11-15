@@ -23,4 +23,10 @@ public interface IExamDetailDAO extends IBaseDAO<ExamDetail>{
     List<String> getLastExamIdByGrade(Map<String, Object> paramMap);
 
     void deleteWeakScoresByDetailId(Map<String, Object> paramMap);
+
+    List<Map<String, Object>> getMostAttentionNumberChart(Map<String, String> paramMap);
+
+    List<Map<String, Object>> getMostAttentionCourseChart(Map<String, String> paramMap);
+
+    List<Map<String, Object>> getMostAttentionPage(Map<String, String> paramMap);
 }

@@ -10,6 +10,7 @@ import cn.thinkjoy.saas.service.IExamDetailService;
 import cn.thinkjoy.saas.service.IExamService;
 import cn.thinkjoy.saas.service.IExamStuWeakCourseService;
 import cn.thinkjoy.zgk.common.StringUtil;
+import com.alibaba.dubbo.common.utils.StringUtils;
 import com.google.common.collect.Maps;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -373,21 +374,6 @@ public class ScoreAnalyseController
         return resultMap;
     }
 
-    @RequestMapping("/getTotalCountByExamId")
-    @ResponseBody
-    public Integer getTotalCountByExamId(@RequestParam(value = "examId", required = false) String examId)
-    {
-        Map<String, Object> condition = Maps.newHashMap();
-        condition.put("groupOp", "and");
-        if (!StringUtil.isNulOrBlank(examId))
-        {
-            ConditionsUtil.setCondition(condition, "examId", "=", examId);
-        }else {
-            throw new BizException("1110001","examId不能为空！");
-        }
-        return examDetailService.count(condition);
-    }
-
     @RequestMapping("/getOverLineNumberByDate")
     @ResponseBody
     public List<Map<String, Object>> getOverLineNumberByDate(
@@ -508,6 +494,7 @@ public class ScoreAnalyseController
         {
             throw new BizException("1100011", "该年级没有成绩录入！！");
         }
+        String lastExamId = examIds.get(0);
         Map<String, Object> numberMap = getNumberMap(tnId);
         int batchOneNumber = Integer.parseInt(numberMap.get("batchOne") + "");
         int batchTwoNumber = Integer.parseInt(numberMap.get("batchTwo") + "");
@@ -518,7 +505,6 @@ public class ScoreAnalyseController
         batchMap.put("batchTwo", new TreeSet<ExamDetail>());
         batchMap.put("batchThr", new TreeSet<ExamDetail>());
         Map<String, Object> selectCourseMap = new HashMap<>();
-        String lastExamId = examIds.get(0);
         Map<String, ExamDetail> lastExamDetailMap = new LinkedHashMap<>();
         Map<Long, Set<ExamScoreRatio>> examScoreRatioMap = new LinkedHashMap<>();
         for(int i=1; i<=examIds.size(); i++)
@@ -704,15 +690,83 @@ public class ScoreAnalyseController
         detail.setSelectCourses(selectCourses);
     }
 
-    @RequestMapping("/getMostAttentionNumberDetail")
+    @RequestMapping("/getMostAttentionNumberChart")
     @ResponseBody
-    public Map<String, Object> getMostAttentionNumberDetail(
-        @RequestParam(value = "examId", required = true) String examId,
+    public Map<String, Object> getMostAttentionNumberChart(
+        @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "batchName", required = true) String batchName)
     {
+        String lastExamId = getLastExamId(grade);
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("examId", lastExamId);
+        paramMap.put("batchName", batchName);
         Map<String, Object> resultMap = new HashMap<>();
-
+        resultMap.put("classChartData", examDetailService.getMostAttentionNumberChart(paramMap));
+        resultMap.put("courseChartData", examDetailService.getMostAttentionCourseChart(paramMap));
         return resultMap;
     }
 
+    @RequestMapping("/getMostAttentionPage")
+    @ResponseBody
+    public Map<String, Object> getMostAttentionPage(
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "batchName", required = true) String batchName,
+        @RequestParam(value = "className", required = false) String className,
+        @RequestParam(value = "courseName", required = false) String courseName,
+        @RequestParam(value = "offset", required = true) int offset,
+        @RequestParam(value = "rows", required = true) int rows)
+    {
+        String lastExamId = getLastExamId(grade);
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("examId", lastExamId);
+        paramMap.put("batchName", batchName);
+        if(StringUtils.isNotEmpty(className))
+        {
+            paramMap.put("className", className);
+        }
+        if(StringUtils.isNotEmpty(courseName))
+        {
+            paramMap.put("courseName", courseName);
+        }
+        List<Map<String, Object>> allList = examDetailService.getMostAttentionPage(paramMap);
+        paramMap.put("offset", offset + "");
+        paramMap.put("rows", rows + "");
+        List<Map<String, Object>> pageList = examDetailService.getMostAttentionPage(paramMap);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("total", allList.size());
+        resultMap.put("list", pageList);
+        return resultMap;
+    }
+
+    private String getLastExamId(String grade)
+    {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("grade", grade);
+        paramMap.put("limitNumber", 3);
+        List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
+        if(null == examIds || examIds.size() == 0)
+        {
+            throw new BizException("1100011", "该年级没有成绩录入！！");
+        }
+        return examIds.get(0);
+    }
+
+    @RequestMapping("/getMostAdvancedNumbers")
+    @ResponseBody
+    public List<Map<String, Object>> getMostAdvancedNumbers(
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "stepStart", required = true) Integer stepStart,
+        @RequestParam(value = "stepEnd", required = true) Integer stepEnd)
+    {
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        Map<String, Object> map1 = new LinkedHashMap<>();
+        map1.put("className", "三年一班");
+        map1.put("advancedNumber", "16");
+        resultList.add(map1);
+        Map<String, Object> map2 = new LinkedHashMap<>();
+        map2.put("className", "三年二班");
+        map2.put("advancedNumber", "11");
+        resultList.add(map2);
+        return resultList;
+    }
 }
