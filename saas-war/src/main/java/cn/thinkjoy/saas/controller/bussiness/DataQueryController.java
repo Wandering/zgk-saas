@@ -97,6 +97,9 @@ public class DataQueryController {
     public List<Map<String,Object>> getBatchByYearAndArea(@RequestParam String year,@RequestParam String provinceId,HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
+        if(provinceId == null || "".equals(provinceId)){
+            provinceId = "-1";
+        }
         Map<String,Object> map = new HashMap<>();
         map.put("year",year);
         map.put("areaId",provinceId);
@@ -159,10 +162,15 @@ public class DataQueryController {
      */
     @RequestMapping(value = "/getYears",method = RequestMethod.GET)
     @ResponseBody
-    public List getYears(@RequestParam(value = "schoolProId") long schoolProId, HttpServletRequest request,HttpServletResponse response)
+    public List getYears(@RequestParam(value = "schoolProId") String schoolProId, HttpServletRequest request,HttpServletResponse response)
             throws IOException {
+
+        long tmpSchoolProId = -1l;
+        if(schoolProId != null && !"".equals(schoolProId)){
+            tmpSchoolProId = Long.valueOf(schoolProId);
+        }
         long currentProId = getUserProvinceId(request,response);
-        return iUniversityApi.getEnrollingYearsByProvinceId(currentProId,schoolProId);
+        return iUniversityApi.getEnrollingYearsByProvinceId(currentProId,tmpSchoolProId);
     }
 
     @ApiDesc(value = "获取分数线", owner = "杨永平")
