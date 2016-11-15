@@ -1075,5 +1075,60 @@ selectList
         where d.examId = #{examId}
     </select>
 
+    <select id="getMostAttentionNumberChart" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
+        select d.className,count(1) total
+        from saas_exam_stu_weak_course c
+        inner join saas_exam_detail d on c.examDetailId=d.id
+        where c.examId=#{examId} and c.batchName=#{batchName}
+        group by d.className
+        order by total desc
+    </select>
+
+    <select id="getMostAttentionCourseChart" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
+        select courseName,CAST(total1 as SIGNED) + CAST(total2 AS SIGNED) total
+        FROM
+        (select *
+        from (select c.weakCourseOne courseName,count(1) total1
+        from saas_exam_stu_weak_course c
+        where c.examId=#{examId} and c.batchName=#{batchName}
+        group by courseName
+        order by total1 desc) t
+        inner join
+        (select c.weakCourseTwo courseName2,count(1) total2
+        from saas_exam_stu_weak_course c
+        where c.examId=#{examId} and c.batchName=#{batchName}
+        group by courseName2
+        order by total2 desc) s on t.courseName=s.courseName2) tb
+        order by total desc
+    </select>
+
+
+    <select id="getMostAttentionPage" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
+        select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo
+        from saas_exam_stu_weak_course c
+        left join saas_exam_detail d on c.examDetailId=d.id
+        where c.examId=#{examId} and c.batchName=#{batchName}
+        <if test="className!=null">
+            AND className = #{className}
+        </if>
+        <if test="courseName!=null">
+            AND weakCourseOne = #{courseName}
+            UNION ALL
+            select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo
+            from saas_exam_stu_weak_course c
+            left join saas_exam_detail d on c.examDetailId=d.id
+            where c.examId=#{examId} and c.batchName=#{batchName}
+            <if test="className!=null">
+                AND className = #{className}
+            </if>
+            AND weakCourseOne = #{courseName}
+        </if>
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
 </mapper>
 
