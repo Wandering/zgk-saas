@@ -18,6 +18,9 @@ public class TenantConfigInstanceView  extends BaseDomain {
     private String enName;
     private Long createDate;
     private Long modifyDate;
+    private String  dataType;
+    private String  dataUrl;
+    private String  dataValue;
 
 
     public Integer getTnId() {
@@ -92,5 +95,27 @@ public class TenantConfigInstanceView  extends BaseDomain {
         this.modifyDate = modifyDate;
     }
 
+    public String getDataType() {
+        return dataType;
+    }
 
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getDataUrl() {
+        return dataUrl;
+    }
+
+    public void setDataUrl(String dataUrl) {
+        this.dataUrl = dataUrl;
+    }
+
+    public String getDataValue() {
+        return dataValue;
+    }
+
+    public void setDataValue(String dataValue) {
+        this.dataValue = dataValue;
+    }
 }
