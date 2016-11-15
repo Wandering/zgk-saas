@@ -1,8 +1,11 @@
 package cn.thinkjoy.saas.controller.filter;
 
+import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
+import cn.thinkjoy.saas.dto.UserInfoDto;
 import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
+import com.alibaba.fastjson.JSON;
 import org.apache.log4j.Logger;
 
 import javax.servlet.*;
@@ -45,13 +48,22 @@ public class LoginFilter implements Filter {
         // 从session里取用户ID
         Object userInfoDto = session.getAttribute(Constant.USER_SESSION_KEY);
 
+
         // 判断如果没有取到员工信息,就跳转到登陆页面
         if (userInfoDto == null || "".equals(userInfoDto)) {
             // 须重定向至登陆页面
             servletResponse.sendRedirect("/login");
         } else {
+            //设置用户上下文
+            UserInfoDto dto = JSON.parseObject(
+                    userInfoDto.toString(),
+                    UserInfoDto.class
+            );
+            UserContext.setCurrentUser(dto);
             chain.doFilter(request, response);
         }
+
+
     }
 
     @Override
