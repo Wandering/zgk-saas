@@ -29,4 +29,8 @@ public interface IExamDetailDAO extends IBaseDAO<ExamDetail>{
     List<Map<String, Object>> getMostAttentionCourseChart(Map<String, String> paramMap);
 
     List<Map<String, Object>> getMostAttentionPage(Map<String, String> paramMap);
+
+    Map<String, Object> getAvgScoresForClass(Map<String, String> paramMap);
+
+    List<String> getClassesNameByGrade(Map<String, String> paramMap);
 }

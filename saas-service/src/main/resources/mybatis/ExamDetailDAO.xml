@@ -1130,5 +1130,28 @@ selectList
             limit ${offset}, ${rows}
         </if>
     </select>
+    <select id="getAvgScoresForClass" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select d.className,e.examTime, ROUND(AVG(IF(d.yuWenScore='', null, d.yuWenScore)), 2) 语文,
+        ROUND(AVG(IF(d.shuXueScore='', null, d.shuXueScore)), 2) 数学,
+        ROUND(AVG(IF(d.yingYuScore='', null, d.yingYuScore)), 2) 英语,
+        ROUND(AVG(IF(d.wuLiScore='', null, d.wuLiScore)), 2) 物理,
+        ROUND(AVG(IF(d.huaXueScore='', null, d.huaXueScore)), 2) 化学,
+        ROUND(AVG(IF(d.shengWuScore='', null, d.shengWuScore)), 2) 生物,
+        ROUND(AVG(IF(d.zhengZhiScore='', null, d.zhengZhiScore)), 2) 政治,
+        ROUND(AVG(IF(d.diLiScore='', null, d.diLiScore)), 2) 地理,
+        ROUND(AVG(IF(d.liShiScore='', null, d.liShiScore)), 2) 历史,
+        ROUND(AVG(IF(d.commonScore='', null, d.commonScore)), 2) 通用技术
+        from saas_exam_detail d
+        LEFT JOIN saas_exam e on d.examId=e.id
+        WHERE d.className=#{className}
+        group by d.className,e.examTime
+        order by e.id desc
+    </select>
+    
+    <select id="getClassesNameByGrade" parameterType="java.util.HashMap" resultType="java.lang.String">
+        select t.class_name
+        from ${tableName} t
+        where t.class_grade= #{grade}
+    </select>
 </mapper>
 

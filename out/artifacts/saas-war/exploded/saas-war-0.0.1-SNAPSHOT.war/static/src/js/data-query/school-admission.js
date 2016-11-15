@@ -11,7 +11,7 @@ var SchoolAdmission = {
     init: function () {
         this.areaId = Common.cookie.getCookie('countyId');
         this.getProvince();
-        this.getYear();
+        this.getYear('-1');
         this.getRemoteDataDictList();
         this.params = {
             year: "",

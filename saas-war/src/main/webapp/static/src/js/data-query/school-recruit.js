@@ -11,7 +11,7 @@ var SchoolRecruit = {
         this.getProvince();
         this.getYear('');
         this.getRemoteDataDictList();
-        this.getBatchByYearAndArea('', '-1');
+        this.getBatchByYearAndArea('', '');
 
         this.params = {
             year: "",
@@ -100,7 +100,7 @@ var SchoolRecruit = {
             if (res.rtnCode == "0000000") {
                 var dataJson = res.bizData;
                 //总记录数 - 每页条数*第几页数 > 每页条数 [ 展示加载更多 ]
-                if (dataJson.records - that.params.rows * (that.params.page-1) > that.params.rows) {
+                if (dataJson.records - that.params.rows * (that.params.page - 1) > that.params.rows) {
                     $('#recruit-load-more').show();
                 }
                 var template = Handlebars.compile($('#school-admission-plan-tpl').html());
@@ -191,7 +191,7 @@ SchoolRecruit.init();
  * =========================================================
  * */
 var SchoolRecruitDetail = {
-    init:function(){
+    init: function () {
 
     }
 }

@@ -1,6 +1,15 @@
 $('#login-btn').on('click', function () {
-    var username = $('#user-name').val();
-    var pwd = $('#password').val();
+    var that = $(this);
+    var username = $.trim($('#user-name').val());
+    var pwd = $.trim($('#password').val());
+    if(username==''){
+        layer.tips('请输入用户名!', $('#user-name'));
+        return false;
+    }
+    if(pwd==''){
+        layer.tips('请输入密码!', $('#password'));
+        return false;
+    }
     Common.ajaxFun('/account/login/' + username + '/' + pwd + '.do', 'GET', {}, function (res) {
         if (res.rtnCode == "0000000") {
             var data = res.bizData;
@@ -16,7 +25,7 @@ $('#login-btn').on('click', function () {
             Common.cookie.setCookie('isInit', data.isInit);
             Common.cookie.setCookie('siderMenu', siderMenuJson);
             if(data.isInit==0){
-                window.location.href = '/index';
+                window.location.href = '/course-guide';
             }else{
                 window.location.href = '/seting-process'+data.isInit;
             }
