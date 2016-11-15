@@ -70,7 +70,6 @@
                         <div class="professional-detail">
                             <h3 class="sub-title">全部</h3>
                             <ul class="tab-detail-title" id="detail-title">
-                                <li class="active" pid="">全部</li>
                             </ul>
                             <script id="detail-title-tpl" type="text/x-handlebars-template">
                                 {{#each this}}
