@@ -77,8 +77,14 @@
                                 </dt>
                                 <dd id="year-list">
                                 </dd>
+                                <%--<script type="text/x-handlebars-template" id="year-list-tpl">--%>
+                                    <%--{{#each this}}{{{firstActive this}}}{{/each}}--%>
+                                <%--</script>--%>
                                 <script type="text/x-handlebars-template" id="year-list-tpl">
-                                    {{#each this}}{{{firstActive this}}}{{/each}}
+                                    <span class="active">全部</span>
+                                    {{#each this}}
+                                    <span>{{this}}</span>
+                                    {{/each}}
                                 </script>
                             </dl>
                         </div>
@@ -91,7 +97,7 @@
                                 <dd id="batch-list">
                                 </dd>
                                 <script type="text/x-handlebars-template" id="batch-list-tpl">
-                                    <span class="active" dictid="00">全部</span>
+                                    <span class="active" dictid="">全部</span>
                                     {{#each this}}
                                     <span dictid="{{dictid}}">{{name}}</span>
                                     {{/each}}
@@ -106,7 +112,7 @@
                                 </dt>
                                 <dd id="feature-list"></dd>
                                 <script type="text/x-handlebars-template" id="feature-list-tpl">
-                                    <span class="active" dictid="00">全部</span>
+                                    <span class="active" dictid="">全部</span>
                                     {{#each this}}
                                     <span dictid="{{dictId}}">{{name}}</span>
                                     {{/each}}
