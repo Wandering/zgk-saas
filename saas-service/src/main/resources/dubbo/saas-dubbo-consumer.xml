@@ -18,4 +18,5 @@
     <dubbo:reference id="imajoredApi" interface="cn.thinkjoy.gk.api.IMajoredApi" check="false" retries="0" timeout="600000" />
     <!--<dubbo:reference id="gkAdmissionLineService" interface="cn.thinkjoy.zgk.remote.IGkAdmissionLineService" check="false" retries="0" timeout="60000"/>-->
     <dubbo:reference id="gkProfessionalService" interface="cn.thinkjoy.zgk.remote.IGkProfessionalService" check="false" timeout="60000"/>
+    <dubbo:reference id="igk360UniversityApi" interface="cn.thinkjoy.zgk.remote.IUniversityService" check="false" timeout="60000"/>
 </beans>
