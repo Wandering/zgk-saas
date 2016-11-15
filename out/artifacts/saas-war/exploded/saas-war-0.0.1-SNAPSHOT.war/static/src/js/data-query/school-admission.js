@@ -97,7 +97,7 @@ var SchoolAdmission = {
             if (res.rtnCode == "0000000") {
                 var dataJson = res.bizData;
                 //总记录数 - 每页条数*第几页数 > 每页条数 [ 展示加载更多 ]
-                if (dataJson.records - that.params.rows * that.params.page > that.params.rows) {
+                if (dataJson.records - that.params.rows * (that.params.page-1) > that.params.rows) {
                     $('#admission-load-more').show();
                 }
                 var template = Handlebars.compile($('#school-admission-plan-tpl').html());
