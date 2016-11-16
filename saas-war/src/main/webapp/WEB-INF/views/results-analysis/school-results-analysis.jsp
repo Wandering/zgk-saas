@@ -98,8 +98,8 @@
                         <form class="form-horizontal" role="form">
                             <div class="form-group">
                                 <div class="col-sm-3">
-                                    <select class="form-control" id="">
-                                        <option value="">选择进步名词</option>
+                                    <select class="form-control" id="ranking-sel">
+                                        <option value="">选择进步名次</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-3">

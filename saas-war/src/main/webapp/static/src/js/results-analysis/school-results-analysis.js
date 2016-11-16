@@ -15,6 +15,8 @@ SchoolResultsAnalysis.prototype = {
             if (res.rtnCode == "0000000") {
                 var myTemplate = Handlebars.compile($("#grade-template").html());
                 $('#grade-body').html(myTemplate(res));
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -27,6 +29,8 @@ SchoolResultsAnalysis.prototype = {
             var radioV = $('input[name="results-radio"]:checked').val();
             that.selSortOnline(radioV);
             that.coreStudent(radioV);
+            that.getStepList(radioV,10,10);
+            that.getMostAdvancedNumbers(radioV,10,20);
         });
 
 
@@ -45,9 +49,11 @@ SchoolResultsAnalysis.prototype = {
                 $('.batchOne').text(res.bizData.batchOne);
                 $('.batchTwo').text(res.bizData.batchTwo);
                 $('.batchThr').text(res.bizData.batchThr);
+            }else{
+                layer.msg(res.msg)
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         });
     },
     selSortOnline: function (grade) {
@@ -60,16 +66,21 @@ SchoolResultsAnalysis.prototype = {
                 'orderBy': orderBy
             }, function (res) {
                 console.log(res)
-                var myTemplate = Handlebars.compile($("#sort-template").html());
-                $('#sort-tbody').html(myTemplate(res));
-                var sortTheadTemplate = Handlebars.compile($("#sort-thead-template").html());
-                $('#sort-thead').html(sortTheadTemplate(res));
+                if (res.rtnCode == "0000000") {
+                    var myTemplate = Handlebars.compile($("#sort-template").html());
+                    $('#sort-tbody').html(myTemplate(res));
+                    var sortTheadTemplate = Handlebars.compile($("#sort-thead-template").html());
+                    $('#sort-thead').html(sortTheadTemplate(res));
+                }else{
+                    layer.msg(res.msg)
+                }
             }, function (res) {
-                alert("出错了");
+                layer.msg(res.msg)
             });
         });
     },
     coreStudent: function (grade) { // 重点关注学生
+        $('#core-thead,#core-tbody').html('');
         var that = this;
         Common.ajaxFun('/scoreAnalyse/getMostAttentionNumber', 'GET', {
             'tnId': tnId,
@@ -131,9 +142,11 @@ SchoolResultsAnalysis.prototype = {
                     });
 
                 });
+            }else{
+                layer.msg(res.msg)
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         });
     },
     // 进步较大学生
@@ -169,7 +182,7 @@ SchoolResultsAnalysis.prototype = {
                 that.subjectChart(subjectItemData,subjectClassData);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         });
     },
     classChart:function(itemData,classData){
@@ -246,7 +259,7 @@ SchoolResultsAnalysis.prototype = {
     },
     // 进步较大学生页面列表
     getMostAdvancedNumbers:function(grade,stepStart,stepEnd){
-        Common.ajaxFun('/scoreAnalyse/getMostAttentionNumberChart', 'GET', {
+        Common.ajaxFun('/scoreAnalyse/getMostAdvancedNumbers', 'GET', {
             'tnId': tnId,
             'grade': grade,
             'stepStart': stepStart,
@@ -254,9 +267,28 @@ SchoolResultsAnalysis.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
 
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
+        });
+    },
+    // 进步名次下拉列表
+    getStepList:function(grade,stepStart,stepLength){
+        Common.ajaxFun('/scoreAnalyse/getStepList', 'GET', {
+            'tnId': tnId,
+            'grade': grade,
+            'stepStart': stepStart,
+            'stepLength': stepLength
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+
+            }else{
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
         });
     },
     progressStudent:function(){
@@ -270,7 +302,7 @@ SchoolResultsAnalysis.prototype = {
         //        $('#progress-tbody').html(myTemplate(res));
         //    }
         //}, function (res) {
-        //    alert("出错了");
+        //    layer.msg(res.msg);
         //});
     }
 
