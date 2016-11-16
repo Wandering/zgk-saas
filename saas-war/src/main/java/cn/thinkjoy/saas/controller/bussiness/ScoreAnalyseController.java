@@ -82,7 +82,7 @@ public class ScoreAnalyseController
     public void downloadModel(
         @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
-        @RequestParam(value = "mock", required = true, defaultValue = "false") Boolean mock,
+        @RequestParam(value = "mock", required = false, defaultValue = "false") Boolean mock,
         HttpServletResponse response)
         throws IOException
     {
@@ -299,9 +299,13 @@ public class ScoreAnalyseController
 
     @RequestMapping("/listExam")
     @ResponseBody
-    public List<Exam> listExam(@RequestParam(value = "grade", required = true) String grade)
+    public List<Exam> listExam(@RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade)
     {
-        return examService.findList("grade", grade, "createDate", SqlOrderEnum.DESC);
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
+        paramMap.put("grade", grade);
+        return examService.like(paramMap, "createDate", SqlOrderEnum.DESC);
     }
 
     @RequestMapping("/deleteExam")

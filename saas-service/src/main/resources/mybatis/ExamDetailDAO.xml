@@ -581,6 +581,9 @@ selectList
             <if test="condition.grade!=null">
                 ${condition.groupOp}   ${condition.grade.field}  ${condition.grade.op}  #{condition.grade.data}
             </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   ${condition.tnId.field}  ${condition.tnId.op}  #{condition.tnId.data}
+            </if>
     </where>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
