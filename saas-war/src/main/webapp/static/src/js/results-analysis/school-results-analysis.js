@@ -126,7 +126,7 @@ SchoolResultsAnalysis.prototype = {
                         content: $('#batch-main-layer').html(),
                         success: function (layero, index) {
                             $('#batch-main-layer').remove();
-                            that.getMostAdvancedNumbers(grade,batchData);
+                            that.getMostAdvancedNumbersChart(grade,batchData);
                         }
                     });
 
@@ -137,9 +137,10 @@ SchoolResultsAnalysis.prototype = {
         });
     },
     // 进步较大学生
-    getMostAdvancedNumbers:function(grade,batchName){
+    getMostAdvancedNumbersChart:function(grade,batchName){
         var that = this;
         Common.ajaxFun('/scoreAnalyse/getMostAttentionNumberChart', 'GET', {
+            'tnId': tnId,
             'batchName': batchName,
             'grade': grade
         }, function (res) {
@@ -242,6 +243,21 @@ SchoolResultsAnalysis.prototype = {
             ]
         };
         subjectChart.setOption(subjectOption);
+    },
+    // 进步较大学生页面列表
+    getMostAdvancedNumbers:function(grade,stepStart,stepEnd){
+        Common.ajaxFun('/scoreAnalyse/getMostAttentionNumberChart', 'GET', {
+            'tnId': tnId,
+            'grade': grade,
+            'stepStart': stepStart,
+            'stepEnd': stepEnd
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+
+            }
+        }, function (res) {
+            alert("出错了");
+        });
     },
     progressStudent:function(){
         //Common.ajaxFun('/scoreAnalyse/getMostAttentionNumber', 'GET', {

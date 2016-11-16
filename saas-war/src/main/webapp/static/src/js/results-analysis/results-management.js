@@ -23,6 +23,7 @@ ResultsManagementFun.prototype = {
     },
     getResultsList: function (grade) {
         Common.ajaxFun('/scoreAnalyse/listExam', 'GET', {
+            'tnId': tnId,
             'grade': grade
         }, function (res) {
             console.log(res)
@@ -35,7 +36,7 @@ ResultsManagementFun.prototype = {
             alert("出错了");
         });
     },
-    uploadResults: function (id, examName, examTime, uploadFilePath) {
+    uploadResults: function (grade,id, examName, examTime, uploadFilePath) {
         var contentHtml = [];
         contentHtml.push('<div class="form-horizontal upload-layer">');
         contentHtml.push('<div class="form-group">');
@@ -58,7 +59,7 @@ ResultsManagementFun.prototype = {
         }
         contentHtml.push('</div>');
         contentHtml.push('</div>');
-        if (!id) {
+        if (!id && grade) {
             contentHtml.push('<div class="form-group add-results">');
             contentHtml.push('<label class="col-sm-3 control-label no-padding-right">添加成绩 </label>');
             contentHtml.push('<div class="col-sm-9">');
@@ -66,7 +67,7 @@ ResultsManagementFun.prototype = {
             contentHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
             contentHtml.push('<button class="btn btn-pink" id="btn-import">添加</button>');
             contentHtml.push('</span>');
-            contentHtml.push('<p><a target="_blank" href="/scoreAnalyse/downloadModel">请先导出Excel模板,进行填写</a></p>');
+            contentHtml.push('<p><a target="_blank" href="/scoreAnalyse/downloadModel?tnId='+ tnId +'&grade='+ grade +'&mock=true">请先导出Excel模板,进行填写</a></p>');
             contentHtml.push('<p>温馨提示:上传与模板不一致的成绩单,系统无法识别</p>');
             contentHtml.push('</div>');
             contentHtml.push('</div>');
@@ -331,6 +332,7 @@ $(function () {
     // 选择年级
     $('#grade-body').find('input[name="results-radio"]').click(function () {
         var radioV = $(this).val();
+        $('#uploadResultsBtn').attr('grade',radioV);
         ResultsManagementIns.getResultsList(radioV);
     });
     $('#grade-body').find('input[name="results-radio"]:first').click();
@@ -338,7 +340,8 @@ $(function () {
 
     //上传成绩
     $('body').on('click', '#uploadResultsBtn', function () {
-        ResultsManagementIns.uploadResults();
+        var grade = $(this).attr('grade');
+        ResultsManagementIns.uploadResults(grade);
     });
 
     // 保存
@@ -392,6 +395,7 @@ $(function () {
             });
         } else {
             Common.ajaxFun('/scoreAnalyse/addExam.do', 'GET', {
+                'tnId': tnId,
                 'examName': examName,
                 'examTime': examDate,
                 'grade': radioV,
@@ -416,7 +420,7 @@ $(function () {
             return false;
         }
         if (checkboxLen > 1) {
-            layer.tips('删除只能选择一项', $(this));
+            layer.tips('修改只能选择一项', $(this));
             return false;
         }
         var resultsChecked = $('#results-tbody input:checked');
