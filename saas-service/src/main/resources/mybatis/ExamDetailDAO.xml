@@ -1054,9 +1054,9 @@ selectList
     <select id="getLastExamIdByGrade" parameterType="java.util.HashMap" resultType="java.lang.String">
         select exam.id
         from saas_exam exam
-        where exam.grade=${grade}
+        where exam.grade=#{grade}
         order by exam.examTime desc
-        limit 0,${limitNumber}
+        limit 0,#{limitNumber}
     </select>
     
     <select id="getAvgScoresByExamId" parameterType="java.util.HashMap" resultType="java.util.HashMap">

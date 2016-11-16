@@ -62,7 +62,7 @@
                                 <dd id="province-list">
                                 </dd>
                                 <script type="text/x-handlebars-template" id="province-list-tpl">
-                                    <span class="active" provinceId="-1">全部</span>
+                                    <span class="active" provinceId="">全部</span>
                                     {{#each this}}
                                     <span code="{{code}}" provinceId="{{id}}">{{name}}</span>
                                     {{/each}}

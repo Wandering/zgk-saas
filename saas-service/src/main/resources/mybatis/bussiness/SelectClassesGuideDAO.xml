@@ -8,7 +8,9 @@
         from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
           INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
           INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+        <if test="subject!=null">
         where zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
+        </if>
     </select>
 
     <!-- 输入院校名 -->
@@ -18,7 +20,10 @@
           INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
           INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
           left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=tmp.batch
-        where zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%') and tmp.batch=#{batch} and uu.name like concat('%',#{universityName},'%')
+        where zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%') and tmp.batch=#{batch}
+        <if test="universityName!=null">
+         and uu.name like concat('%',#{universityName},'%')
+        </if>
         order by if(isnull(uu.rank),10000,uu.rank) asc
         limit ${offset}, ${rows}
     </select>
