@@ -451,11 +451,13 @@ public class ScoreAnalyseController
 
     @RequestMapping("/getOverLineNumberDetail")
     @ResponseBody
-    public List<Map<String, Object>> getOverLineNumberDetail(@RequestParam(value = "tnId", required = true) String tnId,
+    public List<Map<String, Object>> getOverLineNumberDetail(
+        @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "orderBy", required = true) final String orderBy)
     {
         Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
         paramMap.put("grade", grade);
         paramMap.put("limitNumber", 1);
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
@@ -747,10 +749,11 @@ public class ScoreAnalyseController
     @RequestMapping("/getMostAttentionNumberChart")
     @ResponseBody
     public Map<String, Object> getMostAttentionNumberChart(
+        @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "batchName", required = true) String batchName)
     {
-        String lastExamId = getLastExamId(grade);
+        String lastExamId = getLastExamId(grade, tnId);
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("examId", lastExamId);
         paramMap.put("batchName", batchName);
@@ -763,6 +766,7 @@ public class ScoreAnalyseController
     @RequestMapping("/getMostAttentionPage")
     @ResponseBody
     public Map<String, Object> getMostAttentionPage(
+        @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "batchName", required = true) String batchName,
         @RequestParam(value = "className", required = false) String className,
@@ -770,7 +774,7 @@ public class ScoreAnalyseController
         @RequestParam(value = "offset", required = true) int offset,
         @RequestParam(value = "rows", required = true) int rows)
     {
-        String lastExamId = getLastExamId(grade);
+        String lastExamId = getLastExamId(grade, tnId);
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("examId", lastExamId);
         paramMap.put("batchName", batchName);
@@ -792,10 +796,11 @@ public class ScoreAnalyseController
         return resultMap;
     }
 
-    private String getLastExamId(String grade)
+    private String getLastExamId(String grade, String tnId)
     {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("grade", grade);
+        paramMap.put("tnId", tnId);
         paramMap.put("limitNumber", 3);
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
         if(null == examIds || examIds.size() == 0)
@@ -808,6 +813,7 @@ public class ScoreAnalyseController
     @RequestMapping("/getMostAdvancedNumbers")
     @ResponseBody
     public List<Map<String, Object>> getMostAdvancedNumbers(
+        @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "stepStart", required = true) Integer stepStart,
         @RequestParam(value = "stepEnd", required = true) Integer stepEnd)
@@ -815,6 +821,7 @@ public class ScoreAnalyseController
         List<Map<String, Object>> resultList = new ArrayList<>();
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("grade", grade);
+        paramMap.put("tnId", tnId);
         paramMap.put("limitNumber", 3);
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
         if(null == examIds || examIds.size() == 0)
@@ -908,6 +915,32 @@ public class ScoreAnalyseController
             }
         });
         return resultList;
+    }
+
+    @RequestMapping("/getStepList")
+    @ResponseBody
+    public List<Map<String, Integer>> getStepList(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "startStep", required = true) Integer startStep,
+        @RequestParam(value = "stepLength", required = true) Integer stepLength)
+    {
+        List<Map<String, Integer>> stepList = new ArrayList<>();
+        List<Map<String, Object>> list =  getMostAdvancedNumbers(tnId, grade, 0, Integer.MAX_VALUE);
+        if(list.size() > 0)
+        {
+            int maxStep = Integer.parseInt(list.get(list.size()).get("advancedNumber") + "");
+            int endStep = startStep;
+            while (endStep < maxStep)
+            {
+                Map<String, Integer> paramMap = new LinkedHashMap<>();
+                paramMap.put("startStep", startStep);
+                endStep = Math.min(startStep + stepLength, maxStep);
+                paramMap.put("endStep", endStep);
+                stepList.add(paramMap);
+            }
+        }
+        return stepList;
     }
 
     @RequestMapping("/getClassesNameByGrade")
