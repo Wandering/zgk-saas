@@ -41,7 +41,7 @@ var SpecialtyInfo = {
         var that = this;
         $(document).on('click', '.tab-li li', function () {
             $(this).addClass('active').siblings().removeClass('active');
-            $('#sub-majored-category').attr('type',$(this).attr('type'));
+            $('#sub-majored-category').attr('type', $(this).attr('type'));
             that.getMajoredCategory($(this).attr('type'));
         });
         $(document).on('click', '#majored-category span', function () {
@@ -65,21 +65,38 @@ var SpecialtyDetail = {
         this.addEvent();
     },
     //获取专业详情
-    getMajoredInfoById: function () {
-        //Common.ajaxFun('/data/getMajoredInfoById.do', 'GET', {
-        //    majoredId:SpecialtyDetail.majoredId,
-        //    majorType:SpecialtyDetail.majorType,
-        //}, function (res) {
-            var res = {"bizData":{"degreeOffered":"文学学士","id":"50101","majorCode":"50101","majorIntroduce":"<strong class=\"cat\">主要实践教学环节</strong> \n<p>包括教学实习、论文写作等，一般安排8周左右。　　</p> \n<strong class=\"cat\">培养目标</strong> \n<p>本专业培养具备文艺理论素养和系统的汉语言文学知识，能在新闻文艺出版部门、高校、科研机构和机关企事业单位从事文学评论、汉语言文学教学与研究工作，以及文化、宣传方面的实际工作的汉语言文学高级专门人才。</p> \n<strong class=\"cat\">专业培养要求</strong> \n<p>本专业学生主要学习汉语和中国文学方面的基本知识，受到有关理论、发展历史、研究现状等方面的系统教育和业务能力的基本训练。</p> \n<strong class=\"cat\">毕业生具备的专业知识与能力</strong> \n<p>1．掌握马克思主义的基本原理和关于语言、文学的基本理论；2．掌握本专业的基础知识以及新闻、历史、哲学、艺术等学科的相关知识；3．具有文学修养和鉴赏能力以及较强的写作能力；4．了解我国关于语言文字和文学艺术的方针、政策和法规；5．了解本学科的前沿成就和发展前景；6．能阅读古典文献，掌握文献检索、资料查询的基本方法，具有一定的科学研究和实际工作能力。</p>","majorName":"汉语言文学","offerCourses":"语言学概论、古代汉语、现代汉语、文学概论、中国古代文学史、中国现当代文学史、马克思主义文论、中国古典文献学、汉语史、史学等。","schoolingDuration":"四年"},"rtnCode":"0000000","ts":1479263013951};
+    getMajoredInfoByCode: function () {
+        Common.ajaxFun('/data/getMajoredInfoByCode.do', 'GET', {
+            //majoredCode:'010103K'
+            majoredCode: SpecialtyDetail.majoredId
+        }, function (res) {
             if (res.rtnCode == "0000000") {
                 var template = Handlebars.compile($('#detail-content-tpl').html());
                 $('#detail-content').html(template(res.bizData));
-                console.info('aaaa',template(res.bizData))
+                if(res.bizData.fmRatio){
+                    var malePercent = (res.bizData.fmRatio).split('-')[0];
+                    var femalePercent = (res.bizData.fmRatio).split('-')[1];
+
+                    $(".sex-bar .male-bar").css({
+                        'width': '-webkit-calc(100% - ' + femalePercent + ' - 2px)',
+                        'width': '-moz-calc(100% - ' + femalePercent + ' - 2px)',
+                        'width': 'calc(100% - ' + femalePercent + ' - 2px)'
+                    }).html(malePercent);
+                    $(".sex-bar .female-bar").css({
+                        'width': '-webkit-calc(100% - ' + malePercent + ' - 2px)',
+                        'width': '-moz-calc(100% - ' + malePercent + ' - 2px)',
+                        'width': 'calc(100% - ' + malePercent + ' - 2px)'
+                    }).html(femalePercent);
+                    $('.male-bar').text(femalePercent);
+                    $('.female-bar').text(malePercent);
+                }
             }
-        //});
+        }, function () {
+        }, 'true');
     },
     //获取专业开设院校
     getMajorOpenUniversityList: function () {
+        var that = this;
         Common.ajaxFun('/data/getMajorOpenUniversityList.do', 'GET', {
             majoredId: SpecialtyDetail.majoredId,
             majorType: SpecialtyDetail.majorType,
@@ -87,27 +104,66 @@ var SpecialtyDetail = {
             rows: "10"
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                console.info(res);
+                that.renderMajorOpenUniversityList(res.bizData);
             }
         });
+    },
+    renderMajorOpenUniversityList:function(data){
+        var that = this;
+        var tpl = '';
+        $.each(data.universityList,function(i,v){
+            var rank = '',
+                majorRank = '';
+            if(v.rank){
+                rank = '<i class="icon-flags"></i>全国排名：<span class="national-rank">'+ v.rank+'</span>'
+            }
+            if(v.majorRank){
+                rank = '专业排名：<span class="national-rank">'+ v.majorRank+'</span>'
+            }
+            tpl += '' + '<li class="school-list">' +
+                '<img src="http://123.59.12.77:8080/'+ v.photo_url+'"' +
+                'class="school-logo">' +
+                '<div class="top">' +
+                '<span class="school-name" sid="'+ v.id+'">'+ v.name+'</span>'+rank+majorRank
+                '</div>' +
+                '<div class="middle">' +
+                '<div id="property">' +
+                '<span class="type-985">985</span> <span class="type-211">211</span>' +
+                '<span class="type-yan">研</span> <span class="type-guo">国</span>' +
+                '<span class="type-zi">自</span>' +
+                '</div>' +
+                '</div>' +
+                '<div class="bottom">' +
+                '<span class="province">'+ v.province+'</span>' +
+                '<b>隶属：</b><span class="belong">'+ v.subjection+'</span>' +
+                '<b>院校类型：</b><span class="school-type">'+ v.typeName+'</span>' +
+                '<a target="_blank" href="'+ v.url+'" class="enter-site">' +
+                '<span>进入网站</span>' +
+                '</a>' +
+                '</div>' +
+                '</li>';
+        })
+        $('#open-school').append(tpl);
     },
     //获取专业就业方向
     getJobOrientation: function () {
         Common.ajaxFun('/data/getJobOrientation.do', 'GET', {'majoredId': SpecialtyDetail.majoredId}, function (res) {
-            var res = {"bizData": {"employmentRate": "80%", "majorId": 510401}, "rtnCode": "0000000", "ts": 1479262103593};
             if (res.rtnCode == "0000000") {
-                console.info(res);
+                if(res.bizData.employmentRate){
+                    $('#employmentRate').html(res.bizData.employmentRate)
+                }else{
+                    $('#employmentRate').html('暂无');
+                }
             }
         });
     },
     addEvent: function () {
         var that = this;
-        //$(document).on('click', '#sub-majored-category span', function () {
+        $(document).on('click', '#sub-majored-category span', function () {
             that.majorType = $('#sub-majored-category').attr('type')
             that.majoredId = $(this).attr('b-id');
             //majorType:1本科、2、专科
-            that.getMajoredInfoById()
-            that.getMajorOpenUniversityList();
+            that.getMajoredInfoByCode()
             that.getJobOrientation();
             layer.full(
                 layer.open({
@@ -118,7 +174,19 @@ var SpecialtyDetail = {
                     maxmin: false
                 })
             )
-        //})
+            $('#detail-content').remove(); //万年坑 ==========  一定要清楚
+        });
+        $(document).on('click', '.tab-detail-title .detail-tab', function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            var index = parseInt($(this).index());
+            $('.sub-content').eq(index).removeClass('dh').siblings().addClass('dh');
+            if(index === 1){
+                that.getMajorOpenUniversityList();
+            }else if(index === 2){
+                that.getJobOrientation();
+            }
+        });
+
     }
 }
 SpecialtyDetail.init();

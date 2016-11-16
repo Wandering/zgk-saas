@@ -69,14 +69,26 @@
                                     </li>
                                     <li>
                                         <input type="radio" name="subject-analysis" id="subject-unlimited" />
-                                        <label for="subject-unlimited">不限</label>
+                                        <label for="subject-unlimited">不限学科</label>
                                     </li>
                                 </ul>
                             </div>
-                            <div class="subject-require"><span class="require-num">234所院校的678个专业对物理有要求</span><a href="javascript: void(0);" id='university-detail' class="red-link">查看院校详情</a></div>
+                            <div class="subject-require"><span class="require-num">0所院校的0个专业对物理有要求</span><a href="javascript: void(0);" subject="00" id='university-detail' class="red-link">查看院校详情</a></div>
+                            <script id="university-detail-data-template" type="text/x-handlebars-template">
+                                {{#each this}}
+                                <tr>
+                                    <td>1</td>
+                                    <td>北京大学（985）</td>
+                                    <td>法学、国际金融</td>
+                                    <td>本科一批</td>
+                                    <td>23人</td>
+                                    <td>物理</td>
+                                </tr>
+                                {{/each}}
+                            </script>
                             <ul class="plan-to-enroll">
-                                <li>985院校招生计划人数：876人</li>
-                                <li>211院校招生计划人数：876人</li>
+                                <%--<li><!--985院校招生计划人数：876人--></li>--%>
+                                <%--<li><!--211院校招生计划人数：876人--></li>--%>
                             </ul>
                             <div class="plan-analysis">
                                 <div class="batch-analysis">
