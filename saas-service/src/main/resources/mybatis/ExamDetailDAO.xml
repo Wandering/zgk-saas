@@ -581,6 +581,9 @@ selectList
             <if test="condition.grade!=null">
                 ${condition.groupOp}   ${condition.grade.field}  ${condition.grade.op}  #{condition.grade.data}
             </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   ${condition.tnId.field}  ${condition.tnId.op}  #{condition.tnId.data}
+            </if>
     </where>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -1054,9 +1057,9 @@ selectList
     <select id="getLastExamIdByGrade" parameterType="java.util.HashMap" resultType="java.lang.String">
         select exam.id
         from saas_exam exam
-        where exam.grade=${grade}
+        where exam.grade=#{grade} and exam.tnId=#{tnId}
         order by exam.examTime desc
-        limit 0,${limitNumber}
+        limit 0,#{limitNumber}
     </select>
     
     <select id="getAvgScoresByExamId" parameterType="java.util.HashMap" resultType="java.util.HashMap">

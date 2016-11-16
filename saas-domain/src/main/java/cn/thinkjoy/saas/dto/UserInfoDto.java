@@ -68,6 +68,18 @@ public class UserInfoDto implements Serializable {
      */
     private List<MeunDto> meuns;
 
+    private String tnId;
+
+    public String getTnId()
+    {
+        return tnId;
+    }
+
+    public void setTnId(String tnId)
+    {
+        this.tnId = tnId;
+    }
+
     public String getTnName() {
         return tnName;
     }

@@ -31,7 +31,7 @@ ClassSettings.prototype = {
         $.each(result, function (i, k) {
             that.ids.push(k.configKey);
             classHtml.push('<tr>');
-            classHtml.push('<td class="center"><label><input type="checkbox" class="ace" /><span class="lbl"></span></label></td>');
+            classHtml.push('<td class="center"><label><input type="checkbox" columnid="' + k.id + '" class="ace" /><span class="lbl"></span></label></td>');
             classHtml.push('<td class="center index" indexid="' + k.configOrder + '">' + k.configKey + '</td>');
             classHtml.push('<td class="center">' + k.name + '</td>');
             classHtml.push('<td class="center"><a href="javascript: void(0);" id="' + k.id + '" class="remove-link remove-column">移除</a></td>');
@@ -42,14 +42,50 @@ ClassSettings.prototype = {
     removeColumn: function (isBatch, ids) {//isBatch是否是批量删除(false: 单个删除; true: 批量删除, 包括单个删除)
         var that = this;
         if (isBatch) {
-
+            var checkedLen = $("#column-change-list input[type='checkbox']:checked").size();
+            if(checkedLen == "0"){
+                layer.tips('至少选择一项', $('#delColumn-btn'));
+                return false;
+            }
+            var selItem = [];
+            $('#column-change-list').find('input[type="checkbox"]').each(function (i, v) {
+                if ($(this).is(':checked') == true) {
+                    selItem.push($(this).attr('columnid'));
+                }
+            });
+            selItem = selItem.join('-');
+            var ids = selItem;
+            layer.confirm('确定删除?', {
+                btn: ['确定', '关闭'] //按钮
+            }, function () {
+                Common.ajaxFun('/manage/tenant/remove/' + that.type + '/' + tnId + '/' + ids + '.do', 'POST', {}, function (res) {
+                    if (res.rtnCode == "0000000") {
+                        if(res.bizData.result="SUCCESS"){
+                            $('#column-change-list').html('');
+                            that.getClass();
+                            $('#checkAll').prop('checked', false);
+                            layer.msg('删除成功', {time: 1000});
+                            var classManagement = new parent.ClassManagement();
+                            classManagement.init();
+                            //parent.layer.close(index);
+                        }
+                    }
+                }, function (res) {
+                    alert("出错了");
+                });
+            }, function () {
+                layer.closeAll();
+            });
         } else {
             //删除租户表头
             Common.ajaxFun('/manage/tenant/remove/' + that.type + '/' + tnId + '/' + ids +'.do', 'POST', {}, function (res) {
                 if (res.rtnCode == "0000000") {
                     if (res.bizData.result == "SUCCESS") {
                         layer.msg('删除成功', {time: 1000});
-                        that.getClass();
+                        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                        var classManagement = new parent.ClassManagement();
+                        classManagement.init();
+                        parent.layer.close(index);
                     }else{
                         layer.msg(res.bizData.result);
                     }
@@ -180,7 +216,7 @@ ColumnSettings.prototype = {
     },
     changeColumnEvent: function () {
         var that = this;
-        alert('haha' + ', idCount: ' + that.idCount + ', ids: ' + that.ids.join('-'));
+        //alert('haha' + ', idCount: ' + that.idCount + ', ids: ' + that.ids.join('-'));
         Common.ajaxFun('/manage/import/' + that.type + '/' + tnId + '.do?ids=' + that.ids.join('-'), 'POST', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 chooseWindowBox != null ? layer.close(chooseWindowBox) : layer.msg('窗口已关闭', {time: 1000});
@@ -197,8 +233,10 @@ ColumnSettings.prototype = {
 
 $(document).on('click', '.remove-column', function () {
     var ids = $(this).attr('id');
-    var classSettings = new ClassSettings();
     classSettings.removeColumn(false, ids);
+});
+$(document).on('click', '#delColumn-btn', function () {
+    classSettings.removeColumn(true, '');
 });
 
 //(选择添加字段对话框内的)确定选择按钮

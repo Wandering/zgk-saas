@@ -6,6 +6,7 @@
     <!-- 根据用户账号,密码查询用户信息 -->
     <select id="queryUserInfoByAccount" parameterType="map" resultType="cn.thinkjoy.saas.dto.UserInfoDto">
         SELECT
+            t0.tn_id AS tnId,
             t1.tn_name AS tnName,
             t1.tn_addr AS tnAddr,
             t1.is_init AS isInit,
