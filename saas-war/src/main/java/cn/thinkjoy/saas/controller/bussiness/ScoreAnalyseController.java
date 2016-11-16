@@ -58,6 +58,7 @@ public class ScoreAnalyseController
     @Autowired
     IExamStuWeakCourseService examStuWeakCourseService;
 
+    private Set<Integer> advancedScoreSet;
     private static List<String> headerList = new ArrayList<>();
 
     static
@@ -855,6 +856,7 @@ public class ScoreAnalyseController
                 }
             }
         }
+        advancedScoreSet = new TreeSet<>();
         Map<String, List<Map<String, Object>>> resultMap  = new HashMap<>();
         for (Map.Entry<String, List<Integer>> entry: examScoreRatioMap.entrySet())
         {
@@ -880,7 +882,7 @@ public class ScoreAnalyseController
                 advancedScore = new BigDecimal(scoreList.get(0)).subtract(new BigDecimal(scoreList.get(2))).
                     divide(new BigDecimal(2), 0, RoundingMode.HALF_DOWN).intValue();
             }
-            if(advancedScore >= stepStart && advancedScore < stepEnd)
+            if(advancedScore >= stepStart && advancedScore <= stepEnd)
             {
                 List<Map<String, Object>> dataList = resultMap.get(className);
                 if(null == dataList)
@@ -894,6 +896,7 @@ public class ScoreAnalyseController
                 params.put("advancedScore", advancedScore);
                 params.put("historyScores", scoreList.toString());
                 dataList.add(params);
+                advancedScoreSet.add(advancedScore);
             }
         }
         for (Map.Entry<String, List<Map<String, Object>>> en: resultMap.entrySet())
@@ -922,21 +925,30 @@ public class ScoreAnalyseController
     public List<Map<String, Integer>> getStepList(
         @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
-        @RequestParam(value = "startStep", required = true) Integer startStep,
+        @RequestParam(value = "stepStart", required = true) Integer stepStart,
         @RequestParam(value = "stepLength", required = true) Integer stepLength)
     {
+        getMostAdvancedNumbers(tnId, grade, stepStart, Integer.MAX_VALUE);
         List<Map<String, Integer>> stepList = new ArrayList<>();
-        List<Map<String, Object>> list =  getMostAdvancedNumbers(tnId, grade, 0, Integer.MAX_VALUE);
-        if(list.size() > 0)
+        if(advancedScoreSet.size() > 0)
         {
-            int maxStep = Integer.parseInt(list.get(list.size()).get("advancedNumber") + "");
-            int endStep = startStep;
+            Iterator<Integer> it = advancedScoreSet.iterator();
+            int maxStep = 0 ;
+            while (it.hasNext())
+            {
+                int step = it.next();
+                if(step > maxStep)
+                    maxStep=step;
+            }
+            int endStep = stepStart;
             while (endStep < maxStep)
             {
+                int start = stepStart;
+                stepStart = stepStart +stepLength;
                 Map<String, Integer> paramMap = new LinkedHashMap<>();
-                paramMap.put("startStep", startStep);
-                endStep = Math.min(startStep + stepLength, maxStep);
-                paramMap.put("endStep", endStep);
+                paramMap.put("stepStart", start);
+                endStep = Math.min(stepStart - 1, maxStep) ;
+                paramMap.put("stepEnd", endStep);
                 stepList.add(paramMap);
             }
         }
