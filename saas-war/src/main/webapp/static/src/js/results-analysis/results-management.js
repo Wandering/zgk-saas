@@ -16,6 +16,8 @@ ResultsManagementFun.prototype = {
             if (res.rtnCode == "0000000") {
                 var myTemplate = Handlebars.compile($("#grade-template").html());
                 $('#grade-body').html(myTemplate(res));
+            }else{
+                layer.msg(res.msg)
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -27,11 +29,15 @@ ResultsManagementFun.prototype = {
             'grade': grade
         }, function (res) {
             console.log(res)
-            var myTemplate = Handlebars.compile($("#results-template").html());
-            Handlebars.registerHelper('excel', function (url) {
-                return Common.getPageName(url);
-            });
-            $('#results-tbody').html(myTemplate(res));
+            if (res.rtnCode == "0000000") {
+                var myTemplate = Handlebars.compile($("#results-template").html());
+                Handlebars.registerHelper('excel', function (url) {
+                    return Common.getPageName(url);
+                });
+                $('#results-tbody').html(myTemplate(res));
+            }else{
+                layer.msg(res.msg)
+            }
         }, function (res) {
             alert("出错了");
         });
@@ -112,16 +118,20 @@ ResultsManagementFun.prototype = {
             'offset': Pn,
             'rows': rows
         }, function (res) {
-            $(".tcdPageCode").attr('count', parseInt(Math.ceil(res.bizData.count / rows)));
-            var myTemplate = Handlebars.compile($("body #details-template").html());
-            layer.close();
-            $('body #details-tbody').html(myTemplate(res));
-            $('body #details-download-btn').attr('href', uploadfilepath);
-            $('body #details-modify-btn').attr({
-                'grade': grade,
-                'examId': id,
-                'uploadfilepath': uploadfilepath
-            });
+            if (res.rtnCode == "0000000") {
+                $(".tcdPageCode").attr('count', parseInt(Math.ceil(res.bizData.count / rows)));
+                var myTemplate = Handlebars.compile($("body #details-template").html());
+                layer.close();
+                $('body #details-tbody').html(myTemplate(res));
+                $('body #details-download-btn').attr('href', uploadfilepath);
+                $('body #details-modify-btn').attr({
+                    'grade': grade,
+                    'examId': id,
+                    'uploadfilepath': uploadfilepath
+                });
+            }else{
+                layer.msg(res.msg)
+            }
         }, function (res) {
             alert("出错了");
         }, 'true');
@@ -264,6 +274,8 @@ ResultsManagementFun.prototype = {
                 layer.msg('删除成功!');
                 var radioV = $('input[name="results-radio"]:checked').val();
                 that.getResultsList(radioV);
+            }else{
+                layer.msg(res.msg)
             }
         }, function (res) {
             alert("出错了1");
@@ -296,6 +308,8 @@ ResultsManagementFun.prototype = {
                     yuWenScore = data.yuWenScore,
                     zhengZhiScore = data.zhengZhiScore;
                 that.detailsModify(className, classRank, commonScore, diLiScore, examId, gradeRank, huaXueScore, id, liShiScore, selectCourses, shengWuScore, shuXueScore, studentName, totleScore, wuLiScore, yingYuScore, yuWenScore, zhengZhiScore);
+            }else{
+                layer.msg(res.msg)
             }
         }, function (res) {
             alert("出错了");
@@ -315,6 +329,8 @@ ResultsManagementFun.prototype = {
                 layer.msg('删除成功!');
                 var radioV = $('input[name="results-radio"]:checked').val();
                 that.detailsModifyFun(examDetailId);
+            }else{
+                layer.msg(res.msg)
             }
         }, function (res) {
             alert("出错了");
@@ -364,6 +380,8 @@ $(function () {
                     layer.tips('考试名称已经存在,请修改考试名称后再提交!', $('#examName'));
                     return false;
                 }
+            }else{
+                layer.msg(res.msg)
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -389,6 +407,8 @@ $(function () {
                     layer.closeAll();
                     ResultsManagementIns.getResultsList(radioV);
                     layer.msg('修改成功!');
+                }else{
+                    layer.msg(res.msg)
                 }
             }, function (res) {
                 layer.msg(res.msg);
@@ -405,6 +425,8 @@ $(function () {
                     layer.closeAll();
                     ResultsManagementIns.getResultsList(radioV);
                     layer.msg('添加成功!');
+                }else{
+                    layer.msg(res.msg)
                 }
             }, function (res) {
                 layer.msg(res.msg);
@@ -619,6 +641,8 @@ $(function () {
                     }
                 });
                 layer.close(closeIndex);
+            }else{
+                layer.msg(res.msg)
             }
         }, function (res) {
             alert("出错了");

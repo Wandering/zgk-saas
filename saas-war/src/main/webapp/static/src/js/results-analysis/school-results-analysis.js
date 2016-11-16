@@ -31,6 +31,10 @@ SchoolResultsAnalysis.prototype = {
             that.coreStudent(radioV);
             that.getStepList(radioV,10,10);
             that.getMostAdvancedNumbers(radioV,10,20);
+            if(radioV.indexOf('高三') >= 0 || radioV.indexOf('高3') >= 0){
+                $('.grade3-main').show();
+                that.getOverLineNumberByDate(radioV);
+            }
         });
 
 
@@ -281,6 +285,21 @@ SchoolResultsAnalysis.prototype = {
             'grade': grade,
             'stepStart': stepStart,
             'stepLength': stepLength
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+
+            }else{
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
+    // 高三浙江批次线图表
+    getOverLineNumberByDate:function(grade){
+        Common.ajaxFun('/scoreAnalyse/getOverLineNumberByDate', 'GET', {
+            'grade': grade,
+            'lineScore': '439'  //浙江理科二本
         }, function (res) {
             if (res.rtnCode == "0000000") {
 

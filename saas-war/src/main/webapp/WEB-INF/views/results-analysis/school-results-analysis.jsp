@@ -43,7 +43,6 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
-
                         <div class="main-title">
                             <h3>学校成绩管理</h3>
                         </div>
@@ -57,6 +56,7 @@
                     </div><!-- /.col -->
                     <div class="col-xs-12">
                         <h5 class="h5">本科线成绩分析</h5>
+                        <div class="grade3-main"></div>
                         <p><h5 class="h5">班级情况统计：</h5>根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</p>
                         <h5 class="h5">各班上线人数统计：</h5>
                         <div class="txt-t">
