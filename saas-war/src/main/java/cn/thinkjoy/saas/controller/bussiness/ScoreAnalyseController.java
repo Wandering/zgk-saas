@@ -932,14 +932,7 @@ public class ScoreAnalyseController
         List<Map<String, Integer>> stepList = new ArrayList<>();
         if(advancedScoreSet.size() > 0)
         {
-            Iterator<Integer> it = advancedScoreSet.iterator();
-            int maxStep = 0 ;
-            while (it.hasNext())
-            {
-                int step = it.next();
-                if(step > maxStep)
-                    maxStep=step;
-            }
+            int maxStep = Collections.max(advancedScoreSet) ;
             int endStep = stepStart;
             while (endStep < maxStep)
             {
@@ -947,7 +940,7 @@ public class ScoreAnalyseController
                 stepStart = stepStart +stepLength;
                 Map<String, Integer> paramMap = new LinkedHashMap<>();
                 paramMap.put("stepStart", start);
-                endStep = Math.min(stepStart - 1, maxStep) ;
+                endStep = Math.min(stepStart, maxStep) ;
                 paramMap.put("stepEnd", endStep);
                 stepList.add(paramMap);
             }
