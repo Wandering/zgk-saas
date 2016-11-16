@@ -25,7 +25,9 @@ public enum ErrorCode {
 
     ACCOUNT_HAS_EXIST("0000008","账号已存在"),
 
-    ACCOUNT_HAS_DISABLE("0000009","账号已被禁用");
+    ACCOUNT_HAS_DISABLE("0000009","账号已被禁用"),
+
+    ROWS_TOO_LONG("0000010","查询条数过多");
 
     private final String code;
 

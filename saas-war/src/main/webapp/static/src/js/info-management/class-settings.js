@@ -34,10 +34,30 @@ ClassSettings.prototype = {
             classHtml.push('<td class="center"><label><input type="checkbox" class="ace" /><span class="lbl"></span></label></td>');
             classHtml.push('<td class="center index" indexid="' + k.configOrder + '">' + k.configKey + '</td>');
             classHtml.push('<td class="center">' + k.name + '</td>');
-            classHtml.push('<td class="center"><a href="javascript: void(0);" id="' + k.configKey + '" class="remove-link remove-column">移除</a></td>');
+            classHtml.push('<td class="center"><a href="javascript: void(0);" id="' + k.id + '" class="remove-link remove-column">移除</a></td>');
             classHtml.push('</tr>');
         });
         $('#class-table tbody').html(classHtml.join(''));
+    },
+    removeColumn: function (isBatch, ids) {//isBatch是否是批量删除(false: 单个删除; true: 批量删除, 包括单个删除)
+        var that = this;
+        if (isBatch) {
+
+        } else {
+            //删除租户表头
+            Common.ajaxFun('/manage/tenant/remove/' + that.type + '/' + tnId + '/' + ids +'.do', 'POST', {}, function (res) {
+                if (res.rtnCode == "0000000") {
+                    if (res.bizData.result == "SUCCESS") {
+                        layer.msg('删除成功', {time: 1000});
+                        that.getClass();
+                    }else{
+                        layer.msg(res.bizData.result);
+                    }
+                }
+            }, function (res) {
+                layer.msg("出错了", {time: 1000});
+            }, true, null);
+        }
     },
     tableDrag: function () {
         //表格排序
@@ -45,7 +65,7 @@ ClassSettings.prototype = {
                 var $originals = tr.children();
                 var $helper = tr.clone();
                 $helper.children().each(function (index) {
-                    $(this).width($originals.eq(index).width())
+                    $(this).width($originals.eq(index).width());
                 });
                 return $helper;
             },
@@ -176,8 +196,9 @@ ColumnSettings.prototype = {
 };
 
 $(document).on('click', '.remove-column', function () {
-   var id = $(this).attr('id');
-   alert('remove id: ' + id);
+    var ids = $(this).attr('id');
+    var classSettings = new ClassSettings();
+    classSettings.removeColumn(false, ids);
 });
 
 //(选择添加字段对话框内的)确定选择按钮

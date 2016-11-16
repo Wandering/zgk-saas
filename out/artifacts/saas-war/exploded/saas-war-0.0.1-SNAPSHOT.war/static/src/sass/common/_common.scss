@@ -1,8 +1,32 @@
-.dh{
+@import "sprites";
+
+$border: #bfbfbf;
+$mainColor: #cb171d;
+
+.dh {
   display: none;
 }
-ul,li{
+
+ul, li {
   list-style: none;
   padding: 0;
   margin: 0;
 }
+
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+//.breadcrumb > li > a{
+//  color: #333!important;
+//}
+//.breadcrumb {
+//  .active {
+//    a {
+//      color: $mainColor !important;
+//    }
+//  }
+//}

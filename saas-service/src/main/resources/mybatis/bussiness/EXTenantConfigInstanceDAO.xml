@@ -13,6 +13,9 @@
         <result column="domain" property="domain" jdbcType="VARCHAR" />
         <result column="create_date" property="createDate" jdbcType="BIGINT" />
         <result column="modify_date" property="modifyDate" jdbcType="BIGINT" />
+        <result column="data_type" property="dataType" jdbcType="VARCHAR" />
+        <result column="data_url" property="dataUrl" jdbcType="VARCHAR" />
+        <result column="data_value" property="dataValue" jdbcType="VARCHAR" />
     </resultMap>
     <resultMap id="TenantConfigListResultMap" type="cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView">
         <id column="id" property="id" jdbcType="INTEGER" />
@@ -26,6 +29,9 @@
         <result column="enName" property="enName" jdbcType="VARCHAR" />
         <result column="create_date" property="createDate" jdbcType="BIGINT" />
         <result column="modify_date" property="modifyDate" jdbcType="BIGINT" />
+        <result column="data_type" property="dataType" jdbcType="VARCHAR" />
+        <result column="data_url" property="dataUrl" jdbcType="VARCHAR" />
+        <result column="data_value" property="dataValue" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List">
         id,
@@ -35,7 +41,10 @@
         check_rule,
         domain,
         create_date,
-        modify_date
+        modify_date,
+        data_type,
+        data_url,
+        data_value
     </sql>
     <sql id="ConfigDefault_Join_TeantConfig">
         left join saas_configuration config ON tenantConfig.config_key=config.id
@@ -61,10 +70,13 @@
         check_rule,
         domain,
         create_date,
-        modify_date)
+        modify_date,
+        data_type,
+        data_url,
+        data_value)
         values
         <foreach collection="list" item="item" index="index" separator="," >
-            (#{item.tnId},#{item.configKey},#{item.configOrder},#{item.checkRule},#{item.domain},#{item.createDate},#{item.modifyDate})
+            (#{item.tnId},#{item.configKey},#{item.configOrder},#{item.checkRule},#{item.domain},#{item.createDate},#{item.modifyDate},#{item.dataType},#{item.dataUrl},#{item.dataValue})
         </foreach>
     </insert>
 
