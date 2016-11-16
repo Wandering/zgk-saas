@@ -7,17 +7,29 @@ function SchoolResultsAnalysis() {
 SchoolResultsAnalysis.prototype = {
     constructor: SchoolResultsAnalysis,
     init: function () {
+        this.getGrade();
         this.selGrade();
+    },
+    getGrade: function () {
+        Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
+                var myTemplate = Handlebars.compile($("#grade-template").html());
+                $('#grade-body').html(myTemplate(res));
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        }, true);
     },
     selGrade: function () {
         var that = this;
         // 选择高一
-        $('input[name="results-radio"]').change(function () {
+        $('input[name="results-radio"]').click(function () {
             var radioV = $('input[name="results-radio"]:checked').val();
+            alert(radioV)
             that.selSortOnline(radioV);
             that.coreStudent(radioV);
         });
-        $('input[name="results-radio"]:first').trigger('click');
+
 
 
         // 默认高一年级
@@ -26,7 +38,7 @@ SchoolResultsAnalysis.prototype = {
 
 
     },
-    undergraduateLine: function () {
+    undergraduateLine: function () {  // 各班情况统计
         Common.ajaxFun('/scoreAnalyse/getEnrollingNumberInfo', 'GET', {
             'tnId': tnId
         }, function (res) {
@@ -34,10 +46,6 @@ SchoolResultsAnalysis.prototype = {
                 $('.batchOne').text(res.bizData.batchOne);
                 $('.batchTwo').text(res.bizData.batchTwo);
                 $('.batchThr').text(res.bizData.batchThr);
-                $('.batchOneRadio').val(res.bizData.batchOne);
-                $('.batchTwoRadio').val(res.bizData.batchTwo);
-                $('.batchThrRadio').val(res.bizData.batchThr);
-                $('.batchAllRadio').val(parseInt(res.bizData.batchOne) + parseInt(res.bizData.batchTwo) + parseInt(res.bizData.batchThr));
             }
         }, function (res) {
             alert("出错了");
@@ -45,26 +53,22 @@ SchoolResultsAnalysis.prototype = {
     },
     selSortOnline: function (grade) {
         var that = this;
-        $('input[name="sort-radio"]').change(function () {
-            var sortV = $('input[name="sort-radio"]:checked').val();
-            that.overLineNumber(grade, sortV);
-        });
-    },
-    overLineNumber: function (grade, orderBy) {
-        Common.ajaxFun('/scoreAnalyse/getOverLineNumberDetail', 'GET', {
-            'tnId': tnId,
-            'grade': grade,
-            'orderBy': orderBy
-        }, function (res) {
-            console.log(res)
-            if (res.rtnCode == "0000000") {
+        $('input[name="sort-radio"]').click(function () {
+            var orderBy = $('input[name="sort-radio"]:checked').val();
+            //that.overLineNumber(grade, orderBy);
+            Common.ajaxFun('/scoreAnalyse/getOverLineNumberDetail', 'GET', {
+                'tnId': tnId,
+                'grade': grade,
+                'orderBy': orderBy
+            }, function (res) {
+                console.log(res)
 
-            }
-        }, function (res) {
-            alert("出错了");
+            }, function (res) {
+                alert("出错了");
+            });
         });
     },
-    coreStudent: function (grade) {
+    coreStudent: function (grade) { // 重点关注学生
         Common.ajaxFun('/scoreAnalyse/getMostAttentionNumber', 'GET', {
             'tnId': tnId,
             'grade': grade
@@ -97,18 +101,18 @@ SchoolResultsAnalysis.prototype = {
         });
     },
     progressStudent:function(){
-        Common.ajaxFun('/scoreAnalyse/getMostAttentionNumber', 'GET', {
-            'tnId': tnId,
-            'grade': grade
-        }, function (res) {
-            console.log(res)
-            if (res.rtnCode == "0000000") {
-                var myTemplate = Handlebars.compile($("#progress-template").html());
-                $('#progress-tbody').html(myTemplate(res));
-            }
-        }, function (res) {
-            alert("出错了");
-        });
+        //Common.ajaxFun('/scoreAnalyse/getMostAttentionNumber', 'GET', {
+        //    'tnId': tnId,
+        //    'grade': grade
+        //}, function (res) {
+        //    console.log(res)
+        //    if (res.rtnCode == "0000000") {
+        //        var myTemplate = Handlebars.compile($("#progress-template").html());
+        //        $('#progress-tbody').html(myTemplate(res));
+        //    }
+        //}, function (res) {
+        //    alert("出错了");
+        //});
     }
 
 };

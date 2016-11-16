@@ -32,12 +32,14 @@ public class SelectClassesGuideController {
      */
     @RequestMapping("getUniversityAndMajorNumber")
     @ResponseBody
-    public Map<String,Object> getUniversityAndMajorNumber(@RequestParam("subject")String subject) {
+    public Map<String,Object> getUniversityAndMajorNumber(@RequestParam(value = "subject",required = false)String subject) {
 
         Map<String,Object> paramMap=new HashMap<>();
         paramMap.put("areaId","330000");
         paramMap.put("year","2016");
-        paramMap.put("subject",subject);
+        if(StringUtils.isNotBlank(subject)) {
+            paramMap.put("subject", subject);
+        }
         Map<String,Object> returnMap=new HashMap<>();
         returnMap.put("universityAndMajorNumber", iSelectClassesGuideService.selectUniversityAndMajorNumber(paramMap));
         return returnMap;
@@ -51,7 +53,7 @@ public class SelectClassesGuideController {
     @ResponseBody
     public Map<String,Object> getMajorByUniversityNameAndBatch(@RequestParam("subject")String subject,
                                                                @RequestParam("batch")String batch,
-                                                               @RequestParam("universityName")String universityName,
+                                                               @RequestParam(value = "universityName",required = false)String universityName,
                                                                @RequestParam(value = "offset",required = false,defaultValue = "0")String offset,
                                                                @RequestParam(value = "rows",required = false,defaultValue = "10")String rows) {
         Map<String,Object> paramMap=new HashMap<>();
@@ -59,7 +61,9 @@ public class SelectClassesGuideController {
         paramMap.put("year","2016");
         paramMap.put("batch",batch);
         paramMap.put("subject",subject);
-        paramMap.put("universityName",universityName);
+        if (StringUtils.isNotBlank(universityName)) {
+            paramMap.put("universityName", universityName);
+        }
         paramMap.put("offset",offset);
         paramMap.put("rows",rows);
         List<MajorDto> majorDtoList=iSelectClassesGuideService.selectMajorByUniversityNameAndBatch(paramMap);

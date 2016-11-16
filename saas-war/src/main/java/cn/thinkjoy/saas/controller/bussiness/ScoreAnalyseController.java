@@ -13,9 +13,12 @@ import cn.thinkjoy.saas.service.common.ParamsUtils;
 import cn.thinkjoy.zgk.common.StringUtil;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.google.common.collect.Maps;
+import org.apache.poi.hssf.usermodel.DVConstraint;
+import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,10 +79,14 @@ public class ScoreAnalyseController
 
     @RequestMapping(value = "/downloadModel", method = RequestMethod.GET)
     @ResponseBody
-    public void downloadModel(HttpServletResponse response)
+    public void downloadModel(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "mock", required = false, defaultValue = "false") Boolean mock,
+        HttpServletResponse response)
         throws IOException
     {
-        Workbook wb = createWorkBook();
+        Workbook wb = createWorkBook(getClassesNameByGrade(tnId, grade), mock);
         response.reset();
         response.setContentType("application/vnd.ms-excel;charset=utf-8");
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -92,7 +99,7 @@ public class ScoreAnalyseController
         out.close();
     }
 
-    private Workbook createWorkBook()
+    private Workbook createWorkBook(List<String> classeNames, Boolean mock)
     {
         // 创建excel工作簿
         Workbook wb = new HSSFWorkbook();
@@ -114,6 +121,23 @@ public class ScoreAnalyseController
         setRegionBorder(1, classRange, sheet, wb);
         setRegionBorder(1, mainCourseRange, sheet, wb);
         setRegionBorder(1, selectCourseRange, sheet, wb);
+        CellRangeAddressList regions = new CellRangeAddressList(2,
+            5000, 1, 1);
+        DVConstraint constraint = DVConstraint
+            .createExplicitListConstraint(classeNames.toArray(new String[classeNames.size()]));
+        // 数据有效性对象
+        HSSFDataValidation validation = new HSSFDataValidation(
+            regions, constraint);
+        sheet.addValidationData(validation);
+        if(mock)
+        {
+            fillData(wb, sheet);
+        }
+        return wb;
+    }
+
+    private void fillData(Workbook wb, Sheet sheet)
+    {
         Integer currentRow = 1;
         for (int i = 1; i <= 8; i++)
         {
@@ -121,7 +145,6 @@ public class ScoreAnalyseController
             initData(wb, sheet, currentRow, dataLength, "三年" + i + "班");
             currentRow += dataLength;
         }
-        return wb;
     }
 
     private CellStyle getCellStyle(Workbook wb, boolean isHeader)
@@ -244,7 +267,7 @@ public class ScoreAnalyseController
     public Boolean checkExamName(Exam exam)
     {
         Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("examName", exam.getExamTime());
+        paramMap.put("examName", exam.getExamName());
         paramMap.put("grade", exam.getGrade());
         Exam existExam = (Exam)examService.queryOne(paramMap);
         return existExam==null ? false : true;
@@ -254,7 +277,7 @@ public class ScoreAnalyseController
     @ResponseBody
     public Exam addExam(Exam exam)
     {
-        Exam existExam = (Exam)examService.findOne("examName",exam.getExamTime());
+        Exam existExam = getExsitExam(exam);
         if(null !=existExam)
         {
             exam.setId(existExam.getId());
@@ -266,11 +289,23 @@ public class ScoreAnalyseController
         return exam;
     }
 
+    private Exam getExsitExam(Exam exam)
+    {
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("examName", exam.getExamTime());
+        paramMap.put("grade", exam.getGrade());
+        return (Exam)examService.queryOne(paramMap);
+    }
+
     @RequestMapping("/listExam")
     @ResponseBody
-    public List<Exam> listExam(@RequestParam(value = "grade", required = true) String grade)
+    public List<Exam> listExam(@RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade)
     {
-        return examService.findList("grade", grade, "createDate", SqlOrderEnum.DESC);
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
+        paramMap.put("grade", grade);
+        return examService.like(paramMap, "createDate", SqlOrderEnum.DESC);
     }
 
     @RequestMapping("/deleteExam")
@@ -885,7 +920,7 @@ public class ScoreAnalyseController
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("tableName", tableName);
         paramMap.put("grade", grade);
-        List<String> classNames = new ArrayList<>();
+        List<String> classNames;
         try
         {
             classNames =  examDetailService.getClassesNameByGrade(paramMap);

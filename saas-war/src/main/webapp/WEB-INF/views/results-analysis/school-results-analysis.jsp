@@ -50,22 +50,7 @@
 
                         <div class="title-2">
                             <div class="txt-t">
-                                <div class="radio no-padding-left">
-                                    <label>
-                                        <input name="results-radio" type="radio" value="1" class="ace"/>
-                                        <span class="lbl">高一</span>
-                                    </label>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <label>
-                                        <input name="results-radio" type="radio" value="2" class="ace"/>
-                                        <span class="lbl">高二</span>
-                                    </label>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <label>
-                                        <input name="results-radio" type="radio" value="3" class="ace"/>
-                                        <span class="lbl">高三</span>
-                                    </label>
-                                </div>
+                                <div class="radio no-padding-left" id="grade-body"></div>
                             </div>
                         </div>
                         <!-- PAGE CONTENT ENDS -->
@@ -80,23 +65,18 @@
                                     <span class="lbl">排序规则:</span>
                                 </label>
                                 <label>
-                                    <input name="sort-radio" type="radio" value="" class="ace batchAllRadio"/>
+                                    <input name="sort-radio" type="radio" value="batchAll" class="ace batchAllRadio"/>
                                     <span class="lbl">本科上线人数</span>
                                 </label>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                 <label>
-                                    <input name="sort-radio" type="radio" value="2" class="ace batchOneRadio"/>
+                                    <input name="sort-radio" type="radio" value="batchOne" class="ace batchOneRadio"/>
                                     <span class="lbl">一本上线人数</span>
                                 </label>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                 <label>
-                                    <input name="sort-radio" type="radio" value="3" class="ace batchTwoRadio"/>
+                                    <input name="sort-radio" type="radio" value="batchTwo" class="ace batchTwoRadio"/>
                                     <span class="lbl">二本上线人数</span>
-                                </label>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <label>
-                                    <input name="sort-radio" type="radio" value="3" class="ace batchThrRadio"/>
-                                    <span class="lbl">三本上线人数</span>
                                 </label>
                             </div>
                         </div>
@@ -166,6 +146,15 @@
         </div><!-- /.main-content -->
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
+<script id="grade-template" type="text/x-handlebars-template">
+    {{#each bizData.grades}}
+    <label>
+        <input name="results-radio" type="radio" value="{{grade}}" name="{{grade}}" class="ace"/>
+        <span class="lbl">{{grade}}</span>
+    </label>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    {{/each}}
+</script>
 <script id="core-template" type="text/x-handlebars-template">
     {{#each bizData}}
     <tr>
