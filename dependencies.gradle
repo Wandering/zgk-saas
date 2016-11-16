@@ -18,5 +18,6 @@ allprojects {
     zgkSmsVersion = "0.0.3-SNAPSHOT"
 
     gkVersion = "0.0.43-SNAPSHOT"
-    gk360Version = "0.0.38-SNAPSHOT"
+    gk360Version = "0.0.39-SNAPSHOT"
 }
+

@@ -31,8 +31,21 @@ public class Exam extends BaseDomain<Long>{
 
     private String createDate;
 
+    private String tnId;
+
 	public Exam(){
 	}
+
+    public String getTnId()
+    {
+        return tnId;
+    }
+
+    public void setTnId(String tnId)
+    {
+        this.tnId = tnId;
+    }
+
     public void setExamName(String value) {
         this.examName = value;
     }
