@@ -120,7 +120,7 @@ var Common = {
     },
     checkAll:function(){
         // 全选
-        $('#checkAll').on('click', function () {
+        $(document).on('click', '#checkAll', function () {
             if ($(this).is(':checked')) {
                 $('.check-template :checkbox').prop('checked', true);
             } else {

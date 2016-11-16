@@ -216,7 +216,7 @@ ColumnSettings.prototype = {
     },
     changeColumnEvent: function () {
         var that = this;
-        //alert('haha' + ', idCount: ' + that.idCount + ', ids: ' + that.ids.join('-'));
+        alert('hahahehe' + ', idCount: ' + that.idCount + ', ids: ' + that.ids.join('-'));
         Common.ajaxFun('/manage/import/' + that.type + '/' + tnId + '.do?ids=' + that.ids.join('-'), 'POST', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 chooseWindowBox != null ? layer.close(chooseWindowBox) : layer.msg('窗口已关闭', {time: 1000});

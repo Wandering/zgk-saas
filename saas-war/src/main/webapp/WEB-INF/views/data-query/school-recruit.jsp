@@ -78,7 +78,7 @@
                                 <dd id="year-list">
                                 </dd>
                                 <%--<script type="text/x-handlebars-template" id="year-list-tpl">--%>
-                                    <%--{{#each this}}{{{firstActive this}}}{{/each}}--%>
+                                <%--{{#each this}}{{{firstActive this}}}{{/each}}--%>
                                 <%--</script>--%>
                                 <script type="text/x-handlebars-template" id="year-list-tpl">
                                     <span class="active">全部</span>
@@ -173,86 +173,96 @@
                         </div>
                         <%--////////////////////////////////////////////--%>
                     </div>
-                    <div class="col-xs-12 dh">
-                        <!-- PAGE CONTENT BEGINS -->
-                        <%--院校基础信息--%>
-                        <div class="school-base-info">
-                            <div class="top">
-                                <span class="school">北京大学</span>
-                                <i class="icon-flags"></i>全国排名：<span class="national-rank">1</span>
-                                <a class="collect" href="javascript:void(0)" type="1" sid="1">
-                                    <i class="icon-collect-yes"></i>已收藏
-                                </a>
-                            </div>
-                            <div class="middle">
-                                <div id="property">
-                                    <span class="type-985">985</span> <span class="type-211">211</span> <span
-                                        class="type-yan">研</span> <span class="type-guo">国</span> <span class="type-zi">自</span>
+
+
+                    <%--
+                    院校详情信息
+                    --%>
+                    <div id="school-detail-info" class="dh">
+                        <div id="school-detail-top"></div>
+                        <div id="school-detail-bottom"></div>
+                        <script id="school-detail-top-tpl" type="text/x-handlebars-template">
+                            <div class="school-base-info">
+                                <div class="top">
+                                    <span class="school">{{name}}</span>
+                                    {{#if rank}}
+                                    <i class="icon-flags"></i>全国排名：<span class="national-rank">{{rank}}</span>
+                                    {{/if}}
+                                    <%--<a class="collect" href="javascript:void(0)" type="1" sid="1">--%>
+                                        <%--<i class="icon-collect-yes"></i>已收藏--%>
+                                    <%--</a>--%>
+                                </div>
+                                <div class="middle">
+                                    <div id="property">
+                                        <span class="type-985">985</span> <span class="type-211">211</span> <span
+                                            class="type-yan">研</span> <span class="type-guo">国</span> <span
+                                            class="type-zi">自</span>
+                                    </div>
+                                </div>
+                                <div class="bottom">
+                                    <div class="bottom-common-li"><b>所在省份：</b><span class="province">{{#if province}}{{province}}{{else}}-{{/if}}</span></div>
+                                    <div class="bottom-common-li"><b>院校隶属：</b><span class="belong">{{#if subjection}}{{subjection}}{{else}}-{{/if}}</span></div>
+                                    <div class="bottom-common-li"><b>院校类型：</b><span class="school-type">{{#if typeName}}{{typeName}}{{else}}-{{/if}}</span></div>
+                                    <div class="bottom-common-li"><b>学历层次：</b><span class="education-level">{{#if levelName}}{{levelName}}{{else}}-{{/if}}</span>
+                                    </div>
+                                    <div class="bottom-common-li"><b>联系电话：</b><span
+                                            class="education-level">{{#if contactPhone}}{{contactPhone}}{{else}}-{{/if}}</span></div>
+                                    <div class="bottom-common-li" style="min-width:500px"><b>院校地址：</b><span
+                                            class="education-level">{{#if address}}{{address}}{{else}}-{{/if}}</span></div>
+                                    <div class="bottom-common-li"><b>院校网址：</b><span class="education-level">{{#if url}}{{url}}{{else}}-{{/if}}</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="bottom">
-                                <div class="bottom-common-li"><b>所在省份：</b><span class="province">北京市</span></div>
-                                <div class="bottom-common-li"><b>院校隶属：</b><span class="belong">教育部</span></div>
-                                <div class="bottom-common-li"><b>院校类型：</b><span class="school-type">综合</span></div>
-                                <div class="bottom-common-li"><b>学历层次：</b><span class="education-level">本科</span></div>
-                                <div class="bottom-common-li"><b>联系电话：</b><span class="education-level">029-12232435</span></div>
-                                <div class="bottom-common-li"><b>院校地址：</b><span class="education-level">北京市海淀区颐和园</span></div>
-                                <div class="bottom-common-li"><b>院校网址：</b><span class="education-level">http://www.pku.edu.cn</span></div>
-                            </div>
-                        </div>
-
+                        </script>
 
                         <%--table招生计划--%>
-                        <div class="student-enroll-table">
-                            <div class="sub-title">
-                                <div class="title">招生计划</div>
-                                <div class="select-condition">
-                                    <select class="professional-plan-year">
-                                        <option value="2016">2016年</option>
-                                        <option value="2015">2015年</option>
-                                    </select>
-                                    <select class="professional-plan-subject">
-                                        <option value="1">文史</option>
-                                        <option value="2">理工</option>
-                                    </select>
+                        <script id="school-detail-bottom-tpl" type="text/x-handlebars-template">
+                            <div class="student-enroll-table">
+                                <div class="sub-title">
+                                    <div class="title">招生计划</div>
+                                    <div class="select-condition">
+                                        <select class="professional-plan-year" id="plan-year">
+                                            <%--<option value="2016">2016年</option>--%>
+                                            <%--<option value="2015">2015年</option>--%>
+                                        </select>
+                                        <select class="professional-plan-subject" id="plan-subject">
+                                            <%--<option value="1">文史</option>--%>
+                                            <%--<option value="2">理工</option>--%>
+                                        </select>
+                                    </div>
+                                </div>
+                                <table class="table-list table-hover table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>年份</th>
+                                        <th>专业名称</th>
+                                        <th>招生性质</th>
+                                        <th>科类</th>
+                                        <th>计划人数</th>
+                                        <th>学制</th>
+                                        <th>学费</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="professional-plan-select">
+                                    {{#each this}}
+                                    <tr>
+                                        <td>{{#if year}}{{year}}{{else}}-{{/if}}</td>
+                                        <td style="width: 250px">{{#if majoredName}}{{majoredName}}{{else}}-{{/if}}</td>
+                                        <td>{{#if enrollType}}{{enrollType}}{{else}}-{{/if}}</td>
+                                        <td>{{#if majorType}}{{majorType}}{{else}}-{{/if}}</td>
+                                        <td>{{#if planEnrolling}}{{planEnrolling}}{{else}}-{{/if}}</td>
+                                        <td>{{#if lengthOfSchooling}}{{lengthOfSchooling}}{{else}}-{{/if}}</td>
+                                        <td>{{#if schoolFee}}{{schoolFee}}{{else}}-{{/if}}</td>
+                                    </tr>
+                                    {{/each}}
+                                    </tbody>
+                                </table>
+                                <img src="/static/src/img/loading.gif" class="table-loading-img dh" id="school-detail-loading-img">
+                                <div id="school-detail-load-more" class="load-more dh" page-no="1">
+                                    加载更多
                                 </div>
                             </div>
-                            <table class="table-list table-hover table-bordered">
-                                <thead>
-                                <tr>
-                                    <th>年份</th>
-                                    <th>专业名称</th>
-                                    <th>招生性质</th>
-                                    <th>科类</th>
-                                    <th>计划人数</th>
-                                    <th>学制</th>
-                                    <th>学费</th>
-                                </tr>
-                                </thead>
-                                <tbody id="professional-plan-select">
-                                <tr>
-                                    <td>2016年</td>
-                                    <td style="width: 250px">文科试验班类（元培学院）</td>
-                                    <td>非定向</td>
-                                    <td>文史</td>
-                                    <td>1</td>
-                                    <td>4</td>
-                                    <td>5300</td>
-                                </tr>
-                                <tr>
-                                    <td>2016年</td>
-                                    <td style="width: 250px">中国语言文学类</td>
-                                    <td>非定向</td>
-                                    <td>文史</td>
-                                    <td>1</td>
-                                    <td>4</td>
-                                    <td>5000</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div class="load-more">加载更多</div>
-                        </div>
-
+                        </script>
 
 
                         <%--////////////////////////////////////////////--%>

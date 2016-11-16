@@ -11,7 +11,7 @@ var SchoolAdmission = {
     init: function () {
         this.areaId = Common.cookie.getCookie('countyId');
         this.getProvince();
-        this.getYear('-1');
+        this.getYear('');
         this.getRemoteDataDictList();
         this.params = {
             year: "",
@@ -36,7 +36,7 @@ var SchoolAdmission = {
     },
     //根据省份ID获取录取年份
     getYear: function (provinceId) {
-        Common.ajaxFun('/data/getYears.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/data/getYears.do', 'GET', {'schoolProId':provinceId}, function (res) {
             if (res.rtnCode == "0000000") {
                 var str = '';
                 if (res.bizData.length == 0) {

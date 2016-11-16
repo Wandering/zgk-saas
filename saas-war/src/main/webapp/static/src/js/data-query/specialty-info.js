@@ -71,9 +71,13 @@ var SpecialtyDetail = {
             majoredCode: SpecialtyDetail.majoredId
         }, function (res) {
             if (res.rtnCode == "0000000") {
+                if ($.isEmptyObject(res.bizData)) {
+                    $('#detail-content').html('抱歉,暂无数据');
+                    return false;
+                }
                 var template = Handlebars.compile($('#detail-content-tpl').html());
                 $('#detail-content').html(template(res.bizData));
-                if(res.bizData.fmRatio){
+                if (res.bizData.fmRatio) {
                     var malePercent = (res.bizData.fmRatio).split('-')[0];
                     var femalePercent = (res.bizData.fmRatio).split('-')[1];
 
@@ -97,51 +101,87 @@ var SpecialtyDetail = {
     //获取专业开设院校
     getMajorOpenUniversityList: function () {
         var that = this;
-        Common.ajaxFun('/data/getMajorOpenUniversityList.do', 'GET', {
-            majoredId: SpecialtyDetail.majoredId,
-            majorType: SpecialtyDetail.majorType,
-            page: "1",
-            rows: "10"
-        }, function (res) {
+        Common.ajaxFun('/data/getMajorOpenUniversityList.do', 'GET', that.paramsData, function (res) {
             if (res.rtnCode == "0000000") {
+                if(res.bizData.universityList.length == 0){
+                    $('#open-school').html('暂无数据');
+                    $('#table-loading-img').hide();
+                    return false;
+                }
                 that.renderMajorOpenUniversityList(res.bizData);
+                if ((res.bizData.count - parseInt(that.paramsData.page)) > parseInt(that.paramsData.rows)) {
+                    $('#specialty-load-more').removeClass('dh'); //显示加载更多
+                }
+                $('#specialty-load-more').show();
+                $('#table-loading-img').hide();
             }
         });
     },
-    renderMajorOpenUniversityList:function(data){
+    renderMajorOpenUniversityList: function (data) {
         var that = this;
         var tpl = '';
-        $.each(data.universityList,function(i,v){
-            var rank = '',
-                majorRank = '';
-            if(v.rank){
-                rank = '<i class="icon-flags"></i>全国排名：<span class="national-rank">'+ v.rank+'</span>'
+        var propertyListTpl = '';
+        $.each(data.universityList, function (i, v) {
+            if (!v.photo_url.match('http')) {
+                v.photo_url = 'http://123.59.12.77:8080/' + v.photo_url;
             }
-            if(v.majorRank){
-                rank = '专业排名：<span class="national-rank">'+ v.majorRank+'</span>'
+            if (v.rank) {
+                v.rank = '<i class="icon-flags"></i>全国排名：<span class="national-rank">' + v.rank + '</span>'
+            } else {
+                v.rank = '';
             }
+            if (v.majorRank) {
+                v.majorRank = '专业排名：<span class="national-rank">' + v.majorRank + '</span>'
+            } else {
+                v.majorRank = '';
+            }
+            $.each(v.propertys, function (j, k) {
+                switch (k) {
+                    case '985':
+                        propertyListTpl += '<span class="type-985">985</span>';
+                        break;
+                    case '211':
+                        propertyListTpl += '<span class="type-211">211</span>';
+                        break;
+                    case '985高校':
+                        propertyListTpl += '<span class="type-985">985</span>';
+                        break;
+                    case '211工程':
+                        propertyListTpl += '<span class="type-211">211</span>';
+                        break;
+                    case '有研究生院':
+                        propertyListTpl += '<span class="type-yan">研</span>';
+                        break;
+                    case '含国防生':
+                        propertyListTpl += '<span class="type-guo">国</span>';
+                        break;
+                    case '卓越计划':
+                        propertyListTpl += '<span class="type-zhuo">卓</span>';
+                        break;
+                    case '自主招生':
+                        propertyListTpl += '<span class="type-zi">自</span>';
+                        break;
+                }
+            })
             tpl += '' + '<li class="school-list">' +
-                '<img src="http://123.59.12.77:8080/'+ v.photo_url+'"' +
-                'class="school-logo">' +
+                '<img src="' + v.photo_url + '" class="school-logo">' +
                 '<div class="top">' +
-                '<span class="school-name" sid="'+ v.id+'">'+ v.name+'</span>'+rank+majorRank
+                '<span class="school-name" sid="' + v.id + '">' + v.name + '</span>' + v.rank + v.majorRank +
                 '</div>' +
                 '<div class="middle">' +
-                '<div id="property">' +
-                '<span class="type-985">985</span> <span class="type-211">211</span>' +
-                '<span class="type-yan">研</span> <span class="type-guo">国</span>' +
-                '<span class="type-zi">自</span>' +
+                '<div id="property">' + propertyListTpl +
                 '</div>' +
                 '</div>' +
                 '<div class="bottom">' +
-                '<span class="province">'+ v.province+'</span>' +
-                '<b>隶属：</b><span class="belong">'+ v.subjection+'</span>' +
-                '<b>院校类型：</b><span class="school-type">'+ v.typeName+'</span>' +
-                '<a target="_blank" href="'+ v.url+'" class="enter-site">' +
+                '<span class="province">' + v.province + '</span>' +
+                '<b>隶属：</b><span class="belong">' + v.subjection + '</span>' +
+                '<b>院校类型：</b><span class="school-type">' + v.typeName + '</span>' +
+                '<a target="_blank" href="' + v.url + '" class="enter-site">' +
                 '<span>进入网站</span>' +
                 '</a>' +
                 '</div>' +
                 '</li>';
+            propertyListTpl = '';
         })
         $('#open-school').append(tpl);
     },
@@ -149,9 +189,9 @@ var SpecialtyDetail = {
     getJobOrientation: function () {
         Common.ajaxFun('/data/getJobOrientation.do', 'GET', {'majoredId': SpecialtyDetail.majoredId}, function (res) {
             if (res.rtnCode == "0000000") {
-                if(res.bizData.employmentRate){
-                    $('#employmentRate').html(res.bizData.employmentRate)
-                }else{
+                if (res.bizData.employmentRate) {
+                    $('#employmentRate').html((res.bizData.employmentRate) * 100 + '%');
+                } else {
                     $('#employmentRate').html('暂无');
                 }
             }
@@ -165,26 +205,44 @@ var SpecialtyDetail = {
             //majorType:1本科、2、专科
             that.getMajoredInfoByCode()
             that.getJobOrientation();
+
             layer.full(
                 layer.open({
                     type: 1,
                     title: '专业信息详情',
                     content: $('#specialty-detail').html(),
                     area: ['100%', '100%'],
-                    maxmin: false
+                    maxmin: false,
+                    cancel:function(){
+                        window.location.reload();
+                    }
                 })
             )
             $('#detail-content').remove(); //万年坑 ==========  一定要清楚
+
+
+            that.paramsData = {
+                majoredId: SpecialtyDetail.majoredId,
+                majorType: SpecialtyDetail.majorType,
+                page: "1",
+                rows: "10"
+            }
+            that.getMajorOpenUniversityList();
+            that.getJobOrientation();
         });
         $(document).on('click', '.tab-detail-title .detail-tab', function () {
             $(this).addClass('active').siblings().removeClass('active');
             var index = parseInt($(this).index());
             $('.sub-content').eq(index).removeClass('dh').siblings().addClass('dh');
-            if(index === 1){
-                that.getMajorOpenUniversityList();
-            }else if(index === 2){
-                that.getJobOrientation();
-            }
+        });
+        //开设院校加载更多
+        $(document).on('click', '#specialty-load-more', function () {
+            $('#table-loading-img').show();
+            $('#specialty-load-more').hide();
+            var nowPage = parseInt($(this).attr('page-no'));
+            $(this).attr('page-no', nowPage + 1);
+            that.paramsData.page = nowPage + 1;
+            that.getMajorOpenUniversityList();
         });
 
     }
