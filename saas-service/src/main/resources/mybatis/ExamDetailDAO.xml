@@ -581,6 +581,9 @@ selectList
             <if test="condition.grade!=null">
                 ${condition.groupOp}   ${condition.grade.field}  ${condition.grade.op}  #{condition.grade.data}
             </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   ${condition.tnId.field}  ${condition.tnId.op}  #{condition.tnId.data}
+            </if>
     </where>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -1038,7 +1041,7 @@ selectList
         select exam.id,exam.examTime,count(1) as total
         from saas_exam exam
         inner join saas_exam_detail detail on exam.id=detail.examId
-        where exam.grade=${grade} and CAST(detail.totleScore as SIGNED)>=${lineScore}
+        where exam.grade=#{grade} and CAST(detail.totleScore as SIGNED)>=#{lineScore}
         group by exam.id,exam.examTime
         order by exam.examTime asc
     </select>
@@ -1046,7 +1049,7 @@ selectList
     <select id="getEnrollingNumberInfo"  parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT batch_1_enrolls as batchOne, batch_2_enrolls as batchTwo, batch_3_enrolls as batchThr
         FROM saas_enrolling_ratio ratio
-        where ratio.tn_id=${tnId}
+        where ratio.tn_id=#{tnId}
         order by ratio.year desc,ratio.create_date DESC
         limit 1
     </select>
@@ -1054,9 +1057,9 @@ selectList
     <select id="getLastExamIdByGrade" parameterType="java.util.HashMap" resultType="java.lang.String">
         select exam.id
         from saas_exam exam
-        where exam.grade=${grade}
+        where exam.grade=#{grade} and exam.tnId=#{tnId}
         order by exam.examTime desc
-        limit 0,${limitNumber}
+        limit 0,#{limitNumber}
     </select>
     
     <select id="getAvgScoresByExamId" parameterType="java.util.HashMap" resultType="java.util.HashMap">

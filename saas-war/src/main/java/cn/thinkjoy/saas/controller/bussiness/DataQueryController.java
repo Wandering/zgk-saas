@@ -2,7 +2,6 @@ package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.cloudstack.cache.RedisRepository;
 import cn.thinkjoy.common.domain.view.BizData4Page;
-import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.restful.apigen.annotation.ApiParam;
 import cn.thinkjoy.gk.api.IMajoredApi;
@@ -489,5 +488,17 @@ public class DataQueryController {
         condition.put("rows", rows);
         List ll = iUniversityApi.getUniversityMajorEnrollingPlanList(condition);
         return ll;
+    }
+
+    /**
+     * 查询专业详情
+     * @param majoredCode
+     * @return
+     */
+    @RequestMapping(value = "getMajoredInfoByCode",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getMajoredInfoByCode(@RequestParam(value = "majoredCode", required = true) String majoredCode){
+        //专业Id、专业名称、就业率、薪资、专业代码、授予学位、修学年限、开设课程、专业解读、
+        return iMajoredApi.getMajoredInfoByCode(majoredCode);
     }
 }

@@ -24,30 +24,31 @@ public class Env {
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
+            logger.info("System.exit");
         }
     }
 
     public void reInit()
             throws FileNotFoundException, IOException {
-        String filePath = "/environment.properties";
-        File eFile = new File(filePath);
-        logger.info("filePath:" + filePath);
-
-        Properties prop = new Properties();
-
-        if (eFile.exists()) {
-            logger.info("eFile.exists ");
-
-            FileInputStream in = new FileInputStream(filePath);
-            prop.load(in);
-        } else {
-
-//            prop.load(this.getClass().getClassLoader().getResourceAsStream("config/environment.properties"));
-            prop.load(Env.class.getClassLoader().getResource("config/environment.properties").openStream());
-            logger.info("eFile not exists ");
-        }
-
-        this.props = prop;
+//        String filePath = "/environment.properties";
+//        File eFile = new File(filePath);
+//        logger.info("filePath:" + filePath);
+//
+//        Properties prop = new Properties();
+//
+//        if (eFile.exists()) {
+//            logger.info("eFile.exists ");
+//
+//            FileInputStream in = new FileInputStream(filePath);
+//            prop.load(in);
+//        } else {
+//
+////            prop.load(this.getClass().getClassLoader().getResourceAsStream("config/environment.properties"));
+//            prop.load(Env.class.getClassLoader().getResource("config/environment.properties").openStream());
+//            logger.info("eFile not exists ");
+//        }
+//
+//        this.props = prop;
     }
 
     public String getProp(String key) {

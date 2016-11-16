@@ -1,5 +1,6 @@
 package cn.thinkjoy.saas.common;
 
+import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.domain.Exam;
 import cn.thinkjoy.saas.service.IExamService;
 import com.alibaba.fastjson.JSON;
@@ -23,6 +24,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.BindException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
@@ -112,6 +114,7 @@ public class UploadUtil
         catch (Exception e)
         {
             examService.delete(exam.getId());
+            throw new BizException("1110001", "表格数据有误，请重新上传！");
         }
         finally
         {

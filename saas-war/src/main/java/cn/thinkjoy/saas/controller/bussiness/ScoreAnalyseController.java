@@ -13,9 +13,12 @@ import cn.thinkjoy.saas.service.common.ParamsUtils;
 import cn.thinkjoy.zgk.common.StringUtil;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.google.common.collect.Maps;
+import org.apache.poi.hssf.usermodel.DVConstraint;
+import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +58,7 @@ public class ScoreAnalyseController
     @Autowired
     IExamStuWeakCourseService examStuWeakCourseService;
 
+    private Set<Integer> advancedScoreSet;
     private static List<String> headerList = new ArrayList<>();
 
     static
@@ -76,10 +80,14 @@ public class ScoreAnalyseController
 
     @RequestMapping(value = "/downloadModel", method = RequestMethod.GET)
     @ResponseBody
-    public void downloadModel(HttpServletResponse response)
+    public void downloadModel(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "mock", required = false, defaultValue = "false") Boolean mock,
+        HttpServletResponse response)
         throws IOException
     {
-        Workbook wb = createWorkBook();
+        Workbook wb = createWorkBook(getClassesNameByGrade(tnId, grade), mock);
         response.reset();
         response.setContentType("application/vnd.ms-excel;charset=utf-8");
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -92,7 +100,7 @@ public class ScoreAnalyseController
         out.close();
     }
 
-    private Workbook createWorkBook()
+    private Workbook createWorkBook(List<String> classeNames, Boolean mock)
     {
         // 创建excel工作簿
         Workbook wb = new HSSFWorkbook();
@@ -114,6 +122,23 @@ public class ScoreAnalyseController
         setRegionBorder(1, classRange, sheet, wb);
         setRegionBorder(1, mainCourseRange, sheet, wb);
         setRegionBorder(1, selectCourseRange, sheet, wb);
+        CellRangeAddressList regions = new CellRangeAddressList(2,
+            5000, 1, 1);
+        DVConstraint constraint = DVConstraint
+            .createExplicitListConstraint(classeNames.toArray(new String[classeNames.size()]));
+        // 数据有效性对象
+        HSSFDataValidation validation = new HSSFDataValidation(
+            regions, constraint);
+        sheet.addValidationData(validation);
+        if(mock)
+        {
+            fillData(wb, sheet);
+        }
+        return wb;
+    }
+
+    private void fillData(Workbook wb, Sheet sheet)
+    {
         Integer currentRow = 1;
         for (int i = 1; i <= 8; i++)
         {
@@ -121,7 +146,6 @@ public class ScoreAnalyseController
             initData(wb, sheet, currentRow, dataLength, "三年" + i + "班");
             currentRow += dataLength;
         }
-        return wb;
     }
 
     private CellStyle getCellStyle(Workbook wb, boolean isHeader)
@@ -244,7 +268,7 @@ public class ScoreAnalyseController
     public Boolean checkExamName(Exam exam)
     {
         Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("examName", exam.getExamTime());
+        paramMap.put("examName", exam.getExamName());
         paramMap.put("grade", exam.getGrade());
         Exam existExam = (Exam)examService.queryOne(paramMap);
         return existExam==null ? false : true;
@@ -254,7 +278,7 @@ public class ScoreAnalyseController
     @ResponseBody
     public Exam addExam(Exam exam)
     {
-        Exam existExam = (Exam)examService.findOne("examName",exam.getExamTime());
+        Exam existExam = getExsitExam(exam);
         if(null !=existExam)
         {
             exam.setId(existExam.getId());
@@ -266,11 +290,23 @@ public class ScoreAnalyseController
         return exam;
     }
 
+    private Exam getExsitExam(Exam exam)
+    {
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("examName", exam.getExamTime());
+        paramMap.put("grade", exam.getGrade());
+        return (Exam)examService.queryOne(paramMap);
+    }
+
     @RequestMapping("/listExam")
     @ResponseBody
-    public List<Exam> listExam(@RequestParam(value = "grade", required = true) String grade)
+    public List<Exam> listExam(@RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade)
     {
-        return examService.findList("grade", grade, "createDate", SqlOrderEnum.DESC);
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
+        paramMap.put("grade", grade);
+        return examService.like(paramMap, "createDate", SqlOrderEnum.DESC);
     }
 
     @RequestMapping("/deleteExam")
@@ -416,11 +452,13 @@ public class ScoreAnalyseController
 
     @RequestMapping("/getOverLineNumberDetail")
     @ResponseBody
-    public List<Map<String, Object>> getOverLineNumberDetail(@RequestParam(value = "tnId", required = true) String tnId,
+    public List<Map<String, Object>> getOverLineNumberDetail(
+        @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "orderBy", required = true) final String orderBy)
     {
         Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
         paramMap.put("grade", grade);
         paramMap.put("limitNumber", 1);
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
@@ -507,6 +545,7 @@ public class ScoreAnalyseController
     {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("grade", grade);
+        paramMap.put("tnId", tnId);
         paramMap.put("limitNumber", 3);
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
         if(null == examIds || examIds.size() == 0)
@@ -712,10 +751,11 @@ public class ScoreAnalyseController
     @RequestMapping("/getMostAttentionNumberChart")
     @ResponseBody
     public Map<String, Object> getMostAttentionNumberChart(
+        @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "batchName", required = true) String batchName)
     {
-        String lastExamId = getLastExamId(grade);
+        String lastExamId = getLastExamId(grade, tnId);
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("examId", lastExamId);
         paramMap.put("batchName", batchName);
@@ -728,6 +768,7 @@ public class ScoreAnalyseController
     @RequestMapping("/getMostAttentionPage")
     @ResponseBody
     public Map<String, Object> getMostAttentionPage(
+        @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "batchName", required = true) String batchName,
         @RequestParam(value = "className", required = false) String className,
@@ -735,7 +776,7 @@ public class ScoreAnalyseController
         @RequestParam(value = "offset", required = true) int offset,
         @RequestParam(value = "rows", required = true) int rows)
     {
-        String lastExamId = getLastExamId(grade);
+        String lastExamId = getLastExamId(grade, tnId);
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("examId", lastExamId);
         paramMap.put("batchName", batchName);
@@ -757,10 +798,11 @@ public class ScoreAnalyseController
         return resultMap;
     }
 
-    private String getLastExamId(String grade)
+    private String getLastExamId(String grade, String tnId)
     {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("grade", grade);
+        paramMap.put("tnId", tnId);
         paramMap.put("limitNumber", 3);
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
         if(null == examIds || examIds.size() == 0)
@@ -773,6 +815,7 @@ public class ScoreAnalyseController
     @RequestMapping("/getMostAdvancedNumbers")
     @ResponseBody
     public List<Map<String, Object>> getMostAdvancedNumbers(
+        @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "stepStart", required = true) Integer stepStart,
         @RequestParam(value = "stepEnd", required = true) Integer stepEnd)
@@ -780,6 +823,7 @@ public class ScoreAnalyseController
         List<Map<String, Object>> resultList = new ArrayList<>();
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("grade", grade);
+        paramMap.put("tnId", tnId);
         paramMap.put("limitNumber", 3);
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
         if(null == examIds || examIds.size() == 0)
@@ -813,6 +857,7 @@ public class ScoreAnalyseController
                 }
             }
         }
+        advancedScoreSet = new TreeSet<>();
         Map<String, List<Map<String, Object>>> resultMap  = new HashMap<>();
         for (Map.Entry<String, List<Integer>> entry: examScoreRatioMap.entrySet())
         {
@@ -838,7 +883,7 @@ public class ScoreAnalyseController
                 advancedScore = new BigDecimal(scoreList.get(0)).subtract(new BigDecimal(scoreList.get(2))).
                     divide(new BigDecimal(2), 0, RoundingMode.HALF_DOWN).intValue();
             }
-            if(advancedScore >= stepStart && advancedScore < stepEnd)
+            if(advancedScore >= stepStart && advancedScore <= stepEnd)
             {
                 List<Map<String, Object>> dataList = resultMap.get(className);
                 if(null == dataList)
@@ -852,6 +897,7 @@ public class ScoreAnalyseController
                 params.put("advancedScore", advancedScore);
                 params.put("historyScores", scoreList.toString());
                 dataList.add(params);
+                advancedScoreSet.add(advancedScore);
             }
         }
         for (Map.Entry<String, List<Map<String, Object>>> en: resultMap.entrySet())
@@ -875,6 +921,34 @@ public class ScoreAnalyseController
         return resultList;
     }
 
+    @RequestMapping("/getStepList")
+    @ResponseBody
+    public List<Map<String, Integer>> getStepList(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "stepStart", required = true) Integer stepStart,
+        @RequestParam(value = "stepLength", required = true) Integer stepLength)
+    {
+        getMostAdvancedNumbers(tnId, grade, stepStart, Integer.MAX_VALUE);
+        List<Map<String, Integer>> stepList = new ArrayList<>();
+        if(advancedScoreSet.size() > 0)
+        {
+            int maxStep = Collections.max(advancedScoreSet) ;
+            int endStep = stepStart;
+            while (endStep < maxStep)
+            {
+                int start = stepStart;
+                stepStart = stepStart +stepLength;
+                Map<String, Integer> paramMap = new LinkedHashMap<>();
+                paramMap.put("stepStart", start);
+                endStep = Math.min(stepStart, maxStep) ;
+                paramMap.put("stepEnd", endStep);
+                stepList.add(paramMap);
+            }
+        }
+        return stepList;
+    }
+
     @RequestMapping("/getClassesNameByGrade")
     @ResponseBody
     public List<String> getClassesNameByGrade(
@@ -885,7 +959,7 @@ public class ScoreAnalyseController
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("tableName", tableName);
         paramMap.put("grade", grade);
-        List<String> classNames = new ArrayList<>();
+        List<String> classNames;
         try
         {
             classNames =  examDetailService.getClassesNameByGrade(paramMap);
@@ -895,4 +969,6 @@ public class ScoreAnalyseController
         }
         return classNames;
     }
+
+
 }
