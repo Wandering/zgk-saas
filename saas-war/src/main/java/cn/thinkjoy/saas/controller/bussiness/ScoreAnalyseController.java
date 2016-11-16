@@ -545,6 +545,7 @@ public class ScoreAnalyseController
     {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("grade", grade);
+        paramMap.put("tnId", tnId);
         paramMap.put("limitNumber", 3);
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
         if(null == examIds || examIds.size() == 0)
