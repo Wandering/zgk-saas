@@ -244,7 +244,7 @@ public class ScoreAnalyseController
     public Boolean checkExamName(Exam exam)
     {
         Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("examName", exam.getExamTime());
+        paramMap.put("examName", exam.getExamName());
         paramMap.put("grade", exam.getGrade());
         Exam existExam = (Exam)examService.queryOne(paramMap);
         return existExam==null ? false : true;

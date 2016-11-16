@@ -11,7 +11,7 @@ ResultsManagementFun.prototype = {
     },
     count: function () {
     },
-    getGrade:function(){
+    getGrade: function () {
         Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var myTemplate = Handlebars.compile($("#grade-template").html());
@@ -19,7 +19,7 @@ ResultsManagementFun.prototype = {
             }
         }, function (res) {
             layer.msg(res.msg);
-        },true);
+        }, true);
     },
     getResultsList: function (grade) {
         Common.ajaxFun('/scoreAnalyse/listExam', 'GET', {
@@ -75,7 +75,7 @@ ResultsManagementFun.prototype = {
         if (uploadFilePath) {
             contentHtml.push('<button class="btn btn-info save-btn" dataid="' + id + '" filePath="' + uploadFilePath + '">保存</button>');
         } else {
-            contentHtml.push('<button class="btn btn-info save-btn">保存</button>');
+            contentHtml.push('<button class="btn btn-info save-btn">提交</button>');
         }
         contentHtml.push('<button class="btn btn-primary close-btn">取消</button>');
         contentHtml.push('</div>');
@@ -118,14 +118,25 @@ ResultsManagementFun.prototype = {
             $('body #details-download-btn').attr('href', uploadfilepath);
             $('body #details-modify-btn').attr({
                 'grade': grade,
-                'examId':id,
-                'uploadfilepath':uploadfilepath
+                'examId': id,
+                'uploadfilepath': uploadfilepath
             });
         }, function (res) {
             alert("出错了");
         }, 'true');
     },
+    getClass:function(grade){
+        Common.ajaxFun('/scoreAnalyse/getClassesNameByGrade', 'GET', {
+            'tnId': tnId,
+            'grade': grade
+        }, function (res) {
+
+        }, function (res) {
+            alert("出错了");
+        }, 'true');
+    },
     detailsModify: function (className, classRank, commonScore, diLiScore, examId, gradeRank, huaXueScore, id, liShiScore, selectCourses, shengWuScore, shuXueScore, studentName, totleScore, wuLiScore, yingYuScore, yuWenScore, zhengZhiScore) {
+        var that = this;
         var contentHtml = [];
         contentHtml.push('<div class="form-horizontal upload-layer">');
         contentHtml.push('<div class="form-group">');
@@ -228,7 +239,7 @@ ResultsManagementFun.prototype = {
         contentHtml.push('</div>');
         contentHtml.push('</div>');
         contentHtml.push('<div class="btn-box">');
-        contentHtml.push('<button class="btn btn-info details-save-btn" id="'+ id +'">提交</button>');
+        contentHtml.push('<button class="btn btn-info details-save-btn" id="' + id + '">提交</button>');
         contentHtml.push('</div>');
         contentHtml.push('</div>');
         layer.open({
@@ -238,7 +249,7 @@ ResultsManagementFun.prototype = {
             area: ['600px', '450px'],
             content: contentHtml.join(''),
             success: function (layero, index) {
-                $('.details-save-btn').attr('closeIndex',index);
+                $('.details-save-btn').attr('closeIndex', index);
             }
         });
     },
@@ -291,7 +302,24 @@ ResultsManagementFun.prototype = {
     },
     detailsSave: function () {
 
+    },
+    deleteExamDetail:function(examDetailId){
+        var that = this;
+        Common.ajaxFun('/scoreAnalyse/modifyExamDetail', 'GET', {
+            "examDetailId": examDetailId
+        }, function (res) {
+            console.log(res)
+            if (res.rtnCode == "0000000") {
+                layer.closeAll();
+                layer.msg('删除成功!');
+                var radioV = $('input[name="results-radio"]:checked').val();
+                that.detailsModifyFun(examDetailId);
+            }
+        }, function (res) {
+            alert("出错了");
+        });
     }
+
 };
 
 var ResultsManagementIns = new ResultsManagementFun();
@@ -324,6 +352,21 @@ $(function () {
             layer.tips('请输入考试名称!', $('#examName'));
             return false;
         }
+        Common.ajaxFun('/scoreAnalyse/checkExamName', 'GET', {
+            'grade': radioV,
+            'examName': examName
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                if (res.bizData == true) {
+                    layer.tips('考试名称已经存在,请修改考试名称后再提交!', $('#examName'));
+                    return false;
+                }
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+
+
         if (examDate == "") {
             layer.tips('请选择考试时间!', $('#exam-date'));
             return false;
@@ -345,7 +388,7 @@ $(function () {
                     layer.msg('修改成功!');
                 }
             }, function (res) {
-                alert("出错了");
+                layer.msg(res.msg);
             });
         } else {
             Common.ajaxFun('/scoreAnalyse/addExam.do', 'GET', {
@@ -360,7 +403,7 @@ $(function () {
                     layer.msg('添加成功!');
                 }
             }, function (res) {
-                alert("出错了");
+                layer.msg(res.msg);
             });
         }
     });
@@ -431,6 +474,7 @@ $(function () {
         layer.full(index);
     });
 
+    // 详情修改
     $('body').on('click', '#details-modify-btn', function () {
         var checkboxLen = $('#details-tbody input:checked').length;
         if (checkboxLen == 0) {
@@ -443,7 +487,9 @@ $(function () {
         }
         var detailsChecked = $('#details-tbody input:checked');
         var id = detailsChecked.attr('dataid');
+        var grade = detailsChecked.attr('grade');
         ResultsManagementIns.detailsModifyFun(id);
+        ResultsManagementIns.getClass(grade);
     });
 
 
@@ -490,7 +536,7 @@ $(function () {
             layer.tips('请输入英语成绩!', $('.subject-yingyu'));
             return false;
         }
-        if(grade.indexOf('高一')>=0){
+        if (grade.indexOf('高一') >= 0) {
             if (subjectWuli == '') {
                 layer.tips('请输入物理成绩!', $('.subject-wuli'));
                 return false;
@@ -527,15 +573,15 @@ $(function () {
                 layer.tips('请输入年级排名!', $('.top-grade'));
                 return false;
             }
-        }else{
+        } else {
             var valArr = [];
-            $('.sel-course').each(function(i,v){
+            $('.sel-course').each(function (i, v) {
                 //console.log($(v).val());
-                if($.trim($(v).val())==''){
+                if ($.trim($(v).val()) == '') {
                     valArr.push($(v).val());
                 }
             });
-            if(valArr.length>4){
+            if (valArr.length > 4) {
                 layer.tips('选课必须填三项!', that);
                 return false;
             }
@@ -573,6 +619,31 @@ $(function () {
         }, function (res) {
             alert("出错了");
         });
+
+    });
+    // 删除详情列表
+    $('body').on('click','#details-close-btn',function(){
+        var checkboxLen = $('#details-tbody input[type="checkbox"]:checked').length;
+        if (checkboxLen == 0) {
+            layer.tips('至少选择一项', $(this));
+            return false;
+        }
+        if (checkboxLen > 1) {
+            layer.tips('删除只能选择一项', $(this));
+            return false;
+        }
+        layer.confirm('确定删除?', {
+            btn: ['确定', '关闭'] //按钮
+        }, function () {
+            var  examDetailId = $('#details-tbody input[type="checkbox"]:checked').attr('dataid');
+            ResultsManagementIns.deleteExamDetail(examDetailId);
+        }, function () {
+            layer.closeAll();
+        });
+
+
+
+
 
     });
 
