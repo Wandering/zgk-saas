@@ -12,7 +12,6 @@ var SchoolRecruit = {
         this.getYear('');
         this.getRemoteDataDictList();
         this.getBatchByYearAndArea('', '');
-
         this.params = {
             year: "",
             areaId: "",
@@ -100,6 +99,12 @@ var SchoolRecruit = {
             if (res.rtnCode == "0000000") {
                 var dataJson = res.bizData;
                 //总记录数 - 每页条数*第几页数 > 每页条数 [ 展示加载更多 ]
+                if (res.bizData.rows.length == 0) {
+                    $('#recruit-load-more').html('<span>暂无</span>');
+                    return false;
+                }else{
+                    $('#recruit-load-more').html('<span>加载更多</span>');
+                }
                 if (dataJson.records - that.params.rows * (that.params.page - 1) > that.params.rows) {
                     $('#recruit-load-more').show();
                 }
@@ -127,6 +132,7 @@ var SchoolRecruit = {
 
             $(this).addClass('active').siblings().removeClass('active');
             that.getYear(that.params.areaId);
+            that.getBatchByYearAndArea('', that.params.areaId);
             that.getCollegeUniversitiesEnrollment(that.params);
         })
 
@@ -145,7 +151,6 @@ var SchoolRecruit = {
         $(document).on('click', '#batch-list span', function () {
             $('#school-admission-plan').html('');
             $('#recruit-load-more').hide();
-
             $(this).addClass('active').siblings().removeClass('active');
             that.params.batch = $(this).attr('dictid');
             that.getCollegeUniversitiesEnrollment(that.params);

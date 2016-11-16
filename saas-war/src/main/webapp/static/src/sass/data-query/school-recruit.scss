@@ -39,10 +39,12 @@
       border: 1px solid $mainColor;
     }
   }
+  td {
+    .active {
+      color: $mainColor !important;
+    }
+  }
 }
-
-
-
 
 /*
 ==================================
@@ -51,13 +53,13 @@
 */
 .school-base-info {
   margin-top: 24px;
-  .top{
-    .icon-flags{
+  .top {
+    .icon-flags {
       position: relative;
-      top:4px;
-      margin:0 5px 0 20px;
+      top: 4px;
+      margin: 0 5px 0 20px;
     }
-    .collect{
+    .collect {
       margin-left: 20px;
     }
   }

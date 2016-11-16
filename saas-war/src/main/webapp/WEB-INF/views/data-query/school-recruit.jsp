@@ -132,9 +132,8 @@
                                     <th>年份</th>
                                     <th>录取批次</th>
                                     <th>隶属</th>
-                                    <th>最低分</th>
-                                    <th>最高分</th>
-                                    <th>平均分</th>
+                                    <th>总计划数</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody id="school-admission-plan">
@@ -158,13 +157,10 @@
                                             {{#if subjection}}{{subjection}}{{else}}-{{/if}}
                                         </td>
                                         <td>
-                                            {{#if lowestScore}}{{lowestScore}}{{else}}-{{/if}}
+                                            {{#if enrollingNumber}}{{enrollingNumber}}{{else}}-{{/if}}
                                         </td>
                                         <td>
-                                            {{#if highestScore}}{{highestScore}}{{else}}-{{/if}}
-                                        </td>
-                                        <td>
-                                            {{#if averageScore}}{{averageScore}}{{else}}-{{/if}}
+                                            <a href="javascript:void(0)" class="active" type="{{id}}">各专业计划详情</a>
                                         </td>
                                     </tr>
                                     {{/each}}

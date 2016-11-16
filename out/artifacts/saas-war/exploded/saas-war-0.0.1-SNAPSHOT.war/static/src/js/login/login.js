@@ -22,6 +22,7 @@ $('#login-btn').on('click', function () {
             Common.cookie.setCookie('tnName', data.tnName);
             Common.cookie.setCookie('isSuperManager', data.isSuperManager);
             Common.cookie.setCookie('tnId', data.tnId);
+            Common.cookie.setCookie('userId', data.userId);
             Common.cookie.setCookie('isInit', data.isInit);
             Common.cookie.setCookie('siderMenu', siderMenuJson);
             if(data.isInit==0){
