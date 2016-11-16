@@ -35,7 +35,7 @@ ClassManagement.prototype = {
                         });
                     });
                     columnHtml.push('</tr>');
-                    $("#class-table thead").append(columnHtml.join(''));
+                    $("#class-table thead").html(columnHtml.join(''));
                 } else {
 
                 }
@@ -208,6 +208,9 @@ $(document).on('click', '#class-settings-btn', function () {
         shadeClose: true,
         shade: 0.8,
         area: ['60%', '70%'],
-        content: '/class-settings'
+        content: '/class-settings',
+        cancel: function () {
+            classManagement.init();
+        }
     });
 });

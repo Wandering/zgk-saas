@@ -305,6 +305,8 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             Configuration configuration = iConfigurationDAO.queryOne(map, "id", "asc");
 
 
+
+
             Map paramsMap = new HashMap();
             paramsMap.put("tableName", tableName);
             paramsMap.put("columnName", configuration.getEnName());
@@ -325,8 +327,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             addMap.put("columnType", configuration.getMetaType());
             exiTenantConfigInstanceDAO.addColumn(addMap);
         }
-        List<TenantConfigInstanceView> tenantConfigInstanceViews=getTenantConfigListByTnIdAndType(type,tnId);
-
+        isExsitsColumn(idsList,tableName,type,tnId);
 
 
 
@@ -514,7 +515,59 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         return (count>0?true:false);
     }
 
+    private boolean isExsitsColumn(List<String> configIds,String tableName,String type,Integer tnId ) {
 
+        List<String> configViews = new ArrayList<>();
+
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = getTenantConfigListByTnIdAndType(type, tnId);
+
+        for (TenantConfigInstanceView tenantConfigInstanceView : tenantConfigInstanceViews) {
+            configViews.add(tenantConfigInstanceView.getConfigKey());
+        }
+        List<String> diffIds = getDifferent(configIds, configViews);
+
+        for(String configId:diffIds) {
+            Map map = new HashMap();
+            map.put("configKey", configId);
+            map.put("tnId", tnId);
+            map.put("domain", type);
+            iTenantConfigInstanceDAO.deleteByCondition(map);
+            Map conMap = new HashMap();
+            conMap.put("id", configId);
+            conMap.put("domain", type);
+            Configuration configuration = iConfigurationDAO.queryOne(conMap, "id", "asc");
+
+            Map paramsMap = new HashMap();
+            paramsMap.put("tableName", tableName);
+            paramsMap.put("columnName", configuration.getEnName());
+            exiTenantConfigInstanceDAO.removeColumn(paramsMap);
+        }
+
+        return false;
+    }
+
+    private static List<String> getDifferent(List<String> prelist, List<String> curlist) {
+        List<String> diff = new ArrayList<String>();
+
+        Map<String, Integer> map = new HashMap<String, Integer>(curlist.size());
+        for (String stu : curlist) {
+            map.put(stu, 1);
+        }
+        for (String stu : prelist) {
+            if (map.get(stu) != null) {
+                map.put(stu, 2);
+                continue;
+            }
+            diff.add(stu);
+        }
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            if (entry.getValue() == 1) {
+                diff.add(entry.getKey());
+            }
+        }
+        return diff;
+
+    }
     public static void main(String[] args) {
         Map<Object,String> map = new HashMap<Object, String>();
         map.put(1,"22");

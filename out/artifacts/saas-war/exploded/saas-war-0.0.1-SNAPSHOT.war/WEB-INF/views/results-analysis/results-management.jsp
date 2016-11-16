@@ -49,22 +49,7 @@
 
                         <div class="title-2">
                             <div class="txt-t">
-                                <div class="radio">
-                                    <label>
-                                        <input name="results-radio" type="radio" value="1" class="ace"/>
-                                        <span class="lbl">高一</span>
-                                    </label>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <label>
-                                        <input name="results-radio" type="radio" value="2" class="ace"/>
-                                        <span class="lbl">高二</span>
-                                    </label>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <label>
-                                        <input name="results-radio" type="radio" value="3" class="ace"/>
-                                        <span class="lbl">高三</span>
-                                    </label>
-                                </div>
+                                <div class="radio no-padding-left" id="grade-body"></div>
                             </div>
                             <div class="btns">
                                 <button class="btn btn-danger" id="uploadResultsBtn">上传成绩</button>
@@ -76,12 +61,7 @@
                             <table id="" class="table">
                                 <thead>
                                 <tr>
-                                    <th class="center">
-                                        <label>
-                                            <input type="checkbox" class="ace"/>
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </th>
+                                    <th class="center"></th>
                                     <th class="center">考试名称</th>
                                     <th class="center">年级</th>
                                     <th class="center">考试时间</th>
@@ -148,7 +128,15 @@
         </div><!-- /.main-content -->
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
-
+<script id="grade-template" type="text/x-handlebars-template">
+    {{#each bizData.grades}}
+    <label>
+        <input name="results-radio" type="radio" value="{{grade}}" name="{{grade}}" class="ace"/>
+        <span class="lbl">{{grade}}</span>
+    </label>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    {{/each}}
+</script>
 <script id="results-template" type="text/x-handlebars-template">
     {{#each bizData}}
     <tr>
