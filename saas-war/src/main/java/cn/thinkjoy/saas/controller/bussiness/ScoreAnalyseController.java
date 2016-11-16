@@ -9,12 +9,16 @@ import cn.thinkjoy.saas.domain.ExamScoreRatio;
 import cn.thinkjoy.saas.service.IExamDetailService;
 import cn.thinkjoy.saas.service.IExamService;
 import cn.thinkjoy.saas.service.IExamStuWeakCourseService;
+import cn.thinkjoy.saas.service.common.ParamsUtils;
 import cn.thinkjoy.zgk.common.StringUtil;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.google.common.collect.Maps;
+import org.apache.poi.hssf.usermodel.DVConstraint;
+import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -53,6 +58,7 @@ public class ScoreAnalyseController
     @Autowired
     IExamStuWeakCourseService examStuWeakCourseService;
 
+    private Set<Integer> advancedScoreSet;
     private static List<String> headerList = new ArrayList<>();
 
     static
@@ -74,10 +80,14 @@ public class ScoreAnalyseController
 
     @RequestMapping(value = "/downloadModel", method = RequestMethod.GET)
     @ResponseBody
-    public void downloadModel(HttpServletResponse response)
+    public void downloadModel(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "mock", required = false, defaultValue = "false") Boolean mock,
+        HttpServletResponse response)
         throws IOException
     {
-        Workbook wb = createWorkBook();
+        Workbook wb = createWorkBook(getClassesNameByGrade(tnId, grade), mock);
         response.reset();
         response.setContentType("application/vnd.ms-excel;charset=utf-8");
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -90,7 +100,7 @@ public class ScoreAnalyseController
         out.close();
     }
 
-    private Workbook createWorkBook()
+    private Workbook createWorkBook(List<String> classeNames, Boolean mock)
     {
         // 创建excel工作簿
         Workbook wb = new HSSFWorkbook();
@@ -112,6 +122,23 @@ public class ScoreAnalyseController
         setRegionBorder(1, classRange, sheet, wb);
         setRegionBorder(1, mainCourseRange, sheet, wb);
         setRegionBorder(1, selectCourseRange, sheet, wb);
+        CellRangeAddressList regions = new CellRangeAddressList(2,
+            5000, 1, 1);
+        DVConstraint constraint = DVConstraint
+            .createExplicitListConstraint(classeNames.toArray(new String[classeNames.size()]));
+        // 数据有效性对象
+        HSSFDataValidation validation = new HSSFDataValidation(
+            regions, constraint);
+        sheet.addValidationData(validation);
+        if(mock)
+        {
+            fillData(wb, sheet);
+        }
+        return wb;
+    }
+
+    private void fillData(Workbook wb, Sheet sheet)
+    {
         Integer currentRow = 1;
         for (int i = 1; i <= 8; i++)
         {
@@ -119,7 +146,6 @@ public class ScoreAnalyseController
             initData(wb, sheet, currentRow, dataLength, "三年" + i + "班");
             currentRow += dataLength;
         }
-        return wb;
     }
 
     private CellStyle getCellStyle(Workbook wb, boolean isHeader)
@@ -237,21 +263,50 @@ public class ScoreAnalyseController
         return resultMap;
     }
 
+    @RequestMapping("/checkExamName")
+    @ResponseBody
+    public Boolean checkExamName(Exam exam)
+    {
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("examName", exam.getExamName());
+        paramMap.put("grade", exam.getGrade());
+        Exam existExam = (Exam)examService.queryOne(paramMap);
+        return existExam==null ? false : true;
+    }
+
     @RequestMapping("/addExam")
     @ResponseBody
     public Exam addExam(Exam exam)
     {
+        Exam existExam = getExsitExam(exam);
+        if(null !=existExam)
+        {
+            exam.setId(existExam.getId());
+            exam.setCreateDate(existExam.getCreateDate());
+        }
         exam.setCreateDate(TimeUtil.getTimeStamp("yyyy-MM-dd HH:mm:ss sss"));
         examService.add(exam);
         saveExcelData(exam, examService, headerList);
         return exam;
     }
 
+    private Exam getExsitExam(Exam exam)
+    {
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("examName", exam.getExamTime());
+        paramMap.put("grade", exam.getGrade());
+        return (Exam)examService.queryOne(paramMap);
+    }
+
     @RequestMapping("/listExam")
     @ResponseBody
-    public List<Exam> listExam(@RequestParam(value = "grade", required = true) String grade)
+    public List<Exam> listExam(@RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade)
     {
-        return examService.findList("grade", grade, "createDate", SqlOrderEnum.DESC);
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
+        paramMap.put("grade", grade);
+        return examService.like(paramMap, "createDate", SqlOrderEnum.DESC);
     }
 
     @RequestMapping("/deleteExam")
@@ -397,11 +452,13 @@ public class ScoreAnalyseController
 
     @RequestMapping("/getOverLineNumberDetail")
     @ResponseBody
-    public List<Map<String, Object>> getOverLineNumberDetail(@RequestParam(value = "tnId", required = true) String tnId,
+    public List<Map<String, Object>> getOverLineNumberDetail(
+        @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "orderBy", required = true) final String orderBy)
     {
         Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
         paramMap.put("grade", grade);
         paramMap.put("limitNumber", 1);
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
@@ -488,6 +545,7 @@ public class ScoreAnalyseController
     {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("grade", grade);
+        paramMap.put("tnId", tnId);
         paramMap.put("limitNumber", 3);
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
         if(null == examIds || examIds.size() == 0)
@@ -693,10 +751,11 @@ public class ScoreAnalyseController
     @RequestMapping("/getMostAttentionNumberChart")
     @ResponseBody
     public Map<String, Object> getMostAttentionNumberChart(
+        @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "batchName", required = true) String batchName)
     {
-        String lastExamId = getLastExamId(grade);
+        String lastExamId = getLastExamId(grade, tnId);
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("examId", lastExamId);
         paramMap.put("batchName", batchName);
@@ -709,6 +768,7 @@ public class ScoreAnalyseController
     @RequestMapping("/getMostAttentionPage")
     @ResponseBody
     public Map<String, Object> getMostAttentionPage(
+        @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "batchName", required = true) String batchName,
         @RequestParam(value = "className", required = false) String className,
@@ -716,7 +776,7 @@ public class ScoreAnalyseController
         @RequestParam(value = "offset", required = true) int offset,
         @RequestParam(value = "rows", required = true) int rows)
     {
-        String lastExamId = getLastExamId(grade);
+        String lastExamId = getLastExamId(grade, tnId);
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("examId", lastExamId);
         paramMap.put("batchName", batchName);
@@ -738,10 +798,11 @@ public class ScoreAnalyseController
         return resultMap;
     }
 
-    private String getLastExamId(String grade)
+    private String getLastExamId(String grade, String tnId)
     {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("grade", grade);
+        paramMap.put("tnId", tnId);
         paramMap.put("limitNumber", 3);
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
         if(null == examIds || examIds.size() == 0)
@@ -754,19 +815,160 @@ public class ScoreAnalyseController
     @RequestMapping("/getMostAdvancedNumbers")
     @ResponseBody
     public List<Map<String, Object>> getMostAdvancedNumbers(
+        @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "stepStart", required = true) Integer stepStart,
         @RequestParam(value = "stepEnd", required = true) Integer stepEnd)
     {
         List<Map<String, Object>> resultList = new ArrayList<>();
-        Map<String, Object> map1 = new LinkedHashMap<>();
-        map1.put("className", "三年一班");
-        map1.put("advancedNumber", "16");
-        resultList.add(map1);
-        Map<String, Object> map2 = new LinkedHashMap<>();
-        map2.put("className", "三年二班");
-        map2.put("advancedNumber", "11");
-        resultList.add(map2);
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("grade", grade);
+        paramMap.put("tnId", tnId);
+        paramMap.put("limitNumber", 3);
+        List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
+        if(null == examIds || examIds.size() == 0)
+        {
+            throw new BizException("1100011", "该年级没有成绩录入！！");
+        }
+        if(examIds.size() == 1)
+        {
+            throw new BizException("1100012", "该年级只有一次成绩录入！！");
+        }
+        Map<String, List<Integer>> examScoreRatioMap = new LinkedHashMap<>();
+        for(int i=1; i<=examIds.size(); i++)
+        {
+            String examId = examIds.get(i-1);
+            List<ExamDetail> detailList = examDetailService.findList("examId", examId);
+            if(i == 1)
+            {
+                for (ExamDetail detail : detailList)
+                {
+                    List<Integer> scoreList = new ArrayList<>();
+                    scoreList.add(Integer.parseInt(detail.getTotleScore()));
+                    examScoreRatioMap.put(detail.getClassName()+"@"+ detail.getStudentName(), scoreList);
+                }
+            }
+            if(i > 1)
+            {
+                for (ExamDetail detail : detailList)
+                {
+                    List<Integer> scoreList =  examScoreRatioMap.get(detail.getClassName()+"@"+ detail.getStudentName());
+                    scoreList.add(Integer.parseInt(detail.getTotleScore()));
+                }
+            }
+        }
+        advancedScoreSet = new TreeSet<>();
+        Map<String, List<Map<String, Object>>> resultMap  = new HashMap<>();
+        for (Map.Entry<String, List<Integer>> entry: examScoreRatioMap.entrySet())
+        {
+            String examDetailInfo = entry.getKey();
+            List<Integer> scoreList = entry.getValue();
+            String className = examDetailInfo.split("@")[0];
+            String studentName = examDetailInfo.split("@")[1];
+            int advancedScore = 0;
+            if(scoreList.size() == 0)
+            {
+                continue;
+            }
+            if(scoreList.size() == 1)
+            {
+                advancedScore = scoreList.get(0);
+            }
+            if(scoreList.size() == 2)
+            {
+                advancedScore = new BigDecimal(scoreList.get(0)).subtract(new BigDecimal(scoreList.get(1))).intValue();
+            }
+            if(scoreList.size() == 3)
+            {
+                advancedScore = new BigDecimal(scoreList.get(0)).subtract(new BigDecimal(scoreList.get(2))).
+                    divide(new BigDecimal(2), 0, RoundingMode.HALF_DOWN).intValue();
+            }
+            if(advancedScore >= stepStart && advancedScore <= stepEnd)
+            {
+                List<Map<String, Object>> dataList = resultMap.get(className);
+                if(null == dataList)
+                {
+                    dataList = new ArrayList<>();
+                    resultMap.put(className, dataList);
+                }
+                Map<String, Object> params = new LinkedHashMap<>();
+                params.put("className", className);
+                params.put("studentName", studentName);
+                params.put("advancedScore", advancedScore);
+                params.put("historyScores", scoreList.toString());
+                dataList.add(params);
+                advancedScoreSet.add(advancedScore);
+            }
+        }
+        for (Map.Entry<String, List<Map<String, Object>>> en: resultMap.entrySet())
+        {
+           String className =  en.getKey();
+           int advancedNumber = en.getValue().size();
+           Map<String, Object> map = new HashMap<>();
+           map.put("className", className);
+           map.put("advancedNumber", advancedNumber);
+           resultList.add(map);
+        }
+        Collections.sort(resultList, new Comparator<Map<String, Object>>()
+        {
+            @Override
+            public int compare(Map<String, Object> o1, Map<String, Object> o2)
+            {
+                return Integer.parseInt(o2.get("advancedNumber")+"")
+                    - Integer.parseInt(o1.get("advancedNumber")+"");
+            }
+        });
         return resultList;
     }
+
+    @RequestMapping("/getStepList")
+    @ResponseBody
+    public List<Map<String, Integer>> getStepList(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "stepStart", required = true) Integer stepStart,
+        @RequestParam(value = "stepLength", required = true) Integer stepLength)
+    {
+        getMostAdvancedNumbers(tnId, grade, stepStart, Integer.MAX_VALUE);
+        List<Map<String, Integer>> stepList = new ArrayList<>();
+        if(advancedScoreSet.size() > 0)
+        {
+            int maxStep = Collections.max(advancedScoreSet) ;
+            int endStep = stepStart;
+            while (endStep < maxStep)
+            {
+                int start = stepStart;
+                stepStart = stepStart +stepLength;
+                Map<String, Integer> paramMap = new LinkedHashMap<>();
+                paramMap.put("stepStart", start);
+                endStep = Math.min(stepStart, maxStep) ;
+                paramMap.put("stepEnd", endStep);
+                stepList.add(paramMap);
+            }
+        }
+        return stepList;
+    }
+
+    @RequestMapping("/getClassesNameByGrade")
+    @ResponseBody
+    public List<String> getClassesNameByGrade(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade)
+    {
+        String tableName = ParamsUtils.combinationTableName("class", Integer.parseInt(tnId));
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("tableName", tableName);
+        paramMap.put("grade", grade);
+        List<String> classNames;
+        try
+        {
+            classNames =  examDetailService.getClassesNameByGrade(paramMap);
+        }catch (Exception e)
+        {
+            throw new BizException("1100221", "班级信息未设置或设置不正确,必须包含班级名称和年级！");
+        }
+        return classNames;
+    }
+
+
 }

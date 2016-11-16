@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.reform.TrineDAO">
+
+    <select id="selectEnrollingNumberByBatch" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.TrineDto">
+        select  tt.batchName as batchName,count(*) as majorNumber,sum(tt.planEnrollingNumber) as planEnrollingNumber
+        from zgk2.zgk_university_trine tt
+        INNER JOIN zgk2.zgk_major_base bb on tt.majorCode=bb.major_code
+        INNER JOIN zgk2.zgk_university uu on uu.id=tt.universityId
+        where tt.areaId=#{areaId} and tt.year=#{year}
+        and tt.batchName in ('第一批提前批','第二批提前批','第三批提前批','高职提前批')
+        GROUP BY tt.batchName
+    </select>
+
+</mapper>

@@ -16,7 +16,7 @@
                             <span class="txt-t"></span>
                             <div class="btns">
                                 <button class="btn btn-pink opt-btn" id="addColumn-btn">添加</button>
-                                <button class="btn btn-success opt-btn">批量删除</button>
+                                <button class="btn btn-success opt-btn" id="delColumn-btn">批量删除</button>
                             </div>
                             <div class="main-title"></div>
                         </div>
@@ -26,7 +26,7 @@
                                     <tr>
                                         <th class="center">
                                             <label>
-                                                <input type="checkbox" class="ace" />
+                                                <input type="checkbox" id="checkAll" class="ace" />
                                                 <span class="lbl"></span>
                                             </label>
                                         </th>
@@ -35,7 +35,7 @@
                                         <th class="center"></th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="column-change-list" class="check-template">
 
                                 </tbody>
                             </table>
