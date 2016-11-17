@@ -1,6 +1,6 @@
 var tnId = Common.cookie.getCookie('tnId');
 
-//Common.flowSteps();
+Common.flowSteps();
 
 
 function SetingProcess5() {
@@ -31,9 +31,11 @@ SetingProcess5.prototype = {
                     TeacherTemplate.push('</tr>');
                     $('#teacher-template').append(TeacherTemplate.join(''));
                 });
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         });
     },
     initClassItem: function () {
@@ -45,9 +47,11 @@ SetingProcess5.prototype = {
         Common.ajaxFun('/config/getInit/teacher.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 initData = res.bizData.configList;
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         }, true);
         var contentHtml = [];
         contentHtml.push('<div class="add-label">');
@@ -90,9 +94,11 @@ SetingProcess5.prototype = {
                     that.getTeacherList();
                     layer.closeAll();
                 }
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         });
     },
     delItem: function (ids) {
@@ -102,9 +108,11 @@ SetingProcess5.prototype = {
                 layer.closeAll();
                 $('#teacher-template').html('');
                 that.getTeacherList();
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         });
     },
     tableDrag: function () {
