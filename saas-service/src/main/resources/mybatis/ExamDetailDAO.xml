@@ -1041,7 +1041,10 @@ selectList
         select exam.id,exam.examTime,count(1) as total
         from saas_exam exam
         inner join saas_exam_detail detail on exam.id=detail.examId
-        where exam.grade=#{grade} and CAST(detail.totleScore as SIGNED)>=#{lineScore}
+        where exam.tnId=#{tnId} and exam.grade=#{grade} and CAST(detail.totleScore as SIGNED)>=#{lineScore}
+        <if test="className!=null">
+            AND detail.className = #{className}
+        </if>
         group by exam.id,exam.examTime
         order by exam.examTime asc
     </select>
@@ -1105,9 +1108,8 @@ selectList
         order by total desc
     </select>
 
-
     <select id="getMostAttentionPage" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
-        select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo
+        select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank
         from saas_exam_stu_weak_course c
         left join saas_exam_detail d on c.examDetailId=d.id
         where c.examId=#{examId} and c.batchName=#{batchName}
@@ -1117,7 +1119,7 @@ selectList
         <if test="courseName!=null">
             AND weakCourseOne = #{courseName}
             UNION ALL
-            select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo
+            select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank
             from saas_exam_stu_weak_course c
             left join saas_exam_detail d on c.examDetailId=d.id
             where c.examId=#{examId} and c.batchName=#{batchName}
