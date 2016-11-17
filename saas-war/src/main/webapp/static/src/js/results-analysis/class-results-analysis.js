@@ -55,7 +55,7 @@ ClassResultsAnalysis.prototype = {
         });
         $('#select').find('option:eq(0)').attr('selected','selected');
         $('.sel-class-txt').text($('#select').find('option:eq(0)').val());
-        that.getAvgScoresForClass($('#select').find('option:eq(0)').val());
+        that.getAvgScoresForClass(grade,$('#select').find('option:eq(0)').val());
     },
     // 通过年级获取班级
     getClassesNameByGrade:function(grade){
