@@ -72,6 +72,7 @@
                                   <div id="totalScoreChart-chart" style="width: 100%;height: 400px;"></div>
                             </div>
                             <div class="chart-box">
+                                <div id="subjectsChart-chart" style="width: 100%;height: 400px;"></div>
                             </div>
                         </div>
                     </div>
