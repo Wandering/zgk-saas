@@ -4,9 +4,9 @@
 
     <select id="selectEnrollingNumberByBatch" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.TrineDto">
         select
-          case when tt.batchName = '第一批提前批' THEN '本科一批'
-            when tt.batchName = '第二批提前批' THEN '本科二批'
-            when tt.batchName = '第三批提前批' THEN '本科三批'
+          case when tt.batchName = '第一批提前批' THEN '一批本科'
+            when tt.batchName = '第二批提前批' THEN '二批本科'
+            when tt.batchName = '第三批提前批' THEN '三批本科'
             when tt.batchName = '高职提前批' THEN '高职专科'
           end
           as batchName,count(*) as majorNumber,sum(tt.planEnrollingNumber) as planEnrollingNumber,
