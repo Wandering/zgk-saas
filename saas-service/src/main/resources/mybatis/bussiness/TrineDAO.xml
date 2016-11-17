@@ -3,13 +3,46 @@
 <mapper namespace="cn.thinkjoy.saas.dao.bussiness.reform.TrineDAO">
 
     <select id="selectEnrollingNumberByBatch" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.TrineDto">
-        select  tt.batchName as batchName,count(*) as majorNumber,sum(tt.planEnrollingNumber) as planEnrollingNumber
+        select
+          case when tt.batchName = '第一批提前批' THEN '一批本科'
+            when tt.batchName = '第二批提前批' THEN '二批本科'
+            when tt.batchName = '第三批提前批' THEN '三批本科'
+            when tt.batchName = '高职提前批' THEN '高职专科'
+          end
+          as batchName,count(*) as majorNumber,sum(tt.planEnrollingNumber) as planEnrollingNumber,
+          count(*)/(select count(*)
+            from zgk2.zgk_university_trine tt
+            INNER JOIN zgk2.zgk_major_base bb on tt.majorCode=bb.major_code
+            INNER JOIN zgk2.zgk_university uu on uu.id=tt.universityId
+            where tt.areaId=#{areaId} and tt.year=#{year}
+            and tt.batchName in ('第一批提前批','第二批提前批','第三批提前批','高职提前批')) as percent
         from zgk2.zgk_university_trine tt
         INNER JOIN zgk2.zgk_major_base bb on tt.majorCode=bb.major_code
         INNER JOIN zgk2.zgk_university uu on uu.id=tt.universityId
         where tt.areaId=#{areaId} and tt.year=#{year}
         and tt.batchName in ('第一批提前批','第二批提前批','第三批提前批','高职提前批')
         GROUP BY tt.batchName
+    </select>
+
+    <select id="selectEnrollingInfo" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.EnrollingInfoDto">
+        select  uu.name as universityName,uu.rank as rank,uu.property as property,tt.universityId as universityId,sum(tt.planEnrollingNumber) as planEnrollingNumber
+        from zgk2.zgk_university_trine tt
+        INNER JOIN zgk2.zgk_major_base bb on tt.majorCode=bb.major_code
+        INNER JOIN zgk2.zgk_university uu on uu.id=tt.universityId
+        where tt.areaId=#{areaId} and tt.year=#{year}
+                    and tt.batchName in ('第一批提前批','第二批提前批','第三批提前批','高职提前批')
+        GROUP by tt.universityId
+        order by if(ISNULL(uu.rank),10000,uu.rank) asc
+        limit ${offset}, ${rows}
+    </select>
+
+    <select id="selectEnrollingInfoCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select  count(DISTINCT tt.universityId)
+        from zgk2.zgk_university_trine tt
+        INNER JOIN zgk2.zgk_major_base bb on tt.majorCode=bb.major_code
+        INNER JOIN zgk2.zgk_university uu on uu.id=tt.universityId
+        where tt.areaId=#{areaId} and tt.year=#{year}
+                    and tt.batchName in ('第一批提前批','第二批提前批','第三批提前批','高职提前批')
     </select>
 
 </mapper>
