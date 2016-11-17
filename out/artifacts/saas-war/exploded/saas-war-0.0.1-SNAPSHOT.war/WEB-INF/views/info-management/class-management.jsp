@@ -42,14 +42,14 @@
                                     <div class="btns">
                                         <button class="btn btn-pink" id="addRole-btn">添加班级</button>
                                         <button class="btn btn-inverse" id="updateRole-btn">修改</button>
-                                        <button class="btn btn-success">删除</button>
+                                        <button class="btn btn-success" id="deleteClassBtn">删除</button>
                                         <button class="btn btn-warning">模板下载</button>
                                         <button class="btn btn-warning">批量上传</button>
                                         <button class="btn btn-warning" id="class-settings-btn">班级设置</button>
                                     </div>
                                 </div>
                                 <div>
-                                    <table id="class-table" class="table">
+                                    <table id="class-manage-table" class="table">
                                         <thead>
                                             <%--<tr>--%>
                                                 <%--<th class="center">--%>
@@ -69,7 +69,7 @@
                                                 <%--<th class="center">班级人数</th>--%>
                                             <%--</tr>--%>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="class-manage-list" class="check-template">
 
                                         </tbody>
                                     </table>
