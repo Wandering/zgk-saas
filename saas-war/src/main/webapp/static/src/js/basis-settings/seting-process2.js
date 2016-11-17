@@ -1,6 +1,6 @@
 var tnId = Common.cookie.getCookie('tnId');
 
-//Common.flowSteps();
+Common.flowSteps();
 
 
 
@@ -23,9 +23,11 @@ SetingProcess2.prototype = {
             //console.log(res)
             if (res.rtnCode == "0000000") {
                 that.renderList(res);
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         }, true);
     },
     renderList: function (data) {
@@ -42,6 +44,8 @@ SetingProcess2.prototype = {
                 gradeArr.push('</div>');
             });
             $('#grade-group').append(gradeArr.join(''));
+        }else{
+            layer.msg(res.msg);
         }
     },
     eventClick:function(){
@@ -71,9 +75,11 @@ SetingProcess2.prototype = {
                 if (res.bizData.result == "FAIL") {
                     alert('新增失败,请核对后在提交');
                 }
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         }, 'true');
 
     }

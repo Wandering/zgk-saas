@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module external.linked.project.id=":saas-war" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="cn.thinkjoy.saas" external.system.module.version="0.0.1-SNAPSHOT" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
+    <facet type="Spring" name="Spring">
+      <configuration>
+        <fileset id="fileset" name="Spring Application Context" removed="false">
+          <file>file://$MODULE_DIR$/src/main/resources/spring.xml</file>
+          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/springmvc-servlet.xml</file>
+        </fileset>
+      </configuration>
+    </facet>
     <facet type="web" name="Web Gradle : saas-war-0.0.1-SNAPSHOT.war">
       <configuration>
         <descriptors>
@@ -89,13 +97,13 @@
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-domain-common:0.1.43-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-protocol-common:0.1.43-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-biz-common:0.1.43-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:javax.servlet.jsp:2.2.0.v201112011158" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:org.apache.jasper.glassfish:2.2.2.v201112011158" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:javax.servlet.jsp.jstl:1.2.0.v201105211821" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:org.apache.taglibs.standard.glassfish:1.2.0.v201112081803" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:javax.el:2.2.0.v201108011116" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:com.sun.el:2.2.0.v201108011116" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:org.eclipse.jdt.core:3.7.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016:orbit" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:javax.servlet.jsp:2.2.0.v201112011158:orbit" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:org.apache.jasper.glassfish:2.2.2.v201112011158:orbit" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:javax.servlet.jsp.jstl:1.2.0.v201105211821:orbit" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:org.apache.taglibs.standard.glassfish:1.2.0.v201112081803:orbit" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:javax.el:2.2.0.v201108011116:orbit" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:com.sun.el:2.2.0.v201108011116:orbit" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty.orbit:org.eclipse.jdt.core:3.7.1:orbit" level="project" />
   </component>
 </module>
