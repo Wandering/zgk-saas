@@ -260,7 +260,7 @@
             cursor: pointer;
             font-size: 20px;
             color: #333;
-            margin-right: 20px;
+            margin-right: 120px;
             margin-left: 0;
           }
           .icon-flags{
@@ -283,34 +283,30 @@
             border-radius: 1px;
             margin-right: 2px;
           }
-          //.type-985 {
-          //  color: $listColor1;
-          //  border: 1px solid $listColor1;
-          //}
-          //.type-211 {
-          //  color: $listColor2;
-          //  border: 1px solid $listColor2;
-          //}
-          //.type-yan {
-          //  color: $listColor3;
-          //  border: 1px solid $listColor3;
-          //}
-          //.type-zi {
-          //  color: $listColor4;
-          //  border: 1px solid $listColor4;
-          //}
-          //.type-guo {
-          //  color: $listColor5;
-          //  border: 1px solid $listColor5;
-          //}
-          //.type-zhuo {
-          //  color: $listColor6;
-          //  border: 1px solid $listColor6;
-          //}
-          //.btn {
-          padding: 3px 4px;
-          color: #fff;
-          outline: none;
+          .type-985 {
+            color: $listColor1;
+            border: 1px solid $listColor1;
+          }
+          .type-211 {
+            color: $listColor2;
+            border: 1px solid $listColor2;
+          }
+          .type-yan {
+            color: $listColor3;
+            border: 1px solid $listColor3;
+          }
+          .type-zi {
+            color: $listColor4;
+            border: 1px solid $listColor4;
+          }
+          .type-guo {
+            color: $listColor5;
+            border: 1px solid $listColor5;
+          }
+          .type-zhuo {
+            color: $listColor6;
+            border: 1px solid $listColor6;
+          }
         }
       }
       .bottom {
@@ -318,7 +314,7 @@
         top: 100px;
         left: 125px;
         .province, .belong, .school-type {
-          margin-right: 15px;
+          margin-right: 45px;
         }
         .enter-site {
           color: #666;

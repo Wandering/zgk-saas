@@ -16,6 +16,8 @@ ResultsManagementFun.prototype = {
             if (res.rtnCode == "0000000") {
                 var myTemplate = Handlebars.compile($("#grade-template").html());
                 $('#grade-body').html(myTemplate(res));
+            }else{
+                layer.msg(res.msg)
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -23,19 +25,24 @@ ResultsManagementFun.prototype = {
     },
     getResultsList: function (grade) {
         Common.ajaxFun('/scoreAnalyse/listExam', 'GET', {
+            'tnId': tnId,
             'grade': grade
         }, function (res) {
             console.log(res)
-            var myTemplate = Handlebars.compile($("#results-template").html());
-            Handlebars.registerHelper('excel', function (url) {
-                return Common.getPageName(url);
-            });
-            $('#results-tbody').html(myTemplate(res));
+            if (res.rtnCode == "0000000") {
+                var myTemplate = Handlebars.compile($("#results-template").html());
+                Handlebars.registerHelper('excel', function (url) {
+                    return Common.getPageName(url);
+                });
+                $('#results-tbody').html(myTemplate(res));
+            }else{
+                layer.msg(res.msg)
+            }
         }, function (res) {
             alert("出错了");
         });
     },
-    uploadResults: function (id, examName, examTime, uploadFilePath) {
+    uploadResults: function (grade,id, examName, examTime, uploadFilePath) {
         var contentHtml = [];
         contentHtml.push('<div class="form-horizontal upload-layer">');
         contentHtml.push('<div class="form-group">');
@@ -58,7 +65,7 @@ ResultsManagementFun.prototype = {
         }
         contentHtml.push('</div>');
         contentHtml.push('</div>');
-        if (!id) {
+        if (!id && grade) {
             contentHtml.push('<div class="form-group add-results">');
             contentHtml.push('<label class="col-sm-3 control-label no-padding-right">添加成绩 </label>');
             contentHtml.push('<div class="col-sm-9">');
@@ -66,7 +73,7 @@ ResultsManagementFun.prototype = {
             contentHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
             contentHtml.push('<button class="btn btn-pink" id="btn-import">添加</button>');
             contentHtml.push('</span>');
-            contentHtml.push('<p><a target="_blank" href="/scoreAnalyse/downloadModel">请先导出Excel模板,进行填写</a></p>');
+            contentHtml.push('<p><a target="_blank" href="/scoreAnalyse/downloadModel?tnId='+ tnId +'&grade='+ grade +'&mock=true">请先导出Excel模板,进行填写</a></p>');
             contentHtml.push('<p>温馨提示:上传与模板不一致的成绩单,系统无法识别</p>');
             contentHtml.push('</div>');
             contentHtml.push('</div>');
@@ -111,16 +118,20 @@ ResultsManagementFun.prototype = {
             'offset': Pn,
             'rows': rows
         }, function (res) {
-            $(".tcdPageCode").attr('count', parseInt(Math.ceil(res.bizData.count / rows)));
-            var myTemplate = Handlebars.compile($("body #details-template").html());
-            layer.close();
-            $('body #details-tbody').html(myTemplate(res));
-            $('body #details-download-btn').attr('href', uploadfilepath);
-            $('body #details-modify-btn').attr({
-                'grade': grade,
-                'examId': id,
-                'uploadfilepath': uploadfilepath
-            });
+            if (res.rtnCode == "0000000") {
+                $(".tcdPageCode").attr('count', parseInt(Math.ceil(res.bizData.count / rows)));
+                var myTemplate = Handlebars.compile($("body #details-template").html());
+                layer.close();
+                $('body #details-tbody').html(myTemplate(res));
+                $('body #details-download-btn').attr('href', uploadfilepath);
+                $('body #details-modify-btn').attr({
+                    'grade': grade,
+                    'examId': id,
+                    'uploadfilepath': uploadfilepath
+                });
+            }else{
+                layer.msg(res.msg)
+            }
         }, function (res) {
             alert("出错了");
         }, 'true');
@@ -263,6 +274,8 @@ ResultsManagementFun.prototype = {
                 layer.msg('删除成功!');
                 var radioV = $('input[name="results-radio"]:checked').val();
                 that.getResultsList(radioV);
+            }else{
+                layer.msg(res.msg)
             }
         }, function (res) {
             alert("出错了1");
@@ -295,6 +308,8 @@ ResultsManagementFun.prototype = {
                     yuWenScore = data.yuWenScore,
                     zhengZhiScore = data.zhengZhiScore;
                 that.detailsModify(className, classRank, commonScore, diLiScore, examId, gradeRank, huaXueScore, id, liShiScore, selectCourses, shengWuScore, shuXueScore, studentName, totleScore, wuLiScore, yingYuScore, yuWenScore, zhengZhiScore);
+            }else{
+                layer.msg(res.msg)
             }
         }, function (res) {
             alert("出错了");
@@ -314,6 +329,8 @@ ResultsManagementFun.prototype = {
                 layer.msg('删除成功!');
                 var radioV = $('input[name="results-radio"]:checked').val();
                 that.detailsModifyFun(examDetailId);
+            }else{
+                layer.msg(res.msg)
             }
         }, function (res) {
             alert("出错了");
@@ -331,6 +348,7 @@ $(function () {
     // 选择年级
     $('#grade-body').find('input[name="results-radio"]').click(function () {
         var radioV = $(this).val();
+        $('#uploadResultsBtn').attr('grade',radioV);
         ResultsManagementIns.getResultsList(radioV);
     });
     $('#grade-body').find('input[name="results-radio"]:first').click();
@@ -338,7 +356,8 @@ $(function () {
 
     //上传成绩
     $('body').on('click', '#uploadResultsBtn', function () {
-        ResultsManagementIns.uploadResults();
+        var grade = $(this).attr('grade');
+        ResultsManagementIns.uploadResults(grade);
     });
 
     // 保存
@@ -361,6 +380,8 @@ $(function () {
                     layer.tips('考试名称已经存在,请修改考试名称后再提交!', $('#examName'));
                     return false;
                 }
+            }else{
+                layer.msg(res.msg)
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -386,12 +407,15 @@ $(function () {
                     layer.closeAll();
                     ResultsManagementIns.getResultsList(radioV);
                     layer.msg('修改成功!');
+                }else{
+                    layer.msg(res.msg)
                 }
             }, function (res) {
                 layer.msg(res.msg);
             });
         } else {
             Common.ajaxFun('/scoreAnalyse/addExam.do', 'GET', {
+                'tnId': tnId,
                 'examName': examName,
                 'examTime': examDate,
                 'grade': radioV,
@@ -401,6 +425,8 @@ $(function () {
                     layer.closeAll();
                     ResultsManagementIns.getResultsList(radioV);
                     layer.msg('添加成功!');
+                }else{
+                    layer.msg(res.msg)
                 }
             }, function (res) {
                 layer.msg(res.msg);
@@ -416,7 +442,7 @@ $(function () {
             return false;
         }
         if (checkboxLen > 1) {
-            layer.tips('删除只能选择一项', $(this));
+            layer.tips('修改只能选择一项', $(this));
             return false;
         }
         var resultsChecked = $('#results-tbody input:checked');
@@ -615,6 +641,8 @@ $(function () {
                     }
                 });
                 layer.close(closeIndex);
+            }else{
+                layer.msg(res.msg)
             }
         }, function (res) {
             alert("出错了");

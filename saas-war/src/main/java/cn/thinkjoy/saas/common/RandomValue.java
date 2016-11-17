@@ -145,4 +145,18 @@ public class RandomValue
         }
         return set;
     }
+    private static Map<Integer, Set<Integer>> indexMap = new HashMap<>();
+
+    static
+    {
+        for (int i =0; i<10; i++)
+        {
+            indexMap.put(i, getIndex());
+        }
+    }
+
+    public static Set<Integer> getIndexByI(int i)
+    {
+        return indexMap.get(i);
+    }
 }

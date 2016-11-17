@@ -81,37 +81,18 @@
                             </div>
                         </div>
                         <table id="" class="table table-hover">
-                            <thead>
+                            <thead id="sort-thead">
                             <tr>
-                                <th class="center">班级</th>
-                                <th class="center">班主任</th>
-                                <th class="center">本科上线人数</th>
-                                <th class="center">一本上线人数</th>
-                                <th class="center">二本上线人数</th>
-                                <th class="center">三本上线人数</th>
                             </tr>
                             </thead>
                             <tbody id="sort-tbody">
 
                             </tbody>
                         </table>
-
                         <p><h5 class="h5">重点关注学生：</h5>根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</p>
-                        <table id="" class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th class="center">本科</th>
-                                <th class="center">总人数</th>
-                                <th class="center">物政地</th>
-                                <th class="center">史政生</th>
-                                <th class="center">物化史</th>
-                                <th class="center">史地政</th>
-                                <th class="center">物化生</th>
-                            </tr>
-                            </thead>
-                            <tbody id="core-tbody">
-
-                            </tbody>
+                        <table class="table table-hover">
+                            <thead id="core-thead"></thead>
+                            <tbody id="core-tbody"></tbody>
                         </table>
                         <h5 class="h5">进步较大学生：</h5>
                         <form class="form-horizontal" role="form">
@@ -142,6 +123,23 @@
                         </table>
                     </div>
                 </div><!-- /.row -->
+
+                <div class="row" style="display:none;" id="batch-main-layer">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="class-chart">
+                            <div id="class-chart" style="width: 100%;height: 250px;"></div>
+                        </div>
+                        <div class="subject-chart">
+                            <div id="subject-chart" class="" style="width: 100%;height: 250px;"></div>
+                        </div>
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+
+
+
+
             </div><!-- /.page-content -->
         </div><!-- /.main-content -->
     </div><!-- /.main-container-inner -->
@@ -155,16 +153,29 @@
     &nbsp;&nbsp;&nbsp;&nbsp;
     {{/each}}
 </script>
-<script id="core-template" type="text/x-handlebars-template">
+<script id="sort-thead-template" type="text/x-handlebars-template">
+    <tr>
+        <th class="center">班级</th>
+        {{#if bizData.className1}}
+        <th class="center">班主任</th>
+        {{else}}
+        {{/if}}
+        <th class="center">本科上线人数</th>
+        <th class="center">一本上线人数</th>
+        <th class="center">二本上线人数</th>
+    </tr>
+</script>
+<script id="sort-template" type="text/x-handlebars-template">
     {{#each bizData}}
     <tr>
-        <td class="center">{{batch batchName}}</td>
-        <td class="center">{{batchTotal}}</td>
-        <td class="center">{{物政通}}</td>
-        <td class="center">{{生政史}}</td>
-        <td class="center">{{物化史}}</td>
-        <td class="center">{{政地史}}</td>
-        <td class="center">{{物化生}}</td>
+        <td class="center">{{className}}</td>
+        {{#if bizData.className1}}
+        <th class="center">{{className1}}</th>
+        {{else}}
+        {{/if}}
+        <td class="center">{{batchAll}}</td>
+        <td class="center">{{batchOne}}</td>
+        <td class="center">{{batchTwo}}</td>
     </tr>
     {{/each}}
 </script>
@@ -178,6 +189,7 @@
     {{/each}}
 </script>
 <%@ include file="./../common/footer.jsp" %>
+<script src="<%=ctx%>/static/src/lib/jquery.page/jquery.page.js"></script>
 <script src="<%=ctx%>/static/src/js/results-analysis/school-results-analysis.js"></script>
 </body>
 </html>

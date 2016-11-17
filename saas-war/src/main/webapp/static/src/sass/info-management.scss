@@ -1,7 +1,12 @@
 .grade-layer{
-  padding:30px 0 0;
+  padding: 28px 0 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
-
+.btn {
+    outline: 0!important;
+    border: 0!important;
+}
 ul, li, span, div {
   padding: 0;
   margin: 0;
@@ -66,4 +71,19 @@ ul, li, span, div {
 .add-class-box ul li .opt-btn-box button:last-of-type {
   margin-left: 20px;
 }
-
+.upload-box {
+    padding-top: 40px;
+    padding-left: 50px;
+}
+a.download-link:link,
+a.download-link:visited,
+a.download-link:hover {
+    display: block;
+    margin-top: 25px;
+    color: #CB171D;
+    text-decoration: underline;
+    outline: 0;
+}
+.download-opt {
+    text-align: center;
+}

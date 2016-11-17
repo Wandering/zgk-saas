@@ -43,7 +43,6 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
-
                         <div class="main-title">
                             <h3>学校成绩管理</h3>
                         </div>
@@ -57,6 +56,9 @@
                     </div><!-- /.col -->
                     <div class="col-xs-12">
                         <h5 class="h5">本科线成绩分析</h5>
+                        <div class="grade3-main" style="display: none;">
+                            <div id="lineNumberByDate-chart" style="width: 100%;height: 250px;"></div>
+                        </div>
                         <p><h5 class="h5">班级情况统计：</h5>根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</p>
                         <h5 class="h5">各班上线人数统计：</h5>
                         <div class="txt-t">
@@ -98,8 +100,8 @@
                         <form class="form-horizontal" role="form">
                             <div class="form-group">
                                 <div class="col-sm-3">
-                                    <select class="form-control" id="">
-                                        <option value="">选择进步名词</option>
+                                    <select class="form-control" id="ranking-sel">
+                                        <option value="">选择进步名次</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-3">
@@ -123,23 +125,6 @@
                         </table>
                     </div>
                 </div><!-- /.row -->
-
-                <div class="row" style="display:none;" id="batch-main-layer">
-                    <div class="col-xs-12">
-                        <!-- PAGE CONTENT BEGINS -->
-                        <div class="class-chart">
-                            <div id="class-chart" style="width: 100%;height: 250px;"></div>
-                        </div>
-                        <div class="subject-chart">
-                            <div id="subject-chart" class="" style="width: 100%;height: 250px;"></div>
-                        </div>
-                        <!-- PAGE CONTENT ENDS -->
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-
-
-
-
             </div><!-- /.page-content -->
         </div><!-- /.main-content -->
     </div><!-- /.main-container-inner -->
@@ -185,6 +170,17 @@
         <td class="center"></td>
         <td class="center"></td>
         <td class="center"></td>
+    </tr>
+    {{/each}}
+</script>
+<script id="details-main-template" type="text/x-handlebars-template">
+    {{#each bizData.list}}
+    <tr>
+        <td class="center">{{className}}</td>
+        <td class="center">{{studentName}}</td>
+        <td class="center">{{gradeRank}}</td>
+        <td class="center">{{weakCourseOne}}</td>
+        <td class="center">{{weakCourseTwo}}</td>
     </tr>
     {{/each}}
 </script>
