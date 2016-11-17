@@ -94,3 +94,4 @@ saas-war/build/
 saas-api/build/
 saas-domain/build/
 saas-service/build/
+*.DS_Store
