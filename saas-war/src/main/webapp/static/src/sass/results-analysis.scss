@@ -43,6 +43,8 @@
   overflow: hidden;
   .chart-tab{
     float: right;
+    overflow: hidden;
+    height:40px;
     .cur{
       background: #cb171d !important;
       color: #fff;
@@ -50,9 +52,10 @@
   }
   .chart-box{
     display: none;
+    clear: both;
+    overflow: hidden;
   }
 }
-
 .txt1{
   font-weight: bold;
   font-size:16px;

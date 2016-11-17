@@ -48,7 +48,7 @@
 
         <!-- 仅输出 比WARN级别高的日志 -->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>WARN</level>
+            <level>DEBUG</level>
         </filter>
     </appender>
 

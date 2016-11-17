@@ -4,9 +4,12 @@ import cn.thinkjoy.common.dao.IBaseDAO;
 import cn.thinkjoy.common.domain.BaseDomain;
 import cn.thinkjoy.common.service.IBaseService;
 import cn.thinkjoy.common.service.IPageService;
+import cn.thinkjoy.saas.domain.Configuration;
+import cn.thinkjoy.saas.domain.TenantConfigInstance;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by douzy on 16/10/13.
@@ -123,4 +126,39 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      * @return
      */
     boolean isExsitsTeantCustomTable(String type,Integer tnId);
+
+    public Configuration queryConfigurationOne(Map map);
+
+    /**
+     * 是否存在当前列
+     * @param map
+     * @return
+     */
+    public boolean existColumn(Map map);
+
+    /**
+     * 新增表头
+     * @param tenantConfigInstances
+     * @return
+     */
+    public Integer addConfigs(List<TenantConfigInstance> tenantConfigInstances);
+
+    /**
+     * 新增列
+     * @param map
+     */
+    public void addColumn(Map map);
+
+    /**
+     * 删除租户自定义表头
+     * @param map
+     * @return
+     */
+    public Integer teantConfigDeleteByCondition(Map map);
+
+    /**
+     * 删除列
+     * @param map
+     */
+    public void removeColumn(Map map);
 }

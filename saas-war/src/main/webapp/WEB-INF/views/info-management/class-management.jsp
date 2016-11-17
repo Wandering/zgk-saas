@@ -43,8 +43,8 @@
                                         <button class="btn btn-pink" id="addRole-btn">添加班级</button>
                                         <button class="btn btn-inverse" id="updateRole-btn">修改</button>
                                         <button class="btn btn-success" id="deleteClassBtn">删除</button>
-                                        <button class="btn btn-warning">模板下载</button>
-                                        <button class="btn btn-warning">批量上传</button>
+                                        <button class="btn btn-warning" id="downloadBtn">模板下载</button>
+                                        <button class="btn btn-warning" id="uploadBtn">批量上传</button>
                                         <button class="btn btn-warning" id="class-settings-btn">班级设置</button>
                                     </div>
                                 </div>
