@@ -1126,7 +1126,7 @@ selectList
             <if test="className!=null">
                 AND className = #{className}
             </if>
-            AND weakCourseOne = #{courseName}
+            AND weakCourseTwo = #{courseName}
         </if>
         <if test="orderBy!=null">
             ORDER BY ${orderBy} ${sortBy}
@@ -1135,7 +1135,7 @@ selectList
             limit ${offset}, ${rows}
         </if>
     </select>
-    <select id="getAvgScoresForClass" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="getAvgScoresForClass" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
         select d.className,e.examTime, ROUND(AVG(IF(d.yuWenScore='', null, d.yuWenScore)), 2) 语文,
         ROUND(AVG(IF(d.shuXueScore='', null, d.shuXueScore)), 2) 数学,
         ROUND(AVG(IF(d.yingYuScore='', null, d.yingYuScore)), 2) 英语,
@@ -1145,12 +1145,13 @@ selectList
         ROUND(AVG(IF(d.zhengZhiScore='', null, d.zhengZhiScore)), 2) 政治,
         ROUND(AVG(IF(d.diLiScore='', null, d.diLiScore)), 2) 地理,
         ROUND(AVG(IF(d.liShiScore='', null, d.liShiScore)), 2) 历史,
-        ROUND(AVG(IF(d.commonScore='', null, d.commonScore)), 2) 通用技术
+        ROUND(AVG(IF(d.commonScore='', null, d.commonScore)), 2) 通用技术,
+		ROUND(AVG(IF(d.totleScore='', null, d.totleScore)), 2) 总分
         from saas_exam_detail d
         LEFT JOIN saas_exam e on d.examId=e.id
-        WHERE d.className=#{className}
+        WHERE d.className=#{className} and e.grade=#{grade} and e.tnId=#{tnId}
         group by d.className,e.examTime
-        order by e.id desc
+        order by e.examTime asc
     </select>
     
     <select id="getClassesNameByGrade" parameterType="java.util.HashMap" resultType="java.lang.String">

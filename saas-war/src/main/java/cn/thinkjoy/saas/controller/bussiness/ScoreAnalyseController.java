@@ -10,7 +10,6 @@ import cn.thinkjoy.saas.service.IExamDetailService;
 import cn.thinkjoy.saas.service.IExamService;
 import cn.thinkjoy.saas.service.IExamStuWeakCourseService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
-import cn.thinkjoy.zgk.common.StringUtil;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.google.common.collect.Maps;
 import org.apache.poi.hssf.usermodel.DVConstraint;
@@ -413,17 +412,17 @@ public class ScoreAnalyseController
         }
         Map<String, Object> condition = Maps.newHashMap();
         condition.put("groupOp", "and");
-        if (StringUtil.isNulOrBlank(examId))
+        if (StringUtils.isNotEmpty(examId))
         {
             throw new BizException("1110001", "examId不能为空！");
         }
         ConditionsUtil.setCondition(condition, "examId", "=", examId);
         int count = examDetailService.count(condition);
-        if (!StringUtil.isNulOrBlank(id))
+        if (!StringUtils.isNotEmpty(id))
         {
             ConditionsUtil.setCondition(condition, "id", "=", id);
         }
-        if (!StringUtil.isNulOrBlank(grade))
+        if (!StringUtils.isNotEmpty(grade))
         {
             ConditionsUtil.setCondition(condition, "grade", "=", grade);
         }
@@ -956,10 +955,10 @@ public class ScoreAnalyseController
             while (endStep < maxStep)
             {
                 int start = stepStart;
-                stepStart = stepStart + stepLength;
+                stepStart = stepStart + stepLength + 1;
                 Map<String, Integer> paramMap = new LinkedHashMap<>();
                 paramMap.put("stepStart", start);
-                endStep = Math.min(stepStart, maxStep);
+                endStep = Math.min(stepStart - 1, maxStep);
                 paramMap.put("stepEnd", endStep);
                 stepList.add(paramMap);
             }
@@ -989,4 +988,71 @@ public class ScoreAnalyseController
         return classNames;
     }
 
+    @RequestMapping("/getAvgScoresForClass")
+    @ResponseBody
+    public List<Map<String, Object>> getAvgScoresForClass(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "className", required = true) String className)
+    {
+        Map<String,String> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
+        paramMap.put("grade", grade);
+        paramMap.put("className", className);
+        List<Map<String, Object>> resultList;
+        resultList = examDetailService.getAvgScoresForClass(paramMap);
+        if(null == resultList)
+        {
+            resultList = new ArrayList<>();
+        }
+        return resultList;
+    }
+
+
+    @RequestMapping("/getStuNumberScoreChangeForClass")
+    @ResponseBody
+    public List<Map<String, Object>> getStuNumberScoreChangeForClass(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "className", required = true) String className)
+    {
+        Map<String, Object> param = new HashMap<>();
+        param.put("grade", grade);
+        param.put("tnId", tnId);
+        param.put("limitNumber", 3);
+        List<String> examIds = examDetailService.getLastExamIdByGrade(param);
+        if (null == examIds || examIds.size() == 0)
+        {
+            throw new BizException("1100011", "该年级没有成绩录入！！");
+        }
+        if (examIds.size() == 1)
+        {
+            throw new BizException("1100012", "该年级只有一次成绩录入！！");
+        }
+        List<ExamDetail> detailListOne = examDetailService.findList("examId", examIds.get(0));
+        List<ExamDetail> detailListTwo = examDetailService.findList("examId", examIds.get(1));
+        Map<String, List<ExamDetail>> detailMap = new HashMap<>();
+        for (ExamDetail detail : detailListOne)
+        {
+            if(className.equals(detail.getClassName()))
+            {
+                List<ExamDetail> detailList = new ArrayList<>();
+                detailList.add(detail);
+                detailMap.put(className + "@" + detail.getStudentName(), detailList);
+            }
+        }
+        for (ExamDetail detail : detailListTwo)
+        {
+            if(className.equals(detail.getClassName()))
+            {
+                List<ExamDetail> detailList = detailMap.get(className + "@" + detail.getStudentName());
+                detailList.add(detail);
+            }
+        }
+        for (Map.Entry<String, List<ExamDetail>> entry: detailMap.entrySet())
+        {
+            
+        }
+        return null;
+    }
 }
