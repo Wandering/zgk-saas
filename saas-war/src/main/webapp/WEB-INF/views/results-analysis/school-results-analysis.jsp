@@ -178,7 +178,7 @@
     <tr>
         <td class="center">{{className}}</td>
         <td class="center">{{studentName}}</td>
-        <td class="center"></td>
+        <td class="center">{{gradeRank}}</td>
         <td class="center">{{weakCourseOne}}</td>
         <td class="center">{{weakCourseTwo}}</td>
     </tr>
