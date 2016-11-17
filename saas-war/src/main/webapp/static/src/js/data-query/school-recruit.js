@@ -90,7 +90,147 @@ var SchoolRecruit = {
     getCollegeUniversitiesEnrollment: function () {
         var that = this;
         $('#table-loading-img').show();
-        //Common.ajaxFun('/data/getGkAdmissionLineList.do', 'GET', this.params, function (res) {
+        Common.ajaxFun('/data/getGkAdmissionLineList.do', 'GET', this.params, function (res) {
+        //res = {
+        //    "bizData": {
+        //        "conditions": {},
+        //        "page": 1,
+        //        "pagesize": 10,
+        //        "records": 150837,
+        //        "rows": [{
+        //            "averageScore": 660,
+        //            "batchname": "本科一批",
+        //            "enrollingNumber": 149,
+        //            "highestScore": 702,
+        //            "id": 1,
+        //            "lowestScore": 618,
+        //            "name": "北京大学",
+        //            "property": "211工程,985高校,有研究生院,自主招生,含国防生",
+        //            "propertys": {"16": "含国防生", "2": "211工程", "64": "自主招生", "8": "有研究生院"},
+        //            "subjection": "教育部",
+        //            "typename": "理工",
+        //            "year": 2012
+        //        }, {
+        //            "averageScore": 630,
+        //            "batchname": "本科一批",
+        //            "enrollingNumber": 102,
+        //            "highestScore": 662,
+        //            "id": 2,
+        //            "lowestScore": 598,
+        //            "name": "中国人民大学",
+        //            "property": "211工程,985高校,有研究生院,自主招生,含国防生",
+        //            "propertys": {"16": "含国防生", "2": "211工程", "64": "自主招生", "8": "有研究生院"},
+        //            "subjection": "教育部",
+        //            "typename": "理工",
+        //            "year": 2012
+        //        }, {
+        //            "averageScore": 660,
+        //            "batchname": "本科一批",
+        //            "enrollingNumber": 209,
+        //            "highestScore": 712,
+        //            "id": 3,
+        //            "lowestScore": 608,
+        //            "name": "清华大学",
+        //            "property": "211工程,985高校,有研究生院,自主招生,含国防生,卓越计划",
+        //            "propertys": {"16": "含国防生", "2": "211工程", "32": "卓越计划", "64": "自主招生", "8": "有研究生院"},
+        //            "subjection": "教育部",
+        //            "typename": "理工",
+        //            "year": 2012
+        //        }, {
+        //            "averageScore": 596,
+        //            "batchname": "本科一批",
+        //            "enrollingNumber": 205,
+        //            "highestScore": 652,
+        //            "id": 4,
+        //            "lowestScore": 540,
+        //            "name": "北京交通大学",
+        //            "property": "211工程,有研究生院,自主招生,含国防生,卓越计划",
+        //            "propertys": {"16": "含国防生", "2": "211工程", "32": "卓越计划", "64": "自主招生", "8": "有研究生院"},
+        //            "subjection": "教育部",
+        //            "typename": "理工",
+        //            "year": 2012
+        //        }, {
+        //            "averageScore": 537,
+        //            "batchname": "本科一批",
+        //            "enrollingNumber": 1765,
+        //            "highestScore": 654,
+        //            "id": 5,
+        //            "lowestScore": 420,
+        //            "name": "北京工业大学",
+        //            "property": "211工程,自主招生,卓越计划",
+        //            "propertys": {"2": "211工程", "32": "卓越计划", "64": "自主招生"},
+        //            "subjection": "北京市",
+        //            "typename": "理工",
+        //            "year": 2012
+        //        }, {
+        //            "averageScore": 624,
+        //            "batchname": "本科一批",
+        //            "enrollingNumber": 261,
+        //            "highestScore": 662,
+        //            "id": 6,
+        //            "lowestScore": 586,
+        //            "name": "北京航空航天大学",
+        //            "property": "211工程,985高校,有研究生院,自主招生,含国防生,卓越计划",
+        //            "propertys": {"16": "含国防生", "2": "211工程", "32": "卓越计划", "64": "自主招生", "8": "有研究生院"},
+        //            "subjection": "工业和信息化部",
+        //            "typename": "理工",
+        //            "year": 2012
+        //        }, {
+        //            "averageScore": 611,
+        //            "batchname": "本科一批",
+        //            "enrollingNumber": 239,
+        //            "highestScore": 653,
+        //            "id": 7,
+        //            "lowestScore": 569,
+        //            "name": "北京理工大学",
+        //            "property": "211工程,985高校,有研究生院,自主招生,含国防生,卓越计划",
+        //            "propertys": {"16": "含国防生", "2": "211工程", "32": "卓越计划", "64": "自主招生", "8": "有研究生院"},
+        //            "subjection": "工业和信息化部",
+        //            "typename": "理工",
+        //            "year": 2012
+        //        }, {
+        //            "averageScore": 586,
+        //            "batchname": "本科一批",
+        //            "enrollingNumber": 249,
+        //            "highestScore": 652,
+        //            "id": 8,
+        //            "lowestScore": 520,
+        //            "name": "北京科技大学",
+        //            "property": "211工程,有研究生院,自主招生,含国防生,卓越计划",
+        //            "propertys": {"16": "含国防生", "2": "211工程", "32": "卓越计划", "64": "自主招生", "8": "有研究生院"},
+        //            "subjection": "教育部",
+        //            "typename": "理工",
+        //            "year": 2012
+        //        }, {
+        //            "averageScore": 499,
+        //            "batchname": "本科一批",
+        //            "enrollingNumber": 1144,
+        //            "highestScore": 600,
+        //            "id": 9,
+        //            "lowestScore": 398,
+        //            "name": "北方工业大学",
+        //            "property": "卓越计划",
+        //            "propertys": {"32": "卓越计划"},
+        //            "subjection": "北京市",
+        //            "typename": "理工",
+        //            "year": 2012
+        //        }, {
+        //            "averageScore": 564,
+        //            "batchname": "本科一批",
+        //            "enrollingNumber": 159,
+        //            "highestScore": 634,
+        //            "id": 10,
+        //            "lowestScore": 494,
+        //            "name": "北京化工大学",
+        //            "property": "211工程,自主招生,卓越计划",
+        //            "propertys": {"2": "211工程", "32": "卓越计划", "64": "自主招生"},
+        //            "subjection": "教育部",
+        //            "typename": "理工",
+        //            "year": 2012
+        //        }],
+        //        "total": 0
+        //    }, "rtnCode": "0000000", "ts": 1479310313309
+        //};
         if (res.rtnCode == "0000000") {
             var dataJson = res.bizData;
             //总记录数 - 每页条数*第几页数 > 每页条数 [ 展示加载更多 ]
@@ -110,7 +250,7 @@ var SchoolRecruit = {
             layer.msg(res.msg);
             $('.layui-layer-msg').css('left', '56%');
         }
-        //});
+        });
     },
     addEvent: function () {
         //院校所属地
