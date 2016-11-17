@@ -362,7 +362,7 @@ $(document).on("click", "#updateRole-btn", function () {
         layer.tips('修改只能选择一项!', that, {time: 1000});
         return false;
     }
-    var updateClassManagement = new UpdateClassManagement();
+    updateClassManagement = new UpdateClassManagement();
     updateClassManagement.init(classManagement.columnArr);
     updateClassManagement.updateClass('更新班级');
 });
