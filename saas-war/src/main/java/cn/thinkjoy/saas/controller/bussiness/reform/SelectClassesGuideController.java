@@ -1,9 +1,7 @@
 package cn.thinkjoy.saas.controller.bussiness.reform;
 
-import cn.thinkjoy.saas.dto.AnalysisDto;
 import cn.thinkjoy.saas.dto.MajorDto;
 import cn.thinkjoy.saas.dto.PlanEnrollingDto;
-import cn.thinkjoy.saas.dto.UniversityAndMajorNumberDto;
 import cn.thinkjoy.saas.service.bussiness.reform.ISelectClassesGuideService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,16 +49,16 @@ public class SelectClassesGuideController {
      */
     @RequestMapping("getMajorByUniversityNameAndBatch")
     @ResponseBody
-    public Map<String,Object> getMajorByUniversityNameAndBatch(@RequestParam("subject")String subject,
-                                                               @RequestParam("batch")String batch,
+    public Map<String,Object> getMajorByUniversityNameAndBatch(@RequestParam(value = "subject",required = false)String subject,
                                                                @RequestParam(value = "universityName",required = false)String universityName,
                                                                @RequestParam(value = "offset",required = false,defaultValue = "0")String offset,
                                                                @RequestParam(value = "rows",required = false,defaultValue = "10")String rows) {
         Map<String,Object> paramMap=new HashMap<>();
         paramMap.put("areaId","330000");
         paramMap.put("year","2016");
-        paramMap.put("batch",batch);
-        paramMap.put("subject",subject);
+        if(StringUtils.isNotBlank(subject)) {
+            paramMap.put("subject", subject);
+        }
         if (StringUtils.isNotBlank(universityName)) {
             paramMap.put("universityName", universityName);
         }
@@ -96,11 +94,13 @@ public class SelectClassesGuideController {
      */
     @RequestMapping("getPlanEnrollingByProperty")
     @ResponseBody
-    public Map<String,Object> getPlanEnrollingByProperty(@RequestParam("subject")String subject) {
+    public Map<String,Object> getPlanEnrollingByProperty(@RequestParam(value = "subject",required = false)String subject) {
         Map<String,Object> paramMap=new HashMap<>();
         paramMap.put("areaId","330000");
         paramMap.put("year","2016");
-        paramMap.put("subject",subject);
+        if(StringUtils.isNotBlank(subject)) {
+            paramMap.put("subject", subject);
+        }
         paramMap.put("property","211");
         Map<String,Object> returnMap=new HashMap<>();
         List<PlanEnrollingDto> planEnrollingDtoList= iSelectClassesGuideService.selectPlanEnrollingByProperty(paramMap);
@@ -124,11 +124,13 @@ public class SelectClassesGuideController {
      */
     @RequestMapping("getAnalysisBatch")
     @ResponseBody
-    public Map<String,Object> getAnalysisBatch(@RequestParam("subject")String subject) {
+    public Map<String,Object> getAnalysisBatch(@RequestParam(value = "subject",required = false)String subject) {
         Map<String,Object> paramMap=new HashMap<>();
         paramMap.put("areaId","330000");
         paramMap.put("year","2016");
-        paramMap.put("subject",subject);
+        if(StringUtils.isNotBlank(subject)) {
+            paramMap.put("subject", subject);
+        }
         Map<String,Object> returnMap=new HashMap<>();
         returnMap.put("analysisBatch", iSelectClassesGuideService.selectAnalysisBatch(paramMap));
 //        returnMap.put("count",iSelectClassesGuideService.selectAnalysisBatchCount(paramMap));
@@ -141,11 +143,13 @@ public class SelectClassesGuideController {
      */
     @RequestMapping("getAnalysisDiscipline")
     @ResponseBody
-    public Map<String,Object> getAnalysisDiscipline(@RequestParam("subject")String subject) {
+    public Map<String,Object> getAnalysisDiscipline(@RequestParam(value = "subject",required = false)String subject) {
         Map<String,Object> paramMap=new HashMap<>();
         paramMap.put("areaId","330000");
         paramMap.put("year","2016");
-        paramMap.put("subject",subject);
+        if(StringUtils.isNotBlank(subject)) {
+            paramMap.put("subject", subject);
+        }
         Map<String,Object> returnMap=new HashMap<>();
         returnMap.put("analysisDiscipline", iSelectClassesGuideService.selectAnalysisDiscipline(paramMap));
 //        returnMap.put("count",iSelectClassesGuideService.selectAnalysisDisciplineCount(paramMap));
