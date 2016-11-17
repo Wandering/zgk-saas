@@ -22,3 +22,38 @@
   width:400px;
   margin:30px 0 0 30px;
 }
+
+.sel-main{
+  margin:20px 0 0 30px;
+  select{
+    margin-right:20px;
+  }
+}
+.table-details-main{
+  margin:20px;
+}
+.title-2 .txt-t{
+  float: left;
+}
+.class-sel{
+  float: left;
+  margin:10px;
+}
+.chart-main1{
+  overflow: hidden;
+  .chart-tab{
+    float: right;
+    .cur{
+      background: #cb171d !important;
+      color: #fff;
+    }
+  }
+  .chart-box{
+    display: none;
+  }
+}
+
+.txt1{
+  font-weight: bold;
+  font-size:16px;
+}

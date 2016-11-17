@@ -160,9 +160,13 @@
                                             <%--</div>--%>
                                         <%--</li>--%>
                                     </ul>
+                                    <img src="/static/src/img/loading.gif" class="table-loading-img" id="table-loading-img">
+                                    <div id="specialty-load-more" class="load-more dh" page-no="1">
+                                        加载更多
+                                    </div>
                                 </div>
                                 <div class="sub-content dh">
-                                    就业率:<span id="employmentRate"></span>
+                                    就业率：<span id="employmentRate"></span>
                                 </div>
                             </div>
                         </script>
