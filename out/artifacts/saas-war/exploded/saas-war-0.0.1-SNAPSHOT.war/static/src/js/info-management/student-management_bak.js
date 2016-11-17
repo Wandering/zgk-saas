@@ -23,6 +23,7 @@ var App = {
     init: function () {
         this.tableData = [];
         this.renderTableHeader();
+        this.renderTableBody();
     },
     renderTableHeader: function () {
         Common.ajaxFun('/config/get/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
@@ -30,7 +31,6 @@ var App = {
                 var data = res.bizData.configList;
                 if (data.length != 0) {
                     var tpl = [];
-                    App.tableData = [] //制空
                     tpl.push('<tr>');
                     tpl.push('<th class="center"><label><input type="checkbox" id="check-all" class="ace" /><span class="lbl"></span></label></th>');
                     $.each(data, function (i, k) {
@@ -39,13 +39,12 @@ var App = {
                             name: k.name,
                             enName: k.enName,
                             dataType: k.dataType,
-                            dataValue: k.dataValue,
+                            dataValue: k.checkRule,
                             checkRule: k.checkRule,
                         });
                     });
                     tpl.push('</tr>');
                     $("#student-table thead").html(tpl.join(''));
-                    App.renderTableBody();
                 }
             }
         }, function (res) {
@@ -57,15 +56,16 @@ var App = {
         Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var tpl = [];
-                var dataJson = res.bizData.result;
-                $.each(dataJson, function (m, n) {
-                    var obj = dataJson[m];
+                var data = res.bizData.result;
+                $.each(data, function (m, n) {
+                    var obj = data[m];
                     tpl.push('<tr>');
                     tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
                     $.each(App.tableData, function (i, k) {
-                        var enName = App.tableData[i].enName;
-                        if (obj[enName]) {
-                            tpl.push('<td class="center">' + obj[enName] + '</td>');
+                        var tempObj = App.tableData[i];
+                        var tempColumnName = tempObj.enName;
+                        if (obj[tempColumnName]) {
+                            tpl.push('<td class="center">' + obj[tempColumnName] + '</td>');
                         } else {
                             tpl.push('<td class="center">-</td>');
                         }
@@ -86,6 +86,7 @@ App.init();
  * 添加学生模块
  * @type {{init: AddStd.init, bindEvents: AddStd.bindEvents, fetchGrade: AddStd.fetchGrade, fetchEntranceYear: AddStd.fetchEntranceYear, fetchBelongClass: AddStd.fetchBelongClass, renderGrade: AddStd.renderGrade, renderEntranceYear: AddStd.renderEntranceYear, renderBelongClass: AddStd.renderBelongClass}}
  */
+
 var AddStd = {
     init: function () {
         this.bindEvents();
@@ -180,14 +181,8 @@ var AddStd = {
             var radioLen = (v.dataValue).split('-'),
                 radioTpl = '';
             for (var i = 0; i < radioLen.length; i++) {
-                if (i == 0) {
-                    radioTpl += '<label><input name="form-field-radio" type="radio" class="ace" value="' + radioLen[i] + '" checked="checked">' +
-                        '<span class="lbl">' + radioLen[i] + '</span></label>'
-                } else {
-                    radioTpl += '<label><input name="form-field-radio" type="radio" class="ace" value="' + radioLen[i] + '">' +
-                        '<span class="lbl">' + radioLen[i] + '</span></label>'
-                }
-
+                radioTpl += '<label><input name="form-field-radio" type="radio" class="ace" value="' + radioLen[i] + '">' +
+                    '<span class="lbl">' + radioLen[i] + '</span></label>'
             }
             return '<li><span class="f20">' + v.name + '</span>' +
                 '<div id="' + v.enName + '" class="sex-type f70">' + radioTpl +
@@ -203,18 +198,10 @@ var AddStd = {
             var checkBoxLen = (v.dataValue).split('-'),
                 checkBoxTpl = '';
             for (var i = 0; i < checkBoxLen.length; i++) {
-                if (i == 0) {
-                    checkBoxTpl += '<label>' +
-                        '<input type="checkbox" class="ace" value="' + checkBoxLen[i] + '" checked="checked" name="ck">' +
-                        '<span class="lbl">' + checkBoxLen[i] + '</span>' +
-                        '</label>';
-                } else {
-                    checkBoxTpl += '<label>' +
-                        '<input type="checkbox" class="ace" value="' + checkBoxLen[i] + '" name="ck">' +
-                        '<span class="lbl">' + checkBoxLen[i] + '</span>' +
-                        '</label>';
-                }
-
+                checkBoxTpl += '<label>' +
+                    '<input type="checkbox" class="ace" value="' + checkBoxLen[i] + '">' +
+                    '<span class="lbl">' + checkBoxLen[i] + '</span>' +
+                    '</label>';
             }
             return '<li><span class="f20">' + v.name + '</span><div id="' + v.enName + '" class="subject-list f70">' + checkBoxTpl + '</div></li>'
         }
@@ -274,10 +261,8 @@ var AddStd = {
                 content: $('#student-add-layer').html(),
                 cancel: function () {
                     layer.closeAll();
-                    window.location.reload();
                 }
             })
-            $('#student-add-layer').remove();
         })
         //确认添加
         $(document).on('click', '#add-btn', function () {
@@ -313,7 +298,8 @@ var AddStd = {
                         $('#class-change-list').html('');
                         $('#check-all').prop('checked', false);
                         layer.msg('删除成功', {time: 1000});
-                        App.renderTableHeader();
+                        var classManagement = new ClassManagement();
+                        classManagement.init();
                     }
                 }
             }, function (res) {
@@ -325,45 +311,10 @@ var AddStd = {
     },
     addStdVerify: function () {
         var postData = [];
-        (function () {
-            var lock = 0;
-            $.each(App.tableData, function (i, v) {
-                if (v.dataType === "text"){
-                    if ($('#' + v.enName).val() == '') {
-                        layer.msg(v.name + '不能为空', {time: 1000});
-                        $('#' + v.enName).focus();
-                        lock = 1;
-                        return false
-                    }
-                    //if (!($('#' + v.enName).val()).match(v.checkRule)) {
-                    //    layer.msg(v.name + '输入不合法', {time: 1000});
-                    //    $('#' + v.enName).focus();
-                    //    lock = 1;
-                    //    return false
-                    //}
-                }
-            })
-            return false
-        })()
-        $.each(App.tableData, function (i, v) {
-            if (v.dataType === "text" || v.dataType === "select") {
-                postData.push({
-                    "key": v.enName,
-                    "value": $.trim($('#' + v.enName).val())
-                });
-            } else if (v.dataType === "radio") {
-                postData.push({
-                    "key": v.enName,
-                    "value": $('#' + v.enName).find('[name="form-field-radio"]:checked').val()
-                });
-            } else if (v.dataType === "checkbox") {
-                postData.push({
-                    "key": v.enName,
-                    "value": $('#' + v.enName).find('[name="ck"]:checked').val()
-                });
-            }
-        })
-        console.info(postData);
+        postData.push({'key': 'student_name', 'value': '马超122'}, {
+            'key': 'student_phone',
+            'value': '12332323232'
+        }, {'key': 'student_home_address', 'value': '陕西省安康市'});
         return {
             "clientInfo": {},
             "style": "",
@@ -379,6 +330,7 @@ var AddStd = {
             if (res.rtnCode == "0000000" && res.bizData.result === 'SUCCESS') {
                 layer.closeAll();
                 App.renderTableHeader();
+                App.renderTableBody();
             }
         }, function (res) {
             layer.msg("出错了");

@@ -1,5 +1,5 @@
 var tnId = Common.cookie.getCookie('tnId');
-//Common.flowSteps();
+Common.flowSteps();
 
 
 $('#seting-process4-btn').on('click', function () {
@@ -40,9 +40,11 @@ $('#seting-process4-btn').on('click', function () {
             if(res.bizData.result=="FAIL"){
                 layer.tips('请核对后在提交!', that);
             }
+        }else{
+            layer.msg(res.msg);
         }
     }, function (res) {
-        alert("出错了");
+        layer.msg(res.msg);
     }, 'true');
 
 
