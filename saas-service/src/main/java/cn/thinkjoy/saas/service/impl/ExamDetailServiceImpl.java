@@ -93,6 +93,12 @@ public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDeta
     {
         return examDetailDAO.getAvgScoresForClassStudent(paramMap);
     }
+
+    @Override
+    public List<Map<String, Object>> getMostAttentionListForClass(Map<String, String> paramMap)
+    {
+        return examDetailDAO.getMostAttentionListForClass(paramMap);
+    }
 //    @Override
 //    public void insert(BaseDomain entity) {
 //
