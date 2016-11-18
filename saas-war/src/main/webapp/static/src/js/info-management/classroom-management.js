@@ -1,11 +1,11 @@
 var tnId = Common.cookie.getCookie('tnId');
 
-function classRoomManagement() {
+function ClassRoomManagement() {
     this.init();
 }
 
-classRoomManagement.prototype = {
-    constructor: classRoomManagement,
+ClassRoomManagement.prototype = {
+    constructor: ClassRoomManagement,
     init: function () {
         this.getClassRoom();
     },
@@ -73,7 +73,6 @@ classRoomManagement.prototype = {
         contentHtml.push('</div>');
         contentHtml.push('<div class="btn-box"><button class="btn btn-info save-btn" id="save-classroom-btn">保存</button><button class="btn btn-primary close-btn">取消</button></div>');
         contentHtml.push('</div>');
-        //Common.modal("addRole","添加角色",contentHtml.join(''),"内容","");
         layer.open({
             type: 1,
             title: title,
@@ -88,13 +87,13 @@ classRoomManagement.prototype = {
     }
 };
 
-var classRoomManagementIns = new classRoomManagement();
+var classRoomManagement = new ClassRoomManagement();
 
 $('#add-btn').on('click',function(){
-    classRoomManagementIns.addGrade('添加教室');
+    classRoomManagement.addGrade('添加教室');
 });
 
-$('body').on('click','.save-btn',function () {
+$(document).on('click','.save-btn',function () {
     var classroomNum = $.trim($('#classroom-num').val());
     var gradeV = $('#grade-list').val();
     if (classroomNum == '') {
@@ -111,7 +110,7 @@ $('body').on('click','.save-btn',function () {
     }, function (res) {
         if (res.rtnCode == "0000000") {
             $('#grade-list').html('');
-            classRoomManagementIns.getGrade();
+            classRoomManagement.getGrade();
             layer.closeAll();
         } else if (res.rtnCode == '1000001') {
             layer.closeAll();
@@ -132,12 +131,12 @@ $('#modify-btn').on('click',function () {
         layer.tips('修改只能选择一项!',that);
         return false;
     }
-    classRoomManagementIns.addGrade('修改教室');
+    classRoomManagement.addGrade('修改教室');
     $('.save-btn').attr('gradeid',checkV);
     $('#grade-name').val(gradename);
 });
 
 
-$('body').on('click','.close-btn',function(){
+$(document).on('click','.close-btn',function(){
     layer.closeAll();
 });
