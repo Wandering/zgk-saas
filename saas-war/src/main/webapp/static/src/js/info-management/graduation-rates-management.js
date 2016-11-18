@@ -5,12 +5,22 @@
 var tnId = Common.cookie.getCookie('tnId');
 
 function NumberManagement () {
-
+    this.init();
 }
 NumberManagement.prototype = {
     constructor: NumberManagement,
     init: function () {
+        this.getNumber();
+    },
+    getNumber: function () {
+        var that = this;
+        Common.ajaxFun('/manage/get/enrollingRatio/' + tnId + '.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
 
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
     },
     getYear: function () {
         var that = this;
@@ -82,15 +92,21 @@ $(document).on('click', '#add-btn', function () {//新增升学率
     var batch2enrolls = $('#batch-second').val().trim();
     var batch3enrolls = $('#batch-third').val().trim();
     var batch4enrolls = $('#batch-fourth').val().trim();
-    Common.ajaxFun('/manage/enrollingRatio/add.do', 'POST', {
-        'tnId': tnId,//租户ID
-        'stu3numbers': stu3numbers,//高三考生数量
-        'batch1enrolls': batch1enrolls,//一本上线人数
-        'batch2enrolls': batch2enrolls,//二本上线人数
-        'batch3enrolls': batch3enrolls,//三本上线人数
-        'batch4enrolls': batch4enrolls,//高职上线人数
-        'year': year
-    }, function (res) {
+    var datas = {
+        "clientInfo": {},
+        "style": "",
+        "data": {
+            "EnrollingRatio": {
+                "tnId": tnId,
+                "stu3numbers": stu3numbers,
+                "batch1enrolls": batch1enrolls,
+                "batch2enrolls": batch2enrolls,
+                "batch3enrolls": batch3enrolls,
+                "batch4enrolls": batch4enrolls
+            }
+        }
+    };
+    Common.ajaxFun('/manage/enrollingRatio/add.do', 'POST', JSON.stringify(datas), function (res) {
         if (res.rtnCode == "0000000") {
             layer.closeAll();
         }
