@@ -33,7 +33,8 @@ TeacherManagement.prototype = {
                         that.columnArr.push({
                             name: k.name,
                             enName: k.enName,
-                            dataType: k.dataType
+                            dataType: k.dataType,
+                            dataValue: k.dataValue
                         });
                     });
                     columnHtml.push('</tr>');
@@ -61,7 +62,12 @@ TeacherManagement.prototype = {
                         var tempObj = that.columnArr[i];
                         var tempColumnName = tempObj.enName;
                         if (obj[tempColumnName]) {
-                            teacherDataHtml.push('<td class="center">' + obj[tempColumnName] + '</td>');
+                            if (tempColumnName != 'teacher_major_type') {
+                                teacherDataHtml.push('<td class="center">' + obj[tempColumnName] + '</td>');
+                            } else {
+                                var subjects = obj[tempColumnName].split('-');
+                                teacherDataHtml.push('<td class="center">' + subjects.join('、') + '</td>');
+                            }
                         } else {
                             teacherDataHtml.push('<td class="center">-</td>');
                         }
@@ -126,9 +132,50 @@ AddTeacherManagement.prototype.init = function (columnArr) {
         that.columnArr.push({
             name: k.name,
             enName: k.enName,
-            dataType: k.dataType
+            dataType: k.dataType,
+            dataValue: k.dataValue
         });
     });
+};
+AddTeacherManagement.prototype.getYear = function () {
+    var that = this;
+    Common.ajaxFun('/config/get/school/year.do', 'GET', {}, function (res) {
+        if (res.rtnCode == "0000000") {
+            that.renderYearSelect(res);
+        }
+    }, function (res) {
+        layer.msg("出错了");
+    }, true);
+};
+AddTeacherManagement.prototype.renderYearSelect = function (data) {
+    if (data.rtnCode == '0000000') {
+        var yearHtml = [];
+        $.each(data.bizData.result, function (i, k) {
+            yearHtml.push('<option value="' + k + '">' + k + '</option>');
+        });
+        $("#teacher_in_school").append(yearHtml.join(''));
+    }
+};
+AddTeacherManagement.prototype.getGrade = function () {
+    var that = this;
+    Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {
+        'tnId': tnId
+    }, function (res) {
+        if (res.rtnCode == "0000000") {
+            that.renderGradeSelect(res);
+        }
+    }, function (res) {
+        layer.msg("出错了");
+    }, true);
+};
+AddTeacherManagement.prototype.renderGradeSelect = function (data) {
+    if (data.rtnCode == '0000000') {
+        var gradeHtml = [];
+        $.each(data.bizData.grades, function (i, k) {
+            gradeHtml.push('<option value="' + k.grade + '">' + k.grade + '</option>');
+        });
+        $("#teacher_grade").append(gradeHtml.join(''));
+    }
 };
 AddTeacherManagement.prototype.addTeacher = function (title) {
     var that = this;
@@ -137,13 +184,33 @@ AddTeacherManagement.prototype.addTeacher = function (title) {
     contentHtml.push('<ul>');
     $.each(that.columnArr, function (i, k) {
         if (k.dataType == 'text') {
-            if (k.enName != 'teacher_sex' && k.enName != 'teacher_age' && k.enName != 'teacher_position' && k.enName != 'teacher_title') {
+            if (k.enName != 'teacher_sex' && k.enName != 'teacher_age' && k.enName != 'teacher_position' && k.enName != 'teacher_title' && k.enName != 'teacher_experience') {
                 contentHtml.push('<li><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
             } else {
                 contentHtml.push('<li><span style="letter-spacing: 24.0px;">' + k.name + '</span><input type="text" style="position: relative;left: -23px;" id="' + k.enName + '" /></li>');
             }
         } else if (k.dataType == 'select') {
             contentHtml.push('<li><span>' + k.name + '</span><select id="' + k.enName + '"><option value="00">' + k.name + '</option></select></li>');
+        } else if (k.dataType == 'radio') {
+            var values = (k.dataValue + '').split('-');
+            var enName = k.enName;
+            contentHtml.push('<li><span style="letter-spacing: 24.0px;">' + k.name + '</span>');
+            $.each(values, function (i, k) {
+                if (i == 0) {
+                    contentHtml.push('<input type="radio" name="' + enName + '" id="' + enName + i + '" checked="checked" value="' + k + '" /><label for="' + enName + i + '">' + k + '</label>');
+                } else {
+                    contentHtml.push('<input type="radio" name="' + enName + '" id="' + enName + i + '" value="' + k + '" /><label for="' + enName + i + '">' + k + '</label>');
+                }
+            });
+            contentHtml.push('</li>');
+        } else if (k.dataType == 'checkbox') {
+            var values = (k.dataValue + '').split('-');
+            var enName = k.enName;
+            contentHtml.push('<li style="margin-bottom: 26px;"><span>' + k.name + '</span><ul id="teacher_major_type">');
+            $.each(values, function (i, k) {
+                contentHtml.push('<li><input type="checkbox" name="' + enName + '" id="' + enName + i + '" value="' + k + '" /><label for="' + enName + i + '">' + k + '</label></li>');
+            });
+            contentHtml.push('</ul></li>');
         }
     });
     contentHtml.push('<li><div class="opt-btn-box"><button class="btn btn-red" id="add-btn">确认添加</button><button class="btn btn-cancel cancel-btn">取消</button></div></li>');
@@ -156,6 +223,8 @@ AddTeacherManagement.prototype.addTeacher = function (title) {
         area: ['362px', 'auto'],
         content: contentHtml.join('')
     });
+    this.getGrade();
+    this.getYear();
 };
 
 //创建添加教师对象
@@ -178,9 +247,50 @@ UpdateTeacherManagement.prototype = {
             that.columnArr.push({
                 name: k.name,
                 enName: k.enName,
-                dataType: k.dataType
+                dataType: k.dataType,
+                dataValue: k.dataValue
             });
         });
+    },
+    getYear: function () {
+        var that = this;
+        Common.ajaxFun('/config/get/school/year.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
+                that.renderYearSelect(res);
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
+    },
+    renderYearSelect: function (data) {
+        if (data.rtnCode == '0000000') {
+            var yearHtml = [];
+            $.each(data.bizData.result, function (i, k) {
+                yearHtml.push('<option value="' + k + '">' + k + '</option>');
+            });
+            $("#teacher_in_school").append(yearHtml.join(''));
+        }
+    },
+    getGrade: function () {
+        var that = this;
+        Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                that.renderGradeSelect(res);
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
+    },
+    renderGradeSelect: function (data) {
+        if (data.rtnCode == '0000000') {
+            var gradeHtml = [];
+            $.each(data.bizData.grades, function (i, k) {
+                gradeHtml.push('<option value="' + k.grade + '">' + k.grade + '</option>');
+            });
+            $("#teacher_grade").append(gradeHtml.join(''));
+        }
     },
     updateTeacher: function (title) {//更新某一行教师数据
         var that = this;
@@ -188,14 +298,34 @@ UpdateTeacherManagement.prototype = {
         contentHtml.push('<div class="add-class-box">');
         contentHtml.push('<ul>');
         $.each(that.columnArr, function (i, k) {
-            if (k.dataType != 'select') {
-                if (k.enName != 'class_boss') {
+            if (k.dataType == 'text') {
+                if (k.enName != 'teacher_sex' && k.enName != 'teacher_age' && k.enName != 'teacher_position' && k.enName != 'teacher_title' && k.enName != 'teacher_experience') {
                     contentHtml.push('<li><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
                 } else {
-                    contentHtml.push('<li><span style="letter-spacing: 6px;">' + k.name + '</span><input type="text" style="position: relative;left: -6px;" id="' + k.enName + '" /></li>');
+                    contentHtml.push('<li><span style="letter-spacing: 24.0px;">' + k.name + '</span><input type="text" style="position: relative;left: -23px;" id="' + k.enName + '" /></li>');
                 }
-            } else {
+            } else if (k.dataType == 'select') {
                 contentHtml.push('<li><span>' + k.name + '</span><select id="' + k.enName + '"><option value="00">' + k.name + '</option></select></li>');
+            } else if (k.dataType == 'radio') {
+                var values = (k.dataValue + '').split('-');
+                var enName = k.enName;
+                contentHtml.push('<li><span style="letter-spacing: 24.0px;">' + k.name + '</span>');
+                $.each(values, function (i, k) {
+                    if (i == 0) {
+                        contentHtml.push('<input type="radio" name="' + enName + '" id="' + enName + i + '" checked="checked" value="' + k + '" /><label for="' + enName + i + '">' + k + '</label>');
+                    } else {
+                        contentHtml.push('<input type="radio" name="' + enName + '" id="' + enName + i + '" value="' + k + '" /><label for="' + enName + i + '">' + k + '</label>');
+                    }
+                });
+                contentHtml.push('</li>');
+            } else if (k.dataType == 'checkbox') {
+                var values = (k.dataValue + '').split('-');
+                var enName = k.enName;
+                contentHtml.push('<li style="margin-bottom: 26px;"><span>' + k.name + '</span><ul id="teacher_major_type">');
+                $.each(values, function (i, k) {
+                    contentHtml.push('<li><input type="checkbox" name="' + enName + '" id="' + enName + i + '" value="' + k + '" /><label for="' + enName + i + '">' + k + '</label></li>');
+                });
+                contentHtml.push('</ul></li>');
             }
         });
         contentHtml.push('<li><div class="opt-btn-box"><button class="btn btn-red" id="update-btn">确认修改</button><button class="btn btn-cancel cancel-btn">取消</button></div></li>');
@@ -208,11 +338,34 @@ UpdateTeacherManagement.prototype = {
             area: ['362px', 'auto'],
             content: contentHtml.join('')
         });
+        this.getGrade();
+        this.getYear();
         var rowid = $(".check-template :checkbox:checked").attr('cid');
         var rowItem = $('#teacher-manage-list tr[rowid="' + rowid + '"]').find('td');
         $.each(that.columnArr, function (i, k) {
-            if (rowItem.eq(i+1).html() != '-') {
-                $('#' + k.enName).val(rowItem.eq(i + 1).html());
+            if (k.dataType == 'text') {
+                if (rowItem.eq(i + 1).html() != '-') {
+                    $('#' + k.enName).val(rowItem.eq(i + 1).html());
+                }
+            }
+            if (k.dataType == 'radio') {
+                var value = rowItem.eq(i + 1).html();
+                $("input[name='" + k.enName + "'][value=" + value + "]").attr("checked",true);
+            }
+            if (k.dataType == 'checkbox') {
+                var subjects = rowItem.eq(i + 1).html().split('、');
+                var enName = k.enName;
+                $.each(subjects, function (i, k) {
+                    $("input[name='" + enName + "'][value=" + k + "]").attr("checked",true);
+                });
+            }
+            if (k.dataType == 'select') {
+                var value = rowItem.eq(i + 1).html();
+                if (value != '-') {
+                    $('#' + k.enName).val(rowItem.eq(i + 1).html());
+                } else {
+                    $('#' + k.enName).val('00');
+                }
             }
         });
     }
@@ -247,6 +400,29 @@ $(document).on("click", "#update-btn", function () {
                     "value": $('#' + tempObj.enName).val()
                 });
             }
+        }
+        if (tempObj.dataType == 'radio') {
+            postData.push({
+                "key": tempObj.enName,
+                "value": $("input[name='" + tempObj.enName + "']:checked").val()
+            });
+        }
+        if (tempObj.dataType == 'checkbox') {
+            var subjects = [];
+            $("input[name='" + tempObj.enName + "']").each(function () {
+                if ($(this).prop('checked')) {
+                    subjects.push($(this).val());
+                }
+            });
+            if (subjects.length === 0) {
+                layer.msg('请至少选择一门所教科目!', {time: 1000});
+                return;
+            }
+            var values = subjects.join('-');
+            postData.push({
+                "key": tempObj.enName,
+                "value": values
+            });
         }
         if (tempObj.dataType == 'select') {
             if ($('#' + tempObj.enName).val() == '00') {
@@ -285,6 +461,7 @@ $(document).on("click", "#update-btn", function () {
 //确认添加操作按钮
 $(document).on("click", "#add-btn", function () {
     var postData = [];
+    console.info(addTeacherManagement.columnArr);
     for (var i = 0; i < addTeacherManagement.columnArr.length; i++) {
         var tempObj = addTeacherManagement.columnArr[i];
         if (tempObj.dataType == 'text') {
@@ -298,6 +475,29 @@ $(document).on("click", "#add-btn", function () {
                     "value": $('#' + tempObj.enName).val()
                 });
             }
+        }
+        if (tempObj.dataType == 'radio') {
+            postData.push({
+                "key": tempObj.enName,
+                "value": $("input[name='" + tempObj.enName + "']:checked").val()
+            });
+        }
+        if (tempObj.dataType == 'checkbox') {
+            var subjects = [];
+            $("input[name='" + tempObj.enName + "']").each(function () {
+                if ($(this).prop('checked')) {
+                    subjects.push($(this).val());
+                }
+            });
+            if (subjects.length === 0) {
+                layer.msg('请至少选择一门所教科目!', {time: 1000});
+                return;
+            }
+            var values = subjects.join('-');
+            postData.push({
+                "key": tempObj.enName,
+                "value": values
+            });
         }
         if (tempObj.dataType == 'select') {
             if ($('#' + tempObj.enName).val() == '00') {

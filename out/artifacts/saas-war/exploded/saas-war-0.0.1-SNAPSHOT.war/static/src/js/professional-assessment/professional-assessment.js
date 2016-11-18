@@ -274,44 +274,6 @@ var ResultEvaluation = {
             },
         })
         var myBarChart = echarts.init(document.getElementById('myBarChart'));
-        //barOption = {
-        //    color: ['#3398DB'],
-        //    tooltip: {
-        //        trigger: 'axis',
-        //        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-        //            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        //        }
-        //    },
-        //    grid: {
-        //        left: '3%',
-        //        right: '4%',
-        //        bottom: '3%',
-        //        containLabel: true
-        //    },
-        //    xAxis: [
-        //        {
-        //            type: 'category',
-        //            data: data.subjectLi, //科目
-        //            axisTick: {
-        //                alignWithLabel: true
-        //            }
-        //        }
-        //    ],
-        //    yAxis: [
-        //        {
-        //            type: 'value'
-        //        }
-        //    ],
-        //    series: [
-        //        {
-        //            name: '分数',
-        //            type: 'bar',
-        //            barWidth: '60%',
-        //            data: data.subjectLiScores  //各科分数
-        //        }
-        //    ]
-        //};
-
         barOption = {
             color: ['#3398DB'],
             tooltip : {
@@ -402,8 +364,6 @@ var ResultEvaluation = {
             evaluationTip = '综上所述，你感兴趣的3科是' + interstateSubject + ',但' + subjectListMap[Obj.key[0]] + '（兴趣得分最低的一科）科目缺乏学习热情，可能会导致偏科比较严重，建议多多关注' + subjectListMap[Obj.key[0]] + '（兴趣得分最低的一科）学科~均衡发展';
         }
         $('.advise-tip').html(evaluationTip);
-
-
 
     }
 }
