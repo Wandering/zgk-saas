@@ -1194,10 +1194,7 @@ public class ScoreAnalyseController
         }
         for (Map.Entry<String, Map<String, List<ExamDetail>>> entry : classInfoMap.entrySet())
         {
-            String clazzName = entry.getKey();
             Map<String, List<ExamDetail>> examDetailListMap = entry.getValue();
-            Map<String, Object> resultMap = new LinkedHashMap<>();
-            resultMap.put("className", clazzName);
             List<ExamDetail> details = examDetailListMap.get(batch);
             for (ExamDetail d: details)
             {
@@ -1208,6 +1205,28 @@ public class ScoreAnalyseController
                 param.put("年级排名", d.getGradeRank());
                 resultList.add(param);
             }
+        }
+        return resultList;
+    }
+
+    @RequestMapping("/getAvgScoresForClassStudent")
+    @ResponseBody
+    public List<Map<String, Object>> getAvgScoresForClassStudent(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "className", required = true) String className,
+        @RequestParam(value = "studentName", required = true) String studentName)
+    {
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
+        paramMap.put("grade", grade);
+        paramMap.put("className", className);
+        paramMap.put("studentName", studentName);
+        List<Map<String, Object>> resultList;
+        resultList = examDetailService.getAvgScoresForClassStudent(paramMap);
+        if (null == resultList)
+        {
+            resultList = new ArrayList<>();
         }
         return resultList;
     }

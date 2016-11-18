@@ -130,6 +130,14 @@ public class WebCotroller {
         return new ModelAndView("/info-management/teacher-management");
     }
     /**
+     * teacher-settings
+     * 教师设置
+     */
+    @RequestMapping("/teacher-settings")
+    public ModelAndView teacherSettings() {
+        return new ModelAndView("/info-management/teacher-settings");
+    }
+    /**
      * graduation-rates-management
      * 升学率管理
      */

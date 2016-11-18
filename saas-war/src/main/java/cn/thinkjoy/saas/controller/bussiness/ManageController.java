@@ -3,6 +3,7 @@ package cn.thinkjoy.saas.controller.bussiness;
 import cn.thinkjoy.common.protocol.Request;
 import cn.thinkjoy.saas.domain.EnrollingRatio;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
+import cn.thinkjoy.saas.service.IEnrollingRatioService;
 import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExcelUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
@@ -37,6 +38,9 @@ public class ManageController {
 
     @Resource
     IEXEnrollingRatioService iexEnrollingRatioService;
+
+    @Resource
+    IEnrollingRatioService iEnrollingRatioService;
 
     @Resource
     IEXTenantCustomService iexTenantCustomService;
@@ -117,7 +121,7 @@ public class ManageController {
         boolean result = false;
         if (!StringUtils.isBlank(crNum)&&tnId>0&&gId>0) {
             Integer classRoomNum = Integer.valueOf(crNum);
-            result = exiClassRoomService.addClassRoom(tnId, classRoomNum, gId);
+            result = exiClassRoomService.addClassRoom(tnId, gId, classRoomNum);
         }
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
@@ -184,6 +188,21 @@ public class ManageController {
         return resultMap;
     }
 
+    /**
+     * 查询升学率
+     * @param tnId
+     * @return
+     */
+    @RequestMapping(value = "/get/enrollingRatio/{tnId}",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getEnrollingRatio(@PathVariable Integer tnId) {
+        Map map = new HashMap();
+        map.put("tnId", tnId);
+        List<EnrollingRatio> enrollingRatios = iEnrollingRatioService.queryList(map, "id", "asc");
+        Map resultMap = new HashMap();
+        resultMap.put("result", enrollingRatios);
+        return resultMap;
+    }
     /**
      * 管理租户自定义表头
      * @param type
@@ -302,6 +321,7 @@ public class ManageController {
         resultMap.put("result", tenantCustom);
         return resultMap;
     }
+
 
 
     /**

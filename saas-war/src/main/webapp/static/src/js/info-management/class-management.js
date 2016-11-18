@@ -523,7 +523,7 @@ jQuery(function () {
         auto: true,
 
         // swf文件路径
-        swf: BASE_URL + '/js/Uploader.swf',
+        swf: BASE_URL + '/webuploader-0.1.5 2/Uploader.swf',
 
         // 文件接收服务端。
         server: rootPath + '/config/upload/class/' + tnId + '.do',
@@ -583,10 +583,7 @@ jQuery(function () {
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
     uploader.on('uploadSuccess', function (file) {
-        $('#add-btn,#del-batch-btn').addClass('disabled');
-        $('.del-btn').removeClass('del-btn').addClass('disabled');
-        $('#' + file.id).addClass('upload-state-done');
-        layer.msg('导入成功,请进行下一流程!');
+
 
     });
 
