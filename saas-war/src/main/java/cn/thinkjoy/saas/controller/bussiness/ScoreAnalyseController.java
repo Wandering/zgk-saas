@@ -1197,7 +1197,6 @@ public class ScoreAnalyseController
                     mp.get("batchThr").add(detail);
                 }
             }
-
         }
         for (Map.Entry<String, Map<String, List<ExamDetail>>> entry : classInfoMap.entrySet())
         {
@@ -1333,5 +1332,45 @@ public class ScoreAnalyseController
         }
         flag = true;
         return flag;
+    }
+
+    @RequestMapping("/getOverLineDetailForClassTwo")
+    @ResponseBody
+    public List<Map<String, Object>> getOverLineDetailForClassTwo(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "className", required = true) String className,
+        @RequestParam(value = "line", required = true) final String line)
+    {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
+        paramMap.put("grade", grade);
+        paramMap.put("limitNumber", 1);
+        List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
+        if (null == examIds || examIds.size() == 0)
+        {
+            throw new BizException("1100011", "该年级没有成绩录入！！");
+        }
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        int batchOneNumber = Integer.parseInt(line);
+        List<ExamDetail> detailList = examDetailService.findList("examId", examIds.get(0));
+        for (ExamDetail detail : detailList)
+        {
+            String clazzName = detail.getClassName();
+            if(className.equals(clazzName))
+            {
+                int gradeRank = Integer.parseInt(detail.getGradeRank());
+                if (gradeRank <= batchOneNumber)
+                {
+                    Map<String, Object> param = new HashMap<>();
+                    param.put("学生姓名", detail.getStudentName());
+                    param.put("班级排名", detail.getClassRank());
+                    param.put("成绩", detail.getTotleScore());
+                    param.put("年级排名", detail.getGradeRank());
+                    resultList.add(param);
+                }
+            }
+        }
+        return resultList;
     }
 }

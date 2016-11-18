@@ -1109,7 +1109,7 @@ selectList
     </select>
 
     <select id="getMostAttentionPage" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
-        select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank
+        select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank,d.classRank
         from saas_exam_stu_weak_course c
         left join saas_exam_detail d on c.examDetailId=d.id
         where c.examId=#{examId} and c.batchName=#{batchName}
@@ -1119,7 +1119,7 @@ selectList
         <if test="courseName!=null">
             AND weakCourseOne = #{courseName}
             UNION ALL
-            select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank
+            select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank,d.classRank
             from saas_exam_stu_weak_course c
             left join saas_exam_detail d on c.examDetailId=d.id
             where c.examId=#{examId} and c.batchName=#{batchName}
