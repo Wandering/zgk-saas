@@ -136,13 +136,13 @@ AddTeacherManagement.prototype.addTeacher = function (title) {
     contentHtml.push('<div class="add-class-box">');
     contentHtml.push('<ul>');
     $.each(that.columnArr, function (i, k) {
-        if (k.dataType != 'select') {
-            if (k.enName != 'class_boss') {
+        if (k.dataType == 'text') {
+            if (k.enName != 'teacher_sex' && k.enName != 'teacher_age' && k.enName != 'teacher_position' && k.enName != 'teacher_title') {
                 contentHtml.push('<li><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
             } else {
-                contentHtml.push('<li><span style="letter-spacing: 6px;">' + k.name + '</span><input type="text" style="position: relative;left: -6px;" id="' + k.enName + '" /></li>');
+                contentHtml.push('<li><span style="letter-spacing: 24.0px;">' + k.name + '</span><input type="text" style="position: relative;left: -23px;" id="' + k.enName + '" /></li>');
             }
-        } else {
+        } else if (k.dataType == 'select') {
             contentHtml.push('<li><span>' + k.name + '</span><select id="' + k.enName + '"><option value="00">' + k.name + '</option></select></li>');
         }
     });
