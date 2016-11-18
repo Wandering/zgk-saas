@@ -36,9 +36,9 @@ ClassResultsAnalysis.prototype = {
             var radioV = $(this).val();
             that.getClassesNameByGrade(radioV);
             if (radioV.indexOf('高三') >= 0 || radioV.indexOf('高3') >= 0) {
-
+                $('.grade-type').text('本科线成绩分析');
             } else {
-
+                $('.grade-type').text('重点线成绩分析');
             }
         });
         $('.grade-item:first').change();
@@ -51,10 +51,24 @@ ClassResultsAnalysis.prototype = {
             var selV =  $(this).find("option:selected").val();
             $('.sel-class-txt').text(selV);
             that.getAvgScoresForClass(grade,selV);
+            that.getStuNumberScoreChangeForClass(grade,selV);
+            if (grade.indexOf('高三') >= 0 || grade.indexOf('高3') >= 0) {
+                alert(3)
+                that.getOverLineDetailForClass(grade,selV,'batchAll');
+            } else {
+
+            }
         });
         $('#select').find('option:eq(0)').attr('selected','selected');
-        $('.sel-class-txt').text($('#select').find('option:eq(0)').val());
-        that.getAvgScoresForClass(grade,$('#select').find('option:eq(0)').val());
+        var firstV = $('#select').find('option:eq(0)').val();
+        $('.sel-class-txt').text(firstV);
+        that.getAvgScoresForClass(grade,firstV);
+        that.getStuNumberScoreChangeForClass(grade,firstV);
+        if (grade.indexOf('高三') >= 0 || grade.indexOf('高3') >= 0) {
+            that.getOverLineDetailForClass(grade,firstV,'batchAll');
+        } else {
+
+        }
         that.chartTab();
     },
     // 通过年级获取班级
@@ -70,7 +84,6 @@ ClassResultsAnalysis.prototype = {
                     layer.msg('您还没有设置班级');
                 }else{
                     var classOption=[];
-                    classOption.push('<option class="opt-item" value="高一1班">高一1班</option>');
                     $.each(res.bizData,function(i,v){
                         classOption.push('<option class="opt-item" value="'+ v +'">'+ v +'</option>');
                     });
@@ -90,9 +103,9 @@ ClassResultsAnalysis.prototype = {
         $('.chart-tab button').on('click',function(){
             var index = $(this).index();
             $(this).addClass('cur').siblings().removeClass('cur');
-            $('.chart-box').hide().eq(index).show();
+            $('.chart-box').addClass('hds').eq(index).removeClass('hds');
         });
-        $('.chart-tab button:first').click();
+        $('.chart-tab button:eq(0)').click();
         that.totalScoreChart();
     },
     // 拉取班级趋势数据
@@ -104,15 +117,52 @@ ClassResultsAnalysis.prototype = {
             'className':className
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                var dateData = [];
-                var totalScoreData = [];
-                $.each(res.bizData,function(i,v){
-                    console.log(v)
-                    dateData.push(v.examTime);
-                    totalScoreData.push(parseInt(v['总分']));
-                });
-
-                that.totalScoreChart(dateData,totalScoreData);
+                var dataJson = res.bizData;
+                if(dataJson.length>0){
+                    var dateData = [];
+                    var totalScoreData = [];
+                    var subjectData = [];
+                    var datas = [];
+                    var arrMaxMin = [];
+                    for(var i in dataJson) {
+                        dateData.push(dataJson[i].examTime);
+                        totalScoreData.push(parseInt(dataJson[i]['总分']));
+                        delete dataJson[i].examTime;
+                        delete dataJson[i].className;
+                        delete dataJson[i]['总分'];
+                        for(var l in dataJson[i]){
+                            arrMaxMin.push(dataJson[i][l]);
+                        }
+                    }
+                    for(var k in dataJson[0]){
+                        switch (k){
+                            case 'className':
+                            case 'examTime':
+                            case '总分':
+                                break;
+                            default:
+                                subjectData.push(k);
+                                break;
+                        }
+                    }
+                    for(var j in subjectData){
+                        var subArr = [];
+                        for(var g in dataJson) {
+                            delete dataJson[g].examTime;
+                            delete dataJson[g].className;
+                            delete dataJson[g]['总分'];
+                            subArr.push(dataJson[g][subjectData[j]])
+                        }
+                        var seriesObj = {
+                            name:subjectData[j],
+                            type : 'line',
+                            data:subArr
+                        };
+                        datas.push(seriesObj);
+                    }
+                    that.totalScoreChart(dateData,totalScoreData);
+                    that.subjectsChart(subjectData,dateData,datas,arrMaxMin);
+                }
             } else {
                 layer.msg(res.msg);
             }
@@ -125,18 +175,26 @@ ClassResultsAnalysis.prototype = {
         var totalScoreChart = echarts.init(document.getElementById('totalScoreChart-chart'));
         var totalScoreChartOption = {
             title: {
-                text: '堆叠区域图'
+                text: '班级平均分排名',
+                left: 'left',
+                textStyle:{
+                    fontSize:12
+                }
             },
-            tooltip : {
-                trigger: 'axis'
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b} : {c}'
             },
             legend: {
-                data:['邮件营销']
+                left: 'left'
             },
-            toolbox: {
-                feature: {
-                    saveAsImage: {}
-                }
+            xAxis: {
+                type: 'category',
+                name: 'x',
+                splitLine: {show: false},
+                //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
+                data: ["2016-02-02", "2016-03-03", "2016-04-07", "2016-05-10", "2016-06-14"]
+                //data: dateData
             },
             grid: {
                 left: '3%',
@@ -144,41 +202,140 @@ ClassResultsAnalysis.prototype = {
                 bottom: '3%',
                 containLabel: true
             },
-            xAxis : [
+            yAxis: {
+                type: 'value',
+                min:Array.min(totalScoreData),
+                max:Array.max(totalScoreData)
+            },
+            series: [
                 {
-                    type : 'category',
-                    boundaryGap : false,
-                    //data : ['周一','周二','周三','周四','周五','周六','周日']
-                    data : dateData
-                }
-            ],
-            yAxis : [
-                {
-                    type : 'value'
-                }
-            ],
-            series : [
-                {
-                    name:'邮件营销',
-                    type:'line',
-                    stack: '总量',
-                    areaStyle: {normal: {}},
-                    //data:[120, 132, 101, 134, 90, 230, 210]
-                    data:totalScoreData
+                    name: '3的指数',
+                    type: 'line',
+                    //data: [1, 3, 9, 27, 81, 247, 741, 2223, 6669]
+                    data: totalScoreData
                 }
             ]
         };
         totalScoreChart.setOption(totalScoreChartOption);
     },
-    subjectsChart:function(){
-
-    }
+    subjectsChart:function(subjectData,dateData,datas,arrMaxMin){
+        var subjectsChart = echarts.init(document.getElementById('subjectsChart-chart'));
+        var subjectsChartOption = {
+            title: {
+                text: '班级平均分排名',
+                left: 'left',
+                textStyle:{
+                    fontSize:12
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b} : {c}'
+            },
+            legend: {
+                left: 'center',
+                //data: ['2的指数', '3的指数']
+                data: subjectData
+            },
+            xAxis: {
+                type: 'category',
+                splitLine: {show: false},
+                //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
+                data: dateData
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            yAxis: {
+                type: 'value',
+                min:Array.min(arrMaxMin),
+                max:Array.max(arrMaxMin)
+            },
+            series:datas
+        };
+        subjectsChart.setOption(subjectsChartOption);
+    },
     // 查看各科情况
     // 人数分布变化
+    getStuNumberScoreChangeForClass:function(grade,className){
+        var that = this;
+        Common.ajaxFun('/scoreAnalyse/getStuNumberScoreChangeForClass', 'GET', {
+            'tnId':tnId,
+            'grade':grade,
+            'className':className
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var myTemplate = Handlebars.compile($("#student-change-template").html());
+                Handlebars.registerHelper('agree_button', function() {
+                    return new Handlebars.SafeString(
+                       '<tr><td>' + this.学生姓名 + '</td><td>' + this.变化趋势 + '</td></tr>'
+                    );
+                });
+                $('#student-change-tbody').html(myTemplate(res));
+                that.changeStudent();
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
+    changeStudent:function(){
+        $('.change-student-btn').on('click',function(){
+            var data = $(this).attr('data');
+            var studentChangeTable = '<table class="student-change-table table table-hover"><thead><tr><th class="center">学生姓名</th><th class="center">变化趋势</th></tr></thead><tbody>'+ data +'</tbody></table>'
+            layer.open({
+                type: 1,
+                title: '变化人数详情',
+                offset: 'auto',
+                area: ['362px', '350px'],
+                content: studentChangeTable
+            });
+        });
+    },
     // 变化人数弹层
+
     // 个人成绩变化趋势
+    getAvgScoresForClassStudent:function(){
+        Common.ajaxFun('/scoreAnalyse/getStuNumberScoreChangeForClass', 'GET', {
+            'tnId':tnId,
+            'grade':grade,
+            'className':className,
+            'batch':batch
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var myTemplate = Handlebars.compile($("#online-template").html());
+                $('#online-tbody').html(myTemplate(res));
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
     // 设置关注位次线
-    // 班级前多少名人数统计
+    // 班级前多少名人数统计  高三
+    getOverLineDetailForClass:function(grade,className,batch){
+        Common.ajaxFun('/scoreAnalyse/getOverLineDetailForClass', 'GET', {
+            'tnId':tnId,
+            'grade':grade,
+            'className':className,
+            'batch':batch
+        }, function (res) {
+            console.log(res)
+            if (res.rtnCode == "0000000") {
+                var myTemplate = Handlebars.compile($("#online-template").html());
+                $('#online-tbody').html(myTemplate(res));
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    }
     // 重点关注学生
     // 进步较大学生
     // 选择进步名次
