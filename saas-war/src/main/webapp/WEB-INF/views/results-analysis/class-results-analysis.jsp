@@ -97,8 +97,9 @@
                         <br>
                         <p class="txt1">班级情况统计:</p>
                         <div class="grade1-2-line">
-                            <span>设置关注位次线</span><input type="txt" value=""><button type="button">确定</button>
+                            <span>设置关注位次线</span><input type="txt" id="set-line" value=""><button type="button" id="set-line-btn">确定</button>
                         </div>
+                        <p><span>物化一班</span>年级前<span class="student"></span>名人数统计：</p>
                         <table id="" class="table table-hover">
                             <thead>
                             <tr>
