@@ -5,11 +5,11 @@ import java.io.Serializable;
 /**
  * Created by zuohao on 16/11/16.
  */
-public class TrineDto implements Serializable {
+public class EnrollingNumberDto implements Serializable {
     private String batchName;
-    private int majorNumber;
+    private int universityNumber;
     private int planEnrollingNumber;
-    private String percent;
+    private String year;
 
     public String getBatchName() {
         return batchName;
@@ -19,12 +19,12 @@ public class TrineDto implements Serializable {
         this.batchName = batchName;
     }
 
-    public int getMajorNumber() {
-        return majorNumber;
+    public int getUniversityNumber() {
+        return universityNumber;
     }
 
-    public void setMajorNumber(int majorNumber) {
-        this.majorNumber = majorNumber;
+    public void setUniversityNumber(int universityNumber) {
+        this.universityNumber = universityNumber;
     }
 
     public int getPlanEnrollingNumber() {
@@ -35,11 +35,11 @@ public class TrineDto implements Serializable {
         this.planEnrollingNumber = planEnrollingNumber;
     }
 
-    public String getPercent() {
-        return percent;
+    public String getYear() {
+        return year;
     }
 
-    public void setPercent(String percent) {
-        this.percent = percent;
+    public void setYear(String year) {
+        this.year = year;
     }
 }

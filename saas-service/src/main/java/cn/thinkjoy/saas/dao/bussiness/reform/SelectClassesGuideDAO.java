@@ -20,4 +20,6 @@ public interface SelectClassesGuideDAO {
     int selectAnalysisDisciplineCount(Map map);
 
     List<Map<String, Object>> queryDictList(Map map);
+    List<TrineDto> selectEnrollingNumberByBatch(Map map);
+    List<EnrollingNumberDto> selectEnrollingNumber(Map map);
 }
