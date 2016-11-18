@@ -45,7 +45,6 @@
                         <div class="main-title">
                             <h3>班级成绩分析</h3>
                         </div>
-
                         <div class="title-2">
                             <div class="txt-t">
                                 <div class="radio no-padding-left" id="grade-body"></div>
@@ -97,6 +96,9 @@
                         </div>
                         <br>
                         <p class="txt1">班级情况统计:</p>
+                        <div class="grade1-2-line">
+                            <span>设置关注位次线</span><input type="txt" value=""><button type="button">确定</button>
+                        </div>
                         <table id="" class="table table-hover">
                             <thead>
                             <tr>
@@ -110,7 +112,8 @@
 
                             </tbody>
                         </table>
-
+                        <p class="txt1">重点关注学生:</p>
+                        <p class="txt1">进步较大学生:</p>
                     </div><!-- /.col -->
 
                 </div><!-- /.row -->

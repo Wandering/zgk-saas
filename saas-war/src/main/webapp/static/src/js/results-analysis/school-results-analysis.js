@@ -14,6 +14,21 @@ SchoolResultsAnalysis.prototype = {
     init: function () {
         this.getGrade();
         this.selGrade();
+        this.getExamProperties();
+    },
+    getExamProperties:function(){
+        Common.ajaxFun('/scoreAnalyse/getExamProperties', 'GET', {
+            'tnId':tnId
+        }, function (res) {
+            console.log(res);
+            if (res.rtnCode == "0000000") {
+
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        }, true);
     },
     getGrade: function () {
         Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {}, function (res) {

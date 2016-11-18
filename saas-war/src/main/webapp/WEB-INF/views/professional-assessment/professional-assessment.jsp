@@ -61,7 +61,7 @@
                             <dd>
                                 <h3>专业测评</h3>
                                 <p>系统为理科生测试者提供了最适合的20种专业以及106种专业的适合度指数排行，通过评估个体与专业选择相关的兴趣、价值观、个性等因素，得出被测试者关于专业发展方向的指导性参数，为高中学填报大学志愿选择合适专业提供科学的参考。</p>
-                                <button class="btn-assessment">开始测评</button>
+                                <button class="btn-assessment" >开始测评</button>
                             </dd>
                         </dl>
                         <dl class="assessment3">
