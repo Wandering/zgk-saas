@@ -1179,5 +1179,12 @@ selectList
         group by d.className,d.studentName,e.examTime
         order by e.examTime asc
     </select>
+
+    <select id="getMostAttentionListForClass" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
+        select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank,d.classRank
+        from saas_exam_stu_weak_course c
+        left join saas_exam_detail d on c.examDetailId=d.id
+        where c.examId=#{examId}
+    </select>
 </mapper>
 
