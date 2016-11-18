@@ -121,7 +121,7 @@ public class ManageController {
         boolean result = false;
         if (!StringUtils.isBlank(crNum)&&tnId>0&&gId>0) {
             Integer classRoomNum = Integer.valueOf(crNum);
-            result = exiClassRoomService.addClassRoom(tnId, classRoomNum, gId);
+            result = exiClassRoomService.addClassRoom(tnId, gId, classRoomNum);
         }
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));

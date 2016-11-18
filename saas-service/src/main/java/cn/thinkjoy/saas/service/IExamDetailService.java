@@ -37,4 +37,6 @@ public interface IExamDetailService<D extends IBaseDAO<T>, T extends BaseDomain>
     List<String> getClassesNameByGrade(Map<String, String> paramMap);
 
     List<Map<String, Object>> getAvgScoresForClass(Map<String, String> paramMap);
+
+    List<Map<String, Object>> getAvgScoresForClassStudent(Map<String, String> paramMap);
 }
