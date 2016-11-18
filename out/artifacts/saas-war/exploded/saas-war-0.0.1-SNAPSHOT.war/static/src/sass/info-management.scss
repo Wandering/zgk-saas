@@ -3,7 +3,10 @@
   overflow-x: hidden;
   overflow-y: hidden;
 }
-
+.btn {
+    outline: 0!important;
+    border: 0!important;
+}
 ul, li, span, div {
   padding: 0;
   margin: 0;
@@ -23,7 +26,31 @@ ul, li, span, div {
   background-color: #fff!important;
 }
 .add-class-box {
-  padding: 30px 0 33px 23px;
+    padding: 30px 0 33px 23px;
+    .rate-input, .rate-input:focus {
+        width: 220px;
+    }
+}
+.add-year-box {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    padding: 25px 0 23px 23px;
+    font-size: 13px;
+    color: #4A4A4A;
+    ul {
+        line-height: 22px;
+    }
+    .year-title {
+        font-size: 13px;
+        letter-spacing: 8.89px;
+    }
+    .year-title + select {
+        position: relative;
+        left: -10px;
+    }
+    .rate-input, .rate-input:focus {
+        width: 220px;
+    }
 }
 .add-class-box ul {
   list-style-type: none;
@@ -68,4 +95,19 @@ ul, li, span, div {
 .add-class-box ul li .opt-btn-box button:last-of-type {
   margin-left: 20px;
 }
-
+.upload-box {
+    padding-top: 40px;
+    padding-left: 50px;
+}
+a.download-link:link,
+a.download-link:visited,
+a.download-link:hover {
+    display: block;
+    margin-top: 25px;
+    color: #CB171D;
+    text-decoration: underline;
+    outline: 0;
+}
+#cancel-download-btn {
+    margin-top: 50px;
+}

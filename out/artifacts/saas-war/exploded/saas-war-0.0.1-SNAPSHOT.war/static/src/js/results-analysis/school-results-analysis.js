@@ -342,8 +342,9 @@ SchoolResultsAnalysis.prototype = {
     getOverLineNumberByDate: function (grade) {
         var that = this;
         Common.ajaxFun('/scoreAnalyse/getOverLineNumberByDate', 'GET', {
+            'tnId': tnId,
             'grade': grade,
-            'lineScore': '439'  //浙江理科二本
+            'lineScore': '439' //浙江理科二本
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var dateData = [];

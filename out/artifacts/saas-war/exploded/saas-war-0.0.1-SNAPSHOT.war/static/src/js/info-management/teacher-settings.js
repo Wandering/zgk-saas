@@ -1,31 +1,31 @@
 /**
- * Created by machengcheng on 16/11/9.
+ * Created by machengcheng on 16/11/18.
  */
+
 var tnId = Common.cookie.getCookie('tnId');
 
-function ClassSettings () {
-    this.type = 'class';
+function TeacherSettings () {
+    this.type = 'teacher';
     this.ids = [];
     this.init();
 }
-ClassSettings.prototype = {
-    constructor: ClassSettings,
+TeacherSettings.prototype = {
+    constructor: TeacherSettings,
     init: function () {
-        this.getClass();
-        this.tableDrag();
+        this.getTeacher();
     },
-    getClass: function () {
+    getTeacher: function () {
         var that = this;
         Common.ajaxFun('/config/get/' + that.type + '/' + tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData.configList;
-                that.renderClassTable(data);
+                that.renderTeacherTable(data);
             }
         }, function (res) {
             layer.msg("出错了", {time: 1000});
         }, true);
     },
-    renderClassTable: function (result) {
+    renderTeacherTable: function (result) {
         var that = this;
         var classHtml = [];
         $.each(result, function (i, k) {
@@ -37,7 +37,7 @@ ClassSettings.prototype = {
             classHtml.push('<td class="center"><a href="javascript: void(0);" id="' + k.id + '" class="remove-link remove-column">移除</a></td>');
             classHtml.push('</tr>');
         });
-        $('#class-table tbody').html(classHtml.join(''));
+        $('#teacher-table tbody').html(classHtml.join(''));
     },
     removeColumn: function (isBatch, ids) {//isBatch是否是批量删除(false: 单个删除; true: 批量删除, 包括单个删除)
         var that = this;
@@ -62,12 +62,11 @@ ClassSettings.prototype = {
                     if (res.rtnCode == "0000000") {
                         if(res.bizData.result="SUCCESS"){
                             $('#column-change-list').html('');
-                            that.getClass();
+                            that.getTeacher();
                             $('#checkAll').prop('checked', false);
                             layer.msg('删除成功', {time: 1000});
-                            var classManagement = new parent.ClassManagement();
-                            classManagement.init();
-                            //parent.layer.close(index);
+                            var teacherManagement = new parent.TeacherManagement();
+                            teacherManagement.init();
                         }
                     }
                 }, function (res) {
@@ -83,8 +82,8 @@ ClassSettings.prototype = {
                     if (res.bizData.result == "SUCCESS") {
                         layer.msg('删除成功', {time: 1000});
                         var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
-                        var classManagement = new parent.ClassManagement();
-                        classManagement.init();
+                        var teacherManagement = new parent.TeacherManagement();
+                        teacherManagement.init();
                         parent.layer.close(index);
                     }else{
                         layer.msg(res.bizData.result);
@@ -94,51 +93,15 @@ ClassSettings.prototype = {
                 layer.msg("出错了", {time: 1000});
             }, true, null);
         }
-    },
-    tableDrag: function () {
-        //表格排序
-        var fixHelperModified = function (e, tr) {
-                var $originals = tr.children();
-                var $helper = tr.clone();
-                $helper.children().each(function (index) {
-                    $(this).width($originals.eq(index).width());
-                });
-                return $helper;
-            },
-            updateIndex = function (e, ui) {
-                var ids = [];
-                $('td.index', ui.item.parent()).each(function (i) {
-                    $(this).html(i + 1);
-                    ids.push($(this).attr('indexid'));
-                    console.info($(this));
-                });
-                ids = ids.join('-');
-                Common.ajaxFun('/config/sort/class/'+ ids +'.do', 'POST', {}, function (res) {
-                    if (res.rtnCode == "0000000") {
-                        if (res.bizData.result == "SUCCESS") {
-                            layer.msg('排序成功', {time: 1000});
-                        }else{
-                            layer.msg(res.bizData.result);
-                        }
-                    }
-                }, function (res) {
-                    layer.msg("出错了", {time: 1000});
-                }, true, null);
-            };
-        $("#class-table tbody").sortable({
-            helper: fixHelperModified,
-            stop: updateIndex,
-            axis: "y"
-        }).disableSelection();
     }
 };
 
-var classSettings = new ClassSettings();
+var teacherSettings = new TeacherSettings();
 
 var chooseWindowBox = null;
 $(document).on('click', '#addColumn-btn', function () {
     var columnHtml = [];
-    columnHtml.push('<div class="class-settings-box">');
+    columnHtml.push('<div class="teacher-settings-box">');
     columnHtml.push('<ul id="column-list">');
     columnHtml.push('</ul>');
     columnHtml.push('<div class="opt-bottom">');
@@ -153,7 +116,7 @@ $(document).on('click', '#addColumn-btn', function () {
         content: columnHtml.join('')
     });
     $('.class-column').prop('checked', true);
-    Common.ajaxFun('/config/getInit/' + classSettings.type + '.do', 'GET', {}, function (res) {
+    Common.ajaxFun('/config/getInit/' + teacherSettings.type + '.do', 'GET', {}, function (res) {
         if (res.rtnCode == "0000000") {
             if (res.bizData.configList.length != 0) {
                 var template = Handlebars.compile($('#column-list-data-template').html());
@@ -162,7 +125,7 @@ $(document).on('click', '#addColumn-btn', function () {
                 $('#column-list li').each(function () {
                     var tempCheck = $(this).find('.class-column');
                     var tempId = $(this).find('.class-column').attr('columnid');
-                    $.each(classSettings.ids, function (i, k) {
+                    $.each(teacherSettings.ids, function (i, k) {
                         if (k == tempId) {
                             tempCheck.prop('checked', true);
                         }
@@ -175,9 +138,8 @@ $(document).on('click', '#addColumn-btn', function () {
     }, true);
 });
 
-
 function ColumnSettings () {
-    this.type = 'class';
+    this.type = 'teacher';
     this.idCount = 0;
     this.ids = [];
     this.init();
@@ -216,13 +178,12 @@ ColumnSettings.prototype = {
     },
     changeColumnEvent: function () {
         var that = this;
-        //alert('hahahehe' + ', idCount: ' + that.idCount + ', ids: ' + that.ids.join('-'));
         Common.ajaxFun('/manage/import/' + that.type + '/' + tnId + '.do?ids=' + that.ids.join('-'), 'POST', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 chooseWindowBox != null ? layer.close(chooseWindowBox) : layer.msg('窗口已关闭', {time: 1000});
                 layer.msg(res.bizData.result, {time: 1000});
-                if (classSettings != null) {
-                    classSettings.getClass();
+                if (teacherSettings != null) {
+                    teacherSettings.getTeacher();
                 }
             }
         }, function (res) {
@@ -233,14 +194,14 @@ ColumnSettings.prototype = {
 
 $(document).on('click', '.remove-column', function () {
     var ids = $(this).attr('id');
-    classSettings.removeColumn(false, ids);
+    teacherSettings.removeColumn(false, ids);
 });
 $(document).on('click', '#delColumn-btn', function () {
-    classSettings.removeColumn(true, '');
+    teacherSettings.removeColumn(true, '');
 });
 
 //(选择添加字段对话框内的)确定选择按钮
-$(document).on('click', '.class-settings-box .choose-btn', function () {
+$(document).on('click', '.teacher-settings-box .choose-btn', function () {
     var columnSettings = new ColumnSettings();
     if (columnSettings.idCount != 0) {
         columnSettings.changeColumnEvent();
@@ -248,9 +209,8 @@ $(document).on('click', '.class-settings-box .choose-btn', function () {
         layer.msg('至少选择一个字段!', {time: 1000});
     }
 });
-
 //(选择添加字段对话框内的)取消按钮
-$(document).on('click', '.class-settings-box .cancel-btn', function () {
+$(document).on('click', '.teacher-settings-box .cancel-btn', function () {
     chooseWindowBox != null ? layer.close(chooseWindowBox) : layer.msg('窗口已关闭', {time: 1000});
     //classSettings.getClass();
 });
