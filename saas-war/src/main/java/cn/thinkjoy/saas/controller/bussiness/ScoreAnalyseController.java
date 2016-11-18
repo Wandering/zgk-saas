@@ -3,12 +3,12 @@ package cn.thinkjoy.saas.controller.bussiness;
 import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.*;
-import cn.thinkjoy.saas.domain.Exam;
-import cn.thinkjoy.saas.domain.ExamDetail;
-import cn.thinkjoy.saas.domain.ExamScoreRatio;
+import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.service.IExamDetailService;
+import cn.thinkjoy.saas.service.IExamPropertiesService;
 import cn.thinkjoy.saas.service.IExamService;
 import cn.thinkjoy.saas.service.IExamStuWeakCourseService;
+import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.google.common.collect.Maps;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,6 +57,12 @@ public class ScoreAnalyseController
 
     @Autowired
     IExamStuWeakCourseService examStuWeakCourseService;
+
+    @Autowired
+    IExamPropertiesService examPropertiesService;
+
+    @Autowired
+    EXIGradeService exiGradeService;
 
     private Set<Integer> advancedScoreSet;
 
@@ -1229,5 +1236,102 @@ public class ScoreAnalyseController
             resultList = new ArrayList<>();
         }
         return resultList;
+    }
+
+    @RequestMapping("/getExamProperties")
+    @ResponseBody
+    public List<ExamProperties> getExamProperties(@RequestParam(value = "tnId", required = true) String tnId)
+    {
+        List<ExamProperties> list = examPropertiesService.findList("tnId", tnId);
+        if(list == null || list.size()==0)
+        {
+            Map<String, String> map = new HashMap<>();
+            map.put("tnId", tnId);
+            List<Grade> grades = exiGradeService.selectGradeByTnId(map);
+            if(grades == null || grades.size()==0)
+            {
+                throw new BizException("1112011", "未设置年级信息，请先设置！");
+            }
+            ExamProperties p0 = new ExamProperties();
+            p0.setTnId(Long.parseLong(tnId));
+            p0.setName("defaultGrade");
+            p0.setValue(grades.get(0).getGrade());
+            examPropertiesService.add(p0);
+            ExamProperties p1 = new ExamProperties();
+            p1.setTnId(Long.parseLong(tnId));
+            p1.setName("defaultClassGrade");
+            p1.setValue(grades.get(0).getGrade());
+            examPropertiesService.add(p1);
+            List<String> classNames = getClassesNameByGrade(tnId, grades.get(0).getGrade());
+            if(classNames == null || classNames.size() == 0)
+            {
+                throw new BizException("1112011", "未设置班级信息，请先设置！");
+            }
+            ExamProperties p2 = new ExamProperties();
+            p2.setTnId(Long.parseLong(tnId));
+            p2.setName("defaultClass");
+            p2.setValue(classNames.get(0));
+            examPropertiesService.add(p2);
+            list.add(p0);
+            list.add(p1);
+            list.add(p2);
+        }
+        return list;
+    }
+
+    @RequestMapping("/saveExamLineProperties")
+    @ResponseBody
+    public boolean saveExamLineProperties(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "value", required = true) String value)
+    {
+        boolean flag = false;
+        Map<String, String> map = new HashMap<>();
+        map.put("tnId", tnId);
+        map.put("name", "line");
+        ExamProperties e = (ExamProperties)examPropertiesService.queryOne(map);
+        try
+        {
+            if(null != e)
+            {
+                e.setValue(value);
+                examPropertiesService.update(e);
+            }else
+            {
+                ExamProperties p = new ExamProperties();
+                p.setName("line");
+                p.setTnId(Long.parseLong(tnId));
+                p.setValue(value);
+                examPropertiesService.add(p);
+            }
+        }catch (Exception ex)
+        {
+            return flag;
+        }
+        flag = true;
+        return flag;
+    }
+
+    @RequestMapping("/updateExamProperties")
+    @ResponseBody
+    public boolean updateExamProperties(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "name", required = true) String name,
+        @RequestParam(value = "value", required = true) String value)
+    {
+        boolean flag;
+        Map<String, String> map = new HashMap<>();
+        map.put("tnId", tnId);
+        map.put("name", name);
+        ExamProperties e = (ExamProperties)examPropertiesService.queryOne(map);
+        if(null != e)
+        {
+            e.setValue(value);
+            examPropertiesService.update(e);
+        }else {
+            throw new BizException("1100115", "未找到更新配!");
+        }
+        flag = true;
+        return flag;
     }
 }
