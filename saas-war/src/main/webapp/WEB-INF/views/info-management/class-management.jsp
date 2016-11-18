@@ -48,6 +48,14 @@
                                         <button class="btn btn-warning" id="class-settings-btn">班级设置</button>
                                     </div>
                                 </div>
+                                <%--<div class="upload-box">--%>
+                                    <%--<span id="uploader-demo">--%>
+                                        <%--<span id="fileList" class="uploader-list"></span>--%>
+                                        <%--<button class="btn btn-info btn-import" id="btn-import">导入班级数据Excel</button>--%>
+                                    <%--</span>--%>
+                                    <%--<a href="javascript: void(0);" id="downloadBtn1" class="download-link">请先导出Excel模板，进行填写</a>--%>
+                                    <%--<button class="btn btn-cancel cancel-btn" id="cancel-download-btn">取消</button>'--%>
+                                <%--</div>--%>
                                 <div>
                                     <table id="class-manage-table" class="table">
                                         <thead>
@@ -82,6 +90,12 @@
             </div><!-- /.main-container-inner -->
         </div><!-- /.main-container -->
         <%@ include file="./../common/footer.jsp"%>
+        <link rel="stylesheet" type="text/css" href="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.css">
+        <script type="text/javascript" src="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.js"></script>
+        <script>
+            var BASE_URL = '<%=ctx%>/static/src/lib/';
+            var rootPath = '<%=ctx%>';
+        </script>
         <script src="<%=ctx%>/static/src/js/info-management/class-management.js"></script>
     </body>
 </html>

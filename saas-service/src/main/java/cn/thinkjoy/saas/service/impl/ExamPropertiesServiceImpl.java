@@ -2,14 +2,15 @@
  * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
  *
  * Project Name: saas
- * $Id:  ExamDetailServiceImpl.java 2016-11-01 11:03:42 $
+ * $Id:  ExamPropertiesServiceImpl.java 2016-11-18 10:03:07 $
  */
 package cn.thinkjoy.saas.service.impl;
 
+import cn.thinkjoy.common.domain.BaseDomain;
 import cn.thinkjoy.common.dao.IBaseDAO;
-import cn.thinkjoy.saas.dao.IExamDetailDAO;
-import cn.thinkjoy.saas.domain.ExamDetail;
-import cn.thinkjoy.saas.service.IExamDetailService;
+import cn.thinkjoy.saas.dao.IExamPropertiesDAO;
+import cn.thinkjoy.saas.domain.ExamProperties;
+import cn.thinkjoy.saas.service.IExamPropertiesService;
 import cn.thinkjoy.common.service.impl.AbstractPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,81 +19,16 @@ import java.util.List;
 import java.util.Map;
 
 
-@Service("ExamDetailServiceImpl")
-public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDetail>, ExamDetail> implements IExamDetailService<IBaseDAO<ExamDetail>,ExamDetail>{
+@Service("ExamPropertiesServiceImpl")
+public class ExamPropertiesServiceImpl extends AbstractPageService<IBaseDAO<ExamProperties>, ExamProperties> implements IExamPropertiesService<IBaseDAO<ExamProperties>,ExamProperties>{
     @Autowired
-    private IExamDetailDAO examDetailDAO;
+    private IExamPropertiesDAO examPropertiesDAO;
 
     @Override
-    public IBaseDAO<ExamDetail> getDao() {
-        return examDetailDAO;
+    public IBaseDAO<ExamProperties> getDao() {
+        return examPropertiesDAO;
     }
 
-    @Override
-    public List<Map<String, Object>> getOverLineNumberByDate(Map<String, String> paramMap)
-    {
-        return examDetailDAO.getOverLineNumberByDate(paramMap);
-    }
-
-    @Override
-    public Map<String, Object> getEnrollingNumberInfo(Map<String, String> paramMap)
-    {
-        return examDetailDAO.getEnrollingNumberInfo(paramMap);
-    }
-
-    @Override
-    public List<String> getLastExamIdByGrade(Map<String, Object> paramMap)
-    {
-        return examDetailDAO.getLastExamIdByGrade(paramMap);
-    }
-
-    @Override
-    public Map<String, Object> getAvgScoresByExamId(Map<String, String> paramMap)
-    {
-        return examDetailDAO.getAvgScoresByExamId(paramMap);
-    }
-
-    @Override
-    public void deleteWeakScoresByDetailId(Map<String, Object> paramMap)
-    {
-        examDetailDAO.deleteWeakScoresByDetailId(paramMap);
-    }
-
-    @Override
-    public List<Map<String, Object>> getMostAttentionNumberChart(Map<String, String> paramMap)
-    {
-        return examDetailDAO.getMostAttentionNumberChart(paramMap);
-    }
-
-    @Override
-    public List<Map<String, Object>> getMostAttentionCourseChart(Map<String, String> paramMap)
-    {
-        return examDetailDAO.getMostAttentionCourseChart(paramMap);
-    }
-
-    @Override
-    public List<Map<String, Object>> getMostAttentionPage(Map<String, String> paramMap)
-    {
-        return examDetailDAO.getMostAttentionPage(paramMap);
-    }
-
-    @Override
-    public List<String> getClassesNameByGrade(Map<String, String> paramMap)
-    {
-        return examDetailDAO.getClassesNameByGrade(paramMap);
-    }
-
-    @Override
-    public List<Map<String, Object>> getAvgScoresForClass(Map<String, String> paramMap)
-    {
-        return examDetailDAO.getAvgScoresForClass(paramMap);
-    }
-
-    @Override
-    public List<Map<String, Object>> getAvgScoresForClassStudent(Map<String, String> paramMap)
-    {
-        return examDetailDAO.getAvgScoresForClassStudent(paramMap);
-    }
 //    @Override
 //    public void insert(BaseDomain entity) {
 //
@@ -144,8 +80,8 @@ public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDeta
 //    }
 //
 //    @Override
-//    public List<ExamDetail> findAll() {
-//        return examDetailDAO.findAll();
+//    public List<ExamProperties> findAll() {
+//        return examPropertiesDAO.findAll();
 //    }
 //
 //    @Override
@@ -199,8 +135,8 @@ public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDeta
 //    }
 //
 //    @Override
-//    protected ExamDetailDAO getDao() {
-//        return examDetailDAO;
+//    protected ExamPropertiesDAO getDao() {
+//        return examPropertiesDAO;
 //    }
 //
 //    @Override

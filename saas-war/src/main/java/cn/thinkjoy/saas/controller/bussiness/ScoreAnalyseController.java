@@ -3,12 +3,12 @@ package cn.thinkjoy.saas.controller.bussiness;
 import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.*;
-import cn.thinkjoy.saas.domain.Exam;
-import cn.thinkjoy.saas.domain.ExamDetail;
-import cn.thinkjoy.saas.domain.ExamScoreRatio;
+import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.service.IExamDetailService;
+import cn.thinkjoy.saas.service.IExamPropertiesService;
 import cn.thinkjoy.saas.service.IExamService;
 import cn.thinkjoy.saas.service.IExamStuWeakCourseService;
+import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.google.common.collect.Maps;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,6 +57,12 @@ public class ScoreAnalyseController
 
     @Autowired
     IExamStuWeakCourseService examStuWeakCourseService;
+
+    @Autowired
+    IExamPropertiesService examPropertiesService;
+
+    @Autowired
+    EXIGradeService exiGradeService;
 
     private Set<Integer> advancedScoreSet;
 
@@ -412,17 +419,17 @@ public class ScoreAnalyseController
         }
         Map<String, Object> condition = Maps.newHashMap();
         condition.put("groupOp", "and");
-        if (StringUtils.isNotEmpty(examId))
+        if (StringUtils.isEmpty(examId))
         {
             throw new BizException("1110001", "examId不能为空！");
         }
         ConditionsUtil.setCondition(condition, "examId", "=", examId);
         int count = examDetailService.count(condition);
-        if (!StringUtils.isNotEmpty(id))
+        if (StringUtils.isNotEmpty(id))
         {
-            ConditionsUtil.setCondition(condition, "id", "=", id);
+            ConditionsUtil.setCondition(condition, "detail.id", "=", id);
         }
-        if (!StringUtils.isNotEmpty(grade))
+        if (StringUtils.isNotEmpty(grade))
         {
             ConditionsUtil.setCondition(condition, "grade", "=", grade);
         }
@@ -952,16 +959,7 @@ public class ScoreAnalyseController
         {
             int maxStep = Collections.max(advancedScoreSet);
             int endStep = stepStart;
-            while (endStep < maxStep)
-            {
-                int start = stepStart;
-                stepStart = stepStart + stepLength + 1;
-                Map<String, Integer> paramMap = new LinkedHashMap<>();
-                paramMap.put("stepStart", start);
-                endStep = Math.min(stepStart - 1, maxStep);
-                paramMap.put("stepEnd", endStep);
-                stepList.add(paramMap);
-            }
+            addStepList(stepList, maxStep, endStep, stepStart, stepLength);
         }
         return stepList;
     }
@@ -995,19 +993,18 @@ public class ScoreAnalyseController
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "className", required = true) String className)
     {
-        Map<String,String> paramMap = new HashMap<>();
+        Map<String, String> paramMap = new HashMap<>();
         paramMap.put("tnId", tnId);
         paramMap.put("grade", grade);
         paramMap.put("className", className);
         List<Map<String, Object>> resultList;
         resultList = examDetailService.getAvgScoresForClass(paramMap);
-        if(null == resultList)
+        if (null == resultList)
         {
             resultList = new ArrayList<>();
         }
         return resultList;
     }
-
 
     @RequestMapping("/getStuNumberScoreChangeForClass")
     @ResponseBody
@@ -1032,27 +1029,348 @@ public class ScoreAnalyseController
         List<ExamDetail> detailListOne = examDetailService.findList("examId", examIds.get(0));
         List<ExamDetail> detailListTwo = examDetailService.findList("examId", examIds.get(1));
         Map<String, List<ExamDetail>> detailMap = new HashMap<>();
+        int lastGradeRank = 0;
         for (ExamDetail detail : detailListOne)
         {
-            if(className.equals(detail.getClassName()))
+            if (className.equals(detail.getClassName()))
             {
                 List<ExamDetail> detailList = new ArrayList<>();
                 detailList.add(detail);
                 detailMap.put(className + "@" + detail.getStudentName(), detailList);
             }
+            int gradeRank = Integer.parseInt(detail.getGradeRank());
+            if (gradeRank > lastGradeRank)
+            {
+                lastGradeRank = gradeRank;
+            }
         }
         for (ExamDetail detail : detailListTwo)
         {
-            if(className.equals(detail.getClassName()))
+            if (className.equals(detail.getClassName()))
             {
                 List<ExamDetail> detailList = detailMap.get(className + "@" + detail.getStudentName());
                 detailList.add(detail);
             }
         }
-        for (Map.Entry<String, List<ExamDetail>> entry: detailMap.entrySet())
+
+        List<Map<String, Integer>> stepList = new ArrayList<>();
+        int maxStep = (lastGradeRank / 100 + 1) * 100;
+        int endStep = 1;
+        int stepStart = 1;
+        int stepLength = 99;
+        addStepList(stepList, maxStep, endStep, stepStart, stepLength);
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        for (Map<String, Integer> map : stepList)
         {
-            
+            Map<String, Object> params = new LinkedHashMap<>();
+            int min = map.get("stepStart");
+            int max = map.get("stepEnd");
+            params.put("年级排名", min + "-" + max);
+            List<ExamDetail> lastExamDetail = new ArrayList<>();
+            List<ExamDetail> lastButTwoExamDetail = new ArrayList<>();
+            for (Map.Entry<String, List<ExamDetail>> entry : detailMap.entrySet())
+            {
+                List<ExamDetail> detailList = entry.getValue();
+                if (detailList.size() < 2)
+                {
+                    continue;
+                }
+                ExamDetail lastExam = detailList.get(0);
+                ExamDetail lastButTwoExam = detailList.get(1);
+                int lastGrandRank = Integer.parseInt(lastExam.getGradeRank());
+                int lastButTwoGrandRank = Integer.parseInt(lastButTwoExam.getGradeRank());
+                if (lastGrandRank >= min && lastGrandRank <= max)
+                {
+                    lastExamDetail.add(lastExam);
+                }
+                if (lastButTwoGrandRank >= min && lastButTwoGrandRank <= max)
+                {
+                    lastButTwoExamDetail.add(lastButTwoExam);
+                }
+            }
+            params.put("最近第二次考试", lastButTwoExamDetail.size());
+            params.put("最近第一次考试", lastExamDetail.size());
+            Set<String> stuNames = new HashSet<>();
+            for (ExamDetail detail : lastExamDetail)
+            {
+                stuNames.add(detail.getStudentName());
+            }
+            Iterator<ExamDetail> its = lastButTwoExamDetail.iterator();
+            while (its.hasNext())
+            {
+                ExamDetail d = its.next();
+                if(stuNames.contains(d.getStudentName()))
+                {
+                    its.remove();
+                }
+            }
+            lastExamDetail.addAll(lastButTwoExamDetail);
+            params.put("变化人数", lastExamDetail.size());
+            List<Map<String, Object>> list = new ArrayList<>();
+            for (ExamDetail detail : lastExamDetail)
+            {
+                List<ExamDetail> detailList = detailMap.get(className + "@" + detail.getStudentName());
+                if (detailList.size() < 2)
+                {
+                    continue;
+                }
+                Map<String, Object> para = new HashMap<>();
+                para.put("学生姓名", detailList.get(0).getStudentName());
+                para.put("变化趋势", detailList.get(1).getGradeRank() + "名 - " + detailList.get(0).getGradeRank()+"名");
+                list.add(para);
+            }
+            params.put("data", list);
+            resultList.add(params);
         }
-        return null;
+        return resultList;
+    }
+
+    private void addStepList(List<Map<String, Integer>> stepList, int maxStep, int endStep, int stepStart,
+        int stepLength)
+    {
+        while (endStep < maxStep)
+        {
+            int start = stepStart;
+            stepStart = stepStart + stepLength + 1;
+            Map<String, Integer> paramMap = new LinkedHashMap<>();
+            paramMap.put("stepStart", start);
+            endStep = Math.min(stepStart - 1, maxStep);
+            paramMap.put("stepEnd", endStep);
+            stepList.add(paramMap);
+        }
+    }
+
+    @RequestMapping("/getOverLineDetailForClass")
+    @ResponseBody
+    public List<Map<String, Object>> getOverLineDetailForClass(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "className", required = true) String className,
+        @RequestParam(value = "batch", required = true) final String batch)
+    {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
+        paramMap.put("grade", grade);
+        paramMap.put("limitNumber", 1);
+        List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
+        if (null == examIds || examIds.size() == 0)
+        {
+            throw new BizException("1100011", "该年级没有成绩录入！！");
+        }
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        Map<String, Object> numberMap = getNumberMap(tnId);
+        int batchOneNumber = Integer.parseInt(numberMap.get("batchOne") + "");
+        int batchTwoNumber = Integer.parseInt(numberMap.get("batchTwo") + "");
+        int batchThrNumber = Integer.parseInt(numberMap.get("batchThr") + "");
+        Map<String, Map<String, List<ExamDetail>>> classInfoMap = Maps.newHashMap();
+        List<ExamDetail> detailList = examDetailService.findList("examId", examIds.get(0));
+        for (ExamDetail detail : detailList)
+        {
+            String clazzName = detail.getClassName();
+            if(className.equals(clazzName))
+            {
+                Map<String, List<ExamDetail>> mp = classInfoMap.get(clazzName);
+                if (null == mp)
+                {
+                    mp = new HashMap<>();
+                    mp.put("batchAll", new ArrayList<ExamDetail>());
+                    mp.put("batchOne", new ArrayList<ExamDetail>());
+                    mp.put("batchTwo", new ArrayList<ExamDetail>());
+                    mp.put("batchThr", new ArrayList<ExamDetail>());
+                    classInfoMap.put(clazzName, mp);
+                }
+                int gradeRank = Integer.parseInt(detail.getGradeRank());
+                if (gradeRank <= batchThrNumber)
+                {
+                    mp.get("batchAll").add(detail);
+                }
+                if (gradeRank <= batchOneNumber)
+                {
+                    mp.get("batchOne").add(detail);
+                }
+                if (gradeRank > batchOneNumber && gradeRank <= batchTwoNumber)
+                {
+                    mp.get("batchTwo").add(detail);
+                }
+                if (gradeRank > batchTwoNumber && gradeRank <= batchThrNumber)
+                {
+                    mp.get("batchThr").add(detail);
+                }
+            }
+        }
+        for (Map.Entry<String, Map<String, List<ExamDetail>>> entry : classInfoMap.entrySet())
+        {
+            Map<String, List<ExamDetail>> examDetailListMap = entry.getValue();
+            List<ExamDetail> details = examDetailListMap.get(batch);
+            for (ExamDetail d: details)
+            {
+                Map<String, Object> param = new HashMap<>();
+                param.put("班级排名", d.getClassRank());
+                param.put("学生姓名", d.getStudentName());
+                param.put("成绩", d.getTotleScore());
+                param.put("年级排名", d.getGradeRank());
+                resultList.add(param);
+            }
+        }
+        return resultList;
+    }
+
+    @RequestMapping("/getAvgScoresForClassStudent")
+    @ResponseBody
+    public List<Map<String, Object>> getAvgScoresForClassStudent(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "className", required = true) String className,
+        @RequestParam(value = "studentName", required = true) String studentName)
+    {
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
+        paramMap.put("grade", grade);
+        paramMap.put("className", className);
+        paramMap.put("studentName", studentName);
+        List<Map<String, Object>> resultList;
+        resultList = examDetailService.getAvgScoresForClassStudent(paramMap);
+        if (null == resultList)
+        {
+            resultList = new ArrayList<>();
+        }
+        return resultList;
+    }
+
+    @RequestMapping("/getExamProperties")
+    @ResponseBody
+    public List<ExamProperties> getExamProperties(@RequestParam(value = "tnId", required = true) String tnId)
+    {
+        List<ExamProperties> list = examPropertiesService.findList("tnId", tnId);
+        if(list == null || list.size()==0)
+        {
+            Map<String, String> map = new HashMap<>();
+            map.put("tnId", tnId);
+            List<Grade> grades = exiGradeService.selectGradeByTnId(map);
+            if(grades == null || grades.size()==0)
+            {
+                throw new BizException("1112011", "未设置年级信息，请先设置！");
+            }
+            ExamProperties p0 = new ExamProperties();
+            p0.setTnId(Long.parseLong(tnId));
+            p0.setName("defaultGrade");
+            p0.setValue(grades.get(0).getGrade());
+            examPropertiesService.add(p0);
+            ExamProperties p1 = new ExamProperties();
+            p1.setTnId(Long.parseLong(tnId));
+            p1.setName("defaultClassGrade");
+            p1.setValue(grades.get(0).getGrade());
+            examPropertiesService.add(p1);
+            List<String> classNames = getClassesNameByGrade(tnId, grades.get(0).getGrade());
+            if(classNames == null || classNames.size() == 0)
+            {
+                throw new BizException("1112011", "未设置班级信息，请先设置！");
+            }
+            ExamProperties p2 = new ExamProperties();
+            p2.setTnId(Long.parseLong(tnId));
+            p2.setName("defaultClass");
+            p2.setValue(classNames.get(0));
+            examPropertiesService.add(p2);
+            list.add(p0);
+            list.add(p1);
+            list.add(p2);
+        }
+        return list;
+    }
+
+    @RequestMapping("/saveExamLineProperties")
+    @ResponseBody
+    public boolean saveExamLineProperties(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "value", required = true) String value)
+    {
+        boolean flag = false;
+        Map<String, String> map = new HashMap<>();
+        map.put("tnId", tnId);
+        map.put("name", "line");
+        ExamProperties e = (ExamProperties)examPropertiesService.queryOne(map);
+        try
+        {
+            if(null != e)
+            {
+                e.setValue(value);
+                examPropertiesService.update(e);
+            }else
+            {
+                ExamProperties p = new ExamProperties();
+                p.setName("line");
+                p.setTnId(Long.parseLong(tnId));
+                p.setValue(value);
+                examPropertiesService.add(p);
+            }
+        }catch (Exception ex)
+        {
+            return flag;
+        }
+        flag = true;
+        return flag;
+    }
+
+    @RequestMapping("/updateExamProperties")
+    @ResponseBody
+    public boolean updateExamProperties(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "name", required = true) String name,
+        @RequestParam(value = "value", required = true) String value)
+    {
+        boolean flag;
+        Map<String, String> map = new HashMap<>();
+        map.put("tnId", tnId);
+        map.put("name", name);
+        ExamProperties e = (ExamProperties)examPropertiesService.queryOne(map);
+        if(null != e)
+        {
+            e.setValue(value);
+            examPropertiesService.update(e);
+        }else {
+            throw new BizException("1100115", "未找到更新配!");
+        }
+        flag = true;
+        return flag;
+    }
+
+    @RequestMapping("/getOverLineDetailForClassTwo")
+    @ResponseBody
+    public List<Map<String, Object>> getOverLineDetailForClassTwo(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "className", required = true) String className,
+        @RequestParam(value = "line", required = true) final String line)
+    {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
+        paramMap.put("grade", grade);
+        paramMap.put("limitNumber", 1);
+        List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
+        if (null == examIds || examIds.size() == 0)
+        {
+            throw new BizException("1100011", "该年级没有成绩录入！！");
+        }
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        int batchOneNumber = Integer.parseInt(line);
+        List<ExamDetail> detailList = examDetailService.findList("examId", examIds.get(0));
+        for (ExamDetail detail : detailList)
+        {
+            String clazzName = detail.getClassName();
+            if(className.equals(clazzName))
+            {
+                int gradeRank = Integer.parseInt(detail.getGradeRank());
+                if (gradeRank <= batchOneNumber)
+                {
+                    Map<String, Object> param = new HashMap<>();
+                    param.put("学生姓名", detail.getStudentName());
+                    param.put("班级排名", detail.getClassRank());
+                    param.put("成绩", detail.getTotleScore());
+                    param.put("年级排名", detail.getGradeRank());
+                    resultList.add(param);
+                }
+            }
+        }
+        return resultList;
     }
 }

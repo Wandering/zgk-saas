@@ -130,6 +130,14 @@ public class WebCotroller {
         return new ModelAndView("/info-management/teacher-management");
     }
     /**
+     * teacher-settings
+     * 教师设置
+     */
+    @RequestMapping("/teacher-settings")
+    public ModelAndView teacherSettings() {
+        return new ModelAndView("/info-management/teacher-settings");
+    }
+    /**
      * graduation-rates-management
      * 升学率管理
      */
@@ -269,6 +277,14 @@ public class WebCotroller {
     @RequestMapping("/professional-info")
     public ModelAndView professionalInfo() {
         return new ModelAndView("/data-query/professional-info");
+    }
+    /**
+     * professional-assessment
+     * 专业测评
+     */
+    @RequestMapping("/professional-assessment")
+    public ModelAndView professionalAssessment() {
+        return new ModelAndView("/professional-assessment/professional-assessment");
     }
 
 
