@@ -19,8 +19,14 @@
 
     <!-- 输入院校名 -->
     <select id="selectMajorByUniversityNameAndBatch" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.MajorDto">
-        select zz.majorCode as majorCode,zz.major as majorName,uu.id as universityId,uu.name as universityName,uu.rank as rank,dd.name as batchName,tmp.planEnrolling as planNumber,uu.property as property, zz.selectSubject as selSubject
-          from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
+        select
+        <if test="flag==0">
+            DISTINCT uu.id as universityId,uu.name as universityName
+        </if>
+        <if test="flag==1">
+          zz.majorCode as majorCode,zz.major as majorName,uu.id as universityId,uu.name as universityName,uu.rank as rank,dd.name as batchName,tmp.planEnrolling as planNumber,uu.property as property, zz.selectSubject as selSubject
+        </if>
+        from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
           INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
           INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
           left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=tmp.batch
@@ -33,6 +39,9 @@
         </if>
         <if test="universityName!=null">
          and uu.name like concat('%',#{universityName},'%')
+        </if>
+        <if test="universityId!=null">
+         and uu.id = #{universityId}
         </if>
         order by if(isnull(uu.rank),10000,uu.rank) asc
         limit ${offset}, ${rows}
