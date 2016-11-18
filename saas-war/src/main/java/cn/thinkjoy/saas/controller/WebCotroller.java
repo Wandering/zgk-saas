@@ -270,6 +270,14 @@ public class WebCotroller {
     public ModelAndView professionalInfo() {
         return new ModelAndView("/data-query/professional-info");
     }
+    /**
+     * professional-assessment
+     * 专业测评
+     */
+    @RequestMapping("/professional-assessment")
+    public ModelAndView professionalAssessment() {
+        return new ModelAndView("/professional-assessment/professional-assessment");
+    }
 
 
 }

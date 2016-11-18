@@ -51,11 +51,16 @@
     }
   }
   .chart-box{
-    display: none;
     clear: both;
     overflow: hidden;
+    &.hds{
+      font-size:0;
+      height:0;
+      overflow: hidden;
+    }
   }
 }
+
 .txt1{
   font-weight: bold;
   font-size:16px;

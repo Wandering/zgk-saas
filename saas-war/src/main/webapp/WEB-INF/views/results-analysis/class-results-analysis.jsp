@@ -71,7 +71,7 @@
                             <div class="chart-box">
                                   <div id="totalScoreChart-chart" style="width: 100%;height: 400px;"></div>
                             </div>
-                            <div class="chart-box">
+                            <div class="chart-box hds">
                                 <div id="subjectsChart-chart" style="width: 100%;height: 400px;"></div>
                             </div>
                         </div>
@@ -93,7 +93,7 @@
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
                         <div class="main-title">
-                            <h3>重点线成绩分析</h3>
+                            <h3 class="grade-type">重点线成绩分析</h3>
                         </div>
                         <br>
                         <p class="txt1">班级情况统计:</p>
