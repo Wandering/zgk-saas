@@ -26,7 +26,31 @@ ul, li, span, div {
   background-color: #fff!important;
 }
 .add-class-box {
-  padding: 30px 0 33px 23px;
+    padding: 30px 0 33px 23px;
+    .rate-input, .rate-input:focus {
+        width: 220px;
+    }
+}
+.add-year-box {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    padding: 25px 0 23px 23px;
+    font-size: 13px;
+    color: #4A4A4A;
+    ul {
+        line-height: 22px;
+    }
+    .year-title {
+        font-size: 13px;
+        letter-spacing: 8.89px;
+    }
+    .year-title + select {
+        position: relative;
+        left: -10px;
+    }
+    .rate-input, .rate-input:focus {
+        width: 220px;
+    }
 }
 .add-class-box ul {
   list-style-type: none;
