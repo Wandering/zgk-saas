@@ -87,16 +87,16 @@ $(document).on('click', '#add-btn', function () {//新增升学率
             return;
         }
     }
-    var stu3numbers = $('#senior-three').val().trim();
-    var batch1enrolls = $('#batch-first').val().trim();
-    var batch2enrolls = $('#batch-second').val().trim();
-    var batch3enrolls = $('#batch-third').val().trim();
-    var batch4enrolls = $('#batch-fourth').val().trim();
+    var stu3numbers = parseInt($('#senior-three').val().trim());
+    var batch1enrolls = parseInt($('#batch-first').val().trim());
+    var batch2enrolls = parseInt($('#batch-second').val().trim());
+    var batch3enrolls = parseInt($('#batch-third').val().trim());
+    var batch4enrolls = parseInt($('#batch-fourth').val().trim());
     var datas = {
         "clientInfo": {},
         "style": "",
         "data": {
-            "EnrollingRatio": {
+            "EnrollingRatioObj": {
                 "tnId": tnId,
                 "stu3numbers": stu3numbers,
                 "batch1enrolls": batch1enrolls,
