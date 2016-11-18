@@ -7,6 +7,7 @@ import cn.thinkjoy.saas.service.IEnrollingRatioService;
 import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExcelUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -181,7 +182,8 @@ public class ManageController {
     @RequestMapping(value = "/enrollingRatio/add",method = RequestMethod.POST)
     @ResponseBody
     public Map addEnrollingRatio(@RequestBody Request request) {
-        EnrollingRatio enrollingRatio =(EnrollingRatio)request.getData().get("enrollingRatio");
+
+        EnrollingRatio enrollingRatio =JSON.parseObject(request.getData().get("EnrollingRatioObj").toString(),EnrollingRatio.class);
         boolean result = iexEnrollingRatioService.addEnrollingRatio(enrollingRatio);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));

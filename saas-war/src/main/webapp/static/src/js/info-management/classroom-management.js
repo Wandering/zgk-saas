@@ -21,21 +21,21 @@ ClassRoomManagement.prototype = {
     },
     renderList: function (data) {
         if (data.rtnCode == "0000000") {
-            var gradeArr = [];
+            var classRoomHtml = [];
             $.each(data.bizData.classRoom, function (i, v) {
-                gradeArr.push('<tr>');
-                gradeArr.push('<td class="center">');
-                gradeArr.push('<label>');
-                gradeArr.push('<input type="checkbox" gradename="'+ v.grade +'" gradeId = "'+ v.id +'" class="ace" />');
-                gradeArr.push('<span class="lbl"></span>');
-                gradeArr.push('</label>');
-                gradeArr.push('</td>');
-                gradeArr.push('<td class="center">'+ (i+1) +'</td>');
-                gradeArr.push('<td class="center">'+ v.grade +'</td>');
-                gradeArr.push('<td class="center">'+ v.number +'</td>');
-                gradeArr.push('</tr>');
+                classRoomHtml.push('<tr>');
+                classRoomHtml.push('<td class="center">');
+                classRoomHtml.push('<label>');
+                classRoomHtml.push('<input type="checkbox" gradename="'+ v.grade +'" gradeId = "'+ v.gradeId +'" class="ace" />');
+                classRoomHtml.push('<span class="lbl"></span>');
+                classRoomHtml.push('</label>');
+                classRoomHtml.push('</td>');
+                classRoomHtml.push('<td class="center">'+ (i+1) +'</td>');
+                classRoomHtml.push('<td class="center">'+ v.grade +'</td>');
+                classRoomHtml.push('<td class="center">'+ v.number +'</td>');
+                classRoomHtml.push('</tr>');
             });
-            $('#classroom-table tbody').append(gradeArr.join(''));
+            $('#classroom-table tbody').html(classRoomHtml.join(''));
         }
     },
     getGrade: function () {
@@ -110,7 +110,7 @@ $(document).on('click','.save-btn',function () {
     }, function (res) {
         if (res.rtnCode == "0000000") {
             $('#grade-list').html('');
-            classRoomManagement.getGrade();
+            classRoomManagement.getClassRoom();
             layer.closeAll();
         } else if (res.rtnCode == '1000001') {
             layer.closeAll();

@@ -71,10 +71,47 @@
                             <div class="chart-box">
                                   <div id="totalScoreChart-chart" style="width: 100%;height: 400px;"></div>
                             </div>
-                            <div class="chart-box">
+                            <div class="chart-box hds">
+                                <div id="subjectsChart-chart" style="width: 100%;height: 400px;"></div>
                             </div>
                         </div>
+                        <p class="txt1">人数分布变化:</p>
+                        <table id="" class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th class="center">年级排名</th>
+                                <th class="center">模拟考试1</th>
+                                <th class="center">模拟考试2</th>
+                                <th class="center">变化人数</th>
+                            </tr>
+                            </thead>
+                            <tbody id="student-change-tbody">
+
+                            </tbody>
+                        </table>
                     </div>
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="main-title">
+                            <h3 class="grade-type">重点线成绩分析</h3>
+                        </div>
+                        <br>
+                        <p class="txt1">班级情况统计:</p>
+                        <table id="" class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th class="center">班级排名</th>
+                                <th class="center">学生姓名</th>
+                                <th class="center">成绩</th>
+                                <th class="center">年级排名</th>
+                            </tr>
+                            </thead>
+                            <tbody id="online-tbody">
+
+                            </tbody>
+                        </table>
+
+                    </div><!-- /.col -->
 
                 </div><!-- /.row -->
             </div><!-- /.page-content -->
@@ -88,6 +125,26 @@
         <span class="lbl">{{grade}}</span>
     </label>
     &nbsp;&nbsp;&nbsp;&nbsp;
+    {{/each}}
+</script>
+<script id="student-change-template" type="text/x-handlebars-template">
+    {{#each bizData}}
+    <tr>
+        <td class="center">{{年级排名}}</td>
+        <td class="center">{{最近第一次考试}}</td>
+        <td class="center">{{最近第二次考试}}</td>
+        <td class="center"><a href="javascript:;" class="change-student-btn" data="{{#each data}}{{agree_button}}{{/each}}">{{变化人数}}</a></td>
+    </tr>
+    {{/each}}
+</script>
+<script id="online-template" type="text/x-handlebars-template">
+    {{#each bizData}}
+    <tr>
+        <td class="center">{{班级排名}}</td>
+        <td class="center">{{学生姓名}}</td>
+        <td class="center">{{成绩}}</td>
+        <td class="center">{{年级排名}}</td>
+    </tr>
     {{/each}}
 </script>
 <%@ include file="./../common/footer.jsp" %>
