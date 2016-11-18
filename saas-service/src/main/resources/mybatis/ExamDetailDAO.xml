@@ -1109,7 +1109,7 @@ selectList
     </select>
 
     <select id="getMostAttentionPage" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
-        select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank
+        select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank,d.classRank
         from saas_exam_stu_weak_course c
         left join saas_exam_detail d on c.examDetailId=d.id
         where c.examId=#{examId} and c.batchName=#{batchName}
@@ -1119,7 +1119,7 @@ selectList
         <if test="courseName!=null">
             AND weakCourseOne = #{courseName}
             UNION ALL
-            select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank
+            select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank,d.classRank
             from saas_exam_stu_weak_course c
             left join saas_exam_detail d on c.examDetailId=d.id
             where c.examId=#{examId} and c.batchName=#{batchName}
@@ -1178,6 +1178,31 @@ selectList
         WHERE d.className=#{className} and e.grade=#{grade} and e.tnId=#{tnId} and d.studentName=#{studentName}
         group by d.className,d.studentName,e.examTime
         order by e.examTime asc
+    </select>
+
+    <select id="getMostAttentionListForClass" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
+        select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank,d.classRank
+        from saas_exam_stu_weak_course c
+        left join saas_exam_detail d on c.examDetailId=d.id
+        where c.examId=#{examId}
+    </select>
+
+    <select id="checkIsTableExist" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select t.TABLE_SCHEMA,t.TABLE_NAME,t.TABLE_ROWS
+        from information_schema.TABLES t
+        where t.TABLE_SCHEMA='zgk_saas' and t.TABLE_NAME=#{tableName}
+    </select>
+
+    <select id="checkIsColumnExist" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select c.TABLE_SCHEMA,c.TABLE_NAME,c.COLUMN_NAME
+        from information_schema.COLUMNS c
+        where c.TABLE_SCHEMA='zgk_saas' and c.TABLE_NAME=#{tableName} and c.COLUMN_NAME=#{columnName}
+    </select>
+
+    <select id="getClassBossList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select t.class_grade,t.class_name,t.class_boss
+        from ${tableName} t
+        where t.class_grade=#{grade}
     </select>
 </mapper>
 

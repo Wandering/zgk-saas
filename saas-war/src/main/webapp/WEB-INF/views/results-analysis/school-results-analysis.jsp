@@ -82,7 +82,8 @@
                                 </label>
                             </div>
                         </div>
-                        <table id="" class="table table-hover">
+                        <div class="sort-txt"></div>
+                        <table id="sort-table" class="table table-hover">
                             <thead id="sort-thead">
                             <tr>
                             </tr>
@@ -91,32 +92,32 @@
 
                             </tbody>
                         </table>
-                        <p><h5 class="h5">重点关注学生：</h5>根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</p>
+
+                        <div><h5 class="h5">重点关注学生：</h5>根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</div>
+                        <div class="core-txt"></div>
                         <table class="table table-hover">
                             <thead id="core-thead"></thead>
                             <tbody id="core-tbody"></tbody>
                         </table>
+
                         <h5 class="h5">进步较大学生：</h5>
                         <form class="form-horizontal" role="form">
                             <div class="form-group">
                                 <div class="col-sm-3">
                                     <select class="form-control" id="ranking-sel">
-                                        <option value="">选择进步名次</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-3" style="display: none;" id="counselor-sel">
                                     <select class="form-control" id="">
                                         <option value="">选择班主任</option>
                                     </select>
                                 </div>
                             </div>
                         </form>
-                        <table id="" class="table table-hover">
-                            <thead>
+                        <div class="progress-txt"></div>
+                        <table id="progress-table" class="table table-hover">
+                            <thead id="progress-thead">
                             <tr>
-                                <th class="center">班级</th>
-                                <th class="center">班主任</th>
-                                <th class="center">进步较大学生人数</th>
                             </tr>
                             </thead>
                             <tbody id="progress-tbody">
@@ -141,7 +142,7 @@
 <script id="sort-thead-template" type="text/x-handlebars-template">
     <tr>
         <th class="center">班级</th>
-        {{#if bizData.className1}}
+        {{#if bizData.counselor}}
         <th class="center">班主任</th>
         {{else}}
         {{/if}}
@@ -154,13 +155,35 @@
     {{#each bizData}}
     <tr>
         <td class="center">{{className}}</td>
-        {{#if bizData.className1}}
-        <th class="center">{{className1}}</th>
+        {{#if bizData.counselor}}
+        <th class="center">{{counselor}}</th>
         {{else}}
         {{/if}}
         <td class="center">{{batchAll}}</td>
         <td class="center">{{batchOne}}</td>
         <td class="center">{{batchTwo}}</td>
+    </tr>
+    {{/each}}
+</script>
+<script id="progress-thead-template" type="text/x-handlebars-template">
+    <tr>
+        <th class="center">班级</th>
+        {{#if bizData.counselor}}
+        <th class="center">班主任</th>
+        {{else}}
+        {{/if}}
+        <th class="center">进步较大学生人数</th>
+    </tr>
+</script>
+<script id="progress-template" type="text/x-handlebars-template">
+    {{#each bizData}}
+    <tr>
+        <td class="center">{{className}}</td>
+        {{#if bizData.counselor}}
+        <th class="center">{{counselor}}</th>
+        {{else}}
+        {{/if}}
+        <td class="center">{{advancedNumber}}</td>
     </tr>
     {{/each}}
 </script>

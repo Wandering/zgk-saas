@@ -182,4 +182,26 @@ public class SelectClassesGuideController {
         return returnMap;
     }
 
+    @RequestMapping("getEnrollingNumberByBatch")
+    @ResponseBody
+    public Map<String,Object> getEnrollingNumberByBatch(){
+        Map<String,Object> paramMap=new HashMap<>();
+        paramMap.put("areaId","330000");
+        paramMap.put("year","2016");
+        Map<String,Object> returnMap=new HashMap<>();
+        returnMap.put("enrollingNumberByBatch", iSelectClassesGuideService.selectEnrollingNumberByBatch(paramMap));
+        return returnMap;
+    }
+
+    @RequestMapping("getEnrollingNumberTable")
+    @ResponseBody
+    public Map<String,Object> getEnrollingNumberTable(){
+        Map<String,Object> paramMap=new HashMap<>();
+        paramMap.put("areaId","330000");
+        paramMap.put("year","2016");
+        Map<String,Object> returnMap=new HashMap<>();
+        returnMap.put("enrollingNumberTable", iSelectClassesGuideService.selectEnrollingNumber(paramMap));
+        return returnMap;
+    }
+
 }
