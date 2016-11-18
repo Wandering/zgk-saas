@@ -1319,23 +1319,17 @@ public class ScoreAnalyseController
         @RequestParam(value = "name", required = true) String name,
         @RequestParam(value = "value", required = true) String value)
     {
-        boolean flag = false;
+        boolean flag;
         Map<String, String> map = new HashMap<>();
         map.put("tnId", tnId);
         map.put("name", name);
         ExamProperties e = (ExamProperties)examPropertiesService.queryOne(map);
-        try
+        if(null != e)
         {
-            if(null != e)
-            {
-                e.setValue(value);
-                examPropertiesService.update(e);
-            }else {
-                throw new BizException("1100115", "未找到更新配置");
-            }
-        }catch (Exception ex)
-        {
-            return flag;
+            e.setValue(value);
+            examPropertiesService.update(e);
+        }else {
+            throw new BizException("1100115", "未找到更新配!");
         }
         flag = true;
         return flag;
