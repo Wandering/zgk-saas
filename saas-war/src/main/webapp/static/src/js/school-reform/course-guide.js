@@ -10,8 +10,9 @@ SubjectAnalysis.prototype = {
     constructor: SubjectAnalysis,
     init: function () {
         $('input[name="subject-analysis"]').eq(0).prop('checked', true);
-        var subject = $('input[name="subject-analysis"]').eq(0).next().text();
-        this.getUniversityAndMajorNumber(subject);
+        var subject = $('input[name="subject-analysis"]').eq(0).next().text(),
+            subjectTitle = subject;
+        this.getUniversityAndMajorNumber(subject, subjectTitle);
         this.getPlanEnrollingByProperty(subject);
         this.getAnalysisBatch(subject);
         this.getAnalysisDiscipline(subject);
@@ -23,7 +24,11 @@ SubjectAnalysis.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData.universityAndMajorNumber;
-                $('.require-num').html(data.universityNumber + '所院校的' + data.majorNumber + '个专业对' + subjectTitle + '有要求');
+                if (subjectTitle != '不限学科') {
+                    $('.require-num').html(data.universityNumber + '所院校的' + data.majorNumber + '个专业对' + subjectTitle + '有要求');
+                } else {
+                    $('.require-num').html(data.universityNumber + '所院校的' + data.majorNumber + '个专业选课要求为不限学科');
+                }
             }
         }, function (res) {
             layer.msg("出错了");
