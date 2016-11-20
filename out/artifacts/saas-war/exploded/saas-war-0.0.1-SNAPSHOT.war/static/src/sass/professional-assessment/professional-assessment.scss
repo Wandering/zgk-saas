@@ -1,0 +1,142 @@
+@import "../common/common";
+//@import "evaluation-question-detail";
+.assessment-main {
+  overflow: hidden;
+  dl {
+    overflow: hidden;
+    clear: both;
+    margin: 30px 0 20px 0;
+    padding: 0 0 20px;
+    dt {
+      float: left;
+      margin-right: 20px;
+      position: relative;
+      top: 10px;
+    }
+    dd {
+      h3 {
+        font-size: 18px;
+      }
+      p {
+        font-size: 14px;
+      }
+
+      .btn-assessment {
+        display: inline-block;
+        background-image: none !important;
+        cursor: pointer;
+        vertical-align: middle;
+        margin: 0;
+        position: relative;
+        width: 98px;
+        height: 32px;
+        text-align: center;
+        line-height: 26px;
+        padding: 0;
+        border-radius: 2px;
+        background: #fff;
+        border: 1px solid #ccc;
+      }
+    }
+  }
+
+  dl.assessment1 {
+    h3 {
+      color: #5EB1C0;
+    }
+    .btn-assessment {
+      color: #5EB1C0;
+      border: 1px solid #5EB1C0;
+    }
+  }
+  dl.assessment2 {
+    h3 {
+      color: #79ADEA;
+    }
+    .btn-assessment {
+      color: #79ADEA;
+      border: 1px solid #79ADEA;
+    }
+  }
+  dl.assessment3 {
+    h3 {
+      color: #E9AD6A;
+    }
+    .btn-assessment {
+      color: #E9AD6A;
+      border: 1px solid #E9AD6A;
+    }
+  }
+}
+
+/*
+课程兴趣测评
+*/
+#course-container {
+  #question {
+    padding: 30px;
+    .col {
+      font-size: 15px;
+      color: #4a4a4a;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .question-answer {
+      font-size: 14px;
+      color: #4a4a4a;
+      overflow: hidden;
+      .choose {
+        cursor: pointer;
+        margin-right: 40px;
+        margin-top: 10px;
+        display: block;
+        margin-left: 10px;
+        float: left;
+        font-weight: 400;
+        input {
+          position: relative;
+          top: -2px;
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+  #page {
+    height: 50px;
+    ul > li {
+      float: left;
+      display: block;
+      padding: 2px 9pt;
+      margin: 0 5px;
+      background: #eff2f5;
+      color: #4a4a4a;
+      cursor: pointer;
+      border-radius: 1px;
+      font-size: 14px;
+    }
+    .active {
+      background: #D70C18;
+      color: #fff;
+    }
+  }
+  .submit-box{
+    position: absolute;
+    left: 32%;
+    margin-bottom: 50px;
+    .submit-question,.submit-question:hover{
+      background: #D70C18;
+      color: #fff;
+    }
+  }
+}
+//.dhs{
+//  font-size:0;
+//  line-height:0;
+//  text-indent: -1000px;
+//  overflow: hidden;
+//}
+
+
+.advise-tip{
+  padding:  0 40px;
+}

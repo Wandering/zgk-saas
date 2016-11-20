@@ -15,6 +15,7 @@ $('#login-btn').on('click', function () {
             var data = res.bizData;
             var siderMenu = data.meuns;
             var siderMenuJson = {};
+            var provinceId = (data.countyId+'').substr(0,2)+'0000';
             for(var i=0;i<siderMenu.length;i++){
                 siderMenuJson[i]=siderMenu[i];
             }
@@ -25,6 +26,7 @@ $('#login-btn').on('click', function () {
             Common.cookie.setCookie('userId', data.userId);
             Common.cookie.setCookie('isInit', data.isInit);
             Common.cookie.setCookie('siderMenu', siderMenuJson);
+            Common.cookie.setCookie('provinceId', provinceId);
             if(data.isInit==0){
                 window.location.href = '/course-guide';
             }else{

@@ -17,13 +17,13 @@ SubjectAnalysis.prototype = {
         this.getAnalysisDiscipline(subject);
         $('#university-detail').attr('subject', subject);
     },
-    getUniversityAndMajorNumber: function (subject) {
+    getUniversityAndMajorNumber: function (subject, subjectTitle) {
         Common.ajaxFun('/selectClassesGuide/getUniversityAndMajorNumber.do', 'GET', {
             'subject': subject
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData.universityAndMajorNumber;
-                $('.require-num').html(data.universityNumber + '所院校的' + data.majorNumber + '个专业对' + subject + '有要求');
+                $('.require-num').html(data.universityNumber + '所院校的' + data.majorNumber + '个专业对' + subjectTitle + '有要求');
             }
         }, function (res) {
             layer.msg("出错了");
@@ -78,8 +78,12 @@ SubjectAnalysis.prototype = {
     subjectChangeEvent: function () {
         var that = this;
         $(document).on('change', 'input[name="subject-analysis"]', function () {
-            var subject = $(this).next().text();
-            that.getUniversityAndMajorNumber(subject);
+            var subject = $(this).next().text(),
+                subjectTitle = subject;
+            if (subject == '不限学科') {
+                subject = '';
+            }
+            that.getUniversityAndMajorNumber(subject, subjectTitle);
             that.getPlanEnrollingByProperty(subject);
             that.getAnalysisBatch(subject);
             that.getAnalysisDiscipline(subject);

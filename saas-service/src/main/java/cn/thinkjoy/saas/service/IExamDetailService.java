@@ -39,4 +39,12 @@ public interface IExamDetailService<D extends IBaseDAO<T>, T extends BaseDomain>
     List<Map<String, Object>> getAvgScoresForClass(Map<String, String> paramMap);
 
     List<Map<String, Object>> getAvgScoresForClassStudent(Map<String, String> paramMap);
+
+    List<Map<String, Object>> getMostAttentionListForClass(Map<String, String> paramMap);
+
+    boolean checkIsTableExist(Map<String, String> paramMap);
+
+    boolean checkIsColumnExist(Map<String, String> paramMap);
+
+    List<Map<String, Object>> getClassBossList(Map<String, String> paramMap);
 }

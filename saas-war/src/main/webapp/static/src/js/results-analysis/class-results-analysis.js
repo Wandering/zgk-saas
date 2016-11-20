@@ -1,18 +1,71 @@
 var tnId = Common.cookie.getCookie('tnId');
 function ClassResultsAnalysis() {
     this.init();
+    this.deGrade='';
 }
 ClassResultsAnalysis.prototype = {
     constructor: ClassResultsAnalysis,
     init: function () {
         var that = this;
-        that.defaultGrade();
-    },
-    // 默认年级赋值
-    defaultGrade:function(){
-        var that = this;
         that.getGrade();
         that.selGrade();
+        that.getExamProperties('grade');
+    },
+    getExamProperties: function (type) {
+        var that = this;
+        Common.ajaxFun('/scoreAnalyse/getExamProperties', 'GET', {
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                $.each(res.bizData, function (i,v) {
+                    if(type=='grade'){
+                        if(v.name=='defaultClassGrade'){
+                            $('#grade-body input[name="results-radio"][value="'+ v.value +'"]').attr('checked','checked');
+                            that.getClassesNameByGrade(v.value);
+                        }
+                    }else if(type=='class'){
+                        if(v.name=='defaultClassGrade'){
+                            that.deGrade = v.value;
+                        }
+                        if(v.name=='defaultClass'){
+                            $('#select option[value="'+ v.value +'"]').prop('selected','selected');
+                            $('.sel-class-txt').text(v.value);
+                            that.getAvgScoresForClass(that.deGrade,v.value);
+                            that.getStuNumberScoreChangeForClass(that.deGrade,v.value);
+                            that.setLine(that.deGrade,v.value);
+                            if (that.deGrade.indexOf('高三') >= 0 || that.deGrade.indexOf('高3') >= 0) {
+                                that.getOverLineDetailForClass(that.deGrade,v.value,'batchAll');
+                            } else {
+
+                            }
+                        }
+                    }
+                });
+
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        }, true);
+    },
+    // 更新年级后台
+    updateExamProperties:function(defaultClass,grade){
+        Common.ajaxFun('/scoreAnalyse/updateExamProperties', 'GET', {
+            'tnId': tnId,
+            'name': defaultClass,
+            'value': grade
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                if(res.bizData==true){
+                    // 提交成功
+                }
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
     },
     // 获取年级
     getGrade: function () {
@@ -35,13 +88,13 @@ ClassResultsAnalysis.prototype = {
             $(this).attr('checked','checked');
             var radioV = $(this).val();
             that.getClassesNameByGrade(radioV);
+            that.updateExamProperties('defaultClassGrade',radioV);
             if (radioV.indexOf('高三') >= 0 || radioV.indexOf('高3') >= 0) {
                 $('.grade-type').text('本科线成绩分析');
             } else {
                 $('.grade-type').text('重点线成绩分析');
             }
         });
-        $('.grade-item:first').change();
     },
     // 选择班级
     selClass: function (grade) {
@@ -52,23 +105,16 @@ ClassResultsAnalysis.prototype = {
             $('.sel-class-txt').text(selV);
             that.getAvgScoresForClass(grade,selV);
             that.getStuNumberScoreChangeForClass(grade,selV);
+            that.updateExamProperties('defaultClass',selV);
+            that.setLine(grade,selV);
             if (grade.indexOf('高三') >= 0 || grade.indexOf('高3') >= 0) {
-                alert(3)
                 that.getOverLineDetailForClass(grade,selV,'batchAll');
             } else {
 
             }
         });
-        $('#select').find('option:eq(0)').attr('selected','selected');
-        var firstV = $('#select').find('option:eq(0)').val();
-        $('.sel-class-txt').text(firstV);
-        that.getAvgScoresForClass(grade,firstV);
-        that.getStuNumberScoreChangeForClass(grade,firstV);
-        if (grade.indexOf('高三') >= 0 || grade.indexOf('高3') >= 0) {
-            that.getOverLineDetailForClass(grade,firstV,'batchAll');
-        } else {
 
-        }
+
         that.chartTab();
     },
     // 通过年级获取班级
@@ -89,6 +135,7 @@ ClassResultsAnalysis.prototype = {
                     });
                     $('.title-2 .class-sel').append(classOption);
                     that.selClass(grade);
+                    that.getExamProperties('class');
                 }
             } else {
                 layer.msg(res.msg);
@@ -317,6 +364,17 @@ ClassResultsAnalysis.prototype = {
         });
     },
     // 设置关注位次线
+    setLine:function(grade,className){
+        var that = this;
+        $('#set-line-btn').on('click',function(){
+            var setLine = $.trim($('#set-line').val());
+            if(setLine==''){
+                layer.msg('请输入位次线!');
+                return false;
+            }
+            that.getOverLineDetailForClassTwo(grade,className,setLine)
+        });
+    },
     // 班级前多少名人数统计  高三
     getOverLineDetailForClass:function(grade,className,batch){
         Common.ajaxFun('/scoreAnalyse/getOverLineDetailForClass', 'GET', {
@@ -325,7 +383,6 @@ ClassResultsAnalysis.prototype = {
             'className':className,
             'batch':batch
         }, function (res) {
-            console.log(res)
             if (res.rtnCode == "0000000") {
                 var myTemplate = Handlebars.compile($("#online-template").html());
                 $('#online-tbody').html(myTemplate(res));
@@ -335,7 +392,26 @@ ClassResultsAnalysis.prototype = {
         }, function (res) {
             layer.msg(res.msg);
         });
+    },
+    // 班级上线人数统计（高一，高二）
+    getOverLineDetailForClassTwo:function(grade,className,line){
+        Common.ajaxFun('/scoreAnalyse/getOverLineDetailForClassTwo', 'GET', {
+            'tnId':tnId,
+            'grade':grade,
+            'className':className,
+            'line':line
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var myTemplate = Handlebars.compile($("#overLineDetail-template").html());
+                $('#overLineDetail-tbody').html(myTemplate(res));
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
     }
+
     // 重点关注学生
     // 进步较大学生
     // 选择进步名次
