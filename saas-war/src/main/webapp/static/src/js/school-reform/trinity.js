@@ -9,7 +9,7 @@ $(function () {
 
 function TrinityData () {
     this.universityOffset = 0;
-    this.universityRows = 10;
+    this.universityRows = 20;
     this.universityCount = 0;
     this.pageCount = 1;
     this.init();
