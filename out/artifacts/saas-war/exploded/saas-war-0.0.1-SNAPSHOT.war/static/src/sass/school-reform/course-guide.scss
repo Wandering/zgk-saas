@@ -107,6 +107,7 @@ ul {
                     line-height: 42px;
                     tr {
                         td {
+                            width: 63px;
                             text-align: center;
                             vertical-align: middle;
                             border-right: 1px solid #E0E3E8;
@@ -193,13 +194,21 @@ ul {
         border: 1px solid #D5D9DF;
         border-radius: 2px;
     }
+    button {
+        position: relative;
+        left: 3px;
+        top: -2px;
+    }
 }
 .results-table {
+    display: block;
     width: 481px;
     margin: 0 auto;
     border: 1px solid #E0E3E8;
     font-size: 12px;
     color: #4A4A4A;
+    height: 300px;
+    overflow: scroll;
     thead {
         background: #F2F4F6;
         line-height: 40px;
@@ -212,12 +221,17 @@ ul {
                 font-weight: bold;
                 line-height: 18px;
             }
+            th:last-of-type {
+                border-right: 0;
+            }
         }
     }
     tbody {
         line-height: 28px;
         tr {
             td {
+                line-height: 1.3em;
+                padding: 5px;
                 text-align: center;
                 vertical-align: middle;
                 border-right: 1px solid #E0E3E8;
@@ -225,6 +239,9 @@ ul {
             }
         }
     }
+}
+.layer-anim {
+    overflow-y: hidden;
 }
 .red-btn, .red-btn:focus, .red-btn:hover {
     width: 74px;

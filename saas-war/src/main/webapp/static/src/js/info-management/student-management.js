@@ -45,6 +45,7 @@ var App = {
                             dataType: k.dataType,
                             dataValue: k.dataValue,
                             checkRule: k.checkRule,
+                            id: k.id,
                         });
                     });
                     tpl.push('</tr>');
@@ -68,8 +69,9 @@ var App = {
                     tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
                     $.each(App.tableData, function (i, k) {
                         var enName = App.tableData[i].enName;
+                        var dType = App.tableData[i].dataType;
                         if (obj[enName]) {
-                            tpl.push('<td class="center">' + obj[enName] + '</td>');
+                            tpl.push('<td class="center" iName="' + enName + '" dataType="' + dType + '" pid="' + n.id + '">' + obj[enName] + '</td>');
                         } else {
                             tpl.push('<td class="center">-</td>');
                         }
@@ -88,20 +90,17 @@ App.init();
 
 /**
  * 添加学生模块
- * @type {{init: AddStd.init, fetchGrade: AddStd.fetchGrade, fetchEntranceYear: AddStd.fetchEntranceYear, fetchBelongClass: AddStd.fetchBelongClass, renderElement: AddStd.renderElement, bindEvents: AddStd.bindEvents, removeStd: AddStd.removeStd, addStdVerify: AddStd.addStdVerify, addStdEvent: AddStd.addStdEvent}}
+ * @type {{init: CRUDStd.init, fetchGrade: CRUDStd.fetchGrade, fetchEntranceYear: CRUDStd.fetchEntranceYear, fetchBelongClass: CRUDStd.fetchBelongClass, renderElement: CRUDStd.renderElement, bindEvents: CRUDStd.bindEvents, removeStd: CRUDStd.removeStd, CRUDStdVerify: CRUDStd.CRUDStdVerify, addStdEvent: CRUDStd.addStdEvent}}
  */
-var AddStd = {
+var CRUDStd = {
     init: function () {
         this.bindEvents();
-        this.addStdData = {
+        this.CRUDStdData = {
             renderEleData: [],
             gradeData: '',
             yearData: '',
             classData: ''
         }
-        $(document).on('click','#close-btn',function(){
-            window.location.reload();
-        })
     },
     //所属年级
     fetchGrade: function () {
@@ -112,7 +111,7 @@ var AddStd = {
                     tpl += v.grade + '-'
                 })
                 tpl = tpl.substr(0, tpl.length - 1);
-                AddStd.addStdData.gradeData = tpl;
+                CRUDStd.CRUDStdData.gradeData = tpl;
             }
         }, function (res) {
             layer.msg("出错了");
@@ -127,7 +126,7 @@ var AddStd = {
                     tpl += res.bizData.result[i] + '-'
                 }
                 tpl = tpl.substr(0, tpl.length - 1);
-                AddStd.addStdData.yearData = tpl;
+                CRUDStd.CRUDStdData.yearData = tpl;
             }
         }, function (res) {
             layer.msg("出错了");
@@ -142,7 +141,7 @@ var AddStd = {
                     tpl += v.class_name + '-'
                 })
                 tpl = tpl.substr(0, tpl.length - 1);
-                AddStd.addStdData.classData = tpl;
+                CRUDStd.CRUDStdData.classData = tpl;
             }
         }, function (res) {
             layer.msg("出错了");
@@ -155,16 +154,16 @@ var AddStd = {
             if (!v.dataValue) {
                 switch (v.enName) {
                     case 'student_grade':  //所在年级
-                        AddStd.fetchGrade();
-                        v.dataValue = AddStd.addStdData.gradeData;
+                        CRUDStd.fetchGrade();
+                        v.dataValue = CRUDStd.CRUDStdData.gradeData;
                         break;
                     case 'student_class_in_year':  //入学年份
-                        AddStd.fetchEntranceYear();
-                        v.dataValue = AddStd.addStdData.yearData;
+                        CRUDStd.fetchEntranceYear();
+                        v.dataValue = CRUDStd.CRUDStdData.yearData;
                         break;
                     case 'student_class':      //所在班级
-                        AddStd.fetchBelongClass();
-                        v.dataValue = AddStd.addStdData.classData;
+                        CRUDStd.fetchBelongClass();
+                        v.dataValue = CRUDStd.CRUDStdData.classData;
                         break;
                 }
             }
@@ -176,7 +175,7 @@ var AddStd = {
                 checkRule: v.checkRule,
                 checkRule: v.checkRule,
             }
-            AddStd.addStdData.renderEleData.push(eleData);
+            CRUDStd.CRUDStdData.renderEleData.push(eleData);
         })
         /**
          * 渲染Radio
@@ -194,7 +193,6 @@ var AddStd = {
                     radioTpl += '<label><input name="form-field-radio" type="radio" class="ace" value="' + radioLen[i] + '">' +
                         '<span class="lbl">' + radioLen[i] + '</span></label>'
                 }
-
             }
             return '<li><span class="f20">' + v.name + '</span>' +
                 '<div id="' + v.enName + '" class="sex-type f70">' + radioTpl +
@@ -210,17 +208,17 @@ var AddStd = {
             var checkBoxLen = (v.dataValue).split('-'),
                 checkBoxTpl = '';
             for (var i = 0; i < checkBoxLen.length; i++) {
-                if (i == 0) {
-                    checkBoxTpl += '<label>' +
-                        '<input type="checkbox" class="ace" value="' + checkBoxLen[i] + '" checked="checked" name="ck">' +
-                        '<span class="lbl">' + checkBoxLen[i] + '</span>' +
-                        '</label>';
-                } else {
-                    checkBoxTpl += '<label>' +
-                        '<input type="checkbox" class="ace" value="' + checkBoxLen[i] + '" name="ck">' +
-                        '<span class="lbl">' + checkBoxLen[i] + '</span>' +
-                        '</label>';
-                }
+                //if (i == 0) {
+                //checkBoxTpl += '<label>' +
+                //    '<input type="checkbox" class="ace" value="' + checkBoxLen[i] + '" checked="checked" name="ck">' +
+                //    '<span class="lbl">' + checkBoxLen[i] + '</span>' +
+                //    '</label>';
+                //} else {
+                checkBoxTpl += '<label>' +
+                    '<input type="checkbox" class="ace" value="' + checkBoxLen[i] + '" name="ck">' +
+                    '<span class="lbl">' + checkBoxLen[i] + '</span>' +
+                    '</label>';
+                //}
 
             }
             return '<li><span class="f20">' + v.name + '</span><div id="' + v.enName + '" class="subject-list f70">' + checkBoxTpl + '</div></li>'
@@ -246,7 +244,7 @@ var AddStd = {
         var renderText = function (v) {
             return '<li><span>' + v.name + '</span><input type="text" placeholder="请输入' + v.name + '" id="' + v.enName + '" checkRule="' + v.checkRule + '" class="input-common-w"/></li>'
         }
-        $.each(AddStd.addStdData.renderEleData, function (i, v) {
+        $.each(CRUDStd.CRUDStdData.renderEleData, function (i, v) {
             switch (v.dataType) {
                 case 'radio':
                     templateEle += renderRadio(v);
@@ -266,7 +264,7 @@ var AddStd = {
             '<button class="btn btn-info save-btn" id="add-btn">确认添加</button>' +
             '<button class="btn btn-primary close-btn" id="close-btn">取消</button>' +
             '</div>';
-        AddStd.addStdData.renderEleData = [] //制空
+        CRUDStd.CRUDStdData.renderEleData = [] //制空
         $('#student-add-box').html(templateEle);
     },
     bindEvents: function () {
@@ -274,60 +272,99 @@ var AddStd = {
         //添加|更新  弹框
         $(document).on('click', '#student-add,#student-modify', function () {
             var type = $(this).attr('type');
-            that.renderElement()
-            if(type === 'add'){   //添加
-                layer.open({
-                    type: 1,
-                    title: '添加学生',
-                    offset: 'auto',
-                    area: ['425px', 'auto'],
-                    content: $('#student-add-layer').html(),
-                    cancel: function () {
-                        layer.closeAll();
-                        window.location.reload();
-                    }
-                })
-            }else{    //更新
-                var checkboxN = $("#student-table :checkbox:checked").size();
-                if (checkboxN != '1') {
-                    layer.tips('修改只能选择一项!', $('#student-modify'), {time: 1000});
-                    return false;
-                }
-                $('#add-btn').html('确认修改');
-                layer.open({
-                    type: 1,
-                    title: '修改学生',
-                    offset: 'auto',
-                    area: ['425px', 'auto'],
-                    content: $('#student-add-layer').html(),
-                    cancel: function () {
-                        layer.closeAll();
-                        window.location.reload();
-                    }
-                })
+            that.renderElement();
+            if (type === 'add') {
+                CRUDStd.addStd();//添加
+            } else {
+                CRUDStd.updateStd();//更新 update
             }
-            $('#student-add-layer').remove();
         })
         //确认添加
         $(document).on('click', '#add-btn', function () {
-            that.addStdEvent(that.addStdVerify());
+            if (that.CRUDStdVerify('add')) {
+                that.addStdEvent(that.CRUDStdVerify('add'));
+            }
         })
         //删除
         $(document).on('click', '#student-remove', function () {
-            AddStd.removeStd();
+            CRUDStd.removeStd();
         });
         //更新
-        $(document).on("click", "#add-btn", function () {
-
-            //that.updateStd(checkboxN);
-            //updateClassManagement = new UpdateClassManagement();
-            //updateClassManagement.init(classManagement.columnArr);
-            //updateClassManagement.updateClass('更新班级');
+        $(document).on("click", "#update-btn", function () {
+            if (that.CRUDStdVerify('update')) {
+                that.updateStdEvent(that.CRUDStdVerify('update'));
+            }
+        })
+        //获取修改前数据 [组装修改前的数据]
+        $(document).on('click', '#student-table td input[type="checkbox"]', function () {
+            var rowData = [];
+            var parent = $(this).parent().parent().parent();
+            var rowLen = parent.find('td').length
+            for (var i = 1; i < rowLen; i++) {
+                var childData = {};
+                childData.iName = parent.find('td').eq(i).attr('iName');
+                childData.pid = parent.find('td').eq(i).attr('pid');
+                childData.dataType = parent.find('td').eq(i).attr('dataType');
+                childData.value = parent.find('td').eq(i).text();
+                rowData.push(childData);
+            }
+            parent.attr('rowData', JSON.stringify(rowData));
+        })
+    },
+    //添加
+    addStd: function () {
+        layer.open({
+            type: 1,
+            title: '添加学生',
+            offset: 'auto',
+            area: ['425px', 'auto'],
+            content: $('#student-add-layer'),
+            cancel: function () {
+                layer.closeAll();
+            }
         })
     },
     //更新
-    updateStd:function(num){
-
+    updateStd: function () {
+        var checkboxN = $("#student-table :checkbox:checked").size();
+        if (checkboxN != '1') {
+            layer.tips('修改只能选择一项', $('#student-modify'), {time: 1000});
+            return false;
+        }
+        //赋值
+        var parent = $('#student-table td input[type="checkbox"]:checked').parent().parent().parent();
+        var rowData = JSON.parse(parent.attr('rowdata'));
+        $('.save-btn').html('确认修改').attr('id', 'update-btn');
+        layer.open({
+            type: 1,
+            title: '修改学生',
+            offset: 'auto',
+            area: ['425px', 'auto'],
+            content: $('#student-add-layer'),
+            cancel: function () {
+                layer.closeAll();
+            },
+            success: function (html) {
+                $.each(rowData, function (i, v) {
+                    if (v.dataType === 'radio') {
+                        for (var j = 0; j < $('#' + v.iName).find("[name='form-field-radio']").length; j++) {
+                            if ($('#' + v.iName).find("[name='form-field-radio']").eq(j).val() == v.value) {
+                                $('#' + v.iName).find("[name='form-field-radio']").eq(j).attr('checked', 'checked')
+                            }
+                        }
+                    }
+                    if (v.dataType === 'checkbox') {
+                        for (var j = 0; j < $('#' + v.iName).find("[name='ck']").length; j++) {
+                            var foo = $('#' + v.iName).find("[name='ck']").eq(j).val();
+                            if ($.inArray(foo, v.value.split('-')) >= 0) {
+                                $('#' + v.iName).find("[name='ck']").eq(j).attr('checked', true)
+                            }
+                        }
+                    }
+                    $('#' + v.iName).val(v.value);
+                });
+            }
+        });
     },
     //删除一行记录
     removeStd: function () {
@@ -364,10 +401,10 @@ var AddStd = {
             layer.closeAll();
         });
     },
-    addStdVerify: function () {
+    CRUDStdVerify: function (type) {
         var postData = [];
+        var lock = 0;
         (function () {
-            var lock = 0;
             $.each(App.tableData, function (i, v) {
                 if (v.dataType === "text") {
                     if ($('#' + v.enName).val() == '') {
@@ -382,6 +419,12 @@ var AddStd = {
                     //    lock = 1;
                     //    return false
                     //}
+                }
+                if (v.dataType === "checkbox") {
+                    if ($('#' + v.enName).find('[name="ck"]:checked').length == 0) {
+                        layer.msg('请至少选择一门所教科目');
+                        return false;
+                    }
                 }
             })
             return false
@@ -398,68 +441,65 @@ var AddStd = {
                     "value": $('#' + v.enName).find('[name="form-field-radio"]:checked').val()
                 });
             } else if (v.dataType === "checkbox") {
+                var subjects = [];
+                $($('#' + v.enName).find('[name="ck"]')).each(function () {
+                    if ($(this).prop('checked')) {
+                        subjects.push($(this).val());
+                    }
+                });
+                var values = subjects.join('-');
                 postData.push({
                     "key": v.enName,
-                    "value": $('#' + v.enName).find('[name="ck"]:checked').val()
+                    "value": values
                 });
             }
         })
-        console.info(postData);
-        return {
-            "clientInfo": {},
-            "style": "",
-            "data": {
-                "type": GLOBAL_CONSTANT.type,
-                "tnId": GLOBAL_CONSTANT.tnId,
-                "teantCustomList": postData
-            }
-        };
+        if (type == 'add') {
+            return {
+                "clientInfo": {},
+                "style": "",
+                "data": {
+                    "type": GLOBAL_CONSTANT.type,
+                    "tnId": GLOBAL_CONSTANT.tnId,
+                    "teantCustomList": postData
+                }
+            };
+        } else {
+            return {
+                "clientInfo": {},
+                "style": "",
+                "data": {
+                    "type": GLOBAL_CONSTANT.type,
+                    "tnId": GLOBAL_CONSTANT.tnId,
+                    "pri": "",
+                    "teantCustomList": postData
+                }
+            };
+        }
     },
     addStdEvent: function (data) {
         Common.ajaxFun('/manage/teant/custom/data/add.do', 'POST', JSON.stringify(data), function (res) {
             if (res.rtnCode == "0000000" && res.bizData.result === 'SUCCESS') {
                 layer.closeAll();
-                window.location.reload() //layer-bug 待解决
-                //App.renderTableHeader();
+                App.renderTableHeader();
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, null, true);
+    },
+    updateStdEvent: function (data) {
+        Common.ajaxFun('/manage/teant/custom/data/modify.do', 'POST', JSON.stringify(data), function (res) {
+            if (res.rtnCode == "0000000") {
+                layer.closeAll();
+                App.renderTableHeader();
             }
         }, function (res) {
             layer.msg("出错了");
         }, null, true);
     }
 }
-AddStd.init();
+CRUDStd.init();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//修改
-var StudentModify = {}
-
-//删除
-var StudentRemove = {}
 
 //模板上传
 var StudentTemplateDown = {}
@@ -485,7 +525,8 @@ var StudentSetting = {
             layer.full(
                 layer.open({
                     type: 1,
-                    content: $("#sub-student-setting").html(),
+                    //content: $("#sub-student-setting").html(),
+                    content: $("#sub-student-setting"),
                     area: ['100%', '100%'],
                     maxmin: false
                 })
@@ -574,7 +615,8 @@ var StudentSetting = {
                     layer.full(
                         layer.open({
                             type: 1,
-                            content: $("#sub-student-setting").html(),
+                            //content: $("#sub-student-setting").html(),
+                            content: $("#sub-student-setting"),
                             area: ['100%', '100%'],
                             maxmin: false,
                             cancel: function () {
@@ -614,7 +656,8 @@ var StudentSetting = {
                     layer.full(
                         layer.open({
                             type: 1,
-                            content: $("#sub-student-setting").html(),
+                            //content: $("#sub-student-setting").html(),
+                            content: $("#sub-student-setting"),
                             area: ['100%', '100%'],
                             maxmin: false,
                             cancel: function () {

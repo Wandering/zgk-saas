@@ -542,7 +542,7 @@ $(document).on('click', '#deleteTeacherBtn', function () {
 
 //模板下载
 $(document).on('click', '#downloadBtn', function () {
-    window.location.href = '/config/export/' + teacherManagement.type + '/' + tnId + '.do';
+    window.location.href = '/manage/' + teacherManagement.type + '/export/' + tnId + '.do';
 });
 
 //教师设置操作
@@ -560,3 +560,127 @@ $(document).on('click', '#teacher-settings-btn', function () {
         }
     });
 });
+
+//上传数据类及其原型
+function UploadData () {
+
+}
+UploadData.prototype = {
+    constructor: UploadData,
+    init: function () {
+
+    },
+    showUploadBox: function (title) {
+        var that = this;
+        var uploadDataHtml = [];
+        uploadDataHtml.push('<div class="upload-box">');
+        uploadDataHtml.push('<span id="uploader-demo">');
+        uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
+        uploadDataHtml.push('<button class="btn btn-info btn-import" id="btn-import">导入教师数据Excel</button>');
+        uploadDataHtml.push('</span>');
+        uploadDataHtml.push('<a href="javascript: void(0);" id="downloadBtn" class="download-link">请先导出Excel模板，进行填写</a>');
+        uploadDataHtml.push('<button class="btn btn-cancel cancel-btn" id="cancel-download-btn">取消</button>');
+        uploadDataHtml.push('</div>');
+        layer.open({
+            type: 1,
+            title: '<span style="color: #CB171D;font-size: 14px;">' + title + "</span>",
+            offset: 'auto',
+            area: ['460px', '300px'],
+            content: uploadDataHtml.join('')
+        });
+        upload();
+    }
+};
+
+//上传
+$(document).on('click', '#uploadBtn', function () {
+    var upload = new UploadData();
+    upload.showUploadBox('导入教师数据');
+});
+
+function upload () {
+    var $ = jQuery,
+        $list = $('#fileList'),
+
+    // Web Uploader实例
+        uploader;
+    // 初始化Web Uploader
+    uploader = WebUploader.create({
+
+        // 自动上传。
+        auto: true,
+
+        // swf文件路径
+        swf: BASE_URL + '/webuploader-0.1.5 2/Uploader.swf',
+
+        // 文件接收服务端。
+        server: rootPath + '/config/upload/teacher/' + tnId + '.do',
+
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: '#btn-import',
+
+        // 只允许选择文件，可选。
+        accept: {
+            title: 'excel',
+            extensions: 'xls',
+            mimeTypes: 'application/vnd.ms-excel'
+        },
+        fileVal: 'inputFile',
+        duplicate: new Date()
+
+    });
+
+    // 当有文件添加进来的时候
+    uploader.on('fileQueued', function (file) {
+        var $li = $(
+            '<div id="' + file.id + '" class="file-item thumbnail">' +
+                //'<img>' +
+            '<div class="info">' + file.name + '</div>' +
+            '</div>'
+        );
+        $list.append($li);
+
+    });
+
+    // 文件上传过程中创建进度条实时显示。
+    uploader.on('uploadProgress', function (file, percentage) {
+        var $li = $('#' + file.id),
+            $percent = $li.find('.progress span');
+
+        // 避免重复创建
+        if (!$percent.length) {
+            $percent = $('<p class="progress"><span></span></p>')
+                .appendTo($li)
+                .find('span');
+        }
+
+        $percent.css('width', percentage * 100 + '%');
+    });
+
+    // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+    uploader.on('uploadSuccess', function (file) {
+        layer.closeAll();
+        if (teacherManagement != null) {
+            teacherManagement.getTeacherData();
+        }
+    });
+
+    // 文件上传失败，现实上传出错。
+    uploader.on('uploadError', function (file) {
+        var $li = $('#' + file.id),
+            $error = $li.find('div.error');
+
+        // 避免重复创建
+        if (!$error.length) {
+            $error = $('<div class="error"></div>').appendTo($li);
+        }
+
+        $error.text('上传失败');
+    });
+
+    // 完成上传完了，成功或者失败，先删除进度条。
+    uploader.on('uploadComplete', function (file) {
+        $('#' + file.id).find('.progress').remove();
+    });
+}

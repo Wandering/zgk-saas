@@ -15,6 +15,7 @@ SchoolResultsAnalysis.prototype = {
         this.getGrade();
         this.selGrade();
         this.getExamProperties();
+        this.undergraduateLine();
     },
     getExamProperties: function () {
         var that = this;
@@ -425,7 +426,8 @@ SchoolResultsAnalysis.prototype = {
         Common.ajaxFun('/scoreAnalyse/getOverLineNumberByDate', 'GET', {
             'tnId': tnId,
             'grade': grade,
-            'lineScore': '439' //浙江理科二本
+            'lineScore': '439', //浙江理科二本
+            'className': ''
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var dateData = [];
@@ -562,8 +564,6 @@ SchoolResultsAnalysis.prototype = {
 };
 
 var SchoolResultsAnalysisIns = new SchoolResultsAnalysis();
-SchoolResultsAnalysisIns.undergraduateLine();
-//SchoolResultsAnalysisIns.getMostAdvancedNumbers('高一年级1','batchThr');
 
 $(function () {
 
