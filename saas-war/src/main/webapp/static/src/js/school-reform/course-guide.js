@@ -320,12 +320,14 @@ function getLatestYearData () {
     Common.ajaxFun('/selectClassesGuide/getEnrollingNumberByBatch.do', 'GET', {}, function (res) {
         if (res.rtnCode == "0000000") {
             var data = res.bizData.enrollingNumberByBatch;
+            var majorCount = data.majorCount;
+            var enrollingCount = data.enrollingCount;
             var datas = {
                 batchs: [],
                 batchNames: [],
                 numbers: []
             };
-            $.each(data, function (i, k) {
+            $.each(data.enrollingNumberByBatch, function (i, k) {
                 datas.batchs.push({
                     value: k.majorNumber,
                     name: k.batchName
@@ -333,8 +335,8 @@ function getLatestYearData () {
                 datas.batchNames.push(k.batchName);
                 datas.numbers.push(k.planEnrollingNumber);
             });
-            enrollUniversityTotal(datas.batchs, datas.batchNames);
-            planTotalLineChart(datas.batchNames, datas.numbers);
+            enrollUniversityTotal(majorCount, datas.batchs, datas.batchNames);
+            planTotalLineChart(enrollingCount, datas.batchNames, datas.numbers);
         }
     }, function (res) {
         layer.msg("出错了");
@@ -496,12 +498,12 @@ function majorTypeAnalysis (type, datas) {
 }
 
 //选课指导 2016年招生数据--招生专业总数
-function enrollUniversityTotal (batchs, batchNames) {
+function enrollUniversityTotal (majorCount, batchs, batchNames) {
     var enrollTotalChart = echarts.init(document.getElementById('enrollTotalChart'));
     var enrollPieOption = {
         title: {
             show: true,
-            text: "招生院校专业总数：2345个专业",
+            text: '招生院校专业总数：' + majorCount + '个专业',
             x: 'left',
             top: 'top',
             bottom: -30,
@@ -567,11 +569,11 @@ function enrollUniversityTotal (batchs, batchNames) {
 }
 
 //选课指导 2016年招生数据--招生计划总数
-function planTotalLineChart (batchNames, numbers) {
+function planTotalLineChart (enrollingCount, batchNames, numbers) {
     var planTotalLineChart = echarts.init(document.getElementById('planTotalLineChart'));
     var planTotalLineOption = {
         title: {
-            text: '招生计划总数：12345人',
+            text: '招生计划总数：' + enrollingCount + '人',
             textStyle: {
                 color: '#4A4A4A',
                 fontWeight: 'normal',

@@ -1,6 +1,7 @@
 /**
  * Created by machengcheng on 16/11/14.
  */
+var tnId = Common.cookie.getCookie('tnId');
 
 $(function () {
 
@@ -10,6 +11,8 @@ $(function () {
     historyCourseAnalysis();
     partCourseAnalysisChart();
     groupCourseAnalysis();
+
+    getAnalysisGroup(tnId, grade);
 
 });
 
@@ -363,8 +366,18 @@ function groupCourseAnalysis () {
 }
 
 //组合选课情况分析
-function getAnalysisGroup () {
+function getAnalysisGroup (tnId, grade) {
+    Common.ajaxFun('/selectClassesGuide/getAnalysisGroup.do', 'GET', {
+        'tnId': tnId,
+        'grade': grade
+    }, function (res) {
+        if (res.rtnCode == "0000000") {
+            var data = res.bizData;
 
+        }
+    }, function (res) {
+        layer.msg("出错了");
+    }, true);
 }
 
 /**
