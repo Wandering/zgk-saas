@@ -213,7 +213,7 @@
 
     <!-- 查询最后一次考试的考试Id -->
     <select id="selectExamId" parameterType="java.util.Map" resultType="java.lang.String">
-        select ee.id from saas_exam ee where ee.tnId=#{tnId} and grade=#{grade}
+        select ee.id from saas_exam ee where ee.tnId=#{tnId} and grade LIKE CONCAT('%',#{grade},'%')
         order by createDate DESC
         limit 1
     </select>
