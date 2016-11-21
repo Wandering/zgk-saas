@@ -49,9 +49,9 @@
 
     <select id="selectMajorByUniversityNameAndBatchCount" parameterType="java.util.Map" resultType="java.lang.Integer">
         select count(zz.majorCode)
-          from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
-          INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
-          INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+        from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
+        INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
+        INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
         where 1=1
         <if test="subject!=null">
             and zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
@@ -59,7 +59,12 @@
         <if test="subject==null">
             and zz.selectCount=0
         </if>
-        and tmp.batch=#{batch} and uu.name like concat('%',#{universityName},'%')
+        <if test="universityName!=null">
+            and uu.name like concat('%',#{universityName},'%')
+        </if>
+        <if test="universityId!=null">
+            and uu.id = #{universityId}
+        </if>
     </select>
 
     <!-- 211,包含了985 -->

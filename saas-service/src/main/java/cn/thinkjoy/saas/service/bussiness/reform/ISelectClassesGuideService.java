@@ -19,6 +19,6 @@ public interface ISelectClassesGuideService {
     List<AnalysisDto> selectAnalysisDiscipline(Map map);
     int selectAnalysisDisciplineCount(Map map);
     List<Map<String, Object>> queryDictList(Map<String, Object> map);
-    List<TrineDto> selectEnrollingNumberByBatch(Map map);
+    Map<String,Object> selectEnrollingNumberByBatch(Map map);
     List<EnrollingNumberDto> selectEnrollingNumber(Map map);
 }
