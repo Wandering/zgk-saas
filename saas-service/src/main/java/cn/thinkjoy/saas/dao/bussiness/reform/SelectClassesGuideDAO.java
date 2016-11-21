@@ -36,4 +36,12 @@ public interface SelectClassesGuideDAO {
             @Param("table") String table
     );
 
+    int selectEnName(Map map);
+    List<Map<String, String>> selectStudentExcel(Map map);
+
+    String getEnrollingPercent();
+    String selectExamId(Map map);
+    int selectStudentNumber(Map map);
+    List<String> selectLimitStudent(Map map);
+
 }

@@ -213,4 +213,24 @@ public class SelectClassesGuideController {
         return iSelectClassesGuideService.getAnalysisGroup(grade,tnId);
     }
 
+    /**
+     * 往年选课分析
+     * @return
+     */
+    @RequestMapping("getNumberByYear")
+    @ResponseBody
+    public Map<String,Object> getNumberByYear(@RequestParam("tnId")int tnId){
+        Map<String,Object> returnMap=new HashMap<>();
+        returnMap.put("data", iSelectClassesGuideService.selectNumberByYear(tnId));
+        return returnMap;
+    }
+
+
+    @RequestMapping("selectTypeAnalysis")
+    @ResponseBody
+    public Map<String,Object> selectTypeAnalysis(@RequestParam("tnId")int tnId,@RequestParam("studentGrade")String studentGrade){
+        return iSelectClassesGuideService.selectTypeAnalysis(tnId, studentGrade);
+    }
+
+
 }
