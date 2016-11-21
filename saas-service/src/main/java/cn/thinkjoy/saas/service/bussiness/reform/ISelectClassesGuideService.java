@@ -31,4 +31,7 @@ public interface ISelectClassesGuideService {
      */
     List<Map<String, Object>> getAnalysisGroup(String grade,String tnId);
 
+    Map<Integer,Map<String, Integer>> selectNumberByYear(int tnId);
+
+    public Map<String,Object> selectTypeAnalysis(int tnId,String studentGrade);
 }

@@ -308,7 +308,7 @@ a.red-link:hover {
         a:link,
         a:visited,
         a:hover {
-            padding: 9px 15px 10px 15px;
+            padding: 6px 8px 6px 8px;
             margin-right: 10px !important;
             font-size: 14px;
             color: #575757;
@@ -325,7 +325,8 @@ a.red-link:hover {
             background: #fff;
         }
         .disabled {
-            padding: 9px 15px 10px 15px;
+            //padding: 9px 15px 10px 15px;
+            padding: 6px 8px 6px 8px;
             margin-right: 10px !important;
             font-size: 14px;
             letter-spacing: -0.66px;
@@ -338,7 +339,7 @@ a.red-link:hover {
             margin-right: 10px !important;
         }
         .current {
-            padding: 9px 15px 10px 15px;
+            padding: 6px 8px 6px 8px;
             margin-right: 10px !important;
             font-size: 14px;
             letter-spacing: -0.66px;

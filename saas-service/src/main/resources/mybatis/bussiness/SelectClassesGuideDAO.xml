@@ -192,4 +192,42 @@
             student_major_type
     </select>
 
+    <!-- 查询对租户的的应项目里有没有对应属性 -->
+    <select id="selectEnName" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*) from saas_tenant tt
+        left join saas_tenant_config_instance ii on tt.id=ii.tn_id
+        left join saas_configuration cc on ii.config_key=cc.id
+        where ii.tn_id=#{tnId} and ii.domain=#{domain} and cc.en_name=#{enName}
+    </select>
+
+    <select id="selectStudentExcel" parameterType="java.util.Map" resultType="java.util.Map">
+        select * from ${tableName}
+    </select>
+
+    <!-- 最近一年录取百分比 -->
+    <select id="getEnrollingPercent" parameterType="java.util.Map" resultType="java.lang.String">
+        select (batch_1_enrolls+batch_2_enrolls+batch_3_enrolls)/stu_3_numbers as percent from saas_enrolling_ratio rr
+        ORDER BY year desc
+        limit 1
+    </select>
+
+    <!-- 查询最后一次考试的考试Id -->
+    <select id="selectExamId" parameterType="java.util.Map" resultType="java.lang.String">
+        select ee.id from saas_exam ee where ee.tnId=#{tnId} and grade LIKE CONCAT('%',#{grade},'%')
+        order by createDate DESC
+        limit 1
+    </select>
+
+    <!-- 查询所有参加本次考试的学生 -->
+    <select id="selectStudentNumber" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*) from saas_exam_detail dd where dd.examId=#{examId}
+    </select>
+
+    <!-- 查询上线考试的学生 -->
+    <select id="selectLimitStudent" parameterType="java.util.Map" resultType="java.lang.String">
+        select dd.selectCourses from saas_exam_detail dd where dd.examId=#{examId}
+        ORDER BY totleScore DESC
+        limit ${top};
+    </select>
+
 </mapper>

@@ -92,7 +92,7 @@ NumberManagement.prototype = {
         yearContentHtml.push('<li><span>二本上线人数</span><input type="text" class="rate-input" id="batch-second" /></li>');
         yearContentHtml.push('<li><span>三本上线人数</span><input type="text" class="rate-input" id="batch-third" /></li>');
         yearContentHtml.push('<li><span>高职上线人数</span><input type="text" class="rate-input" id="batch-fourth" /></li>');
-        yearContentHtml.push('<li><div class="opt-btn-box"><button class="btn btn-red" id="add-btn">确认添加</button><button class="btn btn-cancel cancel-btn">取消</button></div></li>');
+        yearContentHtml.push('<li><div class="opt-btn-box"><button class="btn btn-red" id="update-btn">确认修改</button><button class="btn btn-cancel cancel-btn">取消</button></div></li>');
         yearContentHtml.push('</ul>');
         yearContentHtml.push('</div>');
         layer.open({
@@ -157,6 +157,7 @@ $(document).on('click', '#add-btn', function () {//新增升学率
         "data": {
             "EnrollingRatioObj": {
                 "tnId": tnId,
+                "year": year,
                 "stu3numbers": stu3numbers,
                 "batch1enrolls": batch1enrolls,
                 "batch2enrolls": batch2enrolls,
@@ -185,9 +186,51 @@ $(document).on('click', '#updateRole-btn', function () {
     numberManagement = new NumberManagement();
     numberManagement.updateYearData('更新升学率');
 });
-
-$(document).on('click', '#deleteTeacherBtn', function () {
-    numberManagement.removeNumber();
+$(document).on('click', '#update-btn', function () {
+    var year = $('#rate-year').val();
+    if (year == '00') {
+        layer.msg('请选择年份!', {time: 1000});
+        $('#rate-year').focus();
+        return;
+    }
+    for (var i = 0; i < $('.add-year-box input[type="text"]').length; i++) {
+        var node = $('.add-year-box input[type="text"]').eq(i);
+        if (node.val().trim() == '') {
+            layer.msg(node.prev().text() + '不能为空!', {time: 1000});
+            node.focus();
+            return;
+        }
+    }
+    var rowid = $(".check-template :checkbox:checked").attr('rid');
+    var stu3numbers = parseInt($('#senior-three').val().trim());
+    var batch1enrolls = parseInt($('#batch-first').val().trim());
+    var batch2enrolls = parseInt($('#batch-second').val().trim());
+    var batch3enrolls = parseInt($('#batch-third').val().trim());
+    var batch4enrolls = parseInt($('#batch-fourth').val().trim());
+    var datas = {
+        "clientInfo": {},
+        "style": "",
+        "data": {
+            "EnrollingRatioObj": {
+                "id": rowid,
+                "tnId": tnId,
+                "year": year,
+                "stu3numbers": stu3numbers,
+                "batch1enrolls": batch1enrolls,
+                "batch2enrolls": batch2enrolls,
+                "batch3enrolls": batch3enrolls,
+                "batch4enrolls": batch4enrolls
+            }
+        }
+    };
+    Common.ajaxFun('/manage/enrollingRatio/modify.do', 'POST', JSON.stringify(datas), function (res) {
+        if (res.rtnCode == "0000000") {
+            layer.closeAll();
+            numberManagement.getNumber();
+        }
+    }, function (res) {
+        layer.msg("出错了");
+    }, null,true);
 });
 
 $(document).on('click', '.cancel-btn', function () {
