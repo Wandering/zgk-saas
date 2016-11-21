@@ -12,7 +12,7 @@ $(function () {
     partCourseAnalysisChart();
     groupCourseAnalysis();
 
-    getAnalysisGroup(tnId, grade);
+    getAnalysisGroup(tnId, 265);
 
 });
 
