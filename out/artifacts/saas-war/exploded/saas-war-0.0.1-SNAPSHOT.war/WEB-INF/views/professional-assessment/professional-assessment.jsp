@@ -58,8 +58,6 @@
                             </dl>
                             {{/each}}
                         </script>
-
-
                         <%--课程兴趣测评--%>
                         <div id="course-test-container" class="dh">
                             <div id="course-container">

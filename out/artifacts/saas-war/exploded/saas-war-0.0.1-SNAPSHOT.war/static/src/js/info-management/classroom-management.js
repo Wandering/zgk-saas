@@ -26,7 +26,7 @@ ClassRoomManagement.prototype = {
                 classRoomHtml.push('<tr>');
                 classRoomHtml.push('<td class="center">');
                 classRoomHtml.push('<label>');
-                classRoomHtml.push('<input type="checkbox" gradename="'+ v.grade +'" gradeId = "'+ v.gradeId +'" class="ace" />');
+                classRoomHtml.push('<input type="checkbox" gradename="'+ v.grade +'" crid = "'+ v.id +'" class="ace" />');
                 classRoomHtml.push('<span class="lbl"></span>');
                 classRoomHtml.push('</label>');
                 classRoomHtml.push('</td>');
@@ -55,7 +55,7 @@ ClassRoomManagement.prototype = {
             layer.msg("出错了");
         }, true);
     },
-    addGrade:function (title) {
+    addClassRoom:function (title) {
         var that = this;
         var contentHtml = [];
         contentHtml.push('<div class="form-horizontal grade-layer">');
@@ -82,15 +82,47 @@ ClassRoomManagement.prototype = {
         });
         that.getGrade();
     },
-    deleteGrade:function(){
-
+    deleteClassRoom: function () {//删除某一行教室数据
+        var that = this;
+        var checkedLen = $("#classroom-manage-list input[type='checkbox']:checked").size();
+        if(checkedLen == "0"){
+            layer.tips('至少选择一项', $('#deleteRole-Btn'), {time: 1000});
+            return false;
+        }
+        var selItem = [];
+        $('#classroom-manage-list').find('input[type="checkbox"]').each(function (i, v) {
+            if ($(this).is(':checked') == true) {
+                selItem.push($(this).attr('crid'));
+            }
+        });
+        selItem = selItem.join('-');
+        var ids = selItem;
+        layer.confirm('确定删除?', {
+            btn: ['确定', '关闭'] //按钮
+        }, function () {
+            Common.ajaxFun('/manage/classRoom/delete/' + ids + '.do', 'POST', {}, function (res) {
+                if (res.rtnCode == "0000000") {
+                    if(res.bizData.result="SUCCESS"){
+                        $('#classroom-change-list').html('');
+                        $('#checkAll').prop('checked', false);
+                        layer.msg('删除成功', {time: 1000});
+                        var classRoomManagement = new ClassRoomManagement();
+                        classRoomManagement.init();
+                    }
+                }
+            }, function (res) {
+                layer.msg("出错了", {time: 1000});
+            });
+        }, function () {
+            layer.closeAll();
+        });
     }
 };
 
 var classRoomManagement = new ClassRoomManagement();
 
-$('#add-btn').on('click',function(){
-    classRoomManagement.addGrade('添加教室');
+$('#addRole-btn').on('click',function(){
+    classRoomManagement.addClassRoom('添加教室');
 });
 
 $(document).on('click','.save-btn',function () {
@@ -122,7 +154,7 @@ $(document).on('click','.save-btn',function () {
 
 });
 
-$('#modify-btn').on('click',function () {
+$('#updateRole-btn').on('click',function () {
     var that = $(this);
     var chknum = $(".check-template :checkbox:checked").size();
     var checkV = $(".check-template :checkbox:checked").attr('gradeid');
@@ -131,11 +163,14 @@ $('#modify-btn').on('click',function () {
         layer.tips('修改只能选择一项!',that);
         return false;
     }
-    classRoomManagement.addGrade('修改教室');
+    classRoomManagement.addClassRoom('修改教室');
     $('.save-btn').attr('gradeid',checkV);
     $('#grade-name').val(gradename);
 });
 
+$(document).on('click', '#deleteRole-Btn', function () {
+    classRoomManagement.deleteClassRoom();
+});
 
 $(document).on('click','.close-btn',function(){
     layer.closeAll();
