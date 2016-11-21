@@ -23,7 +23,7 @@ ClassRoomManagement.prototype = {
         if (data.rtnCode == "0000000") {
             var classRoomHtml = [];
             $.each(data.bizData.classRoom, function (i, v) {
-                classRoomHtml.push('<tr>');
+                classRoomHtml.push('<tr rowid="' + v.id + '">');
                 classRoomHtml.push('<td class="center">');
                 classRoomHtml.push('<label>');
                 classRoomHtml.push('<input type="checkbox" gradename="'+ v.grade +'" crid = "'+ v.id +'" class="ace" />');
@@ -47,7 +47,7 @@ ClassRoomManagement.prototype = {
                 var grade = [];
                 grade.push('<option value="00">请选择年级</option>')
                 $.each(res.bizData.grades,function(i,v){
-                    grade.push('<option value="'+ v.id +'">'+ v.grade +'</option>')
+                    grade.push('<option value="'+ v.grade +'">'+ v.grade +'</option>');
                 });
                 $('#grade-list').append(grade.join(''));
             }
@@ -81,6 +81,37 @@ ClassRoomManagement.prototype = {
             content: contentHtml.join('')
         });
         that.getGrade();
+    },
+    updateClassRoom:function (title) {
+        var that = this;
+        var contentHtml = [];
+        contentHtml.push('<div class="form-horizontal grade-layer">');
+        contentHtml.push('<div class="form-group">');
+        contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="classroom-num"> 教室数量 </label>');
+        contentHtml.push('<div class="col-sm-8">');
+        contentHtml.push('<input type="text" id="classroom-num" placeholder="输入教室数量" class="col-xs-10 col-sm-10" />');
+        contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        contentHtml.push('<div class="form-group">');
+        contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="grade-name"> 选择年级 </label>');
+        contentHtml.push('<div class="col-sm-8">');
+        contentHtml.push('<select id="grade-list"></select>');
+        contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        contentHtml.push('<div class="btn-box"><button class="btn btn-info save-btn" id="update-classroom-btn">确认修改</button><button class="btn btn-primary close-btn">取消</button></div>');
+        contentHtml.push('</div>');
+        layer.open({
+            type: 1,
+            title: title,
+            offset: 'auto',
+            area: ['362px', '230px'],
+            content: contentHtml.join('')
+        });
+        that.getGrade();
+        var rowid = $(".check-template :checkbox:checked").attr('crid');
+        var rowItem = $('#classroom-manage-list tr[rowid="' + rowid + '"]').find('td');
+        $('#classroom-num').val(rowItem.eq(3).text());
+        $('#grade-list').val(rowItem.eq(2).text());
     },
     deleteClassRoom: function () {//删除某一行教室数据
         var that = this;
@@ -163,7 +194,7 @@ $('#updateRole-btn').on('click',function () {
         layer.tips('修改只能选择一项!',that);
         return false;
     }
-    classRoomManagement.addClassRoom('修改教室');
+    classRoomManagement.updateClassRoom('修改教室');
     $('.save-btn').attr('gradeid',checkV);
     $('#grade-name').val(gradename);
 });
