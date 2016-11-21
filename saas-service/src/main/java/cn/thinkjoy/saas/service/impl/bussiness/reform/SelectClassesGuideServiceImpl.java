@@ -154,9 +154,14 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
     @Override
     public Map<String,Object> selectTypeAnalysis(int tnId,String studentGrade){
         Map<String, Object> map=new HashMap<>();
+        map.put("tnId",tnId);
+        map.put("domain","student");
+        map.put("enName","student_grade");
+        if(selectClassesGuideDAO.selectEnName(map)<1){
+            ExceptionUtil.throwException(ErrorCode.TABLE_NOT_EXIST);
+        }
         String tableName = "saas_"+tnId+"_student_excel";
         map.put("tableName",tableName);
-        map.put("student_grade",studentGrade);
         List<Map<String,String>> mapList = Lists.newArrayList();
         mapList = selectClassesGuideDAO.selectStudentExcel(map);
         Map<String, Integer> typeMap=new HashMap<>();
@@ -173,7 +178,6 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
 
         //从saas_enrolling_ratio中获取上线率
         String t=selectClassesGuideDAO.getEnrollingPercent();
-        map.put("tnId",tnId);
         map.put("grade",studentGrade);
         map.put("examId",selectClassesGuideDAO.selectExamId(map));
         int count=selectClassesGuideDAO.selectStudentNumber(map);
