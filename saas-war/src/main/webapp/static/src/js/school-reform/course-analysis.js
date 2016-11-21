@@ -1,14 +1,70 @@
 /**
  * Created by machengcheng on 16/11/14.
  */
+var tnId = Common.cookie.getCookie('tnId');
 
-historyCourseAnalysis();
-partCourseAnalysisChart();
-groupCourseAnalysis();
+$(function () {
+
+    var chkLength = $("input[name='course-analysis']").length;
+    var courseAnalysis = new CourseAnalysis(chkLength, 'course-analysis', null);
+
+    historyCourseAnalysis();
+    partCourseAnalysisChart();
+    groupCourseAnalysis();
+
+    getAnalysisGroup(tnId, 265);
+
+});
+
+function CourseAnalysis (chkLength, chkName, courseFun) {
+    this.selectCount = 0; //当前选中的课程数目,初始化0
+    this.course = [];  //当前选中的课程
+    this.init(chkLength, chkName, courseFun);
+}
+CourseAnalysis.prototype = {
+    constructor: CourseAnalysis,
+    init: function (chkLength, chkName, courseFun) {
+        $("input[name='course-analysis']").prop("checked", false);
+        this.selectCourse(chkLength, chkName, courseFun);
+    },
+    selectCourse: function (chkLength, chkName, courseFun) {
+        var obj = this;
+        for (var i = 0; i < chkLength; i++) {
+            $("input[name=" + chkName + "]")
+                .eq(i)
+                .unbind("change")
+                .bind("change", {data: i, obj: obj}, function (evt) {
+                    var _that = $(this);
+                    var _this = evt.data.obj;
+                    var _child = $(this);
+                    if (_child.prop("checked")) {
+                        _this.selectCount++;
+                        if (_this.selectCount <= 3) {
+                            _this.course.push(_child.next().html());
+                            if (_this.selectCount == 3) {
+                                if (courseFun != null) {
+                                    courseFun(_this.course);
+                                }
+                            }
+                        } else {
+                            _this.selectCount--;
+                            _child.prop("checked", false);
+                            layer.tips('您最多能选3门课程哦!', _that, {
+                                tips: '2'
+                            });
+                        }
+                    } else {
+                        _this.selectCount--;
+                        _this.course.delete(_child.next().html());
+                    }
+                });
+        }
+    }
+};
 
 function historyCourseAnalysis () {
     var historyCourseAnalysisChart = echarts.init(document.getElementById('historyCourseAnalysisChart'));
-    historyCourseAnalysisOption = {
+    var historyCourseAnalysisOption = {
         title: {
             show: false,
             text: '部分学生选课分析'
@@ -308,3 +364,36 @@ function groupCourseAnalysis () {
     };
     groupCourseAnalysisBar.setOption(groupCourseAnalysisOption);
 }
+
+//组合选课情况分析
+function getAnalysisGroup (tnId, grade) {
+    Common.ajaxFun('/selectClassesGuide/getAnalysisGroup.do', 'GET', {
+        'tnId': tnId,
+        'grade': grade
+    }, function (res) {
+        if (res.rtnCode == "0000000") {
+            var data = res.bizData;
+
+        }
+    }, function (res) {
+        layer.msg("出错了");
+    }, true);
+}
+
+/**
+ * 删除数组中的元素
+ * @param varElement
+ * @returns {number}
+ */
+Array.prototype.delete = function (varElement) {
+    var numDeleteIndex = -1;
+    for (var i = 0; i < this.length; i++) {
+        // 严格比较，即类型与数值必须同时相等。
+        if (this[i] === varElement) {
+            this.splice(i, 1);
+            numDeleteIndex = i;
+            break;
+        }
+    }
+    return numDeleteIndex;
+};

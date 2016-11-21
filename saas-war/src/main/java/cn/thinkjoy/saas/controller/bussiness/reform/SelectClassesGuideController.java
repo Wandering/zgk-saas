@@ -49,45 +49,27 @@ public class SelectClassesGuideController {
      * 输入院校名
      * @return
      */
+    @RequestMapping("getUniversityName")
+    @ResponseBody
+    public Map<String,Object> getUniversityName(@RequestParam(value = "subject",required = false)String subject,
+                                                @RequestParam(value = "universityName",required = false)String universityName,
+                                                @RequestParam(value = "universityId",required = false)String universityId,
+                                                @RequestParam(value = "offset",required = false,defaultValue = "0")String offset,
+                                                @RequestParam(value = "rows",required = false,defaultValue = "5")String rows) {
+        return getStringObjectMap(0, subject, universityName, universityId, offset, rows);
+    }
+    /**
+     * 输入院校名
+     * @return
+     */
     @RequestMapping("getMajorByUniversityNameAndBatch")
     @ResponseBody
-    public Map<String,Object> getMajorByUniversityNameAndBatch(@RequestParam("subject")String subject,
-                                                               @RequestParam("batch")String batch,
+    public Map<String,Object> getMajorByUniversityNameAndBatch(@RequestParam(value = "subject",required = false)String subject,
                                                                @RequestParam(value = "universityName",required = false)String universityName,
+                                                               @RequestParam(value = "universityId",required = false)String universityId,
                                                                @RequestParam(value = "offset",required = false,defaultValue = "0")String offset,
                                                                @RequestParam(value = "rows",required = false,defaultValue = "10")String rows) {
-        Map<String,Object> paramMap=new HashMap<>();
-        paramMap.put("areaId","330000");
-        paramMap.put("year","2016");
-        paramMap.put("batch",batch);
-        paramMap.put("subject",subject);
-        if (StringUtils.isNotBlank(universityName)) {
-            paramMap.put("universityName", universityName);
-        }
-        paramMap.put("offset",offset);
-        paramMap.put("rows",rows);
-        List<MajorDto> majorDtoList=iSelectClassesGuideService.selectMajorByUniversityNameAndBatch(paramMap);
-        Map<String, Object> propertyMap = new HashMap();
-        Map<String, Object> map1 = new HashMap<>();
-        map1.put("type", "FEATURE");
-        List<Map<String, Object>> dictMapList = iSelectClassesGuideService.queryDictList(map1);
-        for(MajorDto majorDto:majorDtoList) {
-            if (StringUtils.isNotEmpty(majorDto.getProperty())) {
-                String[] propertys = majorDto.getProperty().split(",");
-                for (String property : propertys) {
-                    for (Map<String, Object> propertyDict : dictMapList) {
-                        if (property.equals(propertyDict.get("name"))) {
-                            propertyMap.put(propertyDict.get("id").toString(), property);
-                        }
-                    }
-                }
-            }
-            majorDto.setPropertys(propertyMap);
-        }
-        Map<String,Object> returnMap=new HashMap<>();
-        returnMap.put("majorByUniversityNameAndBatch", iSelectClassesGuideService.selectMajorByUniversityNameAndBatch(paramMap));
-        returnMap.put("count",iSelectClassesGuideService.selectMajorByUniversityNameAndBatchCount(paramMap));
-        return returnMap;
+        return getStringObjectMap(1, subject, universityName, universityId, offset, rows);
     }
 
     /**
@@ -96,11 +78,13 @@ public class SelectClassesGuideController {
      */
     @RequestMapping("getPlanEnrollingByProperty")
     @ResponseBody
-    public Map<String,Object> getPlanEnrollingByProperty(@RequestParam("subject")String subject) {
+    public Map<String,Object> getPlanEnrollingByProperty(@RequestParam(value = "subject",required = false)String subject) {
         Map<String,Object> paramMap=new HashMap<>();
         paramMap.put("areaId","330000");
         paramMap.put("year","2016");
-        paramMap.put("subject",subject);
+        if(StringUtils.isNotBlank(subject)) {
+            paramMap.put("subject", subject);
+        }
         paramMap.put("property","211");
         Map<String,Object> returnMap=new HashMap<>();
         List<PlanEnrollingDto> planEnrollingDtoList= iSelectClassesGuideService.selectPlanEnrollingByProperty(paramMap);
@@ -124,11 +108,13 @@ public class SelectClassesGuideController {
      */
     @RequestMapping("getAnalysisBatch")
     @ResponseBody
-    public Map<String,Object> getAnalysisBatch(@RequestParam("subject")String subject) {
+    public Map<String,Object> getAnalysisBatch(@RequestParam(value = "subject",required = false)String subject) {
         Map<String,Object> paramMap=new HashMap<>();
         paramMap.put("areaId","330000");
         paramMap.put("year","2016");
-        paramMap.put("subject",subject);
+        if(StringUtils.isNotBlank(subject)) {
+            paramMap.put("subject", subject);
+        }
         Map<String,Object> returnMap=new HashMap<>();
         returnMap.put("analysisBatch", iSelectClassesGuideService.selectAnalysisBatch(paramMap));
 //        returnMap.put("count",iSelectClassesGuideService.selectAnalysisBatchCount(paramMap));
@@ -141,15 +127,90 @@ public class SelectClassesGuideController {
      */
     @RequestMapping("getAnalysisDiscipline")
     @ResponseBody
-    public Map<String,Object> getAnalysisDiscipline(@RequestParam("subject")String subject) {
+    public Map<String,Object> getAnalysisDiscipline(@RequestParam(value = "subject",required = false)String subject) {
         Map<String,Object> paramMap=new HashMap<>();
         paramMap.put("areaId","330000");
         paramMap.put("year","2016");
-        paramMap.put("subject",subject);
+        if(StringUtils.isNotBlank(subject)) {
+            paramMap.put("subject", subject);
+        }
         Map<String,Object> returnMap=new HashMap<>();
         returnMap.put("analysisDiscipline", iSelectClassesGuideService.selectAnalysisDiscipline(paramMap));
 //        returnMap.put("count",iSelectClassesGuideService.selectAnalysisDisciplineCount(paramMap));
         return returnMap;
+    }
+
+    private Map<String, Object> getStringObjectMap(int flag, String subject, String universityName, String universityId, String offset, String rows) {
+        Map<String,Object> paramMap=new HashMap<>();
+        paramMap.put("areaId","330000");
+        paramMap.put("year","2016");
+        paramMap.put("flag",flag);
+        if(StringUtils.isNotBlank(subject)) {
+            paramMap.put("subject", subject);
+        }
+        if (StringUtils.isNotBlank(universityName)) {
+            paramMap.put("universityName", universityName);
+        }
+        if (StringUtils.isNotBlank(universityId)) {
+            paramMap.put("universityId", universityId);
+        }
+        paramMap.put("offset",offset);
+        paramMap.put("rows",rows);
+        List<MajorDto> majorDtoList=iSelectClassesGuideService.selectMajorByUniversityNameAndBatch(paramMap);
+        if(flag==1) {
+            Map<String, Object> propertyMap = new HashMap();
+            Map<String, Object> map1 = new HashMap<>();
+            map1.put("type", "FEATURE");
+            List<Map<String, Object>> dictMapList = iSelectClassesGuideService.queryDictList(map1);
+            for (MajorDto majorDto : majorDtoList) {
+                if (StringUtils.isNotEmpty(majorDto.getProperty())) {
+                    String[] propertys = majorDto.getProperty().split(",");
+                    for (String property : propertys) {
+                        for (Map<String, Object> propertyDict : dictMapList) {
+                            if (property.equals(propertyDict.get("name"))) {
+                                propertyMap.put(propertyDict.get("id").toString(), property);
+                            }
+                        }
+                    }
+                }
+                majorDto.setPropertys(propertyMap);
+            }
+        }
+        Map<String,Object> returnMap=new HashMap<>();
+        returnMap.put("majorByUniversityNameAndBatch", majorDtoList);
+        if(flag==1) {
+            returnMap.put("count", iSelectClassesGuideService.selectMajorByUniversityNameAndBatchCount(paramMap));
+        }
+        return returnMap;
+    }
+
+    @RequestMapping("getEnrollingNumberByBatch")
+    @ResponseBody
+    public Map<String,Object> getEnrollingNumberByBatch(){
+        Map<String,Object> paramMap=new HashMap<>();
+        paramMap.put("areaId","330000");
+        paramMap.put("year","2016");
+        Map<String,Object> returnMap=new HashMap<>();
+        returnMap.put("enrollingNumberByBatch", iSelectClassesGuideService.selectEnrollingNumberByBatch(paramMap));
+        return returnMap;
+    }
+
+    @RequestMapping("getEnrollingNumberTable")
+    @ResponseBody
+    public Map<String,Object> getEnrollingNumberTable(){
+        Map<String,Object> paramMap=new HashMap<>();
+        paramMap.put("areaId","330000");
+        paramMap.put("year","2016");
+        Map<String,Object> returnMap=new HashMap<>();
+        returnMap.put("enrollingNumberTable", iSelectClassesGuideService.selectEnrollingNumber(paramMap));
+        return returnMap;
+    }
+
+    @RequestMapping("getAnalysisGroup")
+    @ResponseBody
+    public List<Map<String,Object>> getAnalysisGroup(@RequestParam("grade") String grade,@RequestParam("tnId") String tnId) {
+
+        return iSelectClassesGuideService.getAnalysisGroup(grade,tnId);
     }
 
 }

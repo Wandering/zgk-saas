@@ -42,8 +42,8 @@
                                         <button class="btn btn-pink" id="addRole-btn">添加班级</button>
                                         <button class="btn btn-inverse" id="updateRole-btn">修改</button>
                                         <button class="btn btn-success" id="deleteClassBtn">删除</button>
-                                        <button class="btn btn-warning" id="downloadBtn">模板下载</button>
-                                        <button class="btn btn-warning" id="uploadBtn">批量上传</button>
+                                        <button class="btn btn-warning" id="downloadid="uploadBtn"Btn">模板下载</button>
+                                        <button class="btn btn-warning" >批量上传</button>
                                         <button class="btn btn-warning" id="class-settings-btn">班级设置</button>
                                     </div>
                                 </div>
@@ -87,34 +87,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-        <div class="form-group add-results">
-            <label class="col-sm-3 control-label no-padding-right">添加成绩 </label>
-            <div class="col-sm-9">
-                <span id="uploader-demo">
-            <span id="fileList" style="display: none;" class="uploader-list"></span>
-            <button class="btn btn-pink" id="btn-import">添加</button>
-            </span>
-                <p><a target="_blank" href="/scoreAnalyse/downloadModel?tnId='+ tnId +'&grade='+ grade +'&mock=true">请先导出Excel模板,进行填写</a></p>
-                <p>温馨提示:上传与模板不一致的成绩单,系统无法识别</p>
-                </div>
-            </div>
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         <%@ include file="./../common/footer.jsp"%>
         <link rel="stylesheet" type="text/css" href="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.css">
         <script src="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.js"></script>

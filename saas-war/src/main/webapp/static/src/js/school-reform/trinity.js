@@ -23,12 +23,14 @@ TrinityData.prototype = {
         Common.ajaxFun('/selectClassesGuide/getEnrollingNumberByBatch.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData.enrollingNumberByBatch;
+                var majorCount = data.majorCount,
+                    enrollingCount = data.enrollingCount;
                 var datas = {
                     batchs: [],
                     batchNames: [],
                     planEnrollingNumbers: []
                 };
-                $.each(data, function (i, k) {
+                $.each(data.enrollingNumberByBatch, function (i, k) {
                     datas.batchNames.push(k.batchName);
                     datas.batchs.push({
                         value: k.majorNumber,
@@ -36,8 +38,8 @@ TrinityData.prototype = {
                     });
                     datas.planEnrollingNumbers.push(k.planEnrollingNumber);
                 });
-                enrollUniversityMajorTotal(datas.batchNames, datas.batchs);
-                planTotalLineChart(datas.batchNames, datas.planEnrollingNumbers);
+                enrollUniversityMajorTotal(majorCount, datas.batchNames, datas.batchs);
+                planTotalLineChart(enrollingCount, datas.batchNames, datas.planEnrollingNumbers);
             }
         }, function (res) {
             layer.msg("出错了");
@@ -89,116 +91,13 @@ TrinityData.prototype = {
     }
 };
 
-function Page() {
-    this.majorCount = 0;
-    this.pageCount = 1;
-    var that = this;
-    this.loadPage = function (offset, rows) {
-        majorOffset = offset;
-        majorRows = rows;
-        var subjects = util.cookie.getCookieValue("selectedMajorBySubjects").split(',');
-        var queryType = parseInt($("#keywords-university-major").attr("category"));
-        var queryId = parseInt($("#keywords-university-major").attr("uid"));
-        var provinceCode = condition.provinceCode;
-        var batch = condition.batch;
-        var type = condition.type;
-        util.ajaxFun(util.INTERFACE_URL.getMajorList, 'GET', {
-            'subject1': subjects[0],
-            'subject2': subjects[1],
-            'subject3': subjects[2],
-            'queryType': queryType, //类型，1为院校，2为专业, 可选
-            'queryId': queryId, //查询院校id或专业code
-            'provinceCode': provinceCode, //学校所在地，可选
-            'batch': batch, //批次，可选
-            'type': type, //类型，可选
-            'offset': offset, //起始条数，可选，默认为0
-            'rows': rows //查询条数，可选，默认为10
-        }, function (res) {
-            if (res.rtnCode == '0000000') {
-                var data = res.bizData;
-                that.showData(data);
-            }
-        });
-    };
-    this.showData = function (result) {
-        that.majorCount = result.count;
-        that.pageCount = Math.ceil(that.majorCount / majorRows);
-        $(".pagination-bar .page-count").html(that.pageCount);
-        $(".pagination-bar .record-count").html(result.count);
-        var dictBatchType = {
-            "0": "零批次",
-            "1": "一批本科",
-            "10": "普通批次",
-            "11": "本科一批A",
-            "111": "本科一批A1",
-            "12": "本科一批B",
-            "2": "二批本科",
-            "21": "本科二批A",
-            "22": "本科二批B",
-            "23": "本科二批C",
-            "4": "三批本科",
-            "41": "本科三批A",
-            "411": "本科三批A1",
-            "412": "本科三批A2",
-            "42": "本科三批B",
-            "8": "高职（专科）",
-            "81": "专科一批",
-            "82": "专科二批",
-            "83": "专科A类",
-            "84": "专科B类"
-        };
-        handlebars.registerHelper('dictBatchType', function (data) {
-            return dictBatchType[parseInt(data)];
-        });
-        var template = handlebars.compile($("#major-detail-data-template").html());
-        $.each(result.majorList, function (i, k) {
-            if (!k.selectSubject) {
-                k.selectSubject = '不限';
-            } else {
-                k.selectSubject = k.selectSubject.split(' ').join('、');
-            }
-        });
-        $('#major-detail-data-list').html(template(result.majorList));
-        $.each(result.majorList, function (i, k) {
-            switch (parseInt(k.isFavorite)) {
-                case 0:
-                    $('#major-detail-table .collect-icon').eq(i).css({
-                        //'background': 'url(../img/icon_collect.png) no-repeat'
-                        'background': 'url(' + iconCollect + ') no-repeat'
-                    });
-                    break;
-                case 1:
-                    $('#major-detail-table .collect-icon').eq(i).css({
-                        //'background': 'url(../img/icon_collected.png) no-repeat'
-                        'background': 'url(' + iconCollected + ') no-repeat'
-                    });
-                    break;
-                default:
-                    break;
-            }
-        });
-        that.pagination();
-    };
-    this.pagination = function () {
-        $(".pagination").createPage({
-            pageCount: Math.ceil(that.majorCount / majorRows),
-            current: Math.ceil(majorOffset / majorRows) + 1,
-            backFn: function (p) {
-                $(".pagination-bar .current-page").html(p);
-                majorOffset = (p - 1) * majorRows;
-                that.loadPage(majorOffset, majorRows, false);
-            }
-        });
-    }
-}
-
 //招生院校专业总数
-function enrollUniversityMajorTotal (batchNames, batchs) {
+function enrollUniversityMajorTotal (majorCount, batchNames, batchs) {
     var enrollTotalChart = echarts.init(document.getElementById('enrollTotalChart'));
     var enrollPieOption = {
         title: {
             show: true,
-            text: "招生院校专业总数：2345个专业",
+            text: '招生院校专业总数：' + majorCount + '个专业',
             x: 'left',
             top: 'top',
             bottom: -30,
@@ -264,11 +163,11 @@ function enrollUniversityMajorTotal (batchNames, batchs) {
 }
 
 //招生计划总数
-function planTotalLineChart (batchNames, planEnrollingNumbers) {
+function planTotalLineChart (enrollingCount, batchNames, planEnrollingNumbers) {
     var planTotalLineChart = echarts.init(document.getElementById('planTotalLineChart'));
     var planTotalLineOption = {
         title: {
-            text: '招生计划总数：12345人',
+            text: '招生计划总数：' + enrollingCount + '人',
             textStyle: {
                 color: '#4A4A4A',
                 fontWeight: 'normal',

@@ -28,12 +28,11 @@
                                 <a href="#">首页</a>
                             </li>
                             <li class="active">班级管理</li>
-                        </ul><!-- .breadcrumb -->
+                        </ul>
                     </div>
                     <div class="page-content">
                         <div class="row">
                             <div class="col-xs-12">
-                                <!-- PAGE CONTENT BEGINS -->
                                 <div class="main-title">
                                     <h3>班级管理</h3>
                                 </div>
@@ -82,20 +81,48 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <!-- PAGE CONTENT ENDS -->
-                            </div><!-- /.col -->
-                        </div><!-- /.row -->
-                    </div><!-- /.page-content -->
-                </div><!-- /.main-content -->
-            </div><!-- /.main-container-inner -->
-        </div><!-- /.main-container -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div class="form-group add-results">
+            <label class="col-sm-3 control-label no-padding-right">添加成绩 </label>
+            <div class="col-sm-9">
+                <span id="uploader-demo">
+            <span id="fileList" style="display: none;" class="uploader-list"></span>
+            <button class="btn btn-pink" id="btn-import">添加</button>
+            </span>
+                <p><a target="_blank" href="/scoreAnalyse/downloadModel?tnId='+ tnId +'&grade='+ grade +'&mock=true">请先导出Excel模板,进行填写</a></p>
+                <p>温馨提示:上传与模板不一致的成绩单,系统无法识别</p>
+                </div>
+            </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         <%@ include file="./../common/footer.jsp"%>
         <link rel="stylesheet" type="text/css" href="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.css">
-        <script type="text/javascript" src="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.js"></script>
+        <script src="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.js"></script>
         <script>
             var BASE_URL = '<%=ctx%>/static/src/lib/';
             var rootPath = '<%=ctx%>';
         </script>
+        <script src="<%=ctx%>/static/src/lib/assets/js/jquery-ui-1.12.1.js"></script>
         <script src="<%=ctx%>/static/src/js/info-management/class-management.js"></script>
     </body>
 </html>

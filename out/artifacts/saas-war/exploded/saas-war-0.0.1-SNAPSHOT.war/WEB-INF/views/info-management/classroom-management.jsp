@@ -39,9 +39,9 @@
                                 <div class="title-2">
                                     <span class="txt-t"></span>
                                     <div class="btns">
-                                        <button class="btn btn-pink" id="add-btn">添加教室</button>
-                                        <button class="btn btn-inverse">修改</button>
-                                        <button class="btn btn-success">删除</button>
+                                        <button class="btn btn-pink" id="addRole-btn">添加教室</button>
+                                        <button class="btn btn-inverse" id="updateRole-btn">修改</button>
+                                        <button class="btn btn-success" id="deleteRole-Btn">删除</button>
                                     </div>
                                 </div>
                                 <div class="">
@@ -50,7 +50,7 @@
                                             <tr>
                                                 <th class="center">
                                                     <label>
-                                                        <input type="checkbox" class="ace" />
+                                                        <input type="checkbox" id="checkAll" class="ace" />
                                                         <span class="lbl"></span>
                                                     </label>
                                                 </th>
@@ -59,7 +59,7 @@
                                                 <th class="center">教室数量</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="classroom-manage-list" class="check-template">
                                             <%--<tr>--%>
                                                 <%--<td class="center">--%>
                                                     <%--<label>--%>
