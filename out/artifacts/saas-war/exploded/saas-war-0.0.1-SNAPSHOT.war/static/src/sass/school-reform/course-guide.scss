@@ -221,6 +221,9 @@ ul {
                 font-weight: bold;
                 line-height: 18px;
             }
+            th:last-of-type {
+                border-right: 0;
+            }
         }
     }
     tbody {

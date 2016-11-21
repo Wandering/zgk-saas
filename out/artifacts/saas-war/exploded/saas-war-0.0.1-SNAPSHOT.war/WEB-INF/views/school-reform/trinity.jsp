@@ -104,8 +104,8 @@
                                     <td>{{rank}}</td>
                                     <td>{{universityName}}</td>
                                     <td>{{planEnrollingNumber}}人</td>
-                                    <td>50%</td>
-                                    <td>学考7A，综合素质A</td>
+                                    <td>-</td>
+                                    <td>-</td>
                                 </tr>
                                 {{/each}}
                             </script>
