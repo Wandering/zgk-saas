@@ -40,15 +40,15 @@
                                 <div class="course-analysis-box">
                                     <ul class="course-analysis-list">
                                         <li>
-                                            <input type="checkbox" name="course-analysis" id="course-physics" checked />
+                                            <input type="checkbox" name="course-analysis" id="course-physics" />
                                             <label for="course-physics">物理</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" name="course-analysis" id="course-chemistry" checked />
+                                            <input type="checkbox" name="course-analysis" id="course-chemistry" />
                                             <label for="course-chemistry">化学</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" name="course-analysis" id="course-biology" checked />
+                                            <input type="checkbox" name="course-analysis" id="course-biology" />
                                             <label for="course-biology">生物</label>
                                         </li>
                                         <li>
