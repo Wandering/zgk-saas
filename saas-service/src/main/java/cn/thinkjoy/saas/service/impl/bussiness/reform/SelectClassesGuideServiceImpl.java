@@ -6,6 +6,7 @@ import cn.thinkjoy.saas.service.bussiness.reform.ISelectClassesGuideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,17 +70,23 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
     }
 
     @Override
-    public List<TrineDto> selectEnrollingNumberByBatch(Map map) {
+    public Map<String,Object> selectEnrollingNumberByBatch(Map map) {
         List<TrineDto> trineDtoList=selectClassesGuideDAO.selectEnrollingNumberByBatch(map);
         int count=0;
+        int enrollingCount=0;
         for(TrineDto trineDto:trineDtoList){
             count=count+trineDto.getMajorNumber();
+            enrollingCount=enrollingCount+trineDto.getPlanEnrollingNumber();
         }
         for(TrineDto trineDto:trineDtoList){
             double precent=Math.round((double)trineDto.getMajorNumber()*100/count)/100.0;
             trineDto.setPercent(String.valueOf(precent));
         }
-        return trineDtoList;
+        Map<String,Object> returnMap=new HashMap<>();
+        returnMap.put("enrollingNumberByBatch",trineDtoList);
+        returnMap.put("majorCount",count);
+        returnMap.put("enrollingCount",enrollingCount);
+        return returnMap;
     }
 
     @Override
