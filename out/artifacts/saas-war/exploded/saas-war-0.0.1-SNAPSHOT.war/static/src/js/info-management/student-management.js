@@ -45,6 +45,7 @@ var App = {
                             dataType: k.dataType,
                             dataValue: k.dataValue,
                             checkRule: k.checkRule,
+                            id: k.id,
                         });
                     });
                     tpl.push('</tr>');
@@ -70,7 +71,7 @@ var App = {
                         var enName = App.tableData[i].enName;
                         var dType = App.tableData[i].dataType;
                         if (obj[enName]) {
-                            tpl.push('<td class="center" iName="' + enName + '" dataType="' + dType + '">' + obj[enName] + '</td>');
+                            tpl.push('<td class="center" iName="' + enName + '" dataType="' + dType + '" pid="' + n.id + '">' + obj[enName] + '</td>');
                         } else {
                             tpl.push('<td class="center">-</td>');
                         }
@@ -89,7 +90,7 @@ App.init();
 
 /**
  * 添加学生模块
- * @type {{init: CRUDStd.init, fetchGrade: CRUDStd.fetchGrade, fetchEntranceYear: CRUDStd.fetchEntranceYear, fetchBelongClass: CRUDStd.fetchBelongClass, renderElement: CRUDStd.renderElement, bindEvents: CRUDStd.bindEvents, removeStd: CRUDStd.removeStd, CRUDStdVerify: CRUDStd.CRUDStdVerify, CRUDStdEvent: CRUDStd.CRUDStdEvent}}
+ * @type {{init: CRUDStd.init, fetchGrade: CRUDStd.fetchGrade, fetchEntranceYear: CRUDStd.fetchEntranceYear, fetchBelongClass: CRUDStd.fetchBelongClass, renderElement: CRUDStd.renderElement, bindEvents: CRUDStd.bindEvents, removeStd: CRUDStd.removeStd, CRUDStdVerify: CRUDStd.CRUDStdVerify, addStdEvent: CRUDStd.addStdEvent}}
  */
 var CRUDStd = {
     init: function () {
@@ -192,7 +193,6 @@ var CRUDStd = {
                     radioTpl += '<label><input name="form-field-radio" type="radio" class="ace" value="' + radioLen[i] + '">' +
                         '<span class="lbl">' + radioLen[i] + '</span></label>'
                 }
-
             }
             return '<li><span class="f20">' + v.name + '</span>' +
                 '<div id="' + v.enName + '" class="sex-type f70">' + radioTpl +
@@ -208,17 +208,17 @@ var CRUDStd = {
             var checkBoxLen = (v.dataValue).split('-'),
                 checkBoxTpl = '';
             for (var i = 0; i < checkBoxLen.length; i++) {
-                if (i == 0) {
-                    checkBoxTpl += '<label>' +
-                        '<input type="checkbox" class="ace" value="' + checkBoxLen[i] + '" checked="checked" name="ck">' +
-                        '<span class="lbl">' + checkBoxLen[i] + '</span>' +
-                        '</label>';
-                } else {
-                    checkBoxTpl += '<label>' +
-                        '<input type="checkbox" class="ace" value="' + checkBoxLen[i] + '" name="ck">' +
-                        '<span class="lbl">' + checkBoxLen[i] + '</span>' +
-                        '</label>';
-                }
+                //if (i == 0) {
+                //checkBoxTpl += '<label>' +
+                //    '<input type="checkbox" class="ace" value="' + checkBoxLen[i] + '" checked="checked" name="ck">' +
+                //    '<span class="lbl">' + checkBoxLen[i] + '</span>' +
+                //    '</label>';
+                //} else {
+                checkBoxTpl += '<label>' +
+                    '<input type="checkbox" class="ace" value="' + checkBoxLen[i] + '" name="ck">' +
+                    '<span class="lbl">' + checkBoxLen[i] + '</span>' +
+                    '</label>';
+                //}
 
             }
             return '<li><span class="f20">' + v.name + '</span><div id="' + v.enName + '" class="subject-list f70">' + checkBoxTpl + '</div></li>'
@@ -278,12 +278,11 @@ var CRUDStd = {
             } else {
                 CRUDStd.updateStd();//更新 update
             }
-            //$('#student-add-layer').remove();// layer坑
         })
         //确认添加
         $(document).on('click', '#add-btn', function () {
-            if (that.CRUDStdVerify()) {
-                that.CRUDStdEvent(that.CRUDStdVerify());
+            if (that.CRUDStdVerify('add')) {
+                that.addStdEvent(that.CRUDStdVerify('add'));
             }
         })
         //删除
@@ -292,7 +291,9 @@ var CRUDStd = {
         });
         //更新
         $(document).on("click", "#update-btn", function () {
-
+            if (that.CRUDStdVerify('update')) {
+                that.updateStdEvent(that.CRUDStdVerify('update'));
+            }
         })
         //获取修改前数据 [组装修改前的数据]
         $(document).on('click', '#student-table td input[type="checkbox"]', function () {
@@ -302,6 +303,7 @@ var CRUDStd = {
             for (var i = 1; i < rowLen; i++) {
                 var childData = {};
                 childData.iName = parent.find('td').eq(i).attr('iName');
+                childData.pid = parent.find('td').eq(i).attr('pid');
                 childData.dataType = parent.find('td').eq(i).attr('dataType');
                 childData.value = parent.find('td').eq(i).text();
                 rowData.push(childData);
@@ -319,7 +321,6 @@ var CRUDStd = {
             content: $('#student-add-layer'),
             cancel: function () {
                 layer.closeAll();
-                //window.location.reload();
             }
         })
     },
@@ -342,10 +343,24 @@ var CRUDStd = {
             content: $('#student-add-layer'),
             cancel: function () {
                 layer.closeAll();
-                //window.location.reload();
             },
-            success:function(html){
+            success: function (html) {
                 $.each(rowData, function (i, v) {
+                    if (v.dataType === 'radio') {
+                        for (var j = 0; j < $('#' + v.iName).find("[name='form-field-radio']").length; j++) {
+                            if ($('#' + v.iName).find("[name='form-field-radio']").eq(j).val() == v.value) {
+                                $('#' + v.iName).find("[name='form-field-radio']").eq(j).attr('checked', 'checked')
+                            }
+                        }
+                    }
+                    if (v.dataType === 'checkbox') {
+                        for (var j = 0; j < $('#' + v.iName).find("[name='ck']").length; j++) {
+                            var foo = $('#' + v.iName).find("[name='ck']").eq(j).val();
+                            if ($.inArray(foo, v.value.split('-')) >= 0) {
+                                $('#' + v.iName).find("[name='ck']").eq(j).attr('checked', true)
+                            }
+                        }
+                    }
                     $('#' + v.iName).val(v.value);
                 });
             }
@@ -386,7 +401,7 @@ var CRUDStd = {
             layer.closeAll();
         });
     },
-    CRUDStdVerify: function () {
+    CRUDStdVerify: function (type) {
         var postData = [];
         var lock = 0;
         (function () {
@@ -405,6 +420,12 @@ var CRUDStd = {
                     //    return false
                     //}
                 }
+                if (v.dataType === "checkbox") {
+                    if ($('#' + v.enName).find('[name="ck"]:checked').length == 0) {
+                        layer.msg('请至少选择一门所教科目');
+                        return false;
+                    }
+                }
             })
             return false
         })()
@@ -420,27 +441,56 @@ var CRUDStd = {
                     "value": $('#' + v.enName).find('[name="form-field-radio"]:checked').val()
                 });
             } else if (v.dataType === "checkbox") {
+                var subjects = [];
+                $($('#' + v.enName).find('[name="ck"]')).each(function () {
+                    if ($(this).prop('checked')) {
+                        subjects.push($(this).val());
+                    }
+                });
+                var values = subjects.join('-');
                 postData.push({
                     "key": v.enName,
-                    "value": $('#' + v.enName).find('[name="ck"]:checked').val()
+                    "value": values
                 });
             }
         })
-        return {
-            "clientInfo": {},
-            "style": "",
-            "data": {
-                "type": GLOBAL_CONSTANT.type,
-                "tnId": GLOBAL_CONSTANT.tnId,
-                "teantCustomList": postData
-            }
-        };
+        if (type == 'add') {
+            return {
+                "clientInfo": {},
+                "style": "",
+                "data": {
+                    "type": GLOBAL_CONSTANT.type,
+                    "tnId": GLOBAL_CONSTANT.tnId,
+                    "teantCustomList": postData
+                }
+            };
+        } else {
+            return {
+                "clientInfo": {},
+                "style": "",
+                "data": {
+                    "type": GLOBAL_CONSTANT.type,
+                    "tnId": GLOBAL_CONSTANT.tnId,
+                    "pri": "",
+                    "teantCustomList": postData
+                }
+            };
+        }
     },
-    CRUDStdEvent: function (data) {
+    addStdEvent: function (data) {
         Common.ajaxFun('/manage/teant/custom/data/add.do', 'POST', JSON.stringify(data), function (res) {
             if (res.rtnCode == "0000000" && res.bizData.result === 'SUCCESS') {
                 layer.closeAll();
-                //window.location.reload() //layer-bug 待解决
+                App.renderTableHeader();
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, null, true);
+    },
+    updateStdEvent: function (data) {
+        Common.ajaxFun('/manage/teant/custom/data/modify.do', 'POST', JSON.stringify(data), function (res) {
+            if (res.rtnCode == "0000000") {
+                layer.closeAll();
                 App.renderTableHeader();
             }
         }, function (res) {
