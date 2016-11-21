@@ -1162,7 +1162,7 @@ selectList
 
     <select id="getAvgScoresForClassStudent" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
         select d.className,d.studentName,e.examTime,
-        ROUND(AVG(IF(d.yuWenScore='', null, d.yuWenScore) 语文,
+        IF(d.yuWenScore='', null, d.yuWenScore) 语文,
         IF(d.shuXueScore='', null, d.shuXueScore) 数学,
         IF(d.yingYuScore='', null, d.yingYuScore) 英语,
         IF(d.wuLiScore='', null, d.wuLiScore) 物理,
