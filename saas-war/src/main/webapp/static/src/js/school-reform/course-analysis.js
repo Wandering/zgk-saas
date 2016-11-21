@@ -10,9 +10,13 @@ $(function () {
 
     historyCourseAnalysis();
     partCourseAnalysisChart();
-    groupCourseAnalysis();
 
-    getAnalysisGroup(tnId, 265);
+    var gradeName = $('input[name="senior-analysis"]:checked').next().text();
+    getAnalysisGroup(tnId, gradeName);
+    $(document).on('change', 'input[name="senior-analysis"]', function () {
+        var gradeName = $(this).next().text();
+        getAnalysisGroup(tnId, gradeName);
+    });
 
 });
 
@@ -265,22 +269,33 @@ function partCourseAnalysisChart () {
 }
 
 //组合招生计划
-function groupCourseAnalysis () {
+function groupCourseAnalysis (groups, stuNumbers) {
     var groupCourseAnalysisBar = echarts.init(document.getElementById('groupCourseAnalysisBar'));
     var groupCourseAnalysisOption = {
+        title: {
+            show: true,
+            text: '组合选课情况统计',
+            x: 'center',
+            top: 'top',
+            textStyle: {
+                color: '#4A4A4A',
+                fontWeight: 'normal',
+                fontSize: 14
+            }
+        },
         tooltip: {
             trigger: 'axis'
         },
-        legend: {
-            selectedMode: false,
-            orient: 'horizontal',
-            x: 'right',
-            itemGap: 32,
-            textStyle: {
-                color: '#4A4A4A'
-            },
-            data:['前365名选课人数', '招生计划']
-        },
+        //legend: {
+        //    selectedMode: false,
+        //    orient: 'horizontal',
+        //    x: 'right',
+        //    itemGap: 32,
+        //    textStyle: {
+        //        color: '#4A4A4A'
+        //    },
+        //    data:['前365名选课人数']
+        //},
         toolbox: {
             show: false
         },
@@ -288,7 +303,12 @@ function groupCourseAnalysis () {
         xAxis: [
             {
                 type: 'category',
-                data: ['本科一批', '本科二批', '本科三批', '高职高专'],
+                name: '选课组合',
+                nameTextStyle: {
+                    color: '#4A4A4A',
+                    fontSize: 14
+                },
+                data: groups, //['本科一批', '本科二批', '本科三批', '高职高专'],
                 axisLine: {
                     lineStyle: {
                         color: '#D8D8D8'
@@ -305,8 +325,13 @@ function groupCourseAnalysis () {
         yAxis: [
             {
                 type: 'value',
-                min: 0,
-                max: 1683,
+                name: '选课人数',
+                nameTextStyle: {
+                    color: '#4A4A4A',
+                    fontSize: 14
+                },
+                min: Math.min(stuNumbers),
+                max: Math.max(stuNumbers),
                 axisLine: {
                     lineStyle: {
                         color: '#D8D8D8'
@@ -316,7 +341,7 @@ function groupCourseAnalysis () {
                     show: true
                 },
                 axisLabel: {
-                    formatter: '{value} ml'
+                    formatter: '{value}'
                 },
                 axisTick: {
                     show: false
@@ -325,10 +350,10 @@ function groupCourseAnalysis () {
         ],
         series: [
             {
-                name: '前365名选课人数',
+                name: '选课人数',
                 type: 'bar',
                 barWidth: 44,
-                data: [1466, 912, 1276, 1107],
+                data: stuNumbers, //[1466, 912, 1276, 1107],
                 label: {
                     normal: {
                         show: true,
@@ -341,25 +366,26 @@ function groupCourseAnalysis () {
                         color: '#108EE9'
                     }
                 }
-            },
-            {
-                name: '招生计划',
-                type: 'bar',
-                barWidth: 44,
-                data: [1683, 537, 726, 1027],
-                label: {
-                    normal: {
-                        show: true,
-                        position: 'top',
-                        formatter: '{c}'
-                    }
-                },
-                itemStyle: {
-                    normal: {
-                        color: '#F5A623'
-                    }
-                }
             }
+            //},
+            //{
+            //    name: '招生计划',
+            //    type: 'bar',
+            //    barWidth: 44,
+            //    data: [1683, 537, 726, 1027],
+            //    label: {
+            //        normal: {
+            //            show: true,
+            //            position: 'top',
+            //            formatter: '{c}'
+            //        }
+            //    },
+            //    itemStyle: {
+            //        normal: {
+            //            color: '#F5A623'
+            //        }
+            //    }
+            //}
         ]
     };
     groupCourseAnalysisBar.setOption(groupCourseAnalysisOption);
@@ -369,11 +395,19 @@ function groupCourseAnalysis () {
 function getAnalysisGroup (tnId, grade) {
     Common.ajaxFun('/selectClassesGuide/getAnalysisGroup.do', 'GET', {
         'tnId': tnId,
-        'grade': grade
+        'grade': grade //两个值: 高二或高三
     }, function (res) {
         if (res.rtnCode == "0000000") {
             var data = res.bizData;
-
+            var datas = {
+                groups: [],
+                stuNumbers: []
+            };
+            $.each(data, function (i, k) {
+                datas.groups.push(k.group);
+                datas.stuNumbers.push(k.stuNumber);
+            });
+            groupCourseAnalysis(datas.groups, datas.stuNumbers);
         }
     }, function (res) {
         layer.msg("出错了");

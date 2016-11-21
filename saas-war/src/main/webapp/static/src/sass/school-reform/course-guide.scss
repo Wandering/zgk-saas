@@ -199,6 +199,34 @@ ul {
         left: 3px;
         top: -2px;
     }
+    #results-list {
+        display: none;
+        width: 268px;
+        position: absolute;
+        left: 100px;
+        top: 44px;
+        height: auto;
+        border: solid 2px #DDDDDD;
+        overflow: hidden;
+        background-color: #FFFFFF;
+        box-sizing: border-box;
+        z-index: 1000;
+        li {
+            text-align: left;
+            border: solid 1px rgba(0, 0, 0, 0);
+            border-width: 1px 10px;
+            box-sizing: border-box;
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            cursor: pointer;
+            border-bottom: 1px solid #EEEEEE;
+            overflow: hidden;
+        }
+        .active {
+            color: #d80c18;
+        }
+    }
 }
 .results-table {
     display: block;

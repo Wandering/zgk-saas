@@ -131,11 +131,18 @@ UniversityDetail.prototype = {
         var that = this;
         var contentHtml = [];
         contentHtml.push('<div class="search-condition">');
-        contentHtml.push('<input type="text" id="search-keywords" class="university-name" placeholder="请输入院校名称" />');
+        contentHtml.push('<input type="text" id="search-keywords" uid="" class="university-name" placeholder="请输入院校名称" />');
         //contentHtml.push('<select id="batch-select">');
         //contentHtml.push('<option value="1">本科一批</option>');
         //contentHtml.push('<option value="8">高职高专</option>');
         //contentHtml.push('</select>');
+        contentHtml.push('<ul id="results-list">');
+        //contentHtml.push('<li>南京理工大学</li>');
+        //contentHtml.push('<li>南京大学</li>');
+        //contentHtml.push('<li>南京航空航天大学</li>');
+        //contentHtml.push('<li>东南大学</li>');
+        //contentHtml.push('<li>南京农业大学</li>');
+        contentHtml.push('</ul>');
         contentHtml.push('<button type="button" id="search-btn" class="red-btn">搜索</button>');
         contentHtml.push('</div>');
         contentHtml.push('<table class="results-table" cellpadding="0" cellspacing="0">');
@@ -313,7 +320,70 @@ $(function () {
     getLatestYearData();
 
     historyEnrollingData();
+
+    /**
+     * 院校文本框添加事件监听
+     */
+    $(document).on('keydown', "#search-keywords", startSearchUniversity)
+        .on('keyup', "#search-keywords", startSearchUniversity)
+        .on('click', "#search-keywords", startSearchUniversity)
+        //.on('mouseover', "#search-keywords", startSearchUniversity)
+        .on('focus', "#search-keywords", startSearchUniversity);
+        //.on('blur', "#search-keywords", startSearchUniversity);
+    $(document).on("click", function (e) {
+        $("#results-list").hide();
+        e.stopPropagation();
+    });
 });
+
+/**
+ * 模糊查询动态接口
+ */
+function startSearchUniversity () {
+    var keywords = $("#search-keywords").val().trim();
+    if (keywords != "") {
+        Common.ajaxFun('/selectClassesGuide/getUniversityName.do', 'GET', {
+            'universityName': keywords,
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData;
+                if (data.majorByUniversityNameAndBatch.length != 0) {
+                    var uArr = [];
+                    $.each(data.majorByUniversityNameAndBatch, function (i, k) {
+                        uArr.push({
+                            id: k.universityId,
+                            name: k.universityName
+                        });
+                    });
+                    uArr.splice(5, uArr.length);
+                    var template = Handlebars.compile($("#university-results-item-data-template").html());
+                    $('#results-list').html(template(uArr));
+                    $('#results-list li').on("click", function () {
+                        $("#search-keywords").val($(this).html());
+                        $("#search-keywords").attr("uid", $(this).attr("uid"));
+                        $("#results-list").hide();
+                    });
+                    $('#results-list li').on("mouseover", function () {
+                        $('#results-list li').removeClass('active');
+                        $(this).addClass('active');
+                        $("#search-keywords").val($(this).html());
+                        $("#search-keywords").attr("uid", $(this).attr("uid"));
+                    });
+
+                    $("#results-list").show();
+                } else {
+                    $("#results-list").hide();
+                    $("#search-keywords").attr("uid", "");
+                }
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
+    } else {
+        $(".course-info .m-list").hide();
+        $("#search-keywords").attr("uid", "");
+    }
+}
 
 //2016年招生数据
 function getLatestYearData () {

@@ -114,32 +114,32 @@
                             <div class="col-xs-12">
                                 <div class="main-title"><h3>组合选课情况分析</h3></div>
                                 <div class="group-course-analysis-box">
-                                    <ul class="group-course-analysis-list">
-                                        <li>
-                                            <input type="radio" name="group-analysis" id="group-item1" checked />
-                                            <label for="group-item1">物理+化学+生物</label>
-                                        </li>
-                                        <li>
-                                            <input type="radio" name="group-analysis" id="group-item2" />
-                                            <label for="group-item2">物理+化学+生物</label>
-                                        </li>
-                                        <li>
-                                            <input type="radio" name="group-analysis" id="group-item3" />
-                                            <label for="group-item3">物理+化学+生物</label>
-                                        </li>
-                                        <li>
-                                            <input type="radio" name="group-analysis" id="group-item4" />
-                                            <label for="group-item4">物理+化学+生物</label>
-                                        </li>
-                                        <li>
-                                            <input type="radio" name="group-analysis" id="group-item5" />
-                                            <label for="group-item5">物理+化学+生物</label>
-                                        </li>
-                                        <li>
-                                            <input type="radio" name="group-analysis" id="group-item6" />
-                                            <label for="group-item6">物理+化学+生物</label>
-                                        </li>
-                                    </ul>
+                                    <%--<ul class="group-course-analysis-list">--%>
+                                        <%--<li>--%>
+                                            <%--<input type="radio" name="group-analysis" id="group-item1" checked />--%>
+                                            <%--<label for="group-item1">物理+化学+生物</label>--%>
+                                        <%--</li>--%>
+                                        <%--<li>--%>
+                                            <%--<input type="radio" name="group-analysis" id="group-item2" />--%>
+                                            <%--<label for="group-item2">物理+化学+生物</label>--%>
+                                        <%--</li>--%>
+                                        <%--<li>--%>
+                                            <%--<input type="radio" name="group-analysis" id="group-item3" />--%>
+                                            <%--<label for="group-item3">物理+化学+生物</label>--%>
+                                        <%--</li>--%>
+                                        <%--<li>--%>
+                                            <%--<input type="radio" name="group-analysis" id="group-item4" />--%>
+                                            <%--<label for="group-item4">物理+化学+生物</label>--%>
+                                        <%--</li>--%>
+                                        <%--<li>--%>
+                                            <%--<input type="radio" name="group-analysis" id="group-item5" />--%>
+                                            <%--<label for="group-item5">物理+化学+生物</label>--%>
+                                        <%--</li>--%>
+                                        <%--<li>--%>
+                                            <%--<input type="radio" name="group-analysis" id="group-item6" />--%>
+                                            <%--<label for="group-item6">物理+化学+生物</label>--%>
+                                        <%--</li>--%>
+                                    <%--</ul>--%>
                                     <div id="groupCourseAnalysisBar" style="width: 100%;height: 350px;margin: 20px auto 0;"></div>
                                 </div>
                             </div>
