@@ -5,7 +5,11 @@ import cn.thinkjoy.saas.dto.AnalysisDto;
 import cn.thinkjoy.saas.dto.MajorDto;
 import cn.thinkjoy.saas.dto.PlanEnrollingDto;
 import cn.thinkjoy.saas.dto.UniversityAndMajorNumberDto;
+import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.service.bussiness.reform.ISelectClassesGuideService;
+import cn.thinkjoy.saas.service.common.ExceptionUtil;
+import com.google.common.collect.Lists;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,8 @@ import java.util.Map;
  */
 @Service("selectClassesGuideServiceImpl")
 public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService {
+
+    private static final Logger logger = Logger.getLogger(SelectClassesGuideServiceImpl.class);
 
     @Autowired
     private SelectClassesGuideDAO selectClassesGuideDAO;
@@ -69,5 +75,20 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
     @Override
     public List<Map<String, Object>> queryDictList(Map<String, Object> map) {
         return selectClassesGuideDAO.queryDictList(map);
+    }
+
+    @Override
+    public List<Map<String, Object>> getAnalysisGroup(String grade, String tnId) {
+        String table = "saas_"+tnId+"_student_excel";
+        List<Map<String,Object>> groups = Lists.newArrayList();
+
+        try{
+            groups = selectClassesGuideDAO.getAnalysisGroup(grade,table);
+        }catch (Exception e){
+            logger.error(table+"不存在,或者字段不存在",e);
+            ExceptionUtil.throwException(ErrorCode.TABLE_NOT_EXIST);
+        }
+
+        return groups;
     }
 }
