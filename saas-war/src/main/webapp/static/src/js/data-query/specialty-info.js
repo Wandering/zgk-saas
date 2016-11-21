@@ -5,7 +5,10 @@
  * @api:http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=44447916
  * */
 
-
+/**
+ * 数据查询-专业信息
+ * @type {{init: SpecialtyInfo.init, getMajoredCategory: SpecialtyInfo.getMajoredCategory, getCategoryMajoredList: SpecialtyInfo.getCategoryMajoredList, addEvent: SpecialtyInfo.addEvent}}
+ */
 var SpecialtyInfo = {
     init: function () {
         this.getMajoredCategory('2'); //默认专科
@@ -55,11 +58,11 @@ var SpecialtyInfo = {
 SpecialtyInfo.init();
 
 
-/*
- * ==================================================================
- * ============================专业信息详情模块============================
- * ==================================================================
- * */
+/**
+ * 专业信息详情模块
+ * @type {{init: SpecialtyDetail.init, getMajoredInfoByCode: SpecialtyDetail.getMajoredInfoByCode, getMajorOpenUniversityList: SpecialtyDetail.getMajorOpenUniversityList, renderMajorOpenUniversityList: SpecialtyDetail.renderMajorOpenUniversityList, getJobOrientation: SpecialtyDetail.getJobOrientation, addEvent: SpecialtyDetail.addEvent}}
+ */
+
 var SpecialtyDetail = {
     init: function () {
         this.addEvent();
@@ -210,17 +213,11 @@ var SpecialtyDetail = {
                 layer.open({
                     type: 1,
                     title: '专业信息详情',
-                    content: $('#specialty-detail').html(),
+                    content: $('#specialty-detail'),
                     area: ['100%', '100%'],
                     maxmin: false,
-                    cancel:function(){
-                        window.location.reload();
-                    }
                 })
             )
-            $('#detail-content').remove(); //万年坑 ==========  一定要清楚
-
-
             that.paramsData = {
                 majoredId: SpecialtyDetail.majoredId,
                 majorType: SpecialtyDetail.majorType,

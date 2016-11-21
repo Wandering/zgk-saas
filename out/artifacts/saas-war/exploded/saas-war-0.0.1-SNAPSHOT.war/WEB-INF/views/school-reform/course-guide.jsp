@@ -90,6 +90,11 @@
                                 <%--<li><!--985院校招生计划人数：876人--></li>--%>
                                 <%--<li><!--211院校招生计划人数：876人--></li>--%>
                             </ul>
+                            <script id="university-results-item-data-template" type="text/x-handlebars-template">
+                                {{#each this}}
+                                <li uid="{{id}}">{{name}}</li>
+                                {{/each}}
+                            </script>
                             <div class="plan-analysis">
                                 <div class="batch-analysis">
                                     <div id="subjectLineChart" style="width: 100%;height: 250px;"></div>

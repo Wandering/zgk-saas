@@ -77,15 +77,12 @@ var InterestTaskQuestion = {
         layer.open({
             type: 1,
             title: '课程兴趣测评',
-            content: $('#course-test-container').html(),
+            content: $('#course-test-container'),
             area: ['100%', '100%'],
             maxmin: false,
             success:function(){
-                $('#course-test-container').remove();
-            },
-            cancel:function(){
-                //window.location.reload();
-            },
+                //$('#course-test-container').remove();
+            }
         })
         this.refreshDom();
     },
@@ -258,62 +255,60 @@ var ResultEvaluation = {
         this.render(assemblyData);
     },
     render: function (data) {
+        var drawChart = function(){
+            var myBarChart = echarts.init(document.getElementById('myBarChart'));
+            barOption = {
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: data.subjectLi, //科目
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: '分数',
+                        type: 'bar',
+                        barWidth: '60%',
+                        data: data.subjectLiScores  //各科分数
+                    }
+                ]
+            };
+            //渲染柱状图
+            myBarChart.setOption(barOption);
+        }
         //弹层展示最终结果
         layer.closeAll();
         layer.open({
             type: 1,
             title: '课程兴趣测评分析结果',
-            content: $('#analyze-result').html(),
+            content: $('#analyze-result'),
             area: ['100%', '100%'],
             maxmin: false,
             success:function(){
-                $('#analyze-result').remove();
-            },
-            cancel:function(){
-                window.location.reload();
+                drawChart();
             },
         })
-        var myBarChart = echarts.init(document.getElementById('myBarChart'));
-        barOption = {
-            color: ['#3398DB'],
-            tooltip : {
-                trigger: 'axis',
-                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                }
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            xAxis : [
-                {
-                    type : 'category',
-                    data : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    axisTick: {
-                        alignWithLabel: true
-                    }
-                }
-            ],
-            yAxis : [
-                {
-                    type : 'value'
-                }
-            ],
-            series : [
-                {
-                    name:'直接访问',
-                    type:'bar',
-                    barWidth: '60%',
-                    data:[10, 52, 200, 334, 390, 330, 220]
-                }
-            ]
-        };
-
-        //渲染柱状图
-        myBarChart.setOption(barOption);
         //测评提示
         var foo = (data.subjectLiScores).sort(function (a, b) {
             return a - b;
@@ -364,7 +359,6 @@ var ResultEvaluation = {
             evaluationTip = '综上所述，你感兴趣的3科是' + interstateSubject + ',但' + subjectListMap[Obj.key[0]] + '（兴趣得分最低的一科）科目缺乏学习热情，可能会导致偏科比较严重，建议多多关注' + subjectListMap[Obj.key[0]] + '（兴趣得分最低的一科）学科~均衡发展';
         }
         $('.advise-tip').html(evaluationTip);
-
     }
 }
 
