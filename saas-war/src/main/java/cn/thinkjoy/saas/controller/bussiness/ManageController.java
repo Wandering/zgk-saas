@@ -246,7 +246,7 @@ public class ManageController {
     @RequestMapping(value = "/enrollingRatio/modify",method = RequestMethod.POST)
     @ResponseBody
     public Map updateEnrollingRatio(@RequestBody Request request){
-        EnrollingRatio enrollingRatio =(EnrollingRatio)request.getData().get("enrollingRatio");
+        EnrollingRatio enrollingRatio =JSON.parseObject(request.getData().get("EnrollingRatioObj").toString(),EnrollingRatio.class);
         boolean result = iexEnrollingRatioService.updateEnrollingRatio(enrollingRatio);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
