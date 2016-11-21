@@ -1,6 +1,7 @@
 package cn.thinkjoy.saas.dao.bussiness.reform;
 
 import cn.thinkjoy.saas.dto.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -20,4 +21,19 @@ public interface SelectClassesGuideDAO {
     int selectAnalysisDisciplineCount(Map map);
 
     List<Map<String, Object>> queryDictList(Map map);
+    List<TrineDto> selectEnrollingNumberByBatch(Map map);
+    List<EnrollingNumberDto> selectEnrollingNumber(Map map);
+
+    /**
+     * 根据年级查询学校内学生选课情况
+     *
+     * @param grade 年级
+     * @param table 表明(动态生成)
+     * @return
+     */
+    List<Map<String, Object>> getAnalysisGroup(
+            @Param("grade") String grade,
+            @Param("table") String table
+    );
+
 }
