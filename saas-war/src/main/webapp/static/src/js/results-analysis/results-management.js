@@ -326,9 +326,6 @@ ResultsManagementFun.prototype = {
             layer.msg("出错了");
         });
     },
-    detailsSave: function () {
-
-    },
     deleteExamDetail:function(examDetailId){
         var that = this;
         Common.ajaxFun('/scoreAnalyse/deleteExamDetail', 'GET', {
