@@ -17,14 +17,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
-
 @Service("ExamDetailServiceImpl")
-public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDetail>, ExamDetail> implements IExamDetailService<IBaseDAO<ExamDetail>,ExamDetail>{
+public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDetail>, ExamDetail>
+    implements IExamDetailService<IBaseDAO<ExamDetail>, ExamDetail>
+{
     @Autowired
     private IExamDetailDAO examDetailDAO;
 
     @Override
-    public IBaseDAO<ExamDetail> getDao() {
+    public IBaseDAO<ExamDetail> getDao()
+    {
         return examDetailDAO;
     }
 
@@ -92,6 +94,32 @@ public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDeta
     public List<Map<String, Object>> getAvgScoresForClassStudent(Map<String, String> paramMap)
     {
         return examDetailDAO.getAvgScoresForClassStudent(paramMap);
+    }
+
+    @Override
+    public List<Map<String, Object>> getMostAttentionListForClass(Map<String, String> paramMap)
+    {
+        return examDetailDAO.getMostAttentionListForClass(paramMap);
+    }
+
+    @Override
+    public boolean checkIsTableExist(Map<String, String> paramMap)
+    {
+        Map<String, Object> map = examDetailDAO.checkIsTableExist(paramMap);
+        return map != null;
+    }
+
+    @Override
+    public boolean checkIsColumnExist(Map<String, String> paramMap)
+    {
+        Map<String, Object> map = examDetailDAO.checkIsColumnExist(paramMap);
+        return map != null;
+    }
+
+    @Override
+    public List<Map<String, Object>> getClassBossList(Map<String, String> paramMap)
+    {
+        return examDetailDAO.getClassBossList(paramMap);
     }
 //    @Override
 //    public void insert(BaseDomain entity) {
@@ -207,6 +235,5 @@ public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDeta
 //    public BizData4Page queryPageByDataPerm(String resUri, Map conditions, int curPage, int offset, int rows) {
 //        return super.doQueryPageByDataPerm(resUri, conditions, curPage, offset, rows);
 //    }
-
 
 }

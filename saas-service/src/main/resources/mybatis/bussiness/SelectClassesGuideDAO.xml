@@ -158,4 +158,20 @@
         from zgk2.zgk_data_dict where type=#{type}
     </select>
 
+    <select id="selectEnrollingNumberByBatch" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.TrineDto">
+        select dd.name as batchName,count(pp.majorCode) as majorNumber,sum(pp.planEnrolling) as planEnrollingNumber
+        from zgk2.zgk_university_major_enrolling_plan pp
+        left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=pp.batch
+        where pp.areaId=#{areaId} and pp.year=#{year}
+        group by pp.batch;
+    </select>
+
+    <select id="selectEnrollingNumber" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.EnrollingNumberDto">
+        select dd.name as batchName,count(DISTINCT pp.universityId) as universityNumber,sum(pp.planEnrolling) as planEnrollingNumber,pp.year as year
+        from zgk2.zgk_university_major_enrolling_plan pp
+        left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=pp.batch
+        where  pp.areaId=#{areaId} and pp.year=#{year}
+        group by pp.batch,pp.year
+    </select>
+
 </mapper>

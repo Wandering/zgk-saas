@@ -7,8 +7,8 @@ import java.io.Serializable;
  */
 public class TrineDto implements Serializable {
     private String batchName;
-    private String majorNumber;
-    private String planEnrollingNumber;
+    private int majorNumber;
+    private int planEnrollingNumber;
     private String percent;
 
     public String getBatchName() {
@@ -19,19 +19,19 @@ public class TrineDto implements Serializable {
         this.batchName = batchName;
     }
 
-    public String getMajorNumber() {
+    public int getMajorNumber() {
         return majorNumber;
     }
 
-    public void setMajorNumber(String majorNumber) {
+    public void setMajorNumber(int majorNumber) {
         this.majorNumber = majorNumber;
     }
 
-    public String getPlanEnrollingNumber() {
+    public int getPlanEnrollingNumber() {
         return planEnrollingNumber;
     }
 
-    public void setPlanEnrollingNumber(String planEnrollingNumber) {
+    public void setPlanEnrollingNumber(int planEnrollingNumber) {
         this.planEnrollingNumber = planEnrollingNumber;
     }
 

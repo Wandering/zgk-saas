@@ -1,20 +1,73 @@
 var tnId = Common.cookie.getCookie('tnId');
-
-
-
-function SchoolResultsAnalysis() {
+function ClassResultsAnalysis() {
     this.init();
-    this.classSel='';
-    this.subjectSel='';
-    this.count='';
+    this.deGrade='';
 }
-
-SchoolResultsAnalysis.prototype = {
-    constructor: SchoolResultsAnalysis,
+ClassResultsAnalysis.prototype = {
+    constructor: ClassResultsAnalysis,
     init: function () {
-        this.getGrade();
-        this.selGrade();
+        var that = this;
+        that.getGrade();
+        that.selGrade();
+        that.getExamProperties('grade');
     },
+    getExamProperties: function (type) {
+        var that = this;
+        Common.ajaxFun('/scoreAnalyse/getExamProperties', 'GET', {
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                $.each(res.bizData, function (i,v) {
+                    if(type=='grade'){
+                        if(v.name=='defaultClassGrade'){
+                            $('#grade-body input[name="results-radio"][value="'+ v.value +'"]').attr('checked','checked');
+                            that.getClassesNameByGrade(v.value);
+                        }
+                    }else if(type=='class'){
+                        if(v.name=='defaultClassGrade'){
+                            that.deGrade = v.value;
+                        }
+                        if(v.name=='defaultClass'){
+                            $('#select option[value="'+ v.value +'"]').prop('selected','selected');
+                            $('.sel-class-txt').text(v.value);
+                            that.getAvgScoresForClass(that.deGrade,v.value);
+                            that.getStuNumberScoreChangeForClass(that.deGrade,v.value);
+                            that.setLine(that.deGrade,v.value);
+                            if (that.deGrade.indexOf('高三') >= 0 || that.deGrade.indexOf('高3') >= 0) {
+                                that.getOverLineDetailForClass(that.deGrade,v.value,'batchAll');
+                            } else {
+
+                            }
+                        }
+                    }
+                });
+
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        }, true);
+    },
+    // 更新年级后台
+    updateExamProperties:function(defaultClass,grade){
+        Common.ajaxFun('/scoreAnalyse/updateExamProperties', 'GET', {
+            'tnId': tnId,
+            'name': defaultClass,
+            'value': grade
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                if(res.bizData==true){
+                    // 提交成功
+                }
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
+    // 获取年级
     getGrade: function () {
         Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
@@ -27,352 +80,168 @@ SchoolResultsAnalysis.prototype = {
             layer.msg(res.msg);
         }, true);
     },
+    // 选择年级
     selGrade: function () {
         var that = this;
         // 选择高一
-        $('input[name="results-radio"]').click(function () {
-            var radioV = $('input[name="results-radio"]:checked').val();
-            that.selSortOnline(radioV);
-            that.coreStudent(radioV);
-            that.getStepList(radioV, 10, 10);
-            that.getMostAdvancedNumbers(radioV, 10, 20);
+        $('input[name="results-radio"]').change(function () {
+            $(this).attr('checked','checked');
+            var radioV = $(this).val();
+            that.getClassesNameByGrade(radioV);
+            that.updateExamProperties('defaultClassGrade',radioV);
             if (radioV.indexOf('高三') >= 0 || radioV.indexOf('高3') >= 0) {
-                $('.grade3-main').show();
-                that.getOverLineNumberByDate(radioV);
+                $('.grade-type').text('本科线成绩分析');
             } else {
-                $('.grade3-main').hide();
+                $('.grade-type').text('重点线成绩分析');
+            }
+        });
+    },
+    // 选择班级
+    selClass: function (grade) {
+        var that = this;
+        // 选择高一
+        $('#select').on('change',function () {
+            var selV =  $(this).find("option:selected").val();
+            $('.sel-class-txt').text(selV);
+            that.getAvgScoresForClass(grade,selV);
+            that.getStuNumberScoreChangeForClass(grade,selV);
+            that.updateExamProperties('defaultClass',selV);
+            that.setLine(grade,selV);
+            if (grade.indexOf('高三') >= 0 || grade.indexOf('高3') >= 0) {
+                that.getOverLineDetailForClass(grade,selV,'batchAll');
+            } else {
+
             }
         });
 
 
-        // 默认高一年级
-
-        // 上线排序
-
-
+        that.chartTab();
     },
-    undergraduateLine: function () {  // 各班情况统计
-        Common.ajaxFun('/scoreAnalyse/getEnrollingNumberInfo', 'GET', {
-            'tnId': tnId
+    // 通过年级获取班级
+    getClassesNameByGrade:function(grade){
+        var that = this;
+        $('.title-2 .class-sel').html('');
+        Common.ajaxFun('/scoreAnalyse/getClassesNameByGrade', 'GET', {
+            'tnId':tnId,
+            'grade':grade
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                $('.batchOne').text(res.bizData.batchOne);
-                $('.batchTwo').text(res.bizData.batchTwo);
-                $('.batchThr').text(res.bizData.batchThr);
+                if(res.bizData.length==0){
+                    layer.msg('您还没有设置班级');
+                }else{
+                    var classOption=[];
+                    $.each(res.bizData,function(i,v){
+                        classOption.push('<option class="opt-item" value="'+ v +'">'+ v +'</option>');
+                    });
+                    $('.title-2 .class-sel').append(classOption);
+                    that.selClass(grade);
+                    that.getExamProperties('class');
+                }
             } else {
-                layer.msg(res.msg)
+                layer.msg(res.msg);
             }
         }, function (res) {
             layer.msg(res.msg);
         });
     },
-    selSortOnline: function (grade) {
+    // chartTab
+    chartTab:function(){
         var that = this;
-        $('input[name="sort-radio"]').click(function () {
-            var orderBy = $('input[name="sort-radio"]:checked').val();
-            Common.ajaxFun('/scoreAnalyse/getOverLineNumberDetail', 'GET', {  // 各班上线人数统计
-                'tnId': tnId,
-                'grade': grade,
-                'orderBy': orderBy
-            }, function (res) {
-                console.log(res)
-                if (res.rtnCode == "0000000") {
-                    var myTemplate = Handlebars.compile($("#sort-template").html());
-                    $('#sort-tbody').html(myTemplate(res));
-                    var sortTheadTemplate = Handlebars.compile($("#sort-thead-template").html());
-                    $('#sort-thead').html(sortTheadTemplate(res));
-                } else {
-                    layer.msg(res.msg)
-                }
-            }, function (res) {
-                layer.msg(res.msg)
-            });
+        $('.chart-tab button').on('click',function(){
+            var index = $(this).index();
+            $(this).addClass('cur').siblings().removeClass('cur');
+            $('.chart-box').addClass('hds').eq(index).removeClass('hds');
         });
+        $('.chart-tab button:eq(0)').click();
+        that.totalScoreChart();
     },
-    coreStudent: function (grade) { // 重点关注学生
-        $('#core-thead,#core-tbody').html('');
+    // 拉取班级趋势数据
+    getAvgScoresForClass:function(grade,className){
         var that = this;
-        Common.ajaxFun('/scoreAnalyse/getMostAttentionNumber', 'GET', {
-            'tnId': tnId,
-            'grade': grade
+        Common.ajaxFun('/scoreAnalyse/getAvgScoresForClass', 'GET', {
+            'tnId':tnId,
+            'grade':grade,
+            'className':className
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                var data = res.bizData;
-                var headArr = '<tr>';
-                for (var i in data[0]) {
-                    switch (i) {
-                        case "batchName":
-                            headArr += '<th class="center">本科</th>';
-                            break;
-                        case "batchTotal":
-                            headArr += '<th class="center">总人数</th>';
-                            break;
-                        default:
-                            headArr += '<th class="center">' + i + '</th>';
-                            break;
+                var dataJson = res.bizData;
+                if(dataJson.length>0){
+                    var dateData = [];
+                    var totalScoreData = [];
+                    var subjectData = [];
+                    var datas = [];
+                    var arrMaxMin = [];
+                    for(var i in dataJson) {
+                        dateData.push(dataJson[i].examTime);
+                        totalScoreData.push(parseInt(dataJson[i]['总分']));
+                        delete dataJson[i].examTime;
+                        delete dataJson[i].className;
+                        delete dataJson[i]['总分'];
+                        for(var l in dataJson[i]){
+                            arrMaxMin.push(dataJson[i][l]);
+                        }
                     }
-                }
-                headArr += '</tr>';
-                $('#core-thead').append(headArr);
-                var tbodyArr = '';
-                $.each(data, function (i, v) {
-                    tbodyArr += '<tr>';
-                    $.each(v, function (n, k) {
-                        switch (k) {
-                            case "batchOne":
-                                tbodyArr += '<td class="center"><a href="javascript:;" class="batch-btn" data="batchOne">一本</a></td>';
-                                break;
-                            case "batchTwo":
-                                tbodyArr += '<td class="center"><a href="javascript:;" class="batch-btn" data="batchTwo">二本</a></td>';
-                                break;
-                            case "batchThr":
-                                tbodyArr += '<td class="center"><a href="javascript:;" class="batch-btn" data="batchThr">三本</a></td>';
+                    for(var k in dataJson[0]){
+                        switch (k){
+                            case 'className':
+                            case 'examTime':
+                            case '总分':
                                 break;
                             default:
-                                tbodyArr += '<td class="center">' + k + '</td>';
+                                subjectData.push(k);
                                 break;
                         }
-                    });
-                    tbodyArr += '</tr>';
-                });
-                $('#core-tbody').append(tbodyArr);
-                // 重点关注学生图表
-                $('body a.batch-btn').on('click', function () {
-                    var batchData = $(this).attr('data');
-                    var batchMainLayer = [];
-                    batchMainLayer.push('<div class="row" id="batch-main-layer">');
-                    batchMainLayer.push('<div class="col-xs-12">');
-                    batchMainLayer.push('<div class="class-chart">');
-                    batchMainLayer.push('<div id="class-chart" style="width: 100%;height: 250px;"></div>');
-                    batchMainLayer.push('</div>');
-                    batchMainLayer.push('<div class="subject-chart">');
-                    batchMainLayer.push('<div id="subject-chart" class="" style="width: 100%;height: 250px;"></div>');
-                    batchMainLayer.push('</div>');
-                    batchMainLayer.push('<div class="sel-main">');
-                    batchMainLayer.push('<select class="grade-sel"></select>');
-                    batchMainLayer.push('<select class="subject-sel"></select>');
-                    batchMainLayer.push('</div>');
-                    batchMainLayer.push('<div class="table-details-main">');
-                    batchMainLayer.push('<table class="table table-hover"><thead><tr><th class="center">班级</th><th class="center">学生名称</th><th class="center">年级排名</th><th class="center">弱势学科一</th><th class="center">弱势学科二</th></tr></thead><tbody id="details-main-tbody"></tbody></table>');
-                    batchMainLayer.push('<div class="tcdPageCode"></div>');
-                    batchMainLayer.push('</div>');
-                    batchMainLayer.push('</div>');
-                    batchMainLayer.push('</div>');
-                    layer.open({
-                        type: 1,
-                        title: '学生明细',
-                        offset: 'auto',
-                        area: ['900px', '600px'],
-                        content: batchMainLayer.join(''),
-                        success: function (layero, index) {
-                            that.getMostAdvancedNumbersChart(grade,batchData);
-                            that.selClassFun(grade,batchData);
-                            that.selSubjectFun(grade,batchData);
-                            that.getMostAttentionPage(grade,batchData,that.classSel,that.subjectSel,0,3);
-                            $(".tcdPageCode").createPage({
-                                pageCount: that.count,
-                                current: 1,
-                                backFn: function (p) {
-                                    that.getMostAttentionPage(grade,batchData,that.classSel,that.subjectSel,(p - 1) * 3,3);
-                                }
-                            });
-
+                    }
+                    for(var j in subjectData){
+                        var subArr = [];
+                        for(var g in dataJson) {
+                            delete dataJson[g].examTime;
+                            delete dataJson[g].className;
+                            delete dataJson[g]['总分'];
+                            subArr.push(dataJson[g][subjectData[j]])
                         }
-                    });
-                });
+                        var seriesObj = {
+                            name:subjectData[j],
+                            type : 'line',
+                            data:subArr
+                        };
+                        datas.push(seriesObj);
+                    }
+                    that.totalScoreChart(dateData,totalScoreData);
+                    that.subjectsChart(subjectData,dateData,datas,arrMaxMin);
+                }
             } else {
-                layer.msg(res.msg)
+                layer.msg(res.msg);
             }
         }, function (res) {
             layer.msg(res.msg);
         });
     },
-    // 进步较大学生
-    getMostAdvancedNumbersChart: function (grade, batchName) {
-        var that = this;
-        Common.ajaxFun('/scoreAnalyse/getMostAttentionNumberChart', 'GET', {
-            'tnId': tnId,
-            'batchName': batchName,
-            'grade': grade
-        }, function (res) {
-            if (res.rtnCode == "0000000") {
-                $('.grade-sel,.subject-sel').html('');
-                // 学生所在班级统计
-                var itemData = [];
-                var classData = [];
-                var gradeSel = [];
-                gradeSel.push('<option value="">请选择班级</option>');
-                $.each(res.bizData.classChartData, function (i, v) {
-                    itemData.push(v.className);
-                    var classDataObj = {};
-                    classDataObj['value'] = v.total;
-                    classDataObj['name'] = v.className;
-                    classData.push(classDataObj);
-                    gradeSel.push('<option value="' + v.className + '">' + v.className + '</option>');
-                });
-                $('.grade-sel').append(gradeSel);
-                that.classChart(itemData, classData);
-                // 弱势学科统计
-                var subjectItemData = [];
-                var subjectClassData = [];
-                var subjectSel = [];
-                subjectSel.push('<option value="">请选择科目</option>')
-                $.each(res.bizData.courseChartData, function (i, v) {
-                    subjectItemData.push(v.courseName);
-                    var subjectClassDataObj = {};
-                    subjectClassDataObj['value'] = v.total;
-                    subjectClassDataObj['name'] = v.courseName;
-                    subjectClassData.push(subjectClassDataObj);
-                    subjectSel.push('<option value="' + v.courseName + '">' + v.courseName + '</option>')
-                });
-                $('.subject-sel').append(subjectSel);
-                that.subjectChart(subjectItemData, subjectClassData);
-            }
-        }, function (res) {
-            layer.msg(res.msg);
-        });
-    },
-    classChart: function (itemData, classData) {
-        var classChart = echarts.init(document.getElementById('class-chart'));
-        var classOption = {
+    // 查看总分趋势
+    totalScoreChart:function(dateData,totalScoreData){
+        var totalScoreChart = echarts.init(document.getElementById('totalScoreChart-chart'));
+        var totalScoreChartOption = {
             title: {
-                text: '学生所在班级统计',
-                x: 'center'
+                text: '班级平均分排名',
+                left: 'left',
+                textStyle:{
+                    fontSize:12
+                }
             },
             tooltip: {
                 trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
+                formatter: '{a} <br/>{b} : {c}'
             },
             legend: {
-                orient: 'vertical',
-                left: '20',
-                top: '20',
-                data: itemData
+                left: 'left'
             },
-            series: [
-                {
-                    name: '学生所在班级统计',
-                    type: 'pie',
-                    radius: '40%',
-                    center: ['65%', '60%'],
-                    data: classData,
-                    itemStyle: {
-                        emphasis: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                    }
-                }
-            ]
-        };
-        classChart.setOption(classOption);
-    },
-    subjectChart: function (itemData, classData) {
-        var subjectChart = echarts.init(document.getElementById('subject-chart'));
-        var subjectOption = {
-            title: {
-                text: '弱势学科统计',
-                x: 'center'
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
-            },
-            legend: {
-                orient: 'vertical',
-                left: '20',
-                top: '20',
-                data: itemData
-            },
-            series: [
-                {
-                    name: '弱势学科统计',
-                    type: 'pie',
-                    radius: '40%',
-                    center: ['65%', '60%'],
-                    data: classData,
-                    itemStyle: {
-                        emphasis: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                    }
-                }
-            ]
-        };
-        subjectChart.setOption(subjectOption);
-    },
-    // 进步较大学生页面列表
-    getMostAdvancedNumbers: function (grade, stepStart, stepEnd) {
-        Common.ajaxFun('/scoreAnalyse/getMostAdvancedNumbers', 'GET', {
-            'tnId': tnId,
-            'grade': grade,
-            'stepStart': stepStart,
-            'stepEnd': stepEnd
-        }, function (res) {
-            if (res.rtnCode == "0000000") {
-
-            } else {
-                layer.msg(res.msg);
-            }
-        }, function (res) {
-            layer.msg(res.msg);
-        });
-    },
-    // 进步名次下拉列表
-    getStepList: function (grade, stepStart, stepLength) {
-        Common.ajaxFun('/scoreAnalyse/getStepList', 'GET', {
-            'tnId': tnId,
-            'grade': grade,
-            'stepStart': stepStart,
-            'stepLength': stepLength
-        }, function (res) {
-            if (res.rtnCode == "0000000") {
-
-            } else {
-                layer.msg(res.msg);
-            }
-        }, function (res) {
-            layer.msg(res.msg);
-        });
-    },
-    // 高三浙江批次线图表
-    getOverLineNumberByDate: function (grade) {
-        var that = this;
-        Common.ajaxFun('/scoreAnalyse/getOverLineNumberByDate', 'GET', {
-            'grade': grade,
-            'lineScore': '439'  //浙江理科二本
-        }, function (res) {
-            if (res.rtnCode == "0000000") {
-                var dateData = [];
-                var popData = [];
-                $.each(res.bizData, function (i, v) {
-                    dateData.push(v.examTime);
-                    popData.push(v.total);
-                });
-                that.lineNumberByDateChart(dateData, popData);
-            } else {
-                layer.msg(res.msg);
-            }
-        }, function (res) {
-            layer.msg(res.msg);
-        });
-    },
-    lineNumberByDateChart: function (dateData, popData) {
-        var lineNumberByDateChart = echarts.init(document.getElementById('lineNumberByDate-chart'));
-        var lineNumberByDateOption = {
-            title: {
-                text: '16年浙江本科批次线:439分'
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            toolbox: {
-                feature: {
-                    saveAsImage: {}
-                }
+            xAxis: {
+                type: 'category',
+                name: 'x',
+                splitLine: {show: false},
+                //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
+                data: ["2016-02-02", "2016-03-03", "2016-04-07", "2016-05-10", "2016-06-14"]
+                //data: dateData
             },
             grid: {
                 left: '3%',
@@ -380,113 +249,190 @@ SchoolResultsAnalysis.prototype = {
                 bottom: '3%',
                 containLabel: true
             },
-            xAxis: [
-                {
-                    type: 'category',
-                    name: '考试时间',
-                    boundaryGap: false,
-                    //data : ['周一','周二','周三','周四','周五','周六','周日']
-                    data: dateData
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value',
-                    name: '上线人数'
-                }
-            ],
+            yAxis: {
+                type: 'value',
+                min:Array.min(totalScoreData),
+                max:Array.max(totalScoreData)
+            },
             series: [
                 {
-                    name: '上线人数',
+                    name: '3的指数',
                     type: 'line',
-                    stack: '总量',
-                    areaStyle: {normal: {}},
-                    //data:[120, 132, 101, 134, 90, 230, 210]
-                    data: popData
+                    //data: [1, 3, 9, 27, 81, 247, 741, 2223, 6669]
+                    data: totalScoreData
                 }
             ]
         };
-        lineNumberByDateChart.setOption(lineNumberByDateOption);
+        totalScoreChart.setOption(totalScoreChartOption);
     },
-    getMostAttentionPage:function(grade,batchName,className,courseName,offset,rows){
+    subjectsChart:function(subjectData,dateData,datas,arrMaxMin){
+        var subjectsChart = echarts.init(document.getElementById('subjectsChart-chart'));
+        var subjectsChartOption = {
+            title: {
+                text: '班级平均分排名',
+                left: 'left',
+                textStyle:{
+                    fontSize:12
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b} : {c}'
+            },
+            legend: {
+                left: 'center',
+                //data: ['2的指数', '3的指数']
+                data: subjectData
+            },
+            xAxis: {
+                type: 'category',
+                splitLine: {show: false},
+                //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
+                data: dateData
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            yAxis: {
+                type: 'value',
+                min:Array.min(arrMaxMin),
+                max:Array.max(arrMaxMin)
+            },
+            series:datas
+        };
+        subjectsChart.setOption(subjectsChartOption);
+    },
+    // 查看各科情况
+    // 人数分布变化
+    getStuNumberScoreChangeForClass:function(grade,className){
         var that = this;
-        Common.ajaxFun('/scoreAnalyse/getMostAttentionPage', 'GET', {
-            'tnId': tnId,
-            'grade': grade,
-            'batchName': batchName,
-            'className': className,
-            'courseName': courseName,
-            'offset': offset,
-            'rows': rows
+        Common.ajaxFun('/scoreAnalyse/getStuNumberScoreChangeForClass', 'GET', {
+            'tnId':tnId,
+            'grade':grade,
+            'className':className
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                that.count = parseInt(Math.ceil(res.bizData.total / rows));
-                var myTemplate = Handlebars.compile($("body #details-main-template").html());
-                $('body #details-main-tbody').html(myTemplate(res));
+                var myTemplate = Handlebars.compile($("#student-change-template").html());
+                Handlebars.registerHelper('agree_button', function() {
+                    return new Handlebars.SafeString(
+                       '<tr><td>' + this.学生姓名 + '</td><td>' + this.变化趋势 + '</td></tr>'
+                    );
+                });
+                $('#student-change-tbody').html(myTemplate(res));
+                that.changeStudent();
             } else {
                 layer.msg(res.msg);
             }
         }, function (res) {
             layer.msg(res.msg);
-        },true);
+        });
     },
-    // 弹层班级选择
-    selClassFun:function(grade,batchData){
-        var that = this;
-        $('.grade-sel').change(function(){
-            var selClassV = $(this).children('option:selected').val();
-            that.classSel=selClassV;
-            that.getMostAttentionPage(grade,batchData,selClassV,that.subjectSel,0,3);
-            $(".tcdPageCode").createPage({
-                pageCount: that.count,
-                current: 1,
-                backFn: function (p) {
-                    that.getMostAttentionPage(grade,batchData,selClassV,that.subjectSel,(p - 1) * 3,3);
-                }
+    changeStudent:function(){
+        $('.change-student-btn').on('click',function(){
+            var data = $(this).attr('data');
+            var studentChangeTable = '<table class="student-change-table table table-hover"><thead><tr><th class="center">学生姓名</th><th class="center">变化趋势</th></tr></thead><tbody>'+ data +'</tbody></table>'
+            layer.open({
+                type: 1,
+                title: '变化人数详情',
+                offset: 'auto',
+                area: ['362px', '350px'],
+                content: studentChangeTable
             });
-        })
+        });
     },
-    // 弹层科目选择
-    selSubjectFun:function(grade,batchData){
+    // 变化人数弹层
+
+    // 个人成绩变化趋势
+    getAvgScoresForClassStudent:function(){
+        Common.ajaxFun('/scoreAnalyse/getStuNumberScoreChangeForClass', 'GET', {
+            'tnId':tnId,
+            'grade':grade,
+            'className':className,
+            'batch':batch
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var myTemplate = Handlebars.compile($("#online-template").html());
+                $('#online-tbody').html(myTemplate(res));
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
+    // 设置关注位次线
+    setLine:function(grade,className){
         var that = this;
-        $('.subject-sel').change(function(){
-            var selSubjectV = $(this).children('option:selected').val();
-            that.subjectSel=selSubjectV;
-            that.getMostAttentionPage(grade,batchData,that.classSel,selSubjectV,0,3);
-            $(".tcdPageCode").createPage({
-                pageCount: that.count,
-                current: 1,
-                backFn: function (p) {
-                    that.getMostAttentionPage(grade,batchData,that.classSel,selSubjectV,(p - 1) * 3,3);
-                }
-            });
-        })
+        $('#set-line-btn').on('click',function(){
+            var setLine = $.trim($('#set-line').val());
+            if(setLine==''){
+                layer.msg('请输入位次线!');
+                return false;
+            }
+            that.getOverLineDetailForClassTwo(grade,className,setLine)
+        });
     },
-    progressStudent: function () {
-        //Common.ajaxFun('/scoreAnalyse/getMostAttentionNumber', 'GET', {
-        //    'tnId': tnId,
-        //    'grade': grade
-        //}, function (res) {
-        //    console.log(res)
-        //    if (res.rtnCode == "0000000") {
-        //        var myTemplate = Handlebars.compile($("#progress-template").html());
-        //        $('#progress-tbody').html(myTemplate(res));
-        //    }
-        //}, function (res) {
-        //    layer.msg(res.msg);
-        //});
+    // 班级前多少名人数统计  高三
+    getOverLineDetailForClass:function(grade,className,batch){
+        Common.ajaxFun('/scoreAnalyse/getOverLineDetailForClass', 'GET', {
+            'tnId':tnId,
+            'grade':grade,
+            'className':className,
+            'batch':batch
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var myTemplate = Handlebars.compile($("#online-template").html());
+                $('#online-tbody').html(myTemplate(res));
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
+    // 班级上线人数统计（高一，高二）
+    getOverLineDetailForClassTwo:function(grade,className,line){
+        Common.ajaxFun('/scoreAnalyse/getOverLineDetailForClassTwo', 'GET', {
+            'tnId':tnId,
+            'grade':grade,
+            'className':className,
+            'line':line
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var myTemplate = Handlebars.compile($("#overLineDetail-template").html());
+                $('#overLineDetail-tbody').html(myTemplate(res));
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
     }
+
+    // 重点关注学生
+    // 进步较大学生
+    // 选择进步名次
+    // 选择年级排名
 
 };
 
-var SchoolResultsAnalysisIns = new SchoolResultsAnalysis();
-SchoolResultsAnalysisIns.undergraduateLine();
-//SchoolResultsAnalysisIns.getMostAdvancedNumbers('高一年级1','batchThr');
+var ClassResultsAnalysisIns = new ClassResultsAnalysis();
 
 $(function () {
+
 
 
 });
 
 
+Array.max = function (array) {
+    return Math.max.apply(Math, array);
+};
+
+Array.min = function (array) {
+    return Math.min.apply(Math, array);
+};
 

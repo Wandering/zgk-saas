@@ -1,10 +1,7 @@
 package cn.thinkjoy.saas.service.impl.bussiness.reform;
 
 import cn.thinkjoy.saas.dao.bussiness.reform.SelectClassesGuideDAO;
-import cn.thinkjoy.saas.dto.AnalysisDto;
-import cn.thinkjoy.saas.dto.MajorDto;
-import cn.thinkjoy.saas.dto.PlanEnrollingDto;
-import cn.thinkjoy.saas.dto.UniversityAndMajorNumberDto;
+import cn.thinkjoy.saas.dto.*;
 import cn.thinkjoy.saas.service.bussiness.reform.ISelectClassesGuideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,5 +66,24 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
     @Override
     public List<Map<String, Object>> queryDictList(Map<String, Object> map) {
         return selectClassesGuideDAO.queryDictList(map);
+    }
+
+    @Override
+    public List<TrineDto> selectEnrollingNumberByBatch(Map map) {
+        List<TrineDto> trineDtoList=selectClassesGuideDAO.selectEnrollingNumberByBatch(map);
+        int count=0;
+        for(TrineDto trineDto:trineDtoList){
+            count=count+trineDto.getMajorNumber();
+        }
+        for(TrineDto trineDto:trineDtoList){
+            double precent=Math.round((double)trineDto.getMajorNumber()*100/count)/100.0;
+            trineDto.setPercent(String.valueOf(precent));
+        }
+        return trineDtoList;
+    }
+
+    @Override
+    public List<EnrollingNumberDto> selectEnrollingNumber(Map map) {
+        return selectClassesGuideDAO.selectEnrollingNumber(map);
     }
 }
