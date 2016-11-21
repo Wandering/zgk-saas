@@ -40,11 +40,11 @@
                                 <span class="txt-t"></span>
                                 <div class="btns">
                                     <button class="btn btn-pink" id="addRole-btn">添加年份</button>
-                                    <button class="btn btn-inverse">修改</button>
+                                    <button class="btn btn-inverse" id="updateRole-btn">修改</button>
                                 </div>
                             </div>
                             <div class="">
-                                <table id="" class="table">
+                                <table id="ratio-manage-table" class="table">
                                     <thead>
                                         <tr>
                                             <th class="center">
@@ -62,7 +62,7 @@
                                             <th class="center">高职上线人数</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="ratio-manage-list" class="check-template">
                                         <%--<tr>--%>
                                             <%--<td class="center">--%>
                                                 <%--<label>--%>

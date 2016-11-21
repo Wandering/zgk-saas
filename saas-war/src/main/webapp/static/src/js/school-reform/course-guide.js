@@ -10,8 +10,9 @@ SubjectAnalysis.prototype = {
     constructor: SubjectAnalysis,
     init: function () {
         $('input[name="subject-analysis"]').eq(0).prop('checked', true);
-        var subject = $('input[name="subject-analysis"]').eq(0).next().text();
-        this.getUniversityAndMajorNumber(subject);
+        var subject = $('input[name="subject-analysis"]').eq(0).next().text(),
+            subjectTitle = subject;
+        this.getUniversityAndMajorNumber(subject, subjectTitle);
         this.getPlanEnrollingByProperty(subject);
         this.getAnalysisBatch(subject);
         this.getAnalysisDiscipline(subject);
@@ -23,7 +24,11 @@ SubjectAnalysis.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData.universityAndMajorNumber;
-                $('.require-num').html(data.universityNumber + '所院校的' + data.majorNumber + '个专业对' + subjectTitle + '有要求');
+                if (subjectTitle != '不限学科') {
+                    $('.require-num').html(data.universityNumber + '所院校的' + data.majorNumber + '个专业对' + subjectTitle + '有要求');
+                } else {
+                    $('.require-num').html(data.universityNumber + '所院校的' + data.majorNumber + '个专业选课要求为不限学科');
+                }
             }
         }, function (res) {
             layer.msg("出错了");
@@ -69,7 +74,27 @@ SubjectAnalysis.prototype = {
             'subject': subject
         }, function (res) {
             if (res.rtnCode == "0000000") {
-
+                var data = res.bizData.analysisDiscipline;
+                var types = {
+                    type: [],
+                    datas: []
+                };
+                $.each(data, function (i, k) {
+                    types.type.push(k.disciplineName);
+                    types.datas.push({
+                        value: k.number,
+                        name: k.disciplineName
+                    });
+                    if (i <= 5) {
+                        $('.major-type-top thead tr th').eq(i+1).html(k.disciplineName);
+                        $('.major-type-top tbody tr td').eq(i+1).html(k.number);
+                    } else {
+                        var n = i % 5;
+                        $('.major-type-bottom thead tr th').eq(n).html(k.disciplineName);
+                        $('.major-type-bottom tbody tr td').eq(n).html(k.number);
+                    }
+                });
+                majorTypeAnalysis(types.type, types.datas);
             }
         }, function (res) {
             layer.msg("出错了");
@@ -92,32 +117,26 @@ SubjectAnalysis.prototype = {
     }
 };
 
-function UniversityDetail (title, subjectName) {
+function UniversityDetail () {
     this.universityOffset = 0;
     this.universityRows = 10;
     this.universityCount = 0;
-    this.subject = subjectName;//科目名称,subject=物理
-    this.universityName = '南京航空航天大学';//学校名称，支持模糊查询
-    this.batch = '1';//batch=1,批次id
+    this.subject = '';//科目名称,subject=物理
+    this.universityName = '';//学校名称，支持模糊查询
     this.pageCount = 1;
-    this.init(title);
 }
 UniversityDetail.prototype = {
     constructor: UniversityDetail,
-    init: function (title) {
-        this.showBox(title);
-        this.loadPage(0, this.universityRows);
-    },
     showBox: function (title) {
         var that = this;
         var contentHtml = [];
         contentHtml.push('<div class="search-condition">');
-        contentHtml.push('<input type="text" class="university-name" placeholder="请输入院校名称" />');
-        contentHtml.push('<select id="batch-select">');
-        contentHtml.push('<option value="1">本科一批</option>');
-        contentHtml.push('<option value="8">高职高专</option>');
-        contentHtml.push('</select>');
-        contentHtml.push('<button type="button" class="red-btn">搜索</button>');
+        contentHtml.push('<input type="text" id="search-keywords" class="university-name" placeholder="请输入院校名称" />');
+        //contentHtml.push('<select id="batch-select">');
+        //contentHtml.push('<option value="1">本科一批</option>');
+        //contentHtml.push('<option value="8">高职高专</option>');
+        //contentHtml.push('</select>');
+        contentHtml.push('<button type="button" id="search-btn" class="red-btn">搜索</button>');
         contentHtml.push('</div>');
         contentHtml.push('<table class="results-table" cellpadding="0" cellspacing="0">');
         contentHtml.push('<thead><tr>');
@@ -230,7 +249,6 @@ UniversityDetail.prototype = {
         Common.ajaxFun('/selectClassesGuide/getMajorByUniversityNameAndBatch.do', 'GET', {
             'subject': subject,
             'universityName': universityName,
-            'batch': batch,
             'offset': offset,
             'rows': rows
         }, function (res) {
@@ -247,6 +265,14 @@ UniversityDetail.prototype = {
         this.universityCount = result.count;
         this.pageCount = Math.ceil(this.universityCount / this.universityRows);
         var template = Handlebars.compile($("#university-detail-data-template").html());
+        $.each(result.majorByUniversityNameAndBatch, function (i, k) {
+            if (k.rank === "" || k.rank === undefined || k.rank === null || k.rank === "0") {
+                k.rank = "-";
+            }
+            if (k.selSubject === "" || k.selSubject === undefined || k.selSubject === null || k.selSubject === "0") {
+                k.selSubject = "-";
+            }
+        });
         $('#university-detail-data-list').html(template(result.majorByUniversityNameAndBatch));
         this.pagination();
     },
@@ -267,17 +293,53 @@ UniversityDetail.prototype = {
 $(function () {
     new SubjectAnalysis();
 
+    var universityDetail = null;
     $(document).on('click', '#university-detail', function () {
         var subjectName = $(this).attr('subject');
         if (subjectName != '00') {
-            var universityDetail = new UniversityDetail('院校详情', subjectName);
+            universityDetail = new UniversityDetail();
+            universityDetail.showBox('院校详情');
+            universityDetail.loadPage(0, universityDetail.universityRows);
         }
     });
 
-    majorTypeAnalysis();
-    enrollUniversityTotal();
-    planTotalLineChart();
+    $(document).on('click', '#search-btn', function () {
+        if (universityDetail != null) {
+            universityDetail.universityName = $('#search-keywords').val().trim();
+            universityDetail.loadPage(0, universityDetail.universityRows);
+        }
+    });
+
+    getLatestYearData();
+
+    historyEnrollingData();
 });
+
+//2016年招生数据
+function getLatestYearData () {
+    Common.ajaxFun('/selectClassesGuide/getEnrollingNumberByBatch.do', 'GET', {}, function (res) {
+        if (res.rtnCode == "0000000") {
+            var data = res.bizData.enrollingNumberByBatch;
+            var datas = {
+                batchs: [],
+                batchNames: [],
+                numbers: []
+            };
+            $.each(data, function (i, k) {
+                datas.batchs.push({
+                    value: k.majorNumber,
+                    name: k.batchName
+                });
+                datas.batchNames.push(k.batchName);
+                datas.numbers.push(k.planEnrollingNumber);
+            });
+            enrollUniversityTotal(datas.batchs, datas.batchNames);
+            planTotalLineChart(datas.batchNames, datas.numbers);
+        }
+    }, function (res) {
+        layer.msg("出错了");
+    }, true);
+}
 
 //按批次分析
 function batchAnalysis (batchs, values) {
@@ -360,7 +422,8 @@ function batchAnalysis (batchs, values) {
     subjectBarChart.setOption(subjectBarOption);
 }
 
-function majorTypeAnalysis () {
+//按专业类别分析
+function majorTypeAnalysis (type, datas) {
     var subjectPieChart = echarts.init(document.getElementById('subjectPieChart'));
     var subjectPieOption = {
         title : {
@@ -380,7 +443,7 @@ function majorTypeAnalysis () {
             x: 'left',
             left: 150,
             bottom: '2%',
-            data: ['哲学', '经济学', '法学', '教育学', '文学', '历史学', '理学', '工学', '农学'], //'医学', '管理学', '艺术学'],
+            data: type, //['哲学', '经济学', '法学', '教育学', '文学', '历史学', '理学', '工学', '农学'], //'医学', '管理学', '艺术学'],
             textStyle: {
                 color: '#4A4A4A',
                 fontSize: 12
@@ -407,17 +470,18 @@ function majorTypeAnalysis () {
                         show: true
                     }
                 },
-                data:[
-                    {value: 345, name: '哲学'},
-                    {value: 310, name: '经济学'},
-                    {value: 234, name: '法学'},
-                    {value: 135, name: '教育学'},
-                    {value: 148, name: '文学'},
-                    {value: 35, name: '历史学'},
-                    {value: 85, name: '理学'},
-                    {value: 305, name: '工学'},
-                    {value: 65, name: '农学'}
-                ],
+                data: datas,
+                //data:[
+                //    {value: 345, name: '哲学'},
+                //    {value: 310, name: '经济学'},
+                //    {value: 234, name: '法学'},
+                //    {value: 135, name: '教育学'},
+                //    {value: 148, name: '文学'},
+                //    {value: 35, name: '历史学'},
+                //    {value: 85, name: '理学'},
+                //    {value: 305, name: '工学'},
+                //    {value: 65, name: '农学'}
+                //],
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 10,
@@ -431,13 +495,13 @@ function majorTypeAnalysis () {
     subjectPieChart.setOption(subjectPieOption);
 }
 
-//招生院校总数
-function enrollUniversityTotal () {
+//选课指导 2016年招生数据--招生专业总数
+function enrollUniversityTotal (batchs, batchNames) {
     var enrollTotalChart = echarts.init(document.getElementById('enrollTotalChart'));
     var enrollPieOption = {
         title: {
             show: true,
-            text: "招生院校总数：2345所",
+            text: "招生院校专业总数：2345个专业",
             x: 'left',
             top: 'top',
             bottom: -30,
@@ -460,7 +524,7 @@ function enrollUniversityTotal () {
             itemWidth: 12,
             itemHeight: 12,
             itemGap: 22,
-            data: ['一本院校', '二本院校', '三本院校', '高职高专'],
+            data: batchNames, //['一批本科', '二批本科', '三批本科', '高职高专'],
             textStyle: {
                 color: ['#4A4A4A', '#4A4A4A', '#4A4A4A', '#4A4A4A'],
                 fontSize: 14
@@ -489,20 +553,21 @@ function enrollUniversityTotal () {
                         show: true
                     }
                 },
-                data:[
-                    {value: 2953, name: '一本院校'},
-                    {value: 3657, name: '二本院校'},
-                    {value: 6321, name: '三本院校'},
-                    {value: 8901, name: '高职高专'}
-                ]
+                data: batchs
+                //data:[
+                //    {value: 2953, name: '一批本科'},
+                //    {value: 3657, name: '二批本科'},
+                //    {value: 6321, name: '三批本科'},
+                //    {value: 8901, name: '高职高专'}
+                //]
             }
         ]
     };
     enrollTotalChart.setOption(enrollPieOption);
 }
 
-//招生计划总数
-function planTotalLineChart () {
+//选课指导 2016年招生数据--招生计划总数
+function planTotalLineChart (batchNames, numbers) {
     var planTotalLineChart = echarts.init(document.getElementById('planTotalLineChart'));
     var planTotalLineOption = {
         title: {
@@ -559,7 +624,7 @@ function planTotalLineChart () {
             splitLine: {
                 show: false
             },
-            data: ['高职院校', '三本院校', '二本院校', '一本院校']
+            data: batchNames //['高职高专', '三批本科', '二批本科', '一批本科']
         },
         series: [
             {
@@ -567,7 +632,7 @@ function planTotalLineChart () {
                 type: 'bar',
                 barMinHeight: 26,
                 barCategoryGap: '40%',
-                data: [8917, 6989, 5342, 3456],
+                data: numbers, //[8917, 6989, 5342, 3456],
                 label: {
                     normal: {
                         show: true,
@@ -583,3 +648,86 @@ function planTotalLineChart () {
     };
     planTotalLineChart.setOption(planTotalLineOption);
 }
+
+//选课指导历年招生数据
+function historyEnrollingData () {
+    Common.ajaxFun('/selectClassesGuide/getEnrollingNumberTable.do', 'GET', {}, function (res) {
+        if (res.rtnCode == "0000000") {
+            var data = res.bizData.enrollingNumberTable;
+            var datas = {
+                years: [],
+                batchNames: [],
+                universityNumbers: [],
+                planEnrollingNumbers: []
+            };
+            $.each(data, function (i, k) {
+                datas.years.push(k.year);
+            });
+            var years = datas.years.deleteRepeat();
+            var historyHtml = [];
+            $.each(years, function (i, k) {
+                var tempYear = years[i];
+                historyHtml.push('<tr>');
+                historyHtml.push('<td colspan="2">' + tempYear + '</td>');
+                var tempBatch = [
+                    {
+                        universityNumber: '-',
+                        planEnrollingNumber: '-'
+                    },
+                    {
+                        universityNumber: '-',
+                        planEnrollingNumber: '-'
+                    },
+                    {
+                        universityNumber: '-',
+                        planEnrollingNumber: '-'
+                    },
+                    {
+                        universityNumber: '-',
+                        planEnrollingNumber: '-'
+                    }
+                ];
+                $.each(data, function (n, m) {
+                    if (m.year == tempYear) {
+                        if (m.batchName == '一批本科') {
+                            tempBatch[0].universityNumber = m.universityNumber;
+                            tempBatch[0].planEnrollingNumber = m.planEnrollingNumber;
+                        }
+                        if (m.batchName == '二批本科') {
+                            tempBatch[1].universityNumber = m.universityNumber;
+                            tempBatch[1].planEnrollingNumber = m.planEnrollingNumber;
+                        }
+                        if (m.batchName == '三批本科') {
+                            tempBatch[2].universityNumber = m.universityNumber;
+                            tempBatch[2].planEnrollingNumber = m.planEnrollingNumber;
+                        }
+                        if (m.batchName == '高职高专') {
+                            tempBatch[3].universityNumber = m.universityNumber;
+                            tempBatch[3].planEnrollingNumber = m.planEnrollingNumber;
+                        }
+                    }
+                });
+                $.each(tempBatch, function (i, k) {
+                    historyHtml.push('<td>' + k.universityNumber + '</td>');
+                    historyHtml.push('<td>' + k.planEnrollingNumber + '</td>');
+                });
+                historyHtml.push('</tr>');
+            });
+            $('#history-enroll-list').html(historyHtml.join(''));
+        }
+    }, function (res) {
+        layer.msg("出错了");
+    }, true);
+}
+
+Array.prototype.deleteRepeat = function(){
+    var res = [];
+    var json = {};
+    for(var i = 0; i < this.length; i++){
+        if(!json[this[i]]){
+            res.push(this[i]);
+            json[this[i]] = 1;
+        }
+    }
+    return res;
+};

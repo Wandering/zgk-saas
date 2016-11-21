@@ -13,7 +13,11 @@ var GLOBAL_CONSTANT = {
     tnId: Common.cookie.getCookie('tnId'), //租户ID
     type: 'student',   //角色
 }
-
+//function proInherit(obj){
+//    function F () {}
+//    F.prototype = obj;
+//    return new F();
+//}
 
 /**
  * 学生管理初始化
@@ -45,14 +49,14 @@ var App = {
                     });
                     tpl.push('</tr>');
                     $("#student-table thead").html(tpl.join(''));
-                    App.renderTableBody();
+                    App.renderTableBody(data);
                 }
             }
         }, function (res) {
             layer.msg("出错了");
         }, true);
     },
-    renderTableBody: function () {
+    renderTableBody: function (data) {
         var that = this
         Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
@@ -84,7 +88,7 @@ App.init();
 
 /**
  * 添加学生模块
- * @type {{init: AddStd.init, bindEvents: AddStd.bindEvents, fetchGrade: AddStd.fetchGrade, fetchEntranceYear: AddStd.fetchEntranceYear, fetchBelongClass: AddStd.fetchBelongClass, renderGrade: AddStd.renderGrade, renderEntranceYear: AddStd.renderEntranceYear, renderBelongClass: AddStd.renderBelongClass}}
+ * @type {{init: AddStd.init, fetchGrade: AddStd.fetchGrade, fetchEntranceYear: AddStd.fetchEntranceYear, fetchBelongClass: AddStd.fetchBelongClass, renderElement: AddStd.renderElement, bindEvents: AddStd.bindEvents, removeStd: AddStd.removeStd, addStdVerify: AddStd.addStdVerify, addStdEvent: AddStd.addStdEvent}}
  */
 var AddStd = {
     init: function () {
@@ -95,6 +99,9 @@ var AddStd = {
             yearData: '',
             classData: ''
         }
+        $(document).on('click','#close-btn',function(){
+            window.location.reload();
+        })
     },
     //所属年级
     fetchGrade: function () {
@@ -257,26 +264,48 @@ var AddStd = {
         })
         templateEle += '<div class="opt-btn-box">' +
             '<button class="btn btn-info save-btn" id="add-btn">确认添加</button>' +
-            '<button class="btn btn-primary close-btn">取消</button>' +
+            '<button class="btn btn-primary close-btn" id="close-btn">取消</button>' +
             '</div>';
         AddStd.addStdData.renderEleData = [] //制空
         $('#student-add-box').html(templateEle);
     },
     bindEvents: function () {
         var that = this;
-        $(document).on('click', '#student-add', function () {
+        //添加|更新  弹框
+        $(document).on('click', '#student-add,#student-modify', function () {
+            var type = $(this).attr('type');
             that.renderElement()
-            layer.open({
-                type: 1,
-                title: '添加学生',
-                offset: 'auto',
-                area: ['425px', 'auto'],
-                content: $('#student-add-layer').html(),
-                cancel: function () {
-                    layer.closeAll();
-                    window.location.reload();
+            if(type === 'add'){   //添加
+                layer.open({
+                    type: 1,
+                    title: '添加学生',
+                    offset: 'auto',
+                    area: ['425px', 'auto'],
+                    content: $('#student-add-layer').html(),
+                    cancel: function () {
+                        layer.closeAll();
+                        window.location.reload();
+                    }
+                })
+            }else{    //更新
+                var checkboxN = $("#student-table :checkbox:checked").size();
+                if (checkboxN != '1') {
+                    layer.tips('修改只能选择一项!', $('#student-modify'), {time: 1000});
+                    return false;
                 }
-            })
+                $('#add-btn').html('确认修改');
+                layer.open({
+                    type: 1,
+                    title: '修改学生',
+                    offset: 'auto',
+                    area: ['425px', 'auto'],
+                    content: $('#student-add-layer').html(),
+                    cancel: function () {
+                        layer.closeAll();
+                        window.location.reload();
+                    }
+                })
+            }
             $('#student-add-layer').remove();
         })
         //确认添加
@@ -287,6 +316,18 @@ var AddStd = {
         $(document).on('click', '#student-remove', function () {
             AddStd.removeStd();
         });
+        //更新
+        $(document).on("click", "#add-btn", function () {
+
+            //that.updateStd(checkboxN);
+            //updateClassManagement = new UpdateClassManagement();
+            //updateClassManagement.init(classManagement.columnArr);
+            //updateClassManagement.updateClass('更新班级');
+        })
+    },
+    //更新
+    updateStd:function(num){
+
     },
     //删除一行记录
     removeStd: function () {
@@ -328,7 +369,7 @@ var AddStd = {
         (function () {
             var lock = 0;
             $.each(App.tableData, function (i, v) {
-                if (v.dataType === "text"){
+                if (v.dataType === "text") {
                     if ($('#' + v.enName).val() == '') {
                         layer.msg(v.name + '不能为空', {time: 1000});
                         $('#' + v.enName).focus();
@@ -378,63 +419,40 @@ var AddStd = {
         Common.ajaxFun('/manage/teant/custom/data/add.do', 'POST', JSON.stringify(data), function (res) {
             if (res.rtnCode == "0000000" && res.bizData.result === 'SUCCESS') {
                 layer.closeAll();
-                App.renderTableHeader();
+                window.location.reload() //layer-bug 待解决
+                //App.renderTableHeader();
             }
         }, function (res) {
             layer.msg("出错了");
         }, null, true);
     }
-    //fetchGrade: function () {
-    //    Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
-    //        if (res.rtnCode == "0000000") {
-    //            AddStd.renderGrade(res);
-    //        }
-    //    }, function (res) {
-    //        layer.msg("出错了");
-    //    }, true);
-    //},
-    //fetchEntranceYear: function () {
-    //    Common.ajaxFun('/config/get/school/year.do', 'GET', {}, function (res) {
-    //        if (res.rtnCode == "0000000") {
-    //            AddStd.renderEntranceYear(res);
-    //        }
-    //    }, function (res) {
-    //        layer.msg("出错了");
-    //    }, true);
-    //},
-    //fetchBelongClass: function () {
-    //    Common.ajaxFun('/manage/class/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {}, function (res) {
-    //        if (res.rtnCode == "0000000") {
-    //            AddStd.renderBelongClass(res);
-    //        }
-    //    }, function (res) {
-    //        layer.msg("出错了");
-    //    }, true);
-    //},
-    //renderGrade: function (res) {
-    //    var tpl = '<option value="00">选择年级</option>';
-    //    $.each(res.bizData.grades, function (i, k) {
-    //        tpl += '<option>' + k.grade + '</option>';
-    //    });
-    //    $('#select-grade').html(tpl)
-    //},
-    //renderEntranceYear: function (res) {
-    //    var tpl = '<option value="00">入学年份</option>';
-    //    for (var i in res.bizData.result) {
-    //        tpl += '<option>' + res.bizData.result[i] + '</option>';
-    //    }
-    //    $('#select-year').html(tpl)
-    //},
-    //renderBelongClass: function (res) {
-    //    var dataJson = res.bizData.result;
-    //    var tpl = '<option value="00">所在班级</option>';
-    //    for (var i in dataJson) {
-    //        tpl += '<option class_name="' + dataJson[i].class_name + '" class_no="' + dataJson[i].id + '" class_id="' + dataJson[i].id + '">' + dataJson[i].class_type + '</option>';
-    //    }
-    //    $('#now-class').html(tpl)
-    //}
 }
 AddStd.init();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //修改

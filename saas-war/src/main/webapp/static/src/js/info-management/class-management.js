@@ -325,7 +325,7 @@ UploadData.prototype = {
         var uploadDataHtml = [];
         uploadDataHtml.push('<div class="upload-box">');
         uploadDataHtml.push('<span id="uploader-demo">');
-        uploadDataHtml.push('<span id="fileList" class="uploader-list"></span>');
+        uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
         uploadDataHtml.push('<button class="btn btn-info btn-import" id="btn-import">导入班级数据Excel</button>');
         uploadDataHtml.push('</span>');
         uploadDataHtml.push('<a href="javascript: void(0);" id="downloadBtn" class="download-link">请先导出Excel模板，进行填写</a>');
@@ -515,7 +515,7 @@ jQuery(function () {
 
     // Web Uploader实例
         uploader;
-
+    //alert('haha: ' + BASE_URL + ', ' + rootPath);
     // 初始化Web Uploader
     uploader = WebUploader.create({
 
@@ -604,4 +604,6 @@ jQuery(function () {
     uploader.on('uploadComplete', function (file) {
         $('#' + file.id).find('.progress').remove();
     });
+
+    console.info(uploader);
 });
