@@ -19,6 +19,16 @@ public interface ISelectClassesGuideService {
     List<AnalysisDto> selectAnalysisDiscipline(Map map);
     int selectAnalysisDisciplineCount(Map map);
     List<Map<String, Object>> queryDictList(Map<String, Object> map);
-    List<TrineDto> selectEnrollingNumberByBatch(Map map);
+    Map<String,Object> selectEnrollingNumberByBatch(Map map);
     List<EnrollingNumberDto> selectEnrollingNumber(Map map);
+
+    /**
+     * 根据年级和租户查询学校内学生选课情况
+     *
+     * @param grade 年级
+     * @param tnId 租户ID
+     * @return
+     */
+    List<Map<String, Object>> getAnalysisGroup(String grade,String tnId);
+
 }

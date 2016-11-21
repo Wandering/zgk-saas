@@ -325,7 +325,7 @@ UploadData.prototype = {
         var uploadDataHtml = [];
         uploadDataHtml.push('<div class="upload-box">');
         uploadDataHtml.push('<span id="uploader-demo">');
-        uploadDataHtml.push('<span id="fileList" class="uploader-list"></span>');
+        uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
         uploadDataHtml.push('<button class="btn btn-info btn-import" id="btn-import">导入班级数据Excel</button>');
         uploadDataHtml.push('</span>');
         uploadDataHtml.push('<a href="javascript: void(0);" id="downloadBtn" class="download-link">请先导出Excel模板，进行填写</a>');
@@ -338,6 +338,7 @@ UploadData.prototype = {
             area: ['460px', '300px'],
             content: uploadDataHtml.join('')
         });
+        upload();
     }
 };
 
@@ -477,7 +478,7 @@ $(document).on('click', '#deleteClassBtn', function () {
 
 //模板下载
 $(document).on('click', '#downloadBtn', function () {
-    window.location.href = '/config/export/' + classManagement.type + '/' + tnId + '.do';
+    window.location.href = '/manage/' + classManagement.type + '/export/' + tnId + '.do';
 });
 
 //上传
@@ -503,19 +504,12 @@ $(document).on('click', '#class-settings-btn', function () {
 });
 
 
-jQuery(function () {
+function upload () {
     var $ = jQuery,
         $list = $('#fileList'),
-    // 优化retina, 在retina下这个值是2
-        ratio = window.devicePixelRatio || 1,
-
-    // 缩略图大小
-        thumbnailWidth = 100 * ratio,
-        thumbnailHeight = 100 * ratio,
 
     // Web Uploader实例
         uploader;
-
     // 初始化Web Uploader
     uploader = WebUploader.create({
 
@@ -550,20 +544,9 @@ jQuery(function () {
                 //'<img>' +
             '<div class="info">' + file.name + '</div>' +
             '</div>'
-        )
-        //    $img = $li.find('img');
-        //
+        );
         $list.append($li);
 
-        // 创建缩略图
-        //uploader.makeThumb( file, function( error, src ) {
-        //    if ( error ) {
-        //        $img.replaceWith('<span>不能预览</span>');
-        //        return;
-        //    }
-        //
-        //    $img.attr( 'src', src );
-        //}, thumbnailWidth, thumbnailHeight );
     });
 
     // 文件上传过程中创建进度条实时显示。
@@ -583,8 +566,10 @@ jQuery(function () {
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
     uploader.on('uploadSuccess', function (file) {
-
-
+        layer.closeAll();
+        if (classManagement != null) {
+            classManagement.getClassData();
+        }
     });
 
     // 文件上传失败，现实上传出错。
@@ -604,4 +589,4 @@ jQuery(function () {
     uploader.on('uploadComplete', function (file) {
         $('#' + file.id).find('.progress').remove();
     });
-});
+}

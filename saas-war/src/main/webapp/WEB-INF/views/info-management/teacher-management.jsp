@@ -43,7 +43,7 @@
                                     <button class="btn btn-inverse" id="updateRole-btn">修改</button>
                                     <button class="btn btn-success" id="deleteTeacherBtn">删除</button>
                                     <button class="btn btn-warning" id="downloadBtn">模板下载</button>
-                                    <button class="btn btn-warning">批量上传</button>
+                                    <button class="btn btn-warning" id="uploadBtn">批量上传</button>
                                     <button class="btn btn-warning" id="teacher-settings-btn">教师设置</button>
                                 </div>
                             </div>
@@ -96,6 +96,13 @@
         </div>
     </div>
     <%@ include file="./../common/footer.jsp"%>
+    <link rel="stylesheet" type="text/css" href="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.css">
+    <script src="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.js"></script>
+    <script>
+        var BASE_URL = '<%=ctx%>/static/src/lib/';
+        var rootPath = '<%=ctx%>';
+    </script>
+    <script src="<%=ctx%>/static/src/lib/assets/js/jquery-ui-1.12.1.js"></script>
     <script src="<%=ctx%>/static/src/js/info-management/teacher-management.js"></script>
     </body>
 </html>

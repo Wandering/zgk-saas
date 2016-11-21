@@ -28,12 +28,11 @@
                                 <a href="#">首页</a>
                             </li>
                             <li class="active">班级管理</li>
-                        </ul><!-- .breadcrumb -->
+                        </ul>
                     </div>
                     <div class="page-content">
                         <div class="row">
                             <div class="col-xs-12">
-                                <!-- PAGE CONTENT BEGINS -->
                                 <div class="main-title">
                                     <h3>班级管理</h3>
                                 </div>
@@ -43,8 +42,8 @@
                                         <button class="btn btn-pink" id="addRole-btn">添加班级</button>
                                         <button class="btn btn-inverse" id="updateRole-btn">修改</button>
                                         <button class="btn btn-success" id="deleteClassBtn">删除</button>
-                                        <button class="btn btn-warning" id="downloadBtn">模板下载</button>
-                                        <button class="btn btn-warning" id="uploadBtn">批量上传</button>
+                                        <button class="btn btn-warning" id="downloadid="uploadBtn"Btn">模板下载</button>
+                                        <button class="btn btn-warning" >批量上传</button>
                                         <button class="btn btn-warning" id="class-settings-btn">班级设置</button>
                                     </div>
                                 </div>
@@ -82,20 +81,20 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <!-- PAGE CONTENT ENDS -->
-                            </div><!-- /.col -->
-                        </div><!-- /.row -->
-                    </div><!-- /.page-content -->
-                </div><!-- /.main-content -->
-            </div><!-- /.main-container-inner -->
-        </div><!-- /.main-container -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <%@ include file="./../common/footer.jsp"%>
         <link rel="stylesheet" type="text/css" href="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.css">
-        <script type="text/javascript" src="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.js"></script>
+        <script src="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.js"></script>
         <script>
             var BASE_URL = '<%=ctx%>/static/src/lib/';
             var rootPath = '<%=ctx%>';
         </script>
+        <script src="<%=ctx%>/static/src/lib/assets/js/jquery-ui-1.12.1.js"></script>
         <script src="<%=ctx%>/static/src/js/info-management/class-management.js"></script>
     </body>
 </html>

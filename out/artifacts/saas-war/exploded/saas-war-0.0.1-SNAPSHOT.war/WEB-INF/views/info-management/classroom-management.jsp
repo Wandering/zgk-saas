@@ -28,21 +28,20 @@
                                 <a href="#">首页</a>
                             </li>
                             <li class="active">控制台</li>
-                        </ul><!-- .breadcrumb -->
+                        </ul>
                     </div>
                     <div class="page-content">
                         <div class="row">
                             <div class="col-xs-12">
-                                <!-- PAGE CONTENT BEGINS -->
                                 <div class="main-title">
                                     <h3>教室管理</h3>
                                 </div>
                                 <div class="title-2">
                                     <span class="txt-t"></span>
                                     <div class="btns">
-                                        <button class="btn btn-pink" id="add-btn">添加教室</button>
-                                        <button class="btn btn-inverse">修改</button>
-                                        <button class="btn btn-success">删除</button>
+                                        <button class="btn btn-pink" id="addRole-btn">添加教室</button>
+                                        <button class="btn btn-inverse" id="updateRole-btn">修改</button>
+                                        <button class="btn btn-success" id="deleteRole-Btn">删除</button>
                                     </div>
                                 </div>
                                 <div class="">
@@ -51,7 +50,7 @@
                                             <tr>
                                                 <th class="center">
                                                     <label>
-                                                        <input type="checkbox" class="ace" />
+                                                        <input type="checkbox" id="checkAll" class="ace" />
                                                         <span class="lbl"></span>
                                                     </label>
                                                 </th>
@@ -60,7 +59,7 @@
                                                 <th class="center">教室数量</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="classroom-manage-list" class="check-template">
                                             <%--<tr>--%>
                                                 <%--<td class="center">--%>
                                                     <%--<label>--%>
@@ -75,13 +74,12 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <!-- PAGE CONTENT ENDS -->
-                            </div><!-- /.col -->
-                        </div><!-- /.row -->
-                    </div><!-- /.page-content -->
-                </div><!-- /.main-content -->
-            </div><!-- /.main-container-inner -->
-        </div><!-- /.main-container -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <%@ include file="./../common/footer.jsp"%>
         <script src="<%=ctx%>/static/src/js/info-management/classroom-management.js"></script>
     </body>

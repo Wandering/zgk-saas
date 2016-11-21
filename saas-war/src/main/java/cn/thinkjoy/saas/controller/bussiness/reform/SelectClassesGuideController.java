@@ -1,7 +1,9 @@
 package cn.thinkjoy.saas.controller.bussiness.reform;
 
+import cn.thinkjoy.saas.dto.AnalysisDto;
 import cn.thinkjoy.saas.dto.MajorDto;
 import cn.thinkjoy.saas.dto.PlanEnrollingDto;
+import cn.thinkjoy.saas.dto.UniversityAndMajorNumberDto;
 import cn.thinkjoy.saas.service.bussiness.reform.ISelectClassesGuideService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,10 +52,10 @@ public class SelectClassesGuideController {
     @RequestMapping("getUniversityName")
     @ResponseBody
     public Map<String,Object> getUniversityName(@RequestParam(value = "subject",required = false)String subject,
-                                               @RequestParam(value = "universityName",required = false)String universityName,
-                                               @RequestParam(value = "universityId",required = false)String universityId,
-                                               @RequestParam(value = "offset",required = false,defaultValue = "0")String offset,
-                                               @RequestParam(value = "rows",required = false,defaultValue = "5")String rows) {
+                                                @RequestParam(value = "universityName",required = false)String universityName,
+                                                @RequestParam(value = "universityId",required = false)String universityId,
+                                                @RequestParam(value = "offset",required = false,defaultValue = "0")String offset,
+                                                @RequestParam(value = "rows",required = false,defaultValue = "5")String rows) {
         return getStringObjectMap(0, subject, universityName, universityId, offset, rows);
     }
     /**
@@ -202,6 +204,13 @@ public class SelectClassesGuideController {
         Map<String,Object> returnMap=new HashMap<>();
         returnMap.put("enrollingNumberTable", iSelectClassesGuideService.selectEnrollingNumber(paramMap));
         return returnMap;
+    }
+
+    @RequestMapping("getAnalysisGroup")
+    @ResponseBody
+    public List<Map<String,Object>> getAnalysisGroup(@RequestParam("grade") String grade,@RequestParam("tnId") String tnId) {
+
+        return iSelectClassesGuideService.getAnalysisGroup(grade,tnId);
     }
 
 }

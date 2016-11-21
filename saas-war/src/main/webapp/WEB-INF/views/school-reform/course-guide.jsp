@@ -77,12 +77,12 @@
                             <script id="university-detail-data-template" type="text/x-handlebars-template">
                                 {{#each this}}
                                 <tr>
-                                    <td>1</td>
-                                    <td>北京大学（985）</td>
-                                    <td>法学、国际金融</td>
-                                    <td>本科一批</td>
-                                    <td>23人</td>
-                                    <td>物理</td>
+                                    <td>{{rank}}</td>
+                                    <td>{{universityName}}</td>
+                                    <td>{{majorName}}</td>
+                                    <td>{{batchName}}</td>
+                                    <td>{{planNumber}}人</td>
+                                    <td>{{selSubject}}</td>
                                 </tr>
                                 {{/each}}
                             </script>
@@ -90,58 +90,63 @@
                                 <%--<li><!--985院校招生计划人数：876人--></li>--%>
                                 <%--<li><!--211院校招生计划人数：876人--></li>--%>
                             </ul>
+                            <script id="university-results-item-data-template" type="text/x-handlebars-template">
+                                {{#each this}}
+                                <li uid="{{id}}">{{name}}</li>
+                                {{/each}}
+                            </script>
                             <div class="plan-analysis">
                                 <div class="batch-analysis">
                                     <div id="subjectLineChart" style="width: 100%;height: 250px;"></div>
                                 </div>
                                 <div class="major-type-analysis">
                                     <span id="major-type-count">共计9个专业门类:</span>
-                                    <div class="major-type-box">
+                                    <div id="major-type-list" class="major-type-box">
                                         <table class="major-type-top">
                                             <thead>
                                                 <tr>
-                                                    <th>专业门类</th>
-                                                    <th>哲学</th>
-                                                    <th>经济学</th>
-                                                    <th>法学</th>
-                                                    <th>教育学</th>
-                                                    <th>文学</th>
-                                                    <th>历史学</th>
+                                                    <th width="94px">专业门类</th>
+                                                    <th>-</th>
+                                                    <th>-</th>
+                                                    <th>-</th>
+                                                    <th>-</th>
+                                                    <th>-</th>
+                                                    <th>-</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>计划人数</td>
-                                                    <td>345人</td>
-                                                    <td>310人</td>
-                                                    <td>234人</td>
-                                                    <td>135人</td>
-                                                    <td>148人</td>
-                                                    <td>35人</td>
+                                                    <td width="94px">计划人数</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                         <table class="major-type-bottom">
                                             <thead>
                                             <tr>
-                                                <th>专业门类</th>
-                                                <th>哲学</th>
-                                                <th>经济学</th>
-                                                <th>法学</th>
-                                                <th>教育学</th>
-                                                <th>文学</th>
-                                                <th>历史学</th>
+                                                <th width="94px">专业门类</th>
+                                                <th>-</th>
+                                                <th>-</th>
+                                                <th>-</th>
+                                                <th>-</th>
+                                                <th>-</th>
+                                                <th>-</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr>
-                                                <td>计划人数</td>
-                                                <td>345人</td>
-                                                <td>310人</td>
-                                                <td>234人</td>
-                                                <td>135人</td>
-                                                <td>148人</td>
-                                                <td>35人</td>
+                                                <td width="94px">计划人数</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -190,40 +195,40 @@
                                             <th>招生计划数</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="2">2014年</td>
-                                            <td>234</td>
-                                            <td>12345</td>
-                                            <td>234</td>
-                                            <td>12345</td>
-                                            <td>234</td>
-                                            <td>12345</td>
-                                            <td>234</td>
-                                            <td>12345</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">2015年</td>
-                                            <td>231</td>
-                                            <td>12345</td>
-                                            <td>231</td>
-                                            <td>12345</td>
-                                            <td>231</td>
-                                            <td>12345</td>
-                                            <td>231</td>
-                                            <td>12345</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">2016年</td>
-                                            <td>234</td>
-                                            <td>12345</td>
-                                            <td>234</td>
-                                            <td>12345</td>
-                                            <td>234</td>
-                                            <td>12345</td>
-                                            <td>234</td>
-                                            <td>12345</td>
-                                        </tr>
+                                    <tbody id="history-enroll-list">
+                                        <%--<tr>--%>
+                                            <%--<td colspan="2">2014年</td>--%>
+                                            <%--<td>234</td>--%>
+                                            <%--<td>12345</td>--%>
+                                            <%--<td>234</td>--%>
+                                            <%--<td>12345</td>--%>
+                                            <%--<td>234</td>--%>
+                                            <%--<td>12345</td>--%>
+                                            <%--<td>234</td>--%>
+                                            <%--<td>12345</td>--%>
+                                        <%--</tr>--%>
+                                        <%--<tr>--%>
+                                            <%--<td colspan="2">2015年</td>--%>
+                                            <%--<td>231</td>--%>
+                                            <%--<td>12345</td>--%>
+                                            <%--<td>231</td>--%>
+                                            <%--<td>12345</td>--%>
+                                            <%--<td>231</td>--%>
+                                            <%--<td>12345</td>--%>
+                                            <%--<td>231</td>--%>
+                                            <%--<td>12345</td>--%>
+                                        <%--</tr>--%>
+                                        <%--<tr>--%>
+                                            <%--<td colspan="2">2016年</td>--%>
+                                            <%--<td>234</td>--%>
+                                            <%--<td>12345</td>--%>
+                                            <%--<td>234</td>--%>
+                                            <%--<td>12345</td>--%>
+                                            <%--<td>234</td>--%>
+                                            <%--<td>12345</td>--%>
+                                            <%--<td>234</td>--%>
+                                            <%--<td>12345</td>--%>
+                                        <%--</tr>--%>
                                     </tbody>
                                 </table>
                             </div>

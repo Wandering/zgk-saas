@@ -36,4 +36,10 @@ public interface IExamDetailDAO extends IBaseDAO<ExamDetail>{
     List<String> getClassesNameByGrade(Map<String, String> paramMap);
 
     List<Map<String, Object>> getMostAttentionListForClass(Map<String, String> paramMap);
+
+    Map<String, Object> checkIsTableExist(Map<String, String> paramMap);
+
+    Map<String, Object> checkIsColumnExist(Map<String, String> paramMap);
+
+    List<Map<String, Object>> getClassBossList(Map<String, String> paramMap);
 }

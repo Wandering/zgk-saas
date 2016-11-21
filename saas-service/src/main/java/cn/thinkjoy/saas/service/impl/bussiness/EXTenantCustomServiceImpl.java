@@ -1,6 +1,5 @@
 package cn.thinkjoy.saas.service.impl.bussiness;
 
-import cn.thinkjoy.saas.dao.IGradeDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO;
 import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
 import cn.thinkjoy.saas.domain.Grade;
@@ -149,8 +148,26 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
                         value = converGradesArr(grades);
                         break;
                     case EnumUtil.CLASS_ENROLL_YEAR://入学年份
-                        value=getEnrollYear(2012,2020);
+                        value = getEnrollYear(2012, 2020);
                         break;
+                    case EnumUtil.TEACHER_SCHOOL_ENROLL_YEAR://教师-入校年份
+                        value = getEnrollYear(2012, 2020);
+                        break;
+                    case EnumUtil.TEACHER_EDUCATION_GRADE://教师-所教年级
+                        Map gradeYear = new HashMap();
+                        gradeYear.put("tnId", tnId);
+                        List<Grade> gradeList = exiGradeDAO.selectGradeByTnId(gradeYear);
+                        value = converGradesArr(gradeList);
+                        break;
+                    case EnumUtil.TEACHER_EDUCATION_CLASS://教师-所教班级
+                        String tableName= ParamsUtils.combinationTableName("teacher", tnId);
+                        List<LinkedHashMap<String, Object>> linkedHashMapList =iexTeantCustomDAO.getTenantCustom(tableName);
+                        value = converClassName(linkedHashMapList);
+                        break;
+                    case EnumUtil.TEACHER_EDUCATION_MAJOYTYPE://教师-所教科目
+                        value=EnumUtil.TEACHER_EDUCATION_MAJOYTYPE_ARR;
+                        break;
+
                 }
 
                 if(!(value==null)) {
@@ -198,6 +215,21 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
             i++;
         }
 
+        return arr;
+    }
+
+    /**
+     * 班级信息
+     * @param tenantCustomsLinks
+     * @return
+     */
+    private String[] converClassName(List<LinkedHashMap<String,Object>> tenantCustomsLinks) {
+        String[] arr = new String[tenantCustomsLinks.size()];
+        int i = 0;
+        for (LinkedHashMap<String, Object> linkedHashMap : tenantCustomsLinks) {
+            arr[i] = linkedHashMap.get("class_name").toString();
+            i++;
+        }
         return arr;
     }
 }

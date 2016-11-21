@@ -1,11 +1,11 @@
 var tnId = Common.cookie.getCookie('tnId');
 
-function classRoomManagement() {
+function ClassRoomManagement() {
     this.init();
 }
 
-classRoomManagement.prototype = {
-    constructor: classRoomManagement,
+ClassRoomManagement.prototype = {
+    constructor: ClassRoomManagement,
     init: function () {
         this.getClassRoom();
     },
@@ -21,21 +21,21 @@ classRoomManagement.prototype = {
     },
     renderList: function (data) {
         if (data.rtnCode == "0000000") {
-            var gradeArr = [];
+            var classRoomHtml = [];
             $.each(data.bizData.classRoom, function (i, v) {
-                gradeArr.push('<tr>');
-                gradeArr.push('<td class="center">');
-                gradeArr.push('<label>');
-                gradeArr.push('<input type="checkbox" gradename="'+ v.grade +'" gradeId = "'+ v.id +'" class="ace" />');
-                gradeArr.push('<span class="lbl"></span>');
-                gradeArr.push('</label>');
-                gradeArr.push('</td>');
-                gradeArr.push('<td class="center">'+ (i+1) +'</td>');
-                gradeArr.push('<td class="center">'+ v.grade +'</td>');
-                gradeArr.push('<td class="center">'+ v.number +'</td>');
-                gradeArr.push('</tr>');
+                classRoomHtml.push('<tr>');
+                classRoomHtml.push('<td class="center">');
+                classRoomHtml.push('<label>');
+                classRoomHtml.push('<input type="checkbox" gradename="'+ v.grade +'" crid = "'+ v.id +'" class="ace" />');
+                classRoomHtml.push('<span class="lbl"></span>');
+                classRoomHtml.push('</label>');
+                classRoomHtml.push('</td>');
+                classRoomHtml.push('<td class="center">'+ (i+1) +'</td>');
+                classRoomHtml.push('<td class="center">'+ v.grade +'</td>');
+                classRoomHtml.push('<td class="center">'+ v.number +'</td>');
+                classRoomHtml.push('</tr>');
             });
-            $('#classroom-table tbody').append(gradeArr.join(''));
+            $('#classroom-table tbody').html(classRoomHtml.join(''));
         }
     },
     getGrade: function () {
@@ -55,7 +55,7 @@ classRoomManagement.prototype = {
             layer.msg("出错了");
         }, true);
     },
-    addGrade:function (title) {
+    addClassRoom:function (title) {
         var that = this;
         var contentHtml = [];
         contentHtml.push('<div class="form-horizontal grade-layer">');
@@ -73,7 +73,6 @@ classRoomManagement.prototype = {
         contentHtml.push('</div>');
         contentHtml.push('<div class="btn-box"><button class="btn btn-info save-btn" id="save-classroom-btn">保存</button><button class="btn btn-primary close-btn">取消</button></div>');
         contentHtml.push('</div>');
-        //Common.modal("addRole","添加角色",contentHtml.join(''),"内容","");
         layer.open({
             type: 1,
             title: title,
@@ -83,18 +82,50 @@ classRoomManagement.prototype = {
         });
         that.getGrade();
     },
-    deleteGrade:function(){
-
+    deleteClassRoom: function () {//删除某一行教室数据
+        var that = this;
+        var checkedLen = $("#classroom-manage-list input[type='checkbox']:checked").size();
+        if(checkedLen == "0"){
+            layer.tips('至少选择一项', $('#deleteRole-Btn'), {time: 1000});
+            return false;
+        }
+        var selItem = [];
+        $('#classroom-manage-list').find('input[type="checkbox"]').each(function (i, v) {
+            if ($(this).is(':checked') == true) {
+                selItem.push($(this).attr('crid'));
+            }
+        });
+        selItem = selItem.join('-');
+        var ids = selItem;
+        layer.confirm('确定删除?', {
+            btn: ['确定', '关闭'] //按钮
+        }, function () {
+            Common.ajaxFun('/manage/classRoom/delete/' + ids + '.do', 'POST', {}, function (res) {
+                if (res.rtnCode == "0000000") {
+                    if(res.bizData.result="SUCCESS"){
+                        $('#classroom-change-list').html('');
+                        $('#checkAll').prop('checked', false);
+                        layer.msg('删除成功', {time: 1000});
+                        var classRoomManagement = new ClassRoomManagement();
+                        classRoomManagement.init();
+                    }
+                }
+            }, function (res) {
+                layer.msg("出错了", {time: 1000});
+            });
+        }, function () {
+            layer.closeAll();
+        });
     }
 };
 
-var classRoomManagementIns = new classRoomManagement();
+var classRoomManagement = new ClassRoomManagement();
 
-$('#add-btn').on('click',function(){
-    classRoomManagementIns.addGrade('添加教室');
+$('#addRole-btn').on('click',function(){
+    classRoomManagement.addClassRoom('添加教室');
 });
 
-$('body').on('click','.save-btn',function () {
+$(document).on('click','.save-btn',function () {
     var classroomNum = $.trim($('#classroom-num').val());
     var gradeV = $('#grade-list').val();
     if (classroomNum == '') {
@@ -111,7 +142,7 @@ $('body').on('click','.save-btn',function () {
     }, function (res) {
         if (res.rtnCode == "0000000") {
             $('#grade-list').html('');
-            classRoomManagementIns.getGrade();
+            classRoomManagement.getClassRoom();
             layer.closeAll();
         } else if (res.rtnCode == '1000001') {
             layer.closeAll();
@@ -123,7 +154,7 @@ $('body').on('click','.save-btn',function () {
 
 });
 
-$('#modify-btn').on('click',function () {
+$('#updateRole-btn').on('click',function () {
     var that = $(this);
     var chknum = $(".check-template :checkbox:checked").size();
     var checkV = $(".check-template :checkbox:checked").attr('gradeid');
@@ -132,12 +163,15 @@ $('#modify-btn').on('click',function () {
         layer.tips('修改只能选择一项!',that);
         return false;
     }
-    classRoomManagementIns.addGrade('修改教室');
+    classRoomManagement.addClassRoom('修改教室');
     $('.save-btn').attr('gradeid',checkV);
     $('#grade-name').val(gradename);
 });
 
+$(document).on('click', '#deleteRole-Btn', function () {
+    classRoomManagement.deleteClassRoom();
+});
 
-$('body').on('click','.close-btn',function(){
+$(document).on('click','.close-btn',function(){
     layer.closeAll();
 });

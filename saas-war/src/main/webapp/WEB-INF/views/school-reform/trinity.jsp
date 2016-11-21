@@ -60,44 +60,60 @@
                                         <th>其他条件</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>北京大学(985)</td>
-                                        <td>12</td>
-                                        <td>50%</td>
-                                        <td>学考7A，综合素质A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>北京大学(985)</td>
-                                        <td>12</td>
-                                        <td>50%</td>
-                                        <td>学考7A，综合素质A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>北京大学(985)</td>
-                                        <td>12</td>
-                                        <td>50%</td>
-                                        <td>学考7A，综合素质A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>北京大学(985)</td>
-                                        <td>12</td>
-                                        <td>50%</td>
-                                        <td>学考7A，综合素质A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>北京大学(985)</td>
-                                        <td>12</td>
-                                        <td>50%</td>
-                                        <td>学考7A，综合素质A</td>
-                                    </tr>
+                                <tbody id="enroll-university-list">
+                                    <%--<tr>--%>
+                                        <%--<td>1</td>--%>
+                                        <%--<td>北京大学(985)</td>--%>
+                                        <%--<td>12</td>--%>
+                                        <%--<td>50%</td>--%>
+                                        <%--<td>学考7A，综合素质A</td>--%>
+                                    <%--</tr>--%>
+                                    <%--<tr>--%>
+                                        <%--<td>2</td>--%>
+                                        <%--<td>北京大学(985)</td>--%>
+                                        <%--<td>12</td>--%>
+                                        <%--<td>50%</td>--%>
+                                        <%--<td>学考7A，综合素质A</td>--%>
+                                    <%--</tr>--%>
+                                    <%--<tr>--%>
+                                        <%--<td>3</td>--%>
+                                        <%--<td>北京大学(985)</td>--%>
+                                        <%--<td>12</td>--%>
+                                        <%--<td>50%</td>--%>
+                                        <%--<td>学考7A，综合素质A</td>--%>
+                                    <%--</tr>--%>
+                                    <%--<tr>--%>
+                                        <%--<td>4</td>--%>
+                                        <%--<td>北京大学(985)</td>--%>
+                                        <%--<td>12</td>--%>
+                                        <%--<td>50%</td>--%>
+                                        <%--<td>学考7A，综合素质A</td>--%>
+                                    <%--</tr>--%>
+                                    <%--<tr>--%>
+                                        <%--<td>5</td>--%>
+                                        <%--<td>北京大学(985)</td>--%>
+                                        <%--<td>12</td>--%>
+                                        <%--<td>50%</td>--%>
+                                        <%--<td>学考7A，综合素质A</td>--%>
+                                    <%--</tr>--%>
                                 </tbody>
                             </table>
+                            <script id="enroll-university-list-data-template" type="text/x-handlebars-template">
+                                {{#each this}}
+                                <tr>
+                                    <td>{{rank}}</td>
+                                    <td>{{universityName}}</td>
+                                    <td>{{planEnrollingNumber}}人</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                                {{/each}}
+                            </script>
+                            <div class="pagination-bar">
+                                <div class="pagination">
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

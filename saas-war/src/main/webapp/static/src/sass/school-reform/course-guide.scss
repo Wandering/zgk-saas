@@ -107,6 +107,7 @@ ul {
                     line-height: 42px;
                     tr {
                         td {
+                            width: 63px;
                             text-align: center;
                             vertical-align: middle;
                             border-right: 1px solid #E0E3E8;
@@ -193,13 +194,49 @@ ul {
         border: 1px solid #D5D9DF;
         border-radius: 2px;
     }
+    button {
+        position: relative;
+        left: 3px;
+        top: -2px;
+    }
+    #results-list {
+        display: none;
+        width: 268px;
+        position: absolute;
+        left: 100px;
+        top: 44px;
+        height: auto;
+        border: solid 2px #DDDDDD;
+        overflow: hidden;
+        background-color: #FFFFFF;
+        box-sizing: border-box;
+        z-index: 1000;
+        li {
+            text-align: left;
+            border: solid 1px rgba(0, 0, 0, 0);
+            border-width: 1px 10px;
+            box-sizing: border-box;
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            cursor: pointer;
+            border-bottom: 1px solid #EEEEEE;
+            overflow: hidden;
+        }
+        .active {
+            color: #d80c18;
+        }
+    }
 }
 .results-table {
+    display: block;
     width: 481px;
     margin: 0 auto;
     border: 1px solid #E0E3E8;
     font-size: 12px;
     color: #4A4A4A;
+    height: 300px;
+    overflow: scroll;
     thead {
         background: #F2F4F6;
         line-height: 40px;
@@ -212,12 +249,17 @@ ul {
                 font-weight: bold;
                 line-height: 18px;
             }
+            th:last-of-type {
+                border-right: 0;
+            }
         }
     }
     tbody {
         line-height: 28px;
         tr {
             td {
+                line-height: 1.3em;
+                padding: 5px;
                 text-align: center;
                 vertical-align: middle;
                 border-right: 1px solid #E0E3E8;
@@ -225,6 +267,9 @@ ul {
             }
         }
     }
+}
+.layer-anim {
+    overflow-y: hidden;
 }
 .red-btn, .red-btn:focus, .red-btn:hover {
     width: 74px;

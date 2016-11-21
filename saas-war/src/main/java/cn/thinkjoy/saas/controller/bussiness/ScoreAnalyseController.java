@@ -26,8 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -447,8 +445,8 @@ public class ScoreAnalyseController
     @RequestMapping("/getOverLineNumberByDate")
     @ResponseBody
     public List<Map<String, Object>> getOverLineNumberByDate(
-        @RequestParam(value = "tnId", required = false) String tnId,
-        @RequestParam(value = "grade", required = false) String grade,
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "className", required = false) String className,
         @RequestParam(value = "lineScore", required = false) String lineScore)
     {
@@ -521,12 +519,18 @@ public class ScoreAnalyseController
                 mp.get("batchThr").add(detail);
             }
         }
+        Map<String, String> classBossMap = getClassBossMap(tnId, grade);
         for (Map.Entry<String, Map<String, List<ExamDetail>>> entry : classInfoMap.entrySet())
         {
             String className = entry.getKey();
             Map<String, List<ExamDetail>> examDetailListMap = entry.getValue();
             Map<String, Object> resultMap = new LinkedHashMap<>();
             resultMap.put("className", className);
+            if(!classBossMap.isEmpty())
+            {
+                String classBoss = classBossMap.get(className);
+                resultMap.put("counselor", classBoss);
+            }
             resultMap.put("batchAll", examDetailListMap.get("batchThr").size());
             resultMap.put("batchOne", examDetailListMap.get("batchOne").size());
             resultMap.put("batchTwo",
@@ -545,6 +549,30 @@ public class ScoreAnalyseController
             }
         });
         return resultList;
+    }
+
+    private Map<String, String> getClassBossMap(String tnId, String grade)
+    {
+        boolean check  = checkClassBoss(tnId);
+        Map<String, String> classBossMap = new HashMap<>();
+        if(check)
+        {
+            String tableName = ParamsUtils.combinationTableName("class", Integer.parseInt(tnId));
+            Map<String, Object> map = new HashMap<>();
+            map.put("tableName",tableName);
+            map.put("grade",grade);
+            List<Map<String,Object>> list = examDetailService.getClassBossList(map);
+            for (Map<String,Object> mp : list)
+            {
+                String className = mp.get("class_name") + "";
+                String classBoss =mp.get("class_boss") + "";
+                if(StringUtils.isNotEmpty(classBoss))
+                {
+                    classBossMap.put(className, classBoss);
+                }
+            }
+        }
+        return classBossMap;
     }
 
     private Map<String, Object> getNumberMap(@RequestParam(value = "tnId", required = true) String tnId)
@@ -865,6 +893,7 @@ public class ScoreAnalyseController
         setScoreList(examIds, examScoreRatioMap);
         advancedScoreSet = new TreeSet<>();
         Map<String, List<Map<String, Object>>> resultMap = new HashMap<>();
+        Map<String, String> bossMap = getClassBossMap(tnId, grade);
         for (Map.Entry<String, List<Integer>> entry : examScoreRatioMap.entrySet())
         {
             String examDetailInfo = entry.getKey();
@@ -899,6 +928,11 @@ public class ScoreAnalyseController
                 }
                 Map<String, Object> params = new LinkedHashMap<>();
                 params.put("className", className);
+                if(!bossMap.isEmpty())
+                {
+                    String bossName = bossMap.get(className);
+                    params.put("counselor", bossName);
+                }
                 params.put("studentName", studentName);
                 params.put("advancedScore", advancedScore);
                 params.put("historyScores", scoreList.toString());
@@ -1528,7 +1562,6 @@ public class ScoreAnalyseController
         List<Map<String, Integer>> stepList = new ArrayList<>();
         if (advancedScoreSet.size() >= 10)
         {
-            int endStep = stepStart;
             addStepList(stepList, maxStep, stepStart, stepLength);
         }else {
             Map<String, Integer> paramMap = new LinkedHashMap<>();
@@ -1553,7 +1586,6 @@ public class ScoreAnalyseController
         List<Map<String, Integer>> stepList = new ArrayList<>();
         if (maxStep >= 10)
         {
-            int endStep = stepStart;
             addStepList(stepList, maxStep, stepStart, stepLength);
         }else
         {
@@ -1563,5 +1595,24 @@ public class ScoreAnalyseController
             stepList.add(paramMap);
         }
         return stepList;
+    }
+
+    /**
+     * 查看是否是否有班主任字段
+     * @param tnId
+     * @return
+     */
+    private boolean checkClassBoss(String tnId)
+    {
+        boolean flag =false;
+        Map<String, String> paramMap = new HashMap<>();
+        String tableName = ParamsUtils.combinationTableName("class", Integer.parseInt(tnId));
+        paramMap.put("tableName", tableName);
+        if(examDetailService.checkIsTableExist(paramMap))
+        {
+            paramMap.put("columnName", "class_boss");
+            flag = examDetailService.checkIsColumnExist(paramMap);
+        }
+        return flag;
     }
 }
