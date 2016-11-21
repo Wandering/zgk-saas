@@ -26,8 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -447,8 +445,8 @@ public class ScoreAnalyseController
     @RequestMapping("/getOverLineNumberByDate")
     @ResponseBody
     public List<Map<String, Object>> getOverLineNumberByDate(
-        @RequestParam(value = "tnId", required = false) String tnId,
-        @RequestParam(value = "grade", required = false) String grade,
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "className", required = false) String className,
         @RequestParam(value = "lineScore", required = false) String lineScore)
     {
@@ -528,9 +526,9 @@ public class ScoreAnalyseController
             Map<String, List<ExamDetail>> examDetailListMap = entry.getValue();
             Map<String, Object> resultMap = new LinkedHashMap<>();
             resultMap.put("className", className);
-            String classBoss = classBossMap.get(className);
-            if(StringUtils.isNotEmpty(classBoss))
+            if(!classBossMap.isEmpty())
             {
+                String classBoss = classBossMap.get(className);
                 resultMap.put("counselor", classBoss);
             }
             resultMap.put("batchAll", examDetailListMap.get("batchThr").size());
@@ -930,9 +928,9 @@ public class ScoreAnalyseController
                 }
                 Map<String, Object> params = new LinkedHashMap<>();
                 params.put("className", className);
-                String bossName = bossMap.get(className);
-                if(StringUtils.isNotEmpty(bossName))
+                if(!bossMap.isEmpty())
                 {
+                    String bossName = bossMap.get(className);
                     params.put("counselor", bossName);
                 }
                 params.put("studentName", studentName);
