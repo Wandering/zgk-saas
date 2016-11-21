@@ -1,13 +1,112 @@
 /**
  * Created by machengcheng on 16/11/11.
  */
-function UniversityDetail () {
 
+function SubjectAnalysis () {
+    this.init();
+    this.subjectChangeEvent();
+}
+SubjectAnalysis.prototype = {
+    constructor: SubjectAnalysis,
+    init: function () {
+        $('input[name="subject-analysis"]').eq(0).prop('checked', true);
+        var subject = $('input[name="subject-analysis"]').eq(0).next().text();
+        this.getUniversityAndMajorNumber(subject);
+        this.getPlanEnrollingByProperty(subject);
+        this.getAnalysisBatch(subject);
+        this.getAnalysisDiscipline(subject);
+        $('#university-detail').attr('subject', subject);
+    },
+    getUniversityAndMajorNumber: function (subject, subjectTitle) {
+        Common.ajaxFun('/selectClassesGuide/getUniversityAndMajorNumber.do', 'GET', {
+            'subject': subject
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData.universityAndMajorNumber;
+                $('.require-num').html(data.universityNumber + '所院校的' + data.majorNumber + '个专业对' + subjectTitle + '有要求');
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
+    },
+    getPlanEnrollingByProperty: function (subject) {
+        Common.ajaxFun('/selectClassesGuide/getPlanEnrollingByProperty.do', 'GET', {
+            'subject': subject
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData;
+                $('.plan-to-enroll').empty();
+                $.each(data, function (i, k) {
+                    $('.plan-to-enroll').append('<li>' + i + '招生计划人数：' + k + '人</li>');
+                });
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
+    },
+    getAnalysisBatch: function (subject) {
+        Common.ajaxFun('/selectClassesGuide/getAnalysisBatch.do', 'GET', {
+            'subject': subject
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData.analysisBatch;
+                var analysisBatchData = {
+                    batchs: [],
+                    values: []
+                }
+                $.each(data, function (i, k) {
+                    analysisBatchData.batchs.push(k.batchName);
+                    analysisBatchData.values.push(k.number);
+                });
+                batchAnalysis(analysisBatchData.batchs, analysisBatchData.values);
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
+    },
+    getAnalysisDiscipline: function (subject) {
+        Common.ajaxFun('/selectClassesGuide/getAnalysisDiscipline.do', 'GET', {
+            'subject': subject
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
+    },
+    subjectChangeEvent: function () {
+        var that = this;
+        $(document).on('change', 'input[name="subject-analysis"]', function () {
+            var subject = $(this).next().text(),
+                subjectTitle = subject;
+            if (subject == '不限学科') {
+                subject = '';
+            }
+            that.getUniversityAndMajorNumber(subject, subjectTitle);
+            that.getPlanEnrollingByProperty(subject);
+            that.getAnalysisBatch(subject);
+            that.getAnalysisDiscipline(subject);
+            $('#university-detail').attr('subject', subject);
+        });
+    }
+};
+
+function UniversityDetail (title, subjectName) {
+    this.universityOffset = 0;
+    this.universityRows = 10;
+    this.universityCount = 0;
+    this.subject = subjectName;//科目名称,subject=物理
+    this.universityName = '南京航空航天大学';//学校名称，支持模糊查询
+    this.batch = '1';//batch=1,批次id
+    this.pageCount = 1;
+    this.init(title);
 }
 UniversityDetail.prototype = {
     constructor: UniversityDetail,
-    init: function () {
-
+    init: function (title) {
+        this.showBox(title);
+        this.loadPage(0, this.universityRows);
     },
     showBox: function (title) {
         var that = this;
@@ -29,87 +128,87 @@ UniversityDetail.prototype = {
         contentHtml.push('<th width="62px">招生计划(2016年)</th>');
         contentHtml.push('<th>必修要求</th>');
         contentHtml.push('</tr></thead>');
-        contentHtml.push('<tbody>');
-        contentHtml.push('<tr>');
-        contentHtml.push('<td>1</td>');
-        contentHtml.push('<td>北京大学（985）</td>');
-        contentHtml.push('<td>法学、国际金融</td>');
-        contentHtml.push('<td>本科一批</td>');
-        contentHtml.push('<td>23人</td>');
-        contentHtml.push('<td>物理</td>');
-        contentHtml.push('</tr>');
-        contentHtml.push('<tr>');
-        contentHtml.push('<td>2</td>');
-        contentHtml.push('<td>北京大学（985）</td>');
-        contentHtml.push('<td>法学、国际金融</td>');
-        contentHtml.push('<td>本科一批</td>');
-        contentHtml.push('<td>23人</td>');
-        contentHtml.push('<td>物理</td>');
-        contentHtml.push('</tr>');
-        contentHtml.push('<tr>');
-        contentHtml.push('<td>3</td>');
-        contentHtml.push('<td>北京大学（985）</td>');
-        contentHtml.push('<td>法学、国际金融</td>');
-        contentHtml.push('<td>本科一批</td>');
-        contentHtml.push('<td>23人</td>');
-        contentHtml.push('<td>物理</td>');
-        contentHtml.push('</tr>');
-        contentHtml.push('<tr>');
-        contentHtml.push('<td>4</td>');
-        contentHtml.push('<td>北京大学（985）</td>');
-        contentHtml.push('<td>法学、国际金融</td>');
-        contentHtml.push('<td>本科一批</td>');
-        contentHtml.push('<td>23人</td>');
-        contentHtml.push('<td>物理</td>');
-        contentHtml.push('<tr>');
-        contentHtml.push('<td>5</td>');
-        contentHtml.push('<td>北京大学（985）</td>');
-        contentHtml.push('<td>法学、国际金融</td>');
-        contentHtml.push('<td>本科一批</td>');
-        contentHtml.push('<td>23人</td>');
-        contentHtml.push('<td>物理</td>');
-        contentHtml.push('</tr>');
-        contentHtml.push('</tr>');
-        contentHtml.push('<tr>');
-        contentHtml.push('<td>6</td>');
-        contentHtml.push('<td>北京大学（985）</td>');
-        contentHtml.push('<td>法学、国际金融</td>');
-        contentHtml.push('<td>本科一批</td>');
-        contentHtml.push('<td>23人</td>');
-        contentHtml.push('<td>物理</td>');
-        contentHtml.push('</tr>');
-        contentHtml.push('<tr>');
-        contentHtml.push('<td>7</td>');
-        contentHtml.push('<td>北京大学（985）</td>');
-        contentHtml.push('<td>法学、国际金融</td>');
-        contentHtml.push('<td>本科一批</td>');
-        contentHtml.push('<td>23人</td>');
-        contentHtml.push('<td>物理</td>');
-        contentHtml.push('</tr>');
-        contentHtml.push('<tr>');
-        contentHtml.push('<td>8</td>');
-        contentHtml.push('<td>北京大学（985）</td>');
-        contentHtml.push('<td>法学、国际金融</td>');
-        contentHtml.push('<td>本科一批</td>');
-        contentHtml.push('<td>23人</td>');
-        contentHtml.push('<td>物理</td>');
-        contentHtml.push('</tr>');
-        contentHtml.push('<tr>');
-        contentHtml.push('<td>9</td>');
-        contentHtml.push('<td>北京大学（985）</td>');
-        contentHtml.push('<td>法学、国际金融</td>');
-        contentHtml.push('<td>本科一批</td>');
-        contentHtml.push('<td>23人</td>');
-        contentHtml.push('<td>物理</td>');
-        contentHtml.push('</tr>');
-        contentHtml.push('<tr>');
-        contentHtml.push('<td>10</td>');
-        contentHtml.push('<td>北京大学（985）</td>');
-        contentHtml.push('<td>法学、国际金融</td>');
-        contentHtml.push('<td>本科一批</td>');
-        contentHtml.push('<td>23人</td>');
-        contentHtml.push('<td>物理</td>');
-        contentHtml.push('</tr>');
+        contentHtml.push('<tbody id="university-detail-data-list">');
+        //contentHtml.push('<tr>');
+        //contentHtml.push('<td>1</td>');
+        //contentHtml.push('<td>北京大学（985）</td>');
+        //contentHtml.push('<td>法学、国际金融</td>');
+        //contentHtml.push('<td>本科一批</td>');
+        //contentHtml.push('<td>23人</td>');
+        //contentHtml.push('<td>物理</td>');
+        //contentHtml.push('</tr>');
+        //contentHtml.push('<tr>');
+        //contentHtml.push('<td>2</td>');
+        //contentHtml.push('<td>北京大学（985）</td>');
+        //contentHtml.push('<td>法学、国际金融</td>');
+        //contentHtml.push('<td>本科一批</td>');
+        //contentHtml.push('<td>23人</td>');
+        //contentHtml.push('<td>物理</td>');
+        //contentHtml.push('</tr>');
+        //contentHtml.push('<tr>');
+        //contentHtml.push('<td>3</td>');
+        //contentHtml.push('<td>北京大学（985）</td>');
+        //contentHtml.push('<td>法学、国际金融</td>');
+        //contentHtml.push('<td>本科一批</td>');
+        //contentHtml.push('<td>23人</td>');
+        //contentHtml.push('<td>物理</td>');
+        //contentHtml.push('</tr>');
+        //contentHtml.push('<tr>');
+        //contentHtml.push('<td>4</td>');
+        //contentHtml.push('<td>北京大学（985）</td>');
+        //contentHtml.push('<td>法学、国际金融</td>');
+        //contentHtml.push('<td>本科一批</td>');
+        //contentHtml.push('<td>23人</td>');
+        //contentHtml.push('<td>物理</td>');
+        //contentHtml.push('<tr>');
+        //contentHtml.push('<td>5</td>');
+        //contentHtml.push('<td>北京大学（985）</td>');
+        //contentHtml.push('<td>法学、国际金融</td>');
+        //contentHtml.push('<td>本科一批</td>');
+        //contentHtml.push('<td>23人</td>');
+        //contentHtml.push('<td>物理</td>');
+        //contentHtml.push('</tr>');
+        //contentHtml.push('</tr>');
+        //contentHtml.push('<tr>');
+        //contentHtml.push('<td>6</td>');
+        //contentHtml.push('<td>北京大学（985）</td>');
+        //contentHtml.push('<td>法学、国际金融</td>');
+        //contentHtml.push('<td>本科一批</td>');
+        //contentHtml.push('<td>23人</td>');
+        //contentHtml.push('<td>物理</td>');
+        //contentHtml.push('</tr>');
+        //contentHtml.push('<tr>');
+        //contentHtml.push('<td>7</td>');
+        //contentHtml.push('<td>北京大学（985）</td>');
+        //contentHtml.push('<td>法学、国际金融</td>');
+        //contentHtml.push('<td>本科一批</td>');
+        //contentHtml.push('<td>23人</td>');
+        //contentHtml.push('<td>物理</td>');
+        //contentHtml.push('</tr>');
+        //contentHtml.push('<tr>');
+        //contentHtml.push('<td>8</td>');
+        //contentHtml.push('<td>北京大学（985）</td>');
+        //contentHtml.push('<td>法学、国际金融</td>');
+        //contentHtml.push('<td>本科一批</td>');
+        //contentHtml.push('<td>23人</td>');
+        //contentHtml.push('<td>物理</td>');
+        //contentHtml.push('</tr>');
+        //contentHtml.push('<tr>');
+        //contentHtml.push('<td>9</td>');
+        //contentHtml.push('<td>北京大学（985）</td>');
+        //contentHtml.push('<td>法学、国际金融</td>');
+        //contentHtml.push('<td>本科一批</td>');
+        //contentHtml.push('<td>23人</td>');
+        //contentHtml.push('<td>物理</td>');
+        //contentHtml.push('</tr>');
+        //contentHtml.push('<tr>');
+        //contentHtml.push('<td>10</td>');
+        //contentHtml.push('<td>北京大学（985）</td>');
+        //contentHtml.push('<td>法学、国际金融</td>');
+        //contentHtml.push('<td>本科一批</td>');
+        //contentHtml.push('<td>23人</td>');
+        //contentHtml.push('<td>物理</td>');
+        //contentHtml.push('</tr>');
         contentHtml.push('</tbody>');
         contentHtml.push('</table>');
         contentHtml.push('<div class="pagination-bar"><div class="pagination"></div></div>');
@@ -120,21 +219,71 @@ UniversityDetail.prototype = {
             area: ['543px', '490px'],
             content: contentHtml.join('')
         });
+    },
+    loadPage: function (offset, rows) {
+        var that = this;
+        this.universityOffset = offset;
+        this.universityRows = rows;
+        var subject = this.subject;
+        var universityName = this.universityName;
+        var batch = this.batch;
+        Common.ajaxFun('/selectClassesGuide/getMajorByUniversityNameAndBatch.do', 'GET', {
+            'subject': subject,
+            'universityName': universityName,
+            'batch': batch,
+            'offset': offset,
+            'rows': rows
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData;
+                that.showData(data);
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
+    },
+    showData: function (result) {
+        var that = this;
+        this.universityCount = result.count;
+        this.pageCount = Math.ceil(this.universityCount / this.universityRows);
+        var template = Handlebars.compile($("#university-detail-data-template").html());
+        $('#university-detail-data-list').html(template(result.majorByUniversityNameAndBatch));
+        this.pagination();
+    },
+    pagination: function () {
+        var that = this;
+        $(".pagination").createPage({
+            pageCount: Math.ceil(that.universityCount / that.universityRows),
+            current: Math.ceil(that.universityOffset / that.universityRows) + 1,
+            backFn: function (p) {
+                $(".pagination-bar .current-page").html(p);
+                that.universityOffset = (p - 1) * that.universityRows;
+                that.loadPage(that.universityOffset, that.universityRows);
+            }
+        });
     }
 };
 
-$(document).on('click', '#university-detail', function () {
-    var universityDetail = new UniversityDetail();
-    universityDetail.showBox('院校详情');
+$(function () {
+    new SubjectAnalysis();
+
+    $(document).on('click', '#university-detail', function () {
+        var subjectName = $(this).attr('subject');
+        if (subjectName != '00') {
+            var universityDetail = new UniversityDetail('院校详情', subjectName);
+        }
+    });
+
+    majorTypeAnalysis();
+    enrollUniversityTotal();
+    planTotalLineChart();
 });
 
-batchAnalysis();
-majorTypeAnalysis();
-enrollUniversityTotal();
-planTotalLineChart();
-
 //按批次分析
-function batchAnalysis () {
+function batchAnalysis (batchs, values) {
+    console.info('======');
+    console.info(batchs);
+    console.info(values);
     var subjectBarChart = echarts.init(document.getElementById('subjectLineChart'));
     var subjectBarOption = {
         title: {
@@ -186,7 +335,7 @@ function batchAnalysis () {
             splitLine: {
                 show: false
             },
-            data: ['高职院校', '三本院校', '二本院校', '一本院校']
+            data: batchs //['高职院校', '三本院校', '二本院校', '一本院校']
         },
         series: [
             {
@@ -194,7 +343,7 @@ function batchAnalysis () {
                 type: 'bar',
                 barMinHeight: 26,
                 barCategoryGap: '40%',
-                data: [8917, 6989, 5342, 3456],
+                data: values, //[8917, 6989, 5342, 3456],
                 label: {
                     normal: {
                         show: true,

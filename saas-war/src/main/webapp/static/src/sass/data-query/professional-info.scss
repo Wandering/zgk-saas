@@ -23,9 +23,6 @@
       border-bottom: none;
       box-sizing: border-box;
     }
-    &:last-of-type {
-      border-right: 1px solid $border;
-    }
     .active {
       box-sizing: border-box;
       background: $mainColor;

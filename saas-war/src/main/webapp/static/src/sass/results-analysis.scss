@@ -15,3 +15,59 @@
   font-size:16px;
   display: inline-block;
 }
+
+.class-chart,
+.subject-chart{
+  float: left;
+  width:400px;
+  margin:30px 0 0 30px;
+}
+
+.sel-main{
+  margin:20px 0 0 30px;
+  select{
+    margin-right:20px;
+  }
+}
+.table-details-main{
+  margin:20px;
+}
+.title-2 .txt-t{
+  float: left;
+}
+.class-sel{
+  float: left;
+  margin:10px;
+}
+.chart-main1{
+  overflow: hidden;
+  .chart-tab{
+    float: right;
+    overflow: hidden;
+    height:40px;
+    .cur{
+      background: #cb171d !important;
+      color: #fff;
+    }
+  }
+  .chart-box{
+    clear: both;
+    overflow: hidden;
+    &.hds{
+      font-size:0;
+      height:0;
+      overflow: hidden;
+    }
+  }
+}
+
+.txt1{
+  font-weight: bold;
+  font-size:16px;
+}
+
+.student-change-table{
+  td{
+    text-align: center;
+  }
+}

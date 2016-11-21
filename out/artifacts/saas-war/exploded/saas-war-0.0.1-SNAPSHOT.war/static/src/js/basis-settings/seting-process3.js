@@ -1,7 +1,7 @@
 var tnId = Common.cookie.getCookie('tnId');
 
 
-//Common.flowSteps();
+Common.flowSteps();
 
 
 
@@ -37,9 +37,11 @@ SetingProcess3.prototype = {
                     classTemplate.push('</tr>');
                     $('#class-template').append(classTemplate.join(''));
                 });
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         });
     },
     initClassItem: function () {
@@ -51,9 +53,11 @@ SetingProcess3.prototype = {
         Common.ajaxFun('/config/getInit/class.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 initData = res.bizData.configList;
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         }, true);
         var contentHtml = [];
         contentHtml.push('<div class="add-label">');
@@ -93,9 +97,11 @@ SetingProcess3.prototype = {
                     that.getClassList();
                     layer.closeAll();
                 }
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         });
     },
     delItem: function (ids) {
@@ -105,9 +111,11 @@ SetingProcess3.prototype = {
                 layer.closeAll();
                 $('#class-template').html('');
                 that.getClassList();
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         });
     },
     tableDrag: function () {
@@ -135,9 +143,11 @@ SetingProcess3.prototype = {
                         }else{
                             layer.msg(res.bizData.result);
                         }
+                    }else{
+                        layer.msg(res.msg);
                     }
                 }, function (res) {
-                    alert("出错了");
+                    layer.msg(res.msg);
                 });
             };
         $("#class-template").sortable({

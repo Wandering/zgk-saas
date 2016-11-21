@@ -32,7 +32,7 @@ ClassSettings.prototype = {
             that.ids.push(k.configKey);
             classHtml.push('<tr>');
             classHtml.push('<td class="center"><label><input type="checkbox" columnid="' + k.id + '" class="ace" /><span class="lbl"></span></label></td>');
-            classHtml.push('<td class="center index" indexid="' + k.configOrder + '">' + k.configKey + '</td>');
+            classHtml.push('<td class="center index" indexid="' + k.id + '">' + k.configKey + '</td>');
             classHtml.push('<td class="center">' + k.name + '</td>');
             classHtml.push('<td class="center"><a href="javascript: void(0);" id="' + k.id + '" class="remove-link remove-column">移除</a></td>');
             classHtml.push('</tr>');
@@ -71,7 +71,7 @@ ClassSettings.prototype = {
                         }
                     }
                 }, function (res) {
-                    alert("出错了");
+                    layer.msg("出错了", {time: 1000});
                 });
             }, function () {
                 layer.closeAll();
@@ -109,10 +109,10 @@ ClassSettings.prototype = {
                 var ids = [];
                 $('td.index', ui.item.parent()).each(function (i) {
                     $(this).html(i + 1);
-                    ids.push("-" + $(this).attr('indexid'));
+                    ids.push($(this).attr('indexid'));
+                    console.info($(this));
                 });
-                ids = ids.join('');
-                ids = ids.substring(1, ids.length);
+                ids = ids.join('-');
                 Common.ajaxFun('/config/sort/class/'+ ids +'.do', 'POST', {}, function (res) {
                     if (res.rtnCode == "0000000") {
                         if (res.bizData.result == "SUCCESS") {
@@ -216,7 +216,7 @@ ColumnSettings.prototype = {
     },
     changeColumnEvent: function () {
         var that = this;
-        //alert('haha' + ', idCount: ' + that.idCount + ', ids: ' + that.ids.join('-'));
+        //alert('hahahehe' + ', idCount: ' + that.idCount + ', ids: ' + that.ids.join('-'));
         Common.ajaxFun('/manage/import/' + that.type + '/' + tnId + '.do?ids=' + that.ids.join('-'), 'POST', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 chooseWindowBox != null ? layer.close(chooseWindowBox) : layer.msg('窗口已关闭', {time: 1000});

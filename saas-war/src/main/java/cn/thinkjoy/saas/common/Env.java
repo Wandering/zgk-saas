@@ -24,6 +24,7 @@ public class Env {
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
+            logger.info("System.exit");
         }
     }
 

@@ -94,17 +94,4 @@
         from zgk2.zgk_data_dict where type=#{type}
     </select>
 
-    <!-- 根据年级查询学校内学生选课情况 -->
-    <select id="getAnalysisGroup" parameterType="java.util.Map" resultType="java.util.Map">
-        SELECT
-            student_major_type AS 'group',
-            count(student_major_type) AS stuNumber
-        FROM
-            ${table}
-        WHERE
-            student_grade LIKE CONCAT('%',#{grade},'%')
-        GROUP BY
-            student_major_type
-    </select>
-
 </mapper>

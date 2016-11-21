@@ -7,10 +7,10 @@
 package cn.thinkjoy.saas.service.impl;
 
 import cn.thinkjoy.common.dao.IBaseDAO;
+import cn.thinkjoy.common.service.impl.AbstractPageService;
 import cn.thinkjoy.saas.dao.ITenantDAO;
 import cn.thinkjoy.saas.domain.Tenant;
 import cn.thinkjoy.saas.service.ITenantService;
-import cn.thinkjoy.common.service.impl.AbstractPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -139,6 +139,5 @@ public class TenantServiceImpl extends AbstractPageService<IBaseDAO<Tenant>, Ten
 //    public BizData4Page queryPageByDataPerm(String resUri, Map conditions, int curPage, int offset, int rows) {
 //        return super.doQueryPageByDataPerm(resUri, conditions, curPage, offset, rows);
 //    }
-
 
 }

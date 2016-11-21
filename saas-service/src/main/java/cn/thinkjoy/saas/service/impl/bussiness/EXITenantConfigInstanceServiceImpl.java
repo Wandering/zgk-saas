@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -28,6 +30,7 @@ import java.util.*;
  * Created by douzy on 16/10/13.
  */
 @Service("EXITenantConfigInstanceServiceImpl")
+@Transactional(propagation=Propagation.REQUIRED)
 public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBaseDAO<TenantConfigInstance>, TenantConfigInstance> implements EXITenantConfigInstanceService<IBaseDAO<TenantConfigInstance>,TenantConfigInstance> {
 
     private static final Logger LOGGER= LoggerFactory.getLogger(EXITenantConfigInstanceServiceImpl.class);
@@ -275,6 +278,31 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         return result;
     }
 
+    @Override
+    public Configuration queryConfigurationOne(Map map) {
+        return iConfigurationDAO.queryOne(map, "id", "asc");
+    }
+
+    @Override
+    public boolean existColumn(Map map) {
+        return exiTenantConfigInstanceDAO.existColumn(map)>0;
+    }
+    @Override
+    public Integer addConfigs(List<TenantConfigInstance> tenantConfigInstances) {
+        return exiTenantConfigInstanceDAO.addConfigs(tenantConfigInstances);
+    }
+    @Override
+    public void addColumn(Map map){
+        exiTenantConfigInstanceDAO.addColumn(map);
+    }
+    @Override
+    public Integer teantConfigDeleteByCondition(Map map){
+        return iTenantConfigInstanceDAO.deleteByCondition(map);
+    }
+    @Override
+    public void removeColumn(Map map){
+        exiTenantConfigInstanceDAO.removeColumn(map);
+    }
     /**
      *  新增表头
      * @param type
@@ -302,31 +330,30 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             Map map = new HashMap();
             map.put("id", configId);
             map.put("domain", type);
-            Configuration configuration = iConfigurationDAO.queryOne(map, "id", "asc");
-
+            Configuration configuration = queryConfigurationOne(map);
 
             Map paramsMap = new HashMap();
             paramsMap.put("tableName", tableName);
             paramsMap.put("columnName", configuration.getEnName());
-            Integer isExist = exiTenantConfigInstanceDAO.existColumn(paramsMap);
+            boolean isExist = existColumn(paramsMap);
 
-            if (isExist > 0)
+            if (isExist)
                 continue;
 
             List<TenantConfigInstance> tenantConfigInstances = new ArrayList<TenantConfigInstance>();
             TenantConfigInstance tenantConfigInstance = configStructure(configuration, tnId);
             tenantConfigInstances.add(tenantConfigInstance);
 
-            Integer addResult = exiTenantConfigInstanceDAO.addConfigs(tenantConfigInstances);
+            addConfigs(tenantConfigInstances);
 
             Map addMap = new HashMap();
             addMap.put("tableName", tableName);
             addMap.put("columnName", configuration.getEnName());
             addMap.put("columnType", configuration.getMetaType());
-            exiTenantConfigInstanceDAO.addColumn(addMap);
+            addColumn(addMap);
         }
-        List<TenantConfigInstanceView> tenantConfigInstanceViews=getTenantConfigListByTnIdAndType(type,tnId);
 
+        isExsitsColumn(idsList,tableName,type,tnId);
 
 
 
@@ -492,7 +519,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * @param tnId 租户ID
      * @return
      */
-    private  TenantConfigInstance configStructure(Configuration configuration,Integer tnId) {
+    public  TenantConfigInstance configStructure(Configuration configuration,Integer tnId) {
         TenantConfigInstance tenantConfigInstance = new TenantConfigInstance();
         tenantConfigInstance.setCheckRule(configuration.getCheckRule());
         tenantConfigInstance.setConfigKey(configuration.getId().toString());
@@ -514,7 +541,59 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         return (count>0?true:false);
     }
 
+    public boolean isExsitsColumn(List<String> configIds,String tableName,String type,Integer tnId ) {
 
+        List<String> configViews = new ArrayList<>();
+
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = getTenantConfigListByTnIdAndType(type, tnId);
+
+        for (TenantConfigInstanceView tenantConfigInstanceView : tenantConfigInstanceViews) {
+            configViews.add(tenantConfigInstanceView.getConfigKey());
+        }
+        List<String> diffIds = getDifferent(configIds, configViews);
+
+        for(String configId:diffIds) {
+            Map map = new HashMap();
+            map.put("configKey", configId);
+            map.put("tnId", tnId);
+            map.put("domain", type);
+            teantConfigDeleteByCondition(map);
+            Map conMap = new HashMap();
+            conMap.put("id", configId);
+            conMap.put("domain", type);
+            Configuration configuration = queryConfigurationOne(map);
+
+            Map paramsMap = new HashMap();
+            paramsMap.put("tableName", tableName);
+            paramsMap.put("columnName", configuration.getEnName());
+            removeColumn(paramsMap);
+        }
+
+        return false;
+    }
+
+    public static List<String> getDifferent(List<String> prelist, List<String> curlist) {
+        List<String> diff = new ArrayList<String>();
+
+        Map<String, Integer> map = new HashMap<String, Integer>(curlist.size());
+        for (String stu : curlist) {
+            map.put(stu, 1);
+        }
+        for (String stu : prelist) {
+            if (map.get(stu) != null) {
+                map.put(stu, 2);
+                continue;
+            }
+            diff.add(stu);
+        }
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            if (entry.getValue() == 1) {
+                diff.add(entry.getKey());
+            }
+        }
+        return diff;
+
+    }
     public static void main(String[] args) {
         Map<Object,String> map = new HashMap<Object, String>();
         map.put(1,"22");

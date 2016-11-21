@@ -1041,7 +1041,10 @@ selectList
         select exam.id,exam.examTime,count(1) as total
         from saas_exam exam
         inner join saas_exam_detail detail on exam.id=detail.examId
-        where exam.grade=${grade} and CAST(detail.totleScore as SIGNED)>=${lineScore}
+        where exam.tnId=#{tnId} and exam.grade=#{grade} and CAST(detail.totleScore as SIGNED)>=#{lineScore}
+        <if test="className!=null">
+            AND detail.className = #{className}
+        </if>
         group by exam.id,exam.examTime
         order by exam.examTime asc
     </select>
@@ -1049,7 +1052,7 @@ selectList
     <select id="getEnrollingNumberInfo"  parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT batch_1_enrolls as batchOne, batch_2_enrolls as batchTwo, batch_3_enrolls as batchThr
         FROM saas_enrolling_ratio ratio
-        where ratio.tn_id=${tnId}
+        where ratio.tn_id=#{tnId}
         order by ratio.year desc,ratio.create_date DESC
         limit 1
     </select>
@@ -1105,9 +1108,8 @@ selectList
         order by total desc
     </select>
 
-
     <select id="getMostAttentionPage" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
-        select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo
+        select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank,d.classRank
         from saas_exam_stu_weak_course c
         left join saas_exam_detail d on c.examDetailId=d.id
         where c.examId=#{examId} and c.batchName=#{batchName}
@@ -1117,14 +1119,14 @@ selectList
         <if test="courseName!=null">
             AND weakCourseOne = #{courseName}
             UNION ALL
-            select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo
+            select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank,d.classRank
             from saas_exam_stu_weak_course c
             left join saas_exam_detail d on c.examDetailId=d.id
             where c.examId=#{examId} and c.batchName=#{batchName}
             <if test="className!=null">
                 AND className = #{className}
             </if>
-            AND weakCourseOne = #{courseName}
+            AND weakCourseTwo = #{courseName}
         </if>
         <if test="orderBy!=null">
             ORDER BY ${orderBy} ${sortBy}
@@ -1133,7 +1135,7 @@ selectList
             limit ${offset}, ${rows}
         </if>
     </select>
-    <select id="getAvgScoresForClass" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="getAvgScoresForClass" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
         select d.className,e.examTime, ROUND(AVG(IF(d.yuWenScore='', null, d.yuWenScore)), 2) 语文,
         ROUND(AVG(IF(d.shuXueScore='', null, d.shuXueScore)), 2) 数学,
         ROUND(AVG(IF(d.yingYuScore='', null, d.yingYuScore)), 2) 英语,
@@ -1143,18 +1145,64 @@ selectList
         ROUND(AVG(IF(d.zhengZhiScore='', null, d.zhengZhiScore)), 2) 政治,
         ROUND(AVG(IF(d.diLiScore='', null, d.diLiScore)), 2) 地理,
         ROUND(AVG(IF(d.liShiScore='', null, d.liShiScore)), 2) 历史,
-        ROUND(AVG(IF(d.commonScore='', null, d.commonScore)), 2) 通用技术
+        ROUND(AVG(IF(d.commonScore='', null, d.commonScore)), 2) 通用技术,
+		ROUND(AVG(IF(d.totleScore='', null, d.totleScore)), 2) 总分
         from saas_exam_detail d
         LEFT JOIN saas_exam e on d.examId=e.id
-        WHERE d.className=#{className}
+        WHERE d.className=#{className} and e.grade=#{grade} and e.tnId=#{tnId}
         group by d.className,e.examTime
-        order by e.id desc
+        order by e.examTime asc
     </select>
     
     <select id="getClassesNameByGrade" parameterType="java.util.HashMap" resultType="java.lang.String">
         select t.class_name
         from ${tableName} t
         where t.class_grade= #{grade}
+    </select>
+
+    <select id="getAvgScoresForClassStudent" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
+        select d.className,d.studentName,e.examTime,
+        ROUND(AVG(IF(d.yuWenScore='', null, d.yuWenScore) 语文,
+        IF(d.shuXueScore='', null, d.shuXueScore) 数学,
+        IF(d.yingYuScore='', null, d.yingYuScore) 英语,
+        IF(d.wuLiScore='', null, d.wuLiScore) 物理,
+        IF(d.huaXueScore='', null, d.huaXueScore) 化学,
+        IF(d.shengWuScore='', null, d.shengWuScore) 生物,
+        IF(d.zhengZhiScore='', null, d.zhengZhiScore) 政治,
+        IF(d.diLiScore='', null, d.diLiScore) 地理,
+        IF(d.liShiScore='', null, d.liShiScore) 历史,
+        IF(d.commonScore='', null, d.commonScore) 通用技术,
+        IF(d.totleScore='', null, d.totleScore) 总分
+        from saas_exam_detail d
+        LEFT JOIN saas_exam e on d.examId=e.id
+        WHERE d.className=#{className} and e.grade=#{grade} and e.tnId=#{tnId} and d.studentName=#{studentName}
+        group by d.className,d.studentName,e.examTime
+        order by e.examTime asc
+    </select>
+
+    <select id="getMostAttentionListForClass" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
+        select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank,d.classRank
+        from saas_exam_stu_weak_course c
+        left join saas_exam_detail d on c.examDetailId=d.id
+        where c.examId=#{examId}
+    </select>
+
+    <select id="checkIsTableExist" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select t.TABLE_SCHEMA,t.TABLE_NAME,t.TABLE_ROWS
+        from information_schema.TABLES t
+        where t.TABLE_SCHEMA='zgk_saas' and t.TABLE_NAME=#{tableName}
+    </select>
+
+    <select id="checkIsColumnExist" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select c.TABLE_SCHEMA,c.TABLE_NAME,c.COLUMN_NAME
+        from information_schema.COLUMNS c
+        where c.TABLE_SCHEMA='zgk_saas' and c.TABLE_NAME=#{tableName} and c.COLUMN_NAME=#{columnName}
+    </select>
+
+    <select id="getClassBossList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select t.class_grade,t.class_name,t.class_boss
+        from ${tableName} t
+        where t.class_grade=#{grade}
     </select>
 </mapper>
 

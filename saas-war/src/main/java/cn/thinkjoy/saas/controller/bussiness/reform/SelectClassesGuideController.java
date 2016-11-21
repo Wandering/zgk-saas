@@ -152,11 +152,4 @@ public class SelectClassesGuideController {
         return returnMap;
     }
 
-    @RequestMapping("getAnalysisGroup")
-    @ResponseBody
-    public List<Map<String,Object>> getAnalysisGroup(@RequestParam("grade") String grade,@RequestParam("tnId") String tnId) {
-
-        return iSelectClassesGuideService.getAnalysisGroup(grade,tnId);
-    }
-
 }

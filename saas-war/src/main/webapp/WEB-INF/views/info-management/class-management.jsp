@@ -28,12 +28,11 @@
                                 <a href="#">首页</a>
                             </li>
                             <li class="active">班级管理</li>
-                        </ul><!-- .breadcrumb -->
+                        </ul>
                     </div>
                     <div class="page-content">
                         <div class="row">
                             <div class="col-xs-12">
-                                <!-- PAGE CONTENT BEGINS -->
                                 <div class="main-title">
                                     <h3>班级管理</h3>
                                 </div>
@@ -42,14 +41,22 @@
                                     <div class="btns">
                                         <button class="btn btn-pink" id="addRole-btn">添加班级</button>
                                         <button class="btn btn-inverse" id="updateRole-btn">修改</button>
-                                        <button class="btn btn-success">删除</button>
-                                        <button class="btn btn-warning">模板下载</button>
-                                        <button class="btn btn-warning">批量上传</button>
+                                        <button class="btn btn-success" id="deleteClassBtn">删除</button>
+                                        <button class="btn btn-warning" id="downloadBtn">模板下载</button>
+                                        <button class="btn btn-warning" id="uploadBtn">批量上传</button>
                                         <button class="btn btn-warning" id="class-settings-btn">班级设置</button>
                                     </div>
                                 </div>
+                                <%--<div class="upload-box">--%>
+                                    <%--<span id="uploader-demo">--%>
+                                        <%--<span id="fileList" class="uploader-list"></span>--%>
+                                        <%--<button class="btn btn-info btn-import" id="btn-import">导入班级数据Excel</button>--%>
+                                    <%--</span>--%>
+                                    <%--<a href="javascript: void(0);" id="downloadBtn1" class="download-link">请先导出Excel模板，进行填写</a>--%>
+                                    <%--<button class="btn btn-cancel cancel-btn" id="cancel-download-btn">取消</button>'--%>
+                                <%--</div>--%>
                                 <div>
-                                    <table id="class-table" class="table">
+                                    <table id="class-manage-table" class="table">
                                         <thead>
                                             <%--<tr>--%>
                                                 <%--<th class="center">--%>
@@ -69,19 +76,53 @@
                                                 <%--<th class="center">班级人数</th>--%>
                                             <%--</tr>--%>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="class-manage-list" class="check-template">
 
                                         </tbody>
                                     </table>
                                 </div>
-                                <!-- PAGE CONTENT ENDS -->
-                            </div><!-- /.col -->
-                        </div><!-- /.row -->
-                    </div><!-- /.page-content -->
-                </div><!-- /.main-content -->
-            </div><!-- /.main-container-inner -->
-        </div><!-- /.main-container -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div class="form-group add-results">
+            <label class="col-sm-3 control-label no-padding-right">添加成绩 </label>
+            <div class="col-sm-9">
+                <span id="uploader-demo">
+            <span id="fileList" style="display: none;" class="uploader-list"></span>
+            <button class="btn btn-pink" id="btn-import">添加</button>
+            </span>
+                <p><a target="_blank" href="/scoreAnalyse/downloadModel?tnId='+ tnId +'&grade='+ grade +'&mock=true">请先导出Excel模板,进行填写</a></p>
+                <p>温馨提示:上传与模板不一致的成绩单,系统无法识别</p>
+                </div>
+            </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         <%@ include file="./../common/footer.jsp"%>
+        <link rel="stylesheet" type="text/css" href="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.css">
+        <script src="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.js"></script>
+        <script>
+            var BASE_URL = '<%=ctx%>/static/src/lib/';
+            var rootPath = '<%=ctx%>';
+        </script>
+        <script src="<%=ctx%>/static/src/lib/assets/js/jquery-ui-1.12.1.js"></script>
         <script src="<%=ctx%>/static/src/js/info-management/class-management.js"></script>
     </body>
 </html>
