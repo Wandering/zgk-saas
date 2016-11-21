@@ -82,3 +82,25 @@
 }
 
 
+//上传layer
+.upload-box {
+  padding-top: 40px;
+  padding-left: 50px;
+}
+a.download-link:link,
+a.download-link:visited,
+a.download-link:hover {
+  display: block;
+  margin-top: 25px;
+  color: #CB171D;
+  text-decoration: underline;
+  outline: 0;
+}
+#cancel-download-btn {
+  margin-top: 50px;
+  border: 1px solid #CB171D !important;
+  border-radius: 2px;
+  color: #CB171D !important;
+  outline: 0;
+  background-color: #fff !important;
+}
