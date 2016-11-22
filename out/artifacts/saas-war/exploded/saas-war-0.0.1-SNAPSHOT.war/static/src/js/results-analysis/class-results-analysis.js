@@ -135,8 +135,6 @@ ClassResultsAnalysis.prototype = {
 
             }
         });
-
-
         that.chartTab();
     },
     // 通过年级获取班级
@@ -175,7 +173,6 @@ ClassResultsAnalysis.prototype = {
             $('.chart-box').addClass('hds').eq(index).removeClass('hds');
         });
         $('.chart-tab button:eq(0)').click();
-        that.totalScoreChart();
     },
     undergraduateLine: function () {  // 各班情况统计
         Common.ajaxFun('/scoreAnalyse/getEnrollingNumberInfo', 'GET', {
@@ -509,133 +506,195 @@ ClassResultsAnalysis.prototype = {
         var that = this;
         $('body').on('click','.student-btn',function(){
             var studentName = $(this).text();
-            Common.ajaxFun('/scoreAnalyse/getAvgScoresForClassStudent', 'GET', { //个人成绩变化趋势
-                'tnId':tnId,
-                'grade':grade,
-                'className':className,
-                'studentName':studentName
-            }, function (res) {
-                if (res.rtnCode == "0000000") {
-
-                } else {
-                    layer.msg(res.msg);
+            var studentChart = ''
+                +'<div class="chart-main2">'
+                +'<div class="chart-tab student-chart-tab">'
+                +'<button class="btn btn-return cur">查看总分趋势</button>'
+                +'<button class="btn btn-return">查看各科情况</button>'
+                +'</div>'
+                +'<div class="student-chart-box">'
+                +'<div id="studentTotalScore-chart" style="width: 100%;height: 400px;"></div>'
+                +'</div>'
+                +'<div class="student-chart-box hds">'
+                +'<div id="studentSubjects-chart" style="width: 100%;height: 400px;"></div>'
+                +'</div>'
+                +'</div>';
+            layer.open({
+                type: 1,
+                title: '个人成绩变化趋势',
+                offset: 'auto',
+                area: ['800px', '500px'],
+                content: studentChart,
+                success:function(){
+                    that.studentChartTab();
+                    that.getAvgScoresForClassStudent(grade,className,studentName);
                 }
-            }, function (res) {
-                layer.msg(res.msg);
             });
-
-
-            //var studentChart = ''
-            //+'<div class="chart-main2">'
-            //+'<div class="chart-tab">'
-            //+'<button class="btn btn-return cur">查看总分趋势</button>'
-            //+'<button class="btn btn-return">查看各科情况</button>'
-            //+'</div>'
-            //+'<div class="chart-box">'
-            //+'<div id="studentTotalScore-chart" style="width: 100%;height: 400px;"></div>'
-            //+'</div>'
-            //+'<div class="chart-box hds">'
-            //+'<div id="studentSubjects-chart" style="width: 100%;height: 400px;"></div>'
-            //+'</div>'
-            //+'</div>';
-            //layer.open({
-            //    type: 1,
-            //    title: '个人成绩变化趋势',
-            //    offset: 'auto',
-            //    area: ['800px', '500px'],
-            //    content: studentChart
-            //});
-            //that.studentTotalScoreChart(dateData,totalScoreData)
         });
     },
+    // 个人成绩变化趋势
+    getAvgScoresForClassStudent:function(grade,className,studentName){
+        var that = this;
+        Common.ajaxFun('/scoreAnalyse/getAvgScoresForClassStudent', 'GET', { //个人成绩变化趋势
+            'tnId':tnId,
+            'grade':grade,
+            'className':className,
+            'studentName':studentName
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var dataJson = res.bizData;
+                if(dataJson.length>0){
+                    var dateData = [];
+                    var totalScoreData = [];
+                    var subjectData = [];
+                    var datas = [];
+                    var arrMaxMin = [];
+                    for(var i in dataJson) {
+                        dateData.push(dataJson[i].examTime);
+                        totalScoreData.push(parseInt(dataJson[i]['总分']));
+                        delete dataJson[i].examTime;
+                        delete dataJson[i].className;
+                        delete dataJson[i].studentName;
+                        delete dataJson[i]['总分'];
+                        for(var l in dataJson[i]){
+                            arrMaxMin.push(dataJson[i][l]);
+                        }
+                    }
+                    for(var k in dataJson[0]){
+                        switch (k){
+                            case 'className':
+                            case 'examTime':
+                            case '总分':
+                                break;
+                            default:
+                                subjectData.push(k);
+                                break;
+                        }
+                    }
+                    for(var j in subjectData){
+                        var subArr = [];
+                        for(var g in dataJson) {
+                            delete dataJson[g].examTime;
+                            delete dataJson[g].className;
+                            delete dataJson[g].studentName;
+                            delete dataJson[g]['总分'];
+                            subArr.push(dataJson[g][subjectData[j]])
+                        }
+                        var seriesObj = {
+                            name:subjectData[j],
+                            type : 'line',
+                            data:subArr
+                        };
+                        datas.push(seriesObj);
+                    }
+                    that.studentTotalScoreChart(dateData,totalScoreData);
+                    that.studentSubjectsChart(subjectData,dateData,datas,arrMaxMin);
+                }
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
+    // chartTab
+    studentChartTab:function(){
+        var that = this;
+        $('.student-chart-tab button').on('click',function(){
+            var index = $(this).index();
+            $(this).addClass('cur').siblings().removeClass('cur');
+            $('.student-chart-box').addClass('hds').eq(index).removeClass('hds');
+        });
+        $('.student-chart-tab button:eq(0)').click();
+    },
     // 查看总分趋势
-    //studentTotalScoreChart:function(dateData,totalScoreData){
-    //    var studentTotalScoreChart = echarts.init(document.getElementById('studentTotalScore-chart'));
-    //    var studentTtotalScoreChartOption = {
-    //        title: {
-    //            text: '班级平均分排名',
-    //            left: 'left',
-    //            textStyle:{
-    //                fontSize:12
-    //            }
-    //        },
-    //        tooltip: {
-    //            trigger: 'item',
-    //            formatter: '{a} <br/>{b} : {c}'
-    //        },
-    //        legend: {
-    //            left: 'left'
-    //        },
-    //        xAxis: {
-    //            type: 'category',
-    //            name: 'x',
-    //            splitLine: {show: false},
-    //            //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
-    //            data: ["2016-02-02", "2016-03-03", "2016-04-07", "2016-05-10", "2016-06-14"]
-    //            //data: dateData
-    //        },
-    //        grid: {
-    //            left: '3%',
-    //            right: '4%',
-    //            bottom: '3%',
-    //            containLabel: true
-    //        },
-    //        yAxis: {
-    //            type: 'value',
-    //            min:Array.min(totalScoreData),
-    //            max:Array.max(totalScoreData)
-    //        },
-    //        series: [
-    //            {
-    //                name: '3的指数',
-    //                type: 'line',
-    //                //data: [1, 3, 9, 27, 81, 247, 741, 2223, 6669]
-    //                data: totalScoreData
-    //            }
-    //        ]
-    //    };
-    //    studentTotalScoreChart.setOption(studentTtotalScoreChartOption);
-    //},
-    //subjectsChart:function(subjectData,dateData,datas,arrMaxMin){
-    //    var subjectsChart = echarts.init(document.getElementById('subjectsChart-chart'));
-    //    var subjectsChartOption = {
-    //        title: {
-    //            text: '班级平均分排名',
-    //            left: 'left',
-    //            textStyle:{
-    //                fontSize:12
-    //            }
-    //        },
-    //        tooltip: {
-    //            trigger: 'item',
-    //            formatter: '{a} <br/>{b} : {c}'
-    //        },
-    //        legend: {
-    //            left: 'center',
-    //            //data: ['2的指数', '3的指数']
-    //            data: subjectData
-    //        },
-    //        xAxis: {
-    //            type: 'category',
-    //            splitLine: {show: false},
-    //            //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
-    //            data: dateData
-    //        },
-    //        grid: {
-    //            left: '3%',
-    //            right: '4%',
-    //            bottom: '3%',
-    //            containLabel: true
-    //        },
-    //        yAxis: {
-    //            type: 'value',
-    //            min:Array.min(arrMaxMin),
-    //            max:Array.max(arrMaxMin)
-    //        },
-    //        series:datas
-    //    };
-    //    studentTotalScoreChart.setOption(subjectsChartOption);
-    //},
+    studentTotalScoreChart:function(dateData,totalScoreData){
+        var studentTotalScoreChart = echarts.init(document.getElementById('studentTotalScore-chart'));
+        var studentTtotalScoreChartOption = {
+            title: {
+                text: '班级平均分排名',
+                left: 'left',
+                textStyle:{
+                    fontSize:12
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b} : {c}'
+            },
+            legend: {
+                left: 'left'
+            },
+            xAxis: {
+                type: 'category',
+                name: 'x',
+                splitLine: {show: false},
+                //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
+                data: ["2016-02-02", "2016-03-03", "2016-04-07", "2016-05-10", "2016-06-14"]
+                //data: dateData
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            yAxis: {
+                type: 'value',
+                min:Array.min(totalScoreData),
+                max:Array.max(totalScoreData)
+            },
+            series: [
+                {
+                    name: '3的指数',
+                    type: 'line',
+                    //data: [1, 3, 9, 27, 81, 247, 741, 2223, 6669]
+                    data: totalScoreData
+                }
+            ]
+        };
+        studentTotalScoreChart.setOption(studentTtotalScoreChartOption);
+    },
+    studentSubjectsChart:function(subjectData,dateData,datas,arrMaxMin){
+        var studentSubjectsChart = echarts.init(document.getElementById('studentSubjects-chart'));
+        var studentSubjectsChartOption = {
+            title: {
+                text: '班级平均分排名',
+                left: 'left',
+                textStyle:{
+                    fontSize:12
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b} : {c}'
+            },
+            legend: {
+                left: 'center',
+                //data: ['2的指数', '3的指数']
+                data: subjectData
+            },
+            xAxis: {
+                type: 'category',
+                splitLine: {show: false},
+                //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
+                data: dateData
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            yAxis: {
+                type: 'value',
+                min:Array.min(arrMaxMin),
+                max:Array.max(arrMaxMin)
+            },
+            series:datas
+        };
+        studentSubjectsChart.setOption(studentSubjectsChartOption);
+    },
     selSortOnline: function (grade,className) {
         var that = this;
         $('input[name="sort-radio"]').change(function () {
