@@ -140,25 +140,18 @@
                         </table>
                         <div><h5 class="h5">重点关注学生：</h5><span class="batch-info">根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</span></div>
                         <div class="txt-t">
-                            <div class="radio no-padding-left">
-                                <label>
-                                    <span class="lbl">选择上线人数:</span>
-                                </label>
-                                <label>
-                                    <input name="sort-radio" type="radio" value="batchAll" class="ace batchAllRadio"/>
-                                    <span class="lbl">本科上线人数</span>
-                                </label>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <label>
-                                    <input name="sort-radio" type="radio" value="batchOne" class="ace batchOneRadio"/>
-                                    <span class="lbl">一本上线人数</span>
-                                </label>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <label>
-                                    <input name="sort-radio" type="radio" value="batchTwo" class="ace batchTwoRadio"/>
-                                    <span class="lbl">二本上线人数</span>
-                                </label>
-                            </div>
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <select class="form-control" id="batch-sel">
+                                            <option value="">请选择批次</option>
+                                            <option value="batchOne">一本</option>
+                                            <option value="batchTwo">二本</option>
+                                            <option value="batchThr">三本</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <div class="table-details-main">
                             <table class="table table-hover">
