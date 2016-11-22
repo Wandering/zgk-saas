@@ -1112,7 +1112,10 @@ selectList
         select d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank,d.classRank
         from saas_exam_stu_weak_course c
         left join saas_exam_detail d on c.examDetailId=d.id
-        where c.examId=#{examId} and c.batchName=#{batchName}
+        where c.examId=#{examId}
+        <if test="batchName!=null">
+            AND c.batchName=#{batchName}
+        </if>
         <if test="className!=null">
             AND className = #{className}
         </if>
