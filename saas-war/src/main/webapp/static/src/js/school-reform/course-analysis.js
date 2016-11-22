@@ -401,7 +401,7 @@ function getNumberByYear (tnId) {
     }, function (res) {
         if (res.rtnCode == "0000000") {
             var data = res.bizData;
-
+            console.info(data);
         }
     }, function (res) {
         layer.msg("出错了");
