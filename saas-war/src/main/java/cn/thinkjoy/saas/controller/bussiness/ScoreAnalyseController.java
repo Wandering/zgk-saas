@@ -963,7 +963,7 @@ public class ScoreAnalyseController
             {
                 String bossName = bossMap.get(className);
                 map.put("counselor", bossName);
-                if(null != counselor && !counselor.equals(bossName))
+                if(StringUtils.isNotEmpty(counselor)  && !counselor.equals(bossName))
                     continue;
             }
             map.put("advancedNumber", advancedNumber);
