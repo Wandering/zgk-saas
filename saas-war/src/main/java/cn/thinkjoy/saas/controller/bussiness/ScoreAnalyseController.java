@@ -888,6 +888,10 @@ public class ScoreAnalyseController
         @RequestParam(value = "stepEnd", required = true) Integer stepEnd,
         @RequestParam(value = "counselor", required = false) String counselor)
     {
+        if(null == stepStart)
+            stepStart = 1;
+        if(null == stepEnd)
+            stepEnd = Integer.MAX_VALUE;
         List<Map<String, Object>> resultList = new ArrayList<>();
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("grade", grade);
@@ -947,6 +951,7 @@ public class ScoreAnalyseController
                 dataList.add(params);
                 advancedScoreSet.add(advancedScore);
             }
+
         }
         for (Map.Entry<String, List<Map<String, Object>>> en : resultMap.entrySet())
         {
@@ -958,7 +963,7 @@ public class ScoreAnalyseController
             {
                 String bossName = bossMap.get(className);
                 map.put("counselor", bossName);
-                if(null != counselor && !counselor.equals(bossName))
+                if(StringUtils.isNotEmpty(counselor)  && !counselor.equals(bossName))
                     continue;
             }
             map.put("advancedNumber", advancedNumber);

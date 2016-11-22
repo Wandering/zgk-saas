@@ -31,6 +31,13 @@ SchoolResultsAnalysis.prototype = {
                         that.selSortOnline(v.value);
                         that.coreStudent(v.value);
                         that.getStepList(v.value, 10, 20);
+                        that.getSchoolBossForGrade(v.value);
+                        if (v.value.indexOf('高三') >= 0 || v.value.indexOf('高3') >= 0) {
+                            that.getOverLineNumberByDate(v.value);
+                            $('.grade3-main').show();
+                        } else {
+                            $('.grade3-main').hide();
+                        }
                     }
                 });
 
@@ -83,6 +90,7 @@ SchoolResultsAnalysis.prototype = {
             that.getStepList(radioV, 10, 20);
             that.getMostAdvancedNumbers(radioV, 10, 20);
             that.updateExamProperties(radioV);
+            that.getSchoolBossForGrade(radioV);
             if (radioV.indexOf('高三') >= 0 || radioV.indexOf('高3') >= 0) {
                 $('.grade3-main').show();
                 that.getOverLineNumberByDate(radioV);
@@ -546,19 +554,25 @@ SchoolResultsAnalysis.prototype = {
             });
         })
     },
-    progressStudent: function () {
-        //Common.ajaxFun('/scoreAnalyse/getMostAttentionNumber', 'GET', {
-        //    'tnId': tnId,
-        //    'grade': grade
-        //}, function (res) {
-        //    console.log(res)
-        //    if (res.rtnCode == "0000000") {
-        //        var myTemplate = Handlebars.compile($("#progress-template").html());
-        //        $('#progress-tbody').html(myTemplate(res));
-        //    }
-        //}, function (res) {
-        //    layer.msg(res.msg);
-        //});
+    // 年级进步较大学生班主任下拉列表
+    getSchoolBossForGrade:function(grade){
+        var that = this;
+        Common.ajaxFun('/scoreAnalyse/getSchoolBossForGrade', 'GET', {
+            'tnId': tnId,
+            'grade': grade
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var rankingSel = [];
+                $.each(res.bizData,function(i,v){
+                    rankingSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="'+ v.stepEnd +'" value="">'+ v.stepStart + "-" + v.stepEnd +'</option>');
+                });
+                $('#counselor-sel').append(rankingSel);
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
     }
 
 };
