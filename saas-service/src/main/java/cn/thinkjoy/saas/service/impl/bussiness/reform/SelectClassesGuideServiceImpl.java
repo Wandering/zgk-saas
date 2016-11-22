@@ -120,7 +120,7 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
     }
 
     @Override
-    public Map<Integer,Map<String, Integer>> selectNumberByYear(int tnId){
+    public Map<String,Map<String, Integer>> selectNumberByYear(int tnId){
         Map<String, Object> map=new HashMap<>();
         map.put("tnId",tnId);
         map.put("domain","student");
@@ -133,9 +133,9 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         map.put("tableName",tableName);
         mapList = selectClassesGuideDAO.selectStudentExcel(map);
 //        Map<String, Integer> map2=new HashMap<>();
-        Map<Integer, Map<String, Integer>> yearMap=new HashMap<>();
+        Map<String, Map<String, Integer>> yearMap=new HashMap<>();
         for (Map<String,String> map1:mapList){
-            int year=Integer.valueOf(String.valueOf(map1.get("student_class_in_year")))+3;
+            String year=String.valueOf(Integer.valueOf(String.valueOf(map1.get("student_class_in_year")))+3);
             if(!yearMap.containsKey(year)){
                 yearMap.put(year,new HashMap<String, Integer>());
             }
