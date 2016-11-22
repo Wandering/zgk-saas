@@ -846,7 +846,10 @@ public class ScoreAnalyseController
         String lastExamId = getLastExamId(grade, tnId);
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("examId", lastExamId);
-        paramMap.put("batchName", batchName);
+        if(StringUtils.isNotEmpty(batchName) && (batchName.equals("batchOne")||batchName.equals("batchTwo")||batchName.equals("batchThr")))
+        {
+            paramMap.put("batchName", batchName);
+        }
         if (StringUtils.isNotEmpty(className))
         {
             paramMap.put("className", className);
