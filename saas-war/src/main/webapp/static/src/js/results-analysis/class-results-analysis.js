@@ -38,13 +38,14 @@ ClassResultsAnalysis.prototype = {
                             $('.sel-class-txt,.class-name').text(v.value);
                             that.getAvgScoresForClass(that.deGrade,v.value);
                             that.getStuNumberScoreChangeForClass(that.deGrade,v.value);
-                            that.selSortOnline(that.deGrade,v.value);
                             that.getMostAdvancedDetailAdvancedStepList(that.deGrade,v.value,10,20);
                             that.getMostAdvancedDetailGradeRankStepList(that.deGrade,v.value,10,20,that.stepStart,that.stepLength);
+                            that.changeCoreBatch(that.deGrade,v.value);
                             that.setLine(that.deGrade,v.value);
                             if (that.deGrade.indexOf('高三') >= 0 || that.deGrade.indexOf('高3') >= 0) {
                                 that.getOverLineDetailForClass(that.deGrade,v.value,'batchAll');
                                 that.getOverLineNumberByDate(that.deGrade,v.value);
+                                that.selSortOnline(that.deGrade,v.value);
                                 $('.grade1-2-line').hide();
                                 $('.batch-info,.grade3-student-batch').show();
                                 $('.grade3-main').show();
@@ -103,6 +104,7 @@ ClassResultsAnalysis.prototype = {
             var radioV = $(this).val();
             that.getClassesNameByGrade(radioV);
             that.updateExamProperties('defaultClassGrade',radioV);
+            $('#overLineDetail-tbody').html('');
             if (radioV.indexOf('高三') >= 0 || radioV.indexOf('高3') >= 0) {
                 $('.grade-type').text('本科线成绩分析');
                 $('.grade1-2-line').hide();
@@ -123,7 +125,7 @@ ClassResultsAnalysis.prototype = {
             $('.sel-class-txt,.class-name').text(selV);
             that.getAvgScoresForClass(grade,selV);
             that.getStuNumberScoreChangeForClass(grade,selV);
-            that.selSortOnline(grade,selV);
+            that.changeCoreBatch(grade,selV);
             that.getMostAdvancedDetailAdvancedStepList(grade,selV,10,20);
             that.getMostAdvancedDetailGradeRankStepList(grade,selV,10,20,that.stepStart,that.stepLength);
             that.updateExamProperties('defaultClass',selV);
@@ -131,6 +133,7 @@ ClassResultsAnalysis.prototype = {
             if (grade.indexOf('高三') >= 0 || grade.indexOf('高3') >= 0) {
                 that.getOverLineDetailForClass(grade,selV,'batchAll');
                 that.getOverLineNumberByDate(grade,selV);
+                that.selSortOnline(grade,selV);
             } else {
 
             }
@@ -460,26 +463,6 @@ ClassResultsAnalysis.prototype = {
             that.getOverLineDetailForClassTwo(grade,className,setLine)
         });
     },
-    // 班级前多少名人数统计  高三
-    getOverLineDetailForClass:function(grade,className,batch){
-        var that = this;
-        Common.ajaxFun('/scoreAnalyse/getOverLineDetailForClass', 'GET', {
-            'tnId':tnId,
-            'grade':grade,
-            'className':className,
-            'batch':batch
-        }, function (res) {
-            if (res.rtnCode == "0000000") {
-                var myTemplate = Handlebars.compile($("#online-template").html());
-                $('#online-tbody').html(myTemplate(res));
-                that.student12Layer();
-            } else {
-                layer.msg(res.msg);
-            }
-        }, function (res) {
-            layer.msg(res.msg);
-        });
-    },
     // 班级上线人数统计（高一，高二）
     getOverLineDetailForClassTwo:function(grade,className,line){
         var that = this;
@@ -532,6 +515,27 @@ ClassResultsAnalysis.prototype = {
             });
         });
     },
+    // 班级前多少名人数统计  高三
+    getOverLineDetailForClass:function(grade,className,batch){
+        var that = this;
+        Common.ajaxFun('/scoreAnalyse/getOverLineDetailForClass', 'GET', {
+            'tnId':tnId,
+            'grade':grade,
+            'className':className,
+            'batch':batch
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var myTemplate = Handlebars.compile($("#overLineDetail-template").html());
+                $('#overLineDetail-tbody').html(myTemplate(res));
+                that.student12Layer();
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
+    //
     // 个人成绩变化趋势
     getAvgScoresForClassStudent:function(grade,className,studentName){
         var that = this;
@@ -697,6 +701,54 @@ ClassResultsAnalysis.prototype = {
     },
     selSortOnline: function (grade,className) {
         var that = this;
+        $('input[name="sort-radio"]').change(function () {
+            var orderBy = $(this).val();
+            that.getOverLineDetailForClass(grade,className,orderBy);
+        });
+        $('input[name="sort-radio"]:first').attr('checked','checked');
+        var orderByFirst = $('input[name="sort-radio"]:first').val();
+        that.getOverLineDetailForClass(grade,className,orderByFirst);
+
+
+
+
+
+
+        //var that = this;
+        //$('input[name="sort-radio"]').change(function () {
+        //    var orderBy = $(this).val();
+        //    that.getMostAttentionPage(grade,orderBy,className,'',0,3);
+        //    $(".tcdPageCode").createPage({
+        //        pageCount: that.count,
+        //        current: 1,
+        //        backFn: function (p) {
+        //            that.getMostAttentionPage(grade,orderBy,className,'', (p - 1) * 3, 3);
+        //        }
+        //    });
+        //});
+        //$('input[name="sort-radio"]:first').attr('checked','checked');
+        //var orderByFirst = $('input[name="sort-radio"]:first').val();
+        //that.getMostAttentionPage(grade,orderByFirst,className,'',0,3);
+
+
+
+
+        //var that = this;
+        //$('#batch-sel').change(function () {
+        //    var batchV = $(this).children('option:checked').val();
+        //    that.getMostAttentionPage(grade,batchV,className,'',0,3);
+        //    $(".tcdPageCode").createPage({
+        //        pageCount: that.count,
+        //        current: 1,
+        //        backFn: function (p) {
+        //            that.getMostAttentionPage(grade,batchV,className,'', (p - 1) * 3, 3);
+        //        }
+        //    });
+        //});
+    },
+    // 重点关注学生批次选择
+    changeCoreBatch:function(grade,className){
+        var that = this;
         $('#batch-sel').change(function () {
             var batchV = $(this).children('option:checked').val();
             that.getMostAttentionPage(grade,batchV,className,'',0,3);
@@ -744,6 +796,7 @@ ClassResultsAnalysis.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var rankingSel = [];
+                rankingSel.push('<option value="">选择进步名次</option>');
                 $.each(res.bizData,function(i,v){
                     rankingSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="'+ v.stepEnd +'" value="">'+ v.stepStart + "-" + v.stepEnd +'</option>');
                 });
@@ -764,10 +817,10 @@ ClassResultsAnalysis.prototype = {
             var stepEnd = $(this).children('option:checked').attr('stepEnd');
             that.getMostAdvancedDetailForClass(grade,className,stepStart,stepEnd,that.rankStepStart,that.rankStepEnd);
         });
-        that.stepStart = $('#ranking-sel option:first').attr('stepStart');
-        that.stepEnd = $('#ranking-sel option:first').attr('stepEnd');
-        $('#ranking-sel option:first').attr('selected','selected');
-        that.getMostAdvancedDetailForClass(grade,className,that.stepStart,that.stepEnd,that.rankStepStart,that.rankStepEnd);
+        //that.stepStart = $('#ranking-sel option:first').attr('stepStart');
+        //that.stepEnd = $('#ranking-sel option:first').attr('stepEnd');
+        //$('#ranking-sel option:first').attr('selected','selected');
+        //that.getMostAdvancedDetailForClass(grade,className,that.stepStart,that.stepEnd,that.rankStepStart,that.rankStepEnd);
     },
     // 进步较大学生页面列表
     getMostAdvancedDetailForClass: function (grade,className,stepStart, stepEnd,rankStepStart,rankStepEnd) {
@@ -792,6 +845,7 @@ ClassResultsAnalysis.prototype = {
     },
     // 年级排名下拉列表
     getMostAdvancedDetailGradeRankStepList: function (grade,className,stepStart, stepLength) {
+        $('#gradeTop-sel').html('');
         var that = this;
         Common.ajaxFun('/scoreAnalyse/getMostAdvancedDetailGradeRankStepList', 'GET', {
             'tnId': tnId,
@@ -802,6 +856,7 @@ ClassResultsAnalysis.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var gradeTopSel = [];
+                gradeTopSel.push('<option value="">选择年级排名</option>');
                 $.each(res.bizData,function(i,v){
                     gradeTopSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="'+ v.stepEnd +'" value="">'+ v.stepStart + "-" + v.stepEnd +'</option>');
                 });
@@ -820,10 +875,10 @@ ClassResultsAnalysis.prototype = {
             var rankStepEnd = $(this).children('option:checked').attr('stepEnd');
             that.getMostAdvancedDetailForClass(grade,className,that.stepStart,that.stepEnd,rankStepStart,rankStepEnd);
         });
-        that.rankStepStart = $('#gradeTop-sel option:first').attr('stepStart');
-        that.rankStepEnd = $('#gradeTop-sel option:first').attr('stepEnd');
-        $('#gradeTop-sel option:first').attr('selected','selected');
-        that.getMostAdvancedDetailForClass(grade,className,that.stepStart,that.stepEnd,that.rankStepStart,that.rankStepEnd);
+        //that.rankStepStart = $('#gradeTop-sel option:first').attr('stepStart');
+        //that.rankStepEnd = $('#gradeTop-sel option:first').attr('stepEnd');
+        //$('#gradeTop-sel option:first').attr('selected','selected');
+        //that.getMostAdvancedDetailForClass(grade,className,that.stepStart,that.stepEnd,that.rankStepStart,that.rankStepEnd);
     }
 
 };
