@@ -107,8 +107,8 @@
                                     <select class="form-control" id="ranking-sel">
                                     </select>
                                 </div>
-                                <div class="col-sm-3" style="display: none;" id="counselor-sel">
-                                    <select class="form-control" id="">
+                                <div class="col-sm-3 counselor-sel" style="display: none;">
+                                    <select class="form-control" id="counselor-sel">
                                         <option value="">选择班主任</option>
                                     </select>
                                 </div>
