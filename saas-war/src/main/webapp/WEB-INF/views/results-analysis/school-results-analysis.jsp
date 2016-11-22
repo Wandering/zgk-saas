@@ -107,9 +107,8 @@
                                     <select class="form-control" id="ranking-sel">
                                     </select>
                                 </div>
-                                <div class="col-sm-3" style="display: none;" id="counselor-sel">
-                                    <select class="form-control" id="">
-                                        <option value="">选择班主任</option>
+                                <div class="col-sm-3 counselor-sel">
+                                    <select class="form-control" id="counselor-sel">
                                     </select>
                                 </div>
                             </div>
@@ -168,10 +167,7 @@
 <script id="progress-thead-template" type="text/x-handlebars-template">
     <tr>
         <th class="center">班级</th>
-        {{#if bizData.counselor}}
         <th class="center">班主任</th>
-        {{else}}
-        {{/if}}
         <th class="center">进步较大学生人数</th>
     </tr>
 </script>
@@ -179,10 +175,7 @@
     {{#each bizData}}
     <tr>
         <td class="center">{{className}}</td>
-        {{#if bizData.counselor}}
         <th class="center">{{counselor}}</th>
-        {{else}}
-        {{/if}}
         <td class="center">{{advancedNumber}}</td>
     </tr>
     {{/each}}

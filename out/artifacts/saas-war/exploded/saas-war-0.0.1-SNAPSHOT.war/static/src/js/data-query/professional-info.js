@@ -153,7 +153,7 @@ var ProfessionalDetail = {
                 layer.open({
                     type: 1,
                     title:'职业信息详情',
-                    content: $('#professional-detail').html(),
+                    content: $('#professional-detail'),
                     area: ['100%','100%'],
                     maxmin: false
                 })

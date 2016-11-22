@@ -575,6 +575,18 @@ public class ScoreAnalyseController
         return classBossMap;
     }
 
+    @RequestMapping("/getSchoolBossForGrade")
+    @ResponseBody
+    private List<String> schoolBossForGrade(String tnId, String grade)
+    {
+        List<String> list = new ArrayList<>();
+        Map<String, String> classBossMap = getClassBossMap(tnId, grade);
+        if(!classBossMap.isEmpty())
+        {
+            list.addAll(classBossMap.values());
+        }
+        return list;
+    }
     private Map<String, Object> getNumberMap(@RequestParam(value = "tnId", required = true) String tnId)
     {
         Map<String, String> paramMap = new HashMap<>();
@@ -873,7 +885,8 @@ public class ScoreAnalyseController
         @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "stepStart", required = true) Integer stepStart,
-        @RequestParam(value = "stepEnd", required = true) Integer stepEnd)
+        @RequestParam(value = "stepEnd", required = true) Integer stepEnd,
+        @RequestParam(value = "counselor", required = false) String counselor)
     {
         List<Map<String, Object>> resultList = new ArrayList<>();
         Map<String, Object> paramMap = new HashMap<>();
@@ -928,11 +941,6 @@ public class ScoreAnalyseController
                 }
                 Map<String, Object> params = new LinkedHashMap<>();
                 params.put("className", className);
-                if(!bossMap.isEmpty())
-                {
-                    String bossName = bossMap.get(className);
-                    params.put("counselor", bossName);
-                }
                 params.put("studentName", studentName);
                 params.put("advancedScore", advancedScore);
                 params.put("historyScores", scoreList.toString());
@@ -946,6 +954,13 @@ public class ScoreAnalyseController
             int advancedNumber = en.getValue().size();
             Map<String, Object> map = new HashMap<>();
             map.put("className", className);
+            if(!bossMap.isEmpty())
+            {
+                String bossName = bossMap.get(className);
+                map.put("counselor", bossName);
+                if(null != counselor && !counselor.equals(bossName))
+                    continue;
+            }
             map.put("advancedNumber", advancedNumber);
             resultList.add(map);
         }
@@ -969,7 +984,7 @@ public class ScoreAnalyseController
         @RequestParam(value = "stepStart", required = true) Integer stepStart,
         @RequestParam(value = "stepLength", required = true) Integer stepLength)
     {
-        getMostAdvancedNumbers(tnId, grade, stepStart, Integer.MAX_VALUE);
+        getMostAdvancedNumbers(tnId, grade, stepStart, Integer.MAX_VALUE, null);
         List<Map<String, Integer>> stepList = new ArrayList<>();
         if (advancedScoreSet.size() > 0)
         {

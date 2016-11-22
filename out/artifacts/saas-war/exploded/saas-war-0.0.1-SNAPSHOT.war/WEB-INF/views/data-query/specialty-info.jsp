@@ -132,7 +132,7 @@
                             </ul>
                             <div class="content">
                                 <div class="sub-content">
-                                   {{{majorIntroduce}}}
+                                    {{#if majorIntroduce}}{{{majorIntroduce}}}{{else}}数据整理中{{/if}}
                                 </div>
                                 <div class="sub-content dh">
                                     <ul id="open-school">

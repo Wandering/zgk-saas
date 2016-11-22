@@ -7,6 +7,9 @@ function SchoolResultsAnalysis() {
     this.subjectSel = '';
     this.count = '';
     this.defaultGrade = '';
+    this.counselor = '';
+    this.stepStart = '';
+    this.stepEnd = '';
 }
 
 SchoolResultsAnalysis.prototype = {
@@ -31,6 +34,13 @@ SchoolResultsAnalysis.prototype = {
                         that.selSortOnline(v.value);
                         that.coreStudent(v.value);
                         that.getStepList(v.value, 10, 20);
+                        that.getSchoolBossForGrade(v.value);
+                        if (v.value.indexOf('高三') >= 0 || v.value.indexOf('高3') >= 0) {
+                            that.getOverLineNumberByDate(v.value);
+                            $('.grade3-main').show();
+                        } else {
+                            $('.grade3-main').hide();
+                        }
                     }
                 });
 
@@ -81,8 +91,9 @@ SchoolResultsAnalysis.prototype = {
             that.selSortOnline(radioV);
             that.coreStudent(radioV);
             that.getStepList(radioV, 10, 20);
-            that.getMostAdvancedNumbers(radioV, 10, 20);
+            that.getMostAdvancedNumbers(radioV,that.counselor,that.stepStart,that.stepEnd);
             that.updateExamProperties(radioV);
+            that.getSchoolBossForGrade(radioV);
             if (radioV.indexOf('高三') >= 0 || radioV.indexOf('高3') >= 0) {
                 $('.grade3-main').show();
                 that.getOverLineNumberByDate(radioV);
@@ -367,6 +378,7 @@ SchoolResultsAnalysis.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var rankingSel = [];
+                rankingSel.push('<option value="">选择进步名次</option>');
                 $.each(res.bizData,function(i,v){
                     rankingSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="'+ v.stepEnd +'" value="">'+ v.stepStart + "-" + v.stepEnd +'</option>');
                 });
@@ -383,35 +395,28 @@ SchoolResultsAnalysis.prototype = {
     selMostAdvanced:function(grade){
         var that = this;
         $('#ranking-sel').change(function(){
-            var stepStart = $(this).children('option:checked').attr('stepStart');
-            var stepEnd = $(this).children('option:checked').attr('stepEnd');
-            that.getMostAdvancedNumbers(grade,stepStart,stepEnd);
+            that.stepStart = $(this).children('option:checked').attr('stepStart');
+            that.stepEnd = $(this).children('option:checked').attr('stepEnd');
+            that.getMostAdvancedNumbers(grade,that.counselor,that.stepStart,that.stepEnd);
         });
-        var stepStartFirst = $('#ranking-sel option:first').attr('stepStart');
-        var stepEndFirst = $('#ranking-sel option:first').attr('stepEnd');
-        $('#ranking-sel option:first').attr('selected','selected');
-        that.getMostAdvancedNumbers(grade,stepStartFirst,stepEndFirst);
     },
     // 进步较大学生页面列表
-    getMostAdvancedNumbers: function (grade, stepStart, stepEnd) {
+    getMostAdvancedNumbers: function (grade,counselor, stepStart, stepEnd) {
         Common.ajaxFun('/scoreAnalyse/getMostAdvancedNumbers', 'GET', {
             'tnId': tnId,
             'grade': grade,
+            'counselor': counselor,
             'stepStart': stepStart,
             'stepEnd': stepEnd
         }, function (res) {
+            console.log(res)
             if (res.rtnCode == "0000000") {
-                if(!res.bizData[0].counselor){
-                    $('#counselor-sel').hide();
-                }else{
-                    $('#counselor-sel').show();
-                }
                 $('#progress-table').show();
                 $('.progress-txt').text('');
                 var myTemplate = Handlebars.compile($("#progress-template").html());
                 $('#progress-tbody').html(myTemplate(res));
-                var sortTheadTemplate = Handlebars.compile($("#progress-thead-template").html());
-                $('#progress-thead').html(sortTheadTemplate(res));
+                var progressTheadTemplate = Handlebars.compile($("#progress-thead-template").html());
+                $('#progress-thead').html(progressTheadTemplate(res));
             } else {
                 $('#progress-table').hide();
                 $('.progress-txt').show().text(res.msg);
@@ -546,20 +551,41 @@ SchoolResultsAnalysis.prototype = {
             });
         })
     },
-    progressStudent: function () {
-        //Common.ajaxFun('/scoreAnalyse/getMostAttentionNumber', 'GET', {
-        //    'tnId': tnId,
-        //    'grade': grade
-        //}, function (res) {
-        //    console.log(res)
-        //    if (res.rtnCode == "0000000") {
-        //        var myTemplate = Handlebars.compile($("#progress-template").html());
-        //        $('#progress-tbody').html(myTemplate(res));
-        //    }
-        //}, function (res) {
-        //    layer.msg(res.msg);
-        //});
-    }
+    // 年级进步较大学生班主任下拉列表
+    getSchoolBossForGrade:function(grade){
+        var that = this;
+        Common.ajaxFun('/scoreAnalyse/getSchoolBossForGrade', 'GET', {
+            'tnId': tnId,
+            'grade': grade
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                if(res.bizData.length>0){
+                    var counselorSel = [];
+                    counselorSel.push('<option value="">选择班主任</option>');
+                    $.each(res.bizData,function(i,v){
+                        counselorSel.push('<option value="'+ v +'">'+ v +'</option>');
+                    });
+                    $('#counselor-sel').append(counselorSel);
+                    that.selCounselor(grade);
+                }else{
+
+                }
+
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
+    // 进步较大学生选择班主任
+    selCounselor:function(grade){
+        var that = this;
+        $('#counselor-sel').change(function(){
+            that.counselor = $(this).children('option:checked').attr('value');
+            that.getMostAdvancedNumbers(grade,that.counselor,that.stepStart,that.stepEnd);
+        });
+    },
 
 };
 
