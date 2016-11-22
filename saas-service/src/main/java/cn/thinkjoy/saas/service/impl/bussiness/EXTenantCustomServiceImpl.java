@@ -160,7 +160,7 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
                         value = converGradesArr(gradeList);
                         break;
                     case EnumUtil.TEACHER_EDUCATION_CLASS://教师-所教班级
-                        String tableName= ParamsUtils.combinationTableName("teacher", tnId);
+                        String tableName= ParamsUtils.combinationTableName("class", tnId);
                         List<LinkedHashMap<String, Object>> linkedHashMapList =iexTeantCustomDAO.getTenantCustom(tableName);
                         value = converClassName(linkedHashMapList);
                         break;
