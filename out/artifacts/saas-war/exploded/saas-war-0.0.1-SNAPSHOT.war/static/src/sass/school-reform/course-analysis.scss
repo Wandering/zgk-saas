@@ -9,6 +9,7 @@ ul {
     margin-top: 24px;
     .course-analysis-list {
         position: relative;
+        z-index: 200;
         li {
             float: left;
             margin-right: 40px;

@@ -13,11 +13,7 @@ var GLOBAL_CONSTANT = {
     tnId: Common.cookie.getCookie('tnId'), //租户ID
     type: 'student',   //角色
 }
-//function proInherit(obj){
-//    function F () {}
-//    F.prototype = obj;
-//    return new F();
-//}
+
 
 /**
  * 学生管理初始化
@@ -90,7 +86,7 @@ App.init();
 
 /**
  * 添加学生模块
- * @type {{init: CRUDStd.init, fetchGrade: CRUDStd.fetchGrade, fetchEntranceYear: CRUDStd.fetchEntranceYear, fetchBelongClass: CRUDStd.fetchBelongClass, renderElement: CRUDStd.renderElement, bindEvents: CRUDStd.bindEvents, removeStd: CRUDStd.removeStd, CRUDStdVerify: CRUDStd.CRUDStdVerify, addStdEvent: CRUDStd.addStdEvent}}
+  * @type {{init: CRUDStd.init, fetchGrade: CRUDStd.fetchGrade, fetchEntranceYear: CRUDStd.fetchEntranceYear, fetchBelongClass: CRUDStd.fetchBelongClass, renderElement: CRUDStd.renderElement, bindEvents: CRUDStd.bindEvents, addStd: CRUDStd.addStd, updateStd: CRUDStd.updateStd, removeStd: CRUDStd.removeStd, CRUDStdVerify: CRUDStd.CRUDStdVerify, addStdEvent: CRUDStd.addStdEvent, updateStdEvent: CRUDStd.updateStdEvent}}
  */
 var CRUDStd = {
     init: function () {
@@ -333,6 +329,7 @@ var CRUDStd = {
         }
         //赋值
         var parent = $('#student-table td input[type="checkbox"]:checked').parent().parent().parent();
+        CRUDStd.pid = $('#student-table td input[type="checkbox"]:checked').parent().parent().next().attr('pid');
         var rowData = JSON.parse(parent.attr('rowdata'));
         $('.save-btn').html('确认修改').attr('id', 'update-btn');
         layer.open({
@@ -471,7 +468,7 @@ var CRUDStd = {
                 "data": {
                     "type": GLOBAL_CONSTANT.type,
                     "tnId": GLOBAL_CONSTANT.tnId,
-                    "pri": "",
+                    "pri": CRUDStd.pid,
                     "teantCustomList": postData
                 }
             };
@@ -501,22 +498,126 @@ var CRUDStd = {
 CRUDStd.init();
 
 
-//模板上传
-var StudentTemplateDown = {}
-
-//模板上传
-var StudentUpload = {}
-
-
-/*
- * 学生设置
- * */
-var StudentSetting = {
+/**
+ * 模板上传|下载
+ * @type {{init: TplHandler.init, tplDownload: TplHandler.tplDownload, tplUpload: TplHandler.tplUpload}}
+ */
+var TplHandler = {
     init: function () {
-        this.eventStudentSetting();
+        this.tplDownload();
+        this.tplUpload();
+    },
+    tplDownload: function () {
+        //模板下载
+        $(document).on('click', '#student-template-download', function () {
+            window.location.href = '/manage/' + GLOBAL_CONSTANT.type + '/export/' + GLOBAL_CONSTANT.tnId + '.do';
+        });
+    },
+    tplUpload: function () {
+        //上传
+        $(document).on('click', '#student-upload', function () {
+            var tpl = [];
+            tpl.push('<div class="upload-box">');
+            tpl.push('<span id="uploader-demo">');
+            tpl.push('<span id="fileList" class="uploader-list dh"></span>');
+            tpl.push('<button class="btn btn-info btn-import" id="btn-import">导入学生数据Excel</button>');
+            tpl.push('</span>');
+            tpl.push('<a href="javascript: void(0);" id="student-template-download" class="download-link">请先导出Excel模板，进行填写</a>');
+            tpl.push('<button class="btn btn-cancel cancel-btn" id="cancel-download-btn">取消</button>');
+            tpl.push('</div>');
+            layer.open({
+                type: 1,
+                title: '导入学生数据',
+                offset: 'auto',
+                area: ['460px', '280px'],
+                content: tpl.join('')
+            });
+            upload();
+        });
+        var upload = function () {
+            var $ = jQuery,
+                $list = $('#fileList'),
+            // Web Uploader实例
+                uploader;
+            // 初始化Web Uploader
+            uploader = WebUploader.create({
+                // 自动上传。
+                auto: true,
+                // swf文件路径
+                swf: BASE_URL + '/webuploader-0.1.5 2/Uploader.swf',
+                // 文件接收服务端。
+                server: rootPath + '/config/upload/'+GLOBAL_CONSTANT.type+'/' + GLOBAL_CONSTANT.tnId + '.do',
+                // 选择文件的按钮。可选。
+                // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+                pick: '#btn-import',
+                // 只允许选择文件，可选。
+                accept: {
+                    title: 'excel',
+                    extensions: 'xls',
+                    mimeTypes: 'application/vnd.ms-excel'
+                },
+                fileVal: 'inputFile',
+                duplicate: new Date()
+            });
+            // 当有文件添加进来的时候
+            uploader.on('fileQueued', function (file) {
+                var $li = $(
+                    '<div id="' + file.id + '" class="file-item thumbnail">' +
+                        //'<img>' +
+                    '<div class="info">' + file.name + '</div>' +
+                    '</div>'
+                );
+                $list.append($li);
+            });
+            // 文件上传过程中创建进度条实时显示。
+            uploader.on('uploadProgress', function (file, percentage) {
+                var $li = $('#' + file.id),
+                    $percent = $li.find('.progress span');
+                // 避免重复创建
+                if (!$percent.length) {
+                    $percent = $('<p class="progress"><span></span></p>')
+                        .appendTo($li)
+                        .find('span');
+                }
+                $percent.css('width', percentage * 100 + '%');
+            });
+            // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+            uploader.on('uploadSuccess', function (file) {
+                layer.closeAll();
+                if (App != null) {
+                    App.renderTableHeader();
+                }
+            });
+            // 文件上传失败，现实上传出错。
+            uploader.on('uploadError', function (file) {
+                var $li = $('#' + file.id),
+                    $error = $li.find('div.error');
+                // 避免重复创建
+                if (!$error.length) {
+                    $error = $('<div class="error"></div>').appendTo($li);
+                }
+                $error.text('上传失败');
+            });
+            // 完成上传完了，成功或者失败，先删除进度条。
+            uploader.on('uploadComplete', function (file) {
+                $('#' + file.id).find('.progress').remove();
+            });
+        }
+    }
+}
+TplHandler.init();
+
+
+/**
+ * 学生设置
+ * @type {{init: StdSet.init, eventStdSet: StdSet.eventStdSet, eventAdd: StdSet.eventAdd, fetchTableHeader: StdSet.fetchTableHeader, renderHeader: StdSet.renderHeader, generateTableHeader: StdSet.generateTableHeader, saveAddTableHeaderField: StdSet.saveAddTableHeaderField, removeTableHeaderField: StdSet.removeTableHeaderField, tableDrag: StdSet.tableDrag}}
+ */
+var StdSet = {
+    init: function () {
+        this.eventStdSet();
         this.removeTableHeaderField();//删除设置的表头
     },
-    eventStudentSetting: function () {
+    eventStdSet: function () {
         var that = this;
         $(document).on('click', '#student-setting', function () {
             that.fetchTableHeader();
@@ -525,12 +626,12 @@ var StudentSetting = {
             layer.full(
                 layer.open({
                     type: 1,
-                    //content: $("#sub-student-setting").html(),
                     content: $("#sub-student-setting"),
                     area: ['100%', '100%'],
                     maxmin: false
                 })
             )
+            that.tableDrag();   //排序
         });
     },
     eventAdd: function () {
@@ -551,8 +652,8 @@ var StudentSetting = {
     fetchTableHeader: function () {
         Common.ajaxFun('/config/get/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
-                StudentSetting.renderHeader(res)
-                StudentSetting.fetchTableHeaderData = res;
+                StdSet.renderHeader(res)
+                StdSet.fetchTableHeaderData = res;
             }
         }, function (res) {
             layer.msg("出错了");
@@ -563,10 +664,10 @@ var StudentSetting = {
         var template = Handlebars.compile($('#sub-student-table-tpl').html());
         $('#sub-student-table').html(template(dataJson));
     },
-    /*
+    /**
      * 添加表头字段
      * (获取所有字段名称)
-     * */
+     */
     generateTableHeader: function () {
         Common.ajaxFun('/config/getInit/' + GLOBAL_CONSTANT.type + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
@@ -575,7 +676,7 @@ var StudentSetting = {
                 $.each(res.bizData.configList, function (i, v) {
                     tpl.push('<label for="li-' + v.id + '">');
                     var isCheck = false;
-                    $.each(StudentSetting.fetchTableHeaderData.bizData.configList, function (j, k) {
+                    $.each(StdSet.fetchTableHeaderData.bizData.configList, function (j, k) {
                         if (v.id == k.configKey) {
                             tpl.push('<input type="checkbox" class="ace" id="li-' + v.id + '" checked="checked">');
                             isCheck = true;
@@ -593,9 +694,9 @@ var StudentSetting = {
             layer.msg("出错了");
         }, true);
     },
-    /*
+    /**
      * 保存已选择的添加字段
-     * */
+     */
     saveAddTableHeaderField: function () {
         var that = this;
         $(document).on('click', '#btn-choose', function () {
@@ -631,10 +732,9 @@ var StudentSetting = {
             }, true);
         })
     },
-    /*
-     *
+    /**
      * 删除设置的表头字段
-     * */
+     */
     removeTableHeaderField: function () {
         var that = this;
         var idsData = null;
@@ -672,12 +772,13 @@ var StudentSetting = {
         }
     },
     tableDrag: function () {
-        // 表格排序
+        var that = this;
+        //表格排序
         var fixHelperModified = function (e, tr) {
                 var $originals = tr.children();
                 var $helper = tr.clone();
                 $helper.children().each(function (index) {
-                    $(this).width($originals.eq(index).width())
+                    $(this).width($originals.eq(index).width());
                 });
                 return $helper;
             },
@@ -685,32 +786,31 @@ var StudentSetting = {
                 var ids = [];
                 $('td.index', ui.item.parent()).each(function (i) {
                     $(this).html(i + 1);
-                    ids.push("-" + $(this).attr('indexId'));
+                    ids.push($(this).attr('indexid'));
+                    console.info($(this));
                 });
-                ids = ids.join('');
-                ids = ids.substring(1, ids.length);
-                Common.ajaxFun('/config/sort/class/' + ids + '.do', 'POST', {}, function (res) {
-                    if (res.rtnCode == "0000000") {
+                ids = ids.join('-');
+                Common.ajaxFun('/config/sort/'+GLOBAL_CONSTANT.type+'/' + ids + '.do', 'POST', {}, function (res) {
+                if (res.rtnCode == "0000000") {
                         if (res.bizData.result == "SUCCESS") {
-                            layer.msg('排序成功');
-                        } else {
+                            layer.msg('排序成功', {time: 1000});
+                        }else{
                             layer.msg(res.bizData.result);
                         }
                     }
                 }, function (res) {
-                    alert("出错了");
-                });
+                    layer.msg("出错了", {time: 1000});
+                }, true, null);
             };
-        $("#class-template").sortable({
+        $("#teacher-table tbody").sortable({
             helper: fixHelperModified,
             stop: updateIndex,
             axis: "y"
         }).disableSelection();
     }
 
-
 }
-StudentSetting.init();
+StdSet.init();
 
 
 

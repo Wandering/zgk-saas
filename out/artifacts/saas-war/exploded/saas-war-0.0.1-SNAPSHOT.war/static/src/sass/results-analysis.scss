@@ -39,12 +39,16 @@
   float: left;
   margin:10px;
 }
-.chart-main1{
+.chart-main1,
+.chart-main2{
   overflow: hidden;
   .chart-tab{
     float: right;
     overflow: hidden;
     height:40px;
+    .btn{
+      margin-right:10px;
+    }
     .cur{
       background: #cb171d !important;
       color: #fff;
@@ -61,6 +65,12 @@
   }
 }
 
+.grade-studeng-num{
+  display: none;
+}
+.chart-main2{
+  padding:20px;
+}
 .txt1{
   font-weight: bold;
   font-size:16px;

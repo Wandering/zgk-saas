@@ -55,7 +55,7 @@
                                 <button class="btn btn-pink" id="student-add" type="add">添加学生</button>
                                 <button class="btn btn-inverse" id="student-modify" type="update">修改</button>
                                 <button class="btn btn-success" id="student-remove">删除</button>
-                                <button class="btn btn-green" id="student-template">模板下载</button>
+                                <button class="btn btn-warning" id="student-template-download">模板下载</button>
                                 <button class="btn btn-warning" id="student-upload">批量上传</button>
                                 <button class="btn btn-grey" id="student-setting">学生设置</button>
                             </div>
@@ -204,7 +204,7 @@
                                                     <th class="center"></th>
                                                 </tr>
                                                 </thead>
-                                                <tbody id="sub-student-table">
+                                                <tbody id="sub-student-table"  class="check-template">
                                                 </tbody>
                                             </table>
                                         </div>
@@ -266,6 +266,13 @@
 </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp" %>
+<link rel="stylesheet" type="text/css" href="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.css">
+<script src="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.js"></script>
+<script>
+    var BASE_URL = '<%=ctx%>/static/src/lib/';
+    var rootPath = '<%=ctx%>';
+</script>
+<script src="<%=ctx%>/static/src/lib/assets/js/jquery-ui-1.12.1.js"></script>
 <script src="<%=ctx%>/static/src/js/info-management/student-management.js"></script>
 </body>
 </html>

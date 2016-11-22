@@ -42,7 +42,8 @@
 .chart-main1,
 .chart-main2{
   overflow: hidden;
-  .chart-tab{
+  .chart-tab,
+  .student-chart-tab{
     float: right;
     overflow: hidden;
     height:40px;
@@ -54,7 +55,8 @@
       color: #fff;
     }
   }
-  .chart-box{
+  .chart-box,
+  .student-chart-box{
     clear: both;
     overflow: hidden;
     &.hds{
@@ -75,7 +77,33 @@
   font-weight: bold;
   font-size:16px;
 }
-
+.grade1-2-line{
+  overflow: hidden;
+  margin-bottom:10px;
+}
+.online-txt{
+  float: left;
+  line-height:26px;
+}
+.online-input{
+  float: left;
+  border:1px solid #D5D9DF;
+  width:116px;
+  height:26px;
+  padding:3px;
+  line-height:26px;
+  margin:0 4px;
+}
+.set-line-btn{
+  float: left;
+  width:64px;
+  height:26px;
+  background: #CB171D;
+  color: #fff;
+  line-height:26px;
+  border: none;
+  border-radius: 3px;
+}
 .student-change-table{
   td{
     text-align: center;

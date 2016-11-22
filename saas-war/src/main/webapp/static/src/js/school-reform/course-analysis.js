@@ -9,13 +9,16 @@ $(function () {
     var courseAnalysis = new CourseAnalysis(chkLength, 'course-analysis', null);
 
     historyCourseAnalysis();
-    partCourseAnalysisChart();
+    //partCourseAnalysisChart();
 
     var gradeName = $('input[name="senior-analysis"]:checked').next().text();
     getAnalysisGroup(tnId, gradeName);
+    selectTypeAnalysis(tnId, gradeName);
+    getNumberByYear(tnId);
     $(document).on('change', 'input[name="senior-analysis"]', function () {
         var gradeName = $(this).next().text();
         getAnalysisGroup(tnId, gradeName);
+        selectTypeAnalysis(tnId, gradeName);
     });
 
 });
@@ -183,8 +186,8 @@ function historyCourseAnalysis () {
     historyCourseAnalysisChart.setOption(historyCourseAnalysisOption);
 }
 
-//部分学生选课情况分析
-function partCourseAnalysisChart () {
+//单科选课情况分析
+function partCourseAnalysisChart (subjects, numbers) {
     var partCourseAnalysisChart = echarts.init(document.getElementById('partCourseAnalysisChart'));
     var partCourseAnalysisOption = {
         title: {
@@ -243,7 +246,7 @@ function partCourseAnalysisChart () {
             splitLine: {
                 show: false
             },
-            data: ['通用技术', '政治', '历史', '生物', '化学', '物理', '地理']
+            data: subjects //['通用技术', '政治', '历史', '生物', '化学', '物理', '地理']
         },
         series: [
             {
@@ -251,7 +254,7 @@ function partCourseAnalysisChart () {
                 type: 'bar',
                 barMinHeight: 26,
                 barCategoryGap: '40%',
-                data: [123, 234, 456, 567, 489, 211, 265],
+                data: numbers, //[123, 234, 456, 567, 489, 211, 265],
                 label: {
                     normal: {
                         show: true,
@@ -391,6 +394,60 @@ function groupCourseAnalysis (groups, stuNumbers) {
     groupCourseAnalysisBar.setOption(groupCourseAnalysisOption);
 }
 
+//往年选课分析
+function getNumberByYear (tnId) {
+    Common.ajaxFun('/selectClassesGuide/getNumberByYear.do', 'GET', {
+        'tnId': tnId
+    }, function (res) {
+        if (res.rtnCode == "0000000") {
+            var data = res.bizData;
+
+        }
+    }, function (res) {
+        layer.msg("出错了");
+    }, true);
+}
+
+//单科选课情况分析
+function selectTypeAnalysis (tnId, studentGrade) {
+    Common.ajaxFun('/selectClassesGuide/selectTypeAnalysis.do', 'GET', {
+        'tnId': tnId,
+        'studentGrade': studentGrade
+    }, function (res) {
+        if (res.rtnCode == "0000000") {
+            var data = res.bizData;
+            $('.stu-count').html(data.count);
+            $('.reach-line').html('预计' + data.top + '人上线').css({'width': (data.top / data.count) * 100 + '%'});
+            var datas = {
+                subjects: [],
+                numbers: []
+            };
+            $.each(data.oneTypeMap, function (i, k) {
+                datas.subjects.push(i);
+                datas.numbers.push(k);
+            });
+            var subjectHtml = [];
+            if (!isEmptyObject(data.limitTypeMap)) {
+                $.each(data.limitTypeMap, function (i, k) {
+                    subjectHtml.push('<span class="item">' + i + '（' + k + '人）</span>');
+                });
+            } else {
+                subjectHtml.push('<span class="item">物理（0人）</span>');
+                subjectHtml.push('<span class="item">化学（0人）</span>');
+                subjectHtml.push('<span class="item">生物（0人）</span>');
+                subjectHtml.push('<span class="item">政治（0人）</span>');
+                subjectHtml.push('<span class="item">地理（0人）</span>');
+                subjectHtml.push('<span class="item">历史（0人）</span>');
+                subjectHtml.push('<span class="item">通用技术（0人）</span>');
+            }
+            $('.single-course-info').html(subjectHtml.join(''));
+            partCourseAnalysisChart(datas.subjects, datas.numbers);
+        }
+    }, function (res) {
+        layer.msg("出错了");
+    }, true);
+}
+
 //组合选课情况分析
 function getAnalysisGroup (tnId, grade) {
     Common.ajaxFun('/selectClassesGuide/getAnalysisGroup.do', 'GET', {
@@ -431,3 +488,12 @@ Array.prototype.delete = function (varElement) {
     }
     return numDeleteIndex;
 };
+
+//判断对象是否为空
+function isEmptyObject (e) {
+    var t;
+    for (t in e) {
+        return !1;
+    }
+    return !0;
+}

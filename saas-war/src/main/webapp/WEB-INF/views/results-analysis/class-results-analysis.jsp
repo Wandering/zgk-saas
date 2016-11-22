@@ -99,9 +99,10 @@
                         </div>
                         <p><h5 class="h5">班级情况统计：</h5><span class="batch-info">根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</span></p>
                         <div class="grade1-2-line">
-                            <span>设置关注位次线</span><input type="txt" id="set-line" value="">
-                            <button type="button" id="set-line-btn">确定</button>
+                            <span class="online-txt">设置关注位次线</span><input type="txt" id="set-line" class="online-input" value="">
+                            <button type="button" class="set-line-btn" id="set-line-btn">确定</button>
                         </div>
+
                         <div class="grade-studeng-num"><span class="class-name"></span>年级前<span class="student-num"></span>名人数统计：</div>
                         <div class="txt-t grade3-student-batch">
                             <div class="radio no-padding-left">

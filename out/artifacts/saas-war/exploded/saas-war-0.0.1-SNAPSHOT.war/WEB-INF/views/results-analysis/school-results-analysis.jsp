@@ -187,15 +187,6 @@
     </tr>
     {{/each}}
 </script>
-<script id="progress-template" type="text/x-handlebars-template">
-    {{#each bizData}}
-    <tr>
-        <td class="center"></td>
-        <td class="center"></td>
-        <td class="center"></td>
-    </tr>
-    {{/each}}
-</script>
 <script id="details-main-template" type="text/x-handlebars-template">
     {{#each bizData.list}}
     <tr>
