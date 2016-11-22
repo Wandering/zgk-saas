@@ -1435,12 +1435,8 @@ public class ScoreAnalyseController
         String lastExamId = getLastExamId(grade, tnId);
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("examId", lastExamId);
+        getMostAttentionNumber(tnId, grade);
         List<Map<String, Object>> allList = examDetailService.getMostAttentionListForClass(paramMap);
-        if (null == allList || allList.size() == 0)
-        {
-            getMostAttentionNumber(tnId, grade);
-            allList = examDetailService.getMostAttentionListForClass(paramMap);
-        }
         Map<String, Map<String, Object>> weakCourseMap = new HashMap<>();
         for (Map<String, Object> map : allList)
         {
@@ -1583,7 +1579,7 @@ public class ScoreAnalyseController
         getMostAdvancedDetailForClass(tnId, grade, className, null, null, null, null);
         int maxStep = (maxAdvancedScore / 10 + 1) * 10;
         List<Map<String, Integer>> stepList = new ArrayList<>();
-        if (advancedScoreSet.size() >= 10)
+        if (maxStep >= 10)
         {
             addStepList(stepList, maxStep, stepStart, stepLength);
         }else {
