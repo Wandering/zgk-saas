@@ -6,6 +6,7 @@ import cn.thinkjoy.common.service.IBaseService;
 import cn.thinkjoy.common.service.IPageService;
 import cn.thinkjoy.saas.domain.Configuration;
 import cn.thinkjoy.saas.domain.TenantConfigInstance;
+import cn.thinkjoy.saas.domain.bussiness.ClassView;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 
 import java.util.List;
@@ -39,7 +40,22 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      */
     public String createColumn(String type,String ids,Integer tnId);
 
+    /**
+     * 年级联动获取
+     * @param map
+     * @return
+     */
+    List<ClassView> selectClassTypeByGrade(String type,Integer tnId,String grade);
 
+    /**
+     * 班级名称
+     * @param type
+     * @param tnId
+     * @param grade
+     * @param classType
+     * @return
+     */
+    public List<ClassView> selectClassNameByGradeAndType(String type,Integer tnId,String grade,String classType);
     /**
      * 删除表头
      * @param type

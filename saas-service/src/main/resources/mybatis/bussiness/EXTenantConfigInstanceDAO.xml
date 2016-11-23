@@ -33,6 +33,10 @@
         <result column="data_url" property="dataUrl" jdbcType="VARCHAR" />
         <result column="data_value" property="dataValue" jdbcType="VARCHAR" />
     </resultMap>
+    <resultMap id="GetClassTypeByClassGradeMap" type="cn.thinkjoy.saas.domain.bussiness.ClassView">
+        <result column="class_type" property="classType" jdbcType="VARCHAR" />
+        <result column="class_Name" property="className" jdbcType="VARCHAR" />
+    </resultMap>
     <sql id="Base_Column_List">
         id,
         tn_id,
@@ -125,6 +129,14 @@
         where TABLE_SCHEMA='zgk_saas'
         and TABLE_NAME=#{tableName}
         and COLUMN_NAME=#{columnName})t
+    </select>
+    <select id="selectClassTypeByGrade" parameterType="java.util.Map" resultMap="GetClassTypeByClassGradeMap">
+        select class_type from ${tableName}
+        where class_grade=#{classGrade}
+        group by class_type
+    </select>
+    <select id="selectClassNameByGradeAndType" parameterType="java.util.Map" resultMap="GetClassTypeByClassGradeMap">
+        select class_name from ${tableName} where class_grade=#{classGrade} and class_type=#{classType} group by class_name
     </select>
     <update id="addColumn" parameterType="java.util.Map">
         alter table ${tableName} add column ${columnName} ${columnType};
