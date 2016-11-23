@@ -531,7 +531,7 @@ public class ScoreAnalyseController
                 String classBoss = classBossMap.get(className);
                 resultMap.put("counselor", classBoss);
             }
-            resultMap.put("batchAll", examDetailListMap.get("batchThr").size());
+            resultMap.put("batchAll", examDetailListMap.get("batchTwo").size());
             resultMap.put("batchOne", examDetailListMap.get("batchOne").size());
             resultMap.put("batchTwo",
                 examDetailListMap.get("batchTwo").size() - examDetailListMap.get("batchOne").size());
