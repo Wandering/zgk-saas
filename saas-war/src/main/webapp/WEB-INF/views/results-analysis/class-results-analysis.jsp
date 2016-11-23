@@ -49,7 +49,7 @@
                             <div class="txt-t">
                                 <div class="radio no-padding-left" id="grade-body"></div>
                             </div>
-                            <select class="class-sel" id="select"></select>
+                            <select class="class-sel" id="select-class"></select>
                             <%--<select id="select">--%>
                             <%--<option value="1">1</option>--%>
                             <%--<option value="2">2</option>--%>
@@ -62,6 +62,7 @@
                     </div><!-- /.col -->
                     <div class="col-xs-12">
                         <p class="txt1">班级排名趋势:<span class="sel-class-txt"></span></p>
+                        <p class="class-rank-tips-txt"></p>
                         <div class="chart-main1">
                             <div class="chart-tab">
                                 <button class="btn btn-return cur">查看总分趋势</button>
@@ -97,13 +98,15 @@
                         <div class="grade3-main" style="display: none;">
                             <div id="lineNumberByDate-chart" style="width: 100%;height: 250px;"></div>
                         </div>
-                        <p><h5 class="h5">班级情况统计：</h5><span class="batch-info">根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</span></p>
+                        <p><h5 class="h5">班级情况统计：</h5><span class="batch-info">根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名</span></p>
                         <div class="grade1-2-line">
                             <span class="online-txt">设置关注位次线</span><input type="txt" id="set-line" class="online-input" value="">
                             <button type="button" class="set-line-btn" id="set-line-btn">确定</button>
                         </div>
 
-                        <div class="grade-studeng-num"><span class="class-name"></span>年级前<span class="student-num"></span>名人数统计：</div>
+                        <div class="grade-student-num">
+                                <span class="class-name"></span>年级前<span class="student-num"></span>名人数统计：
+                        </div>
                         <div class="txt-t grade3-student-batch">
                             <div class="radio no-padding-left">
                                 <label>
@@ -138,7 +141,7 @@
 
                             </tbody>
                         </table>
-                        <div><h5 class="h5">重点关注学生：</h5><span class="batch-info">根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</span></div>
+                        <div><h5 class="h5">重点关注学生：</h5><span class="batch-info">根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名</span></div>
                         <div class="txt-t">
                             <form class="form-horizontal" role="form">
                                 <div class="form-group">
