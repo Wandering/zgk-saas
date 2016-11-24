@@ -1466,7 +1466,7 @@ public class ScoreAnalyseController
         String lastExamId = getLastExamId(grade, tnId);
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("examId", lastExamId);
-        getMostAttentionNumber(tnId, grade);
+//        getMostAttentionNumber(tnId, grade);
         List<Map<String, Object>> allList = examDetailService.getMostAttentionListForClass(paramMap);
         Map<String, Map<String, Object>> weakCourseMap = new HashMap<>();
         for (Map<String, Object> map : allList)
