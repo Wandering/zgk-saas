@@ -8,7 +8,7 @@ $(function () {
     var chkLength = $("input[name='course-analysis']").length;
     var courseAnalysis = new CourseAnalysis(chkLength, 'course-analysis', null);
 
-    historyCourseAnalysis();
+    //();
 
     var gradeName = $('input[name="senior-analysis"]:checked').next().text();
     getAnalysisGroup(tnId, gradeName);
@@ -69,7 +69,9 @@ CourseAnalysis.prototype = {
 };
 
 //往年选课分析
-function historyCourseAnalysis () {
+function historyCourseAnalysis (years, subjects) {
+    console.info('years: ' + years.length);
+    console.info(subjects);
     var historyCourseAnalysisChart = echarts.init(document.getElementById('historyCourseAnalysisChart'));
     var historyCourseAnalysisOption = {
         title: {
@@ -83,7 +85,7 @@ function historyCourseAnalysis () {
             top: 'bottom',
             itemGap: 20,
             selectedMode: true,
-            data: ['物理', '化学', '生物'],
+            data: ['物理', '化学', '生物', '地理', '历史', '政治', '通用技术'],
             textStyle: {
                 color: '#4A4A4A',
                 fontSize: 14
@@ -104,7 +106,7 @@ function historyCourseAnalysis () {
                 color: '#4A4A4A',
                 fontSize: 14
             },
-            data: ['2016', '2017', '2018', '2019'],
+            data: years, //['2016', '2017', '2018', '2019'],
             boundaryGap: [0, 0.01],
             axisTick: {
                 show: true,
@@ -137,25 +139,25 @@ function historyCourseAnalysis () {
                 lineStyle: {
                     color: '#D8D8D8'
                 }
-            },
-            max: 934
+            }
+            //max: 934
         },
         series: [
-            //{
-            //    name:'上线人数',
-            //    type:'line',
-            //    symbolSize: [9, 9],
-            //    itemStyle: {
-            //        normal: {
-            //            color: '#4A90E2',
-            //            borderWidth: 2,
-            //            borderType: 'solid'
-            //        }
-            //    },
-            //    data:[120, 132, 101, 134]
-            //},
             {
-                name:'物理',
+                name: '物理',
+                type:'line',
+                symbolSize: [9, 9],
+                itemStyle: {
+                    normal: {
+                        color: '#4A90E2',
+                        borderWidth: 2,
+                        borderType: 'solid'
+                    }
+                },
+                data:subjects['物理']
+            },
+            {
+                name: '化学',
                 type:'line',
                 symbolSize: [9, 9],
                 itemStyle: {
@@ -165,10 +167,10 @@ function historyCourseAnalysis () {
                         borderType: 'solid'
                     }
                 },
-                data:[220, 182, 191, 234]
+                data:subjects['化学']
             },
             {
-                name:'化学',
+                name: '生物',
                 type:'line',
                 symbolSize: [9, 9],
                 itemStyle: {
@@ -178,10 +180,10 @@ function historyCourseAnalysis () {
                         borderType: 'solid'
                     }
                 },
-                data:[150, 232, 201, 154]
+                data:subjects['生物']
             },
             {
-                name:'生物',
+                name: '政治',
                 type:'line',
                 symbolSize: [9, 9],
                 itemStyle: {
@@ -191,7 +193,46 @@ function historyCourseAnalysis () {
                         borderType: 'solid'
                     }
                 },
-                data:[820, 932, 901, 934]
+                data:subjects['政治']
+            },
+            {
+                name: '历史',
+                type:'line',
+                symbolSize: [9, 9],
+                itemStyle: {
+                    normal: {
+                        color: '#C0DD7D',
+                        borderWidth: 2,
+                        borderType: 'solid'
+                    }
+                },
+                data:subjects['历史']
+            },
+            {
+                name: '地理',
+                type:'line',
+                symbolSize: [9, 9],
+                itemStyle: {
+                    normal: {
+                        color: '#EA6264',
+                        borderWidth: 2,
+                        borderType: 'solid'
+                    }
+                },
+                data: subjects['地理']
+            },
+            {
+                name: '通用技术',
+                type:'line',
+                symbolSize: [9, 9],
+                itemStyle: {
+                    normal: {
+                        color: '#A98FCB',
+                        borderWidth: 2,
+                        borderType: 'solid'
+                    }
+                },
+                data: subjects['通用技术'],
             }
         ]
     };
@@ -204,14 +245,92 @@ function getNumberByYear (tnId) {
         'tnId': tnId
     }, function (res) {
         if (res.rtnCode == "0000000") {
-            //var data = res.bizData;
-            //var historyData = {
-            //    year: []
-            //};
-            //$(data.data, function (i, k) {
-            //    historyData.push(i);
-            //});
-            //console.info(historyData.year);
+            var res = {
+                "bizData":{
+                    "data":{
+                        "2015":{
+                            "化学":3,
+                            "历史":2,
+                            "地理":2,
+                            "政治":2,
+                            "物理":3,
+                            "生物":2,
+                            "通用技术":4
+                        },
+                        "2018":{
+                            "化学":1,
+                            "地理":1,
+                            "物理":1,
+                            "生物":1,
+                            "通用技术":1
+                        }
+                    }
+                },
+                "rtnCode":"0000000",
+                    "ts":1479967678079
+            };
+            var data = res.bizData;
+            var historyData = {
+                year: [],
+                subjects: {
+                    '物理': [],
+                    '化学': [],
+                    '生物': [],
+                    '政治': [],
+                    '历史': [],
+                    '地理': [],
+                    '通用技术': []
+                }
+            };
+            //for (var j in historyData.subjects) {
+                $.each(data.data, function (i, k) {
+                    historyData.year.push(i);
+                    $.each(k, function (m, n) {
+                        console.info('i: ' + i + ', m: ' + m + ', n: ' + n);
+                        //if (!historyData.subjects.hasOwnProperty(m)) {
+                        //    historyData.subjects[m] = [];
+                        //}
+                        if (data.data[i].hasOwnProperty(j)) {alert(1 + ', ' + data.data[i][m]);
+                            historyData.subjects[m].push(n);
+                        } else {alert(2 + ', ' + data.data[i][m]);
+                            historyData.subjects[m].push(0);
+                        }
+                        //if (!historyData.subjects.hasOwnProperty(m)) {
+                        //    historyData.subjects[m] = [];
+                        //} else {
+                        //    historyData.subjects[m] = [];
+                        //}
+                        //historyData.subjects[m].push(n);
+                        //switch (m) {
+                        //    case '物理':
+                        //        historyData.subjects['物理'].push(n);
+                        //        break;
+                        //    case '化学':
+                        //        historyData.subjects['化学'].push(n);
+                        //        break;
+                        //    case '生物':
+                        //        historyData.subjects['生物'].push(n);
+                        //        break;
+                        //    case '政治':
+                        //        historyData.subjects['政治'].push(n);
+                        //        break;
+                        //    case '地理':
+                        //        historyData.subjects['地理'].push(n);
+                        //        break;
+                        //    case '历史':
+                        //        historyData.subjects['历史'].push(n);
+                        //        break;
+                        //    case '通用技术':
+                        //        historyData.subjects['通用技术'].push(n);
+                        //        break;
+                        //    default:
+                        //        break;
+                        //}
+                    });
+                });
+            //}
+            historyCourseAnalysis(historyData.year, historyData.subjects);
+            console.info(historyData.year);
         }
     }, function (res) {
         layer.msg("出错了");
