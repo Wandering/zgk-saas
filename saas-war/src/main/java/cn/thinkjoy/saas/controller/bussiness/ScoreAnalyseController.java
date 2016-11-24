@@ -883,6 +883,7 @@ public class ScoreAnalyseController
         List<Map<String, Object>> allList = examDetailService.getMostAttentionPage(paramMap);
         paramMap.put("offset", offset + "");
         paramMap.put("rows", rows + "");
+        paramMap.put("orderBy", "gradeRank");
         List<Map<String, Object>> pageList = examDetailService.getMostAttentionPage(paramMap);
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("total", allList.size());
@@ -1191,10 +1192,10 @@ public class ScoreAnalyseController
         while (endStep < maxStep)
         {
             int start = stepStart;
-            stepStart = stepStart + stepLength;
+            stepStart = stepStart + stepLength + 1;
             Map<String, Integer> paramMap = new LinkedHashMap<>();
             paramMap.put("stepStart", start);
-            endStep = Math.min(stepStart, maxStep);
+            endStep = Math.min(stepStart - 1, maxStep);
             paramMap.put("stepEnd", endStep);
             stepList.add(paramMap);
         }
@@ -1344,6 +1345,10 @@ public class ScoreAnalyseController
         @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "value", required = true) String value)
     {
+        if(!StringUtils.isNumeric(value))
+        {
+            throw new BizException("1100221", "请设置正确的关注位次线！");
+        }
         boolean flag = false;
         Map<String, String> map = new HashMap<>();
         map.put("tnId", tnId);
@@ -1406,6 +1411,10 @@ public class ScoreAnalyseController
         @RequestParam(value = "className", required = true) String className,
         @RequestParam(value = "line", required = true) final String line)
     {
+        if(!StringUtils.isNumeric(line))
+        {
+            throw new BizException("1100221", "请设置正确的关注位次线！");
+        }
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("tnId", tnId);
         paramMap.put("grade", grade);
