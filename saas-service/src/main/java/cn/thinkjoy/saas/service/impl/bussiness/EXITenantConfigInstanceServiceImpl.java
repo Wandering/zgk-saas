@@ -9,6 +9,7 @@ import cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO;
 import cn.thinkjoy.saas.domain.Configuration;
 import cn.thinkjoy.saas.domain.Tenant;
 import cn.thinkjoy.saas.domain.TenantConfigInstance;
+import cn.thinkjoy.saas.domain.bussiness.ClassView;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import cn.thinkjoy.saas.service.common.EnumUtil;
@@ -539,6 +540,25 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         String tableName=ParamsUtils.combinationTableName(type,tnId);
         Integer count=exiTenantConfigInstanceDAO.existTable(tableName);
         return (count>0?true:false);
+    }
+
+    @Override
+    public List<ClassView> selectClassTypeByGrade(String type,Integer tnId,String grade) {
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        map.put("classGrade", grade);
+        return exiTenantConfigInstanceDAO.selectClassTypeByGrade(map);
+    }
+
+    @Override
+    public List<ClassView> selectClassNameByGradeAndType(String type,Integer tnId,String grade,String classType) {
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        map.put("classGrade", grade);
+        map.put("classType", classType);
+        return exiTenantConfigInstanceDAO.selectClassNameByGradeAndType(map);
     }
 
     public boolean isExsitsColumn(List<String> configIds,String tableName,String type,Integer tnId ) {

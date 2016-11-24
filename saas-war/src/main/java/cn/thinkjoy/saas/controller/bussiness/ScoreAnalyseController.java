@@ -644,15 +644,15 @@ public class ScoreAnalyseController
                 int gradeRank = Integer.parseInt(detail.getGradeRank());
                 if (gradeRank == batchTwoNumber)
                 {
-                    batchTwoLowScore = Integer.parseInt(detail.getTotleScore()) - 20;
+                    batchTwoLowScore = Integer.parseInt(detail.getTotleScore());
                 }
                 if (gradeRank == batchOneNumber)
                 {
-                    batchOneLowScore = Integer.parseInt(detail.getTotleScore()) - 20;
+                    batchOneLowScore = Integer.parseInt(detail.getTotleScore());
                 }
                 if (gradeRank == batchThrNumber)
                 {
-                    batchThrLowScore = Integer.parseInt(detail.getTotleScore()) - 20;
+                    batchThrLowScore = Integer.parseInt(detail.getTotleScore());
                 }
             }
             Map<String, String> params = new HashMap<>();
@@ -663,17 +663,17 @@ public class ScoreAnalyseController
                 fixSelectCourse(detail, lastExamId);
                 int totalScore = Integer.parseInt(detail.getTotleScore());
                 ExamDetail lastDetail = lastExamDetailMap.get(detail.getClassName() + "@" + detail.getStudentName());
-                if (totalScore <= batchOneLowScore && totalScore > batchTwoLowScore)
+                if (totalScore <= batchOneLowScore && totalScore >= batchOneLowScore - 20)
                 {
                     batchMap.get("batchOne").add(lastDetail);
                     selectCourseMap.put(detail.getSelectCourses(), 0);
                 }
-                else if (totalScore <= batchTwoLowScore && totalScore > batchThrLowScore)
+                else if (totalScore <= batchTwoLowScore && totalScore >= batchTwoLowScore - 20)
                 {
                     batchMap.get("batchTwo").add(lastDetail);
                     selectCourseMap.put(detail.getSelectCourses(), 0);
                 }
-                else if (totalScore <= batchThrLowScore)
+                else if (totalScore <= batchThrLowScore && totalScore >= batchThrLowScore - 20)
                 {
                     batchMap.get("batchThr").add(lastDetail);
                     selectCourseMap.put(detail.getSelectCourses(), 0);
