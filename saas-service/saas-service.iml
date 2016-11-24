@@ -25,7 +25,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="saas-api" exported="" />
-    <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-mus-common:0.1.36-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.cloudstack:cs-clustermanager-client:0.0.32-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: javax.servlet:javax.servlet-api:4.0.0-b01" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.apache.poi:poi:3.11-beta2" level="project" />
@@ -104,5 +103,6 @@
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.gaokao360:gaokao360-api:0.0.39-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.gk:zgk-api:0.0.44-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.gk:gk-domain:0.0.44-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: cn.thinkjoy.common:thinkjoy-mus-common:0.1.36-SNAPSHOT" level="project" />
   </component>
 </module>
