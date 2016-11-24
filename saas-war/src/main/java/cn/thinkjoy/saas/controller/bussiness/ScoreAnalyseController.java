@@ -663,17 +663,17 @@ public class ScoreAnalyseController
                 fixSelectCourse(detail, lastExamId);
                 int totalScore = Integer.parseInt(detail.getTotleScore());
                 ExamDetail lastDetail = lastExamDetailMap.get(detail.getClassName() + "@" + detail.getStudentName());
-                if (totalScore <= batchOneLowScore && totalScore >= batchOneLowScore - 20)
+                if (totalScore < batchOneLowScore && totalScore >= batchOneLowScore - 20)
                 {
                     batchMap.get("batchOne").add(lastDetail);
                     selectCourseMap.put(detail.getSelectCourses(), 0);
                 }
-                else if (totalScore <= batchTwoLowScore && totalScore >= batchTwoLowScore - 20)
+                else if (totalScore < batchTwoLowScore && totalScore >= batchTwoLowScore - 20)
                 {
                     batchMap.get("batchTwo").add(lastDetail);
                     selectCourseMap.put(detail.getSelectCourses(), 0);
                 }
-                else if (totalScore <= batchThrLowScore && totalScore >= batchThrLowScore - 20)
+                else if (totalScore < batchThrLowScore && totalScore >= batchThrLowScore - 20)
                 {
                     batchMap.get("batchThr").add(lastDetail);
                     selectCourseMap.put(detail.getSelectCourses(), 0);
