@@ -42,15 +42,16 @@ public class ReadExcel {
                 if (row == null) {
                     continue;
                 }
-                LinkedHashMap<String, String> map = new LinkedHashMap<String, String> ();
+                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
                 for (int j = 0; j <= row.getPhysicalNumberOfCells(); j++) {
                     if (row.getCell(j) != null) {
                         String str = getCellValue(row.getCell(j));
                         LOGGER.info(i + "行-" + j + "列:" + str);
-                        map.put(j+"", str);
+                        map.put(j + "", str);
                     }
                 }
-                list.add(map);
+                if (map.size() > 0)
+                    list.add(map);
             }
             return list;
         } catch (FileNotFoundException e) {
