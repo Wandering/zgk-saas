@@ -198,6 +198,26 @@ function historyCourseAnalysis () {
     historyCourseAnalysisChart.setOption(historyCourseAnalysisOption);
 }
 
+//往年选课分析
+function getNumberByYear (tnId) {
+    Common.ajaxFun('/selectClassesGuide/getNumberByYear.do', 'GET', {
+        'tnId': tnId
+    }, function (res) {
+        if (res.rtnCode == "0000000") {
+            //var data = res.bizData;
+            //var historyData = {
+            //    year: []
+            //};
+            //$(data.data, function (i, k) {
+            //    historyData.push(i);
+            //});
+            //console.info(historyData.year);
+        }
+    }, function (res) {
+        layer.msg("出错了");
+    }, true);
+}
+
 //单科选课情况分析
 function partCourseAnalysisChart (subjects, numbers) {
     var partCourseAnalysisChart = echarts.init(document.getElementById('partCourseAnalysisChart'));
@@ -404,20 +424,6 @@ function groupCourseAnalysis (groups, stuNumbers) {
         ]
     };
     groupCourseAnalysisBar.setOption(groupCourseAnalysisOption);
-}
-
-//往年选课分析
-function getNumberByYear (tnId) {
-    Common.ajaxFun('/selectClassesGuide/getNumberByYear.do', 'GET', {
-        'tnId': tnId
-    }, function (res) {
-        if (res.rtnCode == "0000000") {
-            var data = res.bizData;
-            console.info(data);
-        }
-    }, function (res) {
-        layer.msg("出错了");
-    }, true);
 }
 
 //单科选课情况分析
