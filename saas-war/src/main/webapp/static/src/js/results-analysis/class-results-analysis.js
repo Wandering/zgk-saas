@@ -697,21 +697,17 @@ ClassResultsAnalysis.prototype = {
     },
     selSortOnline: function (grade,className) {
         var that = this;
-        $('input[name="sort-radio"]').change(function () {
-            var orderBy = $(this).val();
-            that.getMostAttentionPage(grade,orderBy,className,'',0,3);
+        $('#batch-sel').change(function () {
+            var batchV = $(this).children('option:checked').val();
+            that.getMostAttentionPage(grade,batchV,className,'',0,3);
             $(".tcdPageCode").createPage({
                 pageCount: that.count,
                 current: 1,
                 backFn: function (p) {
-                    that.getMostAttentionPage(grade,orderBy,className,'', (p - 1) * 3, 3);
+                    that.getMostAttentionPage(grade,batchV,className,'', (p - 1) * 3, 3);
                 }
             });
         });
-        $('input[name="sort-radio"]:first').attr('checked','checked');
-        var orderByFirst = $('input[name="sort-radio"]:first').val();
-        that.getMostAttentionPage(grade,orderByFirst,className,'',0,3);
-
     },
     // 重点关注学生
     getMostAttentionPage: function (grade, batchName, className, courseName, offset, rows) {
