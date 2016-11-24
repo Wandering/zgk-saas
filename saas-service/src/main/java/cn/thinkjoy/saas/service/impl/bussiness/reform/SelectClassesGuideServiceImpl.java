@@ -129,13 +129,19 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
             ExceptionUtil.throwException(ErrorCode.TABLE_NOT_EXIST);
         }
         String tableName = "saas_"+tnId+"_student_excel";
+        String classTableName = "saas_"+tnId+"_class_excel";
         List<Map<String,String>> mapList = Lists.newArrayList();
         map.put("tableName",tableName);
-        mapList = selectClassesGuideDAO.selectStudentExcel(map);
+        map.put("classTableName",classTableName);
+        try{
+            mapList = selectClassesGuideDAO.selectStudentExcel(map);
+        }catch (Exception e){
+            ExceptionUtil.throwException(ErrorCode.TABLE_NOT_EXIST);
+        }
 //        Map<String, Integer> map2=new HashMap<>();
         Map<String, Map<String, Integer>> yearMap=new HashMap<>();
         for (Map<String,String> map1:mapList){
-            String year=String.valueOf(Integer.valueOf(String.valueOf(map1.get("student_class_in_year")))+3);
+            String year=String.valueOf(Integer.valueOf(String.valueOf(map1.get("class_in_year")))+3);
             if(!yearMap.containsKey(year)){
                 yearMap.put(year,new HashMap<String, Integer>());
             }

@@ -9,7 +9,6 @@ $(function () {
     var courseAnalysis = new CourseAnalysis(chkLength, 'course-analysis', null);
 
     historyCourseAnalysis();
-    //partCourseAnalysisChart();
 
     var gradeName = $('input[name="senior-analysis"]:checked').next().text();
     getAnalysisGroup(tnId, gradeName);
@@ -69,12 +68,13 @@ CourseAnalysis.prototype = {
     }
 };
 
+//往年选课分析
 function historyCourseAnalysis () {
     var historyCourseAnalysisChart = echarts.init(document.getElementById('historyCourseAnalysisChart'));
     var historyCourseAnalysisOption = {
         title: {
             show: false,
-            text: '部分学生选课分析'
+            text: '往年选课分析'
         },
         tooltip: {
             trigger: 'axis'
@@ -82,21 +82,28 @@ function historyCourseAnalysis () {
         legend: {
             top: 'bottom',
             itemGap: 20,
-            selectedMode: false,
-            data: ['上线人数', '物理', '化学', '生物'],
+            selectedMode: true,
+            data: ['物理', '化学', '生物'],
             textStyle: {
                 color: '#4A4A4A',
                 fontSize: 14
             }
         },
         grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '12%',
-            containLabel: true
+            left: '2%',
+            right: '8%',
+            top: '13%',
+            containLabel: true,
+            borderWidth: 0,
+            backgroundColor: 'transparent'
         },
         xAxis: {
             type: 'category',
+            name: '高考年份',
+            nameTextStyle: {
+                color: '#4A4A4A',
+                fontSize: 14
+            },
             data: ['2016', '2017', '2018', '2019'],
             boundaryGap: [0, 0.01],
             axisTick: {
@@ -117,6 +124,11 @@ function historyCourseAnalysis () {
         },
         yAxis: {
             type: 'value',
+            name: '选课人数',
+            nameTextStyle: {
+                color: '#4A4A4A',
+                fontSize: 14
+            },
             axisTick: {
                 show: false,
                 inside: false
@@ -129,19 +141,19 @@ function historyCourseAnalysis () {
             max: 934
         },
         series: [
-            {
-                name:'上线人数',
-                type:'line',
-                symbolSize: [9, 9],
-                itemStyle: {
-                    normal: {
-                        color: '#4A90E2',
-                        borderWidth: 2,
-                        borderType: 'solid'
-                    }
-                },
-                data:[120, 132, 101, 134]
-            },
+            //{
+            //    name:'上线人数',
+            //    type:'line',
+            //    symbolSize: [9, 9],
+            //    itemStyle: {
+            //        normal: {
+            //            color: '#4A90E2',
+            //            borderWidth: 2,
+            //            borderType: 'solid'
+            //        }
+            //    },
+            //    data:[120, 132, 101, 134]
+            //},
             {
                 name:'物理',
                 type:'line',

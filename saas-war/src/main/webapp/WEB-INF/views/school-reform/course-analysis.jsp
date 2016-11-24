@@ -68,7 +68,7 @@
                                             <label for="course-technology">通用技术</label>
                                         </li>
                                     </ul>
-                                    <div id="historyCourseAnalysisChart" style="width: 100%;height: 385px;"></div>
+                                    <div id="historyCourseAnalysisChart" style="width: 90%;height: 385px;"></div>
                                 </div>
                             </div>
                             <div class="col-xs-12">
