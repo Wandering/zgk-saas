@@ -440,7 +440,8 @@ ClassResultsAnalysis.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 // 提交位次线记录
-                that.updateExamProperties('line',ClassAnalysisIns.bacthLine);
+                //that.updateExamProperties('line',ClassAnalysisIns.bacthLine);
+                that.saveExamLineProperties(line);
                 $('.student-num').text(res.bizData.length);
                 var myTemplate = Handlebars.compile($("#overLineDetail-template").html());
                 $('#overLineDetail-tbody').html(myTemplate(res));
@@ -764,6 +765,21 @@ ClassResultsAnalysis.prototype = {
                     gradeTopSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="'+ v.stepEnd +'" value="">'+ v.stepStart + "-" + v.stepEnd +'</option>');
                 });
                 $('#gradeTop-sel').append(gradeTopSel);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
+    // 保存关注位次线
+    saveExamLineProperties:function(value){
+        Common.ajaxFun('/scoreAnalyse/saveExamLineProperties', 'GET', {
+            'tnId': tnId,
+            'value': value
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                if(res.bizData=='true'){
+                    console.log('保存关注位次线成功!');
+                }
             }
         }, function (res) {
             layer.msg(res.msg);
