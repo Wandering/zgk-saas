@@ -531,7 +531,7 @@ public class ScoreAnalyseController
                 String classBoss = classBossMap.get(className);
                 resultMap.put("counselor", classBoss);
             }
-            resultMap.put("batchAll", examDetailListMap.get("batchThr").size());
+            resultMap.put("batchAll", examDetailListMap.get("batchTwo").size());
             resultMap.put("batchOne", examDetailListMap.get("batchOne").size());
             resultMap.put("batchTwo",
                 examDetailListMap.get("batchTwo").size() - examDetailListMap.get("batchOne").size());
@@ -644,15 +644,15 @@ public class ScoreAnalyseController
                 int gradeRank = Integer.parseInt(detail.getGradeRank());
                 if (gradeRank == batchTwoNumber)
                 {
-                    batchTwoLowScore = Integer.parseInt(detail.getTotleScore()) - 20;
+                    batchTwoLowScore = Integer.parseInt(detail.getTotleScore());
                 }
                 if (gradeRank == batchOneNumber)
                 {
-                    batchOneLowScore = Integer.parseInt(detail.getTotleScore()) - 20;
+                    batchOneLowScore = Integer.parseInt(detail.getTotleScore());
                 }
                 if (gradeRank == batchThrNumber)
                 {
-                    batchThrLowScore = Integer.parseInt(detail.getTotleScore()) - 20;
+                    batchThrLowScore = Integer.parseInt(detail.getTotleScore());
                 }
             }
             Map<String, String> params = new HashMap<>();
@@ -663,17 +663,17 @@ public class ScoreAnalyseController
                 fixSelectCourse(detail, lastExamId);
                 int totalScore = Integer.parseInt(detail.getTotleScore());
                 ExamDetail lastDetail = lastExamDetailMap.get(detail.getClassName() + "@" + detail.getStudentName());
-                if (totalScore <= batchOneLowScore && totalScore > batchTwoLowScore)
+                if (totalScore <= batchOneLowScore && totalScore >= batchOneLowScore - 20)
                 {
                     batchMap.get("batchOne").add(lastDetail);
                     selectCourseMap.put(detail.getSelectCourses(), 0);
                 }
-                else if (totalScore <= batchTwoLowScore && totalScore > batchThrLowScore)
+                else if (totalScore <= batchTwoLowScore && totalScore >= batchTwoLowScore - 20)
                 {
                     batchMap.get("batchTwo").add(lastDetail);
                     selectCourseMap.put(detail.getSelectCourses(), 0);
                 }
-                else if (totalScore <= batchThrLowScore)
+                else if (totalScore <= batchThrLowScore && totalScore >= batchThrLowScore - 20)
                 {
                     batchMap.get("batchThr").add(lastDetail);
                     selectCourseMap.put(detail.getSelectCourses(), 0);
@@ -846,7 +846,10 @@ public class ScoreAnalyseController
         String lastExamId = getLastExamId(grade, tnId);
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("examId", lastExamId);
-        paramMap.put("batchName", batchName);
+        if(StringUtils.isNotEmpty(batchName) && (batchName.equals("batchOne")||batchName.equals("batchTwo")||batchName.equals("batchThr")))
+        {
+            paramMap.put("batchName", batchName);
+        }
         if (StringUtils.isNotEmpty(className))
         {
             paramMap.put("className", className);
@@ -888,6 +891,10 @@ public class ScoreAnalyseController
         @RequestParam(value = "stepEnd", required = true) Integer stepEnd,
         @RequestParam(value = "counselor", required = false) String counselor)
     {
+        if(null == stepStart)
+            stepStart = 1;
+        if(null == stepEnd)
+            stepEnd = Integer.MAX_VALUE;
         List<Map<String, Object>> resultList = new ArrayList<>();
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("grade", grade);
@@ -947,6 +954,7 @@ public class ScoreAnalyseController
                 dataList.add(params);
                 advancedScoreSet.add(advancedScore);
             }
+
         }
         for (Map.Entry<String, List<Map<String, Object>>> en : resultMap.entrySet())
         {
@@ -958,7 +966,7 @@ public class ScoreAnalyseController
             {
                 String bossName = bossMap.get(className);
                 map.put("counselor", bossName);
-                if(null != counselor && !counselor.equals(bossName))
+                if(StringUtils.isNotEmpty(counselor)  && !counselor.equals(bossName))
                     continue;
             }
             map.put("advancedNumber", advancedNumber);
@@ -1427,12 +1435,8 @@ public class ScoreAnalyseController
         String lastExamId = getLastExamId(grade, tnId);
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("examId", lastExamId);
+        getMostAttentionNumber(tnId, grade);
         List<Map<String, Object>> allList = examDetailService.getMostAttentionListForClass(paramMap);
-        if (null == allList || allList.size() == 0)
-        {
-            getMostAttentionNumber(tnId, grade);
-            allList = examDetailService.getMostAttentionListForClass(paramMap);
-        }
         Map<String, Map<String, Object>> weakCourseMap = new HashMap<>();
         for (Map<String, Object> map : allList)
         {
@@ -1575,7 +1579,7 @@ public class ScoreAnalyseController
         getMostAdvancedDetailForClass(tnId, grade, className, null, null, null, null);
         int maxStep = (maxAdvancedScore / 10 + 1) * 10;
         List<Map<String, Integer>> stepList = new ArrayList<>();
-        if (advancedScoreSet.size() >= 10)
+        if (maxStep >= 10)
         {
             addStepList(stepList, maxStep, stepStart, stepLength);
         }else {

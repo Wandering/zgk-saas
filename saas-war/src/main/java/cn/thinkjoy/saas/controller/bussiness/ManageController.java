@@ -2,6 +2,7 @@ package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.common.protocol.Request;
 import cn.thinkjoy.saas.domain.EnrollingRatio;
+import cn.thinkjoy.saas.domain.bussiness.ClassView;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 import cn.thinkjoy.saas.service.IEnrollingRatioService;
 import cn.thinkjoy.saas.service.bussiness.*;
@@ -324,7 +325,42 @@ public class ManageController {
         return resultMap;
     }
 
+    /**
+     * 获取班级类型
+     * @param type
+     * @param tnId
+     * @param grade
+     * @return
+     */
+    @RequestMapping(value = "/get/classType/{type}/{tnId}/{grade}",method =RequestMethod.GET )
+    @ResponseBody
+    public Map getClassType(@PathVariable String type,
+                            @PathVariable Integer tnId,
+                            @PathVariable String grade) {
+        List<ClassView> classViews = exiTenantConfigInstanceService.selectClassTypeByGrade(type, tnId, grade);
+        Map resultMap = new HashMap();
+        resultMap.put("result", classViews);
+        return resultMap;
+    }
 
+    /**
+     * 获取班级类型
+     * @param type
+     * @param tnId
+     * @param grade
+     * @return
+     */
+    @RequestMapping(value = "/get/className/{type}/{tnId}/{grade}/{classType}",method =RequestMethod.GET )
+    @ResponseBody
+    public Map getClassName(@PathVariable String type,
+                            @PathVariable Integer tnId,
+                            @PathVariable String grade,
+                            @PathVariable String classType) {
+        List<ClassView> classViews = exiTenantConfigInstanceService.selectClassNameByGradeAndType(type, tnId, grade,classType);
+        Map resultMap = new HashMap();
+        resultMap.put("result", classViews);
+        return resultMap;
+    }
 
     /**
      * 导出租户excel模板

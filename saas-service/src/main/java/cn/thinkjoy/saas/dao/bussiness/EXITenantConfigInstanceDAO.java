@@ -3,6 +3,7 @@ package cn.thinkjoy.saas.dao.bussiness;
 import cn.thinkjoy.common.dao.IBaseDAO;
 import cn.thinkjoy.saas.domain.Configuration;
 import cn.thinkjoy.saas.domain.TenantConfigInstance;
+import cn.thinkjoy.saas.domain.bussiness.ClassView;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import org.apache.ibatis.annotations.Param;
 
@@ -81,6 +82,19 @@ public interface EXITenantConfigInstanceDAO extends IBaseDAO<TenantConfigInstanc
      */
     void removeColumn(Map map);
 
+    /**
+     * 联动
+     * @param map
+     * @return
+     */
+    List<ClassView> selectClassTypeByGrade(Map map);
+
+    /**
+     * 获取班级名
+     * @param map
+     * @return
+     */
+    List<ClassView> selectClassNameByGradeAndType(Map map);
     /**
      * 动态创建表
      *
