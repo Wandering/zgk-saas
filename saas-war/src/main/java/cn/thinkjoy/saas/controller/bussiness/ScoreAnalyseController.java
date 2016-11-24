@@ -731,18 +731,40 @@ public class ScoreAnalyseController
         {
             List<ExamScoreRatio> ratioList = new ArrayList<>();
             ratioList.addAll(ratioSet);
-            String weakOneCourseName = ratioList.get(0).getCourseName();
-            dataMap.put("weakCourseOne", weakOneCourseName);
-            for (int i = 1; i < ratioList.size(); i++)
+            Map<String, Float> map = new HashMap<>();
+            for (int i = 0; i < ratioList.size(); i++)
             {
                 String weakTwoCourseName = ratioList.get(i).getCourseName();
-                if (!weakTwoCourseName.equals(weakOneCourseName))
+                if(null == map.get(weakTwoCourseName))
                 {
-                    dataMap.put("weakCourseTwo", weakTwoCourseName);
-                    break;
+                    map.put(weakTwoCourseName, ratioList.get(i).getRatio());
+                }else
+                {
+                    float f = map.get(weakTwoCourseName);
+                    float v = new BigDecimal(f).add(new BigDecimal(ratioList.get(i).getRatio())).floatValue();
+                    map.put(weakTwoCourseName, v);
                 }
             }
-            dataMap.put("weakCourseDetails", ratioSet.toString());
+            Set<ExamScoreRatio> set = new TreeSet<>();
+            int in =1;
+            for (Map.Entry<String, Float> en: map.entrySet())
+            {
+                ExamScoreRatio r = new ExamScoreRatio();
+                r.setCourseName(en.getKey());
+                r.setRatio(en.getValue());
+                r.setId(Long.parseLong(in++ + ""));
+                set.add(r);
+            }
+            List<ExamScoreRatio> ratioList2 = new ArrayList<>();
+            ratioList2.addAll(set);
+            if(ratioList2.size() >= 2)
+            {
+                String weakOneCourseName = ratioList2.get(0).getCourseName();
+                dataMap.put("weakCourseOne", weakOneCourseName);
+                String weakTwoCourseName = ratioList2.get(1).getCourseName();
+                dataMap.put("weakCourseTwo", weakTwoCourseName);
+            }
+            dataMap.put("weakCourseDetails", ratioSet + "@@" +set.toString());
         }
         dataList.add(dataMap);
     }
@@ -1479,17 +1501,13 @@ public class ScoreAnalyseController
             String clazzName = values[0];
             String studentName = values[1];
             int advancedScore = 0;
-            if (scoreList.size() == 0)
+            if (scoreList.size() == 0 || scoreList.size() == 1)
             {
                 continue;
             }
-            if (scoreList.size() == 1)
-            {
-                advancedScore = scoreList.get(0);
-            }
             if (scoreList.size() == 2)
             {
-                if (scoreList.get(0) < scoreList.get(1))
+                if (scoreList.get(0) <= scoreList.get(1))
                 {
                     continue;
                 }
@@ -1497,7 +1515,7 @@ public class ScoreAnalyseController
             }
             if (scoreList.size() == 3)
             {
-                if (scoreList.get(0) < scoreList.get(1) || scoreList.get(1) < scoreList.get(2))
+                if (scoreList.get(0) <= scoreList.get(1) || scoreList.get(1) <= scoreList.get(2))
                 {
                     continue;
                 }
