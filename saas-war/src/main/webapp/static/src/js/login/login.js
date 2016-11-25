@@ -10,6 +10,10 @@ $('#login-btn').on('click', function () {
         layer.tips('请输入密码!', $('#password'));
         return false;
     }
+    if(pwd.length<6||pwd.length>12){
+        layer.tips('密码输入有误，6-12位!', $('#password'));
+        return false;
+    }
     Common.ajaxFun('/account/login/' + username + '/' + $.md5(pwd) + '.do', 'GET', {}, function (res) {
         if (res.rtnCode == "0000000") {
             var data = res.bizData;
@@ -33,9 +37,9 @@ $('#login-btn').on('click', function () {
                 window.location.href = '/seting-process'+data.isInit;
             }
         } else {
-            layer.msg(res.msg);
+            layer.msg('账号或密码输入有误');
         }
     }, function (res) {
-        layer.msg('出错了');
+        layer.msg('账号或密码输入有误');
     });
 });
