@@ -135,6 +135,33 @@ var SchoolAds = {
     eventListen: function () {
         var that = this;
 
+        //院校所属地
+//         var that = this;
+//         $(document).on('click', '#province-list span', function () {
+//             $(this).addClass('active').siblings().removeClass('active');
+//             that.params.areaId = $(this).attr('provinceid');
+//             that.getCollegeUniversitiesEnrollment(that.params);
+//         })
+//         //招生年份
+//         $(document).on('click', '#year-list span', function () {
+//             $(this).addClass('active').siblings().removeClass('active');
+//             that.params.year = $(this).text();
+//             that.getCollegeUniversitiesEnrollment(that.params);
+//         })
+//         //录取批次
+//         $(document).on('click', '#batch-list span', function () {
+//             $(this).addClass('active').siblings().removeClass('active');
+//             that.params.batch = $(this).attr('dictid');
+//             that.getCollegeUniversitiesEnrollment(that.params);
+//         })
+//         //录取批次
+//         $(document).on('click', '#feature-list span', function () {
+//             $(this).addClass('active').siblings().removeClass('active');
+//             that.params.property = $(this).attr('dictid')
+//             that.getCollegeUniversitiesEnrollment(that.params);
+//         })
+
+
         // 文理切换
         $(document).on('click', '.tab-detail-title li', function () {
             $(this).addClass('active').siblings().removeClass('active');
@@ -144,10 +171,10 @@ var SchoolAds = {
             that.params.type = $(this).attr('type')
             that.fetchSchoolEnroll(that.params);
         })
+        //加载更多
         $(document).on('click', '#ladmission-load-more', function () {
 
         })
-
 
         //搜索
         $('.search-input').unbind('input propertychange').bind('input propertychange', function () {
