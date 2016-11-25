@@ -245,30 +245,30 @@ function getNumberByYear (tnId) {
         'tnId': tnId
     }, function (res) {
         if (res.rtnCode == "0000000") {
-            var res = {
-                "bizData":{
-                    "data":{
-                        "2015":{
-                            "化学":3,
-                            "历史":2,
-                            "地理":2,
-                            "政治":2,
-                            "物理":3,
-                            "生物":2,
-                            "通用技术":4
-                        },
-                        "2018":{
-                            "化学":1,
-                            "地理":1,
-                            "物理":1,
-                            "生物":1,
-                            "通用技术":1
-                        }
-                    }
-                },
-                "rtnCode":"0000000",
-                    "ts":1479967678079
-            };
+            //var res = {
+            //    "bizData":{
+            //        "data":{
+            //            "2015":{
+            //                "化学":3,
+            //                "历史":2,
+            //                "地理":2,
+            //                "政治":2,
+            //                "物理":3,
+            //                "生物":2,
+            //                "通用技术":4
+            //            },
+            //            "2018":{
+            //                "化学":1,
+            //                "地理":1,
+            //                "物理":1,
+            //                "生物":1,
+            //                "通用技术":1
+            //            }
+            //        }
+            //    },
+            //    "rtnCode":"0000000",
+            //        "ts":1479967678079
+            //};
             var data = res.bizData;
             var historyData = {
                 year: [],
@@ -282,53 +282,13 @@ function getNumberByYear (tnId) {
                     '通用技术': []
                 }
             };
-            //for (var j in historyData.subjects) {
-                $.each(data.data, function (i, k) {
-                    historyData.year.push(i);
-                    $.each(k, function (m, n) {
-                        console.info('i: ' + i + ', m: ' + m + ', n: ' + n);
-                        //if (!historyData.subjects.hasOwnProperty(m)) {
-                        //    historyData.subjects[m] = [];
-                        //}
-                        if (data.data[i].hasOwnProperty(j)) {alert(1 + ', ' + data.data[i][m]);
-                            historyData.subjects[m].push(n);
-                        } else {alert(2 + ', ' + data.data[i][m]);
-                            historyData.subjects[m].push(0);
-                        }
-                        //if (!historyData.subjects.hasOwnProperty(m)) {
-                        //    historyData.subjects[m] = [];
-                        //} else {
-                        //    historyData.subjects[m] = [];
-                        //}
-                        //historyData.subjects[m].push(n);
-                        //switch (m) {
-                        //    case '物理':
-                        //        historyData.subjects['物理'].push(n);
-                        //        break;
-                        //    case '化学':
-                        //        historyData.subjects['化学'].push(n);
-                        //        break;
-                        //    case '生物':
-                        //        historyData.subjects['生物'].push(n);
-                        //        break;
-                        //    case '政治':
-                        //        historyData.subjects['政治'].push(n);
-                        //        break;
-                        //    case '地理':
-                        //        historyData.subjects['地理'].push(n);
-                        //        break;
-                        //    case '历史':
-                        //        historyData.subjects['历史'].push(n);
-                        //        break;
-                        //    case '通用技术':
-                        //        historyData.subjects['通用技术'].push(n);
-                        //        break;
-                        //    default:
-                        //        break;
-                        //}
-                    });
+            $.each(data.data, function (i, k) {
+                historyData.year.push(i);
+                $.each(k, function (m, n) {
+                    console.info('i: ' + i + ', m: ' + m + ', n: ' + n);
+                    historyData.subjects[m].push(n);
                 });
-            //}
+            });
             historyCourseAnalysis(historyData.year, historyData.subjects);
             console.info(historyData.year);
         }
@@ -554,7 +514,12 @@ function selectTypeAnalysis (tnId, studentGrade) {
         if (res.rtnCode == "0000000") {
             var data = res.bizData;
             $('.stu-count').html(data.count);
-            $('.reach-line').html('预计' + data.top + '人上线').css({'width': (data.top / data.count) * 100 + '%'});
+            if (data.top != 0) {
+                $('.reach-line').html('预计' + data.top + '人上线').css({'width': (data.top / data.count) * 100 + '%'});
+            } else {
+                $('.reach-line').hide();//.html('预计' + data.top + '人上线').css({'width': '0%'});
+                $('.ratio-detail').hide();
+            }
             var datas = {
                 subjects: [],
                 numbers: []
