@@ -23,12 +23,15 @@ public class TrineServiceImpl implements ITrineService {
     public Map<String,Object> selectEnrollingNumberByBatch(Map map) {
         List<TrineDto> trineDtoList=trineDAO.selectEnrollingNumberByBatch(map);
         int count=0;
+        int enrollingCount=0;
         for (TrineDto trineDto:trineDtoList){
             count=count+Integer.valueOf(trineDto.getMajorNumber());
+            enrollingCount=enrollingCount+trineDto.getPlanEnrollingNumber();
         }
         Map<String,Object> returnMap=new HashMap<>();
         returnMap.put("enrollingNumberByBatch", trineDtoList);
-        returnMap.put("count",count);
+        returnMap.put("majorCount",count);
+        returnMap.put("enrollingCount",enrollingCount);
         return returnMap;
     }
 

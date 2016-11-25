@@ -81,6 +81,7 @@
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp" %>
+<script src="<%=ctx%>/static/src/lib/md5/jQuery.md5.js"></script>
 <script src="<%=ctx%>/static/src/js/login/forgot-password.js" charset="utf-8"></script>
 </body>
 </html>

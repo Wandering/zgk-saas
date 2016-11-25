@@ -14,13 +14,13 @@ var SchoolRecruit = {
         this.areaId = Common.cookie.getCookie('countyId');
         //院校录取数据[参数数据]
         this.params = {
-            year: "",
-            areaId: "",
-            property: "",
-            batch: "",
-            type: "2",
-            page: '1',
-            rows: "10"
+            year: "",   //年份
+            areaId: "", //省份code
+            property: "", //院校特征
+            batch: "",   //批次
+            type: "2",  //1.文史 2.理工
+            page: '1',  //第几页
+            rows: "10"  //每页条数
         };
         this.getProvince();
         this.getYear('');
@@ -95,27 +95,28 @@ var SchoolRecruit = {
         var that = this;
         $('#table-loading-img').show();
         Common.ajaxFun('/data/getGkAdmissionLineList.do', 'GET', this.params, function (res) {
-        if (res.rtnCode == "0000000") {
-            var dataJson = res.bizData;
-            //总记录数 - 每页条数*第几页数 > 每页条数 [ 展示加载更多 ]
-            if (res.bizData.rows.length == 0) {
-                $('#recruit-load-more').html('<span>暂无</span>');
-                return false;
+            if (res.rtnCode == "0000000") {
+                var dataJson = res.bizData;
+                //总记录数 - 每页条数*第几页数 > 每页条数 [ 展示加载更多 ]
+                if (res.bizData.rows.length == 0) {
+                    $('#recruit-load-more').html('<span>暂无</span>');
+                    return false;
+                } else {
+                    $('#recruit-load-more').html('<span>加载更多</span>');
+                }
+                if (dataJson.records - that.params.rows * (that.params.page - 1) > that.params.rows) {
+                    $('#recruit-load-more').show();
+                }
+                var template = Handlebars.compile($('#school-admission-plan-tpl').html());
+                $('#school-admission-plan').append(template(dataJson))
+                $('#table-loading-img').hide();
             } else {
-                $('#recruit-load-more').html('<span>加载更多</span>');
+                layer.msg(res.msg);
+                $('.layui-layer-msg').css('left', '56%');
             }
-            if (dataJson.records - that.params.rows * (that.params.page - 1) > that.params.rows) {
-                $('#recruit-load-more').show();
-            }
-            var template = Handlebars.compile($('#school-admission-plan-tpl').html());
-            $('#school-admission-plan').append(template(dataJson))
-            $('#table-loading-img').hide();
-        } else {
-            layer.msg(res.msg);
-            $('.layui-layer-msg').css('left', '56%');
-        }
         });
     },
+    //添加事件
     addEvent: function () {
         //院校所属地
         var that = this;
@@ -217,10 +218,10 @@ var SchoolRecruitDetail = {
                 var tplYear = '',
                     tplSubject = '',
                     foo = '';
-                $.each(res.bizData,function(i,v){
+                $.each(res.bizData, function (i, v) {
                     v == '1' ? foo = '文科' : foo = '理科';
-                    tplYear += '<option value="'+i+'">'+i+'年</option>';
-                    tplSubject += '<option value="'+v+'">'+foo+'</option>';
+                    tplYear += '<option value="' + i + '">' + i + '年</option>';
+                    tplSubject += '<option value="' + v + '">' + foo + '</option>';
                     foo = '';
                 })
                 $('#plan-year').html(tplYear);
@@ -237,7 +238,7 @@ var SchoolRecruitDetail = {
                 $('#school-detail-loading-img').addClass('dh');  //loading - hide
                 if (res.bizData.length > parseInt(data.rows)) {
                     $('#school-detail-load-more').removeClass('dh');  //more - show
-                }else{
+                } else {
                     $('#school-detail-load-more').addClass('dh');  //more - hide
                 }
                 var template = Handlebars.compile($('#school-detail-bottom-tpl').html());

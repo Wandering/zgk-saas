@@ -74,6 +74,12 @@ SubjectAnalysis.prototype = {
             'subject': subject
         }, function (res) {
             if (res.rtnCode == "0000000") {
+                for (var i = 1; i < 7; i++) {
+                    $('.major-type-top thead tr th').eq(i).html('-');
+                    $('.major-type-top tbody tr td').eq(i).html('-');
+                    $('.major-type-bottom thead tr th').eq(i).html('-');
+                    $('.major-type-bottom tbody tr td').eq(i).html('-');
+                }
                 var data = res.bizData.analysisDiscipline;
                 var types = {
                     type: [],
@@ -88,10 +94,10 @@ SubjectAnalysis.prototype = {
                     if (i <= 5) {
                         $('.major-type-top thead tr th').eq(i+1).html(k.disciplineName);
                         $('.major-type-top tbody tr td').eq(i+1).html(k.number);
-                    } else {
-                        var n = i % 5;
-                        $('.major-type-bottom thead tr th').eq(n).html(k.disciplineName);
-                        $('.major-type-bottom tbody tr td').eq(n).html(k.number);
+                    } else {//6 7 8 9 10 11
+                        var n = i % 6;
+                        $('.major-type-bottom thead tr th').eq(n+1).html(k.disciplineName);
+                        $('.major-type-bottom tbody tr td').eq(n+1).html(k.number);
                     }
                 });
                 majorTypeAnalysis(types.type, types.datas);
@@ -278,6 +284,8 @@ UniversityDetail.prototype = {
             }
             if (k.selSubject === "" || k.selSubject === undefined || k.selSubject === null || k.selSubject === "0") {
                 k.selSubject = "-";
+            } else {
+                k.selSubject = k.selSubject.split(' ').join('、');
             }
         });
         $('#university-detail-data-list').html(template(result.majorByUniversityNameAndBatch));
@@ -305,6 +313,7 @@ $(function () {
         var subjectName = $(this).attr('subject');
         if (subjectName != '00') {
             universityDetail = new UniversityDetail();
+            universityDetail.subject = subjectName;
             universityDetail.showBox('院校详情');
             universityDetail.loadPage(0, universityDetail.universityRows);
         }
@@ -324,11 +333,11 @@ $(function () {
     /**
      * 院校文本框添加事件监听
      */
-    $(document).on('keydown', "#search-keywords", startSearchUniversity)
-        .on('keyup', "#search-keywords", startSearchUniversity)
-        .on('click', "#search-keywords", startSearchUniversity)
+    $(document).on('click', "#search-keywords", startSearchUniversity)
+        .on('keyup', "#search-keywords", startSearchUniversity);
+        //.on('click', "#search-keywords", startSearchUniversity)
         //.on('mouseover', "#search-keywords", startSearchUniversity)
-        .on('focus', "#search-keywords", startSearchUniversity);
+        //.on('focus', "#search-keywords", startSearchUniversity);
         //.on('blur', "#search-keywords", startSearchUniversity);
     $(document).on("click", function (e) {
         $("#results-list").hide();

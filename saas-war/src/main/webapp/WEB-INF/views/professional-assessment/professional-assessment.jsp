@@ -126,6 +126,7 @@
 </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp" %>
+<script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
 <script src="<%=ctx%>/static/src/js/professional-assessment/evaluation-data-base.js"></script>
 <script src="<%=ctx%>/static/src/js/professional-assessment/professional-assessment.js"></script>
 </body>
