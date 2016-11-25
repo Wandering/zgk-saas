@@ -1105,7 +1105,7 @@ public class ScoreAnalyseController
         return rList;
     }
 
-    private int sortList(List<Map<String, Object>> list, String orderBy, String className)
+    private int sortList(List<Map<String, Object>> list, final String orderBy, String className)
     {
         Collections.sort(list, new Comparator<Map<String, Object>>()
         {
