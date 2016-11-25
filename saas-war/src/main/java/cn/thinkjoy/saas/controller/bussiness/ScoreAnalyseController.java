@@ -1499,7 +1499,7 @@ public class ScoreAnalyseController
         for (Map.Entry<String, List<Integer>> entry : examScoreRatioMap.entrySet())
         {
             String examDetailInfo = entry.getKey();
-            List<Integer> scoreList = entry.getValue();
+            List<Integer> rankList = entry.getValue();
             String[] values = examDetailInfo.split("@");
             if (values.length < 2)
             {
@@ -1508,25 +1508,25 @@ public class ScoreAnalyseController
             String clazzName = values[0];
             String studentName = values[1];
             int advancedScore = 0;
-            if (scoreList.size() == 0 || scoreList.size() == 1)
+            if (rankList.size() == 0 || rankList.size() == 1)
             {
                 continue;
             }
-            if (scoreList.size() == 2)
+            if (rankList.size() == 2)
             {
-                if (scoreList.get(0) <= scoreList.get(1))
+                if (rankList.get(0) >= rankList.get(1))
                 {
                     continue;
                 }
-                advancedScore = new BigDecimal(scoreList.get(0)).subtract(new BigDecimal(scoreList.get(1))).intValue();
+                advancedScore = new BigDecimal(rankList.get(1)).subtract(new BigDecimal(rankList.get(0))).intValue();
             }
-            if (scoreList.size() == 3)
+            if (rankList.size() == 3)
             {
-                if (scoreList.get(0) <= scoreList.get(1) || scoreList.get(1) <= scoreList.get(2))
+                if (rankList.get(0) >= rankList.get(1) || rankList.get(1) >= rankList.get(2))
                 {
                     continue;
                 }
-                advancedScore = new BigDecimal(scoreList.get(0)).subtract(new BigDecimal(scoreList.get(2))).
+                advancedScore = new BigDecimal(rankList.get(2)).subtract(new BigDecimal(rankList.get(0))).
                     divide(new BigDecimal(2), 0, RoundingMode.HALF_DOWN).intValue();
             }
             if (advancedScore >= stepStart && advancedScore <= stepEnd)
@@ -1579,18 +1579,18 @@ public class ScoreAnalyseController
             {
                 for (ExamDetail detail : detailList)
                 {
-                    List<Integer> scoreList = new ArrayList<>();
-                    scoreList.add(Integer.parseInt(detail.getTotleScore()));
-                    examScoreRatioMap.put(detail.getClassName() + "@" + detail.getStudentName(), scoreList);
+                    List<Integer> rankList = new ArrayList<>();
+                    rankList.add(Integer.parseInt(detail.getGradeRank()));
+                    examScoreRatioMap.put(detail.getClassName() + "@" + detail.getStudentName(), rankList);
                 }
             }
             if (i > 1)
             {
                 for (ExamDetail detail : detailList)
                 {
-                    List<Integer> scoreList =
+                    List<Integer> rankList =
                         examScoreRatioMap.get(detail.getClassName() + "@" + detail.getStudentName());
-                    scoreList.add(Integer.parseInt(detail.getTotleScore()));
+                    rankList.add(Integer.parseInt(detail.getGradeRank()));
                 }
             }
         }
