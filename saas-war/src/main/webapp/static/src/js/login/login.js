@@ -10,7 +10,7 @@ $('#login-btn').on('click', function () {
         layer.tips('请输入密码!', $('#password'));
         return false;
     }
-    Common.ajaxFun('/account/login/' + username + '/' + pwd + '.do', 'GET', {}, function (res) {
+    Common.ajaxFun('/account/login/' + username + '/' + $.md5(pwd) + '.do', 'GET', {}, function (res) {
         if (res.rtnCode == "0000000") {
             var data = res.bizData;
             var siderMenu = data.meuns;
