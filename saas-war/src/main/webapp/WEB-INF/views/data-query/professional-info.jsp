@@ -47,8 +47,10 @@
                         <div class="common-title">
                             <h3 class="fl">职业信息</h3>
                             <div class="search-box fr">
-                                <input type="text" placeholder="请输入查询内容..." class="search-input">
+                                <input type="text" placeholder="请输入查询的职业信息" class="search-input">
                                 <button class="search-btn">搜索</button>
+                                <ul id="search-list">
+                                </ul>
                             </div>
                         </div>
                         <div class="common-select">
