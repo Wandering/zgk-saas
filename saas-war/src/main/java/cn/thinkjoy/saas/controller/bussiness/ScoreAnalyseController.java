@@ -726,6 +726,9 @@ public class ScoreAnalyseController
         dataMap.put("examId", lastExamId);
         dataMap.put("batchName", batchName);
         dataMap.put("examDetailId", detail.getId().toString());
+        dataMap.put("gradeRank", detail.getGradeRank());
+        dataMap.put("className", detail.getClassName());
+        dataMap.put("studentName", detail.getStudentName());
         Set<ExamScoreRatio> ratioSet = examScoreRatioMap.get(detail.getId());
         if (null != ratioSet && ratioSet.size() >= 2)
         {
@@ -865,6 +868,7 @@ public class ScoreAnalyseController
         @RequestParam(value = "offset", required = true) int offset,
         @RequestParam(value = "rows", required = true) int rows)
     {
+        getMostAttentionNumber(tnId, grade);
         String lastExamId = getLastExamId(grade, tnId);
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("examId", lastExamId);
@@ -1466,20 +1470,14 @@ public class ScoreAnalyseController
         String lastExamId = getLastExamId(grade, tnId);
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("examId", lastExamId);
-//        getMostAttentionNumber(tnId, grade);
-        List<Map<String, Object>> allList = examDetailService.getMostAttentionListForClass(paramMap);
-        Map<String, Map<String, Object>> weakCourseMap = new HashMap<>();
-        for (Map<String, Object> map : allList)
+        List<Map<String, String>> allList = getMostAttentionInfo(tnId, grade);
+        Map<String, Map<String, String>> weakCourseMap = new HashMap<>();
+        for (Map<String, String> map : allList)
         {
             String clazzName = map.get("className") + "";
             if (className.equals(clazzName))
             {
-                int gradeRank = Integer.parseInt(map.get("gradeRank") + "");
                 weakCourseMap.put(map.get("studentName") + "", map);
-                if (gradeRank > maxGradeRank)
-                {
-                    maxGradeRank = gradeRank;
-                }
             }
         }
         paramMap.put("tnId", tnId);
@@ -1543,25 +1541,30 @@ public class ScoreAnalyseController
                 params.put("className", clazzName);
                 params.put("studentName", studentName);
                 params.put("advancedScore", advancedScore);
-                Map<String, Object> map = weakCourseMap.get(studentName);
+                Map<String, String> map = weakCourseMap.get(studentName);
                 if (null != map)
                 {
                     int rank = Integer.parseInt(map.get("gradeRank") + "");
-                    params.put("weakCourseOne", map.get("weakCourseOne"));
-                    params.put("weakCourseTwo", map.get("weakCourseTwo"));
-                    params.put("gradeRank", map.get("gradeRank"));
-                    params.put("classRank", map.get("classRank"));
-                    dataList.add(params);
                     if (rank >= rankStepStart && rank <= rankStepEnd)
                     {
+                        params.put("weakCourseOne", map.get("weakCourseOne"));
+                        params.put("weakCourseTwo", map.get("weakCourseTwo"));
+                        params.put("gradeRank", map.get("gradeRank"));
+                        params.put("classRank", map.get("classRank"));
+                        dataList.add(params);
                         advancedScoreSet.add(advancedScore);
+                        if (advancedScore > maxAdvancedScore)
+                        {
+                            maxAdvancedScore = advancedScore;
+                        }
+                        if (rank > maxGradeRank)
+                        {
+                            maxGradeRank = rank;
+                        }
                     }
                 }
             }
-            if (advancedScore > maxAdvancedScore)
-            {
-                maxAdvancedScore = advancedScore;
-            }
+
         }
         return resultMap.get(className);
     }
@@ -1660,5 +1663,55 @@ public class ScoreAnalyseController
             flag = examDetailService.checkIsColumnExist(paramMap);
         }
         return flag;
+    }
+
+    private List<Map<String, String>> getMostAttentionInfo(String tnId,String grade)
+    {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("grade", grade);
+        paramMap.put("tnId", tnId);
+        paramMap.put("limitNumber", 3);
+        List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
+        if (null == examIds || examIds.size() == 0)
+        {
+            throw new BizException("1100011", "该年级没有成绩录入！！");
+        }
+        if (examIds.size() == 1)
+        {
+            throw new BizException("1100011", "该年级只有一次成绩录入！！");
+        }
+        String lastExamId = examIds.get(0);
+        Map<String, ExamDetail> lastExamDetailMap = new LinkedHashMap<>();
+        Map<Long, Set<ExamScoreRatio>> examScoreRatioMap = new LinkedHashMap<>();
+        for (int i = 1; i <= examIds.size(); i++)
+        {
+            String examId = examIds.get(i - 1);
+            List<ExamDetail> detailList = examDetailService.findList("examId", examId);
+            for (ExamDetail detail : detailList)
+            {
+                if (i == 1)
+                {
+                    lastExamDetailMap.put(detail.getClassName() + "@" + detail.getStudentName(), detail);
+                    examScoreRatioMap.put(detail.getId(), new TreeSet<ExamScoreRatio>());
+                }
+            }
+            Map<String, String> params = new HashMap<>();
+            params.put("examId", examId);
+            Map<String, Object> avgScoreMap = examDetailService.getAvgScoresByExamId(params);
+            for (ExamDetail detail : detailList)
+            {
+                fixSelectCourse(detail, lastExamId);
+                ExamDetail lastDetail = lastExamDetailMap.get(detail.getClassName() + "@" + detail.getStudentName());
+                setRatioMap(examScoreRatioMap, avgScoreMap, detail, lastDetail);
+            }
+        }
+        List<Map<String, String>> dataList = new ArrayList<>();
+        for (Map.Entry<String, ExamDetail> entry : lastExamDetailMap.entrySet())
+        {
+            String batchName = entry.getKey();
+            ExamDetail detail = entry.getValue();
+            addDataList(lastExamId, examScoreRatioMap, dataList, batchName, detail);
+        }
+        return dataList;
     }
 }

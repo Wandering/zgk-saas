@@ -171,7 +171,7 @@
         select dd.name as batchName,count(pp.majorCode) as majorNumber,sum(pp.planEnrolling) as planEnrollingNumber
         from zgk2.zgk_university_major_enrolling_plan pp
         left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=pp.batch
-        where pp.areaId=#{areaId} and pp.year=#{year}
+        where pp.areaId=#{areaId} and pp.year=#{year} and pp.majorCode is not null
         group by pp.batch;
     </select>
 
@@ -179,7 +179,7 @@
         select dd.name as batchName,count(DISTINCT pp.universityId) as universityNumber,sum(pp.planEnrolling) as planEnrollingNumber,pp.year as year
         from zgk2.zgk_university_major_enrolling_plan pp
         left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=pp.batch
-        where  pp.areaId=#{areaId} and pp.year=#{year}
+        where  pp.areaId=#{areaId} and pp.year=#{year} and pp.majorCode is not null
         group by pp.batch,pp.year
     </select>
 
