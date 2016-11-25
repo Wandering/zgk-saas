@@ -136,30 +136,47 @@ var SchoolAds = {
         var that = this;
 
         //院校所属地
-//         var that = this;
-//         $(document).on('click', '#province-list span', function () {
-//             $(this).addClass('active').siblings().removeClass('active');
-//             that.params.areaId = $(this).attr('provinceid');
-//             that.getCollegeUniversitiesEnrollment(that.params);
-//         })
-//         //招生年份
-//         $(document).on('click', '#year-list span', function () {
-//             $(this).addClass('active').siblings().removeClass('active');
-//             that.params.year = $(this).text();
-//             that.getCollegeUniversitiesEnrollment(that.params);
-//         })
-//         //录取批次
-//         $(document).on('click', '#batch-list span', function () {
-//             $(this).addClass('active').siblings().removeClass('active');
-//             that.params.batch = $(this).attr('dictid');
-//             that.getCollegeUniversitiesEnrollment(that.params);
-//         })
-//         //录取批次
-//         $(document).on('click', '#feature-list span', function () {
-//             $(this).addClass('active').siblings().removeClass('active');
-//             that.params.property = $(this).attr('dictid')
-//             that.getCollegeUniversitiesEnrollment(that.params);
-//         })
+        var that = this;
+        $(document).on('click', '#province-list span', function () {
+            $('#school-admission-plan').html('');
+            $(this).addClass('active').siblings().removeClass('active');
+            SchoolAds.params = {
+                year: "",   //年份
+                areaId: $(this).attr('provinceid'), //省份code
+                property: "", //院校特征
+                batch: "",   //批次
+                type: "2",  //1.文史 2.理工
+                page: '1',  //第几页
+                rows: "10"  //每页条数
+            }
+            that.getYear(that.params.areaId);
+            that.getBatch(that.params.year, that.params.areaId);
+            that.fetchSchoolEnroll(that.params);
+        })
+
+        //招生年份
+        $(document).on('click', '#year-list span', function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            that.params.year = $(this).attr('yearId');
+            that.getBatch(that.params.year, that.params.areaId);
+            that.fetchSchoolEnroll(that.params);
+        })
+
+
+        //录取批次
+        $(document).on('click', '#batch-list span', function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            that.params.batch = $(this).attr('dictid');
+            that.fetchSchoolEnroll(that.params);
+        })
+
+
+        //录取批次
+        $(document).on('click', '#feature-list span', function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            that.params.property = $(this).attr('dictid')
+            that.fetchSchoolEnroll(that.params);
+        })
 
 
         // 文理切换
@@ -171,6 +188,8 @@ var SchoolAds = {
             that.params.type = $(this).attr('type')
             that.fetchSchoolEnroll(that.params);
         })
+
+
         //加载更多
         $(document).on('click', '#ladmission-load-more', function () {
 

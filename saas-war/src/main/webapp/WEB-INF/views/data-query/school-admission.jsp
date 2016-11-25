@@ -79,9 +79,9 @@
                                 <dd id="year-list">
                                 </dd>
                                 <script type="text/x-handlebars-template" id="year-list-tpl">
-                                    <span class="active">全部</span>
+                                    <span class="active" yearId="">全部</span>
                                     {{#each this}}
-                                    <span>{{this}}</span>
+                                    <span yearId="{{this}}">{{this}}</span>
                                     {{/each}}
                                 </script>
                             </dl>
@@ -95,7 +95,7 @@
                                 <dd id="batch-list">
                                 </dd>
                                 <script type="text/x-handlebars-template" id="batch-list-tpl">
-                                    <span class="active" dictid="00">全部</span>
+                                    <span class="active" dictid="">全部</span>
                                     {{#each this}}
                                     <span dictid="{{dictid}}">{{name}}</span>
                                     {{/each}}

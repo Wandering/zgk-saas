@@ -205,7 +205,7 @@ var Common = {
                 menus.push('<i class="icon-desktop"></i>');
                 menus.push('<span class="menu-text">'+ v.meunName +'</span>');
                 menus.push('</a>');
-                //console.log("子菜单:"+v.sonMeuns.length)
+                console.log("子菜单:"+v.sonMeuns)
                 if(v.sonMeuns.length>0){
                     //console.log(v.sonMeuns)
                     menus.push('<ul class="submenu">');
