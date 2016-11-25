@@ -1131,6 +1131,7 @@ selectList
             </if>
             AND weakCourseTwo = #{courseName}
         </if>
+        GROUP by d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank,d.classRank
         <if test="orderBy!=null">
             ORDER BY ${orderBy} ${sortBy}
         </if>
@@ -1138,6 +1139,7 @@ selectList
             limit ${offset}, ${rows}
         </if>
     </select>
+
     <select id="getAvgScoresForClass" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
         select d.className,e.examTime, ROUND(AVG(IF(d.yuWenScore='', null, d.yuWenScore)), 2) 语文,
         ROUND(AVG(IF(d.shuXueScore='', null, d.shuXueScore)), 2) 数学,
