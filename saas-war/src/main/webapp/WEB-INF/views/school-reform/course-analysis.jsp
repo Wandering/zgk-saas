@@ -149,6 +149,7 @@
             </div>
         </div>
         <%@ include file="./../common/footer.jsp"%>
+        <script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
         <script src="<%=ctx%>/static/src/js/school-reform/course-analysis.js"></script>
     </body>
 </html>

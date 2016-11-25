@@ -251,7 +251,8 @@ ClassResultsAnalysis.prototype = {
             },
             xAxis: {
                 type: 'category',
-                name: 'x',
+                name: '考试时间',
+                position:'bottom',
                 splitLine: {show: false},
                 //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
                 data: ["2016-02-02", "2016-03-03", "2016-04-07", "2016-05-10", "2016-06-14"]
@@ -270,7 +271,7 @@ ClassResultsAnalysis.prototype = {
             },
             series: [
                 {
-                    name: '3的指数',
+                    name: '班级平均分排名',
                     type: 'line',
                     //data: [1, 3, 9, 27, 81, 247, 741, 2223, 6669]
                     data: totalScoreData
@@ -442,7 +443,7 @@ ClassResultsAnalysis.prototype = {
                 // 提交位次线记录
                 //that.updateExamProperties('line',ClassAnalysisIns.bacthLine);
                 that.saveExamLineProperties(line);
-                $('.student-num').text(res.bizData.length);
+                $('.student-num').text(line);
                 var myTemplate = Handlebars.compile($("#overLineDetail-template").html());
                 $('#overLineDetail-tbody').html(myTemplate(res));
                 that.student12Layer(grade,className);
@@ -648,6 +649,7 @@ ClassResultsAnalysis.prototype = {
             },
             xAxis: {
                 type: 'category',
+                name: '考试时间',
                 splitLine: {show: false},
                 //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
                 data: dateData

@@ -628,10 +628,12 @@ var StdSet = {
                     type: 1,
                     content: $("#sub-student-setting"),
                     area: ['100%', '100%'],
-                    maxmin: false
+                    maxmin: false,
+                    cancel:function(){
+                        window.location.reload();
+                    }
                 })
             )
-            //that.tableDrag();   //排序
         });
     },
     eventAdd: function () {

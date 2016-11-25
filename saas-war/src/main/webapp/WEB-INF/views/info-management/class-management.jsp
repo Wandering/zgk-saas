@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>SAAS 角色管理</title>
+        <title>SAAS 班级管理</title>
         <%@ include file="./../common/meta.jsp"%>
         <link rel="stylesheet" href="<%=ctx%>/static/src/css/info-management.css" />
     </head>

@@ -69,7 +69,11 @@ SubjectAnalysis.prototype = {
             layer.msg("出错了");
         }, true);
     },
+    sortNumber: function (a,b) {
+        return a - b;
+    },
     getAnalysisDiscipline: function (subject) {
+        var that = this;
         Common.ajaxFun('/selectClassesGuide/getAnalysisDiscipline.do', 'GET', {
             'subject': subject
         }, function (res) {
@@ -83,24 +87,45 @@ SubjectAnalysis.prototype = {
                 var data = res.bizData.analysisDiscipline;
                 var types = {
                     type: [],
-                    datas: []
+                    datas: [],
+                    data: []
                 };
+                var tempStr = '';
                 $.each(data, function (i, k) {
                     types.type.push(k.disciplineName);
                     types.datas.push({
                         value: k.number,
                         name: k.disciplineName
                     });
+                    types.data.push(k.number);
                     if (i <= 5) {
                         $('.major-type-top thead tr th').eq(i+1).html(k.disciplineName);
                         $('.major-type-top tbody tr td').eq(i+1).html(k.number);
-                    } else {//6 7 8 9 10 11
+                    } else {
                         var n = i % 6;
                         $('.major-type-bottom thead tr th').eq(n+1).html(k.disciplineName);
                         $('.major-type-bottom tbody tr td').eq(n+1).html(k.number);
                     }
                 });
-                majorTypeAnalysis(types.type, types.datas);
+
+                for(var i = 0; i < types.data.length - 1; i++)
+                {
+                    for(var j = 0; j < types.data.length - 1 - i; j++)
+                    {
+                        if(parseInt(types.data[j]) > parseInt(types.data[j+1]))
+                        {
+                            var tmp_number = types.data[j];
+                            types.data[j] = types.data[j+1];
+                            types.data[j+1] = tmp_number;
+
+                            var tmp_name = types.type[j];
+                            types.type[j] = types.type[j+1];
+                            types.type[j+1] = tmp_name;
+                        }
+                    }
+                }
+
+                majorTypeAnalysis(types.type.slice(types.type.length - 3, types.type.length).reverse(), types.datas);
             }
         }, function (res) {
             layer.msg("出错了");
@@ -762,10 +787,6 @@ function historyEnrollingData () {
                     {
                         universityNumber: '-',
                         planEnrollingNumber: '-'
-                    },
-                    {
-                        universityNumber: '-',
-                        planEnrollingNumber: '-'
                     }
                 ];
                 $.each(data, function (n, m) {
@@ -778,13 +799,9 @@ function historyEnrollingData () {
                             tempBatch[1].universityNumber = m.universityNumber;
                             tempBatch[1].planEnrollingNumber = m.planEnrollingNumber;
                         }
-                        if (m.batchName == '三批本科') {
+                        if (m.batchName == '高职（专科）') {
                             tempBatch[2].universityNumber = m.universityNumber;
                             tempBatch[2].planEnrollingNumber = m.planEnrollingNumber;
-                        }
-                        if (m.batchName == '高职高专') {
-                            tempBatch[3].universityNumber = m.universityNumber;
-                            tempBatch[3].planEnrollingNumber = m.planEnrollingNumber;
                         }
                     }
                 });
