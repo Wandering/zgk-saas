@@ -117,11 +117,11 @@
                             <h5>职业介绍</h5>
                             <p>{{this.gkProfessionDetail.introduction}}</p>
                             <h5>职业前景</h5>
-                            <p>{{this.gkProfessionDetail.vocationalDemand}}</p>
-                            <h5>工作内容</h5>
-                            <p>{{this.gkProfessionDetail.workContent}}</p>
-                            <h5>从业要求</h5>
                             <p>{{this.gkProfessionDetail.careerProspects}}</p>
+                            <%--<h5>工作内容</h5>--%>
+                            <%--<p>{{this.gkProfessionDetail.workContent}}</p>--%>
+                            <h5>从业要求</h5>
+                            <p>{{this.gkProfessionDetail.vocationalDemand}}</p>
                         </script>
                     </div>
                     <!-- PAGE CONTENT ENDS -->
