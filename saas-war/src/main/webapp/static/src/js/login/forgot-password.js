@@ -48,7 +48,7 @@ var ForgotPassword = {
         $('#back-btn').on('click', function () {
             var paramData = ForgotPassword.validateFormItem(1);
             if (paramData) {
-                Common.ajaxFun('/account/forgetPwd/' + paramData.account + '/' + paramData.phone + '/' + paramData.smsCode + '/' + paramData.newPwd + '.do', 'GET', {}, function (res) {
+                Common.ajaxFun('/account/forgetPwd/' + paramData.account + '/' + paramData.phone + '/' + paramData.smsCode + '/' + $.md5(paramData.newPwd) + '.do', 'GET', {}, function (res) {
                     if (res.rtnCode == "0000000") {
                         console.info(res);
                     } else {
