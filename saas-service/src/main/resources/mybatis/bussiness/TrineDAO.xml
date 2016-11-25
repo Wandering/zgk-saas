@@ -32,7 +32,7 @@
         where tt.areaId=#{areaId} and tt.year=#{year}
                     and tt.batchName in ('第一批提前批','第二批提前批','第三批提前批','高职提前批')
         GROUP by tt.universityId
-        order by if(ISNULL(uu.rank),10000,uu.rank) asc
+        order by uu.educationLevel,if(ISNULL(uu.rank),10000,uu.rank) asc
         limit ${offset}, ${rows}
     </select>
 

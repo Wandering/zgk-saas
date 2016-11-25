@@ -67,7 +67,7 @@
                                         </div>
                                     </div>
                                     <div class="">
-                                        <button type="button" id="back-btn" class="back-btn">提交</button>
+                                        <button type="button" id="back-btn" class="back-btn">重设密码</button>
                                         <p class="txt">已有账号，请<a href="/login">登录账号</a></p>
                                     </div>
                                 </form>

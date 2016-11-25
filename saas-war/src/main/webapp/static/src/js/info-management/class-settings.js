@@ -220,7 +220,7 @@ ColumnSettings.prototype = {
         Common.ajaxFun('/manage/import/' + that.type + '/' + tnId + '.do?ids=' + that.ids.join('-'), 'POST', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 chooseWindowBox != null ? layer.close(chooseWindowBox) : layer.msg('窗口已关闭', {time: 1000});
-                layer.msg(res.bizData.result, {time: 1000});
+                layer.msg('添加成功', {time: 1000});
                 if (classSettings != null) {
                     classSettings.getClass();
                 }
