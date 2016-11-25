@@ -10,16 +10,18 @@
 var SchoolAds = {
     init: function () {
         this.params = {
-            'queryparam': "", //搜索内容
-            'professionTypeId': '', //大类型ID
-            'professionSubTypeId': '', //子类型ID
-            'page': "1", //当前页数
-            'rows': "10", //每页行数
+            year: "",   //年份
+            areaId: "", //省份code
+            property: "", //院校特征
+            batch: "",   //批次
+            type: "2",  //1.文史 2.理工
+            page: '1',  //第几页
+            rows: "10"  //每页条数
         }
         this.eventListen();
         this.getProvince();
         this.getYear('');
-        this.getBatch('','');
+        this.getBatch('', '');
         this.getRemoteDataDictList();
     },
     //获取省份
@@ -87,36 +89,70 @@ var SchoolAds = {
         $('#table-loading-img').show();
         Common.ajaxFun('/data/getGkAdmissionLineList.do', 'GET', data, function (res) {
             if (res.rtnCode == "0000000") {
-                var dataJson = res.bizData;
-                //总记录数 - 每页条数*第几页数 > 每页条数 [ 展示加载更多 ]
-                if (dataJson.records - that.params.rows * (that.params.page-1) > that.params.rows) {
-                    $('#admission-load-more').show();
-                }
-                var template = Handlebars.compile($('#school-admission-plan-tpl').html());
-                $('#school-admission-plan').append(template(dataJson))
-                $('#table-loading-img').hide();
+                that.renderSchoolEnroll(res.bizData);
             } else {
                 layer.msg(res.msg);
-                $('.layui-layer-msg').css('left','56%');
+                $('.layui-layer-msg').css('left', '56%');
             }
         });
     },
     //渲染录取数据
-    renderSchoolEnroll:function(data){
-
+    renderSchoolEnroll: function (dataJson) {
+        var that = this;
+        //总记录数 - 每页条数*第几页数 > 每页条数 [ 展示加载更多 ]
+        if (dataJson.records - that.params.rows * (that.params.page - 1) > that.params.rows) {
+            $('#admission-load-more').show();
+        }
+        var template = Handlebars.compile($('#school-admission-plan-tpl').html());
+        $('#school-admission-plan').append(template(dataJson))
+        $('#table-loading-img').hide();
     },
-
-
-
-
-
-
-
-
-
-
-
+    //渲染搜索数据
+    renderSearchList: function (data) {
+        var dataJson = data.rows;
+        $(document).on('click', function (e) {
+            $('#search-list').html('').hide();
+            e.stopPropagation();
+        });
+        if (dataJson.length == '') {
+            $('#search-list').html('<span>暂无数据</span>')
+            return false;
+        }
+        var tpl = '';
+        $.each(dataJson, function (i, v) {
+            if (v.professionName.length > 12) {
+                v.professionName = v.professionName.substr(0, 12) + '...';
+            }
+            tpl += '<li pid="' + v.id + '">' + v.professionName + '</li>'
+        })
+        $('#search-list').html(tpl).show();
+        $(document).on('click', '#search-list li', function () {
+            $('.search-input').val($(this).text());
+            $('.search-btn').attr('pid', $(this).attr('pid'));
+            $('#search-list').html('').hide();
+        })
+    },
     eventListen: function () {
+        var that = this;
+
+        // 文理切换
+        $(document).on('click', '.tab-detail-title li', function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            $(this).attr('page-no', 1);
+            $('#admission-load-more').hide();
+            $('#school-admission-plan').html('');
+            that.params.type = $(this).attr('type')
+            that.fetchSchoolEnroll(that.params);
+        })
+        $(document).on('click', '#ladmission-load-more', function () {
+
+        })
+
+
+        //搜索
+        $('.search-input').unbind('input propertychange').bind('input propertychange', function () {
+
+        });
 
     },
 }
