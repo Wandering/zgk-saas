@@ -68,7 +68,7 @@
                                             <label for="course-technology">通用技术</label>
                                         </li>
                                     </ul>
-                                    <div id="historyCourseAnalysisChart" style="width: 100%;height: 385px;"></div>
+                                    <div id="historyCourseAnalysisChart" style="width: 90%;height: 385px;"></div>
                                 </div>
                             </div>
                             <div class="col-xs-12">
@@ -87,24 +87,24 @@
                                         </li>
                                     </ul>
                                     <div class="single-course-info">
-                                        <span class="item">物理（700人）</span>
-                                        <span class="item">化学（800人）</span>
-                                        <span class="item">生物（200人）</span>
-                                        <span class="item">政治（100人）</span>
-                                        <span class="item">地理（100人）</span>
-                                        <span class="item">历史（100人）</span>
-                                        <span class="item">通用技术（300人）</span>
+                                        <span class="item">物理（0人）</span>
+                                        <span class="item">化学（0人）</span>
+                                        <span class="item">生物（0人）</span>
+                                        <span class="item">政治（0人）</span>
+                                        <span class="item">地理（0人）</span>
+                                        <span class="item">历史（0人）</span>
+                                        <span class="item">通用技术（0人）</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xs-12">
                                 <div class="main-title"></div>
                                 <div class="part-course-analysis">
-                                    <div class="title">前365名学生选课情况分析</div>
+                                    <div class="title">前<span class="stu-count">0</span>名学生选课情况分析</div>
                                     <div class="analysis-ratio">
-                                        <span class="total-student">高二共计考生数量1368人</span>
+                                        <span class="total-student">高二共计考生数量<span class="stu-count">0</span>人</span>
                                         <div class="ratio-detail">
-                                            <span class="ratio-left">356人上线</span>
+                                            <span class="ratio-left reach-line">预计0人上线</span>
                                             <span class="ratio-right"></span>
                                         </div>
                                         <div id="partCourseAnalysisChart" style="width: 100%;height: 361px;margin-bottom: 35px;"></div>

@@ -221,7 +221,7 @@
                                         <span class="lbl"></span>
                                     </label>
                                 </td>
-                                <td class="center">{{configOrder}}</td>
+                                <td class="center index" indexid="{{id}}">{{configKey}}</td>
                                 <td class="center">{{name}}</td>
                                 <td class="center">
                                     <a href="javascript:void(0)" class="active student-setting-remove-head"
