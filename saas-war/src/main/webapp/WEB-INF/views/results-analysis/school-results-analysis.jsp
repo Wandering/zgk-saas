@@ -192,6 +192,7 @@
     {{/each}}
 </script>
 <%@ include file="./../common/footer.jsp" %>
+<script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
 <script src="<%=ctx%>/static/src/lib/jquery.page/jquery.page.js"></script>
 <script src="<%=ctx%>/static/src/js/results-analysis/school-results-analysis.js"></script>
 </body>

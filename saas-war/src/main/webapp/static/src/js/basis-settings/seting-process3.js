@@ -1,12 +1,7 @@
 var tnId = Common.cookie.getCookie('tnId');
 
 
-//Common.flowSteps();
-
-
-
-
-
+Common.flowSteps();
 
 
 function SetingProcess3() {
@@ -37,7 +32,7 @@ SetingProcess3.prototype = {
                     classTemplate.push('</tr>');
                     $('#class-template').append(classTemplate.join(''));
                 });
-            }else{
+            } else {
                 layer.msg(res.msg);
             }
         }, function (res) {
@@ -53,7 +48,7 @@ SetingProcess3.prototype = {
         Common.ajaxFun('/config/getInit/class.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 initData = res.bizData.configList;
-            }else{
+            } else {
                 layer.msg(res.msg);
             }
         }, function (res) {
@@ -97,10 +92,10 @@ SetingProcess3.prototype = {
                     $('#class-template').html('');
                     that.getClassList();
                     layer.closeAll();
-                }else{
+                } else {
                     layer.msg(res.bizData.result);
                 }
-            }else{
+            } else {
                 layer.msg(res.msg);
             }
         }, function (res) {
@@ -109,12 +104,12 @@ SetingProcess3.prototype = {
     },
     delItem: function (ids) {
         var that = this;
-        Common.ajaxFun('/config/tenant/remove/class/'+ tnId + '/' + ids + '.do', 'POST', {}, function (res) {
+        Common.ajaxFun('/config/tenant/remove/class/' + tnId + '/' + ids + '.do', 'POST', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 layer.closeAll();
                 $('#class-template').html('');
                 that.getClassList();
-            }else{
+            } else {
                 layer.msg(res.msg);
             }
         }, function (res) {
@@ -139,14 +134,14 @@ SetingProcess3.prototype = {
                 });
                 ids = ids.join('');
                 ids = ids.substring(1, ids.length);
-                Common.ajaxFun('/config/sort/class/'+ ids +'.do', 'POST', {}, function (res) {
+                Common.ajaxFun('/config/sort/class/' + ids + '.do', 'POST', {}, function (res) {
                     if (res.rtnCode == "0000000") {
                         if (res.bizData.result == "SUCCESS") {
                             layer.msg('排序成功');
-                        }else{
+                        } else {
                             layer.msg(res.bizData.result);
                         }
-                    }else{
+                    } else {
                         layer.msg(res.msg);
                     }
                 }, function (res) {
@@ -197,7 +192,7 @@ $(function () {
     // 批量删除
     $('body').on('click', '#del-batch-btn', function () {
         var checkedLen = $("#class-template :checkbox:checked").size();
-        if(checkedLen=="0"){
+        if (checkedLen == "0") {
             layer.tips('至少选择一项', $(this));
             return false;
         }
@@ -223,8 +218,21 @@ $(function () {
         window.location.href = '/config/export/class/' + tnId + '.do';
     });
     // 下一流程
-    $('#seting-process3-btn').on('click',function(){
-        window.location.href='/seting-process4'
+    $('#seting-process3-btn').on('click', function () {
+        Common.ajaxFun('/config/get/step/' + tnId + '.do', 'GET', {},
+            function (res) {
+                console.log(res)
+                if (res.rtnCode == "0000000") {
+                    if (res.bizData.result == 3) {
+                        layer.msg('请完成该流程再进行下一步!');
+                    }else if(res.bizData.result == 4){
+                        window.location.href='/seting-process4'
+                    }
+                }
+            }, function (res) {
+                layer.msg('出错了');
+            });
+
     })
 });
 

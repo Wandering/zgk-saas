@@ -28,7 +28,7 @@ var Common = {
             if (res.rtnCode == "0000000") {
                 if(pathNum!=res.bizData.result){
                     if(res.bizData.result =='0'){
-                        window.location.href='/index';
+                        window.location.href='/course-guide';
                     }else{
                         window.location.href='/seting-process'+res.bizData.result;
                     }

@@ -12,8 +12,8 @@ function ClassResultsAnalysis() {
     this.batchV = '';
     this.progressStart = '10';
     this.progressLength = '20';
-    this.gradeRankStart = '10';
-    this.gradeRankLength = '20';
+    this.gradeRankStart = '1';
+    this.gradeRankLength = '100';
 }
 ClassResultsAnalysis.prototype = {
     constructor: ClassResultsAnalysis,
@@ -255,8 +255,8 @@ ClassResultsAnalysis.prototype = {
                 position:'bottom',
                 splitLine: {show: false},
                 //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
-                data: ["2016-02-02", "2016-03-03", "2016-04-07", "2016-05-10", "2016-06-14"]
-                //data: dateData
+                //data: ["2016-02-02", "2016-03-03", "2016-04-07", "2016-05-10", "2016-06-14"]
+                data: dateData
             },
             grid: {
                 left: '3%',
@@ -360,7 +360,7 @@ ClassResultsAnalysis.prototype = {
             },
             grid: {
                 left: '3%',
-                right: '4%',
+                right: '6%',
                 bottom: '3%',
                 containLabel: true
             },
@@ -714,6 +714,7 @@ ClassResultsAnalysis.prototype = {
             'stepLength': stepLength
         }, function (res) {
             if (res.rtnCode == "0000000") {
+                $('#ranking-sel').html('');
                 var rankingSel = [];
                 rankingSel.push('<option value="">选择进步名次</option>');
                 $.each(res.bizData,function(i,v){
@@ -751,7 +752,6 @@ ClassResultsAnalysis.prototype = {
     },
     // 年级排名下拉列表
     getMostAdvancedDetailGradeRankStepList: function (grade,className,stepStart, stepLength) {
-        $('#gradeTop-sel').html('');
         var that = this;
         Common.ajaxFun('/scoreAnalyse/getMostAdvancedDetailGradeRankStepList', 'GET', {
             'tnId': tnId,
@@ -761,6 +761,7 @@ ClassResultsAnalysis.prototype = {
             'stepLength': stepLength
         }, function (res) {
             if (res.rtnCode == "0000000") {
+                $('#gradeTop-sel').html('');
                 var gradeTopSel = [];
                 gradeTopSel.push('<option value="">选择年级排名</option>');
                 $.each(res.bizData,function(i,v){

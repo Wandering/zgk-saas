@@ -1,6 +1,6 @@
 var tnId = Common.cookie.getCookie('tnId');
 
-//Common.flowSteps();
+Common.flowSteps();
 
 
 function SetingProcess5() {
@@ -229,7 +229,19 @@ $(function () {
     });
     // 下一流程
     $('#seting-process5-btn').on('click',function(){
-        window.location.href='/course-guide';
+        Common.ajaxFun('/config/get/step/' + tnId + '.do', 'GET', {},
+            function (res) {
+                console.log(res)
+                if (res.rtnCode == "0000000") {
+                    if (res.bizData.result == 5) {
+                        layer.msg('请完成该流程再开始SAAS!');
+                    }else if(res.bizData.result == 0){
+                        window.location.href='/course-guide'
+                    }
+                }
+            }, function (res) {
+                layer.msg('出错了');
+            });
     })
 });
 
