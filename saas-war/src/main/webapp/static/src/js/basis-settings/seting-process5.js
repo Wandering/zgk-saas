@@ -229,7 +229,7 @@ $(function () {
     });
     // 下一流程
     $('#seting-process5-btn').on('click',function(){
-        window.location.href='/index';
+        window.location.href='/course-guide';
     })
 });
 

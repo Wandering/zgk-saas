@@ -81,7 +81,7 @@ SetingProcess3.prototype = {
         });
     },
     eventSelConfirm: function () {
-        $('#class-template').html('');
+
         var that = this;
         var ids = [];
         $.each($('.add-label input:checked'), function (i, v) {
@@ -94,8 +94,11 @@ SetingProcess3.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 if (res.bizData.result == "SUCCESS") {
+                    $('#class-template').html('');
                     that.getClassList();
                     layer.closeAll();
+                }else{
+                    layer.msg(res.bizData.result);
                 }
             }else{
                 layer.msg(res.msg);
