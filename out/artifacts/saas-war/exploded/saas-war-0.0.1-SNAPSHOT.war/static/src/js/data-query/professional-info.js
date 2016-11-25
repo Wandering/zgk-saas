@@ -6,6 +6,10 @@
  *
  * */
 
+/**
+ * 职业信息
+ * @type {{init: ProfessionalInfo.init, getProfessionCategory: ProfessionalInfo.getProfessionCategory, getProfessionalList: ProfessionalInfo.getProfessionalList, addEvent: ProfessionalInfo.addEvent}}
+ */
 var ProfessionalInfo = {
     init: function () {
         this.params = {
@@ -112,11 +116,10 @@ var ProfessionalInfo = {
 ProfessionalInfo.init();
 
 
-/*
- * ==================================================================
- * ============================职业详情模块============================
- * ==================================================================
- * */
+/**
+ * 职业详情模块
+ * @type {{init: ProfessionalDetail.init, getProfessionalInfo: ProfessionalDetail.getProfessionalInfo, addEvent: ProfessionalDetail.addEvent}}
+ */
 var ProfessionalDetail = {
     init: function () {
         this.addEvent();

@@ -39,7 +39,7 @@ ResultsManagementFun.prototype = {
                 layer.msg(res.msg)
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg("出错了");
         });
     },
     uploadResults: function (grade,id, examName, examTime, uploadFilePath) {
@@ -133,20 +133,30 @@ ResultsManagementFun.prototype = {
                 layer.msg(res.msg)
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg("出错了");
         }, 'true');
     },
-    getClass:function(grade){
+    getClass:function(grade,className){
         Common.ajaxFun('/scoreAnalyse/getClassesNameByGrade', 'GET', {
             'tnId': tnId,
             'grade': grade
         }, function (res) {
-
+            if(res.rtnCode=="0000000"){
+                var selClass = [];
+                selClass.push('<option value="">请选择班级</option>');
+                $.each(res.bizData,function(i,v){
+                    selClass.push('<option value="'+ v +'">'+ v +'</option>');
+                });
+                $('.sel-class').append(selClass);
+                if(className){
+                    $('.sel-class option[value="'+ className +'"]').attr('selected','selected');
+                }
+            }
         }, function (res) {
-            alert("出错了");
-        }, 'true');
+            layer.msg(res.msg);
+        });
     },
-    detailsModify: function (className, classRank, commonScore, diLiScore, examId, gradeRank, huaXueScore, id, liShiScore, selectCourses, shengWuScore, shuXueScore, studentName, totleScore, wuLiScore, yingYuScore, yuWenScore, zhengZhiScore) {
+    detailsModify: function (grade,className, classRank, commonScore, diLiScore, examId, gradeRank, huaXueScore, id, liShiScore, selectCourses, shengWuScore, shuXueScore, studentName, totleScore, wuLiScore, yingYuScore, yuWenScore, zhengZhiScore) {
         var that = this;
         var contentHtml = [];
         contentHtml.push('<div class="form-horizontal upload-layer">');
@@ -159,7 +169,7 @@ ResultsManagementFun.prototype = {
         contentHtml.push('<div class="form-group">');
         contentHtml.push('<label class="col-sm-3 control-label no-padding-right" for="class"> 班级 </label>');
         contentHtml.push('<div class="col-sm-9">');
-        contentHtml.push('<input type="text" id="" value="' + className + '" placeholder="输入班级" class="col-xs-10 col-sm-10 detailSlass"/>');
+        contentHtml.push('<select class="sel-class"></select>');
         contentHtml.push('</div>');
         contentHtml.push('</div>');
         contentHtml.push('<div class="form-group ">');
@@ -261,6 +271,7 @@ ResultsManagementFun.prototype = {
             content: contentHtml.join(''),
             success: function (layero, index) {
                 $('.details-save-btn').attr('closeIndex', index);
+                that.getClass(grade,className);
             }
         });
     },
@@ -278,10 +289,10 @@ ResultsManagementFun.prototype = {
                 layer.msg(res.msg)
             }
         }, function (res) {
-            alert("出错了1");
+            layer.msg("出错了1");
         });
     },
-    detailsModifyFun: function (id) {
+    detailsModifyFun: function (id,grade) {
         var that = this;
         Common.ajaxFun('/scoreAnalyse/getExamDetailById', 'GET', {
             'id': id
@@ -307,33 +318,27 @@ ResultsManagementFun.prototype = {
                     yingYuScore = data.yingYuScore,
                     yuWenScore = data.yuWenScore,
                     zhengZhiScore = data.zhengZhiScore;
-                that.detailsModify(className, classRank, commonScore, diLiScore, examId, gradeRank, huaXueScore, id, liShiScore, selectCourses, shengWuScore, shuXueScore, studentName, totleScore, wuLiScore, yingYuScore, yuWenScore, zhengZhiScore);
+                that.detailsModify(grade,className, classRank, commonScore, diLiScore, examId, gradeRank, huaXueScore, id, liShiScore, selectCourses, shengWuScore, shuXueScore, studentName, totleScore, wuLiScore, yingYuScore, yuWenScore, zhengZhiScore);
             }else{
                 layer.msg(res.msg)
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg("出错了");
         });
-    },
-    detailsSave: function () {
-
     },
     deleteExamDetail:function(examDetailId){
         var that = this;
-        Common.ajaxFun('/scoreAnalyse/modifyExamDetail', 'GET', {
+        Common.ajaxFun('/scoreAnalyse/deleteExamDetail', 'GET', {
             "examDetailId": examDetailId
         }, function (res) {
-            console.log(res)
             if (res.rtnCode == "0000000") {
-                layer.closeAll();
                 layer.msg('删除成功!');
-                var radioV = $('input[name="results-radio"]:checked').val();
-                that.detailsModifyFun(examDetailId);
+                $('input[type="checkbox"][dataid="'+ examDetailId +'"]').parents('tr').remove();
             }else{
                 layer.msg(res.msg)
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg("出错了");
         });
     }
 
@@ -513,9 +518,8 @@ $(function () {
         }
         var detailsChecked = $('#details-tbody input:checked');
         var id = detailsChecked.attr('dataid');
-        var grade = detailsChecked.attr('grade');
-        ResultsManagementIns.detailsModifyFun(id);
-        ResultsManagementIns.getClass(grade);
+        var grade = $(this).attr('grade');
+        ResultsManagementIns.detailsModifyFun(id,grade);
     });
 
 
@@ -528,7 +532,7 @@ $(function () {
             uploadfilepath = $('body #details-modify-btn').attr('uploadfilepath'),
             grade = $('body #details-modify-btn').attr('grade'),
             name = $.trim($('.name').val()),
-            detailSlass = $.trim($('.detailSlass').val()),
+            detailSlass = $('.sel-class option:selected').val(),
             subjectShuxue = $.trim($('.subject-shuxue').val()),
             subjectYingyu = $.trim($('.subject-yingyu').val()),
             subjectWuli = $.trim($('.subject-wuli').val()),
@@ -547,7 +551,7 @@ $(function () {
             return false;
         }
         if (detailSlass == '') {
-            layer.tips('请输入班级!', $('.detailSlass'));
+            layer.tips('请选择班级!', $('.sel-class'));
             return false;
         }
         if (subjectYuwen == '') {
@@ -645,7 +649,7 @@ $(function () {
                 layer.msg(res.msg)
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg("出错了");
         });
 
     });
@@ -666,13 +670,7 @@ $(function () {
             var  examDetailId = $('#details-tbody input[type="checkbox"]:checked').attr('dataid');
             ResultsManagementIns.deleteExamDetail(examDetailId);
         }, function () {
-            layer.closeAll();
         });
-
-
-
-
-
     });
 
 });

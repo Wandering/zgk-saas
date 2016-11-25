@@ -1117,7 +1117,7 @@ selectList
             AND c.batchName=#{batchName}
         </if>
         <if test="className!=null">
-            AND className = #{className}
+            AND d.className = #{className}
         </if>
         <if test="courseName!=null">
             AND weakCourseOne = #{courseName}
@@ -1127,7 +1127,7 @@ selectList
             left join saas_exam_detail d on c.examDetailId=d.id
             where c.examId=#{examId} and c.batchName=#{batchName}
             <if test="className!=null">
-                AND className = #{className}
+                AND d.className = #{className}
             </if>
             AND weakCourseTwo = #{courseName}
         </if>

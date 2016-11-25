@@ -1,9 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%--<style>--%>
-  <%--#nav-list > li.nav-li{--%>
-    <%--display: none;--%>
-  <%--}--%>
-<%--</style>--%>
 <div class="sidebar" id="sidebar">
   <div class="sidebar-shortcuts" id="sidebar-shortcuts">
     <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">

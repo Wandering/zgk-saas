@@ -43,15 +43,18 @@
         <if test="universityId!=null">
             and uu.id = #{universityId}
         </if>
-        order by if(isnull(uu.rank),10000,uu.rank) asc
+        group by tmp.majorType,zz.eduLevel,tmp.universityId,zz.major
+        order by uu.educationLevel,if(isnull(uu.rank),10000,uu.rank) asc
         limit ${offset}, ${rows}
     </select>
 
     <select id="selectMajorByUniversityNameAndBatchCount" parameterType="java.util.Map" resultType="java.lang.Integer">
-        select count(zz.majorCode)
+        select count(*) form (select
+            count(zz.majorCode)
         from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
         INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
         INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+        left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=tmp.batch
         where 1=1
         <if test="subject!=null">
             and zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
@@ -65,6 +68,7 @@
         <if test="universityId!=null">
             and uu.id = #{universityId}
         </if>
+        group by tmp.majorType,zz.eduLevel,tmp.universityId,zz.major) tmp2
     </select>
 
     <!-- 211,包含了985 -->
@@ -167,7 +171,7 @@
         select dd.name as batchName,count(pp.majorCode) as majorNumber,sum(pp.planEnrolling) as planEnrollingNumber
         from zgk2.zgk_university_major_enrolling_plan pp
         left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=pp.batch
-        where pp.areaId=#{areaId} and pp.year=#{year}
+        where pp.areaId=#{areaId} and pp.year=#{year} and pp.majorCode is not null
         group by pp.batch;
     </select>
 
@@ -175,7 +179,7 @@
         select dd.name as batchName,count(DISTINCT pp.universityId) as universityNumber,sum(pp.planEnrolling) as planEnrollingNumber,pp.year as year
         from zgk2.zgk_university_major_enrolling_plan pp
         left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=pp.batch
-        where  pp.areaId=#{areaId} and pp.year=#{year}
+        where  pp.areaId=#{areaId} and pp.year=#{year} and pp.majorCode is not null
         group by pp.batch,pp.year
     </select>
 
