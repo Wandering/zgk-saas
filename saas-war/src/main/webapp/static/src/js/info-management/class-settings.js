@@ -82,11 +82,13 @@ ClassSettings.prototype = {
                 if (res.rtnCode == "0000000") {
                     if (res.bizData.result == "SUCCESS") {
                         layer.msg('删除成功', {time: 1000});
-                        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                        $('#column-change-list').html('');
+                        that.getClass();
+                        //var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
                         var classManagement = new parent.ClassManagement();
                         classManagement.init();
-                        parent.layer.close(index);
-                    }else{
+                        //parent.layer.close(index);
+                    } else{
                         layer.msg(res.bizData.result);
                     }
                 }

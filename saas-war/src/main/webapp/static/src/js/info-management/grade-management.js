@@ -34,7 +34,7 @@ GradeManagement.prototype = {
                 gradeArr.push('</label>');
                 gradeArr.push('</td>');
                 gradeArr.push('<td class="center">'+ (i+1) +'</td>');
-                gradeArr.push('<td class="center">'+ v.grade +'</td>');
+                gradeArr.push('<td class="center"><span class="gradeNameItem">'+ v.grade +'</span></td>');
                 gradeArr.push('</tr>');
             });
             $('#grade-list').append(gradeArr.join(''));
@@ -94,43 +94,6 @@ GradeManagement.prototype = {
         }, function () {
             layer.closeAll();
         });
-    },
-    tableDrag: function () {
-        var that = this;
-        //表格排序
-        var fixHelperModified = function (e, tr) {
-                var $originals = tr.children();
-                var $helper = tr.clone();
-                $helper.children().each(function (index) {
-                    $(this).width($originals.eq(index).width());
-                });
-                return $helper;
-            },
-            updateIndex = function (e, ui) {
-                var ids = [];
-                $('td.index', ui.item.parent()).each(function (i) {
-                    $(this).html(i + 1);
-                    ids.push($(this).attr('indexid'));
-                    console.info($(this));
-                });
-                ids = ids.join('-');
-                Common.ajaxFun('/config/sort/' + that.type + '/'+ ids +'.do', 'POST', {}, function (res) {
-                    if (res.rtnCode == "0000000") {
-                        if (res.bizData.result == "SUCCESS") {
-                            layer.msg('排序成功', {time: 1000});
-                        }else{
-                            layer.msg(res.bizData.result);
-                        }
-                    }
-                }, function (res) {
-                    layer.msg("出错了", {time: 1000});
-                }, true, null);
-            };
-        $("#grade-list").sortable({
-            helper: fixHelperModified,
-            stop: updateIndex,
-            axis: "y"
-        }).disableSelection();
     }
 };
 var GradeManagementIns = new GradeManagement();
@@ -140,9 +103,21 @@ $('#add-btn').on('click',function(){
 $('body').on('click','.save-btn',function () {
     var gradeName = $.trim($('#grade-name').val());
     var gradeid = $(this).attr('gradeid');
-    if(gradeName==""){
+    if(gradeName == ""){
         layer.tips('请填写年级名称!', $('#grade-name'));
         return false;
+    }
+    if(gradeName.length > 12){
+        layer.tips('年级名称最多熟入为12个字符!', $('#grade-name'));
+        return false;
+    }
+
+    for (var i = 0; i < $('.gradeNameItem').length; i++) {
+        var tempGradeName = $('.gradeNameItem').eq(i).text().trim();
+        if (tempGradeName == gradeName) {
+            layer.tips('该年级名称已经存在!', $('#grade-name'));
+            return false;
+        }
     }
 
     if(!gradeid){

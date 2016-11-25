@@ -78,7 +78,7 @@
                                 {{#each this}}
                                 <tr>
                                     <td>{{rank}}</td>
-                                    <td>{{universityName}}</td>
+                                    <td>{{universityName}}<br/>({{property}})</td>
                                     <td>{{majorName}}</td>
                                     <td>{{batchName}}</td>
                                     <td>{{planNumber}}人</td>
@@ -181,12 +181,9 @@
                                             <th width="135px" rowspan="2" colspan="2"></th>
                                             <th colspan="2">一批本科</th>
                                             <th colspan="2">二批本科</th>
-                                            <th colspan="2">三批本科</th>
                                             <th colspan="2">高职高专</th>
                                         </tr>
                                         <tr>
-                                            <th>招生院校数</th>
-                                            <th>招生计划数</th>
                                             <th>招生院校数</th>
                                             <th>招生计划数</th>
                                             <th>招生院校数</th>
@@ -239,6 +236,7 @@
         </div>
     </div>
     <%@ include file="./../common/footer.jsp"%>
+    <script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
     <script src="<%=ctx%>/static/src/js/school-reform/course-guide.js"></script>
     </body>
 </html>
