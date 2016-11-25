@@ -177,6 +177,27 @@ AddTeacherManagement.prototype.renderGradeSelect = function (data) {
         $("#teacher_grade").append(gradeHtml.join(''));
     }
 };
+AddTeacherManagement.prototype.getClass = function () {
+    var that = this;
+    Common.ajaxFun('/manage/class/' + tnId + '/getTenantCustomData.do', 'GET', {
+        'tnId': tnId
+    }, function (res) {
+        if (res.rtnCode == "0000000") {
+            that.renderClassSelect(res);
+        }
+    }, function (res) {
+        layer.msg("出错了");
+    }, true);
+};
+AddTeacherManagement.prototype.renderClassSelect = function (data) {
+    if (data.rtnCode == '0000000') {
+        var classHtml = [];
+        $.each(data.bizData.result, function (i, k) {
+            classHtml.push('<option value="' + k.class_name + '">' + k.class_name + '</option>');
+        });
+        $("#teacher_class").append(classHtml.join(''));
+    }
+};
 AddTeacherManagement.prototype.addTeacher = function (title) {
     var that = this;
     var contentHtml = [];
@@ -206,7 +227,7 @@ AddTeacherManagement.prototype.addTeacher = function (title) {
         } else if (k.dataType == 'checkbox') {
             var values = (k.dataValue + '').split('-');
             var enName = k.enName;
-            contentHtml.push('<li style="margin-bottom: 26px;"><span>' + k.name + '</span><ul id="teacher_major_type">');
+            contentHtml.push('<li style="margin-bottom: 56px;"><span>' + k.name + '</span><ul id="teacher_major_type">');
             $.each(values, function (i, k) {
                 contentHtml.push('<li><input type="checkbox" name="' + enName + '" id="' + enName + i + '" value="' + k + '" /><label for="' + enName + i + '">' + k + '</label></li>');
             });
@@ -225,6 +246,7 @@ AddTeacherManagement.prototype.addTeacher = function (title) {
     });
     this.getGrade();
     this.getYear();
+    this.getClass();
 };
 
 //创建添加教师对象
@@ -292,6 +314,27 @@ UpdateTeacherManagement.prototype = {
             $("#teacher_grade").append(gradeHtml.join(''));
         }
     },
+    getClass: function () {
+        var that = this;
+        Common.ajaxFun('/manage/class/' + tnId + '/getTenantCustomData.do', 'GET', {
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                that.renderClassSelect(res);
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
+    },
+    renderClassSelect: function (data) {
+        if (data.rtnCode == '0000000') {
+            var classHtml = [];
+            $.each(data.bizData.result, function (i, k) {
+                classHtml.push('<option value="' + k.class_name + '">' + k.class_name + '</option>');
+            });
+            $("#teacher_class").append(classHtml.join(''));
+        }
+    },
     updateTeacher: function (title) {//更新某一行教师数据
         var that = this;
         var contentHtml = [];
@@ -321,7 +364,7 @@ UpdateTeacherManagement.prototype = {
             } else if (k.dataType == 'checkbox') {
                 var values = (k.dataValue + '').split('-');
                 var enName = k.enName;
-                contentHtml.push('<li style="margin-bottom: 26px;"><span>' + k.name + '</span><ul id="teacher_major_type">');
+                contentHtml.push('<li style="margin-bottom: 56px;"><span>' + k.name + '</span><ul id="teacher_major_type">');
                 $.each(values, function (i, k) {
                     contentHtml.push('<li><input type="checkbox" name="' + enName + '" id="' + enName + i + '" value="' + k + '" /><label for="' + enName + i + '">' + k + '</label></li>');
                 });
@@ -340,6 +383,7 @@ UpdateTeacherManagement.prototype = {
         });
         this.getGrade();
         this.getYear();
+        this.getClass();
         var rowid = $(".check-template :checkbox:checked").attr('cid');
         var rowItem = $('#teacher-manage-list tr[rowid="' + rowid + '"]').find('td');
         $.each(that.columnArr, function (i, k) {

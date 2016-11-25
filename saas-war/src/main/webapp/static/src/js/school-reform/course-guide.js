@@ -278,6 +278,8 @@ UniversityDetail.prototype = {
             }
             if (k.selSubject === "" || k.selSubject === undefined || k.selSubject === null || k.selSubject === "0") {
                 k.selSubject = "-";
+            } else {
+                k.selSubject = k.selSubject.split(' ').join('、');
             }
         });
         $('#university-detail-data-list').html(template(result.majorByUniversityNameAndBatch));
@@ -305,6 +307,7 @@ $(function () {
         var subjectName = $(this).attr('subject');
         if (subjectName != '00') {
             universityDetail = new UniversityDetail();
+            universityDetail.subject = subjectName;
             universityDetail.showBox('院校详情');
             universityDetail.loadPage(0, universityDetail.universityRows);
         }
@@ -324,11 +327,11 @@ $(function () {
     /**
      * 院校文本框添加事件监听
      */
-    $(document).on('keydown', "#search-keywords", startSearchUniversity)
-        .on('keyup', "#search-keywords", startSearchUniversity)
-        .on('click', "#search-keywords", startSearchUniversity)
+    $(document).on('click', "#search-keywords", startSearchUniversity)
+        .on('keyup', "#search-keywords", startSearchUniversity);
+        //.on('click', "#search-keywords", startSearchUniversity)
         //.on('mouseover', "#search-keywords", startSearchUniversity)
-        .on('focus', "#search-keywords", startSearchUniversity);
+        //.on('focus', "#search-keywords", startSearchUniversity);
         //.on('blur', "#search-keywords", startSearchUniversity);
     $(document).on("click", function (e) {
         $("#results-list").hide();

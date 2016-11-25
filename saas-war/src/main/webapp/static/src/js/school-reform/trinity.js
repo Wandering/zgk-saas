@@ -20,11 +20,11 @@ TrinityData.prototype = {
         this.getEnrollTotalData();
     },
     getEnrollTotalData: function () {
-        Common.ajaxFun('/selectClassesGuide/getEnrollingNumberByBatch.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/trineController/getEnrollingNumberByBatch.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
-                var data = res.bizData.enrollingNumberByBatch;
-                var majorCount = data.majorCount,
-                    enrollingCount = data.enrollingCount;
+                var data = res.bizData;
+                var majorCount = data.count,
+                    enrollingCount = data.count;
                 var datas = {
                     batchs: [],
                     batchNames: [],
@@ -233,7 +233,8 @@ function planTotalLineChart (enrollingCount, batchNames, planEnrollingNumbers) {
                 label: {
                     normal: {
                         show: true,
-                        position: 'insideRight',
+                        //position: 'insideRight',
+                        position: 'right',
                         formatter: '{c}人',
                         textStyle: {
                             fontSize: 14
