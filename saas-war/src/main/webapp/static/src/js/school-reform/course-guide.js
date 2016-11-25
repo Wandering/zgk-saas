@@ -74,6 +74,12 @@ SubjectAnalysis.prototype = {
             'subject': subject
         }, function (res) {
             if (res.rtnCode == "0000000") {
+                for (var i = 1; i < 7; i++) {
+                    $('.major-type-top thead tr th').eq(i).html('-');
+                    $('.major-type-top tbody tr td').eq(i).html('-');
+                    $('.major-type-bottom thead tr th').eq(i).html('-');
+                    $('.major-type-bottom tbody tr td').eq(i).html('-');
+                }
                 var data = res.bizData.analysisDiscipline;
                 var types = {
                     type: [],
@@ -88,10 +94,10 @@ SubjectAnalysis.prototype = {
                     if (i <= 5) {
                         $('.major-type-top thead tr th').eq(i+1).html(k.disciplineName);
                         $('.major-type-top tbody tr td').eq(i+1).html(k.number);
-                    } else {
-                        var n = i % 5;
-                        $('.major-type-bottom thead tr th').eq(n).html(k.disciplineName);
-                        $('.major-type-bottom tbody tr td').eq(n).html(k.number);
+                    } else {//6 7 8 9 10 11
+                        var n = i % 6;
+                        $('.major-type-bottom thead tr th').eq(n+1).html(k.disciplineName);
+                        $('.major-type-bottom tbody tr td').eq(n+1).html(k.number);
                     }
                 });
                 majorTypeAnalysis(types.type, types.datas);
