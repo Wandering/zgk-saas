@@ -94,8 +94,8 @@ var SpecialtyDetail = {
                         'width': '-moz-calc(100% - ' + malePercent + ' - 2px)',
                         'width': 'calc(100% - ' + malePercent + ' - 2px)'
                     }).html(femalePercent);
-                    $('.male-bar').text(femalePercent);
-                    $('.female-bar').text(malePercent);
+                    $('.male-bar').text(malePercent);
+                    $('.female-bar').text(femalePercent);
                 }
             }
         }, function () {

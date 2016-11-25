@@ -92,6 +92,7 @@ var ProfessionalInfo = {
             $('#professional-load-more').attr('page-no', 1);
             that.getProfessionalList();
         });
+
         $(document).on('click', '#detail-title li', function () {
             $(this).addClass('active').siblings().removeClass('active');
             that.params = {
