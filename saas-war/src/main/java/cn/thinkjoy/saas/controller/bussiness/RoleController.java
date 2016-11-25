@@ -8,8 +8,10 @@ import cn.thinkjoy.saas.dao.IRolesDAO;
 import cn.thinkjoy.saas.domain.RelationUserRole;
 import cn.thinkjoy.saas.domain.Roles;
 import cn.thinkjoy.saas.dto.MeunDto;
+import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.service.IRolesService;
 import cn.thinkjoy.saas.service.bussiness.IEXRoleService;
+import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +44,14 @@ public class RoleController {
         String roleDesc = request.getDataString("roleDesc");
         int tnId = request.getDataInteger("tnId");
         String meunIds = request.getDataString("meunIds");
+
+        Map<String,Object> paramMap = Maps.newHashMap();
+        paramMap.put("tn_id",tnId);
+        paramMap.put("role_name",roleName);
+        Roles tmpRole = (Roles) iRolesService.queryOne(paramMap);
+        if(tmpRole != null){
+            ExceptionUtil.throwException(ErrorCode.ROLE_HAS_EXIST);
+        }
 
         Roles roles = new Roles();
         roles.setCreateDate(new Date());
@@ -77,6 +87,14 @@ public class RoleController {
         String roleName = request.getDataString("roleName");
         String roleDesc = request.getDataString("roleDesc");
         String meunIds = request.getDataString("meunIds");
+
+        Map<String,Object> paramMap = Maps.newHashMap();
+        paramMap.put("tn_id",tnId);
+        paramMap.put("role_name",roleName);
+        Roles tmpRole = (Roles) iRolesService.queryOne(paramMap);
+        if(tmpRole != null){
+            ExceptionUtil.throwException(ErrorCode.ROLE_HAS_EXIST);
+        }
 
         Roles roles = new Roles();
         roles.setRoleDesc(roleDesc);

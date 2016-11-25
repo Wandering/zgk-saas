@@ -99,7 +99,7 @@ ResultsManagementFun.prototype = {
         } else {
             layer.open({
                 type: 1,
-                title: '上传成绩',
+                title: '修改成绩',
                 offset: 'auto',
                 area: ['362px', '350px'],
                 content: contentHtml.join('')
@@ -376,21 +376,26 @@ $(function () {
             layer.tips('请输入考试名称!', $('#examName'));
             return false;
         }
+        var flg = false;
         Common.ajaxFun('/scoreAnalyse/checkExamName', 'GET', {
             'grade': radioV,
             'examName': examName
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 if (res.bizData == true) {
-                    layer.tips('考试名称已经存在,请修改考试名称后再提交!', $('#examName'));
-                    return false;
+                    flg = true;
                 }
             }else{
                 layer.msg(res.msg)
             }
         }, function (res) {
             layer.msg(res.msg);
-        });
+        },true);
+
+        if(flg==true){
+            layer.tips('考试名称已经存在,请修改考试名称后再提交!', $('#examName'));
+            return false;
+        }
 
 
         if (examDate == "") {
@@ -455,7 +460,8 @@ $(function () {
         var examName = resultsChecked.attr('examName');
         var examTime = resultsChecked.attr('examTime');
         var uploadFilePath = resultsChecked.attr('uploadFilePath');
-        ResultsManagementIns.uploadResults(id, examName, examTime, uploadFilePath);
+        var radioV = $('input[name="results-radio"]:checked').val();
+        ResultsManagementIns.uploadResults(radioV,id, examName, examTime, uploadFilePath);
     });
 
     // 删除
@@ -513,7 +519,7 @@ $(function () {
             return false;
         }
         if (checkboxLen > 1) {
-            layer.tips('删除只能选择一项', $(this));
+            layer.tips('修改只能选择一项', $(this));
             return false;
         }
         var detailsChecked = $('#details-tbody input:checked');
@@ -546,6 +552,8 @@ $(function () {
             topGrade = $.trim($('.top-grade').val()),
             subjectYuwen = $.trim($('.subject-yuwen').val());
 
+        var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
+
         if (name == '') {
             layer.tips('请输入姓名!', $('.name'));
             return false;
@@ -558,12 +566,24 @@ $(function () {
             layer.tips('请输入语文成绩!', $('.subject-yuwen'));
             return false;
         }
+        if (!re.test(subjectYuwen) || subjectYuwen > 200) {
+            layer.tips('请输入正确的数字!', $('.subject-yuwen'));
+            return false;
+        }
         if (subjectShuxue == '') {
             layer.tips('请输入数学成绩!', $('.subject-shuxue'));
             return false;
         }
+        if (!re.test(subjectShuxue) || subjectShuxue > 200) {
+            layer.tips('请输入正确的数字!', $('.subject-shuxue'));
+            return false;
+        }
         if (subjectYingyu == '') {
             layer.tips('请输入英语成绩!', $('.subject-yingyu'));
+            return false;
+        }
+        if (!re.test(subjectYingyu) || subjectYingyu > 200) {
+            layer.tips('请输入正确的数字!', $('.subject-yingyu'));
             return false;
         }
         if (grade.indexOf('高一') >= 0) {
@@ -571,36 +591,72 @@ $(function () {
                 layer.tips('请输入物理成绩!', $('.subject-wuli'));
                 return false;
             }
+            if (!re.test(subjectWuli) || subjectWuli > 200) {
+                layer.tips('请输入正确的数字!', $('.subject-wuli'));
+                return false;
+            }
             if (subjectHuaxue == '') {
                 layer.tips('请输入化学成绩!', $('.subject-huaxue'));
+                return false;
+            }
+            if (!re.test(subjectHuaxue) || subjectHuaxue > 200) {
+                layer.tips('请输入正确的数字!', $('.subject-huaxue'));
                 return false;
             }
             if (subjectShengwu == '') {
                 layer.tips('请输入生物成绩!', $('.subject-shengwu'));
                 return false;
             }
+            if (!re.test(subjectShengwu) || subjectShengwu > 200) {
+                layer.tips('请输入正确的数字!', $('.subject-shengwu'));
+                return false;
+            }
             if (subjectZhengzhi == '') {
                 layer.tips('请输入政治成绩!', $('.subject-zhengzhi'));
+                return false;
+            }
+            if (!re.test(subjectZhengzhi) || subjectZhengzhi > 200) {
+                layer.tips('请输入正确的数字!', $('.subject-zhengzhi'));
                 return false;
             }
             if (subjectDili == '') {
                 layer.tips('请输入地理成绩!', $('.subject-dili'));
                 return false;
             }
+            if (!re.test(subjectDili) || subjectDili > 200) {
+                layer.tips('请输入正确的数字!', $('.subject-dili'));
+                return false;
+            }
             if (subjectLishi == '') {
                 layer.tips('请输入历史成绩!', $('.subject-lishi'));
+                return false;
+            }
+            if (!re.test(subjectLishi) || subjectLishi > 200) {
+                layer.tips('请输入正确的数字!', $('.subject-lishi'));
                 return false;
             }
             if (subjectJishu == '') {
                 layer.tips('请输入通用技术成绩!', $('.subject-jishu'));
                 return false;
             }
+            if (!re.test(subjectJishu) || subjectJishu > 200) {
+                layer.tips('请输入正确的数字!', $('.subject-jishu'));
+                return false;
+            }
             if (topClass == '') {
                 layer.tips('请输入班级排名!', $('.top-class'));
                 return false;
             }
+            if (!re.test(topClass) || topClass > 1000) {
+                layer.tips('请输入正确的数字!', $('.top-class'));
+                return false;
+            }
             if (topGrade == '') {
                 layer.tips('请输入年级排名!', $('.top-grade'));
+                return false;
+            }
+            if (!re.test(topGrade) || topGrade > 5000) {
+                layer.tips('请输入正确的数字!', $('.top-grade'));
                 return false;
             }
         } else {
@@ -611,7 +667,8 @@ $(function () {
                     valArr.push($(v).val());
                 }
             });
-            if (valArr.length > 4) {
+            var leng = (7-parseInt(valArr.length));
+            if ( leng != 3) {
                 layer.tips('选课必须填三项!', that);
                 return false;
             }
@@ -709,7 +766,7 @@ function uploadFun() {
             // 只允许选择文件，可选。
             accept: {
                 title: 'excel',
-                extensions: 'xls',
+                extensions: 'xls,xlsx',
                 mimeTypes: 'application/vnd.ms-excel'
             },
             fileVal: 'inputFile',
@@ -757,6 +814,8 @@ function uploadFun() {
 
         // 文件上传成功，给item添加成功class, 用样式标记上传成功。
         uploader.on('uploadSuccess', function (file, response) {
+            console.log(file)
+            console.log(response)
             $('#' + file.id).addClass('upload-state-done');
             $('.save-btn').attr('filePath', response.bizData.filePath);
             layer.msg('上传成功!');

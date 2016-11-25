@@ -64,7 +64,6 @@
   //}
 }
 
-
 .table-list {
   width: 100%;
   border: 1px solid #e0e3e8;
@@ -78,13 +77,10 @@
   }
 }
 
-
-
-
-.table-loading-img{
+.table-loading-img {
   height: 30px;
   position: relative;
-  top:20px;
+  top: 20px;
   left: 52%;
   margin-bottom: 30px;
 }
@@ -102,3 +98,18 @@
   background-color: #fff;
 }
 
+#search-list {
+  position: absolute;
+  background: #fff;
+  width: 210px;
+  padding: 1px 10px;
+  line-height: 24px;
+  border: 1px solid #bfbfbf;
+  display: none;
+  li {
+    cursor: pointer;
+    &:hover {
+      color: $mainColor
+    }
+  }
+}
