@@ -23,8 +23,8 @@ TrinityData.prototype = {
         Common.ajaxFun('/trineController/getEnrollingNumberByBatch.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
-                var majorCount = data.count,
-                    enrollingCount = data.count;
+                var majorCount = data.majorCount,
+                    enrollingCount = data.enrollingCount;
                 var datas = {
                     batchs: [],
                     batchNames: [],

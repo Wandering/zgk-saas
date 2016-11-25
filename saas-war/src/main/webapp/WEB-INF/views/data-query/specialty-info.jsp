@@ -49,6 +49,8 @@
                             <div class="search-box fr">
                                 <input type="text" placeholder="请输入专业名称" class="search-input">
                                 <button class="search-btn">搜索</button>
+                                <ul id="search-list">
+                                </ul>
                             </div>
                         </div>
                         <div class="common-select">

@@ -4,17 +4,20 @@
 
     <!-- 科目分析 -->
     <select id="selectUniversityAndMajorNumber" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.UniversityAndMajorNumberDto">
-        select count(zz.id) as majorNumber , count(DISTINCT uu.id) as universityNumber
-        from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
-        INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
-        INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
-        where 1=1
-        <if test="subject!=null">
-            and zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
-        </if>
-        <if test="subject==null">
-            and zz.selectCount=0
-        </if>
+        select count(tt.majorCode) as majorNumber , count(DISTINCT tt.universityId) as universityNumber
+        from (select zz.id as majorCode,uu.id as universityId
+          from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
+            INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
+            INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+            where 1=1
+            <if test="subject!=null">
+                and zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
+            </if>
+            <if test="subject==null">
+                and zz.selectCount=0
+            </if>
+          group by tmp.majorType,zz.eduLevel,tmp.universityId,zz.major
+        ) tt
     </select>
 
     <!-- 输入院校名 -->
@@ -49,7 +52,7 @@
     </select>
 
     <select id="selectMajorByUniversityNameAndBatchCount" parameterType="java.util.Map" resultType="java.lang.Integer">
-        select count(*) form (select
+        select count(*) from (select
             count(zz.majorCode)
         from (select majorType,batch,universityId,majorCode,pp.planEnrolling from zgk2.zgk_university_major_enrolling_plan pp where pp.areaId=#{areaId} and pp.year=#{year} ) tmp
         INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId

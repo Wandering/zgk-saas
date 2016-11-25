@@ -190,6 +190,7 @@ var Common = {
             //menus.push('<span class="menu-text">首页</span>');
             //menus.push('</a>');
             //menus.push('</li>');
+            var icons = ['icon-desktop','icon-edit','icon-list-alt','icon-dashboard','icon-tag','icon-tasks','icon-group']
             $.each(siderMenu,function(i,v){
 
                 if(pathName==v.meunUrl){
@@ -202,10 +203,11 @@ var Common = {
                 }else{
                     menus.push('<a href="javascript:;" class="dropdown-toggle" id="'+ v.meunId +'">');
                 }
-                menus.push('<i class="icon-desktop"></i>');
+                // menus.push('<i class="icon-desktop"></i>');
+                menus.push('<i class="'+icons[i]+'"></i>');
                 menus.push('<span class="menu-text">'+ v.meunName +'</span>');
                 menus.push('</a>');
-                //console.log("子菜单:"+v.sonMeuns.length)
+                console.log("子菜单:",v);
                 if(v.sonMeuns.length>0){
                     //console.log(v.sonMeuns)
                     menus.push('<ul class="submenu">');

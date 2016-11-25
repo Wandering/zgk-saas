@@ -323,6 +323,18 @@ public class DataQueryController {
     }
 
     /**
+     * 根据专业名称模糊查找专业
+     * @param majoredName
+     * @param type
+     * @return
+     */
+    @RequestMapping(value = "getMajoredByName",method = RequestMethod.GET)
+    @ResponseBody
+    public Object getMajoredByName(@RequestParam(value = "majoredName",required = true)String majoredName,@RequestParam(value = "type",required = true)String type){
+        return iMajoredApi.getMajoredByName(majoredName,type);
+    }
+
+    /**
      * 根据专业查询开设院校
      *
      * @param majoredId

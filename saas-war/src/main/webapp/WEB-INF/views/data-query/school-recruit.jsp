@@ -81,9 +81,9 @@
                                 <%--{{#each this}}{{{firstActive this}}}{{/each}}--%>
                                 <%--</script>--%>
                                 <script type="text/x-handlebars-template" id="year-list-tpl">
-                                    <span class="active">全部</span>
+                                    <span class="active" yearId="">全部</span>
                                     {{#each this}}
-                                    <span>{{this}}</span>
+                                    <span yearId="{{this}}">{{this}}</span>
                                     {{/each}}
                                 </script>
                             </dl>
@@ -97,9 +97,9 @@
                                 <dd id="batch-list">
                                 </dd>
                                 <script type="text/x-handlebars-template" id="batch-list-tpl">
-                                    <span class="active" dictid="">全部</span>
+                                    <span class="active">全部</span>
                                     {{#each this}}
-                                    <span dictid="{{dictid}}">{{name}}</span>
+                                    <span>{{name}}</span>
                                     {{/each}}
                                 </script>
                             </dl>
@@ -189,7 +189,7 @@
                                     <i class="icon-flags"></i>全国排名：<span class="national-rank">{{rank}}</span>
                                     {{/if}}
                                     <%--<a class="collect" href="javascript:void(0)" type="1" sid="1">--%>
-                                        <%--<i class="icon-collect-yes"></i>已收藏--%>
+                                    <%--<i class="icon-collect-yes"></i>已收藏--%>
                                     <%--</a>--%>
                                 </div>
                                 <div class="middle">
