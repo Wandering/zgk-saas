@@ -202,11 +202,11 @@ $('body').on('click', '.save-btn', function () {
     var roleContent = $.trim($('#role-content').val());
     var idData = $(this).attr('id-data');
     if (roleName == "") {
-        layer.tips('请填写角色名称!', $('#role-name'));
+        layer.tips('命名权限名称!', $('#role-name'));
         return false;
     }
     if (roleContent == "") {
-        layer.tips('请填写角色内容!', $('#role-content'));
+        layer.tips('输入权限内容!', $('#role-content'));
         return false;
     }
     if (idData == "" || !idData) {
