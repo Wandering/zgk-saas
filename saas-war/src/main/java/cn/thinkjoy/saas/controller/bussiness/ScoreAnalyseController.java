@@ -10,8 +10,10 @@ import cn.thinkjoy.saas.service.IExamService;
 import cn.thinkjoy.saas.service.IExamStuWeakCourseService;
 import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.google.common.collect.Maps;
+import com.google.common.collect.ObjectArrays;
 import org.apache.poi.hssf.usermodel.DVConstraint;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -1061,14 +1063,70 @@ public class ScoreAnalyseController
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("tnId", tnId);
         paramMap.put("grade", grade);
-        paramMap.put("className", className);
-        List<Map<String, Object>> resultList;
-        resultList = examDetailService.getAvgScoresForClass(paramMap);
+        List<Map<String, Object>> resultList = examDetailService.getAvgScoresForClass(paramMap);
         if (null == resultList)
         {
             resultList = new ArrayList<>();
         }
-        return resultList;
+        Map<String, List<Map<String, Object>>> map = new HashMap<>();
+        if(resultList.size() > 0)
+        {
+            for (Map<String, Object> mp : resultList)
+            {
+                String examTime = mp.get("examTime") + "";
+                List<Map<String, Object>> list = map.get(examTime);
+                if (null == list)
+                {
+                    list = new ArrayList<>();
+                    map.put(examTime, list);
+                }
+                list.add(mp);
+            }
+        }
+        List<Map<String, Object>> rList = new ArrayList<>();
+        for (Map.Entry<String, List<Map<String, Object>>> en: map.entrySet())
+        {
+            String examTime = en.getKey();
+            List<Map<String, Object>> list = en.getValue();
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("examTime" , examTime);
+            m.put("className" , className);
+            m.put("语文" , sortList(list, "语文", className));
+            m.put("数学" , sortList(list, "数学", className));
+            m.put("英语" , sortList(list, "英语", className));
+            m.put("物理" , sortList(list, "物理", className));
+            m.put("化学" , sortList(list, "化学", className));
+            m.put("生物" , sortList(list, "生物", className));
+            m.put("政治" , sortList(list, "政治", className));
+            m.put("地理" , sortList(list, "地理", className));
+            m.put("历史" , sortList(list, "历史", className));
+            m.put("通用技术" , sortList(list, "通用技术", className));
+            m.put("总分" , sortList(list, "总分", className));
+            rList.add(m);
+        }
+        return rList;
+    }
+
+    private int sortList(List<Map<String, Object>> list, String orderBy, String className)
+    {
+        Collections.sort(list, new Comparator<Map<String, Object>>()
+        {
+            @Override
+            public int compare(Map<String, Object> o1, Map<String, Object> o2)
+            {
+                return Float.parseFloat(o2.get(orderBy)+"") >= Float.parseFloat(o1.get(orderBy)+"") ? 1 : -1;
+            }
+        });
+        int rank = 0;
+        for (int i = 0; i < list.size() ; i++)
+        {
+            if(className.equals(list.get(i).get("className")))
+            {
+                rank = i + 1;
+                break;
+            }
+        }
+        return rank;
     }
 
     @RequestMapping("/getStuNumberScoreChangeForClass")

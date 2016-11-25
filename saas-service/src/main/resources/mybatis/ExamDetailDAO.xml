@@ -1154,7 +1154,10 @@ selectList
 		ROUND(AVG(IF(d.totleScore='', null, d.totleScore)), 2) 总分
         from saas_exam_detail d
         LEFT JOIN saas_exam e on d.examId=e.id
-        WHERE d.className=#{className} and e.grade=#{grade} and e.tnId=#{tnId}
+        WHERE  e.grade=#{grade} and e.tnId=#{tnId}
+        <if test="className != null">
+           and d.className=#{className}
+        </if>
         group by d.className,e.examTime
         order by e.examTime asc
     </select>
