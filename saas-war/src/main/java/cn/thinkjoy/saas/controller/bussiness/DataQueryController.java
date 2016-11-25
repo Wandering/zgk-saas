@@ -338,7 +338,7 @@ public class DataQueryController {
                                              @RequestParam(value = "page",required = false,defaultValue = "0")Integer page,
                                              @RequestParam(value = "rows",required = false,defaultValue = "10")Integer rows){
 
-        List<Map<String,Object>> getUniversityList=iMajoredApi.getMajorOpenUniversityList(majoredId,majorType,page,rows);
+        List<Map<String,Object>> getUniversityList=iMajoredApi.getMajorOpenUniversityList(majoredId,majorType,page-1,rows);
         int count=iMajoredApi.getMajorOpenUniversityCount(majoredId, majorType);
         for (Map<String, Object> university : getUniversityList) {
             String[] propertys=new String[1];
