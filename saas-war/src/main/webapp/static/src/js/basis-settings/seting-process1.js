@@ -1,19 +1,26 @@
 var tnId = Common.cookie.getCookie('tnId');
 
-Common.flowSteps();
+//Common.flowSteps();
 
 $('#seting-process1-btn').on('click', function () {
     var that = $(this);
     var numsArr = [];
+
+
     $('.seting-process1-input').each(function (i, v) {
-        console.log(i + "=" + $(this).val());
-        if ($.trim($(this).val()) != '') {
+        //console.log(i + "=" + $.trim($(this).val()).length);
+        if($.trim($(this).val()).length > 12){
+            layer.tips('第'+ (i+1) +'项字数限制在12字以内!', that);
+            return false;
+        }
+        if ($.trim($(this).val()) !="") {
             numsArr.push("-" + $(this).val());
         }
     });
+
     numsArr = numsArr.join('');
     numsArr = numsArr.substring(1, numsArr.length);
-    //console.log(numsArr.substring(1, numsArr.length));
+    console.log(numsArr);
     if (numsArr == '') {
         layer.tips('至少添加一项!', that);
         return false;
@@ -22,7 +29,6 @@ $('#seting-process1-btn').on('click', function () {
         'tnId': tnId,
         'nums': numsArr
     }, function (res) {
-        console.log(res)
         if (res.rtnCode == "0000000") {
             if (res.bizData.result == "SUCCESS") {
                 window.location.href="/seting-process2";
