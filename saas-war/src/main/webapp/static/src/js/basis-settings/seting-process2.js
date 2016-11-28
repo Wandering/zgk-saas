@@ -1,6 +1,6 @@
 var tnId = Common.cookie.getCookie('tnId');
 
-//Common.flowSteps();
+Common.flowSteps();
 
 
 
@@ -53,38 +53,64 @@ SetingProcess2.prototype = {
         $('body').find('.grade-item').each(function(i,v){
             var formGradeId = $('#form-grade'+(i+1)).attr('gradeid');
             var formGradeV = $.trim($('#form-grade'+(i+1)).val());
-            var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
-            if (!re.test(formGradeV) || formGradeV > 100) {
-                layer.tips('请输入正确的数字!', '#form-grade'+(i+1));
-                return false;
-            }
             nums.push("-"+formGradeId+":"+formGradeV);
         });
         nums = nums.join('');
         nums = nums.substring(1, nums.length);
         console.log(nums);
+
         Common.ajaxFun('/config/classRoom/setting/' + tnId + '/' + nums + '.do', 'POST', {
             'tnId': tnId,
             'nums': nums
         }, function (res) {
             console.log(res)
-            if (res.rtnCode == "0000000") {
-                if (res.bizData.result == "SUCCESS") {
-                    window.location.href = "/seting-process3";
-                }
-                if (res.bizData.result == "FAIL") {
-                    alert('新增失败,请核对后在提交');
-                }
-            }else{
-                layer.msg(res.msg);
-            }
+            //if (res.rtnCode == "0000000") {
+            //    if (res.bizData.result == "SUCCESS") {
+            //        window.location.href = "/seting-process3";
+            //    }
+            //    if (res.bizData.result == "FAIL") {
+            //        alert('新增失败,请核对后在提交');
+            //    }
+            //}else{
+            //    layer.msg(res.msg);
+            //}
         }, function (res) {
             layer.msg(res.msg);
-        }, 'true');
+        });
 
     }
 };
 var SetingProcess2Obj = new SetingProcess2();
 $('#seting-process2-btn').on('click', function () {
-    SetingProcess2Obj.eventClick();
+    var nums=[];
+    var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
+    $('body').find('.grade-item').each(function(i,v){
+        var formGradeId = $('#form-grade'+(i+1)).attr('gradeid');
+        var formGradeV = $.trim($('#form-grade'+(i+1)).val());
+        if (!re.test(formGradeV) || formGradeV > 100) {
+            layer.tips('请输入正确的数字!', '#form-grade'+(i+1));
+            return false;
+        }
+        nums.push("-"+formGradeId+":"+formGradeV);
+    });
+    nums = nums.join('');
+    nums = nums.substring(1, nums.length);
+    Common.ajaxFun('/config/classRoom/setting/' + tnId + '/' + nums + '.do', 'POST', {
+        'tnId': tnId,
+        'nums': nums
+    }, function (res) {
+        console.log(res)
+        if (res.rtnCode == "0000000") {
+            if (res.bizData.result == "SUCCESS") {
+                window.location.href = "/seting-process3";
+            }
+            if (res.bizData.result == "FAIL") {
+                layer.msg('新增失败,请核对后在提交');
+            }
+        }else{
+            layer.msg(res.msg);
+        }
+    }, function (res) {
+        layer.msg(res.msg);
+    });
 });

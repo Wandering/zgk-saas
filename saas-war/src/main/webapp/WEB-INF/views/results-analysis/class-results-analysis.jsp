@@ -85,9 +85,7 @@
                                 <th class="center">变化人数</th>
                             </tr>
                             </thead>
-                            <tbody id="student-change-tbody">
-
-                            </tbody>
+                            <tbody id="student-change-tbody"></tbody>
                         </table>
                     </div>
                     <div class="col-xs-12">
@@ -261,6 +259,7 @@
     {{/each}}
 </script>
 <%@ include file="./../common/footer.jsp" %>
+<script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
 <script src="<%=ctx%>/static/src/js/results-analysis/class-results-analysis.js"></script>
 </body>
 </html>

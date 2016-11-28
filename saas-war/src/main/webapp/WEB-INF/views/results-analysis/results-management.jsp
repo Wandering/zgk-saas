@@ -258,6 +258,7 @@
 </script>
 
 <%@ include file="./../common/footer.jsp" %>
+<script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
 <link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/datepicker.css">
 <script src="<%=ctx%>/static/src/lib/assets/js/date-time/bootstrap-datepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.css">

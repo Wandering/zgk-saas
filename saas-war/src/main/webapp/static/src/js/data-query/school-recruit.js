@@ -142,7 +142,7 @@ var SchoolRecruit = {
             $('#recruit-load-more').hide();
 
             $(this).addClass('active').siblings().removeClass('active');
-            that.params.year = $(this).text();
+            that.params.year = $(this).attr('yearId');
             that.getBatchByYearAndArea(that.params.year, that.params.areaId);
             that.getCollegeUniversitiesEnrollment();
         })

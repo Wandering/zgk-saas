@@ -73,7 +73,7 @@ ResultsManagementFun.prototype = {
             contentHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
             contentHtml.push('<button class="btn btn-pink" id="btn-import">添加</button>');
             contentHtml.push('</span>');
-            contentHtml.push('<p><a target="_blank" href="/scoreAnalyse/downloadModel?tnId='+ tnId +'&grade='+ grade +'&mock=true">请先导出Excel模板,进行填写</a></p>');
+            contentHtml.push('<p><a target="_blank" href="/scoreAnalyse/downloadModel?tnId='+ tnId +'&grade='+ grade +'">请先导出Excel模板,进行填写</a></p>');
             contentHtml.push('<p>温馨提示:上传与模板不一致的成绩单,系统无法识别</p>');
             contentHtml.push('</div>');
             contentHtml.push('</div>');

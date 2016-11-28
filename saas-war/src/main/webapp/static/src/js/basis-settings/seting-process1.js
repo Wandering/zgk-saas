@@ -1,6 +1,6 @@
 var tnId = Common.cookie.getCookie('tnId');
 
-//Common.flowSteps();
+Common.flowSteps();
 
 $('#seting-process1-btn').on('click', function () {
     var that = $(this);
