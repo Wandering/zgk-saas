@@ -32,7 +32,8 @@ ClassManagement.prototype = {
                         that.columnArr.push({
                             name: k.name,
                             enName: k.enName,
-                            dataType: k.dataType
+                            dataType: k.dataType,
+                            dataValue: k.dataValue
                         });
                     });
                     columnHtml.push('</tr>');
@@ -126,7 +127,8 @@ AddClassManagement.prototype.init = function (columnArr) {
         that.columnArr.push({
             name: k.name,
             enName: k.enName,
-            dataType: k.dataType
+            dataType: k.dataType,
+            dataValue: k.dataValue
         });
     });
 };
@@ -170,6 +172,22 @@ AddClassManagement.prototype.renderGradeSelect = function (data) {
         $("#class_grade").append(gradeHtml.join(''));
     }
 };
+AddClassManagement.prototype.getClassType = function () {
+    var that = this;
+    var classTypeHtml = [];
+    var classTypes = null;
+    $.each(this.columnArr, function (i, k) {
+        if (k.enName == 'class_type') {
+            classTypes = k.dataValue.split('-');
+        }
+    });
+    if (classTypes != null) {
+        $.each(classTypes, function (i, k) {
+            classTypeHtml.push('<option value="' + k + '">' + k + '</option>');
+        });
+    }
+    $('#class_type').append(classTypeHtml.join(''));
+};
 AddClassManagement.prototype.addClass = function (title) {
     var that = this;
     var contentHtml = [];
@@ -211,6 +229,7 @@ AddClassManagement.prototype.addClass = function (title) {
     });
     that.getYear();
     that.getGrade();
+    that.getClassType();
 };
 
 /**
@@ -229,7 +248,8 @@ UpdateClassManagement.prototype = {
             that.columnArr.push({
                 name: k.name,
                 enName: k.enName,
-                dataType: k.dataType
+                dataType: k.dataType,
+                dataValue: k.dataValue
             });
         });
     },
@@ -273,6 +293,22 @@ UpdateClassManagement.prototype = {
             $("#class_grade").append(gradeHtml.join(''));
         }
     },
+    getClassType: function () {
+        var that = this;
+        var classTypeHtml = [];
+        var classTypes = null;
+        $.each(this.columnArr, function (i, k) {
+            if (k.enName == 'class_type') {
+                classTypes = k.dataValue.split('-');
+            }
+        });
+        if (classTypes != null) {
+            $.each(classTypes, function (i, k) {
+                classTypeHtml.push('<option value="' + k + '">' + k + '</option>');
+            });
+        }
+        $('#class_type').append(classTypeHtml.join(''));
+    },
     updateClass: function (title) {//更新某一行班级数据
         var that = this;
         var contentHtml = [];
@@ -301,6 +337,7 @@ UpdateClassManagement.prototype = {
         });
         that.getYear();
         that.getGrade();
+        that.getClassType();
         var rowid = $(".check-template :checkbox:checked").attr('cid');
         var rowItem = $('#class-manage-list tr[rowid="' + rowid + '"]').find('td');
         $.each(that.columnArr, function (i, k) {

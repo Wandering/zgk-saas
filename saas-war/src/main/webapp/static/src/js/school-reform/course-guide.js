@@ -516,10 +516,10 @@ function batchAnalysis (batchs, values) {
                 label: {
                     normal: {
                         show: true,
-                        position: 'insideRight',
+                        position: 'right',
                         formatter: '{c}人',
                         textStyle: {
-                            fontSize: 14
+                            fontSize: 12
                         }
                     }
                 }
