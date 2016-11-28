@@ -6,6 +6,7 @@
         tn_id as tnId,
         grade_id as gradeId,
         number,
+        room_order as roomOrder,
         create_date as createDate
     </sql>
 
@@ -15,6 +16,7 @@
         classRoom.grade_id as gradeId,
         grade.grade,
         classRoom.number,
+        classRoom.room_order,
         classRoom.create_date as createDate
     </sql>
     <select id="selectClassRoomByTnId" parameterType="java.util.Map" resultType="ClassRoomView">
@@ -79,11 +81,13 @@
         tn_id,
         grade_id,
         number,
+        room_order,
         create_date
         ) VALUES (
         #{tnId},
         #{gradeId},
         #{number},
+        #{roomOrder},
         #{createDate}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
@@ -91,4 +95,15 @@
         </selectKey>
     </insert>
 
+    <update id="sortRoomOrderUpdate"  parameterType="java.util.List">
+
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update saas_class_rooms
+            <set>
+                room_order=${item.roomOrder}
+            </set>
+            where id = ${item.id}
+        </foreach>
+
+    </update>
 </mapper>

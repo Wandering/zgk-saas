@@ -9,6 +9,7 @@ public class ClassRoomView {
     private Integer gradeId;
     private String grade;
     private Integer number;
+    private Integer roomOrder;
     private Long createDate;
 
     public Long getId() {
@@ -49,6 +50,14 @@ public class ClassRoomView {
 
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    public Integer getRoomOrder() {
+        return roomOrder;
+    }
+
+    public void setRoomOrder(Integer roomOrder) {
+        this.roomOrder = roomOrder;
     }
 
     public Long getCreateDate() {

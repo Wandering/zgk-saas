@@ -19,6 +19,7 @@ public class ClassRooms extends BaseDomain {
     private Integer tnId;
     private Integer gradeId;
     private Integer number;
+    private Integer roomOrder;
     private Long createDate;
 
     public ClassRooms() {
@@ -48,6 +49,14 @@ public class ClassRooms extends BaseDomain {
         this.number = number;
     }
 
+    public Integer getRoomOrder() {
+        return roomOrder;
+    }
+
+    public void setRoomOrder(Integer roomOrder) {
+        this.roomOrder = roomOrder;
+    }
+
     public Long getCreateDate() {
         return createDate;
     }
@@ -62,6 +71,7 @@ public class ClassRooms extends BaseDomain {
                 .append("TnId", getTnId())
                 .append("GradeId", getGradeId())
                 .append("Number", getNumber())
+                .append("RoomOrder",getRoomOrder())
                 .append("CreateDate", getCreateDate())
                 .toString();
     }
