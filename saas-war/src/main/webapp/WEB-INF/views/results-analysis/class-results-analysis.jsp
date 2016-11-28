@@ -80,14 +80,12 @@
                             <thead>
                             <tr>
                                 <th class="center">年级排名</th>
-                                <th class="center">模拟考试1</th>
-                                <th class="center">模拟考试2</th>
+                                <th class="center">考试1</th>
+                                <th class="center">考试2</th>
                                 <th class="center">变化人数</th>
                             </tr>
                             </thead>
-                            <tbody id="student-change-tbody">
-
-                            </tbody>
+                            <tbody id="student-change-tbody"></tbody>
                         </table>
                     </div>
                     <div class="col-xs-12">
@@ -261,6 +259,7 @@
     {{/each}}
 </script>
 <%@ include file="./../common/footer.jsp" %>
+<script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
 <script src="<%=ctx%>/static/src/js/results-analysis/class-results-analysis.js"></script>
 </body>
 </html>

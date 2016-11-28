@@ -29,7 +29,9 @@ public enum ErrorCode {
 
     ROWS_TOO_LONG("0000010","查询条数过多"),
 
-    TABLE_NOT_EXIST("0000011","数据异常,表不存在或者字段不存在");
+    TABLE_NOT_EXIST("0000011","数据异常,表不存在或者字段不存在"),
+
+    ROLE_HAS_EXIST("0000012","同名的角色已经存在");
 
     private final String code;
 

@@ -323,6 +323,18 @@ public class DataQueryController {
     }
 
     /**
+     * 根据专业名称模糊查找专业
+     * @param majoredName
+     * @param type
+     * @return
+     */
+    @RequestMapping(value = "getMajoredByName",method = RequestMethod.GET)
+    @ResponseBody
+    public Object getMajoredByName(@RequestParam(value = "majoredName",required = true)String majoredName,@RequestParam(value = "type",required = true)String type){
+        return iMajoredApi.getMajoredByName(majoredName,type);
+    }
+
+    /**
      * 根据专业查询开设院校
      *
      * @param majoredId
@@ -338,7 +350,7 @@ public class DataQueryController {
                                              @RequestParam(value = "page",required = false,defaultValue = "0")Integer page,
                                              @RequestParam(value = "rows",required = false,defaultValue = "10")Integer rows){
 
-        List<Map<String,Object>> getUniversityList=iMajoredApi.getMajorOpenUniversityList(majoredId,majorType,page,rows);
+        List<Map<String,Object>> getUniversityList=iMajoredApi.getMajorOpenUniversityList(majoredId,majorType,page-1,rows);
         int count=iMajoredApi.getMajorOpenUniversityCount(majoredId, majorType);
         for (Map<String, Object> university : getUniversityList) {
             String[] propertys=new String[1];

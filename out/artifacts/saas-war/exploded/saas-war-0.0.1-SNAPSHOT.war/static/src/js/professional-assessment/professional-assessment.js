@@ -80,9 +80,7 @@ var InterestTaskQuestion = {
             content: $('#course-test-container'),
             area: ['100%', '100%'],
             maxmin: false,
-            success:function(){
-                //$('#course-test-container').remove();
-            }
+            scrollbar:true
         })
         this.refreshDom();
     },

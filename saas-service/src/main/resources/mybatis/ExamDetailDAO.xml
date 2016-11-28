@@ -1117,7 +1117,7 @@ selectList
             AND c.batchName=#{batchName}
         </if>
         <if test="className!=null">
-            AND className = #{className}
+            AND d.className = #{className}
         </if>
         <if test="courseName!=null">
             AND weakCourseOne = #{courseName}
@@ -1127,10 +1127,11 @@ selectList
             left join saas_exam_detail d on c.examDetailId=d.id
             where c.examId=#{examId} and c.batchName=#{batchName}
             <if test="className!=null">
-                AND className = #{className}
+                AND d.className = #{className}
             </if>
             AND weakCourseTwo = #{courseName}
         </if>
+        GROUP by d.studentName,d.className,c.weakCourseOne,c.weakCourseTwo,d.gradeRank,d.classRank
         <if test="orderBy!=null">
             ORDER BY ${orderBy} ${sortBy}
         </if>
@@ -1138,6 +1139,7 @@ selectList
             limit ${offset}, ${rows}
         </if>
     </select>
+
     <select id="getAvgScoresForClass" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
         select d.className,e.examTime, ROUND(AVG(IF(d.yuWenScore='', null, d.yuWenScore)), 2) 语文,
         ROUND(AVG(IF(d.shuXueScore='', null, d.shuXueScore)), 2) 数学,
@@ -1152,7 +1154,10 @@ selectList
 		ROUND(AVG(IF(d.totleScore='', null, d.totleScore)), 2) 总分
         from saas_exam_detail d
         LEFT JOIN saas_exam e on d.examId=e.id
-        WHERE d.className=#{className} and e.grade=#{grade} and e.tnId=#{tnId}
+        WHERE  e.grade=#{grade} and e.tnId=#{tnId}
+        <if test="className != null">
+           and d.className=#{className}
+        </if>
         group by d.className,e.examTime
         order by e.examTime asc
     </select>

@@ -27,7 +27,8 @@
                     <li>
                         <a href="#">首页</a>
                     </li>
-                    <li class="active">控制台</li>
+                    <li>账号信息</li>
+                    <li class="active">角色管理</li>
                 </ul><!-- .breadcrumb -->
 
 

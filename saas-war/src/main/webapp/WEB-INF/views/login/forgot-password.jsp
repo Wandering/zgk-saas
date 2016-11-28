@@ -67,7 +67,7 @@
                                         </div>
                                     </div>
                                     <div class="">
-                                        <button type="button" id="back-btn" class="back-btn">提交</button>
+                                        <button type="button" id="back-btn" class="back-btn">重设密码</button>
                                         <p class="txt">已有账号，请<a href="/login">登录账号</a></p>
                                     </div>
                                 </form>
@@ -81,6 +81,7 @@
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp" %>
+<script src="<%=ctx%>/static/src/lib/md5/jQuery.md5.js"></script>
 <script src="<%=ctx%>/static/src/js/login/forgot-password.js" charset="utf-8"></script>
 </body>
 </html>

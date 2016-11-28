@@ -497,8 +497,9 @@ $(document).on('click', '#class-settings-btn', function () {
         area: ['60%', '70%'],
         content: '/class-settings',
         cancel: function () {
-            var classManagement = new ClassManagement();
-            classManagement.init();
+            //var classManagement = new ClassManagement();
+            //classManagement.init();
+            history.go(0);
         }
     });
 });

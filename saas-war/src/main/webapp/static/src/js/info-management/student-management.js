@@ -628,10 +628,12 @@ var StdSet = {
                     type: 1,
                     content: $("#sub-student-setting"),
                     area: ['100%', '100%'],
-                    maxmin: false
+                    maxmin: false,
+                    cancel:function(){
+                        window.location.reload();
+                    }
                 })
             )
-            that.tableDrag();   //排序
         });
     },
     eventAdd: function () {
@@ -650,16 +652,20 @@ var StdSet = {
         });
     },
     fetchTableHeader: function () {
+        var that = this;
         Common.ajaxFun('/config/get/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 StdSet.renderHeader(res)
+                that.tableDrag();
                 StdSet.fetchTableHeaderData = res;
+
             }
         }, function (res) {
             layer.msg("出错了");
         }, true);
     },
     renderHeader: function (res) {
+        var that = this;
         var dataJson = res.bizData.configList;
         var template = Handlebars.compile($('#sub-student-table-tpl').html());
         $('#sub-student-table').html(template(dataJson));
@@ -716,7 +722,6 @@ var StdSet = {
                     layer.full(
                         layer.open({
                             type: 1,
-                            //content: $("#sub-student-setting").html(),
                             content: $("#sub-student-setting"),
                             area: ['100%', '100%'],
                             maxmin: false,
@@ -756,7 +761,6 @@ var StdSet = {
                     layer.full(
                         layer.open({
                             type: 1,
-                            //content: $("#sub-student-setting").html(),
                             content: $("#sub-student-setting"),
                             area: ['100%', '100%'],
                             maxmin: false,
@@ -802,7 +806,7 @@ var StdSet = {
                     layer.msg("出错了", {time: 1000});
                 }, true, null);
             };
-        $("#teacher-table tbody").sortable({
+        $("#sub-student-table").sortable({
             helper: fixHelperModified,
             stop: updateIndex,
             axis: "y"

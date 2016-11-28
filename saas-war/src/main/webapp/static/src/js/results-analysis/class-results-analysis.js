@@ -12,8 +12,8 @@ function ClassResultsAnalysis() {
     this.batchV = '';
     this.progressStart = '10';
     this.progressLength = '20';
-    this.gradeRankStart = '10';
-    this.gradeRankLength = '20';
+    this.gradeRankStart = '1';
+    this.gradeRankLength = '100';
 }
 ClassResultsAnalysis.prototype = {
     constructor: ClassResultsAnalysis,
@@ -251,11 +251,12 @@ ClassResultsAnalysis.prototype = {
             },
             xAxis: {
                 type: 'category',
-                name: 'x',
+                name: '考试时间',
+                position:'bottom',
                 splitLine: {show: false},
                 //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
-                data: ["2016-02-02", "2016-03-03", "2016-04-07", "2016-05-10", "2016-06-14"]
-                //data: dateData
+                //data: ["2016-02-02", "2016-03-03", "2016-04-07", "2016-05-10", "2016-06-14"]
+                data: dateData
             },
             grid: {
                 left: '3%',
@@ -270,7 +271,7 @@ ClassResultsAnalysis.prototype = {
             },
             series: [
                 {
-                    name: '3的指数',
+                    name: '班级平均分排名',
                     type: 'line',
                     //data: [1, 3, 9, 27, 81, 247, 741, 2223, 6669]
                     data: totalScoreData
@@ -359,7 +360,7 @@ ClassResultsAnalysis.prototype = {
             },
             grid: {
                 left: '3%',
-                right: '4%',
+                right: '6%',
                 bottom: '3%',
                 containLabel: true
             },
@@ -442,7 +443,7 @@ ClassResultsAnalysis.prototype = {
                 // 提交位次线记录
                 //that.updateExamProperties('line',ClassAnalysisIns.bacthLine);
                 that.saveExamLineProperties(line);
-                $('.student-num').text(res.bizData.length);
+                $('.student-num').text(line);
                 var myTemplate = Handlebars.compile($("#overLineDetail-template").html());
                 $('#overLineDetail-tbody').html(myTemplate(res));
                 that.student12Layer(grade,className);
@@ -648,6 +649,7 @@ ClassResultsAnalysis.prototype = {
             },
             xAxis: {
                 type: 'category',
+                name: '考试时间',
                 splitLine: {show: false},
                 //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
                 data: dateData
@@ -712,6 +714,7 @@ ClassResultsAnalysis.prototype = {
             'stepLength': stepLength
         }, function (res) {
             if (res.rtnCode == "0000000") {
+                $('#ranking-sel').html('');
                 var rankingSel = [];
                 rankingSel.push('<option value="">选择进步名次</option>');
                 $.each(res.bizData,function(i,v){
@@ -749,7 +752,6 @@ ClassResultsAnalysis.prototype = {
     },
     // 年级排名下拉列表
     getMostAdvancedDetailGradeRankStepList: function (grade,className,stepStart, stepLength) {
-        $('#gradeTop-sel').html('');
         var that = this;
         Common.ajaxFun('/scoreAnalyse/getMostAdvancedDetailGradeRankStepList', 'GET', {
             'tnId': tnId,
@@ -759,6 +761,7 @@ ClassResultsAnalysis.prototype = {
             'stepLength': stepLength
         }, function (res) {
             if (res.rtnCode == "0000000") {
+                $('#gradeTop-sel').html('');
                 var gradeTopSel = [];
                 gradeTopSel.push('<option value="">选择年级排名</option>');
                 $.each(res.bizData,function(i,v){

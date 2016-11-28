@@ -6,6 +6,10 @@
  *
  * */
 
+/**
+ * 职业信息
+ * @type {{init: ProfessionalInfo.init, getProfessionCategory: ProfessionalInfo.getProfessionCategory, getProfessionalList: ProfessionalInfo.getProfessionalList, addEvent: ProfessionalInfo.addEvent}}
+ */
 var ProfessionalInfo = {
     init: function () {
         this.params = {
@@ -42,33 +46,58 @@ var ProfessionalInfo = {
         }, function () {
         }, 'true');
     },
-    getProfessionalList: function () {
+    getProfessionalList: function (type) {
         var that = this;
         Common.ajaxFun('/data/getProfessionalList.do', 'GET', this.params, function (res) {
             if (res.rtnCode == "0000000") {
-                var dataJson = res.bizData;
-                if (dataJson.rows.length == 0) {
-                    $('#tab-detail-content').html('<div style="text-align: center">暂无数据 ~</div>');
-                    $('#professional-load-more').hide();
-                    return false;
-                }
-                console.info(dataJson.records - that.params.rows * (that.params.page - 1));
-                console.info(that.params.rows);
-                //总记录数 - 每页条数*第几页数 > 每页条数 [ 展示加载更多 ]
-                if (dataJson.records - that.params.rows * (that.params.page - 1) > parseInt(that.params.rows)) {
-                    $('#professional-load-more').show();
-                } else {
-                    $('#professional-load-more').hide();
-                }
-                var template = Handlebars.compile($('#tab-detail-content-tpl').html());
-                if (that.params.page == '1') {
-                    $('#tab-detail-content').html(template(dataJson));
-                } else {
-                    $('#tab-detail-content').append(template(dataJson));
-                }
-                $('#professional-loading-img').hide();
+                type ? that.renderSearchList(res.bizData) : that.renderProfessionalList(res.bizData)
             }
         });
+    },
+    renderSearchList: function (data) {
+        var dataJson = data.rows;
+        $(document).on('click', function (e) {
+            $('#search-list').html('').hide();
+            e.stopPropagation();
+        });
+        if (dataJson.length == '') {
+            $('#search-list').html('<span>暂无数据</span>')
+            return false;
+        }
+        var tpl = '';
+        $.each(dataJson, function (i, v) {
+            if (v.professionName.length > 12) {
+                v.professionName = v.professionName.substr(0, 12) + '...';
+            }
+            tpl += '<li pid="' + v.id + '">' + v.professionName + '</li>'
+        })
+        $('#search-list').html(tpl).show();
+        $(document).on('click', '#search-list li', function () {
+            $('.search-input').val($(this).text());
+            $('.search-btn').attr('pid', $(this).attr('pid'));
+            $('#search-list').html('').hide();
+        })
+    },
+    renderProfessionalList: function (dataJson) {
+        var that = this;
+        if (dataJson.rows.length == 0) {
+            $('#tab-detail-content').html('<div style="text-align: center">暂无数据 ~</div>');
+            $('#professional-load-more').hide();
+            return false;
+        }
+        //总记录数 - 每页条数*第几页数 > 每页条数 [ 展示加载更多 ]
+        if (dataJson.records - that.params.rows * (that.params.page - 1) > parseInt(that.params.rows)) {
+            $('#professional-load-more').show();
+        } else {
+            $('#professional-load-more').hide();
+        }
+        var template = Handlebars.compile($('#tab-detail-content-tpl').html());
+        if (that.params.page == '1') {
+            $('#tab-detail-content').html(template(dataJson));
+        } else {
+            $('#tab-detail-content').append(template(dataJson));
+        }
+        $('#professional-loading-img').hide();
     },
     addEvent: function () {
         var that = this;
@@ -88,6 +117,18 @@ var ProfessionalInfo = {
             $('#professional-load-more').attr('page-no', 1);
             that.getProfessionalList();
         });
+        //搜索oninput
+        $('.search-input').unbind('input propertychange').bind('input propertychange', function () {
+            that.params = {
+                'queryparam': $(this).val(), //搜索内容
+                'rows': "5", //备选方案五个
+                'page': '1',
+                'professionTypeId': $(this).attr('pid'),
+                'professionSubTypeId': $('#detail-title li:first').attr('pid')
+            }
+            that.getProfessionalList('search');
+        });
+        //选择单个职业
         $(document).on('click', '#detail-title li', function () {
             $(this).addClass('active').siblings().removeClass('active');
             that.params = {
@@ -112,11 +153,10 @@ var ProfessionalInfo = {
 ProfessionalInfo.init();
 
 
-/*
- * ==================================================================
- * ============================职业详情模块============================
- * ==================================================================
- * */
+/**
+ * 职业详情模块
+ * @type {{init: ProfessionalDetail.init, getProfessionalInfo: ProfessionalDetail.getProfessionalInfo, addEvent: ProfessionalDetail.addEvent}}
+ */
 var ProfessionalDetail = {
     init: function () {
         this.addEvent();
@@ -133,32 +173,40 @@ var ProfessionalDetail = {
     //    },function(){},'true');
     //},
     //根据id获取职业详情
-    getProfessionalInfo:function(sId){
-        Common.ajaxFun('/data/getProfessionalInfo.do', 'GET', {'id':sId}, function (res) {
+    getProfessionalInfo: function (sId) {
+        Common.ajaxFun('/data/getProfessionalInfo.do', 'GET', {'id': sId}, function (res) {
             if (res.rtnCode == "0000000") {
                 var dataJson = res.bizData;
                 var template = Handlebars.compile($('#detail-content-tpl').html());
                 $('#detail-content').html(template(dataJson));
-                console.info(template(dataJson));
             }
-        },function(){},'true');
+        }, function () {
+        }, 'true');
     },
-    addEvent:function(){
+    addEvent: function () {
         var that = this;
-        $(document).on('click','#tab-detail-content a',function(){
-            var pId = $(this).attr('pid');
-            //that.getProfessionCategory(pId);
-            that.getProfessionalInfo(pId);
+        var layerHtmlFn = function(id){
+            that.getProfessionalInfo(id);
             layer.full(
                 layer.open({
                     type: 1,
-                    title:'职业信息详情',
+                    title: '职业信息详情',
                     content: $('#professional-detail'),
-                    area: ['100%','100%'],
+                    area: ['100%', '100%'],
                     maxmin: false
                 })
             )
+        }
+        $(document).on('click', '#tab-detail-content a', function () {
+            var pid = $(this).attr('pid');
+            layerHtmlFn(pid)
         })
+        //搜索按钮
+        $(document).on('click', '.search-btn', function () {
+            var pid = $(this).attr('pid');
+            layerHtmlFn(pid)
+        })
+
     }
 }
 ProfessionalDetail.init();

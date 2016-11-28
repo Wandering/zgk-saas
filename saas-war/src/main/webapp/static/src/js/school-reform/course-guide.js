@@ -69,32 +69,64 @@ SubjectAnalysis.prototype = {
             layer.msg("出错了");
         }, true);
     },
+    sortNumber: function (a,b) {
+        return a - b;
+    },
     getAnalysisDiscipline: function (subject) {
+        var that = this;
         Common.ajaxFun('/selectClassesGuide/getAnalysisDiscipline.do', 'GET', {
             'subject': subject
         }, function (res) {
             if (res.rtnCode == "0000000") {
+                for (var i = 1; i < 7; i++) {
+                    $('.major-type-top thead tr th').eq(i).html('-');
+                    $('.major-type-top tbody tr td').eq(i).html('-');
+                    $('.major-type-bottom thead tr th').eq(i).html('-');
+                    $('.major-type-bottom tbody tr td').eq(i).html('-');
+                }
                 var data = res.bizData.analysisDiscipline;
+                $('#major-type-count').html('共计' + data.length + '个专业门类:');
                 var types = {
                     type: [],
-                    datas: []
+                    datas: [],
+                    data: []
                 };
+                var tempStr = '';
                 $.each(data, function (i, k) {
                     types.type.push(k.disciplineName);
                     types.datas.push({
                         value: k.number,
                         name: k.disciplineName
                     });
+                    types.data.push(k.number);
                     if (i <= 5) {
                         $('.major-type-top thead tr th').eq(i+1).html(k.disciplineName);
                         $('.major-type-top tbody tr td').eq(i+1).html(k.number);
                     } else {
-                        var n = i % 5;
-                        $('.major-type-bottom thead tr th').eq(n).html(k.disciplineName);
-                        $('.major-type-bottom tbody tr td').eq(n).html(k.number);
+                        var n = i % 6;
+                        $('.major-type-bottom thead tr th').eq(n+1).html(k.disciplineName);
+                        $('.major-type-bottom tbody tr td').eq(n+1).html(k.number);
                     }
                 });
-                majorTypeAnalysis(types.type, types.datas);
+
+                for(var i = 0; i < types.data.length - 1; i++)
+                {
+                    for(var j = 0; j < types.data.length - 1 - i; j++)
+                    {
+                        if(parseInt(types.data[j]) > parseInt(types.data[j+1]))
+                        {
+                            var tmp_number = types.data[j];
+                            types.data[j] = types.data[j+1];
+                            types.data[j+1] = tmp_number;
+
+                            var tmp_name = types.type[j];
+                            types.type[j] = types.type[j+1];
+                            types.type[j+1] = tmp_name;
+                        }
+                    }
+                }
+
+                majorTypeAnalysis(types.type.slice(types.type.length - 3, types.type.length).reverse(), types.datas);
             }
         }, function (res) {
             layer.msg("出错了");
@@ -278,6 +310,8 @@ UniversityDetail.prototype = {
             }
             if (k.selSubject === "" || k.selSubject === undefined || k.selSubject === null || k.selSubject === "0") {
                 k.selSubject = "-";
+            } else {
+                k.selSubject = k.selSubject.split(' ').join('、');
             }
         });
         $('#university-detail-data-list').html(template(result.majorByUniversityNameAndBatch));
@@ -305,6 +339,7 @@ $(function () {
         var subjectName = $(this).attr('subject');
         if (subjectName != '00') {
             universityDetail = new UniversityDetail();
+            universityDetail.subject = subjectName;
             universityDetail.showBox('院校详情');
             universityDetail.loadPage(0, universityDetail.universityRows);
         }
@@ -324,11 +359,11 @@ $(function () {
     /**
      * 院校文本框添加事件监听
      */
-    $(document).on('keydown', "#search-keywords", startSearchUniversity)
-        .on('keyup', "#search-keywords", startSearchUniversity)
-        .on('click', "#search-keywords", startSearchUniversity)
+    $(document).on('click', "#search-keywords", startSearchUniversity)
+        .on('keyup', "#search-keywords", startSearchUniversity);
+        //.on('click', "#search-keywords", startSearchUniversity)
         //.on('mouseover', "#search-keywords", startSearchUniversity)
-        .on('focus', "#search-keywords", startSearchUniversity);
+        //.on('focus', "#search-keywords", startSearchUniversity);
         //.on('blur', "#search-keywords", startSearchUniversity);
     $(document).on("click", function (e) {
         $("#results-list").hide();
@@ -496,6 +531,10 @@ function batchAnalysis (batchs, values) {
 
 //按专业类别分析
 function majorTypeAnalysis (type, datas) {
+    console.info('数据显示: ' + type);
+    var type0 = type[0];
+    var type1 = type[1];
+    var type2 = type[2];
     var subjectPieChart = echarts.init(document.getElementById('subjectPieChart'));
     var subjectPieOption = {
         title : {
@@ -753,10 +792,6 @@ function historyEnrollingData () {
                     {
                         universityNumber: '-',
                         planEnrollingNumber: '-'
-                    },
-                    {
-                        universityNumber: '-',
-                        planEnrollingNumber: '-'
                     }
                 ];
                 $.each(data, function (n, m) {
@@ -769,13 +804,9 @@ function historyEnrollingData () {
                             tempBatch[1].universityNumber = m.universityNumber;
                             tempBatch[1].planEnrollingNumber = m.planEnrollingNumber;
                         }
-                        if (m.batchName == '三批本科') {
+                        if (m.batchName == '高职（专科）') {
                             tempBatch[2].universityNumber = m.universityNumber;
                             tempBatch[2].planEnrollingNumber = m.planEnrollingNumber;
-                        }
-                        if (m.batchName == '高职高专') {
-                            tempBatch[3].universityNumber = m.universityNumber;
-                            tempBatch[3].planEnrollingNumber = m.planEnrollingNumber;
                         }
                     }
                 });

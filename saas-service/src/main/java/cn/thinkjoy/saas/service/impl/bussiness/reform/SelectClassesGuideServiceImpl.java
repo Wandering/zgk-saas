@@ -143,7 +143,15 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         for (Map<String,String> map1:mapList){
             String year=String.valueOf(Integer.valueOf(String.valueOf(map1.get("class_in_year")))+3);
             if(!yearMap.containsKey(year)){
-                yearMap.put(year,new HashMap<String, Integer>());
+                Map<String,Integer> map2=new HashMap<String, Integer>();
+                map2.put("物理",0);
+                map2.put("化学",0);
+                map2.put("生物",0);
+                map2.put("政治",0);
+                map2.put("历史",0);
+                map2.put("地理",0);
+                map2.put("通用技术",0);
+                yearMap.put(year,map2);
             }
             String[] types=map1.get("student_major_type").split("-");
             for(String type:types){

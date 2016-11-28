@@ -34,7 +34,7 @@ GradeManagement.prototype = {
                 gradeArr.push('</label>');
                 gradeArr.push('</td>');
                 gradeArr.push('<td class="center">'+ (i+1) +'</td>');
-                gradeArr.push('<td class="center">'+ v.grade +'</td>');
+                gradeArr.push('<td class="center"><span class="gradeNameItem">'+ v.grade +'</span></td>');
                 gradeArr.push('</tr>');
             });
             $('#grade-list').append(gradeArr.join(''));
@@ -103,9 +103,21 @@ $('#add-btn').on('click',function(){
 $('body').on('click','.save-btn',function () {
     var gradeName = $.trim($('#grade-name').val());
     var gradeid = $(this).attr('gradeid');
-    if(gradeName==""){
+    if(gradeName == ""){
         layer.tips('请填写年级名称!', $('#grade-name'));
         return false;
+    }
+    if(gradeName.length > 12){
+        layer.tips('年级名称最多熟入为12个字符!', $('#grade-name'));
+        return false;
+    }
+
+    for (var i = 0; i < $('.gradeNameItem').length; i++) {
+        var tempGradeName = $('.gradeNameItem').eq(i).text().trim();
+        if (tempGradeName == gradeName) {
+            layer.tips('该年级名称已经存在!', $('#grade-name'));
+            return false;
+        }
     }
 
     if(!gradeid){
