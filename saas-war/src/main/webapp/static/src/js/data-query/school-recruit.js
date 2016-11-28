@@ -6,8 +6,8 @@
  *
  * */
 /**
- * 数据查询-院校招生计划 | 院校招生计划详情
- * @type {{init: SchoolRecruit.init, getProvince: SchoolRecruit.getProvince, getYear: SchoolRecruit.getYear, getBatchByYearAndArea: SchoolRecruit.getBatchByYearAndArea, getRemoteDataDictList: SchoolRecruit.getRemoteDataDictList, fetchSchoolEnroll: SchoolRecruit.fetchSchoolEnroll, addEvent: SchoolRecruit.addEvent}}
+ * SchoolRecruit 数据查询-院校招生计划 | 院校招生计划详情
+ * @type {{init: SchoolRecruit.init, getProvince: SchoolRecruit.getProvince, getYear: SchoolRecruit.getYear, getBatch: SchoolRecruit.getBatch, getRemoteDataDictList: SchoolRecruit.getRemoteDataDictList, fetchSchoolEnroll: SchoolRecruit.fetchSchoolEnroll, renderSchoolEnroll: SchoolRecruit.renderSchoolEnroll, eventListen: SchoolRecruit.eventListen}}
  */
 var SchoolRecruit = {
     init: function () {
@@ -127,10 +127,6 @@ var SchoolRecruit = {
     },
 
 
-
-
-
-
     //添加事件
     eventListen: function () {
         //院校所属地
@@ -221,31 +217,16 @@ var SchoolRecruit = {
 SchoolRecruit.init();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * 数据查询 - 院校招生详情  majorType//科类 1：文科，2：理科
- * @type {{init: SchoolRecruitDetail.init, getRemoteUniversityById: SchoolRecruitDetail.getRemoteUniversityById, getMpConditions: SchoolRecruitDetail.getMpConditions, getUniversityMajorEnrollingPlanList: SchoolRecruitDetail.getUniversityMajorEnrollingPlanList, addEvent: SchoolRecruitDetail.addEvent}}
+ * @type {{init: SchoolRecruitDetail.init, getSchoolBaseInfo: SchoolRecruitDetail.getSchoolBaseInfo, getMpConditions: SchoolRecruitDetail.getMpConditions, getUniversityMajorEnrollingPlanList: SchoolRecruitDetail.getUniversityMajorEnrollingPlanList, addEvent: SchoolRecruitDetail.addEvent}}
  */
 var SchoolRecruitDetail = {
     init: function () {
-        this.addEvent();
+        this.eventListen();
     },
     //拉取院校基础信息
-    getRemoteUniversityById: function (uId) {
+    getSchoolBaseInfo: function (uId) {
         Common.ajaxFun('/data/getRemoteUniversityById.do', 'GET', {'universityId': uId}, function (res) {
             if (res.rtnCode == "0000000") {
                 var template = Handlebars.compile($('#school-detail-top-tpl').html());
@@ -256,16 +237,31 @@ var SchoolRecruitDetail = {
     },
     //拉取年份,文理科
     getMpConditions: function (uId) {
+        var that = this;
         Common.ajaxFun('/data/getMpConditions.do', 'GET', {'universityId': uId}, function (res) {
             if (res.rtnCode == "0000000") {
                 var tplYear = '',
                     tplSubject = '',
-                    foo = '';
+                    foo = '',
+                    yearArr = [];
+                that.yearAndTypeBoj = res.bizData;
+                if ($.isEmptyObject(that.yearAndTypeBoj)) {
+                    $('.select-condition').hide();
+                    return false;
+                }
                 $.each(res.bizData, function (i, v) {
-                    v == '1' ? foo = '文科' : foo = '理科';
                     tplYear += '<option value="' + i + '">' + i + '年</option>';
-                    tplSubject += '<option value="' + v + '">' + foo + '</option>';
-                    foo = '';
+                    yearArr.push(i);  //[2013,2014,2015]
+                    if (yearArr.sort()[0] == i) {
+                        for (var j = 0; j < res.bizData[yearArr.sort()[0]].length; j++) {
+                            foo = res.bizData[yearArr.sort()[0]][j];
+                            if (res.bizData[yearArr.sort()[0]][j] == 1) {
+                                tplSubject += '<option value="' + foo + '">文科</option>';
+                            } else {
+                                tplSubject += '<option value="' + foo + '">理科</option>';
+                            }
+                        }
+                    }
                 })
                 $('#plan-year').html(tplYear);
                 $('#plan-subject').html(tplSubject);
@@ -290,30 +286,59 @@ var SchoolRecruitDetail = {
         }, function () {
         }, 'true');
     },
-    addEvent: function () {
+    eventListen: function () {
         var that = this;
         $(document).on('click', '#school-admission-plan a', function () {
-            that.getRemoteUniversityById($(this).attr('type'));
+            that.getSchoolBaseInfo($(this).attr('type'));
+            that.getMpConditions($(this).attr('type'));
             //初始化params
             that.params = {
                 universityId: $(this).attr('type'),
-                year: "",
-                majorType: "",
+                year: $('#plan-year').val(),
+                majorType: $('#plan-subject').val(),
                 batch: "",
                 page: "1",
-                rows: "30"
+                rows: "50"
             }
             that.getUniversityMajorEnrollingPlanList(that.params);
-            that.getMpConditions($(this).attr('type'));
             layer.full(
                 layer.open({
                     type: 1,
                     title: '专业信息详情',
-                    content: $('#school-detail-info').html(),
+                    content: $('#school-detail-info'),
                     area: ['100%', '100%'],
                     maxmin: false
                 })
             )
+        });
+        $(document).on('change', '#plan-year', function () {
+            var checkYear = $(this).val();
+            var values = that.yearAndTypeBoj[parseInt(checkYear)],
+                tplSubject = '',
+                foo = '';
+            for (var i = 0; i < values.length; i++) {
+                values[i] == 1 ? foo = '文科' : foo = '理科'
+                tplSubject += '<option value="' + (i + 1) + '">' + foo + '</option>';
+            }
+            $('#plan-subject').html(tplSubject);
+
+            that.params.year = checkYear;
+            that.params.majorType = $('#plan-subject').val();
+            that.params.batch = "";
+            that.params.page = "1";
+            that.params.rows = "50";
+
+            that.getUniversityMajorEnrollingPlanList(that.params);
+        })
+        $(document).on('change', '#plan-subject', function () {
+            var checkBatch = $(this).val();
+            that.params.year = $('#plan-year').val();
+            that.params.majorType = checkBatch;
+            that.params.batch = "";
+            that.params.page = "1";
+            that.params.rows = "50";
+
+            that.getUniversityMajorEnrollingPlanList(that.params);
         })
     }
 }

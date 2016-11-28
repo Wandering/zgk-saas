@@ -180,7 +180,23 @@
                     --%>
                     <div id="school-detail-info" class="dh">
                         <div id="school-detail-top"></div>
-                        <div id="school-detail-bottom"></div>
+                            <div class="student-enroll-table">
+                                <div class="sub-title">
+                                    <div class="title">招生计划</div>
+                                    <div class="select-condition">
+                                        <select class="professional-plan-year" id="plan-year">
+                                            <%--<option value="2016">2016年</option>--%>
+                                            <%--<option value="2015">2015年</option>--%>
+                                        </select>
+                                        <select class="professional-plan-subject" id="plan-subject">
+                                            <%--<option value="1">文史</option>--%>
+                                            <%--<option value="2">理工</option>--%>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="school-detail-bottom"></div>
+                        </div>
                         <script id="school-detail-top-tpl" type="text/x-handlebars-template">
                             <div class="school-base-info">
                                 <div class="top">
@@ -217,20 +233,6 @@
 
                         <%--table招生计划--%>
                         <script id="school-detail-bottom-tpl" type="text/x-handlebars-template">
-                            <div class="student-enroll-table">
-                                <div class="sub-title">
-                                    <div class="title">招生计划</div>
-                                    <div class="select-condition">
-                                        <select class="professional-plan-year" id="plan-year">
-                                            <%--<option value="2016">2016年</option>--%>
-                                            <%--<option value="2015">2015年</option>--%>
-                                        </select>
-                                        <select class="professional-plan-subject" id="plan-subject">
-                                            <%--<option value="1">文史</option>--%>
-                                            <%--<option value="2">理工</option>--%>
-                                        </select>
-                                    </div>
-                                </div>
                                 <table class="table-list table-hover table-bordered">
                                     <thead>
                                     <tr>
@@ -261,7 +263,6 @@
                                 <div id="school-detail-load-more" class="load-more dh">
                                     加载更多
                                 </div>
-                            </div>
                         </script>
 
 
