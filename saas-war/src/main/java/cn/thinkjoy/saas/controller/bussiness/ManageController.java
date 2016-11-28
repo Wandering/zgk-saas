@@ -93,6 +93,21 @@ public class ManageController {
         return resultMap;
     }
 
+    /**
+     * 年级排序
+     * @param tnId
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/sort/grade/{tnId}/{ids}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map sortGrade(@PathVariable Integer tnId,@PathVariable String ids){
+        boolean result = exiGradeService.gradeSortUpdate(tnId,ids);
+
+        Map resultMap = new HashMap();
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
 
     /**
      * 删除年级
@@ -161,6 +176,21 @@ public class ManageController {
         return resultMap;
     }
 
+    /**
+     * 教室排序
+     * @param tnId
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/sort/classRoom/{tnId}/{ids}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map sortClassRoom(@PathVariable Integer tnId,@PathVariable String ids){
+        boolean result = exiClassRoomService.sortRoomOrderUpdate(tnId,ids);
+        Map map = new HashMap();
+        map.put("result", result);
+        return map;
+    }
+
 
     /**
      * 删除教室
@@ -202,7 +232,7 @@ public class ManageController {
     public Map getEnrollingRatio(@PathVariable Integer tnId) {
         Map map = new HashMap();
         map.put("tnId", tnId);
-        List<EnrollingRatio> enrollingRatios = iEnrollingRatioService.queryList(map, "id", "asc");
+        List<EnrollingRatio> enrollingRatios = iEnrollingRatioService.queryList(map, "ratio_order", "asc");
         Map resultMap = new HashMap();
         resultMap.put("result", enrollingRatios);
         return resultMap;

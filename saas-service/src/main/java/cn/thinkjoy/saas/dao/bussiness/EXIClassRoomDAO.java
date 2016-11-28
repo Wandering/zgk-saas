@@ -41,4 +41,12 @@ public interface EXIClassRoomDAO {
      * @return
      */
     Integer insertClassRoom(ClassRooms classRooms);
+
+
+    /**
+     * 教室排序
+     * @param classRoomses
+     * @return
+     */
+    Integer sortRoomOrderUpdate(List<ClassRooms> classRoomses);
 }

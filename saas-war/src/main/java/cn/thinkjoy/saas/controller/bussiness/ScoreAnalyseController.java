@@ -631,9 +631,9 @@ public class ScoreAnalyseController
         {
             String examId = examIds.get(i - 1);
             List<ExamDetail> detailList = examDetailService.findList("examId", examId);
-            Integer batchOneLowScore = 0;
-            Integer batchTwoLowScore = 0;
-            Integer batchThrLowScore = 0;
+            float batchOneLowScore = 0;
+            float batchTwoLowScore = 0;
+            float batchThrLowScore = 0;
             for (ExamDetail detail : detailList)
             {
                 if (i == 1)
@@ -644,15 +644,15 @@ public class ScoreAnalyseController
                 int gradeRank = Integer.parseInt(detail.getGradeRank());
                 if (gradeRank == batchTwoNumber)
                 {
-                    batchTwoLowScore = Integer.parseInt(detail.getTotleScore());
+                    batchTwoLowScore = Float.parseFloat(detail.getTotleScore());
                 }
                 if (gradeRank == batchOneNumber)
                 {
-                    batchOneLowScore = Integer.parseInt(detail.getTotleScore());
+                    batchOneLowScore = Float.parseFloat(detail.getTotleScore());
                 }
                 if (gradeRank == batchThrNumber)
                 {
-                    batchThrLowScore = Integer.parseInt(detail.getTotleScore());
+                    batchThrLowScore = Float.parseFloat(detail.getTotleScore());
                 }
             }
             Map<String, String> params = new HashMap<>();
@@ -661,19 +661,19 @@ public class ScoreAnalyseController
             for (ExamDetail detail : detailList)
             {
                 fixSelectCourse(detail, lastExamId);
-                int totalScore = Integer.parseInt(detail.getTotleScore());
+                float totalScore = Float.parseFloat(detail.getTotleScore());
                 ExamDetail lastDetail = lastExamDetailMap.get(detail.getClassName() + "@" + detail.getStudentName());
-                if (totalScore < batchOneLowScore && totalScore >= batchOneLowScore - 20)
+                if (isBigger(batchOneLowScore, totalScore) && !isBigger((batchOneLowScore - 20),totalScore))
                 {
                     batchMap.get("batchOne").add(lastDetail);
                     selectCourseMap.put(detail.getSelectCourses(), 0);
                 }
-                else if (totalScore < batchTwoLowScore && totalScore >= batchTwoLowScore - 20)
+                if (isBigger(batchTwoLowScore, totalScore) && !isBigger((batchTwoLowScore - 20),totalScore))
                 {
                     batchMap.get("batchTwo").add(lastDetail);
                     selectCourseMap.put(detail.getSelectCourses(), 0);
                 }
-                else if (totalScore < batchThrLowScore && totalScore >= batchThrLowScore - 20)
+                if (isBigger(batchThrLowScore, totalScore) && !isBigger((batchThrLowScore - 20),totalScore))
                 {
                     batchMap.get("batchThr").add(lastDetail);
                     selectCourseMap.put(detail.getSelectCourses(), 0);
@@ -717,6 +717,13 @@ public class ScoreAnalyseController
             resultList.add(resultMap);
         }
         return resultList;
+    }
+
+    private boolean isBigger(float f1, float f2)
+    {
+        BigDecimal ff1 = new BigDecimal(f1);
+        BigDecimal ff2 = new BigDecimal(f2);
+        return ff1.subtract(ff2).floatValue() > 0;
     }
 
     private void addDataList(String lastExamId, Map<Long, Set<ExamScoreRatio>> examScoreRatioMap,
@@ -827,7 +834,14 @@ public class ScoreAnalyseController
                 continue;
             }
             ratio.setRatio(ratioValue);
-            examScoreRatioMap.get(lastDetail.getId()).add(ratio);
+            try
+            {
+                examScoreRatioMap.get(lastDetail.getId()).add(ratio);
+            }
+            catch (Exception e)
+            {
+                System.out.println("hah");
+            }
         }
     }
 
@@ -1485,7 +1499,7 @@ public class ScoreAnalyseController
             throw new BizException("1100011", "该年级没有成绩录入！！");
         }
         List<Map<String, Object>> resultList = new ArrayList<>();
-        int batchOneNumber = Integer.parseInt(line);
+        float batchOneNumber = Float.parseFloat(line);
         List<ExamDetail> detailList = examDetailService.findList("examId", examIds.get(0));
         for (ExamDetail detail : detailList)
         {
