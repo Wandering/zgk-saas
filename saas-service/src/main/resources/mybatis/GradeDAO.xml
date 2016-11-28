@@ -59,7 +59,26 @@
         WHERE
         id = #{id}
     </update>
-
+    <select id="queryOne" parameterType="java.util.Map" resultType="Grade">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_grade
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tnId = #{condition.tnId}
+            </if>
+            <if test="condition.grade!=null">
+                AND grade = #{condition.grade}
+            </if>
+            <if test="condition.gOrder!=null">
+                AND g_order = #{condition.gOrder}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
 
     <select id="findAll" resultType="Grade">
         SELECT
