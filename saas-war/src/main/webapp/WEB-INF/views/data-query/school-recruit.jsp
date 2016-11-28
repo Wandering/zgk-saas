@@ -258,7 +258,7 @@
                                     </tbody>
                                 </table>
                                 <img src="/static/src/img/loading.gif" class="table-loading-img dh" id="school-detail-loading-img">
-                                <div id="school-detail-load-more" class="load-more dh" page-no="1">
+                                <div id="school-detail-load-more" class="load-more dh">
                                     加载更多
                                 </div>
                             </div>
