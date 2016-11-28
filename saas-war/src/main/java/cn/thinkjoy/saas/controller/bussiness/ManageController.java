@@ -50,6 +50,7 @@ public class ManageController {
     @Resource
     EXITenantConfigInstanceService exiTenantConfigInstanceService;
 
+
     /**
      * 新增年级
      * @param tnId 租户ID
@@ -215,13 +216,54 @@ public class ManageController {
      */
     @RequestMapping(value = "/import/{type}/{tnId}", method = RequestMethod.POST)
     @ResponseBody
-    public Map addTenantCustomConfig(@PathVariable String type, @PathVariable Integer tnId, HttpServletRequest request){
-        String ids = request.getParameter("ids");
+    public Map addTenantCustomConfig(@PathVariable final String type, @PathVariable final Integer tnId, HttpServletRequest request) {
+        final String ids = request.getParameter("ids");
+
+
+//         String exMsg=transactionTemplate.execute(new TransactionCallback<String>() {
+//            @Override
+//            public String doInTransaction(TransactionStatus status) {
+//                try {
         String exMsg = exiTenantConfigInstanceService.createColumn(type, ids, tnId);
+//                } catch (Exception ex) {
+//                    status.setRollbackOnly();
+//                    return "FAIL";
+//                }
+//            }
+//        });
         Map resultMap = new HashMap();
         resultMap.put("result", exMsg);
         return resultMap;
     }
+
+//    /**
+//     * 事务测试
+//     * @return
+//     */
+//    @RequestMapping(value = "/tran/import",method = RequestMethod.GET)
+//    @ResponseBody
+//    public Map tranTest() {
+//        String resul = transactionTemplate.execute(new TransactionCallback<String>() {
+//            @Override
+//            public String doInTransaction(TransactionStatus status) {
+//                try {
+//                    Map addMap = new HashMap();
+//                    addMap.put("tableName", "saas_1_class_excel");
+//                    addMap.put("columnName", "class_name");
+//                    addMap.put("columnType", "VARCHAR(12)");
+//                    exiTenantConfigInstanceService.addColumn(addMap);
+//                    throw new RuntimeException("runtime e");
+////                    return "SUCCESS";
+//                } catch (Exception ex) {
+//                    status.setRollbackOnly();
+//                    return "FAIL";
+//                }
+//            }
+//        });
+//        Map resultMap = new HashMap();
+//        resultMap.put("result", resul);
+//        return resultMap;
+//    }
 
     /**
      * 删除租户表头

@@ -20,8 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -31,7 +29,6 @@ import java.util.*;
  * Created by douzy on 16/10/13.
  */
 @Service("EXITenantConfigInstanceServiceImpl")
-@Transactional(propagation=Propagation.REQUIRED)
 public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBaseDAO<TenantConfigInstance>, TenantConfigInstance> implements EXITenantConfigInstanceService<IBaseDAO<TenantConfigInstance>,TenantConfigInstance> {
 
     private static final Logger LOGGER= LoggerFactory.getLogger(EXITenantConfigInstanceServiceImpl.class);
@@ -312,18 +309,19 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * @return
      */
     @Override
-    public String createColumn(String type,String ids,Integer tnId) {
+    public String createColumn( String type,String ids,  Integer tnId) {
+
 
         LOGGER.info("===============新增租户自选表头 S==============");
         LOGGER.info("ids:" + ids);
         LOGGER.info("tnId:" + tnId);
 
-        List<String> idsList = ParamsUtils.idsSplit(ids);
+         List<String> idsList = ParamsUtils.idsSplit(ids);
         if (tnId <= 0 || idsList == null) {
             LOGGER.info("result:1[参数错误]");
             return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_PARAMSERROR);
         }
-        String tableName = ParamsUtils.combinationTableName(type, tnId);
+         String tableName = ParamsUtils.combinationTableName(type, tnId);
 
 
         for (String configId : idsList) {
@@ -354,8 +352,9 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             addColumn(addMap);
         }
 
-        isExsitsColumn(idsList,tableName,type,tnId);
+//        System.out.print(1 / 0);
 
+                isExsitsColumn(idsList,tableName,type,tnId);
 
 
         LOGGER.info("===============新增租户自选表头 E==============");
