@@ -7,7 +7,7 @@
  * */
 /**
  * 数据查询-院校招生计划 | 院校招生计划详情
- * @type {{init: SchoolRecruit.init, getProvince: SchoolRecruit.getProvince, getYear: SchoolRecruit.getYear, getBatchByYearAndArea: SchoolRecruit.getBatchByYearAndArea, getRemoteDataDictList: SchoolRecruit.getRemoteDataDictList, getCollegeUniversitiesEnrollment: SchoolRecruit.getCollegeUniversitiesEnrollment, addEvent: SchoolRecruit.addEvent}}
+ * @type {{init: SchoolRecruit.init, getProvince: SchoolRecruit.getProvince, getYear: SchoolRecruit.getYear, getBatchByYearAndArea: SchoolRecruit.getBatchByYearAndArea, getRemoteDataDictList: SchoolRecruit.getRemoteDataDictList, fetchSchoolEnroll: SchoolRecruit.fetchSchoolEnroll, addEvent: SchoolRecruit.addEvent}}
  */
 var SchoolRecruit = {
     init: function () {
@@ -22,12 +22,13 @@ var SchoolRecruit = {
             page: '1',  //第几页
             rows: "10"  //每页条数
         };
+        this.eventListen();
         this.getProvince();
         this.getYear('');
+        this.getBatch('', '');
         this.getRemoteDataDictList();
-        this.getBatchByYearAndArea('', '');
-        this.addEvent();
     },
+
     //获取省份
     getProvince: function () {
         Common.ajaxFun('/data/getProvinceList.do', 'GET', {}, function (res) {
@@ -37,6 +38,7 @@ var SchoolRecruit = {
             }
         });
     },
+
     //根据省份ID获取录取年份
     getYear: function (provinceId) {
         Common.ajaxFun('/data/getYears.do', 'GET', {
@@ -53,8 +55,10 @@ var SchoolRecruit = {
             }
         });
     },
+
+
     //根据年份和区域获取批次
-    getBatchByYearAndArea: function (year, provinceId) {
+    getBatch: function (year, provinceId) {
         Common.ajaxFun('/data/getBatchByYearAndArea.do', 'GET', {
             year: year,
             provinceId: provinceId,
@@ -70,6 +74,8 @@ var SchoolRecruit = {
             }
         });
     },
+
+
     //院校特征
     getRemoteDataDictList: function () {
         var that = this;
@@ -83,114 +89,151 @@ var SchoolRecruit = {
                 }
                 var template = Handlebars.compile($('#feature-list-tpl').html());
                 $('#feature-list').html(template(res.bizData))
-
-
-                that.getCollegeUniversitiesEnrollment();
+                that.fetchSchoolEnroll(that.params);
             }
         }, function () {
         }, 'true');
     },
-    //院校录取数据
-    getCollegeUniversitiesEnrollment: function () {
+
+    //拉取录取数据
+    fetchSchoolEnroll: function (data, more) {
         var that = this;
         $('#table-loading-img').show();
-        Common.ajaxFun('/data/getGkAdmissionLineList.do', 'GET', this.params, function (res) {
+        console.log('data', JSON.stringify(data));
+        Common.ajaxFun('/data/getGkAdmissionLineList.do', 'GET', data, function (res) {
             if (res.rtnCode == "0000000") {
-                var dataJson = res.bizData;
-                //总记录数 - 每页条数*第几页数 > 每页条数 [ 展示加载更多 ]
-                if (res.bizData.rows.length == 0) {
-                    $('#recruit-load-more').html('<span>暂无</span>');
-                    return false;
-                } else {
-                    $('#recruit-load-more').html('<span>加载更多</span>');
-                }
-                if (dataJson.records - that.params.rows * (that.params.page - 1) > that.params.rows) {
-                    $('#recruit-load-more').show();
-                }
-                var template = Handlebars.compile($('#school-admission-plan-tpl').html());
-                $('#school-admission-plan').append(template(dataJson))
-                $('#table-loading-img').hide();
+                that.renderSchoolEnroll(res.bizData, more);
             } else {
                 layer.msg(res.msg);
                 $('.layui-layer-msg').css('left', '56%');
             }
         });
     },
+    //渲染录取数据
+    renderSchoolEnroll: function (dataJson, more) {
+        var that = this;
+        $('#table-loading-img').hide();
+        var template = Handlebars.compile($('#school-admission-plan-tpl').html());
+        more == 'more' ? $('#school-admission-plan').append(template(dataJson)) : $('#school-admission-plan').html(template(dataJson))
+        //总记录数 - 每页条数*第几页数 > 每页条数 [ 展示加载更多 ]
+        if (dataJson.records - that.params.rows * (that.params.page - 1) > that.params.rows) {
+            $('#recruit-load-more').show().attr('page-no', parseInt(that.params.page));
+            $('#no-data').remove();
+        } else if (dataJson.records == 0) {
+            $('.admission-detail .table-list').after('<p id="no-data" style="text-align: center;margin-top: 40px;">暂无数据</p>');
+        } else {
+            $('#recruit-load-more').hide();
+        }
+    },
+
+
+
+
+
+
     //添加事件
-    addEvent: function () {
+    eventListen: function () {
         //院校所属地
         var that = this;
         $(document).on('click', '#province-list span', function () {
             $('#school-admission-plan').html('');
             $('#recruit-load-more').hide();
-            that.params = {
-                'year': '',
-                'property': '',
-                'batch': '',
-                'areaId': $(this).attr('provinceid'),
-            }
+            $('#no-data').remove();
 
             $(this).addClass('active').siblings().removeClass('active');
+
+
+            that.params.areaId = $(this).attr('provinceid');
+            that.params.year = "";
+            that.params.batch = "";
+            that.params.type = "2";
+            that.params.page = "1";
+            that.params.rows = "10";
+
+
             that.getYear(that.params.areaId);
-            that.getBatchByYearAndArea('', that.params.areaId);
-            that.getCollegeUniversitiesEnrollment();
+            that.getBatch(that.params.year, that.params.areaId);
+            that.fetchSchoolEnroll(that.params);
         })
 
         //招生年份
         $(document).on('click', '#year-list span', function () {
             $('#school-admission-plan').html('');
             $('#recruit-load-more').hide();
+            ('#no-data').remove();
 
-            $(this).addClass('active').siblings().removeClass('active');
             that.params.year = $(this).attr('yearId');
-            that.getBatchByYearAndArea(that.params.year, that.params.areaId);
-            that.getCollegeUniversitiesEnrollment();
+            that.params.batch = '';
+            that.params.page = "1";
+            that.params.rows = "10";
+
+            that.getBatch(that.params.year, that.params.areaId);
+            that.fetchSchoolEnroll(that.params);
         })
 
         //录取批次
         $(document).on('click', '#batch-list span', function () {
             $('#school-admission-plan').html('');
             $('#recruit-load-more').hide();
-            $(this).addClass('active').siblings().removeClass('active');
+            $('#no-data').remove();
+
             that.params.batch = $(this).attr('dictid');
-            that.getCollegeUniversitiesEnrollment();
+            that.params.page = "1";
+            that.params.rows = "10";
+            that.fetchSchoolEnroll(that.params);
         })
 
         //院校特征
         $(document).on('click', '#feature-list span', function () {
             $('#school-admission-plan').html('');
             $('#recruit-load-more').hide();
+            $('#no-data').remove();
 
-            $(this).addClass('active').siblings().removeClass('active');
             that.params.property = $(this).attr('dictid')
-            that.getCollegeUniversitiesEnrollment();
+            that.params.page = "1";
+            that.params.rows = "10";
+            that.fetchSchoolEnroll(that.params);
         })
 
         //文理切换
         $(document).on('click', '.tab-detail-title li', function () {
             $('#school-admission-plan').html('');
             $('#recruit-load-more').hide();
+            $('#no-data').remove();
 
             $(this).addClass('active').siblings().removeClass('active');
-            $(this).attr('page-no', 1);
-            $('#recruit-load-more').hide();
-            $('#school-admission-plan').html('');
-
-            that.params.type = $(this).attr('type');
-            that.params.page = '1';
-            $('#recruit-load-more').attr('page-no', '1');
-            that.getCollegeUniversitiesEnrollment();
+            that.params.type = $(this).attr('type')
+            that.params.page = "1";
+            that.params.rows = "10";
+            that.fetchSchoolEnroll(that.params);
         })
         //加载更多
         $(document).on('click', '#recruit-load-more', function () {
-            var nowPage = parseInt($(this).attr('page-no'));
-            $(this).attr('page-no', nowPage + 1).hide();
-            that.params.page = nowPage + 1;
-            that.getCollegeUniversitiesEnrollment();
+            that.params.page = parseInt(that.params.page) + 1
+            $(this).attr({
+                'disabled': false,
+                'page-no': that.params.page
+            }).hide();
+            that.fetchSchoolEnroll(that.params, 'more')
         })
     }
 }
 SchoolRecruit.init();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**
