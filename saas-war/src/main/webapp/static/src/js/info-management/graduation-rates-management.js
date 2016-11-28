@@ -22,7 +22,7 @@ NumberManagement.prototype = {
                 $.each(data, function (i, k) {
                     ratioHtml.push('<tr rowid="' + k.id + '">');
                     ratioHtml.push('<td class="center"><label><input type="checkbox" rid="' + k.id + '" class="ace" /><span class="lbl"></span></label></td>');
-                    ratioHtml.push('<td class="center index" indexid="' + k.id + '">' + (i+1) + '</td>');
+                    ratioHtml.push('<td class="center index" indexid="' + k.id + '">' + (k.ratioOrder + 1) + '</td>');
                     if (k.year) {
                         ratioHtml.push('<td class="center">' + k.year + '</td>');
                     } else {
@@ -34,7 +34,7 @@ NumberManagement.prototype = {
                     ratioHtml.push('<td class="center">' + k.batch3enrolls + '</td>');
                     ratioHtml.push('<td class="center">' + k.batch4enrolls + '</td>');
                 });
-                 $('#ratio-manage-list').html(ratioHtml.join(''));
+                $('#ratio-manage-list').html(ratioHtml.join(''));
             }
         }, function (res) {
             layer.msg("出错了");
