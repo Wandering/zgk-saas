@@ -39,10 +39,10 @@ public class ManageController {
     EXIClassRoomService exiClassRoomService;
 
     @Resource
-    IEXEnrollingRatioService iexEnrollingRatioService;
+    IEnrollingRatioService iEnrollingRatioService;
 
     @Resource
-    IEnrollingRatioService iEnrollingRatioService;
+    IEXEnrollingRatioService iexEnrollingRatioService;
 
     @Resource
     IEXTenantCustomService iexTenantCustomService;
@@ -216,7 +216,7 @@ public class ManageController {
      */
     @RequestMapping(value = "/import/{type}/{tnId}", method = RequestMethod.POST)
     @ResponseBody
-    public Map addTenantCustomConfig(@PathVariable final String type, @PathVariable final Integer tnId, HttpServletRequest request) {
+    public Map addTenantCustomConfig(@PathVariable  String type, @PathVariable  Integer tnId, HttpServletRequest request) {
         final String ids = request.getParameter("ids");
 
 
@@ -234,6 +234,20 @@ public class ManageController {
         Map resultMap = new HashMap();
         resultMap.put("result", exMsg);
         return resultMap;
+    }
+
+    /**
+     * 升学率排序
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/sort/enrollingRatio/{tnId}/{ids}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map sortEnrollingRatio(@PathVariable  Integer tnId,@PathVariable String ids) {
+        boolean result = iexEnrollingRatioService.sortRatioUpdate(tnId,ids);
+        Map map = new HashMap();
+        map.put("result", result);
+        return map;
     }
 
 //    /**
