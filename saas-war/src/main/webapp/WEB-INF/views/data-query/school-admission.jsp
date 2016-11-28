@@ -170,7 +170,7 @@
                             </table>
                         </div>
                         <img src="/static/src/img/loading.gif" class="table-loading-img" id="table-loading-img">
-                        <div id="admission-load-more" class="load-more dh" page-no="1">
+                        <div id="admission-load-more" class="load-more dh">
                             加载更多
                         </div>
                         <%--////////////////////////////////////////////--%>

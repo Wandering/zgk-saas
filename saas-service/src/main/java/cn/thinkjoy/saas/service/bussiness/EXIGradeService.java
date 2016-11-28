@@ -14,7 +14,7 @@ public interface EXIGradeService {
      * @param ids  需要调换的两个ID
      * @return
      */
-    boolean gradeSortUpdate(String ids);
+     boolean gradeSortUpdate(Integer tnId,String ids);
 
     /**
      * 根据字段查找一个年级对象
