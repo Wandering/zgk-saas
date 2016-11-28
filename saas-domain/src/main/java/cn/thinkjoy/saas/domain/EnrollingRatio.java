@@ -23,6 +23,7 @@ public class EnrollingRatio extends BaseDomain{
     private Integer batch3enrolls;
     private Integer batch4enrolls;
     private Integer year;
+    private Integer ratioOrder;
     private Long createDate;
 
 	public EnrollingRatio(){
@@ -78,6 +79,14 @@ public class EnrollingRatio extends BaseDomain{
         this.year = year;
     }
 
+    public Integer getRatioOrder() {
+        return ratioOrder;
+    }
+
+    public void setRatioOrder(Integer ratioOrder) {
+        this.ratioOrder = ratioOrder;
+    }
+
     public void setCreateDate(Long value) {
         this.createDate = value;
     }
@@ -89,14 +98,15 @@ public class EnrollingRatio extends BaseDomain{
 	public String toString() {
 		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
 			.append("Id",getId())
-			.append("TnId",getTnId())
+			.append("TnId", getTnId())
 			.append("Stu3numbers",getStu3numbers())
 			.append("Batch1enrolls",getBatch1enrolls())
 			.append("Batch2enrolls",getBatch2enrolls())
 			.append("Batch3enrolls",getBatch3enrolls())
 			.append("Batch4enrolls",getBatch4enrolls())
-            .append("Year",getYear())
-			.append("CreateDate",getCreateDate())
+            .append("Year", getYear())
+            .append("RatioOrder", getRatioOrder())
+            .append("CreateDate", getCreateDate())
 			.toString();
 	}
 	
