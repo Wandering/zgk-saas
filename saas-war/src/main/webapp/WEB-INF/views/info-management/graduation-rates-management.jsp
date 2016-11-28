@@ -88,6 +88,7 @@
         </div>
     </div>
     <%@ include file="./../common/footer.jsp"%>
+    <script src="<%=ctx%>/static/src/lib/assets/js/jquery-ui-1.12.1.js"></script>
     <script src="<%=ctx%>/static/src/js/info-management/graduation-rates-management.js"></script>
     </body>
 </html>
