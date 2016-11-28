@@ -21,4 +21,12 @@ public interface IEXEnrollingRatioService {
      */
     boolean updateEnrollingRatio(EnrollingRatio enrollingRatio);
 
+    /**
+     * 升学率排序
+     *
+     * @param ids 需排序的对象集
+     * @return
+     */
+     boolean sortRatioUpdate(Integer tnId,String ids);
+
 }
