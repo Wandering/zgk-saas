@@ -93,6 +93,21 @@ public class ManageController {
         return resultMap;
     }
 
+    /**
+     * 年级排序
+     * @param tnId
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/sort/grade/{tnId}/{ids}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map sortGrade(@PathVariable Integer tnId,@PathVariable String ids){
+        boolean result = exiGradeService.gradeSortUpdate(tnId,ids);
+
+        Map resultMap = new HashMap();
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
 
     /**
      * 删除年级
