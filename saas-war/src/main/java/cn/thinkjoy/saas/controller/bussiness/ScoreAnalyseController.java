@@ -32,6 +32,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -1080,7 +1082,31 @@ public class ScoreAnalyseController
         {
             resultList = new ArrayList<>();
         }
-        Map<String, List<Map<String, Object>>> map = new HashMap<>();
+        Collections.sort(resultList, new Comparator<Map<String, Object>>()
+        {
+            DateFormat df=new java.text.SimpleDateFormat("yyyy-MM-dd");
+            Calendar c1=Calendar.getInstance();
+            Calendar c2=Calendar.getInstance();
+
+            @Override
+            public int compare(Map<String, Object> o1, Map<String, Object> o2)
+            {
+                String t1 = o1.get("examTime") + "";
+                String t2 = o2.get("examTime") + "";
+                try
+                {
+                    c1.setTime(df.parse(t1));
+                    c2.setTime(df.parse(t2));
+                }
+                catch (ParseException e)
+                {
+                    return -1;
+                }
+
+                return c1.compareTo(c2);
+            }
+        });
+        Map<String, List<Map<String, Object>>> map = new LinkedHashMap<>();
         if(resultList.size() > 0)
         {
             for (Map<String, Object> mp : resultList)
