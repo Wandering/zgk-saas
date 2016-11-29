@@ -254,45 +254,120 @@ var ResultEvaluation = {
     },
     render: function (data) {
         var drawChart = function(){
+
             var myBarChart = echarts.init(document.getElementById('myBarChart'));
-            barOption = {
-                color: ['#3398DB'],
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            var barOption = {
+                title: {
+                    show: true,
+                    x: 'center',
+                    top: 'top',
+                    textStyle: {
+                        color: '#4A4A4A',
+                        fontWeight: 'normal',
+                        fontSize: 14
                     }
                 },
-                grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
-                    containLabel: true
+                tooltip: {
+                    trigger: 'axis'
                 },
+                //legend: {
+                //    selectedMode: false,
+                //    orient: 'horizontal',
+                //    x: 'right',
+                //    itemGap: 32,
+                //    textStyle: {
+                //        color: '#4A4A4A'
+                //    },
+                //    data:['前365名选课人数']
+                //},
+                toolbox: {
+                    show: false
+                },
+                calculable: false,
                 xAxis: [
                     {
                         type: 'category',
+                        nameTextStyle: {
+                            color: '#4A4A4A',
+                            fontSize: 14
+                        },
                         data: data.subjectLi, //科目
+                        axisLine: {
+                            lineStyle: {
+                                color: '#D8D8D8'
+                            }
+                        },
+                        splitLine: {
+                            show: false
+                        },
                         axisTick: {
-                            alignWithLabel: true
+                            show: false
                         }
                     }
                 ],
                 yAxis: [
                     {
-                        type: 'value'
+                        type: 'value',
+                        nameTextStyle: {
+                            color: '#4A4A4A',
+                            fontSize: 14
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: '#D8D8D8'
+                            }
+                        },
+                        splitLine: {
+                            show: true
+                        },
+                        axisLabel: {
+                            formatter: '{value}'
+                        },
+                        axisTick: {
+                            show: false
+                        }
                     }
                 ],
                 series: [
                     {
                         name: '分数',
                         type: 'bar',
-                        barWidth: '60%',
-                        data: data.subjectLiScores  //各科分数
+                        barWidth: 44,
+                        data: data.subjectLiScores,  //各科分数
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'top',
+                                formatter: '{c}'
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                color: '#108EE9'
+                            }
+                        }
                     }
+                    //},
+                    //{
+                    //    name: '招生计划',
+                    //    type: 'bar',
+                    //    barWidth: 44,
+                    //    data: [1683, 537, 726, 1027],
+                    //    label: {
+                    //        normal: {
+                    //            show: true,
+                    //            position: 'top',
+                    //            formatter: '{c}'
+                    //        }
+                    //    },
+                    //    itemStyle: {
+                    //        normal: {
+                    //            color: '#F5A623'
+                    //        }
+                    //    }
+                    //}
                 ]
             };
-            //渲染柱状图
             myBarChart.setOption(barOption);
         }
         //弹层展示最终结果
