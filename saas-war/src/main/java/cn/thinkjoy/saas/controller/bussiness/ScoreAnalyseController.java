@@ -1082,9 +1082,56 @@ public class ScoreAnalyseController
         {
             resultList = new ArrayList<>();
         }
+        sortByExamTime(resultList);
+        Map<String, List<Map<String, Object>>> map = new LinkedHashMap<>();
+        if(resultList.size() > 0)
+        {
+            for (Map<String, Object> mp : resultList)
+            {
+                String examTime = mp.get("examTime") + "";
+                List<Map<String, Object>> list = map.get(examTime);
+                if (null == list)
+                {
+                    list = new ArrayList<>();
+                    map.put(examTime, list);
+                }
+                list.add(mp);
+            }
+        }
+        List<Map<String, Object>> rList = new ArrayList<>();
+        setRList(className, map, rList);
+        return rList;
+    }
+
+    private void setRList(String className, Map<String, List<Map<String, Object>>> map, List<Map<String, Object>> rList)
+    {
+        for (Map.Entry<String, List<Map<String, Object>>> en: map.entrySet())
+        {
+            String examTime = en.getKey();
+            List<Map<String, Object>> list = en.getValue();
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("examTime" , examTime);
+            m.put("className" , className);
+            m.put("语文" , sortList(list, "语文", className));
+            m.put("数学" , sortList(list, "数学", className));
+            m.put("英语" , sortList(list, "英语", className));
+            m.put("物理" , sortList(list, "物理", className));
+            m.put("化学" , sortList(list, "化学", className));
+            m.put("生物" , sortList(list, "生物", className));
+            m.put("政治" , sortList(list, "政治", className));
+            m.put("地理" , sortList(list, "地理", className));
+            m.put("历史" , sortList(list, "历史", className));
+            m.put("通用技术" , sortList(list, "通用技术", className));
+            m.put("总分" , sortList(list, "总分", className));
+            rList.add(m);
+        }
+    }
+
+    private void sortByExamTime(List<Map<String, Object>> resultList)
+    {
         Collections.sort(resultList, new Comparator<Map<String, Object>>()
         {
-            DateFormat df=new java.text.SimpleDateFormat("yyyy-MM-dd");
+            DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
             Calendar c1=Calendar.getInstance();
             Calendar c2=Calendar.getInstance();
 
@@ -1106,43 +1153,6 @@ public class ScoreAnalyseController
                 return c1.compareTo(c2);
             }
         });
-        Map<String, List<Map<String, Object>>> map = new LinkedHashMap<>();
-        if(resultList.size() > 0)
-        {
-            for (Map<String, Object> mp : resultList)
-            {
-                String examTime = mp.get("examTime") + "";
-                List<Map<String, Object>> list = map.get(examTime);
-                if (null == list)
-                {
-                    list = new ArrayList<>();
-                    map.put(examTime, list);
-                }
-                list.add(mp);
-            }
-        }
-        List<Map<String, Object>> rList = new ArrayList<>();
-        for (Map.Entry<String, List<Map<String, Object>>> en: map.entrySet())
-        {
-            String examTime = en.getKey();
-            List<Map<String, Object>> list = en.getValue();
-            Map<String, Object> m = new LinkedHashMap<>();
-            m.put("examTime" , examTime);
-            m.put("className" , className);
-            m.put("语文" , sortList(list, "语文", className));
-            m.put("数学" , sortList(list, "数学", className));
-            m.put("英语" , sortList(list, "英语", className));
-            m.put("物理" , sortList(list, "物理", className));
-            m.put("化学" , sortList(list, "化学", className));
-            m.put("生物" , sortList(list, "生物", className));
-            m.put("政治" , sortList(list, "政治", className));
-            m.put("地理" , sortList(list, "地理", className));
-            m.put("历史" , sortList(list, "历史", className));
-            m.put("通用技术" , sortList(list, "通用技术", className));
-            m.put("总分" , sortList(list, "总分", className));
-            rList.add(m);
-        }
-        return rList;
     }
 
     private int sortList(List<Map<String, Object>> list, final String orderBy, String className)
