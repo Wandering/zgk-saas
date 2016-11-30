@@ -14,7 +14,6 @@ GradeManagement.prototype = {
         Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {
             'tnId': tnId
         }, function (res) {
-            //console.log(res)
             if (res.rtnCode == "0000000") {
                 that.renderList(res);
             }
@@ -23,7 +22,6 @@ GradeManagement.prototype = {
         }, true);
     },
     renderList: function (data) {
-        console.log(data);
         if (data.rtnCode == "0000000") {
             var gradeArr = [];
             $.each(data.bizData.grades, function (i, v) {
@@ -112,7 +110,6 @@ GradeManagement.prototype = {
                 $('td.index', ui.item.parent()).each(function (i) {
                     $(this).html(i + 1);
                     ids.push($(this).attr('indexid'));
-                    console.info($(this));
                 });
                 ids = ids.join('-');///manage/sort/grade/{tnId}/{ids}.do
                 Common.ajaxFun('/manage/sort/grade/' + tnId + '/'+ ids +'.do', 'POST', {}, function (res) {
@@ -162,7 +159,6 @@ $('body').on('click','.save-btn',function () {
         Common.ajaxFun('/manage/grade/add/'+ tnId +'.do', 'POST',{
             gradeName:gradeName
         }, function (res) {
-            console.log(res)
             if (res.rtnCode == "0000000") {
                 if(res.bizData.result=='SUCCESS'){
                     $('#grade-list').html('');
@@ -177,7 +173,6 @@ $('body').on('click','.save-btn',function () {
         Common.ajaxFun('/manage/grade/modify/'+ tnId +'/'+ gradeid +'.do', 'POST',{
             gradeName:gradeName
         }, function (res) {
-            console.log(res)
             if (res.rtnCode == "0000000") {
                 if(res.bizData.result=='SUCCESS'){
                     $('#grade-list').html('');
@@ -196,7 +191,6 @@ $('#modify-btn').on('click',function () {
     var chknum = $(".check-template :checkbox:checked").size();
     var checkV = $(".check-template :checkbox:checked").attr('gradeid');
     var gradename = $(".check-template :checkbox:checked").attr('gradename');
-    console.log(checkV);
     if(chknum!='1'){
         layer.tips('修改只能选择一项!',that);
         return false;

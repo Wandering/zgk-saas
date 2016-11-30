@@ -175,7 +175,7 @@ public class DataQueryController {
     @ApiDesc(value = "获取分数线", owner = "杨永平")
     @RequestMapping(value = "/getGkAdmissionLineList",method = RequestMethod.GET)
     @ResponseBody
-    public BizData4Page<GkAdmissionLine> getGkAdmissionLineList(@ApiParam(param="queryparam", desc="标题模糊查询",required = false) @RequestParam(required = false) String queryparam,
+    public BizData4Page<GkAdmissionLine> getGkAdmissionLineList(@ApiParam(param="universityName", desc="标题模糊查询",required = false) @RequestParam(required = false) String universityName,
                                                                 @ApiParam(param="year", desc="年份",required = false) @RequestParam(required = false) String year,
                                                                 @ApiParam(param="areaId", desc="区域ID",required = false) @RequestParam(required = false) String areaId,
                                                                 @ApiParam(param="property", desc="院校特征",required = false) @RequestParam(required = false) String property,
@@ -194,8 +194,8 @@ public class DataQueryController {
             QueryUtil.setMapOp(map, "enrollingyear", "=", year);
         }
 //        院校名称 模糊
-        if(queryparam!=null &&!"".equals(queryparam)) {
-            QueryUtil.setMapOp(map, "universityname", "like", "%" + queryparam + "%");
+        if(universityName!=null &&!"".equals(universityName)) {
+            QueryUtil.setMapOp(map, "universityname", "like", "%" + universityName + "%");
         }
 //        地区
         if(areaId!=null &&!"".equals(areaId)) {
