@@ -53,6 +53,17 @@ var SpecialtyInfo = {
             var cId = $(this).attr('categoryid');
             that.getCategoryMajoredList(cId);
         });
+        //搜索
+        $(document).on('click','.search-btn', function () {
+            Common.ajaxFun('/data/getCategoryMajoredList.do', 'GET', {'majoredName': $.trim($('.search-input').val())}, function (res) {
+                if (res.rtnCode == "0000000") {
+                    var template = Handlebars.compile($('#sub-majored-category-tpl').html());
+                    $('#sub-majored-category').html(template(res.bizData));
+                }else{
+                    layer.msg(res.msg);
+                }
+            });
+        });
     }
 }
 SpecialtyInfo.init();
@@ -241,6 +252,18 @@ var SpecialtyDetail = {
             that.paramsData.page = nowPage + 1;
             that.getMajorOpenUniversityList();
         });
+
+        // //搜索按钮
+        // $(document).on('click', '.search-btn', function () {
+        //     if($(this).attr('pid')){
+        //         var pid = $(this).attr('pid');
+        //         layerHtmlFn(pid)
+        //     }else{
+        //         layer.msg('没有搜索到');
+        //     }
+        // })
+
+
 
     }
 }
