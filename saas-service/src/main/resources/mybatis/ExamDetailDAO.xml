@@ -1140,7 +1140,7 @@ selectList
         </if>
     </select>
 
-    <select id="getAvgScoresForClass" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
+    <select id="getAvgScoresForClass" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         select d.className,e.examTime, ROUND(AVG(IF(d.yuWenScore='', null, d.yuWenScore)), 2) 语文,
         ROUND(AVG(IF(d.shuXueScore='', null, d.shuXueScore)), 2) 数学,
         ROUND(AVG(IF(d.yingYuScore='', null, d.yingYuScore)), 2) 英语,

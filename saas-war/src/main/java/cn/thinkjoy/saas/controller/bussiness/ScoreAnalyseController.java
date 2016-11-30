@@ -32,6 +32,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -1080,7 +1082,8 @@ public class ScoreAnalyseController
         {
             resultList = new ArrayList<>();
         }
-        Map<String, List<Map<String, Object>>> map = new HashMap<>();
+        sortByExamTime(resultList);
+        Map<String, List<Map<String, Object>>> map = new LinkedHashMap<>();
         if(resultList.size() > 0)
         {
             for (Map<String, Object> mp : resultList)
@@ -1096,6 +1099,12 @@ public class ScoreAnalyseController
             }
         }
         List<Map<String, Object>> rList = new ArrayList<>();
+        setRList(className, map, rList);
+        return rList;
+    }
+
+    private void setRList(String className, Map<String, List<Map<String, Object>>> map, List<Map<String, Object>> rList)
+    {
         for (Map.Entry<String, List<Map<String, Object>>> en: map.entrySet())
         {
             String examTime = en.getKey();
@@ -1116,7 +1125,34 @@ public class ScoreAnalyseController
             m.put("总分" , sortList(list, "总分", className));
             rList.add(m);
         }
-        return rList;
+    }
+
+    private void sortByExamTime(List<Map<String, Object>> resultList)
+    {
+        Collections.sort(resultList, new Comparator<Map<String, Object>>()
+        {
+            DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
+            Calendar c1=Calendar.getInstance();
+            Calendar c2=Calendar.getInstance();
+
+            @Override
+            public int compare(Map<String, Object> o1, Map<String, Object> o2)
+            {
+                String t1 = o1.get("examTime") + "";
+                String t2 = o2.get("examTime") + "";
+                try
+                {
+                    c1.setTime(df.parse(t1));
+                    c2.setTime(df.parse(t2));
+                }
+                catch (ParseException e)
+                {
+                    return -1;
+                }
+
+                return c1.compareTo(c2);
+            }
+        });
     }
 
     private int sortList(List<Map<String, Object>> list, final String orderBy, String className)
