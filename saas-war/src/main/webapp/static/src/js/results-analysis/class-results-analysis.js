@@ -244,7 +244,7 @@ ClassResultsAnalysis.prototype = {
             },
             tooltip: {
                 trigger: 'item',
-                formatter: '{a} <br/>{b} : {c}'
+                formatter: '{b} <br/>{a} : {c}'
             },
             legend: {
                 left: 'left'
@@ -260,11 +260,12 @@ ClassResultsAnalysis.prototype = {
             },
             grid: {
                 left: '3%',
-                right: '4%',
+                right: '10%',
                 bottom: '3%',
                 containLabel: true
             },
             yAxis: {
+                scale:false,
                 type: 'value',
                 min:Array.min(totalScoreData),
                 max:Array.max(totalScoreData)
@@ -307,11 +308,12 @@ ClassResultsAnalysis.prototype = {
             },
             grid: {
                 left: '3%',
-                right: '4%',
+                right: '10%',
                 bottom: '3%',
                 containLabel: true
             },
             yAxis: {
+                scale:false,
                 type: 'value',
                 min:Array.min(arrMaxMin),
                 max:Array.max(arrMaxMin)
@@ -360,7 +362,7 @@ ClassResultsAnalysis.prototype = {
             },
             grid: {
                 left: '3%',
-                right: '6%',
+                right: '10%',
                 bottom: '3%',
                 containLabel: true
             },
@@ -424,7 +426,8 @@ ClassResultsAnalysis.prototype = {
                 type: 1,
                 title: '变化人数详情',
                 offset: 'auto',
-                area: ['362px', '350px'],
+                // area: ['362px', '350px'],
+                area: ['362px', 'auto'],
                 content: studentChangeTable
             });
         });
@@ -475,7 +478,8 @@ ClassResultsAnalysis.prototype = {
                 type: 1,
                 title: '个人成绩变化趋势',
                 offset: 'auto',
-                area: ['800px', '500px'],
+                area: ['800px','auto'],
+                // area: ['800px', '400'],
                 content: studentChart,
                 success:function(){
                     that.studentChartTab();
@@ -593,22 +597,22 @@ ClassResultsAnalysis.prototype = {
             },
             tooltip: {
                 trigger: 'item',
-                formatter: '{a} <br/>{b} : {c}'
+                formatter: '{b} <br/>{a} : {c}'
             },
             legend: {
                 left: 'left'
             },
             xAxis: {
                 type: 'category',
-                name: 'x',
+                name: '考试时间',
                 splitLine: {show: false},
                 //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
-                data: ["2016-02-02", "2016-03-03", "2016-04-07", "2016-05-10", "2016-06-14"]
-                //data: dateData
+                // data: ["2016-02-02", "2016-03-03", "2016-04-07", "2016-05-10", "2016-06-14"]
+                data: dateData
             },
             grid: {
                 left: '3%',
-                right: '4%',
+                right: '10%',
                 bottom: '3%',
                 containLabel: true
             },
@@ -619,7 +623,7 @@ ClassResultsAnalysis.prototype = {
             },
             series: [
                 {
-                    name: '3的指数',
+                    name: '班级平均分排名',
                     type: 'line',
                     //data: [1, 3, 9, 27, 81, 247, 741, 2223, 6669]
                     data: totalScoreData
@@ -640,7 +644,7 @@ ClassResultsAnalysis.prototype = {
             },
             tooltip: {
                 trigger: 'item',
-                formatter: '{a} <br/>{b} : {c}'
+                formatter: '{b} <br/>{a} : {c}'
             },
             legend: {
                 left: 'center',
@@ -656,7 +660,7 @@ ClassResultsAnalysis.prototype = {
             },
             grid: {
                 left: '3%',
-                right: '4%',
+                right: '10%',
                 bottom: '3%',
                 containLabel: true
             },

@@ -1,5 +1,7 @@
 var tnId = Common.cookie.getCookie('tnId');
-
+var globalParam = {
+    $oldExamName:''
+}
 function ResultsManagementFun() {
     this.init();
 }
@@ -391,13 +393,14 @@ $(function () {
         }, function (res) {
             layer.msg(res.msg);
         },true);
-
+        if(globalParam.$oldExamName == $('#examName').val()){
+            layer.closeAll();
+            return false;
+        }
         if(flg==true){
             layer.tips('考试名称已经存在,请修改考试名称后再提交!', $('#examName'));
             return false;
         }
-
-
         if (examDate == "") {
             layer.tips('请选择考试时间!', $('#exam-date'));
             return false;
@@ -455,6 +458,7 @@ $(function () {
             layer.tips('修改只能选择一项', $(this));
             return false;
         }
+
         var resultsChecked = $('#results-tbody input:checked');
         var id = resultsChecked.attr('id');
         var examName = resultsChecked.attr('examName');
@@ -462,6 +466,7 @@ $(function () {
         var uploadFilePath = resultsChecked.attr('uploadFilePath');
         var radioV = $('input[name="results-radio"]:checked').val();
         ResultsManagementIns.uploadResults(radioV,id, examName, examTime, uploadFilePath);
+        globalParam.$oldExamName = $('#examName').val();
     });
 
     // 删除
@@ -647,6 +652,10 @@ $(function () {
                 layer.tips('请输入班级排名!', $('.top-class'));
                 return false;
             }
+            // if (!isNaN(topClass)) {
+            //     layer.tips('请输入正确的数字!', $('.top-class'));
+            //     return false;
+            // }
             if (!re.test(topClass) || topClass > 1000) {
                 layer.tips('请输入正确的数字!', $('.top-class'));
                 return false;
@@ -655,6 +664,10 @@ $(function () {
                 layer.tips('请输入年级排名!', $('.top-grade'));
                 return false;
             }
+            // if (!isNaN(topGrade)) {
+            //     layer.tips('请输入正确的数字!', $('.top-grade'));
+            //     return false;
+            // }
             if (!re.test(topGrade) || topGrade > 5000) {
                 layer.tips('请输入正确的数字!', $('.top-grade'));
                 return false;
