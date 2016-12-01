@@ -267,8 +267,9 @@ ClassResultsAnalysis.prototype = {
             yAxis: {
                 scale:false,
                 type: 'value',
-                min:Array.min(totalScoreData),
-                max:Array.max(totalScoreData)
+                // min:Array.min(totalScoreData),
+                // max:Array.max(totalScoreData),
+                // minInterval:1
             },
             series: [
                 {
@@ -377,8 +378,13 @@ ClassResultsAnalysis.prototype = {
             ],
             yAxis: [
                 {
+                    name: '上线人数',
+
+                    scale:false,
                     type: 'value',
-                    name: '上线人数'
+                    // min:Array.min(totalScoreData),
+                    // max:Array.max(totalScoreData),
+                    // minInterval:1
                 }
             ],
             series: [
