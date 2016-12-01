@@ -1515,7 +1515,7 @@ public class ScoreAnalyseController
 
     @RequestMapping("/getOverLineDetailForClassTwo")
     @ResponseBody
-    public List<Map<String, Object>> getOverLineDetailForClassTwo(
+    public Map<String, List> getOverLineDetailForClassTwo(
         @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "className", required = true) String className,
@@ -1538,8 +1538,27 @@ public class ScoreAnalyseController
         {
             throw new BizException("1100012", "该年级只有一次成绩录入！！");
         }
+        List<Map<String, Object>> resultList1 = new ArrayList<>();
+        float batchOneNumber = Float.parseFloat(line);
+        List<ExamDetail> detailLists = examDetailService.findList("examId", examIds.get(0));
+        for (ExamDetail detail : detailLists)
+        {
+            String clazzName = detail.getClassName();
+            if (className.equals(clazzName))
+            {
+                int gradeRank = Integer.parseInt(detail.getGradeRank());
+                if (gradeRank <= batchOneNumber)
+                {
+                    Map<String, Object> param = new HashMap<>();
+                    param.put("学生姓名", detail.getStudentName());
+                    param.put("班级排名", detail.getClassRank());
+                    param.put("成绩", detail.getTotleScore());
+                    param.put("年级排名", detail.getGradeRank());
+                    resultList1.add(param);
+                }
+            }
+        }
         float scoreLine = Float.parseFloat(line);
-        String lastExamId = examIds.get(0);
         float lineScore = 0;
         Map<String, ExamDetail> lastExamDetailMap = new LinkedHashMap<>();
         Set<ExamDetail> details = new TreeSet<>();
@@ -1627,7 +1646,10 @@ public class ScoreAnalyseController
                 resultList.add(m);
             }
         }
-        return resultList;
+        Map<String, List> resultMap = new HashMap<>();
+        resultMap.put("overLineList", resultList1);
+        resultMap.put("mostAttendList", resultList);
+        return resultMap;
     }
 
     @RequestMapping("/getMostAdvancedDetailForClass")
