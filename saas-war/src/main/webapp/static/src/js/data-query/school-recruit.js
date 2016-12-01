@@ -154,6 +154,9 @@ var SchoolRecruit = {
 
         //招生年份
         $(document).on('click', '#year-list span', function () {
+            $(this).addClass('active').siblings().removeClass('active');
+
+
             $('#school-admission-plan').html('');
             $('#recruit-load-more').hide();
             ('#no-data').remove();
@@ -169,6 +172,8 @@ var SchoolRecruit = {
 
         //录取批次
         $(document).on('click', '#batch-list span', function () {
+            $(this).addClass('active').siblings().removeClass('active');
+
             $('#school-admission-plan').html('');
             $('#recruit-load-more').hide();
             $('#no-data').remove();
@@ -181,6 +186,8 @@ var SchoolRecruit = {
 
         //院校特征
         $(document).on('click', '#feature-list span', function () {
+            $(this).addClass('active').siblings().removeClass('active');
+
             $('#school-admission-plan').html('');
             $('#recruit-load-more').hide();
             $('#no-data').remove();
@@ -212,6 +219,15 @@ var SchoolRecruit = {
             }).hide();
             that.fetchSchoolEnroll(that.params, 'more')
         })
+
+        //搜索
+        $(document).on('click','.search-btn', function () {
+            $('#school-admission-plan').html('');
+            $('#recruit-load-more').hide();
+            $('#no-data').remove();
+            that.params.universityName = $.trim($('.search-input').val());
+            that.fetchSchoolEnroll(that.params, 'more')
+        });
     }
 }
 SchoolRecruit.init();

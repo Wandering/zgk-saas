@@ -242,10 +242,13 @@ var SchoolAds = {
         })
 
         //搜索
-        $('.search-input').unbind('input propertychange').bind('input propertychange', function () {
-
+        $(document).on('click','.search-btn', function () {
+            $('#school-admission-plan').html('');
+            $('#admission-load-more').hide();
+            $('#no-data').remove();
+            that.params.universityName = $.trim($('.search-input').val());
+            that.fetchSchoolEnroll(that.params);
         });
-
     },
 }
 SchoolAds.init();
