@@ -1515,7 +1515,7 @@ public class ScoreAnalyseController
 
     @RequestMapping("/getOverLineDetailForClassTwo")
     @ResponseBody
-    public List<Map<String, Object>> getOverLineDetailForClassTwo(
+    public List<Map<String, Object>>  getOverLineDetailForClassTwo(
         @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "className", required = true) String className,
@@ -1528,16 +1528,16 @@ public class ScoreAnalyseController
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("tnId", tnId);
         paramMap.put("grade", grade);
-        paramMap.put("limitNumber", 1);
+        paramMap.put("limitNumber", 3);
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
         if (null == examIds || examIds.size() == 0)
         {
             throw new BizException("1100011", "该年级没有成绩录入！！");
         }
-        List<Map<String, Object>> resultList = new ArrayList<>();
+        List<Map<String, Object>> resultList1 = new ArrayList<>();
         float batchOneNumber = Float.parseFloat(line);
-        List<ExamDetail> detailList = examDetailService.findList("examId", examIds.get(0));
-        for (ExamDetail detail : detailList)
+        List<ExamDetail> detailLists = examDetailService.findList("examId", examIds.get(0));
+        for (ExamDetail detail : detailLists)
         {
             String clazzName = detail.getClassName();
             if (className.equals(clazzName))
@@ -1550,12 +1550,130 @@ public class ScoreAnalyseController
                     param.put("班级排名", detail.getClassRank());
                     param.put("成绩", detail.getTotleScore());
                     param.put("年级排名", detail.getGradeRank());
-                    resultList.add(param);
+                    resultList1.add(param);
                 }
+            }
+        }
+
+        return resultList1;
+    }
+
+    @RequestMapping("/getMostAttendDetailForClassTwo")
+    @ResponseBody
+    public List<Map<String, Object>> getMostAttendDetailForClassTwo(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "className", required = true) String className,
+        @RequestParam(value = "line", required = true) final String line)
+    {
+        if(!StringUtils.isNumeric(line))
+        {
+            throw new BizException("1100221", "请设置正确的关注位次线！");
+        }
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
+        paramMap.put("grade", grade);
+        paramMap.put("limitNumber", 3);
+        List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
+        if (null == examIds || examIds.size() == 0)
+        {
+            throw new BizException("1100011", "该年级没有成绩录入！！");
+        }
+        if (examIds.size() == 1)
+        {
+            throw new BizException("1100012", "该年级只有一次成绩录入！！");
+        }
+        float scoreLine = Float.parseFloat(line);
+        float lineScore = 0;
+        Map<String, ExamDetail> lastExamDetailMap = new LinkedHashMap<>();
+        Set<ExamDetail> details = new TreeSet<>();
+        for (int i = 1; i <= examIds.size(); i++)
+        {
+            String examId = examIds.get(i - 1);
+            List<ExamDetail> detailList = examDetailService.findList("examId", examId);
+            for (ExamDetail detail : detailList)
+            {
+                if (i == 1)
+                {
+                    lastExamDetailMap.put(detail.getClassName() + "@" + detail.getStudentName(), detail);
+                }
+                int gradeRank = Integer.parseInt(detail.getGradeRank());
+                if (gradeRank == scoreLine)
+                {
+                    lineScore = Float.parseFloat(detail.getTotleScore());
+                }
+            }
+            Map<String, String> params = new HashMap<>();
+            params.put("examId", examId);
+            for (ExamDetail detail : detailList)
+            {
+                if(className.equals(detail.getClassName()))
+                {
+                    float totalScore = Float.parseFloat(detail.getTotleScore());
+                    ExamDetail lastDetail = lastExamDetailMap.get(detail.getClassName() + "@" + detail.getStudentName());
+                    if (isBigger(lineScore, totalScore) && !isBigger((lineScore - 20),totalScore))
+                    {
+                        details.add(lastDetail);
+                    }
+                }
+            }
+        }
+        List<Map<String, String>> allList = getMostAttentionInfo(tnId, grade);
+        Map<String, Map<String, String>> weakCourseMap = new HashMap<>();
+        for (Map<String, String> map : allList)
+        {
+            String clazzName = map.get("className") + "";
+            if (className.equals(clazzName))
+            {
+                weakCourseMap.put(map.get("studentName") + "", map);
+            }
+        }
+        Map<String, List<Integer>> examScoreRatioMap = new LinkedHashMap<>();
+        setScoreList(examIds, examScoreRatioMap);
+        advancedScoreSet = new TreeSet<>();
+        Map<String, Map<String, Object>> rMap  = new HashMap<>();
+        for (Map.Entry<String, List<Integer>> entry : examScoreRatioMap.entrySet())
+        {
+            String examDetailInfo = entry.getKey();
+            String[] values = examDetailInfo.split("@");
+            if (values.length < 2)
+            {
+                continue;
+            }
+            String studentName = values[1];
+            String clazzName = values[0];
+            Map<String, Object> params = new LinkedHashMap<>();
+            params.put("className", clazzName);
+            params.put("studentName", studentName);
+            Map<String, String> map = weakCourseMap.get(studentName);
+            if (null != map)
+            {
+                params.put("weakCourseOne", map.get("weakCourseOne"));
+                params.put("weakCourseTwo", map.get("weakCourseTwo"));
+                params.put("gradeRank", map.get("gradeRank"));
+                params.put("classRank", map.get("classRank"));
+                rMap.put(studentName, params);
+            }
+        }
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        for (ExamDetail detail: details)
+        {
+            String studentName = detail.getStudentName();
+            Map<String, Object> params = rMap.get(studentName);
+            if(null != params && !params.isEmpty())
+            {
+                Map<String, Object> m = new LinkedHashMap<>();
+                m.put("studentName", studentName);
+                m.put("gradeRank", detail.getGradeRank());
+                m.put("classRank", detail.getClassRank());
+                m.put("weakCourseOne", params.get("weakCourseOne"));
+                m.put("weakCourseTwo", params.get("weakCourseTwo"));
+                resultList.add(m);
             }
         }
         return resultList;
     }
+
 
     @RequestMapping("/getMostAdvancedDetailForClass")
     @ResponseBody
@@ -1670,7 +1788,6 @@ public class ScoreAnalyseController
                     }
                 }
             }
-
         }
         return resultMap.get(className);
     }
