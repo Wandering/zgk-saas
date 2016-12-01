@@ -1515,7 +1515,52 @@ public class ScoreAnalyseController
 
     @RequestMapping("/getOverLineDetailForClassTwo")
     @ResponseBody
-    public Map<String, List> getOverLineDetailForClassTwo(
+    public List<Map<String, Object>>  getOverLineDetailForClassTwo(
+        @RequestParam(value = "tnId", required = true) String tnId,
+        @RequestParam(value = "grade", required = true) String grade,
+        @RequestParam(value = "className", required = true) String className,
+        @RequestParam(value = "line", required = true) final String line)
+    {
+        if(!StringUtils.isNumeric(line))
+        {
+            throw new BizException("1100221", "请设置正确的关注位次线！");
+        }
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
+        paramMap.put("grade", grade);
+        paramMap.put("limitNumber", 3);
+        List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
+        if (null == examIds || examIds.size() == 0)
+        {
+            throw new BizException("1100011", "该年级没有成绩录入！！");
+        }
+        List<Map<String, Object>> resultList1 = new ArrayList<>();
+        float batchOneNumber = Float.parseFloat(line);
+        List<ExamDetail> detailLists = examDetailService.findList("examId", examIds.get(0));
+        for (ExamDetail detail : detailLists)
+        {
+            String clazzName = detail.getClassName();
+            if (className.equals(clazzName))
+            {
+                int gradeRank = Integer.parseInt(detail.getGradeRank());
+                if (gradeRank <= batchOneNumber)
+                {
+                    Map<String, Object> param = new HashMap<>();
+                    param.put("学生姓名", detail.getStudentName());
+                    param.put("班级排名", detail.getClassRank());
+                    param.put("成绩", detail.getTotleScore());
+                    param.put("年级排名", detail.getGradeRank());
+                    resultList1.add(param);
+                }
+            }
+        }
+
+        return resultList1;
+    }
+
+    @RequestMapping("/getMostAttendDetailForClassTwo")
+    @ResponseBody
+    public List<Map<String, Object>> getMostAttendDetailForClassTwo(
         @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade,
         @RequestParam(value = "className", required = true) String className,
@@ -1537,26 +1582,6 @@ public class ScoreAnalyseController
         if (examIds.size() == 1)
         {
             throw new BizException("1100012", "该年级只有一次成绩录入！！");
-        }
-        List<Map<String, Object>> resultList1 = new ArrayList<>();
-        float batchOneNumber = Float.parseFloat(line);
-        List<ExamDetail> detailLists = examDetailService.findList("examId", examIds.get(0));
-        for (ExamDetail detail : detailLists)
-        {
-            String clazzName = detail.getClassName();
-            if (className.equals(clazzName))
-            {
-                int gradeRank = Integer.parseInt(detail.getGradeRank());
-                if (gradeRank <= batchOneNumber)
-                {
-                    Map<String, Object> param = new HashMap<>();
-                    param.put("学生姓名", detail.getStudentName());
-                    param.put("班级排名", detail.getClassRank());
-                    param.put("成绩", detail.getTotleScore());
-                    param.put("年级排名", detail.getGradeRank());
-                    resultList1.add(param);
-                }
-            }
         }
         float scoreLine = Float.parseFloat(line);
         float lineScore = 0;
@@ -1646,11 +1671,9 @@ public class ScoreAnalyseController
                 resultList.add(m);
             }
         }
-        Map<String, List> resultMap = new HashMap<>();
-        resultMap.put("overLineList", resultList1);
-        resultMap.put("mostAttendList", resultList);
-        return resultMap;
+        return resultList;
     }
+
 
     @RequestMapping("/getMostAdvancedDetailForClass")
     @ResponseBody
