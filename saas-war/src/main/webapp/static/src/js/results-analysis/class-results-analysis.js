@@ -290,9 +290,12 @@ ClassResultsAnalysis.prototype = {
                     fontSize:12
                 }
             },
+            //tooltip: {
+            //    trigger: 'item',
+            //    formatter: '{a} <br/>{b} : {c}'
+            //},
             tooltip: {
-                trigger: 'item',
-                formatter: '{a} <br/>{b} : {c}'
+                trigger: 'axis'
             },
             legend: {
                 left: 'center',
@@ -313,8 +316,8 @@ ClassResultsAnalysis.prototype = {
             },
             yAxis: {
                 type: 'value',
-                min:Array.min(arrMaxMin),
-                max:Array.max(arrMaxMin)
+                min: Array.min(arrMaxMin),
+                max: Array.max(arrMaxMin)
             },
             series:datas
         };
@@ -608,7 +611,7 @@ ClassResultsAnalysis.prototype = {
             },
             grid: {
                 left: '3%',
-                right: '4%',
+                right: '6%',
                 bottom: '3%',
                 containLabel: true
             },
@@ -656,7 +659,7 @@ ClassResultsAnalysis.prototype = {
             },
             grid: {
                 left: '3%',
-                right: '4%',
+                right: '6%',
                 bottom: '3%',
                 containLabel: true
             },
