@@ -140,8 +140,9 @@ function enrollUniversityMajorTotal (majorCount, batchNames, batchs) {
                 color: ['#A98FCB', '#EF8B87', '#C0DD7D', '#65A1DD'],
                 label: {
                     normal: {
-                        show: false,
-                        position: 'inner'
+                        show: true,
+                        position: 'inner',
+                        formatter: "{d}%"
                     }
                 },
                 labelLine: {

@@ -573,7 +573,8 @@ function majorTypeAnalysis (type, datas) {
                 label: {
                     normal: {
                         show: false,
-                        position: 'inner'
+                        position: 'inner',
+                        formatter: "{d}%"
                     }
                 },
                 labelLine: {
@@ -655,8 +656,9 @@ function enrollUniversityTotal (majorCount, batchs, batchNames) {
                 color: ['#A98FCB', '#EF8B87', '#C0DD7D', '#65A1DD'],
                 label: {
                     normal: {
-                        show: false,
-                        position: 'inner'
+                        show: true,
+                        position: 'inner',
+                        formatter: "{d}%"
                     }
                 },
                 labelLine: {
