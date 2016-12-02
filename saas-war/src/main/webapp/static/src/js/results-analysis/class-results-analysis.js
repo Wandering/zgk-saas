@@ -730,7 +730,7 @@ ClassResultsAnalysis.prototype = {
             if (res.rtnCode == "0000000") {
                 $('#ranking-sel').html('');
                 var rankingSel = [];
-                rankingSel.push('<option value="">选择进步名次</option>');
+                rankingSel.push('<option stepStart="" stepEnd="">选择进步名次</option>');
                 $.each(res.bizData,function(i,v){
                     rankingSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="'+ v.stepEnd +'" value="">'+ v.stepStart + "-" + v.stepEnd +'</option>');
                 });
@@ -777,7 +777,7 @@ ClassResultsAnalysis.prototype = {
             if (res.rtnCode == "0000000") {
                 $('#gradeTop-sel').html('');
                 var gradeTopSel = [];
-                gradeTopSel.push('<option value="">选择年级排名</option>');
+                gradeTopSel.push('<option stepStart="" stepEnd="">选择年级排名</option>');
                 $.each(res.bizData,function(i,v){
                     gradeTopSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="'+ v.stepEnd +'" value="">'+ v.stepStart + "-" + v.stepEnd +'</option>');
                 });
