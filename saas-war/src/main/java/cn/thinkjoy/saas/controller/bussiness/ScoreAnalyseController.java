@@ -300,6 +300,7 @@ public class ScoreAnalyseController
             exam.setId(existExam.getId());
             exam.setCreateDate(existExam.getCreateDate());
         }
+        exam.setOriginFileName(RedisUtil.getInstance().get(exam.getUploadFilePath())+"");
         exam.setCreateDate(TimeUtil.getTimeStamp("yyyy-MM-dd HH:mm:ss"));
         examService.add(exam);
         saveExcelData(exam, examService, headerList);
