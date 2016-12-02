@@ -85,6 +85,7 @@ SubjectAnalysis.prototype = {
                     $('.major-type-bottom tbody tr td').eq(i).html('-');
                 }
                 var data = res.bizData.analysisDiscipline;
+                $('#major-type-count').html('共计' + data.length + '个专业门类:');
                 var types = {
                     type: [],
                     datas: [],
@@ -515,10 +516,10 @@ function batchAnalysis (batchs, values) {
                 label: {
                     normal: {
                         show: true,
-                        position: 'insideRight',
+                        position: 'right',
                         formatter: '{c}人',
                         textStyle: {
-                            fontSize: 14
+                            fontSize: 12
                         }
                     }
                 }
@@ -530,6 +531,10 @@ function batchAnalysis (batchs, values) {
 
 //按专业类别分析
 function majorTypeAnalysis (type, datas) {
+    console.info('数据显示: ' + type);
+    var type0 = type[0];
+    var type1 = type[1];
+    var type2 = type[2];
     var subjectPieChart = echarts.init(document.getElementById('subjectPieChart'));
     var subjectPieOption = {
         title : {
@@ -568,7 +573,8 @@ function majorTypeAnalysis (type, datas) {
                 label: {
                     normal: {
                         show: false,
-                        position: 'inner'
+                        position: 'inner',
+                        formatter: "{d}%"
                     }
                 },
                 labelLine: {
@@ -650,8 +656,9 @@ function enrollUniversityTotal (majorCount, batchs, batchNames) {
                 color: ['#A98FCB', '#EF8B87', '#C0DD7D', '#65A1DD'],
                 label: {
                     normal: {
-                        show: false,
-                        position: 'inner'
+                        show: true,
+                        position: 'inner',
+                        formatter: "{d}%"
                     }
                 },
                 labelLine: {

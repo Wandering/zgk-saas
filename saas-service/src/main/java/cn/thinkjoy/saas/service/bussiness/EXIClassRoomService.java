@@ -59,5 +59,10 @@ public interface EXIClassRoomService {
      */
     boolean insertClassRoom(ClassRooms classRooms);
 
+    /**
+     * 教室排序
+     * @return
+     */
+    boolean sortRoomOrderUpdate(Integer tnId,String ids);
 
 }

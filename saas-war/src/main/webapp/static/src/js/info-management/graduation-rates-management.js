@@ -11,6 +11,7 @@ NumberManagement.prototype = {
     constructor: NumberManagement,
     init: function () {
         this.getNumber();
+        this.tableDrag();
     },
     getNumber: function () {
         var that = this;
@@ -21,7 +22,7 @@ NumberManagement.prototype = {
                 $.each(data, function (i, k) {
                     ratioHtml.push('<tr rowid="' + k.id + '">');
                     ratioHtml.push('<td class="center"><label><input type="checkbox" rid="' + k.id + '" class="ace" /><span class="lbl"></span></label></td>');
-                    ratioHtml.push('<td class="center">' + (i+1) + '</td>');
+                    ratioHtml.push('<td class="center index" indexid="' + k.id + '">' + (k.ratioOrder + 1) + '</td>');
                     if (k.year) {
                         ratioHtml.push('<td class="center">' + k.year + '</td>');
                     } else {
@@ -33,7 +34,7 @@ NumberManagement.prototype = {
                     ratioHtml.push('<td class="center">' + k.batch3enrolls + '</td>');
                     ratioHtml.push('<td class="center">' + k.batch4enrolls + '</td>');
                 });
-                 $('#ratio-manage-list').html(ratioHtml.join(''));
+                $('#ratio-manage-list').html(ratioHtml.join(''));
             }
         }, function (res) {
             layer.msg("出错了");
@@ -121,6 +122,43 @@ NumberManagement.prototype = {
                 }
             })(i);
         }
+    },
+    tableDrag: function () {
+        var that = this;
+        //表格排序
+        var fixHelperModified = function (e, tr) {
+                var $originals = tr.children();
+                var $helper = tr.clone();
+                $helper.children().each(function (index) {
+                    $(this).width($originals.eq(index).width());
+                });
+                return $helper;
+            },
+            updateIndex = function (e, ui) {
+                var ids = [];
+                $('td.index', ui.item.parent()).each(function (i) {
+                    $(this).html(i + 1);
+                    ids.push($(this).attr('indexid'));
+                    console.info($(this));
+                });
+                ids = ids.join('-');///manage/sort/enrollingRatio/{tnId}/{ids}.do
+                Common.ajaxFun('/manage/sort/enrollingRatio/' + tnId + '/'+ ids +'.do', 'POST', {}, function (res) {
+                    if (res.rtnCode == "0000000") {
+                        if (res.bizData.result) {
+                            layer.msg('排序成功', {time: 1000});
+                        }else{
+                            layer.msg(res.bizData.result);
+                        }
+                    }
+                }, function (res) {
+                    layer.msg("出错了", {time: 1000});
+                }, true, null);
+            };
+        $("#ratio-manage-list").sortable({
+            helper: fixHelperModified,
+            stop: updateIndex,
+            axis: "y"
+        }).disableSelection();
     }
 };
 

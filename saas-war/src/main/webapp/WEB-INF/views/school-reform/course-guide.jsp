@@ -100,7 +100,7 @@
                                     <div id="subjectLineChart" style="width: 100%;height: 250px;"></div>
                                 </div>
                                 <div class="major-type-analysis">
-                                    <span id="major-type-count">共计9个专业门类:</span>
+                                    <span id="major-type-count">共计0个专业门类:</span>
                                     <div id="major-type-list" class="major-type-box">
                                         <table class="major-type-top">
                                             <thead>

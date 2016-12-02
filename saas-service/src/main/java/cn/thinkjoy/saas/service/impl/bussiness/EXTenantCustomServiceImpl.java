@@ -167,6 +167,8 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
                     case EnumUtil.TEACHER_EDUCATION_MAJOYTYPE://教师-所教科目
                         value=EnumUtil.TEACHER_EDUCATION_MAJOYTYPE_ARR;
                         break;
+                    case EnumUtil.STUDENT_EDUCATION_MAJOYTYPE://学生-选择科目
+                        value=EnumUtil.STUDENT_EDUCATION_MAJOYTYPE_ARR;
 
                 }
 

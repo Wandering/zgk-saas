@@ -28,6 +28,7 @@ selectList
         tn_id as tnId,
         grade_id as gradeId,
         number,
+        room_order as roomOrder,
         create_date as createDate
     </sql>
     <insert id="insert" parameterType="ClassRooms">
@@ -35,11 +36,13 @@ selectList
         tn_id,
         grade_id,
         number,
+        room_order,
         create_date
         ) VALUES (
         #{tnId},
         #{gradeId},
         #{number},
+        #{roomOrder},
         #{createDate}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
@@ -59,6 +62,9 @@ selectList
             </if>
             <if test="number!=null">
                 number = #{number},
+            </if>
+            <if test="roomOrder!=null">
+                room_order=#{roomOrder},
             </if>
             <if test="createDate!=null">
                 create_date = #{createDate},
@@ -80,6 +86,9 @@ selectList
             <if test="map.number!=null">
                 number = #{map.number},
             </if>
+            <if test="map.roomOrder!=null">
+                room_order=#{map.roomOrder},
+            </if>
             <if test="map.createDate!=null">
                 create_date = #{map.createDate},
             </if>
@@ -100,6 +109,9 @@ selectList
             <if test="update.number!=null">
                 number = #{update.number},
             </if>
+            <if test="update.roomOrder!=null">
+                room_order=#{update.roomOrder},
+            </if>
             <if test="update.createDate!=null">
                 create_date = #{update.createDate},
             </if>
@@ -118,6 +130,9 @@ selectList
             <if test="condition.number!=null">
                 AND number = #{condition.number}
             </if>
+            <if test="condition.roomOrder!=null">
+                AND room_order=#{condition.roomOrder}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -129,11 +144,13 @@ selectList
                 tn_id,
                 grade_id,
                 number,
+                room_order,
                 create_date
         ) VALUES (
                     #{map.tnId},
                     #{map.gradeId},
                     #{map.number},
+                    #{map.roomOrder},
                     #{map.createDate}
         )
     </insert>
@@ -145,6 +162,7 @@ selectList
             tn_id = #{tnId},
             grade_id = #{gradeId},
             number = #{number},
+            room_order=#{roomOrder},
             create_date = #{createDate},
         </trim>
         WHERE
@@ -174,6 +192,9 @@ selectList
             </if>
             <if test="number!=null">
                 AND number = #{number}
+            </if>
+            <if test="roomOrder!=null">
+                AND room_order=#{roomOrder}
             </if>
             <if test="createDate!=null">
                 AND create_date = #{createDate}
@@ -247,6 +268,9 @@ selectList
             <if test="condition.number!=null">
                 ${condition.groupOp}   number  ${condition.number.op}  #{condition.number.data}
             </if>
+            <if test="condition.roomOrder!=null">
+                ${condition.groupOp}   room_order  ${condition.roomOrder.op}  #{condition.roomOrder.data}
+            </if>
             <if test="condition.createDate!=null">
                 ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
             </if>
@@ -279,6 +303,9 @@ selectList
             <if test="number!=null">
                 AND number like CONCAT('%', #{number} , '%')
             </if>
+            <if test="roomOrder!=null">
+                AND room_order like CONCAT('%', #{roomOrder} , '%')
+            </if>
             <if test="createDate!=null">
                 AND create_date like CONCAT('%', #{createDate} , '%')
             </if>
@@ -307,6 +334,10 @@ selectList
             <if test="condition.number!=null">
                 AND number = #{condition.number}
             </if>
+            <if test="condition.roomOrder!=null">
+                AND room_order = #{condition.roomOrder}
+            </if>
+
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -333,6 +364,9 @@ selectList
             <if test="condition.number!=null">
                 AND number = #{condition.number}
             </if>
+            <if test="condition.roomOrder!=null">
+                AND room_order = #{condition.roomOrder}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -354,6 +388,9 @@ selectList
            </if>
            <if test="number!=null">
                ${groupOp} number ${number.op}  #{number.data}
+           </if>
+           <if test="roomOrder!=null">
+               ${groupOp} room_order ${roomOrder.op}  #{roomOrder.data}
            </if>
            <if test="createDate!=null">
                ${groupOp} create_date ${create_date.op}  #{create_date.data}

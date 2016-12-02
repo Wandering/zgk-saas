@@ -203,8 +203,12 @@ var ProfessionalDetail = {
         })
         //搜索按钮
         $(document).on('click', '.search-btn', function () {
-            var pid = $(this).attr('pid');
-            layerHtmlFn(pid)
+            if($(this).attr('pid')){
+                var pid = $(this).attr('pid');
+                layerHtmlFn(pid)
+            }else{
+                layer.msg('没有搜索到');
+            }
         })
 
     }

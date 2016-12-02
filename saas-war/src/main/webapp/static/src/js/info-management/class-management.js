@@ -32,7 +32,10 @@ ClassManagement.prototype = {
                         that.columnArr.push({
                             name: k.name,
                             enName: k.enName,
-                            dataType: k.dataType
+                            dataType: k.dataType,
+                            dataValue: k.dataValue,
+                            dataUrl: k.dataUrl,
+                            checkRule: k.checkRule
                         });
                     });
                     columnHtml.push('</tr>');
@@ -126,7 +129,10 @@ AddClassManagement.prototype.init = function (columnArr) {
         that.columnArr.push({
             name: k.name,
             enName: k.enName,
-            dataType: k.dataType
+            dataType: k.dataType,
+            dataValue: k.dataValue,
+            dataUrl: k.dataUrl,
+            checkRule: k.checkRule
         });
     });
 };
@@ -170,6 +176,22 @@ AddClassManagement.prototype.renderGradeSelect = function (data) {
         $("#class_grade").append(gradeHtml.join(''));
     }
 };
+AddClassManagement.prototype.getType = function (type) {
+    var that = this;
+    var typeHtml = [];
+    var types = null;
+    $.each(this.columnArr, function (i, k) {
+        if (k.enName == type) {
+            types = k.dataValue.split('-');
+        }
+    });
+    if (types != null) {
+        $.each(types, function (i, k) {
+            typeHtml.push('<option value="' + k + '">' + k + '</option>');
+        });
+    }
+    $('#' + type).append(typeHtml.join(''));
+};
 AddClassManagement.prototype.addClass = function (title) {
     var that = this;
     var contentHtml = [];
@@ -211,6 +233,16 @@ AddClassManagement.prototype.addClass = function (title) {
     });
     that.getYear();
     that.getGrade();
+    $.each(that.columnArr, function (i, k) {
+        if (k.dataType == 'select') {
+            if (k.dataValue) {
+                that.getType(k.enName);
+            }
+            if (k.dataUrl) {
+
+            }
+        }
+    });
 };
 
 /**
@@ -229,7 +261,9 @@ UpdateClassManagement.prototype = {
             that.columnArr.push({
                 name: k.name,
                 enName: k.enName,
-                dataType: k.dataType
+                dataType: k.dataType,
+                dataValue: k.dataValue,
+                dataUrl: k.dataUrl
             });
         });
     },
@@ -273,6 +307,22 @@ UpdateClassManagement.prototype = {
             $("#class_grade").append(gradeHtml.join(''));
         }
     },
+    getType: function (type) {
+        var that = this;
+        var typeHtml = [];
+        var types = null;
+        $.each(this.columnArr, function (i, k) {
+            if (k.enName == type) {
+                types = k.dataValue.split('-');
+            }
+        });
+        if (types != null) {
+            $.each(types, function (i, k) {
+                typeHtml.push('<option value="' + k + '">' + k + '</option>');
+            });
+        }
+        $('#' + type).append(typeHtml.join(''));
+    },
     updateClass: function (title) {//更新某一行班级数据
         var that = this;
         var contentHtml = [];
@@ -301,6 +351,16 @@ UpdateClassManagement.prototype = {
         });
         that.getYear();
         that.getGrade();
+        $.each(that.columnArr, function (i, k) {
+            if (k.dataType == 'select') {
+                if (k.dataValue) {
+                    that.getType(k.enName);
+                }
+                if (k.dataUrl) {
+
+                }
+            }
+        });
         var rowid = $(".check-template :checkbox:checked").attr('cid');
         var rowItem = $('#class-manage-list tr[rowid="' + rowid + '"]').find('td');
         $.each(that.columnArr, function (i, k) {
@@ -425,6 +485,20 @@ $(document).on("click", "#add-btn", function () {
     for (var i = 0; i < addClassManagement.columnArr.length; i++) {
         var tempObj = addClassManagement.columnArr[i];
         if (tempObj.dataType == 'text') {
+            //alert('text: ' + eval(tempObj.checkRule) + ', ' + $('#' + tempObj.enName).val());
+            //var tempType = eval(tempObj.checkRule);
+            //var typeResult = tempType.test($('#' + tempObj.enName).val());
+            //if (typeResult === false) {
+            //    layer.msg(tempObj.name + '长度为1~12个字符!', {time: 1000});
+            //    $('#' + tempObj.enName).focus();
+            //    return;
+            //} else {
+            //    postData.push({
+            //        "key": tempObj.enName,
+            //        "value": $('#' + tempObj.enName).val()
+            //    });
+            //}
+
             if ($('#' + tempObj.enName).val() == '') {
                 layer.msg(tempObj.name + '不能为空!', {time: 1000});
                 $('#' + tempObj.enName).focus();
