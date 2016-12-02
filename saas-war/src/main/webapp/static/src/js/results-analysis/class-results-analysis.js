@@ -106,6 +106,7 @@ ClassResultsAnalysis.prototype = {
             $('.grade1-2-line,.grade-student-num').show();
             $('.batch-info,.grade3-main,.grade3-student-batch').hide();
             that.getOverLineDetailForClassTwo(gradeV,className,line);
+            that.getMostAttendDetailForClassTwo(gradeV,className,line);
         }
     },
     // 根据年级获取班级
@@ -729,7 +730,7 @@ ClassResultsAnalysis.prototype = {
             if (res.rtnCode == "0000000") {
                 $('#ranking-sel').html('');
                 var rankingSel = [];
-                rankingSel.push('<option value="">选择进步名次</option>');
+                rankingSel.push('<option stepStart="" stepEnd="">选择进步名次</option>');
                 $.each(res.bizData,function(i,v){
                     rankingSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="'+ v.stepEnd +'" value="">'+ v.stepStart + "-" + v.stepEnd +'</option>');
                 });
@@ -756,8 +757,8 @@ ClassResultsAnalysis.prototype = {
             if (res.rtnCode == "0000000") {
                 var myTemplate = Handlebars.compile($("#progress-template").html());
                 $('#progress-tbody').html(myTemplate(res));
-                var sortTheadTemplate = Handlebars.compile($("#progress-thead-template").html());
-                $('#progress-thead').html(sortTheadTemplate(res));
+                //var sortTheadTemplate = Handlebars.compile($("#progress-thead-template").html());
+                //$('#progress-thead').html(sortTheadTemplate(res));
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -776,7 +777,7 @@ ClassResultsAnalysis.prototype = {
             if (res.rtnCode == "0000000") {
                 $('#gradeTop-sel').html('');
                 var gradeTopSel = [];
-                gradeTopSel.push('<option value="">选择年级排名</option>');
+                gradeTopSel.push('<option stepStart="" stepEnd="">选择年级排名</option>');
                 $.each(res.bizData,function(i,v){
                     gradeTopSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="'+ v.stepEnd +'" value="">'+ v.stepStart + "-" + v.stepEnd +'</option>');
                 });
@@ -800,8 +801,23 @@ ClassResultsAnalysis.prototype = {
         }, function (res) {
             layer.msg(res.msg);
         });
+    },
+    // 高一高二重点关注学生
+    getMostAttendDetailForClassTwo:function(grade,className,line){
+        Common.ajaxFun('/scoreAnalyse/getMostAttendDetailForClassTwo', 'GET', {
+            'tnId': tnId,
+            'grade': grade,
+            'className': className,
+            'line': line
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var myTemplate = Handlebars.compile($("#progress-template").html());
+                $('#progress-tbody').html(myTemplate(res));
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
     }
-
 };
 
 var ClassAnalysisIns = new ClassResultsAnalysis();
@@ -859,6 +875,7 @@ $(function () {
             layer.msg('请输入位次线!');
             return false;
         }
+        ClassAnalysisIns.getOverLineDetailForClassTwo(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.bacthLine);
         ClassAnalysisIns.getOverLineDetailForClassTwo(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.bacthLine);
     });
 

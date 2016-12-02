@@ -779,12 +779,11 @@ function uploadFun() {
             // 只允许选择文件，可选。
             accept: {
                 title: 'excel',
-                extensions: 'xls,xlsx',
-                mimeTypes: 'application/vnd.ms-excel'
+                extensions: 'xlsx,xls',
+                mimeTypes: '.xlsx,.xls'
             },
             fileVal: 'inputFile',
             duplicate: new Date()
-
         });
 
         // 当有文件添加进来的时候

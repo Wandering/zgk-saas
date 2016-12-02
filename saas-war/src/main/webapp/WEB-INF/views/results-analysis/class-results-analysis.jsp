@@ -184,6 +184,11 @@
                         <table id="progress-table" class="table table-hover">
                             <thead id="progress-thead">
                             <tr>
+                                <th class="center">学生姓名</th>
+                                <th class="center">平均进步名次</th>
+                                <th class="center">年级排名</th>
+                                <th class="center">弱势学科一</th>
+                                <th class="center">弱势学科二</th>
                             </tr>
                             </thead>
                             <tbody id="progress-tbody">
@@ -238,15 +243,9 @@
     </tr>
     {{/each}}
 </script>
-<script id="progress-thead-template" type="text/x-handlebars-template">
-    <tr>
-        <th class="center">学生姓名</th>
-        <th class="center">平均进步名次</th>
-        <th class="center">年级排名</th>
-        <th class="center">弱势学科一</th>
-        <th class="center">弱势学科二</th>
-    </tr>
-</script>
+<%--<script id="progress-thead-template" type="text/x-handlebars-template">--%>
+
+<%--</script>--%>
 <script id="progress-template" type="text/x-handlebars-template">
     {{#each bizData}}
     <tr>

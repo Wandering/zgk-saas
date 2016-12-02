@@ -98,7 +98,12 @@ public class ScoreAnalyseController
         HttpServletResponse response)
         throws IOException
     {
-        Workbook wb = createWorkBook(getClassesNameByGrade(tnId, grade), mock);
+        List<String> classNames = getClassesNameByGrade(tnId, grade);
+        if((null == classNames) || (classNames.size() == 0))
+        {
+            throw new BizException("1100221", "无班级信息，请设置班级");
+        }
+        Workbook wb = createWorkBook(classNames, mock);
         response.reset();
         response.setContentType("application/vnd.ms-excel;charset=utf-8");
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -295,7 +300,8 @@ public class ScoreAnalyseController
             exam.setId(existExam.getId());
             exam.setCreateDate(existExam.getCreateDate());
         }
-        exam.setCreateDate(TimeUtil.getTimeStamp("yyyy-MM-dd HH:mm:ss sss"));
+        exam.setOriginFileName(RedisUtil.getInstance().get(exam.getUploadFilePath())+"");
+        exam.setCreateDate(TimeUtil.getTimeStamp("yyyy-MM-dd HH:mm:ss"));
         examService.add(exam);
         saveExcelData(exam, examService, headerList);
         return exam;
@@ -456,7 +462,7 @@ public class ScoreAnalyseController
         paramMap.put("tnId", tnId);
         paramMap.put("grade", grade);
         paramMap.put("lineScore", lineScore);
-        if (null != className)
+        if (StringUtils.isNotEmpty(className))
         {
             paramMap.put("className", className);
         }
@@ -1753,14 +1759,14 @@ public class ScoreAnalyseController
                 advancedScore = new BigDecimal(rankList.get(2)).subtract(new BigDecimal(rankList.get(0))).
                     divide(new BigDecimal(2), 0, RoundingMode.HALF_DOWN).intValue();
             }
+            List<Map<String, Object>> dataList = resultMap.get(clazzName);
+            if (null == dataList)
+            {
+                dataList = new ArrayList<>();
+                resultMap.put(clazzName, dataList);
+            }
             if (advancedScore >= stepStart && advancedScore <= stepEnd)
             {
-                List<Map<String, Object>> dataList = resultMap.get(clazzName);
-                if (null == dataList)
-                {
-                    dataList = new ArrayList<>();
-                    resultMap.put(clazzName, dataList);
-                }
                 Map<String, Object> params = new LinkedHashMap<>();
                 params.put("className", clazzName);
                 params.put("studentName", studentName);

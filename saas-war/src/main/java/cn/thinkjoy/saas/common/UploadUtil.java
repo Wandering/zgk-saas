@@ -28,6 +28,7 @@ import java.net.BindException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by liusven on 2016/11/1.
@@ -85,6 +86,7 @@ public class UploadUtil
                         {
                             delete = distFile.delete();
                         }
+                        RedisUtil.getInstance().set(filePath, uploadFile.getOriginalFilename(), 4, TimeUnit.HOURS);
                     }
                 }
             }

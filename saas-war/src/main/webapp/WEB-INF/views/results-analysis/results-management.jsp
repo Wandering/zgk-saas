@@ -151,7 +151,7 @@
         <td class="center">{{grade}}</td>
         <td class="center">{{examTime}}</td>
         <td class="center">{{createDate}}</td>
-        <td class="center"><a href="{{uploadFilePath}}" target="_blank">{{excel uploadFilePath}}</a></td>
+        <td class="center"><a href="{{uploadFilePath}}" target="_blank">{{originFileName}}</a></td>
         <td class="center"><a href="javascript:;" urlId="{{id}}" grade="{{grade}}" examName="{{examName}}"
                               examTime="{{examTime}}" uploadFilePath="{{uploadFilePath}}" class="look-details">查看明细</a>
         </td>
