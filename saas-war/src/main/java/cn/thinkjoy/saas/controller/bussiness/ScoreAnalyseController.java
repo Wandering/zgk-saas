@@ -98,7 +98,12 @@ public class ScoreAnalyseController
         HttpServletResponse response)
         throws IOException
     {
-        Workbook wb = createWorkBook(getClassesNameByGrade(tnId, grade), mock);
+        List<String> classNames = getClassesNameByGrade(tnId, grade);
+        if((null == classNames) || (classNames.size() == 0))
+        {
+            throw new BizException("1100221", "无班级信息，请设置班级");
+        }
+        Workbook wb = createWorkBook(classNames, mock);
         response.reset();
         response.setContentType("application/vnd.ms-excel;charset=utf-8");
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -295,7 +300,7 @@ public class ScoreAnalyseController
             exam.setId(existExam.getId());
             exam.setCreateDate(existExam.getCreateDate());
         }
-        exam.setCreateDate(TimeUtil.getTimeStamp("yyyy-MM-dd HH:mm:ss sss"));
+        exam.setCreateDate(TimeUtil.getTimeStamp("yyyy-MM-dd HH:mm:ss"));
         examService.add(exam);
         saveExcelData(exam, examService, headerList);
         return exam;
