@@ -1758,14 +1758,14 @@ public class ScoreAnalyseController
                 advancedScore = new BigDecimal(rankList.get(2)).subtract(new BigDecimal(rankList.get(0))).
                     divide(new BigDecimal(2), 0, RoundingMode.HALF_DOWN).intValue();
             }
+            List<Map<String, Object>> dataList = resultMap.get(clazzName);
+            if (null == dataList)
+            {
+                dataList = new ArrayList<>();
+                resultMap.put(clazzName, dataList);
+            }
             if (advancedScore >= stepStart && advancedScore <= stepEnd)
             {
-                List<Map<String, Object>> dataList = resultMap.get(clazzName);
-                if (null == dataList)
-                {
-                    dataList = new ArrayList<>();
-                    resultMap.put(clazzName, dataList);
-                }
                 Map<String, Object> params = new LinkedHashMap<>();
                 params.put("className", clazzName);
                 params.put("studentName", studentName);
