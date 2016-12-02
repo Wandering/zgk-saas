@@ -33,6 +33,8 @@ public class Exam extends BaseDomain<Long>{
 
     private String tnId;
 
+    private String originFileName;
+
 	public Exam(){
 	}
 
@@ -83,6 +85,16 @@ public class Exam extends BaseDomain<Long>{
     public void setCreateDate(String createDate)
     {
         this.createDate = createDate;
+    }
+
+    public String getOriginFileName()
+    {
+        return originFileName;
+    }
+
+    public void setOriginFileName(String originFileName)
+    {
+        this.originFileName = originFileName;
     }
 
     public String toString() {

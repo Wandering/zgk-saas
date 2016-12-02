@@ -482,7 +482,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         if (tenantConfigInstanceViews == null)
             return false;
 
-        boolean excelValid = ParamsUtils.excelValueValid(configTeantComList, tenantConfigInstanceViews);
+         boolean excelValid = ParamsUtils.excelValueValid(configTeantComList, tenantConfigInstanceViews);
 
 
         Integer reuslt = 0;

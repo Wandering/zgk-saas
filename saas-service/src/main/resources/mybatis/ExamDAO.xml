@@ -31,7 +31,8 @@ selectList
         examTime as examTime ,
         grade as grade ,
         uploadFilePath as uploadFilePath ,
-        createDate as createDate 
+        createDate as createDate,
+        originFileName  as originFileName
     </sql>
     <insert id="insert" parameterType="Exam">
         INSERT INTO saas_exam (
@@ -40,14 +41,16 @@ selectList
         examTime,
         grade,
         uploadFilePath,
-        createDate
+        createDate,
+        originFileName
         ) VALUES (
         #{tnId},
         #{examName},
         #{examTime},
         #{grade},
         #{uploadFilePath},
-        #{createDate}
+        #{createDate},
+        #{originFileName}
         )
             <selectKey resultType="java.lang.Long" keyProperty="id">
                 SELECT LAST_INSERT_ID() AS ID
@@ -73,6 +76,9 @@ selectList
             <if test="createDate!=null">
                 createDate = #{createDate},
             </if>
+            <if test="originFileName!=null">
+                originFileName = #{originFileName},
+            </if>
         </trim>
         WHERE
         id = #{id}
@@ -95,6 +101,9 @@ selectList
             </if>
             <if test="map.createDate!=null">
                 createDate = #{map.createDate},
+            </if>
+            <if test="map.originFileName!=null">
+                originFileName = #{map.originFileName},
             </if>
         </trim>
         WHERE
@@ -119,6 +128,9 @@ selectList
             <if test="update.createDate!=null">
                 createDate = #{update.createDate},
             </if>
+            <if test="update.originFileName!=null">
+                originFileName = #{update.originFileName},
+            </if>
         </trim>
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -140,6 +152,9 @@ selectList
             <if test="condition.createDate!=null">
                 AND createDate = #{condition.createDate}
             </if>
+            <if test="condition.originFileName!=null">
+                AND originFileName = #{condition.originFileName}
+            </if>
         </trim>
     </update>
 
@@ -150,14 +165,16 @@ selectList
                 examTime,
                 grade,
                 uploadFilePath,
-                createDate
+                createDate,
+                originFileName
         ) VALUES (
                     #{map.tnId},
                     #{map.examName},
                     #{map.examTime},
                     #{map.grade},
                     #{map.uploadFilePath},
-                    #{map.createDate}
+                    #{map.createDate},
+                    #{map.originFileName}
         )
     </insert>
 
