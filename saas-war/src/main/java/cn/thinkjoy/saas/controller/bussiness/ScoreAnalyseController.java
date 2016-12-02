@@ -461,7 +461,7 @@ public class ScoreAnalyseController
         paramMap.put("tnId", tnId);
         paramMap.put("grade", grade);
         paramMap.put("lineScore", lineScore);
-        if (null != className)
+        if (StringUtils.isNotEmpty(className))
         {
             paramMap.put("className", className);
         }
