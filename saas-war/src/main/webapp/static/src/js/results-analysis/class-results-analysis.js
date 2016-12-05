@@ -133,6 +133,8 @@ ClassResultsAnalysis.prototype = {
                     //// 人数分布变化
                     //that.getStuNumberScoreChangeForClass(that.grade,that.className);
                     $('.sel-class-txt,.class-name').text(that.className);
+                    // 进步较大学生列表默认拉取
+                    that.getMostAdvancedDetailForClass(that.grade,that.className,ClassAnalysisIns.stepStart,ClassAnalysisIns.stepEnd,ClassAnalysisIns.rankStepStart,ClassAnalysisIns.rankStepEnd);
                 }
             } else {
                 layer.msg(res.msg);
@@ -737,7 +739,7 @@ ClassResultsAnalysis.prototype = {
                 });
                 $('#ranking-sel').append(rankingSel);
             } else {
-                $('#ranking-sel').hide();
+                layer.msg(res.msg);
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -865,7 +867,6 @@ $(function () {
         ClassAnalysisIns.getMostAdvancedDetailGradeRankStepList(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.gradeRankStart,ClassAnalysisIns.gradeRankLength);
         // 进步较大学生列表
         ClassAnalysisIns.getMostAdvancedDetailForClass(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.stepStart,ClassAnalysisIns.stepEnd,ClassAnalysisIns.rankStepStart,ClassAnalysisIns.rankStepEnd);
-
     });
 
 
