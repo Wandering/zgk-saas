@@ -1,0 +1,89 @@
+.common-back-title {
+    margin-top: 23px;
+    a:link,
+    a:visited {
+        display: inline-block;
+        font-size: 12px;
+        color: #CB171D;
+        outline: 0;
+        text-decoration: none;
+        margin-right: 20px;
+    }
+    a:hover {
+        text-decoration: underline;
+        outline: 0;
+    }
+}
+.course-scheduling-base {
+    margin-top: 24px;
+    .procedure {
+        .gap {
+            display: inline-block;
+            letter-spacing: 10px;
+            i {
+                display: inline-block;
+                width: 5px;
+                height: 5px;
+                background: #D5D9DF;
+                margin-left: 8px;
+                -webkit-border-radius: 100%;
+                -moz-border-radius: 100%;
+                border-radius: 100%;
+                position: relative;
+                top: -3px;
+            }
+            i:last-of-type {
+                margin-right: 8px;
+            }
+        }
+        a:link,
+        a:visited,
+        a:hover {
+            display: inline-block;
+            width: 122px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            background: #CB171D;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #FFFFFF;
+            text-decoration: none;
+            outline: 0;
+            i {
+                font-style: normal;
+                position: relative;
+                left: -6px;
+                top: 1px;
+            }
+        }
+        a.disabled {
+            font-size: 14px;
+            color: #B1B5BC;
+            background: #fff;
+            border: 1px solid #B1B5BC;
+            border-radius: 4px;
+            cursor: not-allowed;
+        }
+    }
+}
+.base-item-tab {
+    list-style-type: none;
+    margin-top: 44px;
+    li {
+        float: left;
+        a:link,
+        a:visited,
+        a:hover {
+            padding-right: 20px;
+            border-right: 1px solid #D8D8D8;
+            font-size: 14px;
+            color: #9B9B9B;
+            text-decoration: none;
+            outline: 0;
+        }
+    }
+    li + li + li a {
+        border-right: 0!important;
+    }
+}
