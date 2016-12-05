@@ -43,7 +43,7 @@ TrinityData.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false);
     },
     loadPage: function (offset, rows) {
         var that = this;
@@ -59,7 +59,7 @@ TrinityData.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false);
     },
     showData: function (result) {
         this.universityCount = result.count;
