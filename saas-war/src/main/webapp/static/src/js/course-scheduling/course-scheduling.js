@@ -23,7 +23,12 @@ Schedule.prototype = {
         addScheduleContentHtml.push('<span><i>*</i>年级：</span><select id="grade-list"><option value="00">请选择年级</option></select>');
         addScheduleContentHtml.push('</div>');
         addScheduleContentHtml.push('<div class="box-row">');
-        addScheduleContentHtml.push('<span><i>*</i>学期：</span><input id="term-year" type="text" />年<select id="term-list"><option value="00">请选择学期</option></select>');
+        addScheduleContentHtml.push('<span><i>*</i>学期：</span><input id="term-year" type="text" />年');
+        addScheduleContentHtml.push('<select id="term-list">');
+        addScheduleContentHtml.push('<option value="00">请选择学期</option>');
+        addScheduleContentHtml.push('<option value="第一学期">第一学期</option>');
+        addScheduleContentHtml.push('<option value="第二学期">第二学期</option>');
+        addScheduleContentHtml.push('</select>');
         addScheduleContentHtml.push('</div>');
         addScheduleContentHtml.push('<div class="box-row">');
         addScheduleContentHtml.push('<button type="button" id="save-schedule-btn">保存</button>');
