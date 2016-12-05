@@ -294,7 +294,14 @@ public class WebCotroller {
     public ModelAndView courseScheduling() {
         return new ModelAndView("/course-scheduling/course-scheduling");
     }
-
+    /**
+     * course-scheduling-base
+     * 排课任务--基本信息设置
+     */
+    @RequestMapping("/course-scheduling-base")
+    public ModelAndView courseSchedulingBase() {
+        return new ModelAndView("/course-scheduling/course-scheduling-base");
+    }
 
 
 }
