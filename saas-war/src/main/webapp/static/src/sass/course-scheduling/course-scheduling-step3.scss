@@ -24,7 +24,7 @@
   .info-modify {
     text-align: center;
     margin: $parentMargin;
-    .retry-scheduling,.look-origin-schedule{
+    .retry-scheduling, .look-origin-schedule {
       width: 100px;
       height: 34px;
       border-radius: 2px;
@@ -34,7 +34,7 @@
       cursor: pointer;
       transition: all .3s ease-out;
     }
-    .retry-scheduling{
+    .retry-scheduling {
       margin-left: 395px;
       margin-right: 29px;
       color: $mainColor;
@@ -44,9 +44,9 @@
         color: #fff;
       }
     }
-    .look-origin-schedule{
+    .look-origin-schedule {
       color: #F6A623;
-      border:1px solid #F6A623;
+      border: 1px solid #F6A623;
       &:hover {
         background: #F6A623;
         color: #fff;
@@ -59,3 +59,30 @@
     text-align: center;
   }
 }
+
+#role-scheduling {
+  .role-tab {
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #ccc;
+    li {
+      float: left;
+      &:before{
+        margin: 0 10px;
+        content: '|';
+        display: block;
+        color: #ccc;
+        float: left;
+      }
+    }
+    .no-before{
+      &:before{
+        margin: 0;
+        content: '';
+        display: block;
+        float: left;
+      }
+    }
+  }
+}
+

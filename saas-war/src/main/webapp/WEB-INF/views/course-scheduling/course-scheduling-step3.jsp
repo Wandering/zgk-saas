@@ -53,9 +53,21 @@
                                     <div class="look-origin-schedule">查看原课表</div>
                                 </div>
                                 <div class="scheduling-error">
-                                    <p>排课失败~  因为*******，所以无法排出课表。请调整**规则/信息后，再进行排课</p>
+                                    <p>排课失败~ 因为*******，所以无法排出课表。请调整**规则/信息后，再进行排课</p>
                                 </div>
                             </div>
+                            <%--教室课表|教师课表|学生课表|总课表--%>
+                            <div id="role-scheduling">
+                                <div class="role-tab">
+                                    <ul>
+                                        <li class="no-before"><i class=""></i>教室课表</li>
+                                        <li><i class=""></i>教师课表</li>
+                                        <li><i class=""></i>学生课表</li>
+                                        <li><i class=""></i>总课表</li>
+                                    </ul>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
