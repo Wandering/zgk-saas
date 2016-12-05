@@ -189,6 +189,7 @@ $(document).on('click', '#add-btn', function () {//新增升学率
     var batch2enrolls = parseInt($('#batch-second').val().trim());
     var batch3enrolls = parseInt($('#batch-third').val().trim());
     var batch4enrolls = parseInt($('#batch-fourth').val().trim());
+    var rowCount = $('#ratio-manage-list').find('tr').length;
     var datas = {
         "clientInfo": {},
         "style": "",
@@ -196,6 +197,7 @@ $(document).on('click', '#add-btn', function () {//新增升学率
             "EnrollingRatioObj": {
                 "tnId": tnId,
                 "year": year,
+                "ratioOrder": rowCount + 1,
                 "stu3numbers": stu3numbers,
                 "batch1enrolls": batch1enrolls,
                 "batch2enrolls": batch2enrolls,

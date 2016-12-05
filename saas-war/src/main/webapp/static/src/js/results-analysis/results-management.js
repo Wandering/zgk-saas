@@ -342,7 +342,27 @@ ResultsManagementFun.prototype = {
         }, function (res) {
             layer.msg("出错了");
         });
-    }
+    },
+    // 判断年级下是否有班
+    getClassesNameByGrade:function(grade){
+        var that = this;
+        Common.ajaxFun('/scoreAnalyse/getClassesNameByGrade', 'GET', {
+            'tnId':tnId,
+            'grade':grade
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                if(res.bizData.length==0){
+                    layer.msg('无班级信息,请设置班级!');
+                }else{
+                    that.uploadResults(grade);
+                }
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
 
 };
 
@@ -364,7 +384,8 @@ $(function () {
     //上传成绩
     $('body').on('click', '#uploadResultsBtn', function () {
         var grade = $(this).attr('grade');
-        ResultsManagementIns.uploadResults(grade);
+        ResultsManagementIns.getClassesNameByGrade(grade);
+
     });
 
     // 保存

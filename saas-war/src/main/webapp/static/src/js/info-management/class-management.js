@@ -263,7 +263,8 @@ UpdateClassManagement.prototype = {
                 enName: k.enName,
                 dataType: k.dataType,
                 dataValue: k.dataValue,
-                dataUrl: k.dataUrl
+                dataUrl: k.dataUrl,
+                checkRule: k.checkRule
             });
         });
     },
@@ -486,10 +487,23 @@ $(document).on("click", "#add-btn", function () {
         var tempObj = addClassManagement.columnArr[i];
         if (tempObj.dataType == 'text') {
             //alert('text: ' + eval(tempObj.checkRule) + ', ' + $('#' + tempObj.enName).val());
-            //var tempType = eval(tempObj.checkRule);
-            //var typeResult = tempType.test($('#' + tempObj.enName).val());
-            //if (typeResult === false) {
-            //    layer.msg(tempObj.name + '长度为1~12个字符!', {time: 1000});
+            if (tempObj.dataType) {
+                var tempType = eval(tempObj.checkRule);
+                var typeResult = tempType.test($('#' + tempObj.enName).val());
+                if (typeResult === false) {
+                    layer.msg(tempObj.name + '长度为1~12个字符!', {time: 1000});
+                    $('#' + tempObj.enName).focus();
+                    return;
+                }
+            }
+
+            postData.push({
+                "key": tempObj.enName,
+                "value": $('#' + tempObj.enName).val()
+            });
+
+            //if ($('#' + tempObj.enName).val() == '') {
+            //    layer.msg(tempObj.name + '不能为空!', {time: 1000});
             //    $('#' + tempObj.enName).focus();
             //    return;
             //} else {
@@ -498,17 +512,6 @@ $(document).on("click", "#add-btn", function () {
             //        "value": $('#' + tempObj.enName).val()
             //    });
             //}
-
-            if ($('#' + tempObj.enName).val() == '') {
-                layer.msg(tempObj.name + '不能为空!', {time: 1000});
-                $('#' + tempObj.enName).focus();
-                return;
-            } else {
-                postData.push({
-                    "key": tempObj.enName,
-                    "value": $('#' + tempObj.enName).val()
-                });
-            }
         }
         if (tempObj.dataType == 'select') {
             if ($('#' + tempObj.enName).val() == '00') {
