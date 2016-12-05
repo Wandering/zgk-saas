@@ -158,7 +158,7 @@
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <th class="center">班级</th>
+                                    <th class="center">班级排名</th>
                                     <th class="center">学生名称</th>
                                     <th class="center">年级排名</th>
                                     <th class="center">弱势学科一</th>
@@ -233,9 +233,9 @@
     {{/each}}
 </script>
 <script id="details-main-template" type="text/x-handlebars-template">
-    {{#each bizData.list}}
+    {{#each bizData}}
     <tr>
-        <td class="center">{{className}}</td>
+        <td class="center">{{classRank}}</td>
         <td class="center">{{studentName}}</td>
         <td class="center">{{gradeRank}}</td>
         <td class="center">{{weakCourseOne}}</td>
@@ -243,9 +243,7 @@
     </tr>
     {{/each}}
 </script>
-<%--<script id="progress-thead-template" type="text/x-handlebars-template">--%>
 
-<%--</script>--%>
 <script id="progress-template" type="text/x-handlebars-template">
     {{#each bizData}}
     <tr>

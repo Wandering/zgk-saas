@@ -13,7 +13,7 @@ function ClassResultsAnalysis() {
     this.progressStart = '10';
     this.progressLength = '20';
     this.gradeRankStart = '1';
-    this.gradeRankLength = '100';
+    this.gradeRankLength = '99';
 }
 ClassResultsAnalysis.prototype = {
     constructor: ClassResultsAnalysis,
@@ -99,12 +99,13 @@ ClassResultsAnalysis.prototype = {
         if (gradeV.indexOf('高三') >= 0 || gradeV.indexOf('高3') >= 0) {
             $('.grade-type').text('本科线成绩分析');
             $('.grade1-2-line,.grade-student-num').hide();
-            $('.batch-info,.grade3-main,.grade3-student-batch').show();
+            $('.batch-info,.grade3-main,.grade3-student-batch,#batch-sel').show();
             that.getOverLineNumberByDate(gradeV,className);
+            that.selSortOnline(gradeV,className);
         } else {
             $('.grade-type').text('重点线成绩分析');
             $('.grade1-2-line,.grade-student-num').show();
-            $('.batch-info,.grade3-main,.grade3-student-batch').hide();
+            $('.batch-info,.grade3-main,.grade3-student-batch,#batch-sel').hide();
             that.getOverLineDetailForClassTwo(gradeV,className,line);
             that.getMostAttendDetailForClassTwo(gradeV,className,line);
         }
@@ -728,7 +729,7 @@ ClassResultsAnalysis.prototype = {
             'stepLength': stepLength
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                $('#ranking-sel').html('');
+                $('#ranking-sel').show().html('');
                 var rankingSel = [];
                 rankingSel.push('<option stepStart="" stepEnd="">选择进步名次</option>');
                 $.each(res.bizData,function(i,v){
@@ -736,7 +737,7 @@ ClassResultsAnalysis.prototype = {
                 });
                 $('#ranking-sel').append(rankingSel);
             } else {
-                layer.msg(res.msg);
+                $('#ranking-sel').hide();
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -744,7 +745,7 @@ ClassResultsAnalysis.prototype = {
     },
     // 进步较大学生页面列表
     getMostAdvancedDetailForClass: function (grade,className,stepStart, stepEnd,rankStepStart,rankStepEnd) {
-        $('#progress-tbody,#progress-thead').html('');
+        $('#progress-tbody').html('');
         Common.ajaxFun('/scoreAnalyse/getMostAdvancedDetailForClass', 'GET', {
             'tnId': tnId,
             'grade': grade,
@@ -811,8 +812,8 @@ ClassResultsAnalysis.prototype = {
             'line': line
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                var myTemplate = Handlebars.compile($("#progress-template").html());
-                $('#progress-tbody').html(myTemplate(res));
+                var myTemplate = Handlebars.compile($("body #details-main-template").html());
+                $('body #details-main-tbody').html(myTemplate(res));
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -876,7 +877,7 @@ $(function () {
             return false;
         }
         ClassAnalysisIns.getOverLineDetailForClassTwo(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.bacthLine);
-        ClassAnalysisIns.getOverLineDetailForClassTwo(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.bacthLine);
+        ClassAnalysisIns.getMostAttendDetailForClassTwo(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.bacthLine);
     });
 
     // 重点关注学生批次选择
