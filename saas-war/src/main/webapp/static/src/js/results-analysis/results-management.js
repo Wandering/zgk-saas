@@ -578,7 +578,8 @@ $(function () {
             topGrade = $.trim($('.top-grade').val()),
             subjectYuwen = $.trim($('.subject-yuwen').val());
 
-        var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
+        // var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
+        var re = /^[0-9]*$/;
 
         if (name == '') {
             layer.tips('请输入姓名!', $('.name'));

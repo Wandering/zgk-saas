@@ -353,6 +353,8 @@ ClassResultsAnalysis.prototype = {
         });
     },
     lineNumberByDateChart: function (dateData, popData) {
+        console.info('dateData',dateData);
+        console.info('popData',popData);
         var lineNumberByDateChart = echarts.init(document.getElementById('lineNumberByDate-chart'));
         var lineNumberByDateOption = {
             title: {
