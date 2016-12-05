@@ -78,7 +78,12 @@
                                 {{#each this}}
                                 <tr>
                                     <td>{{rank}}</td>
-                                    <td>{{universityName}}<br/>({{property}})</td>
+                                    <td>
+                                        {{universityName}}<br/>
+                                        {{#if property}}
+                                        ({{property}})
+                                        {{/if}}
+                                    </td>
                                     <td>{{majorName}}</td>
                                     <td>{{batchName}}</td>
                                     <td>{{planNumber}}人</td>

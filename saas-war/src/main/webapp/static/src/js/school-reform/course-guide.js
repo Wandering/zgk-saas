@@ -32,7 +32,7 @@ SubjectAnalysis.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false);
     },
     getPlanEnrollingByProperty: function (subject) {
         Common.ajaxFun('/selectClassesGuide/getPlanEnrollingByProperty.do', 'GET', {
@@ -47,7 +47,7 @@ SubjectAnalysis.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false);
     },
     getAnalysisBatch: function (subject) {
         Common.ajaxFun('/selectClassesGuide/getAnalysisBatch.do', 'GET', {
@@ -67,7 +67,7 @@ SubjectAnalysis.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false);
     },
     sortNumber: function (a,b) {
         return a - b;
@@ -130,7 +130,7 @@ SubjectAnalysis.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false);
     },
     subjectChangeEvent: function () {
         var that = this;
@@ -297,7 +297,7 @@ UniversityDetail.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false, null);
     },
     showData: function (result) {
         var that = this;
@@ -360,10 +360,10 @@ $(function () {
      * 院校文本框添加事件监听
      */
     $(document).on('click', "#search-keywords", startSearchUniversity)
-        .on('keyup', "#search-keywords", startSearchUniversity);
-        //.on('click', "#search-keywords", startSearchUniversity)
+        .on('keyup', "#search-keywords", startSearchUniversity)
+        .on('keydown', "#search-keywords", startSearchUniversity)
         //.on('mouseover', "#search-keywords", startSearchUniversity)
-        //.on('focus', "#search-keywords", startSearchUniversity);
+        .on('focus', "#search-keywords", startSearchUniversity);
         //.on('blur', "#search-keywords", startSearchUniversity);
     $(document).on("click", function (e) {
         $("#results-list").hide();
@@ -413,7 +413,7 @@ function startSearchUniversity () {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false);
     } else {
         $(".course-info .m-list").hide();
         $("#search-keywords").attr("uid", "");
@@ -445,7 +445,7 @@ function getLatestYearData () {
         }
     }, function (res) {
         layer.msg("出错了");
-    }, true);
+    }, false);
 }
 
 //按批次分析
@@ -822,7 +822,7 @@ function historyEnrollingData () {
         }
     }, function (res) {
         layer.msg("出错了");
-    }, true);
+    }, false);
 }
 
 Array.prototype.deleteRepeat = function(){
