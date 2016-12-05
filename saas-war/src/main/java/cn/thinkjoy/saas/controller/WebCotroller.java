@@ -286,6 +286,15 @@ public class WebCotroller {
     public ModelAndView professionalAssessment() {
         return new ModelAndView("/professional-assessment/professional-assessment");
     }
+    /**
+     * course-scheduling
+     * 排课任务
+     */
+    @RequestMapping("/course-scheduling")
+    public ModelAndView courseScheduling() {
+        return new ModelAndView("/course-scheduling/course-scheduling");
+    }
+
 
 
 }

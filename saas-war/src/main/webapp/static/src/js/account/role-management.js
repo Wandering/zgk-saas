@@ -184,9 +184,11 @@ RoleManagementFun.prototype = {
                 layer.closeAll();
                 layer.msg('删除成功!');
                 that.getAllRole();
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         });
     }
 };
@@ -233,9 +235,11 @@ $('body').on('click', '.save-btn', function () {
                 layer.closeAll();
                 RoleManagementIns.getAllRole();
                 layer.msg('修改成功!');
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         }, null, true);
     }else{
         console.log(JSON.stringify(datas))
@@ -245,9 +249,11 @@ $('body').on('click', '.save-btn', function () {
                 layer.closeAll();
                 RoleManagementIns.getAllRole();
                 layer.msg('添加成功!');
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
-            alert("出错了");
+            layer.msg(res.msg);
         }, null, true);
     }
 
