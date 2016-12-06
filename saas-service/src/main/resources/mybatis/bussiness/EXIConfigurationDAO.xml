@@ -45,4 +45,18 @@
             ORDER BY ${orderBy} ${sortBy}
         </if>
     </select>
+    <select id="selectListRetain" parameterType="java.util.Map" resultMap="Base_Result_Mapper">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_configuration
+        <where>
+            <if test="domain!=null">
+                and `domain`=#{domain}
+            </if>
+            and is_retain=1
+        </where>
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
 </mapper>
