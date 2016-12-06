@@ -28,12 +28,6 @@ public class JwTeacherRule extends JwBaseRule{
 	public JwTeacherRule(){
 	}
 
-	@Override
-	public void setTypeId(Integer value)
-	{
-		setTeacherId(value);
-	}
-
 	public void setTeacherId(Integer value) {
         this.teacherId = value;
     }
