@@ -5,7 +5,7 @@ import cn.thinkjoy.common.domain.BaseDomain;
 /**
  * Created by liusven on 2016/12/5.
  */
-public abstract class JwBaseRule extends BaseDomain<Integer>
+public class JwBaseRule extends BaseDomain<Integer>
 {
     /** 周一不上课节数，默认为全上9个1：“111111111”，如果勾选某个节，不上，则对应的值为“0” */
     public String mon;
@@ -74,5 +74,4 @@ public abstract class JwBaseRule extends BaseDomain<Integer>
         return this.sun;
     }
 
-    public abstract void setTypeId(Integer value);
 }

@@ -21,6 +21,7 @@ public class TenantConfigInstanceView  extends BaseDomain {
     private String  dataType;
     private String  dataUrl;
     private String  dataValue;
+    private byte isRetain;
 
 
     public Integer getTnId() {
@@ -117,5 +118,13 @@ public class TenantConfigInstanceView  extends BaseDomain {
 
     public void setDataValue(String dataValue) {
         this.dataValue = dataValue;
+    }
+
+    public byte getIsRetain() {
+        return isRetain;
+    }
+
+    public void setIsRetain(byte isRetain) {
+        this.isRetain = isRetain;
     }
 }

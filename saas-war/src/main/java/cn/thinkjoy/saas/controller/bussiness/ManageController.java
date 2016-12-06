@@ -136,10 +136,12 @@ public class ManageController {
                             @PathVariable Integer gId,
                             HttpServletRequest request) {
         String crNum = request.getParameter("crNum");
+        String dayNum = request.getParameter("dayNum");
         boolean result = false;
         if (!StringUtils.isBlank(crNum)&&tnId>0&&gId>0) {
-            Integer classRoomNum = Integer.valueOf(crNum);
-            result = exiClassRoomService.addClassRoom(tnId, gId, classRoomNum);
+            Integer classRoomNum = Integer.valueOf(crNum),
+                    dNum=Integer.valueOf(dayNum);
+            result = exiClassRoomService.addClassRoom(tnId, gId, classRoomNum,dNum);
         }
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
@@ -158,16 +160,18 @@ public class ManageController {
     public Map modifyClassRoom(@PathVariable Integer cid,HttpServletRequest request) {
 
         String gid = request.getParameter("gid"),
-                num = request.getParameter("num");
+                num = request.getParameter("num"),
+                dayNum = request.getParameter("dayNum");
 
         boolean result = false;
 
         if (!StringUtils.isBlank(gid) && !StringUtils.isBlank(num)) {
 
             Integer g = Integer.valueOf(gid),
-                    n = Integer.valueOf(num);
+                    n = Integer.valueOf(num),
+                    d=Integer.valueOf(dayNum);
 
-            result = exiClassRoomService.updateClassRoom(n, g, cid);
+            result = exiClassRoomService.updateClassRoom(n,d, g, cid);
 
         }
 

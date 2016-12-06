@@ -1,7 +1,6 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.saas.common.Env;
-import cn.thinkjoy.saas.domain.ClassRooms;
 import cn.thinkjoy.saas.domain.Configuration;
 import cn.thinkjoy.saas.domain.EnrollingRatio;
 import cn.thinkjoy.saas.domain.Grade;
@@ -118,7 +117,7 @@ public class ConfigurationController {
      * 教室设置
      *
      * @param tnId 租户ID
-     * @param nums 数量集  例:  1:1-2:2-3:3   1:高一年级:教室数量 2:高二年级:教室数量 3:高三年级:教室数量
+     * @param nums 数量集  例:  1:1|2-2:2|3-3:3|4   1:高一年级:行政教室数量|走读教室数量 2:高二年级:行政教室数量|走读教室数量 3:高三年级:行政教室数量|走读教室数量
      * @return
      */
     @RequestMapping(value = "/classRoom/setting/{tnId}/{nums}", method = RequestMethod.POST)

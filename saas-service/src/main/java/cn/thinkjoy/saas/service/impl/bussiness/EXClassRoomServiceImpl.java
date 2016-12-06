@@ -46,11 +46,12 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
     }
 
     @Override
-    public boolean addClassRoom(Integer tnId,Integer gradeId,Integer classRoomNum) {
+    public boolean addClassRoom(Integer tnId,Integer gradeId,Integer classRoomNum,Integer dayNum) {
         ClassRooms classRooms = new ClassRooms();
         classRooms.setTnId(tnId);
         classRooms.setCreateDate(System.currentTimeMillis());
-        classRooms.setNumber(classRoomNum);
+        classRooms.setExecutiveNumber(classRoomNum);
+        classRooms.setDayNumber(dayNum);
         classRooms.setGradeId(gradeId);
         return (exiClassRoomDAO.insertClassRoom(classRooms) > 0 ? true : false);
     }
@@ -78,11 +79,14 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
                 String row = idsList.get(i);
                 String[] rowArr = row.split(ParamsUtils.CLASSROOM_GRADE_COMBIN_CHAR);
 
+                String[] number=rowArr[1].split(ParamsUtils.CLASSROOM_NUMBER_COMBIN_CHAR);
+
                 ClassRooms classRooms = new ClassRooms();
                 classRooms.setTnId(tnId);
                 classRooms.setCreateDate(System.currentTimeMillis());
                 classRooms.setGradeId(Integer.valueOf(rowArr[0]));
-                classRooms.setNumber(Integer.valueOf(rowArr[1]));
+                classRooms.setExecutiveNumber(Integer.valueOf(number[0]));
+                classRooms.setDayNumber(Integer.valueOf(number[1]));
                 classRoomsList.add(classRooms);
             }
 
@@ -103,11 +107,12 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
      * @return
      */
     @Override
-    public boolean updateClassRoom(Integer num,Integer gid,Integer cid) {
+    public boolean updateClassRoom(Integer num, Integer dNum ,Integer gid,Integer cid) {
 
         ClassRooms classRooms = new ClassRooms();
         classRooms.setGradeId(gid);
-        classRooms.setNumber(num);
+        classRooms.setExecutiveNumber(num);
+        classRooms.setDayNumber(dNum);
         classRooms.setId(cid);
         return (iClassRoomsDAO.update(classRooms) > 0 ? true : false);
     }
