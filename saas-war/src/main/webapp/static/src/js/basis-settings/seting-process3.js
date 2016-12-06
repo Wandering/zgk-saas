@@ -3,23 +3,6 @@ var tnId = Common.cookie.getCookie('tnId');
 
 //Common.flowSteps();
 
-
-var initClassBtn = '<div class="initClassBtn"><button class="btn btn-info" id="initBtn">初始化班级</button></div>';
-layer.open({
-    type: 1,
-    title:"请初始化班级",
-    skin: 'layui-layer-demo', //样式类名
-    closeBtn: 0, //不显示关闭按钮
-    anim: 2,
-    shadeClose: false, //开启遮罩关闭
-    offset: 'auto',
-    area: ['400px', '200px'],
-    content: initClassBtn
-});
-
-
-
-
 function SetingProcess3() {
     this.init();
 }
@@ -28,19 +11,44 @@ SetingProcess3.prototype = {
     init: function () {
         this.getClassList();
         this.tableDrag();
+        var trLen = $('#class-template').find('tr').length;
+        console.log(trLen);
+        if(trLen==0){
+            this.initClass();
+        }
+    },
+    initClass:function(){
+        var initClassBtn = '<div class="initClassBtn"><button class="btn btn-info" id="initBtn">初始化班级</button></div>';
+        layer.open({
+            type: 1,
+            title: "请初始化班级",
+            skin: 'layui-layer-demo', //样式类名
+            closeBtn: 0, //不显示关闭按钮
+            anim: 2,
+            shadeClose: false, //开启遮罩关闭
+            offset: 'auto',
+            area: ['400px', '200px'],
+            content: initClassBtn
+        });
     },
     getClassList: function () {
         Common.ajaxFun('/config/get/class/' + tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
+                $('#class-template').html('');
                 var data = res.bizData.configList;
                 $.each(data, function (i, v) {
                     var classTemplate = [];
                     classTemplate.push('<tr>');
                     classTemplate.push('<td class="center">');
-                    classTemplate.push('<label>');
-                    classTemplate.push('<input type="checkbox" seldata="' + v.id + '" class="ace" />');
-                    classTemplate.push('<span class="lbl"></span>');
-                    classTemplate.push('</label>');
+                    if(v.isRetain==1){
+
+                    }else{
+                        classTemplate.push('<label>');
+                        classTemplate.push('<input type="checkbox" seldata="' + v.id + '" class="ace" />');
+                        classTemplate.push('<span class="lbl"></span>');
+                        classTemplate.push('</label>');
+                    }
+
                     classTemplate.push('</td>');
                     classTemplate.push('<td class="center index" indexId="' + v.id + '">' + (i + 1) + '</td>');
                     classTemplate.push('<td class="center key-name">' + v.name + '</td>');
@@ -53,7 +61,7 @@ SetingProcess3.prototype = {
             }
         }, function (res) {
             layer.msg(res.msg);
-        });
+        },true);
     },
     initClassItem: function () {
         var name = {};
@@ -74,14 +82,14 @@ SetingProcess3.prototype = {
         contentHtml.push('<div class="add-label">');
         $.each(initData, function (i, v) {
             contentHtml.push('<label>');
-            if(v.isRetain!=1){
+            if (v.isRetain != 1) {
                 if (name[v.chName] == v.chName) {
-                    contentHtml.push('<input name="form-field-checkbox"  isRetain="'+ v.isRetain +'"  type="checkbox" checked="checked" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
+                    contentHtml.push('<input name="form-field-checkbox"  isRetain="' + v.isRetain + '"  type="checkbox" checked="checked" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
                 } else {
-                    contentHtml.push('<input name="form-field-checkbox" isRetain="'+ v.isRetain +'" type="checkbox" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
+                    contentHtml.push('<input name="form-field-checkbox" isRetain="' + v.isRetain + '" type="checkbox" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
                 }
-            }else{
-                contentHtml.push('<input name="form-field-checkbox" disabled="disabled" isRetain="'+ v.isRetain +'" checked="checked" type="checkbox" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
+            } else {
+                contentHtml.push('<input name="form-field-checkbox" disabled="disabled" isRetain="' + v.isRetain + '" checked="checked" type="checkbox" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
             }
             contentHtml.push('<span class="lbl">' + v.chName + '</span>');
             contentHtml.push('</label>');
@@ -178,30 +186,32 @@ SetingProcess3.prototype = {
 };
 var SetingProcess3Obj = new SetingProcess3();
 
+
+
 // 新增班级字段
 $(function () {
 
 
-    $('body').on('click','#initBtn',function(){
-        Common.ajaxFun('/config/retain/class/'+ tnId +'.do', 'GET', {},
+
+
+    $('body').on('click', '#initBtn', function () {
+        Common.ajaxFun('/config/retain/class/' + tnId + '.do', 'POST', {},
             function (res) {
                 console.log(res)
                 if (res.rtnCode == "0000000") {
-                    //if (res.bizData.result == 3) {
-                    //    layer.msg('请完成该流程再进行下一步!');
-                    //}else if(res.bizData.result == 4){
-                    //    window.location.href='/seting-process4'
-                    //}
+                    if (res.bizData.result == true) {
+                        layer.msg('班级初始化成功!');
+                        layer.closeAll();
+                        SetingProcess3Obj.getClassList();
+                    } else {
+                        layer.msg('班级初始化失败!');
+                        SetingProcess3Obj.initClass();
+                    }
                 }
             }, function (res) {
                 layer.msg(res.msg);
             });
     });
-
-
-
-
-
 
 
     $('#add-btn').on('click', function () {
@@ -261,8 +271,8 @@ $(function () {
                 if (res.rtnCode == "0000000") {
                     if (res.bizData.result == 3) {
                         layer.msg('请完成该流程再进行下一步!');
-                    }else if(res.bizData.result == 4){
-                        window.location.href='/seting-process4'
+                    } else if (res.bizData.result == 4) {
+                        window.location.href = '/seting-process4'
                     }
                 }
             }, function (res) {

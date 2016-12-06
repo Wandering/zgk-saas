@@ -11,11 +11,11 @@
 </div>
 <div class="course-scheduling-base">
     <div class="procedure">
-        <a href="javascript: void(0);" class="disabled"><i>1</i>基本信息设置</a>
+        <a href="/course-scheduling-step1" class="disabled"><i>1</i>基本信息设置</a>
         <span class="gap"><i></i><i></i><i></i><i></i><i></i></span>
-        <a href="javascript: void(0);" class="disabled"><i>2</i>排课规则设置</a>
+        <a href="/course-scheduling-step2" class="disabled"><i>2</i>排课规则设置</a>
         <span class="gap"><i></i><i></i><i></i><i></i><i></i></span>
-        <a href="javascript: void(0);"><i>3</i>自动排课</a>
+        <a href="/course-scheduling-step3"><i>3</i>自动排课</a>
     </div>
 </div>
 <div id="one-key-page" class="dh">
@@ -30,7 +30,7 @@
     </div>
 </div>
 <%--教室课表|教师课表|学生课表|总课表--%>
-<div id="role-scheduling-tab" class="">
+<div id="role-scheduling-tab">
     <div class="role-tab">
         <ul>
             <li class="no-before active"><i class="icon-step3-class-yes"></i><i
@@ -43,3 +43,6 @@
         </ul>
     </div>
 </div>
+<%@ include file="./../common/footer.jsp" %>
+<script src="<%=ctx%>/static/src/js/course-scheduling/step3-common.js"></script>
+
