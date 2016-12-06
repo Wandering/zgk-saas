@@ -64,6 +64,32 @@
                                     <th class="center">操作</th>
                                 </tr>
                                 </thead>
+                                <tbody class="check-template">
+                                <tr>
+                                    <td class="center"></td>
+                                    <td class="center">1</td>
+                                    <td class="center">教师姓名</td>
+                                    <td class="center">固定表头</td>
+                                </tr>
+                                <tr>
+                                    <td class="center"></td>
+                                    <td class="center">1</td>
+                                    <td class="center">教师姓名</td>
+                                    <td class="center">固定表头</td>
+                                </tr>
+                                <tr>
+                                    <td class="center"></td>
+                                    <td class="center">1</td>
+                                    <td class="center">教师姓名</td>
+                                    <td class="center">固定表头</td>
+                                </tr>
+                                <tr>
+                                    <td class="center"></td>
+                                    <td class="center">1</td>
+                                    <td class="center">教师姓名</td>
+                                    <td class="center">固定表头</td>
+                                </tr>
+                                </tbody>
                                 <tbody id="class-template" class="check-template">
                                 <%--<tr>--%>
                                     <%--<td class="center">--%>

@@ -243,7 +243,8 @@ ClassResultsAnalysis.prototype = {
                 text: '班级平均分排名',
                 left: 'left',
                 textStyle:{
-                    fontSize:12
+                    fontSize:'14',
+                    color:'#9B9B9B'
                 }
             },
             tooltip: {
@@ -293,7 +294,8 @@ ClassResultsAnalysis.prototype = {
                 text: '班级平均分排名',
                 left: 'left',
                 textStyle:{
-                    fontSize:12
+                    fontSize:'14',
+                    color:'#9B9B9B'
                 }
             },
             //tooltip: {
@@ -360,7 +362,11 @@ ClassResultsAnalysis.prototype = {
         var lineNumberByDateChart = echarts.init(document.getElementById('lineNumberByDate-chart'));
         var lineNumberByDateOption = {
             title: {
-                text: '16年浙江本科批次线:439分'
+                text: '16年浙江本科批次线:439分',
+                textStyle:{
+                    fontSize:'14',
+                    color:'#9B9B9B'
+                }
             },
             tooltip: {
                 trigger: 'axis'
@@ -608,7 +614,7 @@ ClassResultsAnalysis.prototype = {
                 left: 'left',
                 textStyle:{
                     fontSize:'14',
-                    color:'#4A4A4A'
+                    color:'#9B9B9B'
                 }
             },
             tooltip: {
@@ -655,7 +661,8 @@ ClassResultsAnalysis.prototype = {
                 text: '班级平均分排名',
                 left: 'left',
                 textStyle:{
-                    fontSize:12
+                    fontSize:'14',
+                    color:'#9B9B9B'
                 }
             },
             tooltip: {
