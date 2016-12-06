@@ -302,6 +302,13 @@ public class WebCotroller {
     public ModelAndView courseSchedulingBase() {
         return new ModelAndView("/course-scheduling/course-scheduling-base");
     }
-
+    /**
+     * rule-settings
+     * 排课任务--排课规则设置
+     */
+    @RequestMapping("/rule-settings")
+    public ModelAndView ruleSettings() {
+        return new ModelAndView("/course-scheduling/rule-settings");
+    }
 
 }
