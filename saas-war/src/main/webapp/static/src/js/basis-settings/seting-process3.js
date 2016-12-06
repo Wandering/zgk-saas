@@ -40,15 +40,12 @@ SetingProcess3.prototype = {
                     var classTemplate = [];
                     classTemplate.push('<tr>');
                     classTemplate.push('<td class="center">');
-                    if(v.isRetain==1){
-
-                    }else{
+                    if(v.isRetain==1){""}else{
                         classTemplate.push('<label>');
                         classTemplate.push('<input type="checkbox" seldata="' + v.id + '" class="ace" />');
                         classTemplate.push('<span class="lbl"></span>');
                         classTemplate.push('</label>');
                     }
-
                     classTemplate.push('</td>');
                     classTemplate.push('<td class="center index" indexId="' + v.id + '">' + (i + 1) + '</td>');
                     classTemplate.push('<td class="center key-name">' + v.name + '</td>');
