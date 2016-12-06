@@ -43,25 +43,25 @@
                         </div>
                         <div class="course-scheduling-base">
                             <div class="procedure">
-                                <a href="javascript: void(0);" class="disabled"><i>1</i>基本信息设置</a>
+                                <a href="/course-scheduling-step1" class="disabled"><i>1</i>基本信息设置</a>
                                 <span class="gap"><i></i><i></i><i></i><i></i><i></i></span>
-                                <a href="javascript: void(0);"><i>2</i>排课规则设置</a>
+                                <a href="/course-scheduling-step2"><i>2</i>排课规则设置</a>
                                 <span class="gap"><i></i><i></i><i></i><i></i><i></i></span>
-                                <a href="javascript: void(0);" class="disabled"><i>3</i>自动排课</a>
+                                <a href="/course-scheduling-step3" class="disabled"><i>3</i>自动排课</a>
                             </div>
                         </div>
                         <ul class="rule-item-tab">
                             <li>
-                                <a href="javascript: void(0);" class="active">不排课时间</a>
+                                <a href="/course-scheduling-step2" class="active">不排课时间</a>
                             </li>
                             <li>
-                                <a href="javascript: void(0);">不连堂</a>
+                                <a href="/course-no-proceed">不连堂</a>
                             </li>
                             <li>
-                                <a href="javascript: void(0);">合班</a>
+                                <a href="/class-mixed">合班</a>
                             </li>
                             <li>
-                                <a href="javascript: void(0);">基本规则设置</a>
+                                <a href="/base-rule-settings">基本规则设置</a>
                             </li>
                         </ul>
                         <div class="rule-content">
@@ -72,18 +72,174 @@
                             </select>
                             <div class="no-course-time">
                                 <div class="class-no-course">
-
+                                    <div class="class-items">
+                                        <div id="class-no-array" class="class-no-array">
+                                            <div class="title">高一</div>
+                                            <ul class="class-list">
+                                                <li>
+                                                    <a href="javascript: void(0);" class="active">全部班级</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">一班</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">二班</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">三班</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">四班</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">五班</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">六班</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div id="teacher-no-array" class="teacher-no-array">
+                                            <select class="teaching-class">
+                                                <option value="00">选择所授课程</option>
+                                                <option value="1">语文</option>
+                                                <option value="2">数学</option>
+                                                <option value="3">英语</option>
+                                                <option value="4">物理</option>
+                                                <option value="5">政治</option>
+                                                <option value="6">历史</option>
+                                                <option value="7">地理</option>
+                                            </select>
+                                            <ul class="teacher-list">
+                                                <li>
+                                                    <a href="javascript: void(0);" class="active">李华</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">李小龙</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">周杰伦</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">陈港生</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">成龙</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">周润发</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">鹿晗</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div id="course-no-array" class="course-no-array">
+                                            <ul class="course-list">
+                                                <li>
+                                                    <a href="javascript: void(0);" class="active">语文</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">数学</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">英语</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">物理</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">化学</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">生物</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">政治</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">历史</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript: void(0);">地理</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="class-assign-time">
+                                        <table class="no-assign-table" cellpadding="0" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th width="135px"></th>
+                                                    <th>星期一</th>
+                                                    <th>星期二</th>
+                                                    <th>星期三</th>
+                                                    <th>星期四</th>
+                                                    <th>星期五</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>不排课</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>4</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>5</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>6</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>7</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="rule-content rule-content-none">
-                            不连堂
-                        </div>
-                        <div class="rule-content rule-content-none">
-                            合班
-                        </div>
-                        <div class="rule-content rule-content-none">
-                            基本规则设置
                         </div>
                     </div>
                 </div>

@@ -52,13 +52,13 @@
                         </div>
                         <ul class="base-item-tab">
                             <li>
-                                <a href="javascript: void(0);" class="active">教学时间</a>
+                                <a href="/course-scheduling-step1" class="active">教学时间</a>
                             </li>
                             <li>
-                                <a href="javascript: void(0);">课程信息</a>
+                                <a href="/course-info">课程信息</a>
                             </li>
                             <li>
-                                <a href="javascript: void(0);">教师信息</a>
+                                <a href="/teacher-info">教师信息</a>
                             </li>
                         </ul>
                         <div class="base-content">
@@ -127,132 +127,6 @@
                                 </div>
                             </div>
                             <button type="button" class="btn-save-base" id="btn-save-base">保存</button>
-                        </div>
-                        <div class="base-content base-content-none">
-                            <div class="title-2">
-                                <span class="txt-t"></span>
-                                <div class="btns">
-                                    <button class="btn btn-pink" id="settings-class-btn">设置课时</button>
-                                </div>
-                            </div>
-                            <table id="schedule-table" class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="center" width="50px">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </th>
-                                        <th class="center" width="80px">序号</th>
-                                        <th class="center" width="250px">课程名称</th>
-                                        <th class="center" width="250px">课时</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="schedule-list" class="check-template">
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">1</td>
-                                        <td class="center">语文</td>
-                                        <td class="center">1节/周</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">2</td>
-                                        <td class="center">数学</td>
-                                        <td class="center">2节/周</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">3</td>
-                                        <td class="center">英语</td>
-                                        <td class="center">6节/周</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="base-content base-content-none">
-                            <div class="title-2">
-                                <span class="txt-t"></span>
-                                <div class="btns">
-                                    <button class="btn btn-pink" id="add-teacher-btn">添加教师</button>
-                                    <button class="btn btn-inverse" id="modify-teacher-btn">修改</button>
-                                    <button class="btn btn-success del-btn" id="delete-teacher-btn">删除</button>
-                                </div>
-                            </div>
-                            <table id="teacher-table" class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="center" width="50px">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </th>
-                                        <th class="center" width="80px">序号</th>
-                                        <th class="center" width="250px">教师姓名</th>
-                                        <th class="center" width="250px">所授课程</th>
-                                        <th class="center" width="250px">最大带班数</th>
-                                        <th class="center">所带班级</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="teacher-list" class="check-template">
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">1</td>
-                                        <td class="center">黎明</td>
-                                        <td class="center">语文</td>
-                                        <td class="center">2</td>
-                                        <td class="center">高一二班</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">2</td>
-                                        <td class="center">张华</td>
-                                        <td class="center">物理</td>
-                                        <td class="center">2</td>
-                                        <td class="center">高一三班</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">3</td>
-                                        <td class="center">张华</td>
-                                        <td class="center">化学</td>
-                                        <td class="center">3</td>
-                                        <td class="center">高一四班</td>
-                                    </tr>
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>

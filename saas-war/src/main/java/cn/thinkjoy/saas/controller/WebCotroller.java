@@ -295,12 +295,28 @@ public class WebCotroller {
         return new ModelAndView("/course-scheduling/course-scheduling");
     }
     /**
-     * course-scheduling-base
+     * course-scheduling-step1
      * 排课任务--基本信息设置
      */
     @RequestMapping("/course-scheduling-step1")
     public ModelAndView courseSchedulingBase() {
         return new ModelAndView("/course-scheduling/course-scheduling-step1");
+    }
+    /**
+     * teaching-time
+     * 排课任务--基本信息设置--课程信息
+     */
+    @RequestMapping("/course-info")
+    public ModelAndView courseInfo() {
+        return new ModelAndView("/course-scheduling/course-info");
+    }
+    /**
+     * teaching-time
+     * 排课任务--基本信息设置--教师信息
+     */
+    @RequestMapping("/teacher-info")
+    public ModelAndView teachingInfo() {
+        return new ModelAndView("/course-scheduling/teacher-info");
     }
     /**
      * course-scheduling-step2
@@ -309,7 +325,32 @@ public class WebCotroller {
     @RequestMapping("/course-scheduling-step2")
     public ModelAndView courseSchedulingStep2() {
         return new ModelAndView("/course-scheduling/course-scheduling-step2");
-    }/**
+    }
+    /**
+     * course-no-proceed
+     * 排课任务--排课第二步骤，不连堂
+     */
+    @RequestMapping("/course-no-proceed")
+    public ModelAndView courseNoProceed() {
+        return new ModelAndView("/course-scheduling/course-no-proceed");
+    }
+    /**
+     * class-mixed
+     * 排课任务--排课第二步骤，合班
+     */
+    @RequestMapping("/class-mixed")
+    public ModelAndView classMixed() {
+        return new ModelAndView("/course-scheduling/class-mixed");
+    }
+    /**
+     * class-mixed
+     * 排课任务--排课第二步骤，基本规则设置
+     */
+    @RequestMapping("/base-rule-settings")
+    public ModelAndView baseRuleSettings() {
+        return new ModelAndView("/course-scheduling/base-rule-settings");
+    }
+    /**
      * course-scheduling-step3
      * 排课任务--排课第三步骤，自动排课
      */

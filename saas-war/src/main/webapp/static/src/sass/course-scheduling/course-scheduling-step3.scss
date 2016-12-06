@@ -1,6 +1,16 @@
 @import "../common/common";
 
 //step comm
+.mt15{
+  margin-top: 15px;
+}
+.table {
+  border: 1px solid #ddd !important;
+  tbody > tr > td {
+    border: 1px solid #ddd !important;
+  }
+}
+
 .course-scheduling-base {
   margin-top: 35px;
   margin-bottom: 35px;
@@ -173,28 +183,36 @@
   }
 }
 
-
-#role-scheduling-content{
+.role-scheduling-content {
   .select-condition {
     margin: 20px 0 10px;
-    select{
+    select {
       min-width: 105px;
+      margin-right: 17px;
     }
   }
-  .scheduling-info{
+  .scheduling-info {
     margin-bottom: 10px;
     overflow: hidden;
     height: 28px;
     line-height: 28px;
-    .scheduling-name{
+    .scheduling-name {
       font-size: 14px;
       font-weight: bold;
     }
-    #output-tpl{
-      width: 155px;
-      background: #B085B9!important;
-      border-color: #B085B9!important;
+    #output-tpl {
+      width: 165px;
+      background: #B085B9 !important;
+      border-color: #B085B9 !important;
       outline: none;
+    }
+    .icon-output-down {
+      display: inline-block !important;
     }
   }
 }
+
+
+
+
+
