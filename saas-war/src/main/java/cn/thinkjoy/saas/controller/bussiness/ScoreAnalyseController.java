@@ -47,9 +47,6 @@ import static cn.thinkjoy.saas.common.UploadUtil.saveExcelData;
 public class ScoreAnalyseController
 {
     @Autowired
-    Env env;
-
-    @Autowired
     IExamService examService;
 
     @Autowired

@@ -181,6 +181,9 @@ var Common = {
     },
     renderMenu:function(){
         var pathName = window.location.pathname;
+        if (pathName == '/course-scheduling-base') {
+            pathName = '/course-scheduling';
+        }
         if(Common.cookie.getCookie('siderMenu')){
             var siderMenu = $.parseJSON(Common.cookie.getCookie('siderMenu'));
             var menus = [];

@@ -120,6 +120,6 @@
     </div>
 </div>
 <%@ include file="./../common/footer.jsp"%>
-<script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling-step2.js"></script>
 </body>
 </html>
