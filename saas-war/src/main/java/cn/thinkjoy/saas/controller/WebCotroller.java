@@ -298,9 +298,9 @@ public class WebCotroller {
      * course-scheduling-base
      * 排课任务--基本信息设置
      */
-    @RequestMapping("/course-scheduling-base")
+    @RequestMapping("/course-scheduling-step1")
     public ModelAndView courseSchedulingBase() {
-        return new ModelAndView("/course-scheduling/course-scheduling-base");
+        return new ModelAndView("/course-scheduling/course-scheduling-step1");
     }
     /**
      * course-scheduling-step2
