@@ -28,12 +28,6 @@ public class JwClassRule extends JwBaseRule{
 	public JwClassRule(){
 	}
 
-	@Override
-	public void setTypeId(Integer value)
-	{
-		setClassId(value);
-	}
-
 	public void setClassId(Integer value) {
         this.classId = value;
     }

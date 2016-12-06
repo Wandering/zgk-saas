@@ -101,12 +101,12 @@ TeacherInfo.prototype = {
 
 $(function () {
 
-    $('.base-item-tab li').click(function(){
-        if(!$(this).hasClass('on')){
-            $('.base-item-tab li a').removeClass('active').eq($(this).index()).addClass('active');
-            $('.base-content').stop(true,true).hide().eq($(this).index()).show();
-        }
-    });
+    //$('.base-item-tab li').click(function(){
+    //    if(!$(this).hasClass('on')){
+    //        $('.base-item-tab li a').removeClass('active').eq($(this).index()).addClass('active');
+    //        $('.base-content').stop(true,true).hide().eq($(this).index()).show();
+    //    }
+    //});
 
     $('#morning-list').val(4);
     $('#afternoon-list').val(3);
