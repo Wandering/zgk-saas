@@ -24,14 +24,14 @@ selectOne
 selectList
 -->
     <sql id="Base_Column_List">
-        id,
-        schedule_name,
-        grade,
-        year,
-        term,
-        status,
-        create_date,
-        tn_id
+        id as id,
+        schedule_name as scheduleName,
+        grade as grade,
+        year as year,
+        term as term,
+        status as status,
+        create_date as createDate,
+        tn_id as tnId
     </sql>
     <insert id="insert" parameterType="JwScheduleTask">
         INSERT INTO saas_jw_schedule_task (
@@ -302,7 +302,7 @@ selectList
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
             <if test="condition.scheduleName!=null">
-                ${condition.groupOp}   schedule_name  ${condition.schedule_name.op}  #{condition.schedule_name.data}
+                ${condition.groupOp}   schedule_name  ${condition.scheduleName.op}  #{condition.scheduleName.data}
             </if>
             <if test="condition.grade!=null">
                 ${condition.groupOp}   grade  ${condition.grade.op}  #{condition.grade.data}
@@ -317,10 +317,10 @@ selectList
                 ${condition.groupOp}   status  ${condition.status.op}  #{condition.status.data}
             </if>
             <if test="condition.createDate!=null">
-                ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
+                ${condition.groupOp}   create_date  ${condition.createDate.op}  #{condition.createDate.data}
             </if>
             <if test="condition.tnId!=null">
-                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+                ${condition.groupOp}   tn_id  ${condition.tnId.op}  #{condition.tnId.data}
             </if>
 
 
@@ -445,7 +445,7 @@ selectList
                ${groupOp} id ${id.op}  #{id.data}
            </if>
            <if test="scheduleName!=null">
-               ${groupOp} schedule_name ${schedule_name.op}  #{schedule_name.data}
+               ${groupOp} schedule_name ${scheduleName.op}  #{scheduleName.data}
            </if>
            <if test="grade!=null">
                ${groupOp} grade ${grade.op}  #{grade.data}
@@ -460,10 +460,10 @@ selectList
                ${groupOp} status ${status.op}  #{status.data}
            </if>
            <if test="createDate!=null">
-               ${groupOp} create_date ${create_date.op}  #{create_date.data}
+               ${groupOp} create_date ${createDate.op}  #{createDate.data}
            </if>
            <if test="tnId!=null">
-               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+               ${groupOp} tn_id ${tnId.op}  #{tnId.data}
            </if>
 
        </where>

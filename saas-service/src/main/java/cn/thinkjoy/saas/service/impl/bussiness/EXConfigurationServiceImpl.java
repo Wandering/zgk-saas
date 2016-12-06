@@ -55,7 +55,8 @@ public class EXConfigurationServiceImpl extends AbstractPageService<IBaseDAO<Con
         paramsMap.put("domain", type);
         paramsMap.put("orderBy", "config_order");
         paramsMap.put("sortBy", "asc");
-        List<Configuration> configurations = exiConfigurationDAO.selectListBydomain(paramsMap);
+        paramsMap.put("isRetain", 1);
+        List<Configuration> configurations = exiConfigurationDAO.selectListRetain(paramsMap);
 
         List<TenantConfigInstance>  tenantConfigInstances=new ArrayList<>();
 

@@ -24,8 +24,8 @@ selectOne
 selectList
 -->
     <sql id="Base_Column_List">
-        id,
-        room_name
+        id as id,
+        room_name as roomName
     </sql>
     <insert id="insert" parameterType="JwRoom">
         INSERT INTO saas_jw_room (
@@ -176,7 +176,7 @@ selectList
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
             <if test="condition.roomName!=null">
-                ${condition.groupOp}   room_name  ${condition.room_name.op}  #{condition.room_name.data}
+                ${condition.groupOp}   room_name  ${condition.roomName.op}  #{condition.roomName.data}
             </if>
 
 
@@ -247,7 +247,7 @@ selectList
                ${groupOp} id ${id.op}  #{id.data}
            </if>
            <if test="roomName!=null">
-               ${groupOp} room_name ${room_name.op}  #{room_name.data}
+               ${groupOp} room_name ${roomName.op}  #{roomName.data}
            </if>
 
        </where>
