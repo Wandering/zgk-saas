@@ -18,4 +18,13 @@ public interface EXIConfigurationService<D extends IBaseDAO<T>, T extends BaseDo
      * @return
      */
     public List<Configuration> selectListBydomain(String type);
+
+
+    /**
+     * 初始化必选字段
+     * @param type
+     * @return
+     */
+    public boolean selectListRetain(String type,Integer tnid);
+
 }

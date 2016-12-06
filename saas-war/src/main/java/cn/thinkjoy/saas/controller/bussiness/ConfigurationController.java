@@ -113,6 +113,16 @@ public class ConfigurationController {
         return resultMap;
     }
 
+    @RequestMapping(value = "/retain/{type}/{tnId}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map retainConfig(@PathVariable String type,@PathVariable Integer tnId) {
+
+        boolean result = exiConfigurationService.selectListRetain(type, tnId);
+        Map resultMap = new HashMap();
+        resultMap.put("result", result);
+        return resultMap;
+    }
+
     /**
      * 教室设置
      *
