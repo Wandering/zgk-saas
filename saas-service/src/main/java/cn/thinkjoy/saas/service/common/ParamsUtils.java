@@ -29,7 +29,7 @@ public  class ParamsUtils {
      * 年级:数量
      */
     public static final String CLASSROOM_GRADE_COMBIN_CHAR=":";
-    public static final String CLASSROOM_NUMBER_COMBIN_CHAR="|";
+    public static final String CLASSROOM_NUMBER_COMBIN_CHAR="\\|";
 
     /**
      * ids 转换Array
