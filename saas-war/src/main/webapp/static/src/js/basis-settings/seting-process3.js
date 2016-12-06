@@ -4,6 +4,22 @@ var tnId = Common.cookie.getCookie('tnId');
 //Common.flowSteps();
 
 
+var initClassBtn = '<div class="initClassBtn"><button class="btn btn-info" id="initBtn">初始化班级</button></div>';
+layer.open({
+    type: 1,
+    title:"请初始化班级",
+    skin: 'layui-layer-demo', //样式类名
+    closeBtn: 0, //不显示关闭按钮
+    anim: 2,
+    shadeClose: false, //开启遮罩关闭
+    offset: 'auto',
+    area: ['400px', '200px'],
+    content: initClassBtn
+});
+
+
+
+
 function SetingProcess3() {
     this.init();
 }
@@ -164,6 +180,28 @@ var SetingProcess3Obj = new SetingProcess3();
 
 // 新增班级字段
 $(function () {
+
+
+    $('body').on('click','#initBtn',function(){
+        Common.ajaxFun('/config/retain/class/'+ tnId +'.do', 'GET', {},
+            function (res) {
+                console.log(res)
+                if (res.rtnCode == "0000000") {
+                    //if (res.bizData.result == 3) {
+                    //    layer.msg('请完成该流程再进行下一步!');
+                    //}else if(res.bizData.result == 4){
+                    //    window.location.href='/seting-process4'
+                    //}
+                }
+            }, function (res) {
+                layer.msg(res.msg);
+            });
+    });
+
+
+
+
+
 
 
     $('#add-btn').on('click', function () {
