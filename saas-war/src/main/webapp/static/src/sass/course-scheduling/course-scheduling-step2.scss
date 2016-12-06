@@ -421,7 +421,11 @@
         margin-top: 30px;
         text-align: center;
     }
-    .btn-save-rule, .btn-save-rule:focus {
+    .btn-save-rule, .btn-save-rule:focus,
+    .btn-teaching-plan, .btn-teaching-plan:focus,
+    .btn-week-save, .btn-week-save:focus,
+    .btn-day-save, .btn-day-save:focus,
+    .btn-base-rule-save, .btn-base-rule-save:focus {
         display: block;
         width: 104px;
         height: 36px;
@@ -433,7 +437,11 @@
         color: #CB171D;
         outline: 0;
     }
-    .btn-save-rule:hover {
+    .btn-save-rule:hover,
+    .btn-teaching-plan:hover,
+    .btn-week-save:hover,
+    .btn-day-save:hover,
+    .btn-base-rule-save:hover {
         background: #CB171D;
         color: #fff;
         outline: 0;
@@ -565,6 +573,31 @@
     }
     .base-rule-content-none {
         display: none;
+    }
+    .base-rule-table {
+        td {
+            .rule-radio, .rule-radio1 {
+                margin-right: 100px;
+                label {
+                    font-size: 12px;
+                    color: #4A4A4A;
+                    position: relative;
+                    top: 2px;
+                }
+            }
+            .rule-radio:first-of-type {
+                margin-left: 30px;
+            }
+            .rule-radio:last-of-type {
+                margin-right: 0;
+            }
+            .rule-radio1 {
+                margin-right: 40px;
+            }
+            .rule-radio1:first-of-type {
+                margin-left: 0;
+            }
+        }
     }
 }
 .rule-content-none {

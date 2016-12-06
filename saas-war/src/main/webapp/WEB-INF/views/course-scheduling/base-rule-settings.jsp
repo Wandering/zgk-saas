@@ -82,7 +82,7 @@
                                 </ul>
                             </div>
                             <div class="base-rule-content">
-                                <select id="">
+                                <select id="teaching-plan-course-list">
                                     <option value="语文">语文</option>
                                     <option value="数学">数学</option>
                                     <option value="英语">英语</option>
@@ -108,35 +108,238 @@
                                             <td>李华</td>
                                             <td>
                                                 <span class="rule-radio">
-                                                    <input type="radio" />
-                                                    <label for="">非常重要</label>
+                                                    <input type="radio" name="teacher-a" id="radio1" />
+                                                    <label for="radio1">非常重要</label>
                                                 </span>
                                                 <span class="rule-radio">
-                                                    <input type="radio" />
-                                                    <label for="">相对重要</label>
+                                                    <input type="radio" name="teacher-a" id="radio2" />
+                                                    <label for="radio2">相对重要</label>
                                                 </span>
                                                 <span class="rule-radio">
-                                                    <input type="radio" />
-                                                    <label for="">一般</label>
+                                                    <input type="radio" name="teacher-a" id="radio3" />
+                                                    <label for="radio3">一般</label>
                                                 </span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>数学</td>
                                             <td>刘伟</td>
-                                            <td></td>
+                                            <td>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-b" id="radio4" />
+                                                    <label for="radio4">非常重要</label>
+                                                </span>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-b" id="radio5" />
+                                                    <label for="radio5">相对重要</label>
+                                                </span>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-b" id="radio6" />
+                                                    <label for="radio6">一般</label>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>英语</td>
+                                            <td>张鹏</td>
+                                            <td>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-c" id="radio7" />
+                                                    <label for="radio7">非常重要</label>
+                                                </span>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-c" id="radio8" />
+                                                    <label for="radio8">相对重要</label>
+                                                </span>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-c" id="radio9" />
+                                                    <label for="radio9">一般</label>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>物理</td>
+                                            <td>张磊</td>
+                                            <td>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-d" id="radio10" />
+                                                    <label for="radio10">非常重要</label>
+                                                </span>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-d" id="radio11" />
+                                                    <label for="radio11">相对重要</label>
+                                                </span>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-d" id="radio12" />
+                                                    <label for="radio12">一般</label>
+                                                </span>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
+                                <button type="button" class="btn-teaching-plan" id="btn-teaching-plan">保存</button>
                             </div>
                             <div class="base-rule-content base-rule-content-none">
-                                周任课规则
+                                <select id="week-course-list">
+                                    <option value="语文">语文</option>
+                                    <option value="数学">数学</option>
+                                    <option value="英语">英语</option>
+                                    <option value="物理">物理</option>
+                                    <option value="化学">化学</option>
+                                    <option value="生物">生物</option>
+                                    <option value="政治">政治</option>
+                                    <option value="历史">历史</option>
+                                    <option value="地理">地理</option>
+                                </select>
+                                <table class="base-rule-table" cellpadding="0" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th width="220px">课程</th>
+                                            <th width="220px">教师</th>
+                                            <th width="260px">周内分布</th>
+                                            <th>重要程度</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>语文</td>
+                                            <td>李华</td>
+                                            <td>
+                                                <span class="rule-radio rule-radio1">
+                                                    <input type="radio" name="teacher-a" id="radio113" />
+                                                    <label for="radio113">周内集中</label>
+                                                </span>
+                                                <span class="rule-radio rule-radio1">
+                                                    <input type="radio" name="teacher-a" id="radio114" />
+                                                    <label for="radio114">周内分散</label>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-a" id="radio13" />
+                                                    <label for="radio13">非常重要</label>
+                                                </span>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-a" id="radio14" />
+                                                    <label for="radio14">相对重要</label>
+                                                </span>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-a" id="radio15" />
+                                                    <label for="radio15">一般</label>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" class="btn-week-save" id="btn-week-save">保存</button>
                             </div>
                             <div class="base-rule-content base-rule-content-none">
-                                日任课规则
+                                <select id="day-course-list">
+                                    <option value="语文">语文</option>
+                                    <option value="数学">数学</option>
+                                    <option value="英语">英语</option>
+                                    <option value="物理">物理</option>
+                                    <option value="化学">化学</option>
+                                    <option value="生物">生物</option>
+                                    <option value="政治">政治</option>
+                                    <option value="历史">历史</option>
+                                    <option value="地理">地理</option>
+                                </select>
+                                <table class="base-rule-table" cellpadding="0" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th width="220px">课程</th>
+                                            <th width="220px">教师</th>
+                                            <th width="260px">日内分布</th>
+                                            <th>重要程度</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>语文</td>
+                                            <td>李华</td>
+                                            <td>
+                                                <span class="rule-radio rule-radio1">
+                                                    <input type="radio" name="teacher-a" id="radio116" />
+                                                    <label for="radio116">日内集中</label>
+                                                </span>
+                                                <span class="rule-radio rule-radio1">
+                                                    <input type="radio" name="teacher-a" id="radio117" />
+                                                    <label for="radio117">日内分散</label>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-a" id="radio16" />
+                                                    <label for="radio16">非常重要</label>
+                                                </span>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-a" id="radio17" />
+                                                    <label for="radio17">相对重要</label>
+                                                </span>
+                                                <span class="rule-radio">
+                                                    <input type="radio" name="teacher-a" id="radio18" />
+                                                    <label for="radio18">一般</label>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" class="btn-day-save" id="btn-day-save">保存</button>
                             </div>
                             <div class="base-rule-content base-rule-content-none">
-                                连上限制
+                                <select id="proceed-course-list">
+                                    <option value="语文">语文</option>
+                                    <option value="数学">数学</option>
+                                    <option value="英语">英语</option>
+                                    <option value="物理">物理</option>
+                                    <option value="化学">化学</option>
+                                    <option value="生物">生物</option>
+                                    <option value="政治">政治</option>
+                                    <option value="历史">历史</option>
+                                    <option value="地理">地理</option>
+                                </select>
+                                <table class="base-rule-table" cellpadding="0" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th width="220px">课程</th>
+                                        <th width="220px">教师</th>
+                                        <th width="260px">一天连上节数</th>
+                                        <th>重要程度</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>语文</td>
+                                        <td>李华</td>
+                                        <td>
+                                            <span class="rule-radio rule-radio1">
+                                                <input type="radio" name="teacher-a" id="radio119" />
+                                                <label for="radio119">连上2节</label>
+                                            </span>
+                                            <span class="rule-radio rule-radio1">
+                                                <input type="radio" name="teacher-a" id="radio120" />
+                                                <label for="radio120">连上3节</label>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="rule-radio">
+                                                <input type="radio" name="teacher-a" id="radio19" />
+                                                <label for="radio19">非常重要</label>
+                                            </span>
+                                            <span class="rule-radio">
+                                                <input type="radio" name="teacher-a" id="radio20" />
+                                                <label for="radio20">相对重要</label>
+                                            </span>
+                                            <span class="rule-radio">
+                                                <input type="radio" name="teacher-a" id="radio21" />
+                                                <label for="radio21">一般</label>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" class="btn-base-rule-save" id="btn-base-rule-save">保存</button>
                             </div>
                         </div>
                     </div>

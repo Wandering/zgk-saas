@@ -33,40 +33,8 @@
             <td class="center">通用技术</td>
         </tr>
         <tr>
-            <td class="center">1</td>
-            <td class="center">英语（韩嘉琛）行政1班</td>
-            <td class="center">历史</td>
-            <td class="center">生物</td>
-            <td class="center">化学</td>
-            <td class="center">通用技术</td>
-        </tr>
-        <tr>
-            <td class="center">1</td>
-            <td class="center">英语（韩嘉琛）行政1班</td>
-            <td class="center">历史</td>
-            <td class="center">生物</td>
-            <td class="center">化学</td>
-            <td class="center">通用技术</td>
-        </tr>
-        <tr>
-            <td class="center">1</td>
-            <td class="center">英语（韩嘉琛）行政1班</td>
-            <td class="center">历史</td>
-            <td class="center">生物</td>
-            <td class="center">化学</td>
-            <td class="center">通用技术</td>
-        </tr>
-        <tr>
-            <td class="center">1</td>
-            <td class="center">英语（韩嘉琛）行政1班</td>
-            <td class="center">历史</td>
-            <td class="center">生物</td>
-            <td class="center">化学</td>
-            <td class="center">通用技术</td>
-        </tr>
-        <tr>
-            <td class="center">1</td>
-            <td class="center">英语（韩嘉琛）行政1班</td>
+            <td class="center">2</td>
+            <td class="center">语文（李嘉）行政5班</td>
             <td class="center">历史</td>
             <td class="center">生物</td>
             <td class="center">化学</td>
