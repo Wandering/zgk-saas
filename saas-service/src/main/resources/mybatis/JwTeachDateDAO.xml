@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IJwTeachDateDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+    <sql id="Base_Column_List">
+        tid,
+        tn_id,
+        teach_date,
+        teach_detail,
+        create_date,
+        task_id
+    </sql>
+    <insert id="insert" parameterType="JwTeachDate">
+        INSERT INTO saas_jw_teach_date (
+        tid,
+        tn_id,
+        teach_date,
+        teach_detail,
+        create_date,
+        task_id
+        ) VALUES (
+        #{tid},
+        #{tnId},
+        #{teachDate},
+        #{teachDetail},
+        #{createDate},
+        #{taskId}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="JwTeachDate">
+        UPDATE saas_jw_teach_date
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tnId!=null">
+                tn_id = #{tnId},
+            </if>
+            <if test="teachDate!=null">
+                teach_date = #{teachDate},
+            </if>
+            <if test="teachDetail!=null">
+                teach_detail = #{teachDetail},
+            </if>
+            <if test="createDate!=null">
+                create_date = #{createDate},
+            </if>
+            <if test="taskId!=null">
+                task_id = #{taskId},
+            </if>
+        </trim>
+        WHERE
+        tid = #{tid}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_jw_teach_date
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.tnId!=null">
+                tn_id = #{map.tnId},
+            </if>
+            <if test="map.teachDate!=null">
+                teach_date = #{map.teachDate},
+            </if>
+            <if test="map.teachDetail!=null">
+                teach_detail = #{map.teachDetail},
+            </if>
+            <if test="map.createDate!=null">
+                create_date = #{map.createDate},
+            </if>
+            <if test="map.taskId!=null">
+                task_id = #{map.taskId},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_jw_teach_date
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.tnId!=null">
+                tn_id = #{update.tnId},
+            </if>
+            <if test="update.teachDate!=null">
+                teach_date = #{update.teachDate},
+            </if>
+            <if test="update.teachDetail!=null">
+                teach_detail = #{update.teachDetail},
+            </if>
+            <if test="update.createDate!=null">
+                create_date = #{update.createDate},
+            </if>
+            <if test="update.taskId!=null">
+                task_id = #{update.taskId},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.tid!=null">
+                AND tid = #{condition.tid}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.teachDate!=null">
+                AND teach_date = #{condition.teachDate}
+            </if>
+            <if test="condition.teachDetail!=null">
+                AND teach_detail = #{condition.teachDetail}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+            <if test="condition.taskId!=null">
+                AND task_id = #{condition.taskId}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_jw_teach_date (
+                tid,
+                tn_id,
+                teach_date,
+                teach_detail,
+                create_date,
+                task_id
+        ) VALUES (
+                    #{map.tid},
+                    #{map.tnId},
+                    #{map.teachDate},
+                    #{map.teachDetail},
+                    #{map.createDate},
+                    #{map.taskId}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="JwTeachDate">
+        UPDATE saas_jw_teach_date
+        <trim prefix="SET" suffixOverrides=",">
+            tn_id = #{tnId},
+            teach_date = #{teachDate},
+            teach_detail = #{teachDetail},
+            create_date = #{createDate},
+            task_id = #{taskId},
+        </trim>
+        WHERE
+        tid = #{tid} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_jw_teach_date
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND tid = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_jw_teach_date
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="tid!=null">
+                AND tid = #{tid}
+            </if>
+            <if test="tnId!=null">
+                AND tn_id = #{tnId}
+            </if>
+            <if test="teachDate!=null">
+                AND teach_date = #{teachDate}
+            </if>
+            <if test="teachDetail!=null">
+                AND teach_detail = #{teachDetail}
+            </if>
+            <if test="createDate!=null">
+                AND create_date = #{createDate}
+            </if>
+            <if test="taskId!=null">
+                AND task_id = #{taskId}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_jw_teach_date WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="JwTeachDate">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_date
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND tid = #{id}
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="JwTeachDate">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_date WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="JwTeachDate">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_date WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="JwTeachDate">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_date
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="JwTeachDate">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_date
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.tid!=null">
+                ${condition.groupOp}   tid  ${condition.tid.op}  #{condition.tid.data}
+            </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+            </if>
+            <if test="condition.teachDate!=null">
+                ${condition.groupOp}   teach_date  ${condition.teach_date.op}  #{condition.teach_date.data}
+            </if>
+            <if test="condition.teachDetail!=null">
+                ${condition.groupOp}   teach_detail  ${condition.teach_detail.op}  #{condition.teach_detail.data}
+            </if>
+            <if test="condition.createDate!=null">
+                ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
+            </if>
+            <if test="condition.taskId!=null">
+                ${condition.groupOp}   task_id  ${condition.task_id.op}  #{condition.task_id.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="JwTeachDate">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_date
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="tid!=null">
+                AND tid like CONCAT('%', #{tid} , '%')
+            </if>
+            <if test="tnId!=null">
+                AND tn_id like CONCAT('%', #{tnId} , '%')
+            </if>
+            <if test="teachDate!=null">
+                AND teach_date like CONCAT('%', #{teachDate} , '%')
+            </if>
+            <if test="teachDetail!=null">
+                AND teach_detail like CONCAT('%', #{teachDetail} , '%')
+            </if>
+            <if test="createDate!=null">
+                AND create_date like CONCAT('%', #{createDate} , '%')
+            </if>
+            <if test="taskId!=null">
+                AND task_id like CONCAT('%', #{taskId} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="JwTeachDate">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_date
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.tid!=null">
+                AND tid = #{condition.tid}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.teachDate!=null">
+                AND teach_date = #{condition.teachDate}
+            </if>
+            <if test="condition.teachDetail!=null">
+                AND teach_detail = #{condition.teachDetail}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+            <if test="condition.taskId!=null">
+                AND task_id = #{condition.taskId}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="JwTeachDate">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_date
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.tid!=null">
+                AND tid = #{condition.tid}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.teachDate!=null">
+                AND teach_date = #{condition.teachDate}
+            </if>
+            <if test="condition.teachDetail!=null">
+                AND teach_detail = #{condition.teachDetail}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+            <if test="condition.taskId!=null">
+                AND task_id = #{condition.taskId}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(tid) FROM saas_jw_teach_date
+       <where>
+           <if test="tid!=null">
+               ${groupOp} tid ${tid.op}  #{tid.data}
+           </if>
+           <if test="tnId!=null">
+               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+           </if>
+           <if test="teachDate!=null">
+               ${groupOp} teach_date ${teach_date.op}  #{teach_date.data}
+           </if>
+           <if test="teachDetail!=null">
+               ${groupOp} teach_detail ${teach_detail.op}  #{teach_detail.data}
+           </if>
+           <if test="createDate!=null">
+               ${groupOp} create_date ${create_date.op}  #{create_date.data}
+           </if>
+           <if test="taskId!=null">
+               ${groupOp} task_id ${task_id.op}  #{task_id.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_jw_teach_date
+    </select>
+
+</mapper>
+

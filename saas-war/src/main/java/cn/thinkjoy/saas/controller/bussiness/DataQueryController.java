@@ -466,7 +466,7 @@ public class DataQueryController {
      * @param universityId
      * @param year
      * @param batch
-     * @param universityMajorType
+     * @param majorType
      * @param page
      * @param rows
      * @return
@@ -476,7 +476,7 @@ public class DataQueryController {
     public List getUniversityMajorEnrollingPlanList(@RequestParam(value = "universityId", required = true) long universityId,
                                                     @RequestParam(value = "year", required = false) String year,//年份
                                                     @RequestParam(value = "batch", required = false) Integer batch,//批次
-                                                    @RequestParam(value = "universityMajorType", required = false) String universityMajorType,//科类
+                                                    @RequestParam(value = "majorType", required = false) String majorType,//科类
                                                     @RequestParam(value = "page") Integer page,
                                                     @RequestParam(value = "rows") Integer rows,
                                                     HttpServletRequest request,
@@ -492,8 +492,8 @@ public class DataQueryController {
         if (batch != null) {
             condition.put("batch", batch);
         }
-        if (StringUtils.isNotBlank(universityMajorType)) {
-            condition.put("majorType", universityMajorType);
+        if (StringUtils.isNotBlank(majorType)) {
+            condition.put("majorType", majorType);
         }
         condition.put("areaId",getUserProvinceId(request,response));
         condition.put("offset", page-1);

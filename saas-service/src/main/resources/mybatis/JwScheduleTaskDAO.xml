@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IJwScheduleTaskDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+    <sql id="Base_Column_List">
+        id,
+        schedule_name,
+        grade,
+        year,
+        term,
+        status,
+        create_date,
+        tn_id
+    </sql>
+    <insert id="insert" parameterType="JwScheduleTask">
+        INSERT INTO saas_jw_schedule_task (
+        schedule_name,
+        grade,
+        year,
+        term,
+        status,
+        create_date,
+        tn_id
+        ) VALUES (
+        #{scheduleName},
+        #{grade},
+        #{year},
+        #{term},
+        #{status},
+        #{createDate},
+        #{tnId}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="JwScheduleTask">
+        UPDATE saas_jw_schedule_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scheduleName!=null">
+                schedule_name = #{scheduleName},
+            </if>
+            <if test="grade!=null">
+                grade = #{grade},
+            </if>
+            <if test="year!=null">
+                year = #{year},
+            </if>
+            <if test="term!=null">
+                term = #{term},
+            </if>
+            <if test="status!=null">
+                status = #{status},
+            </if>
+            <if test="createDate!=null">
+                create_date = #{createDate},
+            </if>
+            <if test="tnId!=null">
+                tn_id = #{tnId},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_jw_schedule_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.scheduleName!=null">
+                schedule_name = #{map.scheduleName},
+            </if>
+            <if test="map.grade!=null">
+                grade = #{map.grade},
+            </if>
+            <if test="map.year!=null">
+                year = #{map.year},
+            </if>
+            <if test="map.term!=null">
+                term = #{map.term},
+            </if>
+            <if test="map.status!=null">
+                status = #{map.status},
+            </if>
+            <if test="map.createDate!=null">
+                create_date = #{map.createDate},
+            </if>
+            <if test="map.tnId!=null">
+                tn_id = #{map.tnId},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_jw_schedule_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.scheduleName!=null">
+                schedule_name = #{update.scheduleName},
+            </if>
+            <if test="update.grade!=null">
+                grade = #{update.grade},
+            </if>
+            <if test="update.year!=null">
+                year = #{update.year},
+            </if>
+            <if test="update.term!=null">
+                term = #{update.term},
+            </if>
+            <if test="update.status!=null">
+                status = #{update.status},
+            </if>
+            <if test="update.createDate!=null">
+                create_date = #{update.createDate},
+            </if>
+            <if test="update.tnId!=null">
+                tn_id = #{update.tnId},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.scheduleName!=null">
+                AND schedule_name = #{condition.scheduleName}
+            </if>
+            <if test="condition.grade!=null">
+                AND grade = #{condition.grade}
+            </if>
+            <if test="condition.year!=null">
+                AND year = #{condition.year}
+            </if>
+            <if test="condition.term!=null">
+                AND term = #{condition.term}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_jw_schedule_task (
+                schedule_name,
+                grade,
+                year,
+                term,
+                status,
+                create_date,
+                tn_id
+        ) VALUES (
+                    #{map.scheduleName},
+                    #{map.grade},
+                    #{map.year},
+                    #{map.term},
+                    #{map.status},
+                    #{map.createDate},
+                    #{map.tnId}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="JwScheduleTask">
+        UPDATE saas_jw_schedule_task
+        <trim prefix="SET" suffixOverrides=",">
+            schedule_name = #{scheduleName},
+            grade = #{grade},
+            year = #{year},
+            term = #{term},
+            status = #{status},
+            create_date = #{createDate},
+            tn_id = #{tnId},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_jw_schedule_task
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_jw_schedule_task
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="scheduleName!=null">
+                AND schedule_name = #{scheduleName}
+            </if>
+            <if test="grade!=null">
+                AND grade = #{grade}
+            </if>
+            <if test="year!=null">
+                AND year = #{year}
+            </if>
+            <if test="term!=null">
+                AND term = #{term}
+            </if>
+            <if test="status!=null">
+                AND status = #{status}
+            </if>
+            <if test="createDate!=null">
+                AND create_date = #{createDate}
+            </if>
+            <if test="tnId!=null">
+                AND tn_id = #{tnId}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_jw_schedule_task WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="JwScheduleTask">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_schedule_task
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="JwScheduleTask">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_schedule_task WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="JwScheduleTask">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_schedule_task WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="JwScheduleTask">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_schedule_task
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="JwScheduleTask">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_schedule_task
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.scheduleName!=null">
+                ${condition.groupOp}   schedule_name  ${condition.schedule_name.op}  #{condition.schedule_name.data}
+            </if>
+            <if test="condition.grade!=null">
+                ${condition.groupOp}   grade  ${condition.grade.op}  #{condition.grade.data}
+            </if>
+            <if test="condition.year!=null">
+                ${condition.groupOp}   year  ${condition.year.op}  #{condition.year.data}
+            </if>
+            <if test="condition.term!=null">
+                ${condition.groupOp}   term  ${condition.term.op}  #{condition.term.data}
+            </if>
+            <if test="condition.status!=null">
+                ${condition.groupOp}   status  ${condition.status.op}  #{condition.status.data}
+            </if>
+            <if test="condition.createDate!=null">
+                ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
+            </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="JwScheduleTask">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_schedule_task
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id like CONCAT('%', #{id} , '%')
+            </if>
+            <if test="scheduleName!=null">
+                AND schedule_name like CONCAT('%', #{scheduleName} , '%')
+            </if>
+            <if test="grade!=null">
+                AND grade like CONCAT('%', #{grade} , '%')
+            </if>
+            <if test="year!=null">
+                AND year like CONCAT('%', #{year} , '%')
+            </if>
+            <if test="term!=null">
+                AND term like CONCAT('%', #{term} , '%')
+            </if>
+            <if test="status!=null">
+                AND status like CONCAT('%', #{status} , '%')
+            </if>
+            <if test="createDate!=null">
+                AND create_date like CONCAT('%', #{createDate} , '%')
+            </if>
+            <if test="tnId!=null">
+                AND tn_id like CONCAT('%', #{tnId} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="JwScheduleTask">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_schedule_task
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.scheduleName!=null">
+                AND schedule_name = #{condition.scheduleName}
+            </if>
+            <if test="condition.grade!=null">
+                AND grade = #{condition.grade}
+            </if>
+            <if test="condition.year!=null">
+                AND year = #{condition.year}
+            </if>
+            <if test="condition.term!=null">
+                AND term = #{condition.term}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="JwScheduleTask">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_schedule_task
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.scheduleName!=null">
+                AND schedule_name = #{condition.scheduleName}
+            </if>
+            <if test="condition.grade!=null">
+                AND grade = #{condition.grade}
+            </if>
+            <if test="condition.year!=null">
+                AND year = #{condition.year}
+            </if>
+            <if test="condition.term!=null">
+                AND term = #{condition.term}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_jw_schedule_task
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="scheduleName!=null">
+               ${groupOp} schedule_name ${schedule_name.op}  #{schedule_name.data}
+           </if>
+           <if test="grade!=null">
+               ${groupOp} grade ${grade.op}  #{grade.data}
+           </if>
+           <if test="year!=null">
+               ${groupOp} year ${year.op}  #{year.data}
+           </if>
+           <if test="term!=null">
+               ${groupOp} term ${term.op}  #{term.data}
+           </if>
+           <if test="status!=null">
+               ${groupOp} status ${status.op}  #{status.data}
+           </if>
+           <if test="createDate!=null">
+               ${groupOp} create_date ${create_date.op}  #{create_date.data}
+           </if>
+           <if test="tnId!=null">
+               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_jw_schedule_task
+    </select>
+
+</mapper>
+
