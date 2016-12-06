@@ -55,12 +55,11 @@
                         <!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
                     <div class="col-xs-12">
-                        <h5 class="h5">本科线成绩分析</h5>
+                        <div class="grade3-t"><h5 class="h5 p-t"><span class="line"></span>本科线成绩分析：</h5></div>
                         <div class="grade3-main" style="display: none;">
                             <div id="lineNumberByDate-chart" style="width: 100%;height: 250px;"></div>
                         </div>
-                        <p><h5 class="h5">班级情况统计：</h5>根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</p>
-                        <h5 class="h5">各班上线人数统计：</h5>
+                        <p><h5 class="h5 p-t"><span class="line"></span>各班上线人数统计：</h5><span class="p-t2">根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</span></p>
                         <div class="txt-t">
                             <div class="radio no-padding-left">
                                 <label>
@@ -93,14 +92,14 @@
                             </tbody>
                         </table>
 
-                        <div><h5 class="h5">重点关注学生：</h5>根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</div>
+                        <div><h5 class="h5 p-t"><span class="line"></span>重点关注学生：</h5><span class="p-t2">根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</span></div>
                         <div class="core-txt"></div>
                         <table class="table table-hover">
                             <thead id="core-thead"></thead>
                             <tbody id="core-tbody"></tbody>
                         </table>
 
-                        <h5 class="h5">进步较大学生：</h5>
+                        <div><h5 class="h5 p-t"><span class="line"></span>进步较大学生：</h5></div>
                         <form class="form-horizontal" role="form">
                             <div class="form-group">
                                 <div class="col-sm-3">

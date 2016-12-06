@@ -45,6 +45,8 @@
                         <div class="main-title">
                             <h3>班级成绩分析</h3>
                         </div>
+                        <br>
+                        <div><h5 class="h5 p-t"><span class="line"></span>总体成绩分析：</h5></div>
                         <div class="title-2">
                             <div class="txt-t">
                                 <div class="radio no-padding-left" id="grade-body"></div>
@@ -90,13 +92,10 @@
                     </div>
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
-                        <div class="main-title">
-                            <h3 class="grade-type">重点线成绩分析</h3>
-                        </div>
+                        <div><h5 class="h5 p-t"><span class="line"></span>重点线成绩分析：</h5>
                         <div class="grade3-main" style="display: none;">
                             <div id="lineNumberByDate-chart" style="width: 100%;height: 250px;"></div>
                         </div>
-                        <p><h5 class="h5">班级情况统计：</h5><span class="batch-info">根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名</span></p>
                         <div class="grade1-2-line">
                             <span class="online-txt">设置关注位次线</span><input type="txt" id="set-line" class="online-input" value="">
                             <button type="button" class="set-line-btn" id="set-line-btn">确定</button>
@@ -169,7 +168,7 @@
                             </table>
                             <div class="tcdPageCode"></div>
                         </div>
-                        <p class="txt1">进步较大学生:</p>
+                            <div><h5 class="h5 p-t"><span class="line"></span>进步较大学生：</h5>
                         <form class="form-horizontal" role="form">
                             <div class="form-group">
                                 <div class="col-sm-3">
