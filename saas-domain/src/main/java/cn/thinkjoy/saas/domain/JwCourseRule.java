@@ -28,12 +28,6 @@ public class JwCourseRule extends JwBaseRule{
 	public JwCourseRule(){
 	}
 
-	@Override
-	public void setTypeId(Integer value)
-	{
-		setCourseId(value);
-	}
-
 	public void setCourseId(Integer value) {
         this.courseId = value;
     }
