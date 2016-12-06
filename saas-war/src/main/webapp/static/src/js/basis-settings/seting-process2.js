@@ -33,10 +33,20 @@ SetingProcess2.prototype = {
             var gradeArr = [];
             $.each(data.bizData.grades, function (i, v) {
                 gradeArr.push('<div class="form-group">');
-                gradeArr.push('<label class="col-sm-3 control-label no-padding-right" for="form-grade1">');
-                gradeArr.push( v.grade +'教室数量 </label>');
-                gradeArr.push('<div class="col-sm-9">');
-                gradeArr.push('<input type="text" gradeId="'+ v.id +'" id="form-grade'+ (i+1) +'" placeholder="0--100以内" class="col-xs-10 col-xs-10 col-sm-10 grade-item"/>');
+                gradeArr.push('<label class="col-sm-4 control-label no-padding-right">'+v.grade +'教室数量 </label>');
+                gradeArr.push('<div class="col-sm-6">');
+                gradeArr.push('</div>');
+                gradeArr.push('</div>');
+                gradeArr.push('<div class="form-group">');
+                gradeArr.push('<label for="classroom-num" class="col-sm-4 control-label no-padding-right">行政教室数量:</label>');
+                gradeArr.push('<div class="col-sm-6">');
+                gradeArr.push('<input type="text" class="form-control grade-item" gradeId="'+ v.id +'" id="classroom-grade'+ (i+1) +'"  placeholder="0--100以内">');
+                gradeArr.push('</div>');
+                gradeArr.push('</div>');
+                gradeArr.push('<div class="form-group">');
+                gradeArr.push('<label for="" class="col-sm-4 control-label no-padding-right">走班教室数量:</label>');
+                gradeArr.push('<div class="col-sm-6">');
+                gradeArr.push('<input type="text" class="form-control grade-item" gradeId="'+ v.id +'" id="goclass-grade'+ (i+1) +'"  placeholder="0--100以内">');
                 gradeArr.push('</div>');
                 gradeArr.push('</div>');
             });

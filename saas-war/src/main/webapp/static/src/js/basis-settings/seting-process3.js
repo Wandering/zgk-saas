@@ -58,13 +58,18 @@ SetingProcess3.prototype = {
         contentHtml.push('<div class="add-label">');
         $.each(initData, function (i, v) {
             contentHtml.push('<label>');
-            if (name[v.chName] == v.chName) {
-                contentHtml.push('<input name="form-field-checkbox" type="checkbox" checked="checked" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
-            } else {
-                contentHtml.push('<input name="form-field-checkbox" type="checkbox" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
+            if(v.isRetain!=1){
+                if (name[v.chName] == v.chName) {
+                    contentHtml.push('<input name="form-field-checkbox"  isRetain="'+ v.isRetain +'"  type="checkbox" checked="checked" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
+                } else {
+                    contentHtml.push('<input name="form-field-checkbox" isRetain="'+ v.isRetain +'" type="checkbox" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
+                }
+            }else{
+                contentHtml.push('<input name="form-field-checkbox" disabled="disabled" isRetain="'+ v.isRetain +'" checked="checked" type="checkbox" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
             }
             contentHtml.push('<span class="lbl">' + v.chName + '</span>');
             contentHtml.push('</label>');
+
         });
         contentHtml.push('</div>');
         contentHtml.push('<div class="btn-box"><button class="btn btn-info" id="sel-confirm">确定选择</button></div>');
@@ -167,14 +172,7 @@ $(function () {
 
 // 添加班级字段确定
     $('body').on('click', '#sel-confirm', function () {
-        var that = $(this);
-        var addLabelSelLen = $('.add-label input:checked').length;
-        if (addLabelSelLen == "0") {
-            layer.tips('至少选择一项', that);
-        } else {
-            SetingProcess3Obj.eventSelConfirm();
-        }
-
+        SetingProcess3Obj.eventSelConfirm();
     });
 
 // 删除表头
