@@ -8,7 +8,8 @@ public class ClassRoomView {
     private Integer tnId;
     private Integer gradeId;
     private String grade;
-    private Integer number;
+    private Integer executiveNumber;
+    private Integer dayNumber;
     private Integer roomOrder;
     private Long createDate;
 
@@ -44,12 +45,20 @@ public class ClassRoomView {
         this.grade = grade;
     }
 
-    public Integer getNumber() {
-        return number;
+    public Integer getExecutiveNumber() {
+        return executiveNumber;
     }
 
-    public void setNumber(Integer number) {
-        this.number = number;
+    public void setExecutiveNumber(Integer executiveNumber) {
+        this.executiveNumber = executiveNumber;
+    }
+
+    public Integer getDayNumber() {
+        return dayNumber;
+    }
+
+    public void setDayNumber(Integer dayNumber) {
+        this.dayNumber = dayNumber;
     }
 
     public Integer getRoomOrder() {
