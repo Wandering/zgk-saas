@@ -33,4 +33,7 @@ public class Constant {
      * 用户默认密码 111111
      */
     public static final String DEFULT_PWD = "96e79218965eb72c92a549dd5a330112";
+
+
+    public static final Integer SCHEDULE_TASK_INIT_STATUS = 1;
 }

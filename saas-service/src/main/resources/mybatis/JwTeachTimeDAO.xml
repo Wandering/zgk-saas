@@ -24,11 +24,11 @@ selectOne
 selectList
 -->
     <sql id="Base_Column_List">
-        id,
-        teach_time,
-        ten_id,
-        create_time,
-        tid
+        id as id,
+        teach_time as teachTime,
+        ten_id as tenId,
+        create_time as createTime,
+        tid as tid
     </sql>
     <insert id="insert" parameterType="JwTeachTime">
         INSERT INTO saas_jw_teach_time (
@@ -239,13 +239,13 @@ selectList
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
             <if test="condition.teachTime!=null">
-                ${condition.groupOp}   teach_time  ${condition.teach_time.op}  #{condition.teach_time.data}
+                ${condition.groupOp}   teach_time  ${condition.teachTime.op}  #{condition.teachTime.data}
             </if>
             <if test="condition.tenId!=null">
-                ${condition.groupOp}   ten_id  ${condition.ten_id.op}  #{condition.ten_id.data}
+                ${condition.groupOp}   ten_id  ${condition.tenId.op}  #{condition.tenId.data}
             </if>
             <if test="condition.createTime!=null">
-                ${condition.groupOp}   create_time  ${condition.create_time.op}  #{condition.create_time.data}
+                ${condition.groupOp}   create_time  ${condition.createTime.op}  #{condition.createTime.data}
             </if>
             <if test="condition.tid!=null">
                 ${condition.groupOp}   tid  ${condition.tid.op}  #{condition.tid.data}
@@ -346,13 +346,13 @@ selectList
                ${groupOp} id ${id.op}  #{id.data}
            </if>
            <if test="teachTime!=null">
-               ${groupOp} teach_time ${teach_time.op}  #{teach_time.data}
+               ${groupOp} teach_time ${teachTime.op}  #{teachTime.data}
            </if>
            <if test="tenId!=null">
-               ${groupOp} ten_id ${ten_id.op}  #{ten_id.data}
+               ${groupOp} ten_id ${tenId.op}  #{tenId.data}
            </if>
            <if test="createTime!=null">
-               ${groupOp} create_time ${create_time.op}  #{create_time.data}
+               ${groupOp} create_time ${createTime.op}  #{createTime.data}
            </if>
            <if test="tid!=null">
                ${groupOp} tid ${tid.op}  #{tid.data}
