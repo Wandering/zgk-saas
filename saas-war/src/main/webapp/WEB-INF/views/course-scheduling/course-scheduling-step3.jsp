@@ -181,7 +181,6 @@
         </div>
     </div>
 </div>
-<%@ include file="./../common/footer.jsp" %>
 <script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling-step3.js"></script>
 </body>
 </html>
