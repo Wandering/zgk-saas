@@ -27,7 +27,8 @@ selectList
         id,
         tn_id as tnId,
         grade_id as gradeId,
-        number,
+        executive_number as executiveNumber,
+        day_number as dayNumber,
         room_order as roomOrder,
         create_date as createDate
     </sql>
@@ -35,13 +36,15 @@ selectList
         INSERT INTO saas_class_rooms (
         tn_id,
         grade_id,
-        number,
+        executive_number,
+        day_number,
         room_order,
         create_date
         ) VALUES (
         #{tnId},
         #{gradeId},
-        #{number},
+        #{executiveNumber},
+        #{dayNumber},
         #{roomOrder},
         #{createDate}
         )
@@ -60,8 +63,11 @@ selectList
             <if test="gradeId!=null">
                 grade_id = #{gradeId},
             </if>
-            <if test="number!=null">
-                number = #{number},
+            <if test="executiveNumber!=null">
+                executive_number = #{executiveNumber},
+            </if>
+            <if test="dayNumber!=null">
+                day_number = #{dayNumber},
             </if>
             <if test="roomOrder!=null">
                 room_order=#{roomOrder},
@@ -83,8 +89,11 @@ selectList
             <if test="map.gradeId!=null">
                 grade_id = #{map.gradeId},
             </if>
-            <if test="map.number!=null">
-                number = #{map.number},
+            <if test="map.executiveNumber!=null">
+                executive_number = #{map.executiveNumber},
+            </if>
+            <if test="map.dayNumber!=null">
+                day_number = #{map.dayNumber},
             </if>
             <if test="map.roomOrder!=null">
                 room_order=#{map.roomOrder},
@@ -106,8 +115,11 @@ selectList
             <if test="update.gradeId!=null">
                 grade_id = #{update.gradeId},
             </if>
-            <if test="update.number!=null">
-                number = #{update.number},
+            <if test="update.executiveNumber!=null">
+                executive_number = #{update.executiveNumber},
+            </if>
+            <if test="update.dayNumber!=null">
+                day_number = #{update.dayNumber},
             </if>
             <if test="update.roomOrder!=null">
                 room_order=#{update.roomOrder},
@@ -127,8 +139,11 @@ selectList
             <if test="condition.gradeId!=null">
                 AND grade_id = #{condition.gradeId}
             </if>
-            <if test="condition.number!=null">
-                AND number = #{condition.number}
+            <if test="condition.executiveNumber!=null">
+                AND executive_number = #{condition.executiveNumber}
+            </if>
+            <if test="condition.dayNumber!=null">
+                AND day_number = #{condition.dayNumber}
             </if>
             <if test="condition.roomOrder!=null">
                 AND room_order=#{condition.roomOrder}
@@ -143,13 +158,15 @@ selectList
         INSERT INTO saas_class_rooms (
                 tn_id,
                 grade_id,
-                number,
+                executive_number,
+                day_number,
                 room_order,
                 create_date
         ) VALUES (
                     #{map.tnId},
                     #{map.gradeId},
-                    #{map.number},
+                    #{map.executiveNumber},
+                    #{map.dayNumber},
                     #{map.roomOrder},
                     #{map.createDate}
         )
@@ -161,7 +178,8 @@ selectList
         <trim prefix="SET" suffixOverrides=",">
             tn_id = #{tnId},
             grade_id = #{gradeId},
-            number = #{number},
+            executive_number = #{executiveNumber},
+            day_number = #{dayNumber},
             room_order=#{roomOrder},
             create_date = #{createDate},
         </trim>
@@ -190,8 +208,11 @@ selectList
             <if test="gradeId!=null">
                 AND grade_id = #{gradeId}
             </if>
-            <if test="number!=null">
-                AND number = #{number}
+            <if test="executiveNumber!=null">
+                AND executive_number = #{executiveNumber}
+            </if>
+            <if test="dayNumber!=null">
+                AND day_number = #{dayNumber}
             </if>
             <if test="roomOrder!=null">
                 AND room_order=#{roomOrder}
@@ -265,8 +286,11 @@ selectList
             <if test="condition.gradeId!=null">
                 ${condition.groupOp}   grade_id  ${condition.grade_id.op}  #{condition.grade_id.data}
             </if>
-            <if test="condition.number!=null">
-                ${condition.groupOp}   number  ${condition.number.op}  #{condition.number.data}
+            <if test="condition.executiveNumber!=null">
+                ${condition.groupOp}   executive_number  ${condition.executive_number.op}  #{condition.executive_number.data}
+            </if>
+            <if test="condition.dayNumber!=null">
+                ${condition.groupOp}   day_number  ${condition.day_number.op}  #{condition.day_number.data}
             </if>
             <if test="condition.roomOrder!=null">
                 ${condition.groupOp}   room_order  ${condition.roomOrder.op}  #{condition.roomOrder.data}
@@ -300,8 +324,11 @@ selectList
             <if test="gradeId!=null">
                 AND grade_id like CONCAT('%', #{gradeId} , '%')
             </if>
-            <if test="number!=null">
-                AND number like CONCAT('%', #{number} , '%')
+            <if test="executiveNumber!=null">
+                AND executive_number like CONCAT('%', #{executiveNumber} , '%')
+            </if>
+            <if test="dayNumber!=null">
+                AND day_number like CONCAT('%', #{dayNumber} , '%')
             </if>
             <if test="roomOrder!=null">
                 AND room_order like CONCAT('%', #{roomOrder} , '%')
@@ -331,8 +358,11 @@ selectList
             <if test="condition.gradeId!=null">
                 AND grade_id = #{condition.gradeId}
             </if>
-            <if test="condition.number!=null">
-                AND number = #{condition.number}
+            <if test="condition.executiveNumber!=null">
+                AND executive_number = #{condition.executiveNumber}
+            </if>
+            <if test="condition.dayNumber!=null">
+                AND day_number = #{condition.dayNumber}
             </if>
             <if test="condition.roomOrder!=null">
                 AND room_order = #{condition.roomOrder}
@@ -361,8 +391,11 @@ selectList
             <if test="condition.gradeId!=null">
                 AND grade_id = #{condition.gradeId}
             </if>
-            <if test="condition.number!=null">
-                AND number = #{condition.number}
+            <if test="condition.executiveNumber!=null">
+                AND executive_number = #{condition.executiveNumber}
+            </if>
+            <if test="condition.dayNumber!=null">
+                AND day_number = #{condition.dayNumber}
             </if>
             <if test="condition.roomOrder!=null">
                 AND room_order = #{condition.roomOrder}
@@ -386,8 +419,11 @@ selectList
            <if test="gradeId!=null">
                ${groupOp} grade_id ${grade_id.op}  #{grade_id.data}
            </if>
-           <if test="number!=null">
-               ${groupOp} number ${number.op}  #{number.data}
+           <if test="executiveNumber!=null">
+               ${groupOp} executive_number ${executiveNumber.op}  #{executiveNumber.data}
+           </if>
+           <if test="dayNumber!=null">
+               ${groupOp} day_number ${dayNumber.op}  #{dayNumber.data}
            </if>
            <if test="roomOrder!=null">
                ${groupOp} room_order ${roomOrder.op}  #{roomOrder.data}

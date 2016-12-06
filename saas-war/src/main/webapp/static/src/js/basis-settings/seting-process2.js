@@ -32,6 +32,7 @@ SetingProcess2.prototype = {
         if (data.rtnCode == "0000000") {
             var gradeArr = [];
             $.each(data.bizData.grades, function (i, v) {
+                gradeArr.push('<div class="classroom-item" gradeId="'+ v.id +'">');
                 gradeArr.push('<div class="form-group">');
                 gradeArr.push('<label class="col-sm-4 control-label no-padding-right">'+v.grade +'教室数量 </label>');
                 gradeArr.push('<div class="col-sm-6">');
@@ -40,13 +41,14 @@ SetingProcess2.prototype = {
                 gradeArr.push('<div class="form-group">');
                 gradeArr.push('<label for="classroom-num" class="col-sm-4 control-label no-padding-right">行政教室数量:</label>');
                 gradeArr.push('<div class="col-sm-6">');
-                gradeArr.push('<input type="text" class="form-control grade-item" gradeId="'+ v.id +'" id="classroom-grade'+ (i+1) +'"  placeholder="0--100以内">');
+                gradeArr.push('<input type="text" class="form-control grade-item classroom-administrative"  placeholder="0--100以内">');
                 gradeArr.push('</div>');
                 gradeArr.push('</div>');
                 gradeArr.push('<div class="form-group">');
                 gradeArr.push('<label for="" class="col-sm-4 control-label no-padding-right">走班教室数量:</label>');
                 gradeArr.push('<div class="col-sm-6">');
-                gradeArr.push('<input type="text" class="form-control grade-item" gradeId="'+ v.id +'" id="goclass-grade'+ (i+1) +'"  placeholder="0--100以内">');
+                gradeArr.push('<input type="text" class="form-control grade-item classroom-goclass" id="goclass-grade'+ (i+1) +'"  placeholder="0--100以内">');
+                gradeArr.push('</div>');
                 gradeArr.push('</div>');
                 gradeArr.push('</div>');
             });
@@ -56,68 +58,59 @@ SetingProcess2.prototype = {
         }
     },
     eventClick:function(){
+
         var nums=[];
-        $('body').find('.grade-item').each(function(i,v){
-            var formGradeId = $('#form-grade'+(i+1)).attr('gradeid');
-            var formGradeV = $.trim($('#form-grade'+(i+1)).val());
-            nums.push("-"+formGradeId+":"+formGradeV);
+        $('body').find('.classroom-item').each(function(i,v){
+            var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
+            var gradeId = $(this).attr('gradeId');
+            var classroomAdministrativeNum = $.trim($(this).find('.classroom-administrative').val())?$.trim($(this).find('.classroom-administrative').val()):0;
+            var classroomGoclassNum = $.trim($(this).find('.classroom-goclass').val())?$.trim($(this).find('.classroom-goclass').val()):0;
+            if(classroomAdministrativeNum=='0'){
+                layer.tips("教室数量必须填写",$(this).find('.classroom-administrative'));
+                return false;
+            }
+            if (!re.test(classroomAdministrativeNum) || classroomAdministrativeNum > 100) {
+                layer.tips('请输入正确的数字!', $(this).find('.classroom-administrative'));
+                return false;
+            }
+            if(classroomGoclassNum=='0'){
+                layer.tips("教室数量必须填写",$(this).find('.classroom-goclass'));
+                return false;
+            }
+            if (!re.test(classroomGoclassNum) || classroomGoclassNum > 100) {
+                layer.tips('请输入正确的数字!', $(this).find('.classroom-goclass'));
+                return false;
+            }
+            nums.push("-"+gradeId+":"+classroomAdministrativeNum+"|"+classroomGoclassNum);
         });
         nums = nums.join('');
         nums = nums.substring(1, nums.length);
         console.log(nums);
-
-        //Common.ajaxFun('/config/classRoom/setting/' + tnId + '/' + nums + '.do', 'POST', {
-        //    'tnId': tnId,
-        //    'nums': nums
-        //}, function (res) {
-        //    console.log(res)
-        //    if (res.rtnCode == "0000000") {
-        //        if (res.bizData.result == "SUCCESS") {
-        //            window.location.href = "/seting-process3";
-        //        }
-        //        if (res.bizData.result == "FAIL") {
-        //            alert('新增失败,请核对后在提交');
-        //        }
-        //    }else{
-        //        layer.msg(res.msg);
-        //    }
-        //}, function (res) {
-        //    layer.msg(res.msg);
-        //});
+        Common.ajaxFun('/config/classRoom/setting/' + tnId + '/' + nums + '.do', 'POST', {
+            'tnId': tnId,
+            'nums': nums
+        }, function (res) {
+            console.log(res)
+            if (res.rtnCode == "0000000") {
+                if (res.bizData.result == "SUCCESS") {
+                    window.location.href = "/seting-process3";
+                }
+                if (res.bizData.result == "FAIL") {
+                    layer.msg("失败");
+                }
+            }else{
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
 
     }
 };
 var SetingProcess2Obj = new SetingProcess2();
-$('#seting-process2-btn').on('click', function () {
-    var nums=[];
-    var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
-    $('body').find('.grade-item').each(function(i,v){
-        var formGradeId = $('#form-grade'+(i+1)).attr('gradeid');
-        var formGradeV = $.trim($('#form-grade'+(i+1)).val());
-        if (!re.test(formGradeV) || formGradeV > 100) {
-            layer.tips('请输入正确的数字!', '#form-grade'+(i+1));
-            return false;
-        }
-        nums.push("-"+formGradeId+":"+formGradeV);
-    });
-    nums = nums.join('');
-    nums = nums.substring(1, nums.length);
-    Common.ajaxFun('/config/classRoom/setting/' + tnId + '/' + nums + '.do', 'POST', {
-        'tnId': tnId,
-        'nums': nums
-    }, function (res) {
-        console.log(res)
-        if (res.rtnCode == "0000000") {
-            if (res.bizData.result == "SUCCESS") {
-                window.location.href = "/seting-process3";
-            }
-            if (res.bizData.result == "FAIL") {
-                layer.msg('新增失败,请核对后在提交');
-            }
-        }else{
-            layer.msg(res.msg);
-        }
-    }, function (res) {
-        layer.msg(res.msg);
+$(function(){
+    $('#seting-process2-btn').on('click', function () {
+        SetingProcess2Obj.eventClick();
     });
 });
+

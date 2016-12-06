@@ -33,7 +33,7 @@ public interface EXIClassRoomService {
      * @param classRoomNum
      * @return
      */
-    boolean addClassRoom(Integer tnId,Integer gradeId,Integer classRoomNum);
+    boolean addClassRoom(Integer tnId,Integer gradeId,Integer classRoomNum,Integer dayNum);
 
 
     /**
@@ -43,7 +43,7 @@ public interface EXIClassRoomService {
      * @param cid 教室标识
      * @return
      */
-    boolean updateClassRoom(Integer num,Integer gid,Integer cid);
+    boolean updateClassRoom(Integer num, Integer d ,Integer gid,Integer cid);
 
 
     /**

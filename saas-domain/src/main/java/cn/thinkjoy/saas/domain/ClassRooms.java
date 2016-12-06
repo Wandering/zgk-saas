@@ -18,7 +18,8 @@ import org.apache.commons.lang.builder.ToStringStyle;
 public class ClassRooms extends BaseDomain {
     private Integer tnId;
     private Integer gradeId;
-    private Integer number;
+    private Integer executiveNumber;
+    private Integer dayNumber;
     private Integer roomOrder;
     private Long createDate;
 
@@ -41,12 +42,20 @@ public class ClassRooms extends BaseDomain {
         this.gradeId = gradeId;
     }
 
-    public Integer getNumber() {
-        return number;
+    public Integer getExecutiveNumber() {
+        return executiveNumber;
     }
 
-    public void setNumber(Integer number) {
-        this.number = number;
+    public void setExecutiveNumber(Integer executiveNumber) {
+        this.executiveNumber = executiveNumber;
+    }
+
+    public Integer getDayNumber() {
+        return dayNumber;
+    }
+
+    public void setDayNumber(Integer dayNumber) {
+        this.dayNumber = dayNumber;
     }
 
     public Integer getRoomOrder() {
@@ -70,8 +79,9 @@ public class ClassRooms extends BaseDomain {
                 .append("Id", getId())
                 .append("TnId", getTnId())
                 .append("GradeId", getGradeId())
-                .append("Number", getNumber())
-                .append("RoomOrder",getRoomOrder())
+                .append("ExecutiveNumber",getExecutiveNumber())
+                .append("DayNumber", getDayNumber())
+                .append("RoomOrder", getRoomOrder())
                 .append("CreateDate", getCreateDate())
                 .toString();
     }

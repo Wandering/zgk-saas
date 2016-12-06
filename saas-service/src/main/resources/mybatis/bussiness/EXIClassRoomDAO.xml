@@ -5,17 +5,18 @@
         id,
         tn_id as tnId,
         grade_id as gradeId,
-        number,
+        executive_number as executiveNumber,
+        day_number as dayNumber,
         room_order as roomOrder,
         create_date as createDate
     </sql>
-
     <sql id="ClassRoomColumnList">
-         classRoom.id,
+        classRoom.id,
         classRoom.tn_id as tnId,
         classRoom.grade_id as gradeId,
         grade.grade,
-        classRoom.number,
+        classRoom.executive_number as executiveNumber,
+        classRoom.day_number as dayNumber,
         classRoom.room_order,
         classRoom.create_date as createDate
     </sql>
@@ -40,8 +41,11 @@
             <if test="gradeId!=null">
                 AND classRoom.grade_id = #{gradeId}
             </if>
-            <if test="number!=null">
-                AND classRoom.number = #{number}
+            <if test="executiveNumber!=null">
+                AND classRoom.executive_number = #{executiveNumber}
+            </if>
+            <if test="dayNumber!=null">
+                AND classRoom.day_number = #{dayNumber}
             </if>
             <if test="createDate!=null">
                 AND classRoom.create_date = #{createDate}
@@ -58,12 +62,13 @@
         insert into saas_class_rooms(
             tn_id,
             grade_id,
-            number,
+            executive_number,
+            day_number,
             create_date
         )
         values
         <foreach collection="ClassRoomsList" item="item" index="index" separator="," >
-            (#{item.tnId},#{item.gradeId},#{item.number},#{item.createDate})
+            (#{item.tnId},#{item.gradeId},#{item.executiveNumber},#{item.dayNumber},#{item.createDate})
         </foreach>
     </insert>
 
@@ -81,13 +86,15 @@
         INSERT INTO saas_class_rooms (
         tn_id,
         grade_id,
-        number,
+        executive_number,
+        day_number,
         room_order,
         create_date
         ) VALUES (
         #{tnId},
         #{gradeId},
-        #{number},
+        #{executiveNumber},
+        #{dayNumber},
         #{roomOrder},
         #{createDate}
         )
