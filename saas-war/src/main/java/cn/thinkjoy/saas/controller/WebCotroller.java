@@ -303,12 +303,20 @@ public class WebCotroller {
         return new ModelAndView("/course-scheduling/course-scheduling-base");
     }
     /**
-     * rule-settings
-     * 排课任务--排课规则设置
+     * course-scheduling-step2
+     * 排课任务--排课第二步骤，排课规则
      */
-    @RequestMapping("/rule-settings")
-    public ModelAndView ruleSettings() {
-        return new ModelAndView("/course-scheduling/rule-settings");
+    @RequestMapping("/course-scheduling-step2")
+    public ModelAndView courseSchedulingStep2() {
+        return new ModelAndView("/course-scheduling/course-scheduling-step2");
+    }/**
+     * course-scheduling-step3
+     * 排课任务--排课第三步骤，自动排课
+     */
+    @RequestMapping("/course-scheduling-step3")
+    public ModelAndView courseSchedulingStep3() {
+        return new ModelAndView("/course-scheduling/course-scheduling-step3");
     }
+
 
 }

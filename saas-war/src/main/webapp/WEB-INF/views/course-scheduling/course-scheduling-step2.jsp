@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>SAAS 角色管理</title>
     <%@ include file="./../common/meta.jsp"%>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/rule-settings.css" />
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step2.css" />
 </head>
 <body>
 <%@ include file="./../common/header.jsp"%>
@@ -92,6 +92,6 @@
     </div>
 </div>
 <%@ include file="./../common/footer.jsp"%>
-<script src="<%=ctx%>/static/src/js/course-scheduling/rule-settings.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling-step2.js"></script>
 </body>
 </html>

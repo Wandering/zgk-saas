@@ -9,12 +9,29 @@
     margin:0;
   }
 }
-
 .h5{
   font-weight: bold;
   font-size:16px;
   display: inline-block;
+  &.p-t{
+    color: #CB171D;
+    font-size:16px;
+    .line{
+      width:6px;
+      height:16px;
+      display: inline-block;
+      background: #CB171D;
+      position: relative;
+      top:3px;
+      margin-right:7px;
+    }
+  }
 }
+.p-t2{
+  color: #9B9B9B;
+  font-size:14px;
+}
+
 
 .class-chart,
 .subject-chart{
@@ -32,8 +49,11 @@
 .table-details-main{
   margin:20px;
 }
-.title-2 .txt-t{
-  float: left;
+.title-2 {
+  padding:10px 0 30px;
+  .txt-t{
+    float: left;
+  }
 }
 .class-sel{
   float: left;

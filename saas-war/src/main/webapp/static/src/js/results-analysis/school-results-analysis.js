@@ -37,9 +37,9 @@ SchoolResultsAnalysis.prototype = {
                         that.getSchoolBossForGrade(v.value);
                         if (v.value.indexOf('高三') >= 0 || v.value.indexOf('高3') >= 0) {
                             that.getOverLineNumberByDate(v.value);
-                            $('.grade3-main').show();
+                            $('.grade3-main,.grade3-t').show();
                         } else {
-                            $('.grade3-main').hide();
+                            $('.grade3-main,.grade3-t').hide();
                         }
                     }
                 });
@@ -95,10 +95,10 @@ SchoolResultsAnalysis.prototype = {
             that.updateExamProperties(radioV);
             that.getSchoolBossForGrade(radioV);
             if (radioV.indexOf('高三') >= 0 || radioV.indexOf('高3') >= 0) {
-                $('.grade3-main').show();
+                $('.grade3-main,.grade3-t').show();
                 that.getOverLineNumberByDate(radioV);
             } else {
-                $('.grade3-main').hide();
+                $('.grade3-main,.grade3-t').hide();
             }
         });
         // 默认高一年级
@@ -453,7 +453,11 @@ SchoolResultsAnalysis.prototype = {
         var lineNumberByDateChart = echarts.init(document.getElementById('lineNumberByDate-chart'));
         var lineNumberByDateOption = {
             title: {
-                text: '16年浙江本科批次线:439分'
+                text: '16年浙江本科批次线:439分',
+                textStyle:{
+                    fontSize:'14',
+                    color:'#9B9B9B'
+                }
             },
             tooltip: {
                 trigger: 'axis'

@@ -607,7 +607,8 @@ ClassResultsAnalysis.prototype = {
                 text: '班级平均分排名',
                 left: 'left',
                 textStyle:{
-                    fontSize:12
+                    fontSize:'14',
+                    color:'#4A4A4A'
                 }
             },
             tooltip: {
