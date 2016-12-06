@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>SAAS 角色管理</title>
     <%@ include file="./../common/meta.jsp"%>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling.css" />
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step2.css" />
 </head>
 <body>
 <%@ include file="./../common/header.jsp"%>
@@ -37,81 +37,53 @@
                         <div class="main-title">
                             <h3>排课任务</h3>
                         </div>
-                        <div class="title-2">
-                            <span class="txt-t"></span>
-                            <div class="btns">
-                                <button class="btn btn-pink" id="addRole-btn">新建排课任务</button>
-                                <button class="btn btn-inverse" id="updateRole-btn">修改</button>
-                                <button class="btn btn-success" id="deleteRole-btn">删除</button>
+                        <div class="common-back-title">
+                            <a href="/course-scheduling">&lt;返回</a>
+                            <span class="title">高一排课</span>
+                        </div>
+                        <div class="course-scheduling-base">
+                            <div class="procedure">
+                                <a href="javascript: void(0);" class="disabled"><i>1</i>基本信息设置</a>
+                                <span class="gap"><i></i><i></i><i></i><i></i><i></i></span>
+                                <a href="javascript: void(0);"><i>2</i>排课规则设置</a>
+                                <span class="gap"><i></i><i></i><i></i><i></i><i></i></span>
+                                <a href="javascript: void(0);" class="disabled"><i>3</i>自动排课</a>
                             </div>
                         </div>
-                        <div class="">
-                            <table id="schedule-table" class="table">
-                                <thead>
-                                <tr>
-                                    <th class="center" width="50px">
-                                        <label>
-                                            <input type="checkbox" class="ace" />
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </th>
-                                    <th class="center" width="80px">序号</th>
-                                    <th class="center" width="250px">名称</th>
-                                    <th class="center" width="250px">年级</th>
-                                    <th class="center" width="250px">学期</th>
-                                    <th class="center"></th>
-                                </tr>
-                                </thead>
-                                <tbody id="schedule-list" class="check-template">
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">1</td>
-                                        <td class="center">高二排课</td>
-                                        <td class="center">高二</td>
-                                        <td class="center">2016年第一学期</td>
-                                        <td class="center">
-                                            <a href="/course-scheduling-base" class="start-schedule-btn">开始排课</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">2</td>
-                                        <td class="center">高一排课</td>
-                                        <td class="center">高一</td>
-                                        <td class="center">2016年第一学期</td>
-                                        <td class="center">
-                                            <a href="javascript: void(0);" class="fail-schedule-btn btn-split">排课失败</a>
-                                            <a href="javascript: void(0);" class="again-schedule-btn btn-split">重新排课</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">3</td>
-                                        <td class="center">高三排课</td>
-                                        <td class="center">高三</td>
-                                        <td class="center">2016年第一学期</td>
-                                        <td class="center">
-                                            <a href="javascript: void(0);" class="timetable-btn btn-split">查看课表</a>
-                                            <a href="javascript: void(0);" class="again-schedule-btn btn-split">重新排课</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <ul class="rule-item-tab">
+                            <li>
+                                <a href="javascript: void(0);" class="active">不排课时间</a>
+                            </li>
+                            <li>
+                                <a href="javascript: void(0);">不连堂</a>
+                            </li>
+                            <li>
+                                <a href="javascript: void(0);">合班</a>
+                            </li>
+                            <li>
+                                <a href="javascript: void(0);">基本规则设置</a>
+                            </li>
+                        </ul>
+                        <div class="rule-content">
+                            <select id="no-course-time">
+                                <option value="1">班级不排课时间</option>
+                                <option value="2">教师不排课时间</option>
+                                <option value="3">课程不排课时间</option>
+                            </select>
+                            <div class="no-course-time">
+                                <div class="class-no-course">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rule-content rule-content-none">
+                            不连堂
+                        </div>
+                        <div class="rule-content rule-content-none">
+                            合班
+                        </div>
+                        <div class="rule-content rule-content-none">
+                            基本规则设置
                         </div>
                     </div>
                 </div>

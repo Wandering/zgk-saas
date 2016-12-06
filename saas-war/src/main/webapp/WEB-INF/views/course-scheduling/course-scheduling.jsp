@@ -75,7 +75,7 @@
                                         <td class="center">高二</td>
                                         <td class="center">2016年第一学期</td>
                                         <td class="center">
-                                            <a href="/course-scheduling-base" class="start-schedule-btn">开始排课</a>
+                                            <a href="/course-scheduling-step1" class="start-schedule-btn">开始排课</a>
                                         </td>
                                     </tr>
                                     <tr>

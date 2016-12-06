@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>SAAS 角色管理</title>
     <%@ include file="./../common/meta.jsp"%>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-base.css" />
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step1.css" />
 </head>
 <body>
 <%@ include file="./../common/header.jsp"%>
@@ -45,7 +45,7 @@
                             <div class="procedure">
                                 <a href="javascript: void(0);"><i>1</i>基本信息设置</a>
                                 <span class="gap"><i></i><i></i><i></i><i></i><i></i></span>
-                                <a href="javascript: void(0);" class="disabled"><i>2</i>排课规则设置</a>
+                                <a href="/course-scheduling-step2" class="disabled"><i>2</i>排课规则设置</a>
                                 <span class="gap"><i></i><i></i><i></i><i></i><i></i></span>
                                 <a href="javascript: void(0);" class="disabled"><i>3</i>自动排课</a>
                             </div>
@@ -261,6 +261,6 @@
     </div>
 </div>
 <%@ include file="./../common/footer.jsp"%>
-<script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling-base.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling-step1.js"></script>
 </body>
 </html>

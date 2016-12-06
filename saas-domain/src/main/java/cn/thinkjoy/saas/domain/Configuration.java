@@ -25,6 +25,7 @@ public class Configuration extends BaseDomain{
     private String dataType;
     private String dataUrl;
     private String dataValue;
+    private byte isRetain;
 
 	public Configuration(){
 	}
@@ -95,6 +96,14 @@ public class Configuration extends BaseDomain{
         this.dataValue = dataValue;
     }
 
+    public byte getIsRetain() {
+        return isRetain;
+    }
+
+    public void setIsRetain(byte isRetain) {
+        this.isRetain = isRetain;
+    }
+
     public String toString() {
 		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
 			.append("Id",getId())
@@ -107,7 +116,8 @@ public class Configuration extends BaseDomain{
             .append("DataType", getDataType())
             .append("DataUrl",getDataUrl())
             .append("DataValue",getDataValue())
-			.toString();
+            .append("IsRetain", getIsRetain())
+                .toString();
 	}
 	
 	public int hashCode() {

@@ -16,6 +16,7 @@
         <result column="data_type" property="dataType" jdbcType="VARCHAR" />
         <result column="data_url" property="dataUrl" jdbcType="VARCHAR" />
         <result column="data_value" property="dataValue" jdbcType="VARCHAR" />
+        <result column="is_retain" property="isRetain" jdbcType="VARCHAR" />
     </resultMap>
     <resultMap id="TenantConfigListResultMap" type="cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView">
         <id column="id" property="id" jdbcType="INTEGER" />
@@ -32,6 +33,7 @@
         <result column="data_type" property="dataType" jdbcType="VARCHAR" />
         <result column="data_url" property="dataUrl" jdbcType="VARCHAR" />
         <result column="data_value" property="dataValue" jdbcType="VARCHAR" />
+        <result column="is_retain" property="isRetain" jdbcType="VARCHAR" />
     </resultMap>
     <resultMap id="GetClassTypeByClassGradeMap" type="cn.thinkjoy.saas.domain.bussiness.ClassView">
         <result column="class_type" property="classType" jdbcType="VARCHAR" />
@@ -48,7 +50,8 @@
         modify_date,
         data_type,
         data_url,
-        data_value
+        data_value,
+        is_retain
     </sql>
     <sql id="ConfigDefault_Join_TeantConfig">
         left join saas_configuration config ON tenantConfig.config_key=config.id
@@ -77,10 +80,11 @@
         modify_date,
         data_type,
         data_url,
-        data_value)
+        data_value,
+        is_retain)
         values
         <foreach collection="list" item="item" index="index" separator="," >
-            (#{item.tnId},#{item.configKey},#{item.configOrder},#{item.checkRule},#{item.domain},#{item.createDate},#{item.modifyDate},#{item.dataType},#{item.dataUrl},#{item.dataValue})
+            (#{item.tnId},#{item.configKey},#{item.configOrder},#{item.checkRule},#{item.domain},#{item.createDate},#{item.modifyDate},#{item.dataType},#{item.dataUrl},#{item.dataValue},#{item.isRetain})
         </foreach>
     </insert>
 
