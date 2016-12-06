@@ -181,7 +181,13 @@ var Common = {
     },
     renderMenu:function(){
         var pathName = window.location.pathname;
-        if (pathName == '/course-scheduling-base' || pathName == '/course-scheduling-step2' || pathName == '/course-scheduling-step3') {
+        if (pathName == '/course-scheduling-step1' ||
+            pathName == '/course-scheduling-step2' ||
+            pathName == '/course-scheduling-step3' ||
+            pathName == '/course-info' ||
+            pathName == '/teacher-info' ||
+            pathName == '/course-no-proceed' ||
+            pathName == '/class-mixed') {
             pathName = '/course-scheduling';
         }
         if(Common.cookie.getCookie('siderMenu')){
