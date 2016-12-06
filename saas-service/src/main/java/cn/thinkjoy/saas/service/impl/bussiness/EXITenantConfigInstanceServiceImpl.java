@@ -530,6 +530,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         tenantConfigInstance.setDataType(configuration.getDataType());
         tenantConfigInstance.setDataUrl(configuration.getDataUrl());
         tenantConfigInstance.setDataValue(configuration.getDataValue());
+        tenantConfigInstance.setIsRetain(configuration.getIsRetain());
         tenantConfigInstance.setModifyDate(null);
         return tenantConfigInstance;
     }
