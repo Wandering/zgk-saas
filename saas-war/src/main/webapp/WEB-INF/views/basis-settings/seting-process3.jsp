@@ -64,19 +64,7 @@
                                     <th class="center">操作</th>
                                 </tr>
                                 </thead>
-                                <tbody id="class-template" class="check-template">
-                                <%--<tr>--%>
-                                    <%--<td class="center">--%>
-                                        <%--<label>--%>
-                                            <%--<input type="checkbox" class="ace" />--%>
-                                            <%--<span class="lbl">111</span>--%>
-                                        <%--</label>--%>
-                                    <%--</td>--%>
-                                    <%--<td class="center">1</td>--%>
-                                    <%--<td class="center">教师姓名</td>--%>
-                                    <%--<td class="center"><span class="disabled">删除</span></td>--%>
-                                <%--</tr>--%>
-                                </tbody>
+                                <tbody id="class-template" class="check-template"></tbody>
                             </table>
                         </div>
                         <div class="fun-box">

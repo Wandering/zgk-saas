@@ -11,23 +11,49 @@ SetingProcess5.prototype = {
     init: function () {
         this.getTeacherList();
         this.tableDrag();
+        var trLen = $('#teacher-template').find('tr').length;
+        console.log(trLen);
+        if(trLen==0){
+            this.initTeacher();
+        }
+    },
+    initTeacher:function(){
+        var initTeacherBtn = '<div class="initClassBtn"><button class="btn btn-info" id="initBtn">初始化班级</button></div>';
+        layer.open({
+            type: 1,
+            title: "请初始化教师",
+            skin: 'layui-layer-demo', //样式类名
+            closeBtn: 0, //不显示关闭按钮
+            anim: 2,
+            shadeClose: false, //开启遮罩关闭
+            offset: 'auto',
+            area: ['400px', '200px'],
+            content: initTeacherBtn
+        });
     },
     getTeacherList: function () {
         Common.ajaxFun('/config/get/teacher/' + tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
+                $('#teacher-template').html('');
                 var data = res.bizData.configList;
                 $.each(data, function (i, v) {
                     var TeacherTemplate = [];
-                    TeacherTemplate.push('<tr>');
+                    TeacherTemplate.push('<tr class="isRetain'+ v.isRetain +'">');
                     TeacherTemplate.push('<td class="center">');
-                    TeacherTemplate.push('<label>');
-                    TeacherTemplate.push('<input type="checkbox" seldata="' + v.id + '" class="ace" />');
-                    TeacherTemplate.push('<span class="lbl"></span>');
-                    TeacherTemplate.push('</label>');
+                    if(v.isRetain==1){""}else {
+                        TeacherTemplate.push('<label>');
+                        TeacherTemplate.push('<input type="checkbox" seldata="' + v.id + '" class="ace" />');
+                        TeacherTemplate.push('<span class="lbl"></span>');
+                        TeacherTemplate.push('</label>');
+                    }
                     TeacherTemplate.push('</td>');
                     TeacherTemplate.push('<td class="center index">' + (i + 1) + '</td>');
                     TeacherTemplate.push('<td class="center key-name">' + v.name + '</td>');
-                    TeacherTemplate.push('<td class="center"><span deldata="' + v.id + '" class="del-btn">删除</span></td>');
+                    if(v.isRetain==1){
+                        TeacherTemplate.push('<td class="center"></td>');
+                    }else{
+                        TeacherTemplate.push('<td class="center"><span deldata="' + v.id + '" class="del-btn">删除</span></td>');
+                    }
                     TeacherTemplate.push('</tr>');
                     $('#teacher-template').append(TeacherTemplate.join(''));
                 });
@@ -57,11 +83,16 @@ SetingProcess5.prototype = {
         contentHtml.push('<div class="add-label">');
         $.each(initData, function (i, v) {
             contentHtml.push('<label>');
-            if (name[v.chName] == v.chName) {
-                contentHtml.push('<input name="form-field-checkbox" type="checkbox" checked="checked" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
+            if (v.isRetain != 1) {
+                if (name[v.chName] == v.chName) {
+                    contentHtml.push('<input name="form-field-checkbox" isRetain="' + v.isRetain + '" type="checkbox" checked="checked" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
+                } else {
+                    contentHtml.push('<input name="form-field-checkbox" isRetain="' + v.isRetain + '" type="checkbox" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
+                }
             } else {
-                contentHtml.push('<input name="form-field-checkbox" type="checkbox" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
+                contentHtml.push('<input name="form-field-checkbox" isRetain="' + v.isRetain + '" disabled="disabled" type="checkbox" checked="checked" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
             }
+
             contentHtml.push('<span class="lbl">' + v.chName + '</span>');
             contentHtml.push('</label>');
         });
@@ -91,6 +122,7 @@ SetingProcess5.prototype = {
             console.log(res)
             if (res.rtnCode == "0000000") {
                 if (res.bizData.result == "SUCCESS") {
+                    $('#teacher-template').html('');
                     that.getTeacherList();
                     layer.closeAll();
                 }
@@ -133,7 +165,8 @@ SetingProcess5.prototype = {
         $("#teacher-template").sortable({
             helper: fixHelperModified,
             stop: updateIndex,
-            axis: "y"
+            axis: "y",
+            items: "tr:not(.isRetain1)"
         }).disableSelection();
     }
 };
@@ -141,6 +174,26 @@ var SetingProcess5Obj = new SetingProcess5();
 
 // 新增班级字段
 $(function () {
+
+
+    $('body').on('click', '#initBtn', function () {
+        Common.ajaxFun('/config/retain/teacher/' + tnId + '.do', 'POST', {},
+            function (res) {
+                console.log(res)
+                if (res.rtnCode == "0000000") {
+                    if (res.bizData.result == true) {
+                        layer.msg('教师初始化成功!');
+                        layer.closeAll();
+                        SetingProcess5Obj.getTeacherList();
+                    } else {
+                        layer.msg('教师初始化失败!');
+                        SetingProcess5Obj.initTeacher();
+                    }
+                }
+            }, function (res) {
+                layer.msg(res.msg);
+            });
+    });
 
 
     $('#add-btn').on('click', function () {

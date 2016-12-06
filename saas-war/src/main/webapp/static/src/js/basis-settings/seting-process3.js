@@ -38,7 +38,7 @@ SetingProcess3.prototype = {
                 var data = res.bizData.configList;
                 $.each(data, function (i, v) {
                     var classTemplate = [];
-                    classTemplate.push('<tr>');
+                    classTemplate.push('<tr class="isRetain'+ v.isRetain +'">');
                     classTemplate.push('<td class="center">');
                     if(v.isRetain==1){""}else{
                         classTemplate.push('<label>');
@@ -49,7 +49,12 @@ SetingProcess3.prototype = {
                     classTemplate.push('</td>');
                     classTemplate.push('<td class="center index" indexId="' + v.id + '">' + (i + 1) + '</td>');
                     classTemplate.push('<td class="center key-name">' + v.name + '</td>');
-                    classTemplate.push('<td class="center"><span deldata="' + v.id + '" class="del-btn">删除</span></td>');
+                    if(v.isRetain==1){
+                        classTemplate.push('<td class="center"></td>');
+                    }else{
+                        classTemplate.push('<td class="center"><span deldata="' + v.id + '" class="del-btn">删除</span></td>');
+                    }
+
                     classTemplate.push('</tr>');
                     $('#class-template').append(classTemplate.join(''));
                 });
@@ -86,7 +91,7 @@ SetingProcess3.prototype = {
                     contentHtml.push('<input name="form-field-checkbox" isRetain="' + v.isRetain + '" type="checkbox" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
                 }
             } else {
-                contentHtml.push('<input name="form-field-checkbox" disabled="disabled" isRetain="' + v.isRetain + '" checked="checked" type="checkbox" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
+                    contentHtml.push('<input name="form-field-checkbox" disabled="disabled" isRetain="' + v.isRetain + '" checked="checked" type="checkbox" iddata="' + v.id + '" class="ace ' + v.class_in_year + '" />');
             }
             contentHtml.push('<span class="lbl">' + v.chName + '</span>');
             contentHtml.push('</label>');
@@ -102,10 +107,10 @@ SetingProcess3.prototype = {
         });
     },
     eventSelConfirm: function () {
-
         var that = this;
         var ids = [];
         $.each($('.add-label input:checked'), function (i, v) {
+            console.log()
             ids.push("-" + $(v).attr('iddata'));
         });
         ids = ids.join('');
@@ -148,6 +153,7 @@ SetingProcess3.prototype = {
                 var $originals = tr.children();
                 var $helper = tr.clone();
                 $helper.children().each(function (index) {
+                    console.log(index)
                     $(this).width($originals.eq(index).width())
                 });
                 return $helper;
@@ -177,7 +183,8 @@ SetingProcess3.prototype = {
         $("#class-template").sortable({
             helper: fixHelperModified,
             stop: updateIndex,
-            axis: "y"
+            axis: "y",
+            items: "tr:not(.isRetain1)"
         }).disableSelection();
     }
 };
