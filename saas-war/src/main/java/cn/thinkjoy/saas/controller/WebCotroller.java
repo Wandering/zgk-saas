@@ -286,6 +286,37 @@ public class WebCotroller {
     public ModelAndView professionalAssessment() {
         return new ModelAndView("/professional-assessment/professional-assessment");
     }
+    /**
+     * course-scheduling
+     * 排课任务
+     */
+    @RequestMapping("/course-scheduling")
+    public ModelAndView courseScheduling() {
+        return new ModelAndView("/course-scheduling/course-scheduling");
+    }
+    /**
+     * course-scheduling-base
+     * 排课任务--基本信息设置
+     */
+    @RequestMapping("/course-scheduling-step1")
+    public ModelAndView courseSchedulingBase() {
+        return new ModelAndView("/course-scheduling/course-scheduling-step1");
+    }
+    /**
+     * course-scheduling-step2
+     * 排课任务--排课第二步骤，排课规则
+     */
+    @RequestMapping("/course-scheduling-step2")
+    public ModelAndView courseSchedulingStep2() {
+        return new ModelAndView("/course-scheduling/course-scheduling-step2");
+    }/**
+     * course-scheduling-step3
+     * 排课任务--排课第三步骤，自动排课
+     */
+    @RequestMapping("/course-scheduling-step3")
+    public ModelAndView courseSchedulingStep3() {
+        return new ModelAndView("/course-scheduling/course-scheduling-step3");
+    }
 
 
 }

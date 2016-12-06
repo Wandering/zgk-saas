@@ -47,6 +47,7 @@
                 AND classRoom.create_date = #{createDate}
             </if>
         </trim>
+        ORDER BY classRoom.room_order asc
     </select>
 
     <insert id="addClassRoom" useGeneratedKeys="true" parameterType="java.util.List">

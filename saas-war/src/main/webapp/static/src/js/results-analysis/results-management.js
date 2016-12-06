@@ -1,5 +1,7 @@
 var tnId = Common.cookie.getCookie('tnId');
-
+var globalParam = {
+    $oldExamName:''
+}
 function ResultsManagementFun() {
     this.init();
 }
@@ -340,7 +342,27 @@ ResultsManagementFun.prototype = {
         }, function (res) {
             layer.msg("出错了");
         });
-    }
+    },
+    // 判断年级下是否有班
+    getClassesNameByGrade:function(grade){
+        var that = this;
+        Common.ajaxFun('/scoreAnalyse/getClassesNameByGrade', 'GET', {
+            'tnId':tnId,
+            'grade':grade
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                if(res.bizData.length==0){
+                    layer.msg('无班级信息,请设置班级!');
+                }else{
+                    that.uploadResults(grade);
+                }
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
 
 };
 
@@ -362,7 +384,8 @@ $(function () {
     //上传成绩
     $('body').on('click', '#uploadResultsBtn', function () {
         var grade = $(this).attr('grade');
-        ResultsManagementIns.uploadResults(grade);
+        ResultsManagementIns.getClassesNameByGrade(grade);
+
     });
 
     // 保存
@@ -391,13 +414,14 @@ $(function () {
         }, function (res) {
             layer.msg(res.msg);
         },true);
-
+        if(globalParam.$oldExamName == $('#examName').val()){
+            layer.closeAll();
+            return false;
+        }
         if(flg==true){
             layer.tips('考试名称已经存在,请修改考试名称后再提交!', $('#examName'));
             return false;
         }
-
-
         if (examDate == "") {
             layer.tips('请选择考试时间!', $('#exam-date'));
             return false;
@@ -455,6 +479,7 @@ $(function () {
             layer.tips('修改只能选择一项', $(this));
             return false;
         }
+
         var resultsChecked = $('#results-tbody input:checked');
         var id = resultsChecked.attr('id');
         var examName = resultsChecked.attr('examName');
@@ -462,6 +487,7 @@ $(function () {
         var uploadFilePath = resultsChecked.attr('uploadFilePath');
         var radioV = $('input[name="results-radio"]:checked').val();
         ResultsManagementIns.uploadResults(radioV,id, examName, examTime, uploadFilePath);
+        globalParam.$oldExamName = $('#examName').val();
     });
 
     // 删除
@@ -552,7 +578,8 @@ $(function () {
             topGrade = $.trim($('.top-grade').val()),
             subjectYuwen = $.trim($('.subject-yuwen').val());
 
-        var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
+        // var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
+        var re = /^[0-9]*$/;
 
         if (name == '') {
             layer.tips('请输入姓名!', $('.name'));
@@ -647,6 +674,10 @@ $(function () {
                 layer.tips('请输入班级排名!', $('.top-class'));
                 return false;
             }
+            // if (!isNaN(topClass)) {
+            //     layer.tips('请输入正确的数字!', $('.top-class'));
+            //     return false;
+            // }
             if (!re.test(topClass) || topClass > 1000) {
                 layer.tips('请输入正确的数字!', $('.top-class'));
                 return false;
@@ -655,6 +686,10 @@ $(function () {
                 layer.tips('请输入年级排名!', $('.top-grade'));
                 return false;
             }
+            // if (!isNaN(topGrade)) {
+            //     layer.tips('请输入正确的数字!', $('.top-grade'));
+            //     return false;
+            // }
             if (!re.test(topGrade) || topGrade > 5000) {
                 layer.tips('请输入正确的数字!', $('.top-grade'));
                 return false;
@@ -766,12 +801,11 @@ function uploadFun() {
             // 只允许选择文件，可选。
             accept: {
                 title: 'excel',
-                extensions: 'xls,xlsx',
-                mimeTypes: 'application/vnd.ms-excel'
+                extensions: 'xlsx,xls',
+                mimeTypes: '.xlsx,.xls'
             },
             fileVal: 'inputFile',
             duplicate: new Date()
-
         });
 
         // 当有文件添加进来的时候

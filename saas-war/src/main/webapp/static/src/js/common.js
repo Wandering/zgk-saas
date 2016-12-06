@@ -181,6 +181,9 @@ var Common = {
     },
     renderMenu:function(){
         var pathName = window.location.pathname;
+        if (pathName == '/course-scheduling-base' || pathName == '/course-scheduling-step2' || pathName == '/course-scheduling-step3') {
+            pathName = '/course-scheduling';
+        }
         if(Common.cookie.getCookie('siderMenu')){
             var siderMenu = $.parseJSON(Common.cookie.getCookie('siderMenu'));
             var menus = [];
@@ -190,7 +193,7 @@ var Common = {
             //menus.push('<span class="menu-text">首页</span>');
             //menus.push('</a>');
             //menus.push('</li>');
-            var icons = ['icon-desktop','icon-edit','icon-list-alt','icon-dashboard','icon-tag','icon-tasks','icon-group']
+            var icons = ['icon-desktop','icon-edit','icon-list-alt','icon-dashboard','icon-tag','icon-tag','icon-tasks','icon-group']
             $.each(siderMenu,function(i,v){
 
                 if(pathName==v.meunUrl){

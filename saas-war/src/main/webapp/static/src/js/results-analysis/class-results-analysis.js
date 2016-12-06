@@ -13,7 +13,7 @@ function ClassResultsAnalysis() {
     this.progressStart = '10';
     this.progressLength = '20';
     this.gradeRankStart = '1';
-    this.gradeRankLength = '100';
+    this.gradeRankLength = '99';
 }
 ClassResultsAnalysis.prototype = {
     constructor: ClassResultsAnalysis,
@@ -99,13 +99,15 @@ ClassResultsAnalysis.prototype = {
         if (gradeV.indexOf('高三') >= 0 || gradeV.indexOf('高3') >= 0) {
             $('.grade-type').text('本科线成绩分析');
             $('.grade1-2-line,.grade-student-num').hide();
-            $('.batch-info,.grade3-main,.grade3-student-batch').show();
+            $('.batch-info,.grade3-main,.grade3-student-batch,#batch-sel').show();
             that.getOverLineNumberByDate(gradeV,className);
+            that.selSortOnline(gradeV,className);
         } else {
             $('.grade-type').text('重点线成绩分析');
             $('.grade1-2-line,.grade-student-num').show();
-            $('.batch-info,.grade3-main,.grade3-student-batch').hide();
+            $('.batch-info,.grade3-main,.grade3-student-batch,#batch-sel').hide();
             that.getOverLineDetailForClassTwo(gradeV,className,line);
+            that.getMostAttendDetailForClassTwo(gradeV,className,line);
         }
     },
     // 根据年级获取班级
@@ -131,6 +133,8 @@ ClassResultsAnalysis.prototype = {
                     //// 人数分布变化
                     //that.getStuNumberScoreChangeForClass(that.grade,that.className);
                     $('.sel-class-txt,.class-name').text(that.className);
+                    // 进步较大学生列表默认拉取
+                    that.getMostAdvancedDetailForClass(that.grade,that.className,ClassAnalysisIns.stepStart,ClassAnalysisIns.stepEnd,ClassAnalysisIns.rankStepStart,ClassAnalysisIns.rankStepEnd);
                 }
             } else {
                 layer.msg(res.msg);
@@ -244,7 +248,7 @@ ClassResultsAnalysis.prototype = {
             },
             tooltip: {
                 trigger: 'item',
-                formatter: '{a} <br/>{b} : {c}'
+                formatter: '{b} <br/>{a} : {c}'
             },
             legend: {
                 left: 'left'
@@ -260,14 +264,16 @@ ClassResultsAnalysis.prototype = {
             },
             grid: {
                 left: '3%',
-                right: '4%',
+                right: '10%',
                 bottom: '3%',
                 containLabel: true
             },
             yAxis: {
+                scale:false,
                 type: 'value',
-                min:Array.min(totalScoreData),
-                max:Array.max(totalScoreData)
+                // min:Array.min(totalScoreData),
+                // max:Array.max(totalScoreData),
+                // minInterval:1
             },
             series: [
                 {
@@ -290,9 +296,12 @@ ClassResultsAnalysis.prototype = {
                     fontSize:12
                 }
             },
+            //tooltip: {
+            //    trigger: 'item',
+            //    formatter: '{a} <br/>{b} : {c}'
+            //},
             tooltip: {
-                trigger: 'item',
-                formatter: '{a} <br/>{b} : {c}'
+                trigger: 'axis'
             },
             legend: {
                 left: 'center',
@@ -307,11 +316,12 @@ ClassResultsAnalysis.prototype = {
             },
             grid: {
                 left: '3%',
-                right: '4%',
+                right: '10%',
                 bottom: '3%',
                 containLabel: true
             },
             yAxis: {
+                scale:false,
                 type: 'value',
                 min:Array.min(arrMaxMin),
                 max:Array.max(arrMaxMin)
@@ -345,6 +355,8 @@ ClassResultsAnalysis.prototype = {
         });
     },
     lineNumberByDateChart: function (dateData, popData) {
+        console.info('dateData',dateData);
+        console.info('popData',popData);
         var lineNumberByDateChart = echarts.init(document.getElementById('lineNumberByDate-chart'));
         var lineNumberByDateOption = {
             title: {
@@ -360,7 +372,7 @@ ClassResultsAnalysis.prototype = {
             },
             grid: {
                 left: '3%',
-                right: '6%',
+                right: '10%',
                 bottom: '3%',
                 containLabel: true
             },
@@ -375,8 +387,13 @@ ClassResultsAnalysis.prototype = {
             ],
             yAxis: [
                 {
+                    name: '上线人数',
+
+                    scale:false,
                     type: 'value',
-                    name: '上线人数'
+                    // min:Array.min(totalScoreData),
+                    // max:Array.max(totalScoreData),
+                    // minInterval:1
                 }
             ],
             series: [
@@ -424,7 +441,8 @@ ClassResultsAnalysis.prototype = {
                 type: 1,
                 title: '变化人数详情',
                 offset: 'auto',
-                area: ['362px', '350px'],
+                // area: ['362px', '350px'],
+                area: ['362px', 'auto'],
                 content: studentChangeTable
             });
         });
@@ -475,7 +493,8 @@ ClassResultsAnalysis.prototype = {
                 type: 1,
                 title: '个人成绩变化趋势',
                 offset: 'auto',
-                area: ['800px', '500px'],
+                area: ['800px','auto'],
+                // area: ['800px', '400'],
                 content: studentChart,
                 success:function(){
                     that.studentChartTab();
@@ -588,27 +607,28 @@ ClassResultsAnalysis.prototype = {
                 text: '班级平均分排名',
                 left: 'left',
                 textStyle:{
-                    fontSize:12
+                    fontSize:'14',
+                    color:'#4A4A4A'
                 }
             },
             tooltip: {
                 trigger: 'item',
-                formatter: '{a} <br/>{b} : {c}'
+                formatter: '{b} <br/>{a} : {c}'
             },
             legend: {
                 left: 'left'
             },
             xAxis: {
                 type: 'category',
-                name: 'x',
+                name: '考试时间',
                 splitLine: {show: false},
                 //data: ['一', '二', '三', '四', '五', '六', '七', '八', '九']
-                data: ["2016-02-02", "2016-03-03", "2016-04-07", "2016-05-10", "2016-06-14"]
-                //data: dateData
+                // data: ["2016-02-02", "2016-03-03", "2016-04-07", "2016-05-10", "2016-06-14"]
+                data: dateData
             },
             grid: {
                 left: '3%',
-                right: '4%',
+                right: '10%',
                 bottom: '3%',
                 containLabel: true
             },
@@ -619,7 +639,7 @@ ClassResultsAnalysis.prototype = {
             },
             series: [
                 {
-                    name: '3的指数',
+                    name: '班级平均分排名',
                     type: 'line',
                     //data: [1, 3, 9, 27, 81, 247, 741, 2223, 6669]
                     data: totalScoreData
@@ -640,7 +660,7 @@ ClassResultsAnalysis.prototype = {
             },
             tooltip: {
                 trigger: 'item',
-                formatter: '{a} <br/>{b} : {c}'
+                formatter: '{b} <br/>{a} : {c}'
             },
             legend: {
                 left: 'center',
@@ -656,7 +676,7 @@ ClassResultsAnalysis.prototype = {
             },
             grid: {
                 left: '3%',
-                right: '4%',
+                right: '10%',
                 bottom: '3%',
                 containLabel: true
             },
@@ -714,9 +734,9 @@ ClassResultsAnalysis.prototype = {
             'stepLength': stepLength
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                $('#ranking-sel').html('');
+                $('#ranking-sel').show().html('');
                 var rankingSel = [];
-                rankingSel.push('<option value="">选择进步名次</option>');
+                rankingSel.push('<option stepStart="" stepEnd="">选择进步名次</option>');
                 $.each(res.bizData,function(i,v){
                     rankingSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="'+ v.stepEnd +'" value="">'+ v.stepStart + "-" + v.stepEnd +'</option>');
                 });
@@ -730,7 +750,7 @@ ClassResultsAnalysis.prototype = {
     },
     // 进步较大学生页面列表
     getMostAdvancedDetailForClass: function (grade,className,stepStart, stepEnd,rankStepStart,rankStepEnd) {
-        $('#progress-tbody,#progress-thead').html('');
+        $('#progress-tbody').html('');
         Common.ajaxFun('/scoreAnalyse/getMostAdvancedDetailForClass', 'GET', {
             'tnId': tnId,
             'grade': grade,
@@ -743,8 +763,8 @@ ClassResultsAnalysis.prototype = {
             if (res.rtnCode == "0000000") {
                 var myTemplate = Handlebars.compile($("#progress-template").html());
                 $('#progress-tbody').html(myTemplate(res));
-                var sortTheadTemplate = Handlebars.compile($("#progress-thead-template").html());
-                $('#progress-thead').html(sortTheadTemplate(res));
+                //var sortTheadTemplate = Handlebars.compile($("#progress-thead-template").html());
+                //$('#progress-thead').html(sortTheadTemplate(res));
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -763,7 +783,7 @@ ClassResultsAnalysis.prototype = {
             if (res.rtnCode == "0000000") {
                 $('#gradeTop-sel').html('');
                 var gradeTopSel = [];
-                gradeTopSel.push('<option value="">选择年级排名</option>');
+                gradeTopSel.push('<option stepStart="" stepEnd="">选择年级排名</option>');
                 $.each(res.bizData,function(i,v){
                     gradeTopSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="'+ v.stepEnd +'" value="">'+ v.stepStart + "-" + v.stepEnd +'</option>');
                 });
@@ -787,8 +807,23 @@ ClassResultsAnalysis.prototype = {
         }, function (res) {
             layer.msg(res.msg);
         });
+    },
+    // 高一高二重点关注学生
+    getMostAttendDetailForClassTwo:function(grade,className,line){
+        Common.ajaxFun('/scoreAnalyse/getMostAttendDetailForClassTwo', 'GET', {
+            'tnId': tnId,
+            'grade': grade,
+            'className': className,
+            'line': line
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var myTemplate = Handlebars.compile($("body #details-main-template").html());
+                $('body #details-main-tbody').html(myTemplate(res));
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
     }
-
 };
 
 var ClassAnalysisIns = new ClassResultsAnalysis();
@@ -835,7 +870,6 @@ $(function () {
         ClassAnalysisIns.getMostAdvancedDetailGradeRankStepList(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.gradeRankStart,ClassAnalysisIns.gradeRankLength);
         // 进步较大学生列表
         ClassAnalysisIns.getMostAdvancedDetailForClass(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.stepStart,ClassAnalysisIns.stepEnd,ClassAnalysisIns.rankStepStart,ClassAnalysisIns.rankStepEnd);
-
     });
 
 
@@ -847,6 +881,7 @@ $(function () {
             return false;
         }
         ClassAnalysisIns.getOverLineDetailForClassTwo(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.bacthLine);
+        ClassAnalysisIns.getMostAttendDetailForClassTwo(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.bacthLine);
     });
 
     // 重点关注学生批次选择

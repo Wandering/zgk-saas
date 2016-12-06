@@ -211,7 +211,7 @@ var SchoolAds = {
             $('#admission-load-more').hide();
             $('#no-data').remove();
             $(this).addClass('active').siblings().removeClass('active');
-            that.params.property = $(this).attr('dictid')
+            that.params.property = $(this).text()
             that.params.page = "1";
             that.params.rows = "10";
             that.fetchSchoolEnroll(that.params);
@@ -242,10 +242,13 @@ var SchoolAds = {
         })
 
         //搜索
-        $('.search-input').unbind('input propertychange').bind('input propertychange', function () {
-
+        $(document).on('click','.search-btn', function () {
+            $('#school-admission-plan').html('');
+            $('#admission-load-more').hide();
+            $('#no-data').remove();
+            that.params.universityName = $.trim($('.search-input').val());
+            that.fetchSchoolEnroll(that.params);
         });
-
     },
 }
 SchoolAds.init();

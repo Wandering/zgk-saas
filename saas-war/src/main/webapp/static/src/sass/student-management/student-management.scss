@@ -1,5 +1,19 @@
 @import "../common/common";
 
+.title-2{
+  .grade-list{
+      li{
+        float: left;
+        margin-right: 25px;
+        margin-left: 3px;
+        label{
+          position: relative;
+          top: 3px;
+        }
+      }
+  }
+}
+
 .student-add-box {
   padding: 35px 30px;
   .f50, .f70, .f20 {

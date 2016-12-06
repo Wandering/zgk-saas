@@ -8,6 +8,7 @@ ClassRoomManagement.prototype = {
     constructor: ClassRoomManagement,
     init: function () {
         this.getClassRoom();
+        this.tableDrag();
     },
     getClassRoom:function () {
         var that = this;
@@ -30,7 +31,7 @@ ClassRoomManagement.prototype = {
                 classRoomHtml.push('<span class="lbl"></span>');
                 classRoomHtml.push('</label>');
                 classRoomHtml.push('</td>');
-                classRoomHtml.push('<td class="center index" indexid="' + k.id + '">'+ (i+1) +'</td>');
+                classRoomHtml.push('<td class="center index" indexid="' + v.id + '">'+ (i+1) +'</td>');
                 classRoomHtml.push('<td class="center" gradeid="' + v.gradeId + '">'+ v.grade +'</td>');
                 classRoomHtml.push('<td class="center">'+ v.number +'</td>');
                 classRoomHtml.push('</tr>');

@@ -83,6 +83,21 @@
                             </dl>
                             {{/each}}
                         </script>
+                        <%--搜索--%>
+                        <script type="text/x-handlebars-template" id="sub-majored-category-tpl-search">
+                            {{#each this}}
+                            <dl class="tab-detail-li">
+                                <dt class="title" style="margin-right:30px;">学科门类：{{this.disciplineCategoriesName}}</dt>
+                                <dt class="title">专业门类：{{this.majorCategoryName}}</dt>
+                                <dd>
+                                    {{#each this.majoredList}}
+                                        <span b-id="{{majoredId}}" style="margin-top:10px;display:inline-block;margin-right:30px">{{majoredName}}</span>
+                                    {{/each}}
+                                </dd>
+                            </dl>
+                            {{/each}}
+                        </script>
+
                         <%--////////////////////////////////////////////--%>
                     </div>
                     <%--
