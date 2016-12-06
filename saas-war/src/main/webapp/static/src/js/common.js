@@ -181,7 +181,7 @@ var Common = {
     },
     renderMenu:function(){
         var pathName = window.location.pathname;
-        if (pathName == '/course-scheduling-base') {
+        if (pathName == '/course-scheduling-base' || pathName == '/rule-settings') {
             pathName = '/course-scheduling';
         }
         if(Common.cookie.getCookie('siderMenu')){
