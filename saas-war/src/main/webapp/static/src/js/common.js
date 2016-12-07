@@ -187,7 +187,8 @@ var Common = {
             pathName == '/course-info' ||
             pathName == '/teacher-info' ||
             pathName == '/course-no-proceed' ||
-            pathName == '/class-mixed') {
+            pathName == '/class-mixed' ||
+            pathName == '/base-rule-settings') {
             pathName = '/course-scheduling';
         }
         if(Common.cookie.getCookie('siderMenu')){
