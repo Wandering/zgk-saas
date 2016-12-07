@@ -32,7 +32,7 @@ SubjectAnalysis.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false);
     },
     getPlanEnrollingByProperty: function (subject) {
         Common.ajaxFun('/selectClassesGuide/getPlanEnrollingByProperty.do', 'GET', {
@@ -47,7 +47,7 @@ SubjectAnalysis.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false);
     },
     getAnalysisBatch: function (subject) {
         Common.ajaxFun('/selectClassesGuide/getAnalysisBatch.do', 'GET', {
@@ -67,7 +67,7 @@ SubjectAnalysis.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false);
     },
     sortNumber: function (a,b) {
         return a - b;
@@ -85,6 +85,7 @@ SubjectAnalysis.prototype = {
                     $('.major-type-bottom tbody tr td').eq(i).html('-');
                 }
                 var data = res.bizData.analysisDiscipline;
+                $('#major-type-count').html('共计' + data.length + '个专业门类:');
                 var types = {
                     type: [],
                     datas: [],
@@ -129,7 +130,7 @@ SubjectAnalysis.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false);
     },
     subjectChangeEvent: function () {
         var that = this;
@@ -296,7 +297,7 @@ UniversityDetail.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false, null);
     },
     showData: function (result) {
         var that = this;
@@ -359,10 +360,10 @@ $(function () {
      * 院校文本框添加事件监听
      */
     $(document).on('click', "#search-keywords", startSearchUniversity)
-        .on('keyup', "#search-keywords", startSearchUniversity);
-        //.on('click', "#search-keywords", startSearchUniversity)
+        .on('keyup', "#search-keywords", startSearchUniversity)
+        .on('keydown', "#search-keywords", startSearchUniversity)
         //.on('mouseover', "#search-keywords", startSearchUniversity)
-        //.on('focus', "#search-keywords", startSearchUniversity);
+        .on('focus', "#search-keywords", startSearchUniversity);
         //.on('blur', "#search-keywords", startSearchUniversity);
     $(document).on("click", function (e) {
         $("#results-list").hide();
@@ -412,7 +413,7 @@ function startSearchUniversity () {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false);
     } else {
         $(".course-info .m-list").hide();
         $("#search-keywords").attr("uid", "");
@@ -444,7 +445,7 @@ function getLatestYearData () {
         }
     }, function (res) {
         layer.msg("出错了");
-    }, true);
+    }, false);
 }
 
 //按批次分析
@@ -515,10 +516,10 @@ function batchAnalysis (batchs, values) {
                 label: {
                     normal: {
                         show: true,
-                        position: 'insideRight',
+                        position: 'right',
                         formatter: '{c}人',
                         textStyle: {
-                            fontSize: 14
+                            fontSize: 12
                         }
                     }
                 }
@@ -530,6 +531,10 @@ function batchAnalysis (batchs, values) {
 
 //按专业类别分析
 function majorTypeAnalysis (type, datas) {
+    console.info('数据显示: ' + type);
+    var type0 = type[0];
+    var type1 = type[1];
+    var type2 = type[2];
     var subjectPieChart = echarts.init(document.getElementById('subjectPieChart'));
     var subjectPieOption = {
         title : {
@@ -568,7 +573,8 @@ function majorTypeAnalysis (type, datas) {
                 label: {
                     normal: {
                         show: false,
-                        position: 'inner'
+                        position: 'inner',
+                        formatter: "{d}%"
                     }
                 },
                 labelLine: {
@@ -650,8 +656,9 @@ function enrollUniversityTotal (majorCount, batchs, batchNames) {
                 color: ['#A98FCB', '#EF8B87', '#C0DD7D', '#65A1DD'],
                 label: {
                     normal: {
-                        show: false,
-                        position: 'inner'
+                        show: true,
+                        position: 'inner',
+                        formatter: "{d}%"
                     }
                 },
                 labelLine: {
@@ -815,7 +822,7 @@ function historyEnrollingData () {
         }
     }, function (res) {
         layer.msg("出错了");
-    }, true);
+    }, false);
 }
 
 Array.prototype.deleteRepeat = function(){

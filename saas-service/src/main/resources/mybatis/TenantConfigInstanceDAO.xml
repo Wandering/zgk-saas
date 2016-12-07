@@ -34,7 +34,8 @@ selectList
         modify_date  as modifyDate,
         data_type as dataType,
         data_url as dataUrl,
-        data_value as dataValue
+        data_value as dataValue,
+        is_retain as isRetain
     </sql>
     <insert id="insert" parameterType="TenantConfigInstance">
         INSERT INTO saas_tenant_config_instance (
@@ -47,7 +48,8 @@ selectList
         modify_date,
         data_type,
         data_url,
-        data_value
+        data_value,
+        is_retain
         ) VALUES (
         #{tnId},
         #{configKey},
@@ -58,7 +60,8 @@ selectList
         #{modifyDate},
         #{dataType},
         #{dataUrl},
-        #{dataValue}
+        #{dataValue},
+        #{isRetain}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
         SELECT LAST_INSERT_ID() AS ID
@@ -97,7 +100,10 @@ selectList
                 data_url = #{dataUrl},
             </if>
             <if test="dataValue!=null">
-                data_value = #{dataValue}
+                data_value = #{dataValue},
+            </if>
+            <if test="isRetain!=null">
+                is_retain=#{isRetain}
             </if>
         </trim>
         WHERE
@@ -137,6 +143,9 @@ selectList
             <if test="map.dataValue!=null">
                 data_value = #{map.dataValue},
             </if>
+            <if test="map.isRetain!=null">
+                is_retain=#{map.isRetain}
+            </if>
         </trim>
         WHERE
         id = #{map.id}
@@ -175,6 +184,9 @@ selectList
             <if test="update.dataValue!=null">
                 data_value = #{update.dataValue},
             </if>
+            <if test="update.isRetain!=null">
+                is_retain=#{update.isRetain}
+            </if>
         </trim>
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -211,6 +223,9 @@ selectList
             <if test="condition.dataValue!=null">
                 AND data_value = #{condition.dataValue}
             </if>
+            <if test="condition.isRetain!=null">
+                AND is_retain=#{condition.isRetain}
+            </if>
         </trim>
     </update>
 
@@ -225,7 +240,8 @@ selectList
                 modify_date,
                 data_type,
                 data_url,
-                data_value
+                data_value,
+                is_retain
         ) VALUES (
                     #{map.tnId},
                     #{map.configKey},
@@ -236,7 +252,8 @@ selectList
                     #{map.modifyDate},
                     #{map.dataType},
                     #{map.dataUrl},
-                    #{map.dataValue}
+                    #{map.dataValue},
+                    #{map.isRetain}
         )
     </insert>
 
@@ -253,7 +270,8 @@ selectList
             modify_date = #{modifyDate},
             data_type = #{dataType},
             data_url = #{dataUrl},
-            data_value = #{dataValue}
+            data_value = #{dataValue},
+            is_retain=#{isRetain}
         </trim>
         WHERE
         id = #{id} 
@@ -304,6 +322,9 @@ selectList
             </if>
             <if test="dataValue!=null">
                 AND data_value = #{dataValue}
+            </if>
+            <if test="isRetain!=null">
+                AND is_retain=#{isRetain}
             </if>
         </trim>
     </delete>
@@ -395,6 +416,9 @@ selectList
             <if test="condition.dataValue!=null">
                 ${condition.groupOp}   data_value  ${condition.data_value.op}  #{condition.data_value.data}
             </if>
+            <if test="condition.isRetain!=null">
+                ${condition.groupOp}   is_retain  ${condition.is_retain.op}  #{condition.is_retain.data}
+            </if>
 
 
     </where>
@@ -445,6 +469,9 @@ selectList
             <if test="dataValue!=null">
                 AND data_value like CONCAT('%', #{dataValue} , '%')
             </if>
+            <if test="isRetain!=null">
+                AND is_retain like CONCAT('%',isRetain,'%')
+            </if>
 
         </trim>
         <if test="orderBy!=null">
@@ -491,7 +518,9 @@ selectList
             <if test="condition.dataValue!=null">
                 AND data_value = #{condition.dataValue}
             </if>
-
+            <if test="condition.isRetain!=null">
+                AND is_retain=#{condition.isRetain}
+            </if>
 
         </trim>
         <if test="orderBy!=null">
@@ -538,6 +567,9 @@ selectList
             <if test="condition.dataValue!=null">
                 AND data_value = #{condition.dataValue}
             </if>
+            <if test="condition.isRetain!=null">
+                AND is_retain=#{condition.isRetain}
+            </if>
 
         </trim>
         limit 0,1
@@ -579,6 +611,9 @@ selectList
            </if>
            <if test="dataValue!=null">
                ${groupOp} data_value ${data_value.op}  #{data_value.data}
+           </if>
+           <if test="isRetain!=null">
+               ${groupOp} is_retain ${is_retain.op}  #{is_retain.data}
            </if>
 
        </where>

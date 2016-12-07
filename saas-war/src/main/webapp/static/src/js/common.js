@@ -28,7 +28,7 @@ var Common = {
             if (res.rtnCode == "0000000") {
                 if(pathNum!=res.bizData.result){
                     if(res.bizData.result =='0'){
-                        window.location.href='/index';
+                        window.location.href='/course-guide';
                     }else{
                         window.location.href='/seting-process'+res.bizData.result;
                     }
@@ -181,6 +181,16 @@ var Common = {
     },
     renderMenu:function(){
         var pathName = window.location.pathname;
+        if (pathName == '/course-scheduling-step1' ||
+            pathName == '/course-scheduling-step2' ||
+            pathName == '/course-scheduling-step3' ||
+            pathName == '/course-info' ||
+            pathName == '/teacher-info' ||
+            pathName == '/course-no-proceed' ||
+            pathName == '/class-mixed' ||
+            pathName == '/base-rule-settings') {
+            pathName = '/course-scheduling';
+        }
         if(Common.cookie.getCookie('siderMenu')){
             var siderMenu = $.parseJSON(Common.cookie.getCookie('siderMenu'));
             var menus = [];
@@ -190,6 +200,7 @@ var Common = {
             //menus.push('<span class="menu-text">首页</span>');
             //menus.push('</a>');
             //menus.push('</li>');
+            var icons = ['icon-desktop','icon-edit','icon-list-alt','icon-dashboard','icon-tag','icon-tag','icon-tasks','icon-group']
             $.each(siderMenu,function(i,v){
 
                 if(pathName==v.meunUrl){
@@ -202,10 +213,10 @@ var Common = {
                 }else{
                     menus.push('<a href="javascript:;" class="dropdown-toggle" id="'+ v.meunId +'">');
                 }
-                menus.push('<i class="icon-desktop"></i>');
+                // menus.push('<i class="icon-desktop"></i>');
+                menus.push('<i class="'+icons[i]+'"></i>');
                 menus.push('<span class="menu-text">'+ v.meunName +'</span>');
                 menus.push('</a>');
-                //console.log("子菜单:"+v.sonMeuns.length)
                 if(v.sonMeuns.length>0){
                     //console.log(v.sonMeuns)
                     menus.push('<ul class="submenu">');

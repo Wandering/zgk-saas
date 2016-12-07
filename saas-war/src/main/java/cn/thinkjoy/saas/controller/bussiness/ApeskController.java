@@ -30,9 +30,17 @@ public class ApeskController {
         return map;
     }
 
+
+    @ResponseBody
+    @RequestMapping("/queryReportUrlById")
+    public Map<String,Object> queryReportUrl(@RequestParam Integer id){
+        Map<String,Object> map = apeskApi.queryReportUrl(id);
+        return map;
+    }
+
     @ResponseBody
     @RequestMapping("/queryApeskUrl")
-    public Map<String, Object> queryApeskUrl(Integer acId){
+    public Map<String, Object> queryApeskUrl(@RequestParam Integer acId){
         UserInfoDto userInfoDto = UserContext.getCurrentUser();
         Long userId = Long.valueOf(userInfoDto.getUserId());
         String userName = userInfoDto.getUserName();

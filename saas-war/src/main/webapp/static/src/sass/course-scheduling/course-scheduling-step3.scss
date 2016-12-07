@@ -1,0 +1,222 @@
+@import "../common/common";
+
+//step comm
+.mt15{
+  margin-top: 15px;
+}
+.table {
+  border: 1px solid #ddd !important;
+  tbody > tr > td {
+    border: 1px solid #ddd !important;
+  }
+}
+
+.course-scheduling-base {
+  margin-top: 35px;
+  margin-bottom: 35px;
+  .procedure {
+    .gap {
+      display: inline-block;
+      letter-spacing: 10px;
+      i {
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        background: #D5D9DF;
+        margin-left: 8px;
+        -webkit-border-radius: 100%;
+        -moz-border-radius: 100%;
+        border-radius: 100%;
+        position: relative;
+        top: -3px;
+      }
+      i:last-of-type {
+        margin-right: 8px;
+      }
+    }
+    a:link,
+    a:visited,
+    a:hover {
+      display: inline-block;
+      width: 122px;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      background: #CB171D;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #FFFFFF;
+      text-decoration: none;
+      outline: 0;
+      i {
+        font-style: normal;
+        position: relative;
+        left: -6px;
+        top: 1px;
+      }
+    }
+    a.disabled {
+      font-size: 14px;
+      color: #B1B5BC;
+      background: #fff;
+      border: 1px solid #B1B5BC;
+      border-radius: 4px;
+      cursor: not-allowed;
+    }
+  }
+}
+
+//=================================
+
+#page-container {
+  $parentMargin: 100px auto;
+  .btn-one-key {
+    margin: $parentMargin;
+    width: 170px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    border-radius: 2px;
+    color: #cb171d;
+    border: 1px solid #cb171d;
+    letter-spacing: 2px;
+    cursor: pointer;
+    font-size: 14px;
+    background: #fff;
+    transition: all .3s ease-out;
+    &:hover {
+      background: $mainColor;
+      color: #fff;
+    }
+  }
+  .info-modify {
+    text-align: center;
+    margin: $parentMargin;
+    .retry-scheduling, .look-origin-schedule {
+      width: 100px;
+      height: 34px;
+      border-radius: 2px;
+      text-align: center;
+      line-height: 34px;
+      float: left;
+      cursor: pointer;
+      transition: all .3s ease-out;
+    }
+    .retry-scheduling {
+      margin-left: 490px;
+      margin-right: 29px;
+      color: $mainColor;
+      border: 1px solid $mainColor;
+      &:hover {
+        background: $mainColor;
+        color: #fff;
+      }
+    }
+    .look-origin-schedule {
+      color: #F6A623;
+      border: 1px solid #F6A623;
+      &:hover {
+        background: #F6A623;
+        color: #fff;
+      }
+    }
+
+  }
+  .scheduling-error {
+    margin: $parentMargin;
+    text-align: center;
+    .icon-cry-face{
+      margin-bottom: 20px;
+    }
+  }
+}
+
+
+#role-scheduling-tab {
+  .role-tab {
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+    color: $stepGrey;
+    .active {
+      color: $mainColor;
+      .icon-step3-class-yes,
+      .icon-step3-std-yes,
+      .icon-step3-teacher-yes,
+      .icon-step3-all-yes {
+        display: inline-block;
+      }
+      .icon-step3-class-no,
+      .icon-step3-std-no,
+      .icon-step3-teacher-no,
+      .icon-step3-all-no {
+        display: none;
+      }
+    }
+    li {
+      cursor: pointer;
+      float: left;
+      &:before {
+        margin: 0 15px;
+        content: '|';
+        display: block;
+        color: #ccc;
+        float: left;
+      }
+      i {
+        position: relative;
+        top: 5px;
+        margin-right: 5px;
+      }
+      .icon-step3-class-yes,
+      .icon-step3-std-yes,
+      .icon-step3-teacher-yes,
+      .icon-step3-all-yes {
+        display: none;
+      }
+    }
+    .no-before {
+      &:before {
+        margin: 0;
+        content: '';
+        display: block;
+        float: left;
+      }
+    }
+  }
+}
+
+.role-scheduling-content {
+  .select-condition {
+    margin: 20px 0 10px;
+    select {
+      min-width: 105px;
+      margin-right: 17px;
+    }
+  }
+  .scheduling-info {
+    margin-bottom: 10px;
+    overflow: hidden;
+    height: 28px;
+    line-height: 28px;
+    .scheduling-name {
+      font-size: 14px;
+      font-weight: bold;
+    }
+    #output-tpl {
+      width: 165px;
+      background: #B085B9 !important;
+      border-color: #B085B9 !important;
+      outline: none;
+    }
+    .icon-output-down {
+      display: inline-block !important;
+    }
+  }
+}
+
+
+
+
+

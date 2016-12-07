@@ -175,7 +175,7 @@ public class DataQueryController {
     @ApiDesc(value = "获取分数线", owner = "杨永平")
     @RequestMapping(value = "/getGkAdmissionLineList",method = RequestMethod.GET)
     @ResponseBody
-    public BizData4Page<GkAdmissionLine> getGkAdmissionLineList(@ApiParam(param="queryparam", desc="标题模糊查询",required = false) @RequestParam(required = false) String queryparam,
+    public BizData4Page<GkAdmissionLine> getGkAdmissionLineList(@ApiParam(param="universityName", desc="标题模糊查询",required = false) @RequestParam(required = false) String universityName,
                                                                 @ApiParam(param="year", desc="年份",required = false) @RequestParam(required = false) String year,
                                                                 @ApiParam(param="areaId", desc="区域ID",required = false) @RequestParam(required = false) String areaId,
                                                                 @ApiParam(param="property", desc="院校特征",required = false) @RequestParam(required = false) String property,
@@ -194,8 +194,8 @@ public class DataQueryController {
             QueryUtil.setMapOp(map, "enrollingyear", "=", year);
         }
 //        院校名称 模糊
-        if(queryparam!=null &&!"".equals(queryparam)) {
-            QueryUtil.setMapOp(map, "universityname", "like", "%" + queryparam + "%");
+        if(universityName!=null &&!"".equals(universityName)) {
+            QueryUtil.setMapOp(map, "universityname", "like", "%" + universityName + "%");
         }
 //        地区
         if(areaId!=null &&!"".equals(areaId)) {
@@ -466,7 +466,7 @@ public class DataQueryController {
      * @param universityId
      * @param year
      * @param batch
-     * @param universityMajorType
+     * @param majorType
      * @param page
      * @param rows
      * @return
@@ -476,7 +476,7 @@ public class DataQueryController {
     public List getUniversityMajorEnrollingPlanList(@RequestParam(value = "universityId", required = true) long universityId,
                                                     @RequestParam(value = "year", required = false) String year,//年份
                                                     @RequestParam(value = "batch", required = false) Integer batch,//批次
-                                                    @RequestParam(value = "universityMajorType", required = false) String universityMajorType,//科类
+                                                    @RequestParam(value = "majorType", required = false) String majorType,//科类
                                                     @RequestParam(value = "page") Integer page,
                                                     @RequestParam(value = "rows") Integer rows,
                                                     HttpServletRequest request,
@@ -492,8 +492,8 @@ public class DataQueryController {
         if (batch != null) {
             condition.put("batch", batch);
         }
-        if (StringUtils.isNotBlank(universityMajorType)) {
-            condition.put("majorType", universityMajorType);
+        if (StringUtils.isNotBlank(majorType)) {
+            condition.put("majorType", majorType);
         }
         condition.put("areaId",getUserProvinceId(request,response));
         condition.put("offset", page-1);

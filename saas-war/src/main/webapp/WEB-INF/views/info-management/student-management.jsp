@@ -50,14 +50,29 @@
                         </div>
 
                         <div class="title-2">
-                            <span class="txt-t"></span>
+                            <span class="txt-t">
+                                <ul class="grade-list">
+                                    <li>
+                                        <input type="radio" name="subject-analysis" id="grade-1" checked="">
+                                        <label for="grade-1">高一年级</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" name="subject-analysis" id="grade-2" checked="">
+                                        <label for="grade-2">高二年级</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" name="subject-analysis" id="grade-3" checked="">
+                                        <label for="grade-3">高三年级</label>
+                                    </li>
+                                </ul>
+                            </span>
                             <div class="btns">
                                 <button class="btn btn-pink" id="student-add" type="add">添加学生</button>
                                 <button class="btn btn-inverse" id="student-modify" type="update">修改</button>
                                 <button class="btn btn-success" id="student-remove">删除</button>
                                 <button class="btn btn-warning" id="student-template-download">模板下载</button>
                                 <button class="btn btn-warning" id="student-upload">批量上传</button>
-                                <button class="btn btn-grey" id="student-setting">学生设置</button>
+                                <button class="btn btn-warning" id="student-setting">学生设置</button>
                             </div>
                         </div>
 

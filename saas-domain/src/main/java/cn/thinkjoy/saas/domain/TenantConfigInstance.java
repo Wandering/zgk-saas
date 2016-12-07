@@ -26,6 +26,7 @@ public class TenantConfigInstance extends BaseDomain{
     private String dataType;
     private String dataUrl;
     private String dataValue;
+    private byte isRetain;
 
 	public TenantConfigInstance(){
 	}
@@ -106,6 +107,14 @@ public class TenantConfigInstance extends BaseDomain{
         this.dataValue = dataValue;
     }
 
+    public byte getIsRetain() {
+        return isRetain;
+    }
+
+    public void setIsRetain(byte isRetain) {
+        this.isRetain = isRetain;
+    }
+
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("Id", getId())
@@ -119,6 +128,7 @@ public class TenantConfigInstance extends BaseDomain{
                 .append("DataType", getDataType())
                 .append("DataUrl",getDataUrl())
                 .append("DataValue",getDataValue())
+                .append("IsRetain", getIsRetain())
                 .toString();
     }
 	

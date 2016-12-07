@@ -410,12 +410,14 @@ var CRUDStd = {
                         lock = 1;
                         return false
                     }
-                    //if (!($('#' + v.enName).val()).match(v.checkRule)) {
-                    //    layer.msg(v.name + '输入不合法', {time: 1000});
-                    //    $('#' + v.enName).focus();
-                    //    lock = 1;
-                    //    return false
-                    //}
+                    var reg = eval(v.checkRule);
+                    var regV = eval($('#' + v.enName).val());
+                    if (!reg.test(regV)) {
+                       layer.msg(v.name + '输入不合法', {time: 1000});
+                       $('#' + v.enName).focus();
+                       lock = 1;
+                       return false
+                    }
                 }
                 if (v.dataType === "checkbox") {
                     if ($('#' + v.enName).find('[name="ck"]:checked').length == 0) {

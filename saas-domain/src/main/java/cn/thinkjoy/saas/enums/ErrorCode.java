@@ -31,6 +31,10 @@ public enum ErrorCode {
 
     TABLE_NOT_EXIST("0000011","数据异常,表不存在或者字段不存在"),
 
+    PARAN_NULL("0500002","参数不完整,请检查参数完整性"),
+
+    TASK_ERROR("0500001","参数不完整,请检查参数完整性"),
+
     ROLE_HAS_EXIST("0000012","同名的角色已经存在");
 
     private final String code;

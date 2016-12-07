@@ -294,7 +294,7 @@ function getNumberByYear (tnId) {
         }
     }, function (res) {
         layer.msg("出错了");
-    }, true);
+    }, false);
 }
 
 //单科选课情况分析
@@ -547,7 +547,7 @@ function selectTypeAnalysis (tnId, studentGrade) {
         }
     }, function (res) {
         layer.msg("出错了");
-    }, true);
+    }, false);
 }
 
 //组合选课情况分析
@@ -570,7 +570,7 @@ function getAnalysisGroup (tnId, grade) {
         }
     }, function (res) {
         layer.msg("出错了");
-    }, true);
+    }, false);
 }
 
 /**

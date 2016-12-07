@@ -59,6 +59,7 @@
                 AND tnId=#{tnId}
             </if>
         </trim>
+        ORDER by gOrder asc
     </select>
 
     <delete id="deleteByMap" parameterType="java.util.Map">

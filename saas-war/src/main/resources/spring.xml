@@ -31,4 +31,7 @@
         </property>
     </bean>
 
+    <bean id="redisUtil" class="cn.thinkjoy.saas.common.RedisUtil">
+        <property name="redisRepository" ref="redisRepository"/>
+    </bean>
 </beans>

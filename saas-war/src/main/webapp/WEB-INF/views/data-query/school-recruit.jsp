@@ -81,9 +81,9 @@
                                 <%--{{#each this}}{{{firstActive this}}}{{/each}}--%>
                                 <%--</script>--%>
                                 <script type="text/x-handlebars-template" id="year-list-tpl">
-                                    <span class="active">全部</span>
+                                    <span class="active" yearId="">全部</span>
                                     {{#each this}}
-                                    <span>{{this}}</span>
+                                    <span yearId="{{this}}">{{this}}</span>
                                     {{/each}}
                                 </script>
                             </dl>
@@ -97,9 +97,9 @@
                                 <dd id="batch-list">
                                 </dd>
                                 <script type="text/x-handlebars-template" id="batch-list-tpl">
-                                    <span class="active" dictid="">全部</span>
+                                    <span class="active">全部</span>
                                     {{#each this}}
-                                    <span dictid="{{dictid}}">{{name}}</span>
+                                    <span>{{name}}</span>
                                     {{/each}}
                                 </script>
                             </dl>
@@ -180,7 +180,23 @@
                     --%>
                     <div id="school-detail-info" class="dh">
                         <div id="school-detail-top"></div>
-                        <div id="school-detail-bottom"></div>
+                            <div class="student-enroll-table">
+                                <div class="sub-title">
+                                    <div class="title">招生计划</div>
+                                    <div class="select-condition">
+                                        <select class="professional-plan-year" id="plan-year">
+                                            <%--<option value="2016">2016年</option>--%>
+                                            <%--<option value="2015">2015年</option>--%>
+                                        </select>
+                                        <select class="professional-plan-subject" id="plan-subject">
+                                            <%--<option value="1">文史</option>--%>
+                                            <%--<option value="2">理工</option>--%>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="school-detail-bottom"></div>
+                        </div>
                         <script id="school-detail-top-tpl" type="text/x-handlebars-template">
                             <div class="school-base-info">
                                 <div class="top">
@@ -189,7 +205,7 @@
                                     <i class="icon-flags"></i>全国排名：<span class="national-rank">{{rank}}</span>
                                     {{/if}}
                                     <%--<a class="collect" href="javascript:void(0)" type="1" sid="1">--%>
-                                        <%--<i class="icon-collect-yes"></i>已收藏--%>
+                                    <%--<i class="icon-collect-yes"></i>已收藏--%>
                                     <%--</a>--%>
                                 </div>
                                 <div class="middle">
@@ -217,20 +233,6 @@
 
                         <%--table招生计划--%>
                         <script id="school-detail-bottom-tpl" type="text/x-handlebars-template">
-                            <div class="student-enroll-table">
-                                <div class="sub-title">
-                                    <div class="title">招生计划</div>
-                                    <div class="select-condition">
-                                        <select class="professional-plan-year" id="plan-year">
-                                            <%--<option value="2016">2016年</option>--%>
-                                            <%--<option value="2015">2015年</option>--%>
-                                        </select>
-                                        <select class="professional-plan-subject" id="plan-subject">
-                                            <%--<option value="1">文史</option>--%>
-                                            <%--<option value="2">理工</option>--%>
-                                        </select>
-                                    </div>
-                                </div>
                                 <table class="table-list table-hover table-bordered">
                                     <thead>
                                     <tr>
@@ -258,10 +260,9 @@
                                     </tbody>
                                 </table>
                                 <img src="/static/src/img/loading.gif" class="table-loading-img dh" id="school-detail-loading-img">
-                                <div id="school-detail-load-more" class="load-more dh" page-no="1">
+                                <div id="school-detail-load-more" class="load-more dh">
                                     加载更多
                                 </div>
-                            </div>
                         </script>
 
 

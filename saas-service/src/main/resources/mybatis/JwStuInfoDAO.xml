@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IJwStuInfoDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+    <sql id="Base_Column_List">
+        id as id,
+        stu_name as stuName,
+        tn_id as tnId
+    </sql>
+    <insert id="insert" parameterType="JwStuInfo">
+        INSERT INTO saas_jw_stu_info (
+        stu_name,
+        tn_id
+        ) VALUES (
+        #{stuName},
+        #{tnId}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="JwStuInfo">
+        UPDATE saas_jw_stu_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stuName!=null">
+                stu_name = #{stuName},
+            </if>
+            <if test="tnId!=null">
+                tn_id = #{tnId},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_jw_stu_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.stuName!=null">
+                stu_name = #{map.stuName},
+            </if>
+            <if test="map.tnId!=null">
+                tn_id = #{map.tnId},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_jw_stu_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.stuName!=null">
+                stu_name = #{update.stuName},
+            </if>
+            <if test="update.tnId!=null">
+                tn_id = #{update.tnId},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.stuName!=null">
+                AND stu_name = #{condition.stuName}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_jw_stu_info (
+                stu_name,
+                tn_id
+        ) VALUES (
+                    #{map.stuName},
+                    #{map.tnId}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="JwStuInfo">
+        UPDATE saas_jw_stu_info
+        <trim prefix="SET" suffixOverrides=",">
+            stu_name = #{stuName},
+            tn_id = #{tnId},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_jw_stu_info
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_jw_stu_info
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="stuName!=null">
+                AND stu_name = #{stuName}
+            </if>
+            <if test="tnId!=null">
+                AND tn_id = #{tnId}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_jw_stu_info WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="JwStuInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_stu_info
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="JwStuInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_stu_info WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="JwStuInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_stu_info WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="JwStuInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_stu_info
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="JwStuInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_stu_info
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.stuName!=null">
+                ${condition.groupOp}   stu_name  ${condition.stuName.op}  #{condition.stuName.data}
+            </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   tn_id  ${condition.tnId.op}  #{condition.tnId.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="JwStuInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_stu_info
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id like CONCAT('%', #{id} , '%')
+            </if>
+            <if test="stuName!=null">
+                AND stu_name like CONCAT('%', #{stuName} , '%')
+            </if>
+            <if test="tnId!=null">
+                AND tn_id like CONCAT('%', #{tnId} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="JwStuInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_stu_info
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.stuName!=null">
+                AND stu_name = #{condition.stuName}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="JwStuInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_stu_info
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.stuName!=null">
+                AND stu_name = #{condition.stuName}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_jw_stu_info
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="stuName!=null">
+               ${groupOp} stu_name ${stuName.op}  #{stuName.data}
+           </if>
+           <if test="tnId!=null">
+               ${groupOp} tn_id ${tnId.op}  #{tnId.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_jw_stu_info
+    </select>
+
+</mapper>
+

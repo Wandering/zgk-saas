@@ -151,7 +151,7 @@
         <td class="center">{{grade}}</td>
         <td class="center">{{examTime}}</td>
         <td class="center">{{createDate}}</td>
-        <td class="center"><a href="{{uploadFilePath}}" target="_blank">{{excel uploadFilePath}}</a></td>
+        <td class="center"><a href="{{uploadFilePath}}" target="_blank">{{originFileName}}</a></td>
         <td class="center"><a href="javascript:;" urlId="{{id}}" grade="{{grade}}" examName="{{examName}}"
                               examTime="{{examTime}}" uploadFilePath="{{uploadFilePath}}" class="look-details">查看明细</a>
         </td>
@@ -258,6 +258,7 @@
 </script>
 
 <%@ include file="./../common/footer.jsp" %>
+<script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
 <link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/datepicker.css">
 <script src="<%=ctx%>/static/src/lib/assets/js/date-time/bootstrap-datepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=ctx%>/static/src/lib/webuploader-0.1.5 2/webuploader.css">

@@ -39,16 +39,17 @@ public class ManageController {
     EXIClassRoomService exiClassRoomService;
 
     @Resource
-    IEXEnrollingRatioService iexEnrollingRatioService;
+    IEnrollingRatioService iEnrollingRatioService;
 
     @Resource
-    IEnrollingRatioService iEnrollingRatioService;
+    IEXEnrollingRatioService iexEnrollingRatioService;
 
     @Resource
     IEXTenantCustomService iexTenantCustomService;
 
     @Resource
     EXITenantConfigInstanceService exiTenantConfigInstanceService;
+
 
     /**
      * 新增年级
@@ -92,6 +93,21 @@ public class ManageController {
         return resultMap;
     }
 
+    /**
+     * 年级排序
+     * @param tnId
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/sort/grade/{tnId}/{ids}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map sortGrade(@PathVariable Integer tnId,@PathVariable String ids){
+        boolean result = exiGradeService.gradeSortUpdate(tnId,ids);
+
+        Map resultMap = new HashMap();
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
 
     /**
      * 删除年级
@@ -120,10 +136,12 @@ public class ManageController {
                             @PathVariable Integer gId,
                             HttpServletRequest request) {
         String crNum = request.getParameter("crNum");
+        String dayNum = request.getParameter("dayNum");
         boolean result = false;
         if (!StringUtils.isBlank(crNum)&&tnId>0&&gId>0) {
-            Integer classRoomNum = Integer.valueOf(crNum);
-            result = exiClassRoomService.addClassRoom(tnId, gId, classRoomNum);
+            Integer classRoomNum = Integer.valueOf(crNum),
+                    dNum=Integer.valueOf(dayNum);
+            result = exiClassRoomService.addClassRoom(tnId, gId, classRoomNum,dNum);
         }
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
@@ -142,22 +160,39 @@ public class ManageController {
     public Map modifyClassRoom(@PathVariable Integer cid,HttpServletRequest request) {
 
         String gid = request.getParameter("gid"),
-                num = request.getParameter("num");
+                num = request.getParameter("num"),
+                dayNum = request.getParameter("dayNum");
 
         boolean result = false;
 
         if (!StringUtils.isBlank(gid) && !StringUtils.isBlank(num)) {
 
             Integer g = Integer.valueOf(gid),
-                    n = Integer.valueOf(num);
+                    n = Integer.valueOf(num),
+                    d=Integer.valueOf(dayNum);
 
-            result = exiClassRoomService.updateClassRoom(n, g, cid);
+            result = exiClassRoomService.updateClassRoom(n,d, g, cid);
 
         }
 
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
+    }
+
+    /**
+     * 教室排序
+     * @param tnId
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/sort/classRoom/{tnId}/{ids}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map sortClassRoom(@PathVariable Integer tnId,@PathVariable String ids){
+        boolean result = exiClassRoomService.sortRoomOrderUpdate(tnId,ids);
+        Map map = new HashMap();
+        map.put("result", result);
+        return map;
     }
 
 
@@ -201,7 +236,7 @@ public class ManageController {
     public Map getEnrollingRatio(@PathVariable Integer tnId) {
         Map map = new HashMap();
         map.put("tnId", tnId);
-        List<EnrollingRatio> enrollingRatios = iEnrollingRatioService.queryList(map, "id", "asc");
+        List<EnrollingRatio> enrollingRatios = iEnrollingRatioService.queryList(map, "ratio_order", "asc");
         Map resultMap = new HashMap();
         resultMap.put("result", enrollingRatios);
         return resultMap;
@@ -215,13 +250,68 @@ public class ManageController {
      */
     @RequestMapping(value = "/import/{type}/{tnId}", method = RequestMethod.POST)
     @ResponseBody
-    public Map addTenantCustomConfig(@PathVariable String type, @PathVariable Integer tnId, HttpServletRequest request){
-        String ids = request.getParameter("ids");
+    public Map addTenantCustomConfig(@PathVariable  String type, @PathVariable  Integer tnId, HttpServletRequest request) {
+        final String ids = request.getParameter("ids");
+
+
+//         String exMsg=transactionTemplate.execute(new TransactionCallback<String>() {
+//            @Override
+//            public String doInTransaction(TransactionStatus status) {
+//                try {
         String exMsg = exiTenantConfigInstanceService.createColumn(type, ids, tnId);
+//                } catch (Exception ex) {
+//                    status.setRollbackOnly();
+//                    return "FAIL";
+//                }
+//            }
+//        });
         Map resultMap = new HashMap();
         resultMap.put("result", exMsg);
         return resultMap;
     }
+
+    /**
+     * 升学率排序
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/sort/enrollingRatio/{tnId}/{ids}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map sortEnrollingRatio(@PathVariable  Integer tnId,@PathVariable String ids) {
+        boolean result = iexEnrollingRatioService.sortRatioUpdate(tnId,ids);
+        Map map = new HashMap();
+        map.put("result", result);
+        return map;
+    }
+
+//    /**
+//     * 事务测试
+//     * @return
+//     */
+//    @RequestMapping(value = "/tran/import",method = RequestMethod.GET)
+//    @ResponseBody
+//    public Map tranTest() {
+//        String resul = transactionTemplate.execute(new TransactionCallback<String>() {
+//            @Override
+//            public String doInTransaction(TransactionStatus status) {
+//                try {
+//                    Map addMap = new HashMap();
+//                    addMap.put("tableName", "saas_1_class_excel");
+//                    addMap.put("columnName", "class_name");
+//                    addMap.put("columnType", "VARCHAR(12)");
+//                    exiTenantConfigInstanceService.addColumn(addMap);
+//                    throw new RuntimeException("runtime e");
+////                    return "SUCCESS";
+//                } catch (Exception ex) {
+//                    status.setRollbackOnly();
+//                    return "FAIL";
+//                }
+//            }
+//        });
+//        Map resultMap = new HashMap();
+//        resultMap.put("result", resul);
+//        return resultMap;
+//    }
 
     /**
      * 删除租户表头

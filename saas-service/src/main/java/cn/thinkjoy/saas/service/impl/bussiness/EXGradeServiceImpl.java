@@ -2,6 +2,7 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 
 import cn.thinkjoy.saas.dao.IGradeDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO;
+import cn.thinkjoy.saas.domain.EnrollingRatio;
 import cn.thinkjoy.saas.domain.Grade;
 import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantService;
@@ -97,8 +98,8 @@ public class EXGradeServiceImpl implements EXIGradeService {
      * @return
      */
     @Override
-    public boolean gradeSortUpdate(String ids) {
-        LOGGER.info("===============年级拖动排序 S==============");
+    public boolean gradeSortUpdate(Integer tnId,String ids) {
+        LOGGER.info("===============年级排序 S==============");
         LOGGER.info("ids:" + ids);
 
         boolean result = false;
@@ -107,39 +108,22 @@ public class EXGradeServiceImpl implements EXIGradeService {
         if (idsList == null)
             return false;
 
-//        //调换表头顺序 必须保证ids size 为2
-//        if (idsList.size() == 2) {
-//            List<Grade> grades = new ArrayList<Grade>();
-//
-//            for (int i = 0; i < idsList.size(); i++) {
-//                Map map = new HashMap();
-//                map.put("id", idsList.get(i));
-//                TenantConfigInstance tenantConfigInstance = iTenantConfigInstanceDAO.queryOne(map, "id", "asc");
-//                if (tenantConfigInstance == null)
-//                    return false;
-//                grades.add(tenantConfigInstance);
-//            }
-//
-//            List<Grade> sortResultTenantConfigInstances = new ArrayList<Grade>();
-//            TenantConfigInstance tenantConfigInstanceStart = grades.get(0);
-//            TenantConfigInstance tenantConfigInstanceEnd = grades.get(1);
-//            //存储一个order
-//            Integer temp = tenantConfigInstanceStart.getConfigOrder();
-//            //调换另一个对象的order
-//            tenantConfigInstanceStart.setConfigOrder(tenantConfigInstanceEnd.getConfigOrder());
-//            tenantConfigInstanceStart.setModifyDate(System.currentTimeMillis());
-//            //调换temporder
-//            tenantConfigInstanceEnd.setConfigOrder(temp);
-//            tenantConfigInstanceEnd.setModifyDate(System.currentTimeMillis());
-//
-//            sortResultTenantConfigInstances.add(tenantConfigInstanceStart);
-//            sortResultTenantConfigInstances.add(tenantConfigInstanceEnd);
-//
-//            Integer sortResult = exiGradeDAO.gradeSortUpdate(sortResultTenantConfigInstances);
-//            result = sortResult > 0 ? true : false;
-//        }
+        List<Grade> grades = new ArrayList<Grade>();
 
-        LOGGER.info("===============年级拖动排序 E==============");
+        for (int i = 0; i < idsList.size(); i++) {
+            Map map = new HashMap();
+            map.put("id", idsList.get(i));
+            map.put("tnId",tnId);
+            Grade grade = iGradeDAO.queryOne(map, "id", "asc");
+            if (grade == null)
+                return false;
+            grade.setgOrder(i);
+            grades.add(grade);
+        }
+        Integer sortResult = exiGradeDAO.gradeSortUpdate(grades);
+        result = sortResult > 0 ? true : false;
+
+        LOGGER.info("===============年级 E==============");
 
         return result;
     }

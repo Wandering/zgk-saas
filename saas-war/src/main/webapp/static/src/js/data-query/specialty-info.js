@@ -13,6 +13,7 @@ var SpecialtyInfo = {
     init: function () {
         this.getMajoredCategory('2'); //默认专科
         this.addEvent();
+        this.type = 1;
     },
     getMajoredCategory: function (type) {
         var that = this;
@@ -46,12 +47,32 @@ var SpecialtyInfo = {
             $(this).addClass('active').siblings().removeClass('active');
             $('#sub-majored-category').attr('type', $(this).attr('type'));
             that.getMajoredCategory($(this).attr('type'));
+            that.type = $(this).attr('type');
         });
         $(document).on('click', '#majored-category span', function () {
             $(this).addClass('active').siblings().removeClass('active');
             $('#sub-title').html($(this).text());
             var cId = $(this).attr('categoryid');
             that.getCategoryMajoredList(cId);
+        });
+        //搜索
+        $(document).on('click', '.search-btn', function () {
+            var tpl = '';
+            Common.ajaxFun('/data/getMajoredByName.do', 'GET', {
+                'majoredName': $.trim($('.search-input').val()),
+                'type': that.type
+            }, function (res) {
+                if (res.rtnCode == "0000000") {
+                    if(res.bizData.length == 0){
+                        $('#sub-majored-category').html('暂无');
+                        return false;
+                    }
+                    var template = Handlebars.compile($('#sub-majored-category-tpl-search').html());
+                    $('#sub-majored-category').html(template(res.bizData));
+                } else {
+                    layer.msg(res.msg);
+                }
+            });
         });
     }
 }
@@ -106,12 +127,15 @@ var SpecialtyDetail = {
         var that = this;
         Common.ajaxFun('/data/getMajorOpenUniversityList.do', 'GET', that.paramsData, function (res) {
             if (res.rtnCode == "0000000") {
-                if(res.bizData.universityList.length == 0){
+                if (res.bizData.universityList.length == 0) {
                     $('#open-school').html('暂无数据');
                     $('#table-loading-img').hide();
                     return false;
                 }
                 that.renderMajorOpenUniversityList(res.bizData);
+                if(res.bizData.count.length<that.paramsData.rows){
+
+                }
                 if ((res.bizData.count - parseInt(that.paramsData.page)) > parseInt(that.paramsData.rows)) {
                     $('#specialty-load-more').removeClass('dh'); //显示加载更多
                 }
@@ -241,6 +265,17 @@ var SpecialtyDetail = {
             that.paramsData.page = nowPage + 1;
             that.getMajorOpenUniversityList();
         });
+
+        // //搜索按钮
+        // $(document).on('click', '.search-btn', function () {
+        //     if($(this).attr('pid')){
+        //         var pid = $(this).attr('pid');
+        //         layerHtmlFn(pid)
+        //     }else{
+        //         layer.msg('没有搜索到');
+        //     }
+        // })
+
 
     }
 }
