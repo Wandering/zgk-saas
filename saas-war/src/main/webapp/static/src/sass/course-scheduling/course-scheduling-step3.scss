@@ -125,8 +125,12 @@
   .scheduling-error {
     margin: $parentMargin;
     text-align: center;
+    .icon-cry-face{
+      margin-bottom: 20px;
+    }
   }
 }
+
 
 #role-scheduling-tab {
   .role-tab {

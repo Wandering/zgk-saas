@@ -113,6 +113,12 @@ public class ConfigurationController {
         return resultMap;
     }
 
+    /**
+     * 默认表头初始化
+     * @param type
+     * @param tnId
+     * @return
+     */
     @RequestMapping(value = "/retain/{type}/{tnId}",method = RequestMethod.POST)
     @ResponseBody
     public Map retainConfig(@PathVariable String type,@PathVariable Integer tnId) {

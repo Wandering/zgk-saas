@@ -45,4 +45,16 @@ $(function () {
         }
     });
 
+    $(document).on('click', '.no-assign-table td', function () {
+        var curText = $(this).text().trim();
+        var rowIndex = $(this).index();
+        var columnIndex = $(this).parent().index();
+        alert('rowIndex: ' + rowIndex + ', columnIndex: ' + rowIndex);
+        if (curText == '') {
+            $(this).text('不排课');
+        } else {
+            $(this).text('');
+        }
+    });
+
 });
