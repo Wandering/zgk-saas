@@ -20,6 +20,8 @@ TeachDate.prototype = {
                 if (res.rtnCode == "0000000") {
                     var teachDate = res.bizData.teachDate;
                     var teachTime = res.bizData.teachTime;
+                    var teachDateArr = []
+                    console.log(teachDate)
 
 
 
