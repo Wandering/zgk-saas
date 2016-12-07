@@ -22,6 +22,7 @@ public class JwCourse extends BaseDomain{
     private Integer chour;
     private Integer tnId;
     private Integer courseId;
+    private Integer taskId;
 
 	public JwCourse(){
 	}
@@ -48,6 +49,14 @@ public class JwCourse extends BaseDomain{
     }
     public void setCourseId(Integer value) {
         this.courseId = value;
+    }
+
+    public Integer getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
     }
 
     public Integer getCourseId() {

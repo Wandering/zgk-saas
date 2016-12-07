@@ -47,6 +47,18 @@ public  class ParamsUtils {
         return idsList;
     }
 
+    /**
+     * 获取模块下对应字段
+     * @param type
+     * @return
+     */
+    public static String getGradeKey(String type) {
+        Map map = new HashMap();
+        map.put("class", "class_grade");
+        map.put("student", "student_grade");
+        map.put("teacher", "teacher_grade");
+        return map.get(type).toString();
+    }
 
     /**
      * 获取年份

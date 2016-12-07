@@ -25,6 +25,8 @@ public class EnumUtil {
     public static final String STUDENT_EDUCATION_MAJOYTYPE="选择科目";
     public static final String[] STUDENT_EDUCATION_MAJOYTYPE_ARR={"化学","生物","政治","历史","地理","通用技术"};
 
+
+
     /**
      * 错误编码   规则: 【业务块描述-错误描述】
      */
