@@ -22,13 +22,21 @@ var GLOBAL_CONSTANT = {
 var App = {
     init: function () {
         this.tableData = [];
+        this.checkGradeName = '';
         this.renderTableHeader();
+        this.fetchGrade();
+        this.addEvent();
+        // this.loadPage();
     },
     renderTableHeader: function () {
         Common.ajaxFun('/config/get/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData.configList;
-                if (data.length != 0) {
+                if (data.length == 0) {
+                    App.layerAlertInit();
+                    return false;
+                }
+                if (data.length !== 0) {
                     var tpl = [];
                     App.tableData = [] //制空
                     tpl.push('<tr>');
@@ -79,6 +87,78 @@ var App = {
         }, function (res) {
             layer.msg("出错了");
         }, true);
+    },
+    layerAlertInit: function () {
+        var that = this;
+        layer.open({
+            type: 1,
+            closeBtn: 0,
+            title: '请初始化学生',
+            shade: [0.8, '#000'],
+            shadeClose: false,
+            scrollbar: false,
+            content: '<div class="init-page-layer"><button class="btn btn-info" id="init-btn">初始化学生数据</button></div>'
+        });
+        $(document).on('click', '#init-btn', function () {
+            Common.ajaxFun('/config/retain/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do', 'POST', {},
+                function (res) {
+                    if (res.rtnCode == "0000000") {
+                        if (res.bizData.result == true) {
+                            layer.msg('学生初始化成功');
+                            layer.closeAll();
+                            that.renderTableHeader();
+                        } else {
+                            layer.msg('学生初始化失败');
+                        }
+                    }
+                }, function (res) {
+                    layer.msg(res.msg);
+                });
+        })
+    },
+    // loadPage: function (offset, rows) {
+    //     var that = this;
+    //     this.classOffset = offset;
+    //     this.classRows = rows;
+    //     Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
+    //         's': that.classOffset,
+    //         'r': that.classRows,
+    //         'g': that.gradeName
+    //     }, function (res) {
+    //         if (res.rtnCode == "0000000") {
+    //             var data = res.bizData;
+    //             that.showData(data);
+    //         }
+    //     }, function (res) {
+    //         layer.msg("出错了");
+    //     }, false);
+    // },
+    //所属年级
+    fetchGrade: function () {
+        Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
+                var dataJson = res.bizData.grades;
+                //初始页面table-header渲染
+                var template = Handlebars.compile($('#grade-list-tpl').html());
+                $('#grade-list').html(template(dataJson));
+                //弹层渲染
+                // var tpl = '';
+                // $.each(dataJson, function (i, v) {
+                //     tpl += v.grade + '-';
+                // })
+                // tpl = tpl.substr(0, tpl.length - 1);
+                // CRUDStd.CRUDStdData.gradeData = tpl;
+                App.checkGradeName = dataJson[0].grade;
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
+    },
+    addEvent: function () {
+        var targetDom = $('#grade-list input');
+        $(document).on('click', '.grade-list input[name="grade-li"]', function () {
+            App.checkGradeName = $(this).next().html();
+        })
     }
 }
 App.init();
@@ -86,7 +166,7 @@ App.init();
 
 /**
  * 添加学生模块
-  * @type {{init: CRUDStd.init, fetchGrade: CRUDStd.fetchGrade, fetchEntranceYear: CRUDStd.fetchEntranceYear, fetchBelongClass: CRUDStd.fetchBelongClass, renderElement: CRUDStd.renderElement, bindEvents: CRUDStd.bindEvents, addStd: CRUDStd.addStd, updateStd: CRUDStd.updateStd, removeStd: CRUDStd.removeStd, CRUDStdVerify: CRUDStd.CRUDStdVerify, addStdEvent: CRUDStd.addStdEvent, updateStdEvent: CRUDStd.updateStdEvent}}
+ * @type {{init: CRUDStd.init, fetchGrade: CRUDStd.fetchGrade, fetchEntranceYear: CRUDStd.fetchEntranceYear, fetchBelongClass: CRUDStd.fetchBelongClass, renderElement: CRUDStd.renderElement, bindEvents: CRUDStd.bindEvents, addStd: CRUDStd.addStd, updateStd: CRUDStd.updateStd, removeStd: CRUDStd.removeStd, CRUDStdVerify: CRUDStd.CRUDStdVerify, addStdEvent: CRUDStd.addStdEvent, updateStdEvent: CRUDStd.updateStdEvent}}
  */
 var CRUDStd = {
     init: function () {
@@ -96,23 +176,32 @@ var CRUDStd = {
             gradeData: '',
             yearData: '',
             classData: ''
-        }
+        };
+        // this.fetchGrade(); //拉取渲染grade 12.7
     },
-    //所属年级
-    fetchGrade: function () {
-        Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
-            if (res.rtnCode == "0000000") {
-                var tpl = '';
-                $.each(res.bizData.grades, function (i, v) {
-                    tpl += v.grade + '-'
-                })
-                tpl = tpl.substr(0, tpl.length - 1);
-                CRUDStd.CRUDStdData.gradeData = tpl;
-            }
-        }, function (res) {
-            layer.msg("出错了");
-        }, true);
-    },
+    // //所属年级
+    // fetchGrade: function () {
+    //     Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
+    //         if (res.rtnCode == "0000000") {
+    //             var dataJson = res.bizData.grades;
+    //             //初始页面table-header渲染
+    //
+    //             var template = Handlebars.compile($('#grade-list-tpl').html());
+    //             $('#grade-list').html(template(dataJson));
+    //
+    //             //弹层渲染
+    //             // var tpl = '';
+    //             // $.each(dataJson, function (i, v) {
+    //             //     tpl += v.grade + '-';
+    //             // })
+    //             // tpl = tpl.substr(0, tpl.length - 1);
+    //             // CRUDStd.CRUDStdData.gradeData = tpl;
+    //             CRUDStd.CRUDStdData.gradeData = dataJson[0].grade;
+    //         }
+    //     }, function (res) {
+    //         layer.msg("出错了");
+    //     }, true);
+    // },
     //入学年份
     fetchEntranceYear: function () {
         Common.ajaxFun('/config/get/school/year.do', 'GET', {}, function (res) {
@@ -150,8 +239,9 @@ var CRUDStd = {
             if (!v.dataValue) {
                 switch (v.enName) {
                     case 'student_grade':  //所在年级
-                        CRUDStd.fetchGrade();
-                        v.dataValue = CRUDStd.CRUDStdData.gradeData;
+                        // CRUDStd.fetchGrade(); 初始化调用了12.7
+                        // console.info('CRUDStd.CRUDStdData.gradeData', CRUDStd.CRUDStdData.gradeData);
+                        v.dataValue = App.checkGradeName;
                         break;
                     case 'student_class_in_year':  //入学年份
                         CRUDStd.fetchEntranceYear();
@@ -225,12 +315,16 @@ var CRUDStd = {
          * @returns {string}
          */
         var renderSelect = function (v) {
-            var selectLen = (v.dataValue).split('-'),
-                selectTpl = '';
-            for (var i = 0; i < selectLen.length; i++) {
-                selectTpl += '<option>' + selectLen[i] + '</option>'
+            if(v.enName == "student_grade"){
+                return '<li><span>' + v.name + '</span><select id="' + v.enName + '" readonly disabled style="cursor: not-allowed;background-color: #eee;"><option>' + v.dataValue + '</option></select></li>'
+            }else{
+                var selectLen = (v.dataValue).split('-'),
+                    selectTpl = '';
+                for (var i = 0; i < selectLen.length; i++) {
+                    selectTpl += '<option>' + selectLen[i] + '</option>'
+                }
+                return '<li><span>' + v.name + '</span><select id="' + v.enName + '">' + selectTpl + '</select></li>'
             }
-            return '<li><span>' + v.name + '</span><select id="' + v.enName + '">' + selectTpl + '</select></li>'
         }
         /**
          * 渲染Text
@@ -313,7 +407,7 @@ var CRUDStd = {
             type: 1,
             title: '添加学生',
             offset: 'auto',
-            area: ['425px', 'auto'],
+            area: ['475px', 'auto'],
             content: $('#student-add-layer'),
             cancel: function () {
                 layer.closeAll();
@@ -411,12 +505,12 @@ var CRUDStd = {
                         return false
                     }
                     var reg = eval(v.checkRule);
-                    var regV = eval($('#' + v.enName).val());
+                    var regV = $('#' + v.enName).val();
                     if (!reg.test(regV)) {
-                       layer.msg(v.name + '输入不合法', {time: 1000});
-                       $('#' + v.enName).focus();
-                       lock = 1;
-                       return false
+                        layer.msg(v.name + '输入不合法', {time: 1000});
+                        $('#' + v.enName).focus();
+                        lock = 1;
+                        return false
                     }
                 }
                 if (v.dataType === "checkbox") {
@@ -539,7 +633,7 @@ var TplHandler = {
         var upload = function () {
             var $ = jQuery,
                 $list = $('#fileList'),
-            // Web Uploader实例
+                // Web Uploader实例
                 uploader;
             // 初始化Web Uploader
             uploader = WebUploader.create({
@@ -548,7 +642,7 @@ var TplHandler = {
                 // swf文件路径
                 swf: BASE_URL + '/webuploader-0.1.5 2/Uploader.swf',
                 // 文件接收服务端。
-                server: rootPath + '/config/upload/'+GLOBAL_CONSTANT.type+'/' + GLOBAL_CONSTANT.tnId + '.do',
+                server: rootPath + '/config/upload/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do',
                 // 选择文件的按钮。可选。
                 // 内部根据当前运行是创建，可能是input元素，也可能是flash.
                 pick: '#btn-import',
@@ -565,7 +659,7 @@ var TplHandler = {
             uploader.on('fileQueued', function (file) {
                 var $li = $(
                     '<div id="' + file.id + '" class="file-item thumbnail">' +
-                        //'<img>' +
+                    //'<img>' +
                     '<div class="info">' + file.name + '</div>' +
                     '</div>'
                 );
@@ -631,7 +725,7 @@ var StdSet = {
                     content: $("#sub-student-setting"),
                     area: ['100%', '100%'],
                     maxmin: false,
-                    cancel:function(){
+                    cancel: function () {
                         window.location.reload();
                     }
                 })
@@ -646,7 +740,7 @@ var StdSet = {
                 type: 1,
                 title: '选择添加字段',
                 content: $('#sub-choose-field'),
-                area: ['550px', '200px'],
+                area: ['668px', '230px'],
                 cancel: function () {
                     $('#field').html('');
                 }
@@ -686,7 +780,11 @@ var StdSet = {
                     var isCheck = false;
                     $.each(StdSet.fetchTableHeaderData.bizData.configList, function (j, k) {
                         if (v.id == k.configKey) {
-                            tpl.push('<input type="checkbox" class="ace" id="li-' + v.id + '" checked="checked">');
+                            if (v.isRetain == 1) {
+                                tpl.push('<input type="checkbox" class="ace" id="li-' + v.id + '" checked="checked" disabled>');
+                            } else {
+                                tpl.push('<input type="checkbox" class="ace" id="li-' + v.id + '" checked="checked">');
+                            }
                             isCheck = true;
                             return false;
                         }
@@ -796,11 +894,11 @@ var StdSet = {
                     console.info($(this));
                 });
                 ids = ids.join('-');
-                Common.ajaxFun('/config/sort/'+GLOBAL_CONSTANT.type+'/' + ids + '.do', 'POST', {}, function (res) {
-                if (res.rtnCode == "0000000") {
+                Common.ajaxFun('/config/sort/' + GLOBAL_CONSTANT.type + '/' + ids + '.do', 'POST', {}, function (res) {
+                    if (res.rtnCode == "0000000") {
                         if (res.bizData.result == "SUCCESS") {
                             layer.msg('排序成功', {time: 1000});
-                        }else{
+                        } else {
                             layer.msg(res.bizData.result);
                         }
                     }
@@ -811,7 +909,8 @@ var StdSet = {
         $("#sub-student-table").sortable({
             helper: fixHelperModified,
             stop: updateIndex,
-            axis: "y"
+            axis: "y",
+            items: "tr:not(.isRetain1)"
         }).disableSelection();
     }
 

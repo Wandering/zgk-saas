@@ -9,6 +9,11 @@ var tnId = Common.cookie.getCookie('tnId');
 function ClassManagement () {
     this.tnId = tnId;
     this.type = 'class';
+    this.classOffset = 0;
+    this.classRows = 30;
+    this.classCount = 0;
+    this.gradeName = '';
+    this.pageCount = 1;
     this.columnArr = [];
 }
 ClassManagement.prototype = {
@@ -40,8 +45,8 @@ ClassManagement.prototype = {
                     });
                     columnHtml.push('</tr>');
                     $("#class-manage-table thead").html(columnHtml.join(''));
-                    that.getClassData();
                 }
+                that.getGrade();
             }
         }, function (res) {
             layer.msg("出错了");
@@ -75,6 +80,61 @@ ClassManagement.prototype = {
         }, function (res) {
             layer.msg("出错了");
         }, true);
+    },
+    loadPage: function (offset, rows) {
+        var that = this;
+        this.classOffset = offset;
+        this.classRows = rows;
+        Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
+            's': that.classOffset,
+            'r': that.classRows,
+            'g': that.gradeName
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData;
+                that.showData(data);
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, false);
+    },
+    showData: function (result) {
+        var that = this;
+        this.classCount = result.count;
+        this.pageCount = Math.ceil(this.classCount / this.classRows);
+
+        var classDataHtml = [];
+        var data = result.result;
+        $.each(data, function (m, n) {
+            var obj = data[m];
+            classDataHtml.push('<tr rowid="' + obj['id'] + '">');
+            classDataHtml.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
+            $.each(that.columnArr, function (i, k) {
+                var tempObj = that.columnArr[i];
+                var tempColumnName = tempObj.enName;
+                if (obj[tempColumnName]) {
+                    classDataHtml.push('<td class="center">' + obj[tempColumnName] + '</td>');
+                } else {
+                    classDataHtml.push('<td class="center">-</td>');
+                }
+            });
+            classDataHtml.push('</tr>');
+        });
+        $("#class-manage-table tbody").html(classDataHtml.join(''));
+
+        this.pagination();
+    },
+    pagination: function () {
+        var that = this;
+        $(".pagination").createPage({
+            pageCount: Math.ceil(that.classCount / that.classRows),
+            current: Math.ceil(that.classOffset / that.classRows) + 1,
+            backFn: function (p) {
+                $(".pagination-bar .current-page").html(p);
+                that.classOffset = (p - 1) * that.classRows;
+                that.loadPage(that.classOffset, that.classRows);
+            }
+        });
     },
     removeClass: function () {//删除某一行班级数据
         var that = this;
@@ -110,6 +170,36 @@ ClassManagement.prototype = {
         }, function () {
             layer.closeAll();
         });
+    },
+    getGrade: function () {
+        var that = this;
+        Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData.grades;
+                var gradeListHtml = [];
+                $.each(data, function (i, k) {
+                    if (i != 0) {
+                        gradeListHtml.push('<span class="grade-item">');
+                        gradeListHtml.push('<input type="radio" name="high-school" id="senior' + k.id + '" />');
+                        gradeListHtml.push('<label for="senior' + k.id + '">' + k.grade + '</label>');
+                        gradeListHtml.push('</span>');
+                    } else {
+                        gradeListHtml.push('<span class="grade-item">');
+                        gradeListHtml.push('<input type="radio" name="high-school" checked="checked" id="senior' + k.id + '" />');
+                        gradeListHtml.push('<label for="senior' + k.id + '">' + k.grade + '</label>');
+                        gradeListHtml.push('</span>');
+                    }
+                });
+                $('#grade-level').html(gradeListHtml.join(''));
+                var checkedGrade = $('input[name="high-school"]:checked').next().text();
+                that.gradeName = checkedGrade;
+                that.loadPage(0, that.classRows);
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
     }
 };
 
@@ -174,6 +264,10 @@ AddClassManagement.prototype.renderGradeSelect = function (data) {
             gradeHtml.push('<option value="' + k.grade + '">' + k.grade + '</option>');
         });
         $("#class_grade").append(gradeHtml.join(''));
+        var checkedGrade = $('input[name="high-school"]:checked').next().text();
+        $("#class_grade").val(checkedGrade);
+        $("#class_grade").css({'cursor':'not-allowed'});
+        $("#class_grade").prop('disabled', true);
     }
 };
 AddClassManagement.prototype.getType = function (type) {
@@ -306,6 +400,10 @@ UpdateClassManagement.prototype = {
                 gradeHtml.push('<option value="' + k.grade + '">' + k.grade + '</option>');
             });
             $("#class_grade").append(gradeHtml.join(''));
+            var checkedGrade = $('input[name="high-school"]:checked').next().text();
+            $("#class_grade").val(checkedGrade);
+            $("#class_grade").css({'cursor':'not-allowed'});
+            $("#class_grade").prop('disabled', true);
         }
     },
     getType: function (type) {
@@ -429,6 +527,13 @@ $(document).on("click", "#updateRole-btn", function () {
     updateClassManagement.updateClass('更新班级');
 });
 
+$(document).on('change', 'input[name="high-school"]', function () {
+    $('#checkAll').prop('checked', false);
+    var checkedGrade = $('input[name="high-school"]:checked').next().text();
+    classManagement.gradeName = checkedGrade;
+    classManagement.loadPage(0, classManagement.classRows);
+});
+
 //确认更新操作按钮
 $(document).on("click", "#update-btn", function () {
     var postData = [];
@@ -473,7 +578,9 @@ $(document).on("click", "#update-btn", function () {
     Common.ajaxFun('/manage/teant/custom/data/modify.do', 'POST', JSON.stringify(datas), function (res) {
         if (res.rtnCode == "0000000") {
             layer.closeAll();
-            classManagement.getClassData();
+            var checkedGrade = $('input[name="high-school"]:checked').next().text();
+            classManagement.gradeName = checkedGrade;
+            classManagement.loadPage(0, classManagement.classRows);
         }
     }, function (res) {
         layer.msg("出错了");
@@ -538,7 +645,9 @@ $(document).on("click", "#add-btn", function () {
     Common.ajaxFun('/manage/teant/custom/data/add.do', 'POST', JSON.stringify(datas), function (res) {
         if (res.rtnCode == "0000000") {
             layer.closeAll();
-            classManagement.getClassData();
+            var checkedGrade = $('input[name="high-school"]:checked').next().text();
+            classManagement.gradeName = checkedGrade;
+            classManagement.loadPage(0, classManagement.classRows);
         }
     }, function (res) {
         layer.msg("出错了");
@@ -646,7 +755,9 @@ function upload () {
     uploader.on('uploadSuccess', function (file) {
         layer.closeAll();
         if (classManagement != null) {
-            classManagement.getClassData();
+            var checkedGrade = $('input[name="high-school"]:checked').next().text();
+            classManagement.gradeName = checkedGrade;
+            classManagement.loadPage(0, classManagement.classRows);
         }
     });
 

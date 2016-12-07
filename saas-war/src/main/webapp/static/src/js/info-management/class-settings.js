@@ -30,12 +30,21 @@ ClassSettings.prototype = {
         var classHtml = [];
         $.each(result, function (i, k) {
             that.ids.push(k.configKey);
-            classHtml.push('<tr>');
-            classHtml.push('<td class="center"><label><input type="checkbox" columnid="' + k.id + '" class="ace" /><span class="lbl"></span></label></td>');
-            classHtml.push('<td class="center index" indexid="' + k.id + '">' + k.configKey + '</td>');
-            classHtml.push('<td class="center">' + k.name + '</td>');
-            classHtml.push('<td class="center"><a href="javascript: void(0);" id="' + k.id + '" class="remove-link remove-column">移除</a></td>');
-            classHtml.push('</tr>');
+            if (parseInt(k.isRetain) == 1) {
+                classHtml.push('<tr class="isRetain'+ k.isRetain +'">');
+                classHtml.push('<td class="center"></td>');
+                classHtml.push('<td class="center index" indexid="' + k.id + '">' + k.configKey + '</td>');
+                classHtml.push('<td class="center">' + k.name + '</td>');
+                classHtml.push('<td class="center"></td>');
+                classHtml.push('</tr>');
+            } else {
+                classHtml.push('<tr class="isRetain'+ k.isRetain +'">');
+                classHtml.push('<td class="center"><label><input type="checkbox" isretain="' + k.isRetain + '" columnid="' + k.id + '" class="ace" /><span class="lbl"></span></label></td>');
+                classHtml.push('<td class="center index" indexid="' + k.id + '">' + k.configKey + '</td>');
+                classHtml.push('<td class="center">' + k.name + '</td>');
+                classHtml.push('<td class="center"><a href="javascript: void(0);" id="' + k.id + '" class="remove-link remove-column">移除</a></td>');
+                classHtml.push('</tr>');
+            }
         });
         $('#class-table tbody').html(classHtml.join(''));
     },
@@ -130,7 +139,8 @@ ClassSettings.prototype = {
         $("#class-table tbody").sortable({
             helper: fixHelperModified,
             stop: updateIndex,
-            axis: "y"
+            axis: "y",
+            items: "tr:not(.isRetain1)"
         }).disableSelection();
     }
 };
@@ -164,6 +174,10 @@ $(document).on('click', '#addColumn-btn', function () {
                 $('#column-list li').each(function () {
                     var tempCheck = $(this).find('.class-column');
                     var tempId = $(this).find('.class-column').attr('columnid');
+                    var tempIsRetain = $(this).find('.class-column').attr('isretain');
+                    if (parseInt(tempIsRetain) == 1) {
+                        tempCheck.prop('disabled', true);
+                    }
                     $.each(classSettings.ids, function (i, k) {
                         if (k == tempId) {
                             tempCheck.prop('checked', true);
