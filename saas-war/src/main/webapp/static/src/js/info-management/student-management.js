@@ -395,6 +395,7 @@ var CRUDStd = {
         $(document).on('click', '#add-btn', function () {
             if (that.CRUDStdVerify('add')) {
                 that.addStdEvent(that.CRUDStdVerify('add'));
+                window.location.reload();
             }
         })
         //删除
@@ -405,6 +406,7 @@ var CRUDStd = {
         $(document).on("click", "#update-btn", function () {
             if (that.CRUDStdVerify('update')) {
                 that.updateStdEvent(that.CRUDStdVerify('update'));
+                window.location.reload();
             }
         })
         //获取修改前数据 [组装修改前的数据]
@@ -505,6 +507,7 @@ var CRUDStd = {
                         $('#check-all').prop('checked', false);
                         layer.msg('删除成功', {time: 1000});
                         App.renderTableHeader();
+                        window.location.reload();
                     }
                 }
             }, function (res) {
