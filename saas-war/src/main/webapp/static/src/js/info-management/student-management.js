@@ -157,7 +157,7 @@ var App = {
     addEvent: function () {
         var targetDom = $('#grade-list input');
         $(document).on('click', '.grade-list input[name="grade-li"]', function () {
-            App.checkGradeName = $(this).next().html();
+            App.checkGradeName = $('input[name="grade-li"]:checked').next().html();
         })
     }
 }
@@ -315,9 +315,9 @@ var CRUDStd = {
          * @returns {string}
          */
         var renderSelect = function (v) {
-            if(v.enName == "student_grade"){
+            if (v.enName == "student_grade") {
                 return '<li><span>' + v.name + '</span><select id="' + v.enName + '" readonly disabled style="cursor: not-allowed;background-color: #eee;"><option>' + v.dataValue + '</option></select></li>'
-            }else{
+            } else {
                 var selectLen = (v.dataValue).split('-'),
                     selectTpl = '';
                 for (var i = 0; i < selectLen.length; i++) {
