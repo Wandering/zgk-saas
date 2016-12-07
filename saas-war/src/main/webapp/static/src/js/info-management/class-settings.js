@@ -164,6 +164,10 @@ $(document).on('click', '#addColumn-btn', function () {
                 $('#column-list li').each(function () {
                     var tempCheck = $(this).find('.class-column');
                     var tempId = $(this).find('.class-column').attr('columnid');
+                    var tempIsRetain = $(this).find('.class-column').attr('isretain');
+                    if (parseInt(tempIsRetain) == 1) {
+                        tempCheck.prop('disabled', true);
+                    }
                     $.each(classSettings.ids, function (i, k) {
                         if (k == tempId) {
                             tempCheck.prop('checked', true);
