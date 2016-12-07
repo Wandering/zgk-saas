@@ -56,12 +56,12 @@
                                     {{#each this}}
                                         {{#if @index}}
                                         <li>
-                                            <input type="radio" name="subject-analysis" id="grade-{{@index}}" keyId="{{id}}">
+                                            <input type="radio" name="grade-li" id="grade-{{@index}}" keyId="{{id}}">
                                             <label for="grade-{{@index}}">{{grade}}</label>
                                         </li>
                                         {{else}}
                                         <li>
-                                            <input type="radio" name="subject-analysis" id="grade-{{@index}}" keyId="{{id}}" checked>
+                                            <input type="radio" name="grade-li" id="grade-{{@index}}" keyId="{{id}}" checked>
                                             <label for="grade-{{@index}}">{{grade}}</label>
                                         </li>
                                         {{/if}}
@@ -231,20 +231,39 @@
                         </div>
                         <script type="text/x-handlebars-template" id="sub-student-table-tpl">
                             {{#each this}}
-                            <tr id="configKey-{{configKey}}">
-                                <td class="center">
-                                    <label>
-                                        <input type="checkbox" class="ace" id="configOrder-{{id}}"/>
-                                        <span class="lbl"></span>
-                                    </label>
-                                </td>
-                                <td class="center index" indexid="{{id}}">{{configKey}}</td>
-                                <td class="center">{{name}}</td>
-                                <td class="center">
-                                    <a href="javascript:void(0)" class="active student-setting-remove-head"
-                                       data-id="{{id}}">移除</a>
-                                </td>
-                            </tr>
+                                {{#if isRetain}}
+                                    <tr id="configKey-{{configKey}}" class="isRetain{{isRetain}}">
+                                        <td class="center">
+                                            <label>
+                                                <input type="checkbox" disabled class="ace" id="configOrder-{{id}}"/>
+                                                <span class="lbl"></span>
+                                            </label>
+                                        </td>
+                                        <td class="center index" indexid="{{id}}">{{configKey}}</td>
+                                        <td class="center">{{name}}</td>
+                                        <td class="center">
+                                            <a href="javascript:void(0)" class="active student-setting-remove-head"
+                                               data-id="{{id}}">-</a>
+                                        </td>
+                                    </tr>
+                                {{else}}
+                                    <tr id="configKey-{{configKey}}">
+                                        <td class="center">
+                                            <label>
+                                                <input type="checkbox" class="ace" id="configOrder-{{id}}"/>
+                                                <span class="lbl"></span>
+                                            </label>
+                                        </td>
+                                        <td class="center index" indexid="{{id}}">{{configKey}}</td>
+                                        <td class="center">{{name}}</td>
+                                        <td class="center">
+                                            <a href="javascript:void(0)" class="active student-setting-remove-head"
+                                               data-id="{{id}}">移除</a>
+                                        </td>
+                                    </tr>
+                                {{/if}}
+
+
                             {{/each}}
                         </script>
 

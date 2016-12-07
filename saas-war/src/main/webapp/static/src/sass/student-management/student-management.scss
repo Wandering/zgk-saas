@@ -35,7 +35,7 @@
     span {
       margin-right: 6px;
       display: inline-block;
-      min-width: 55px;
+      min-width: 100px;
     }
   }
   .subject-list {
@@ -68,7 +68,7 @@
 
 .opt-btn-box{
   .save-btn{
-    margin-left: 80px;
+    margin-left: 106px;
     margin-right: 45px;
   }
 }
@@ -80,13 +80,14 @@
   padding: 20px 30px;
   label{
     margin-right: 20px;
-    width: 100px;
+    width: 132px;
   }
   .btn-info{
     //margin-top: 15px;
     position: absolute;
     left: 50%;
     margin-left: -40px;
+    margin-top:18px;
   }
   .lbl{
     &:before{
