@@ -83,4 +83,15 @@ public class EXConfigurationServiceImpl extends AbstractPageService<IBaseDAO<Con
         }
         return result > 0;
     }
+
+    /**
+     * 中英文列名互转
+     *
+     * @param map
+     * @return
+     */
+    @Override
+    public String selectColumnName(Map map) {
+        return exiConfigurationDAO.selectColumnName(map);
+    }
 }

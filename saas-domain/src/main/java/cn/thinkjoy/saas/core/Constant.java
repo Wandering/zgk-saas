@@ -38,4 +38,19 @@ public class Constant {
     public static final Integer SCHEDULE_TASK_INIT_STATUS = 1;
 
     public static final String TIME_INTERVAL = "_";
+
+    public static final String TABLE_TYPE_STUDENT = "student";
+
+    public static final String STUDENT_GRADE = "student_grade";
+
+    public static final String[] CHECK_TABLE_STUDENT_COLUMNS = {
+            "student_name",
+            "student_no",
+            "student_check_major1",
+            "student_check_major_class1",
+            "student_check_major2",
+            "student_check_major_class2",
+            "student_check_major3",
+            "student_check_major_class3"
+            };
 }
