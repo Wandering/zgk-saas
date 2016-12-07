@@ -62,4 +62,17 @@ public interface IEXTeantCustomDAO {
      * @return
      */
     Integer removeTenantCustomList(@Param("tableName") String tableName,@Param("ids")List<String> ids);
+
+    /**
+     * 查询表中所有字段名
+     * @param tableName
+     * @return
+     */
+    List<String> getTableColumns(@Param("tableName") String tableName);
+
+    /**
+     * 判断表中列是否存在数据
+     * @return
+     */
+    Map<String,Object> existDataCount(Map map);
 }
