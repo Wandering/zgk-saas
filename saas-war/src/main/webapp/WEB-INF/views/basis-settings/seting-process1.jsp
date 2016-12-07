@@ -85,24 +85,6 @@
                                         <input type="text" id="seting-process1-3" disabled="disabled"  value="高三年级" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="center">4</td>
-                                    <td class="center">
-                                        <input type="text" id="seting-process1-4" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="center">5</td>
-                                    <td class="center">
-                                        <input type="text" id="seting-process1-5" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="center">6</td>
-                                    <td class="center">
-                                        <input type="text" id="seting-process1-6" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
-                                    </td>
-                                </tr>
                                 </tbody>
                             </table>
                         </div>
