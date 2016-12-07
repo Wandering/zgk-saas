@@ -29,7 +29,7 @@ public class TeachTimeController {
     @Autowired
     private IJwTeachDateService jwTeachDateService;
     @ResponseBody
-    @RequestMapping(value = "/saveTeachTime",method = RequestMethod.GET)
+    @RequestMapping(value = "/saveTeachTime",method = RequestMethod.POST)
     public boolean saveTeachTime(@RequestParam Integer taskId,
                                  @RequestParam String teachDate,
                                  @RequestParam String teachTime){
