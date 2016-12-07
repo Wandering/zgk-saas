@@ -10,7 +10,6 @@ public class TeacherBaseDto implements Serializable {
 
     private long teacherId; // 教师ID
     private String teacherName; // 教师姓名
-    private long courseId; // 课程ID
     private String courseName; // 课程名
     private int classNum; // 最大带班数
     private List<ClassBaseDto> classInfo;
@@ -29,14 +28,6 @@ public class TeacherBaseDto implements Serializable {
 
     public void setTeacherName(String teacherName) {
         this.teacherName = teacherName;
-    }
-
-    public long getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(long courseId) {
-        this.courseId = courseId;
     }
 
     public String getCourseName() {
@@ -68,7 +59,6 @@ public class TeacherBaseDto implements Serializable {
         return "TeacherBaseDto{" +
                 "teacherId=" + teacherId +
                 ", teacherName='" + teacherName + '\'' +
-                ", courseId=" + courseId +
                 ", courseName='" + courseName + '\'' +
                 ", classNum=" + classNum +
                 ", classInfo=" + classInfo +

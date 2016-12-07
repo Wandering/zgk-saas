@@ -35,7 +35,9 @@ public enum ErrorCode {
 
     TASK_ERROR("0500001","参数不完整,请检查参数完整性"),
 
-    ROLE_HAS_EXIST("0000012","同名的角色已经存在");
+    ROLE_HAS_EXIST("0000012","同名的角色已经存在"),
+
+    TASK_NOT_EXIST("0000013","任务不存在");
 
     private final String code;
 

@@ -5,6 +5,8 @@ import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
+import cn.thinkjoy.saas.dao.IJwCourseDAO;
+import cn.thinkjoy.saas.domain.JwCourse;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.JwScheduleTaskDto;
@@ -13,7 +15,9 @@ import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.enums.GradeEnum;
 import cn.thinkjoy.saas.enums.StatusEnum;
 import cn.thinkjoy.saas.enums.TermEnum;
+import cn.thinkjoy.saas.service.IJwCourseService;
 import cn.thinkjoy.saas.service.IJwScheduleTaskService;
+import cn.thinkjoy.saas.service.IJwTeacherService;
 import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import com.google.common.collect.Maps;
@@ -44,6 +48,12 @@ public class ScheduleTaskController {
 
     @Autowired
     private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
+
+    @Autowired
+    private IJwCourseService jwCourseService;
+
+    @Autowired
+    private IJwTeacherService jwTeacherService;
 
     /**
      * 新建排课任务
@@ -195,48 +205,96 @@ public class ScheduleTaskController {
     @ResponseBody
     @ApiDesc(value = "根据任务ID获取课程信息",owner = "gryang")
     @RequestMapping(value = "/queryCourseInfoByTaskId",method = RequestMethod.GET)
-    public List<CourseBaseDto> queryCourseInfoByTaskId(@RequestParam long taskId){
+    public List<CourseBaseDto> queryCourseInfoByTaskId(@RequestParam int taskId){
         List<CourseBaseDto> dtos = iexScheduleBaseInfoService.queryCourseInfoByTaskId(taskId);
         return dtos;
     }
 
     @ResponseBody
-    @ApiDesc(value = "添加课程课时信息",owner = "gryang")
-    @RequestMapping(value = "/updateCourseTime",method = RequestMethod.POST)
-    public Map updateCourseTime(@RequestParam long taskId,@RequestParam long courseId,@RequestParam String time){
-        return null;
+    @ApiDesc(value = "添加或修改课程课时信息",owner = "gryang")
+    @RequestMapping(value = "/saveOrUpdateCourseTime",method = RequestMethod.POST)
+    public Map saveOrUpdateCourseTime(@RequestParam int taskId,@RequestParam int courseId,@RequestParam String time){
+
+        if(StringUtils.isEmpty(time)){
+            ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
+        }
+
+        int chour = 0;
+        String [] arr = time.split("\\+");
+        if(arr.length == 1){
+            chour = Integer.valueOf(arr[0]);
+        }else if (arr.length == 2){
+            chour = Integer.valueOf(arr[0]) + 2*Integer.valueOf(arr[1]);
+        }
+
+        Map<String,Object> paramMap = Maps.newHashMap();
+        paramMap.put("task_id",taskId);
+        paramMap.put("course_id",courseId);
+        JwCourse course = (JwCourse) jwCourseService.queryOne(paramMap,"id",SqlOrderEnum.DESC);
+        if(course != null){
+            course.setCourseHour(time);
+            course.setChour(chour);
+            jwCourseService.update(course);
+        }else {
+            course = new JwCourse();
+            course.setCourseId(courseId);
+            course.setCourseHour(time);
+            course.setChour(chour);
+            course.setTaskId(taskId);
+            course.setTnId(iexScheduleBaseInfoService.getTnIdByTaskId(taskId));
+            jwCourseService.insert(course);
+        }
+
+        return Maps.newHashMap();
     }
 
     @ResponseBody
     @ApiDesc(value = "根据任务ID获取教师信息",owner = "gryang")
     @RequestMapping(value = "/queryTeacherByTaskId",method = RequestMethod.GET)
-    public TeacherBaseDto queryTeacherByTaskId(@RequestParam long taskId){
-        return null;
+    public List<TeacherBaseDto> queryTeacherByTaskId(@RequestParam int taskId){
+        List<TeacherBaseDto> dtos = iexScheduleBaseInfoService.queryTeacherByTaskId(taskId);
+        return dtos;
     }
 
     @ResponseBody
     @ApiDesc(value = "自动补全教师姓名",owner = "gryang")
     @RequestMapping(value = "/queryTeacherByKeyWord",method = RequestMethod.GET)
-    public TeacherBaseDto queryTeacherByKeyWord(@RequestParam String keyWord){
-        return null;
+    public List<TeacherBaseDto> queryTeacherByKeyWord(@RequestParam int taskId,@RequestParam String keyWord){
+        List<TeacherBaseDto> dtos = iexScheduleBaseInfoService.queryTeacherByKeyWord(taskId,keyWord);
+        return dtos;
     }
 
     @ResponseBody
     @ApiDesc(value = "保存或修改教师配置信息",owner = "gryang")
     @RequestMapping(value = "/saveOrUpdateTeacher",method = RequestMethod.POST)
-    public Map saveOrUpdateTeacher(@RequestParam long taskId,
-                                   @RequestParam long tnId,
-                                   @RequestParam long teacherId,
+    public Map saveOrUpdateTeacher(@RequestParam int taskId,
+                                   @RequestParam int teacherId,
                                    @RequestParam int classNum,
+                                   @RequestParam String course,
                                    @RequestParam String classId){
-        return null;
+
+        iexScheduleBaseInfoService.saveOrUpdateTeacher(
+                taskId,
+                teacherId,
+                classNum,
+                course,
+                classId
+        );
+
+        return Maps.newHashMap();
     }
 
     @ResponseBody
     @ApiDesc(value = "删除教师配置信息",owner = "gryang")
     @RequestMapping(value = "/deleteTeacher",method = RequestMethod.GET)
-    public TeacherBaseDto deleteTeacher(@RequestParam long taskId,@RequestParam long teacherId){
-        return null;
+    public Map deleteTeacher(@RequestParam int taskId,@RequestParam int teacherId){
+
+        Map<String,Object> paramMap = Maps.newHashMap();
+        paramMap.put("teacher_id",teacherId);
+        paramMap.put("task_id",taskId);
+        jwTeacherService.deleteByCondition(paramMap);
+
+        return Maps.newHashMap();
     }
 
 }
