@@ -36,4 +36,6 @@ public class Constant {
 
 
     public static final Integer SCHEDULE_TASK_INIT_STATUS = 1;
+
+    public static final String TIME_INTERVAL = "_";
 }
