@@ -48,9 +48,9 @@ public interface IEXTenantCustomService {
      * @param tnId 租户ID
      * @return
      */
-    List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId);
+    List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId,String g,Integer s);
 
-
+    public Integer getTenantCustomCount(String type,Integer tnId,String g);
     /**
      * excel内添加select
      * @param columnNames

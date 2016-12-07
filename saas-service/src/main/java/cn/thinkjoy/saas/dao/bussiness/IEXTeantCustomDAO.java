@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by douzy on 16/10/25.
@@ -47,10 +48,12 @@ public interface IEXTeantCustomDAO {
     /**
      * 获取租户自定义表头数据
      *
-     * @param tableName
+     * @param map
      * @return
      */
-    List<LinkedHashMap<String, Object>> getTenantCustom(@Param("tableName") String tableName);
+    List<LinkedHashMap<String, Object>> getTenantCustom(Map map);
+
+    Integer getTenantCustomCount(Map map);
 
     /**
      * 批量删除

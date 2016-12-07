@@ -108,7 +108,7 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
      * @return
      */
     @Override
-    public List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId) {
+    public List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId,String g,Integer s) {
         if (tnId <= 0)
             return null;
 
@@ -117,12 +117,33 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         if (StringUtils.isBlank(tableName))
             return null;
 
-        List<LinkedHashMap<String, Object>> tenantCustoms = iexTeantCustomDAO.getTenantCustom(tableName);
+        Map map=new HashMap();
+        map.put("tableName",tableName);
+        map.put("searchKey",ParamsUtils.getGradeKey(type));
+        map.put("searchValue",g);
+        map.put("offset",s);
+        map.put("rows",30);
+        List<LinkedHashMap<String, Object>> tenantCustoms = iexTeantCustomDAO.getTenantCustom(map);
 
 
         return tenantCustoms;
     }
+    @Override
+    public Integer getTenantCustomCount(String type,Integer tnId,String g) {
+        if (tnId <= 0)
+            return null;
 
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+
+        if (StringUtils.isBlank(tableName))
+            return null;
+
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        map.put("searchKey", ParamsUtils.getGradeKey(type));
+        map.put("searchValue", g);
+        return iexTeantCustomDAO.getTenantCustomCount(map);
+    }
     /**
      * excel内添加select
      * @param columnNames
@@ -161,7 +182,9 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
                         break;
                     case EnumUtil.TEACHER_EDUCATION_CLASS://教师-所教班级
                         String tableName= ParamsUtils.combinationTableName("class", tnId);
-                        List<LinkedHashMap<String, Object>> linkedHashMapList =iexTeantCustomDAO.getTenantCustom(tableName);
+                        Map maplin=new HashMap();
+                        maplin.put("tableName",tableName);
+                        List<LinkedHashMap<String, Object>> linkedHashMapList =iexTeantCustomDAO.getTenantCustom(maplin);
                         value = converClassName(linkedHashMapList);
                         break;
                     case EnumUtil.TEACHER_EDUCATION_MAJOYTYPE://教师-所教科目
