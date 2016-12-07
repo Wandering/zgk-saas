@@ -33,7 +33,8 @@ ClassRoomManagement.prototype = {
                 classRoomHtml.push('</td>');
                 classRoomHtml.push('<td class="center index" indexid="' + v.id + '">'+ (i+1) +'</td>');
                 classRoomHtml.push('<td class="center" gradeid="' + v.gradeId + '">'+ v.grade +'</td>');
-                classRoomHtml.push('<td class="center">'+ v.number +'</td>');
+                classRoomHtml.push('<td class="center">'+ v.executiveNumber +'</td>');
+                classRoomHtml.push('<td class="center">'+ v.dayNumber +'</td>');
                 classRoomHtml.push('</tr>');
             });
             $('#classroom-table tbody').html(classRoomHtml.join(''));
@@ -61,13 +62,19 @@ ClassRoomManagement.prototype = {
         var contentHtml = [];
         contentHtml.push('<div class="form-horizontal grade-layer">');
         contentHtml.push('<div class="form-group">');
-        contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="classroom-num"> 教室数量 </label>');
+        contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="classroom-num">行政教室数量: </label>');
         contentHtml.push('<div class="col-sm-8">');
-        contentHtml.push('<input type="text" id="classroom-num" placeholder="输入教室数量" class="col-xs-10 col-sm-10" />');
+        contentHtml.push('<input type="text" id="executiveNumber" placeholder="输入行政教室数量" class="col-xs-10 col-sm-10" />');
         contentHtml.push('</div>');
         contentHtml.push('</div>');
         contentHtml.push('<div class="form-group">');
-        contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="grade-name"> 选择年级 </label>');
+        contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="classroom-num">走班教室数量: </label>');
+        contentHtml.push('<div class="col-sm-8">');
+        contentHtml.push('<input type="text" id="dayNumber" placeholder="输入走班教室数量" class="col-xs-10 col-sm-10" />');
+        contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        contentHtml.push('<div class="form-group">');
+        contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="grade-name">选择年级: </label>');
         contentHtml.push('<div class="col-sm-8">');
         contentHtml.push('<select id="grade-list"></select>');
         contentHtml.push('</div>');
@@ -78,7 +85,7 @@ ClassRoomManagement.prototype = {
             type: 1,
             title: title,
             offset: 'auto',
-            area: ['362px', '230px'],
+            area: ['362px', '280px'],
             content: contentHtml.join('')
         });
         that.getGrade();
@@ -88,13 +95,19 @@ ClassRoomManagement.prototype = {
         var contentHtml = [];
         contentHtml.push('<div class="form-horizontal grade-layer">');
         contentHtml.push('<div class="form-group">');
-        contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="classroom-num"> 教室数量 </label>');
+        contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="classroom-num">行政教室数量: </label>');
         contentHtml.push('<div class="col-sm-8">');
-        contentHtml.push('<input type="text" id="classroom-num" placeholder="输入教室数量" class="col-xs-10 col-sm-10" />');
+        contentHtml.push('<input type="text" id="executiveNumber" placeholder="输入行政教室数量" class="col-xs-10 col-sm-10" />');
         contentHtml.push('</div>');
         contentHtml.push('</div>');
         contentHtml.push('<div class="form-group">');
-        contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="grade-name"> 选择年级 </label>');
+        contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="classroom-num">走班教室数量: </label>');
+        contentHtml.push('<div class="col-sm-8">');
+        contentHtml.push('<input type="text" id="dayNumber" placeholder="输入走班教室数量" class="col-xs-10 col-sm-10" />');
+        contentHtml.push('</div>');
+        contentHtml.push('</div>');
+        contentHtml.push('<div class="form-group">');
+        contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="grade-name">选择年级: </label>');
         contentHtml.push('<div class="col-sm-8">');
         contentHtml.push('<select id="grade-list"></select>');
         contentHtml.push('</div>');
@@ -105,13 +118,14 @@ ClassRoomManagement.prototype = {
             type: 1,
             title: title,
             offset: 'auto',
-            area: ['362px', '230px'],
+            area: ['362px', '280px'],
             content: contentHtml.join('')
         });
         that.getGrade();
         var rowid = $(".check-template :checkbox:checked").attr('crid');
         var rowItem = $('#classroom-manage-list tr[rowid="' + rowid + '"]').find('td');
-        $('#classroom-num').val(rowItem.eq(3).text());
+        $('#executiveNumber').val(rowItem.eq(3).text());
+        $('#dayNumber').val(rowItem.eq(4).text());
         $('#grade-list').val(rowItem.eq(2).attr('gradeid'));
     },
     deleteClassRoom: function () {//删除某一行教室数据
@@ -195,10 +209,15 @@ $('#addRole-btn').on('click',function(){
 });
 
 $(document).on('click','.save-btn',function () {
-    var classroomNum = $.trim($('#classroom-num').val());
+    var executiveNumber = $.trim($('#executiveNumber').val());
+    var dayNumber = $.trim($('#dayNumber').val());
     var gradeV = $('#grade-list').val();
-    if (classroomNum == '') {
-        layer.tips('请填写教室数量!', $('#classroom-num'));
+    if (executiveNumber == '') {
+        layer.tips('请填写行政教室数量!', $('#executiveNumber'));
+        return false;
+    }
+    if (dayNumber == '') {
+        layer.tips('请填写走班教室数量!', $('#dayNumber'));
         return false;
     }
     if (gradeV == '00') {
@@ -207,7 +226,8 @@ $(document).on('click','.save-btn',function () {
     }
 
     Common.ajaxFun('/manage/classRoom/add/'+ tnId +'/' + gradeV + '.do', 'POST',{
-        crNum: classroomNum
+        crNum: executiveNumber,
+        dayNum: dayNumber
     }, function (res) {
         if (res.rtnCode == "0000000") {
             $('#grade-list').html('');
@@ -233,10 +253,15 @@ $('#updateRole-btn').on('click',function () {
     classRoomManagement.updateClassRoom('修改教室');
 });
 $(document).on('click', '#update-classroom-btn', function () {
-    var classroomNum = $.trim($('#classroom-num').val());
+    var executiveNumber = $.trim($('#executiveNumber').val());
+    var dayNumber = $.trim($('#dayNumber').val());
     var gradeV = $('#grade-list').val();
-    if (classroomNum == '') {
-        layer.tips('请填写教室数量!', $('#classroom-num'));
+    if (executiveNumber == '') {
+        layer.tips('请填写行政教室数量!', $('#executiveNumber'));
+        return false;
+    }
+    if (dayNumber == '') {
+        layer.tips('请填写走班教室数量!', $('#dayNumber'));
         return false;
     }
     if (gradeV == '00') {
@@ -245,9 +270,9 @@ $(document).on('click', '#update-classroom-btn', function () {
     }
 
     var rowid = $(".check-template :checkbox:checked").attr('crid');
-    ///manage/classRoom/modify/{cid}.do?gid=xx&num=xx
-    Common.ajaxFun('/manage/classRoom/modify/' + rowid + '.do?gid=' + gradeV + '&num=' + classroomNum, 'POST',{
-
+    Common.ajaxFun('/manage/classRoom/modify/' + rowid + '.do?gid=' + gradeV, 'POST',{
+        num: executiveNumber,
+        dayNum: dayNumber
     }, function (res) {
         if (res.rtnCode == "0000000") {
             $('#grade-list').html('');

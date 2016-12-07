@@ -51,20 +51,22 @@
 
                         <div class="title-2">
                             <span class="txt-t">
-                                <ul class="grade-list">
-                                    <li>
-                                        <input type="radio" name="subject-analysis" id="grade-1" checked="">
-                                        <label for="grade-1">高一年级</label>
-                                    </li>
-                                    <li>
-                                        <input type="radio" name="subject-analysis" id="grade-2" checked="">
-                                        <label for="grade-2">高二年级</label>
-                                    </li>
-                                    <li>
-                                        <input type="radio" name="subject-analysis" id="grade-3" checked="">
-                                        <label for="grade-3">高三年级</label>
-                                    </li>
-                                </ul>
+                                <ul class="grade-list" id="grade-list"></ul>
+                                <script type="text/x-handlebars-template" id="grade-list-tpl">
+                                    {{#each this}}
+                                        {{#if @index}}
+                                        <li>
+                                            <input type="radio" name="grade-li" id="grade-{{@index}}" keyId="{{id}}">
+                                            <label for="grade-{{@index}}">{{grade}}</label>
+                                        </li>
+                                        {{else}}
+                                        <li>
+                                            <input type="radio" name="grade-li" id="grade-{{@index}}" keyId="{{id}}" checked>
+                                            <label for="grade-{{@index}}">{{grade}}</label>
+                                        </li>
+                                        {{/if}}
+                                    {{/each}}
+                                </script>
                             </span>
                             <div class="btns">
                                 <button class="btn btn-pink" id="student-add" type="add">添加学生</button>
@@ -229,20 +231,39 @@
                         </div>
                         <script type="text/x-handlebars-template" id="sub-student-table-tpl">
                             {{#each this}}
-                            <tr id="configKey-{{configKey}}">
-                                <td class="center">
-                                    <label>
-                                        <input type="checkbox" class="ace" id="configOrder-{{id}}"/>
-                                        <span class="lbl"></span>
-                                    </label>
-                                </td>
-                                <td class="center index" indexid="{{id}}">{{configKey}}</td>
-                                <td class="center">{{name}}</td>
-                                <td class="center">
-                                    <a href="javascript:void(0)" class="active student-setting-remove-head"
-                                       data-id="{{id}}">移除</a>
-                                </td>
-                            </tr>
+                                {{#if isRetain}}
+                                    <tr id="configKey-{{configKey}}" class="isRetain{{isRetain}}">
+                                        <td class="center">
+                                            <label>
+                                                <input type="checkbox" disabled class="ace" id="configOrder-{{id}}"/>
+                                                <span class="lbl"></span>
+                                            </label>
+                                        </td>
+                                        <td class="center index" indexid="{{id}}">{{configKey}}</td>
+                                        <td class="center">{{name}}</td>
+                                        <td class="center">
+                                            <a href="javascript:void(0)" class="active student-setting-remove-head"
+                                               data-id="{{id}}">-</a>
+                                        </td>
+                                    </tr>
+                                {{else}}
+                                    <tr id="configKey-{{configKey}}">
+                                        <td class="center">
+                                            <label>
+                                                <input type="checkbox" class="ace" id="configOrder-{{id}}"/>
+                                                <span class="lbl"></span>
+                                            </label>
+                                        </td>
+                                        <td class="center index" indexid="{{id}}">{{configKey}}</td>
+                                        <td class="center">{{name}}</td>
+                                        <td class="center">
+                                            <a href="javascript:void(0)" class="active student-setting-remove-head"
+                                               data-id="{{id}}">移除</a>
+                                        </td>
+                                    </tr>
+                                {{/if}}
+
+
                             {{/each}}
                         </script>
 
