@@ -9,6 +9,10 @@ var tnId = Common.cookie.getCookie('tnId');
 function ClassManagement () {
     this.tnId = tnId;
     this.type = 'class';
+    this.classOffset = 0;
+    this.classRows = 10;
+    this.classCount = 0;
+    this.pageCount = 1;
     this.columnArr = [];
 }
 ClassManagement.prototype = {
@@ -40,8 +44,8 @@ ClassManagement.prototype = {
                     });
                     columnHtml.push('</tr>');
                     $("#class-manage-table thead").html(columnHtml.join(''));
-                    that.getClassData();
                 }
+                that.getGrade();
             }
         }, function (res) {
             layer.msg("出错了");
@@ -75,6 +79,41 @@ ClassManagement.prototype = {
         }, function (res) {
             layer.msg("出错了");
         }, true);
+    },
+    loadPage: function (offset, rows) {
+        var that = this;
+        this.classOffset = offset;
+        this.classRows = rows;
+        Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
+            's': that.classOffset,
+            'r': that.classRows
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData;
+                that.showData(data);
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, false);
+    },
+    showData: function (result) {
+        this.classCount = result.count;
+        this.pageCount = Math.ceil(this.classCount / this.classRows);
+
+
+        this.pagination();
+    },
+    pagination: function () {
+        var that = this;
+        $(".pagination").createPage({
+            pageCount: Math.ceil(that.classCount / that.classRows),
+            current: Math.ceil(that.classOffset / that.classRows) + 1,
+            backFn: function (p) {
+                $(".pagination-bar .current-page").html(p);
+                that.classOffset = (p - 1) * that.classRows;
+                that.loadPage(that.classOffset, that.classRows);
+            }
+        });
     },
     removeClass: function () {//删除某一行班级数据
         var that = this;
@@ -110,6 +149,35 @@ ClassManagement.prototype = {
         }, function () {
             layer.closeAll();
         });
+    },
+    getGrade: function () {
+        var that = this;
+        Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData.grades;
+                var gradeListHtml = [];
+                $.each(data, function (i, k) {
+                    if (i != 0) {
+                        gradeListHtml.push('<span class="grade-item">');
+                        gradeListHtml.push('<input type="radio" name="high-school" id="senior' + k.id + '" />');
+                        gradeListHtml.push('<label for="senior' + k.id + '">' + k.grade + '</label>');
+                        gradeListHtml.push('</span>');
+                    } else {
+                        gradeListHtml.push('<span class="grade-item">');
+                        gradeListHtml.push('<input type="radio" name="high-school" checked="checked" id="senior' + k.id + '" />');
+                        gradeListHtml.push('<label for="senior' + k.id + '">' + k.grade + '</label>');
+                        gradeListHtml.push('</span>');
+                    }
+                });
+                $('#grade-level').html(gradeListHtml.join(''));
+                //that.getClassData();
+                that.loadPage(0, that.classRows);
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
     }
 };
 
@@ -427,6 +495,10 @@ $(document).on("click", "#updateRole-btn", function () {
     updateClassManagement = new UpdateClassManagement();
     updateClassManagement.init(classManagement.columnArr);
     updateClassManagement.updateClass('更新班级');
+});
+
+$(document).on('change', 'input[name="high-school"]', function () {
+    alert($(this).next().text());
 });
 
 //确认更新操作按钮

@@ -46,7 +46,7 @@
         </div>
         <script id="column-list-data-template" type="text/x-handlebars-template">
             {{#each this}}
-            <li><input type="checkbox" class='class-column' columnid="{{id}}" id="{{enName}}" /><label for="{{enName}}">{{chName}}</label></li>
+            <li><input type="checkbox" class='class-column' isretain="{{isRetain}}" columnid="{{id}}" id="{{enName}}" /><label for="{{enName}}">{{chName}}</label></li>
             {{/each}}
         </script>
         <%@ include file="./../common/footer.jsp"%>

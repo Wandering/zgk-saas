@@ -83,7 +83,7 @@
     width: 100px;
   }
   .btn-info{
-    margin-top: 15px;
+    //margin-top: 15px;
     position: absolute;
     left: 50%;
     margin-left: -40px;
@@ -117,4 +117,18 @@ a.download-link:hover {
   color: #CB171D !important;
   outline: 0;
   background-color: #fff !important;
+}
+
+
+//初始化弹层
+.init-page-layer{
+  padding: 30px;
+  width: 360px;
+  #init-btn{
+    width: 120px;
+    position: relative;
+    margin-left: -60px;
+    left: 50%;
+    outline: none;
+  }
 }
