@@ -54,6 +54,7 @@ public class ScheduleTaskController {
         jwScheduleTask.setGrade(grade);
         jwScheduleTask.setTerm(term);
         jwScheduleTask.setYear(year);
+        jwScheduleTask.setDelStatus(StatusEnum.Y.getCode());
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         jwScheduleTask.setTnId(tnId);
         jwScheduleTask.setCreateDate(System.currentTimeMillis());
