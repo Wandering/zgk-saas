@@ -40,8 +40,8 @@ ClassManagement.prototype = {
                     });
                     columnHtml.push('</tr>');
                     $("#class-manage-table thead").html(columnHtml.join(''));
-                    that.getClassData();
                 }
+                that.getGrade();
             }
         }, function (res) {
             layer.msg("出错了");
@@ -110,6 +110,34 @@ ClassManagement.prototype = {
         }, function () {
             layer.closeAll();
         });
+    },
+    getGrade: function () {
+        var that = this;
+        Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData.grades;
+                var gradeListHtml = [];
+                $.each(data, function (i, k) {
+                    if (i != 0) {
+                        gradeListHtml.push('<span class="grade-item">');
+                        gradeListHtml.push('<input type="radio" name="high-school" id="senior' + k.id + '" />');
+                        gradeListHtml.push('<label for="senior' + k.id + '">' + k.grade + '</label>');
+                        gradeListHtml.push('</span>');
+                    } else {
+                        gradeListHtml.push('<span class="grade-item">');
+                        gradeListHtml.push('<input type="radio" name="high-school" checked="checked" id="senior' + k.id + '" />');
+                        gradeListHtml.push('<label for="senior' + k.id + '">' + k.grade + '</label>');
+                        gradeListHtml.push('</span>');
+                    }
+                });
+                $('#grade-level').html(gradeListHtml.join(''));
+                that.getClassData();
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
     }
 };
 
@@ -427,6 +455,10 @@ $(document).on("click", "#updateRole-btn", function () {
     updateClassManagement = new UpdateClassManagement();
     updateClassManagement.init(classManagement.columnArr);
     updateClassManagement.updateClass('更新班级');
+});
+
+$(document).on('change', 'input[name="high-school"]', function () {
+    alert($(this).next().text());
 });
 
 //确认更新操作按钮

@@ -145,3 +145,86 @@ a.download-link:hover {
 #cancel-download-btn {
     margin-top: 50px;
 }
+.grade-level {
+    display: inline-block;
+    margin-left: 5px;
+    span {
+        display: inline-block;
+        margin-right: 30px;
+        label {
+            font-size: 14px;
+            color: #4a4a4a;
+            position: relative;
+            top: 3px;
+            left: 7px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    }
+}
+
+.pagination-bar {
+    .pagination-info {
+        display: inline-block;
+        float: left;
+        margin-top: 40px;
+        margin-left: 28px;
+        text-align: center;
+        font-size: 14px;
+        color: #9B9B9B;
+    }
+    .pagination {
+        display: inline-block;
+        float: right;
+        margin-top: 40px;
+        margin-right: 14px;
+        text-align: center;
+        a:link,
+        a:visited,
+        a:hover {
+            padding: 9px 15px 10px 15px;
+            margin-right: 10px !important;
+            font-size: 14px;
+            color: #575757;
+            letter-spacing: -0.66px;
+            border: 1px solid #ddd;
+            background: #EFF2F5;
+            border-radius: 2px;
+            text-decoration: none;
+            outline: 0;
+        }
+        a.pageNum {
+            cursor: auto;
+            color: #9B9B9B;
+            background: #fff;
+        }
+        .disabled {
+            padding: 9px 15px 10px 15px;
+            margin-right: 10px !important;
+            font-size: 14px;
+            letter-spacing: -0.66px;
+            border-radius: 2px;
+            color: #ccc;
+            border: 1px solid #ddd;
+            background: #EFF2F5;
+        }
+        span {
+            margin-right: 10px !important;
+        }
+        .current {
+            padding: 9px 15px 10px 15px;
+            margin-right: 10px !important;
+            font-size: 14px;
+            letter-spacing: -0.66px;
+            border-radius: 2px;
+            color: #fff;
+            background: #D80C18;
+            border: 1px solid #D80C18;
+        }
+        a:last-of-type {
+            margin-left: 10px !important;
+        }
+    }
+}

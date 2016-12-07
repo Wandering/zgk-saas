@@ -37,6 +37,20 @@
                                     <h3>班级管理</h3>
                                 </div>
                                 <div class="title-2">
+                                    <div id="grade-level" class="grade-level">
+                                        <%--<span class="grade-item">--%>
+                                            <%--<input type="radio" name="high-school" id="senior-one" />--%>
+                                            <%--<label for="senior-one">高一</label>--%>
+                                        <%--</span>--%>
+                                        <%--<span class="grade-item">--%>
+                                            <%--<input type="radio" name="high-school" id="senior-two" />--%>
+                                            <%--<label for="senior-two">高二</label>--%>
+                                        <%--</span>--%>
+                                        <%--<span class="grade-item">--%>
+                                            <%--<input type="radio" name="high-school" id="senior-three" />--%>
+                                            <%--<label for="senior-three">高三</label>--%>
+                                        <%--</span>--%>
+                                    </div>
                                     <span class="txt-t"></span>
                                     <div class="btns">
                                         <button class="btn btn-pink" id="addRole-btn">添加班级</button>
@@ -47,39 +61,14 @@
                                         <button class="btn btn-warning" id="class-settings-btn">班级设置</button>
                                     </div>
                                 </div>
-                                <%--<div class="upload-box">--%>
-                                    <%--<span id="uploader-demo">--%>
-                                        <%--<span id="fileList" class="uploader-list"></span>--%>
-                                        <%--<button class="btn btn-info btn-import" id="btn-import">导入班级数据Excel</button>--%>
-                                    <%--</span>--%>
-                                    <%--<a href="javascript: void(0);" id="downloadBtn1" class="download-link">请先导出Excel模板，进行填写</a>--%>
-                                    <%--<button class="btn btn-cancel cancel-btn" id="cancel-download-btn">取消</button>'--%>
-                                <%--</div>--%>
                                 <div>
                                     <table id="class-manage-table" class="table">
-                                        <thead>
-                                            <%--<tr>--%>
-                                                <%--<th class="center">--%>
-                                                    <%--<label>--%>
-                                                        <%--<input type="checkbox" class="ace" />--%>
-                                                        <%--<span class="lbl"></span>--%>
-                                                    <%--</label>--%>
-                                                <%--</th>--%>
-                                                <%--<th class="center">编号</th>--%>
-                                                <%--<th class="center">班级名称</th>--%>
-                                                <%--<th class="center">班级类型</th>--%>
-                                                <%--<th class="center">班级编号</th>--%>
-                                                <%--<th class="center">入学年份</th>--%>
-                                                <%--<th class="center">班主任</th>--%>
-                                                <%--<th class="center">所属年级</th>--%>
-                                                <%--<th class="center">班级科类</th>--%>
-                                                <%--<th class="center">班级人数</th>--%>
-                                            <%--</tr>--%>
-                                        </thead>
-                                        <tbody id="class-manage-list" class="check-template">
-
-                                        </tbody>
+                                        <thead></thead>
+                                        <tbody id="class-manage-list" class="check-template"></tbody>
                                     </table>
+                                </div>
+                                <div class="pagination-bar">
+                                    <div class="pagination"></div>
                                 </div>
                             </div>
                         </div>
