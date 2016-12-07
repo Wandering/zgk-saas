@@ -7,14 +7,14 @@ import java.io.Serializable;
  */
 public class ClassBaseDto implements Serializable {
 
-    private long classId; // 所带班级ID
+    private int classId; // 所带班级ID
     private String className; // 所带班级名称
 
-    public long getClassId() {
+    public int getClassId() {
         return classId;
     }
 
-    public void setClassId(long classId) {
+    public void setClassId(int classId) {
         this.classId = classId;
     }
 

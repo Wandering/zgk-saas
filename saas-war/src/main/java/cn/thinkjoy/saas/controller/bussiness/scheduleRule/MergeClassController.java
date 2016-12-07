@@ -42,10 +42,12 @@ public class MergeClassController {
     @RequestMapping("getMergeInfo")
     @ResponseBody
     public Map<String,Object> getMergeInfo(@RequestParam("tnId")String tnId,
-                                           @RequestParam("taskId")String taskId){
+                                           @RequestParam("taskId")String taskId,
+                                           @RequestParam("grade")String grade){
         Map<String,Object> paramMap=new HashMap<>();
         paramMap.put("tnId",tnId);
         paramMap.put("taskId",taskId);
+        paramMap.put("grade",grade);
         Map<String,Object> resultMap=new HashMap<>();
         resultMap.put("mergeClassInfoList",iMergeClass.selectMergeInfo(paramMap));
         return resultMap;
