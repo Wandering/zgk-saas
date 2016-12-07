@@ -119,7 +119,7 @@ public class ConfigurationController {
      * @param tnId
      * @return
      */
-    @RequestMapping(value = "/retain/{type}/{tnId}",method = RequestMethod.POST)
+    @RequestMapping(value = "/retain/{type}/{tnId}",method = RequestMethod.GET)
     @ResponseBody
     public Map retainConfig(@PathVariable String type,@PathVariable Integer tnId) {
 

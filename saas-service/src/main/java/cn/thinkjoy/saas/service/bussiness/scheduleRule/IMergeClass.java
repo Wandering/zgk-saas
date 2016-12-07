@@ -1,6 +1,7 @@
 package cn.thinkjoy.saas.service.bussiness.scheduleRule;
 
 import cn.thinkjoy.saas.domain.bussiness.MergeClassInfo;
+import cn.thinkjoy.saas.dto.MergeClassInfoDto;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.Map;
 public interface IMergeClass {
     void insertMergeInfo(Map<String,Object> map);
 
-    List<MergeClassInfo> selectMergeInfo(Map<String,Object> map);
+    List<MergeClassInfoDto> selectMergeInfo(Map<String,Object> map);
 
     void deleteMergeInfo(Map<String,Object> map);
 }
