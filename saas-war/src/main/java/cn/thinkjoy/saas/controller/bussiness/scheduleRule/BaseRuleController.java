@@ -124,6 +124,7 @@ public class BaseRuleController {
             paramMap.put("courseId", courseId);
         }
         paramMap.put("ruleTable","saas_jw_base_con_rule");
+        paramMap.put("dayConType",1);
         Map<String,Object> resultMap=new HashMap<>();
         resultMap.put("baseRuleList",iBaseRule.selectBaseRule(paramMap));
         return resultMap;
