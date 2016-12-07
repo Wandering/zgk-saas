@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.scheduleRule.BaseRuleDAO">
+
+    <select id="selectBaseRule" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.BaseRuleDto">
+        select
+            ii.id as id,
+            ii.tn_id as tnId,
+            ii.course_id as courseId,
+            cc.course_name as courseName,
+            ii.teacher_id as teacherId,
+            tt.teacher_name as teacherName,
+            ii.important_type as importantType,
+            <if test="weekType!=null">
+                ii.week_type as weekType,
+            </if>
+            <if test="dayType!=null">
+                ii.day_type as dayType,
+            </if>
+            <if test="dayConType!=null">
+                ii.day_con_type as dayConType,
+            </if>
+            ii.create_date as createDate,
+            ii.task_id as taskId
+        from ${ruleTable} ii
+        left join saas_jw_course_base_info cc on ii.course_id = cc.id
+        left join saas_jw_teacher_base_info tt on ii.teacher_id = tt.id
+        where 1=1
+          <if test="courseId!=null">
+            and ii.course_id=#{courseId}
+          </if>
+          and ii.task_id=#{taskId}
+          and ii.tn_id=#{tnId}
+    </select>
+
+    <update id="updateBaseRule" parameterType="java.util.Map">
+        update ${ruleTable}
+        set
+          <if test="baseRuleDto.weekType!=null">
+              week_type=#{baseRuleDto.weekType},
+          </if>
+          <if test="baseRuleDto.dayType!=null">
+              day_type=#{baseRuleDto.dayType},
+          </if>
+          <if test="baseRuleDto.dayConType!=null">
+              day_con_type=#{baseRuleDto.dayConType},
+          </if>
+          important_type=#{baseRuleDto.importantType}
+        where id=#{baseRuleDto.id}
+    </update>
+
+</mapper>
