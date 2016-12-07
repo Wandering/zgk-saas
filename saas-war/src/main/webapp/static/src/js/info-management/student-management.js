@@ -28,7 +28,11 @@ var App = {
         Common.ajaxFun('/config/get/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData.configList;
-                if (data.length != 0) {
+                if (data.length == 0) {
+                    App.layerAlertInit();
+                    return false;
+                }
+                if (data.length !== 0) {
                     var tpl = [];
                     App.tableData = [] //制空
                     tpl.push('<tr>');
@@ -79,6 +83,34 @@ var App = {
         }, function (res) {
             layer.msg("出错了");
         }, true);
+    },
+    layerAlertInit: function () {
+        var that = this;
+        layer.open({
+            type: 1,
+            closeBtn: 0,
+            title: '请初始化学生',
+            shade: [0.8, '#000'],
+            shadeClose: false,
+            scrollbar: false,
+            content: '<div class="init-page-layer"><button class="btn btn-info" id="init-btn">初始化学生数据</button></div>'
+        });
+        $(document).on('click', '#init-btn', function () {
+            Common.ajaxFun('/config/retain/'+GLOBAL_CONSTANT.type+'/' + GLOBAL_CONSTANT.tnId + '.do', 'POST', {},
+                function (res) {
+                    if (res.rtnCode == "0000000") {
+                        if (res.bizData.result == true) {
+                            layer.msg('学生初始化成功');
+                            layer.closeAll();
+                            that.renderTableHeader();
+                        } else {
+                            layer.msg('学生初始化失败');
+                        }
+                    }
+                }, function (res) {
+                    layer.msg(res.msg);
+                });
+        })
     }
 }
 App.init();
@@ -654,7 +686,7 @@ var StdSet = {
                 type: 1,
                 title: '选择添加字段',
                 content: $('#sub-choose-field'),
-                area: ['550px', '200px'],
+                area: ['550px', '280px'],
                 cancel: function () {
                     $('#field').html('');
                 }
@@ -694,7 +726,11 @@ var StdSet = {
                     var isCheck = false;
                     $.each(StdSet.fetchTableHeaderData.bizData.configList, function (j, k) {
                         if (v.id == k.configKey) {
-                            tpl.push('<input type="checkbox" class="ace" id="li-' + v.id + '" checked="checked">');
+                            if(v.isRetain == 1){
+                                tpl.push('<input type="checkbox" class="ace" id="li-' + v.id + '" checked="checked" disabled>');
+                            }else{
+                                tpl.push('<input type="checkbox" class="ace" id="li-' + v.id + '" checked="checked">');
+                            }
                             isCheck = true;
                             return false;
                         }
@@ -819,7 +855,8 @@ var StdSet = {
         $("#sub-student-table").sortable({
             helper: fixHelperModified,
             stop: updateIndex,
-            axis: "y"
+            axis: "y",
+            items: "tr:not(.isRetain1)"
         }).disableSelection();
     }
 
