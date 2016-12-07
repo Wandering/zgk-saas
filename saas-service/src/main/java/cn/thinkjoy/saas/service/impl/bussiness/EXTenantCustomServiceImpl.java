@@ -257,4 +257,14 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         }
         return arr;
     }
+
+
+    /**
+     * 判断表中列是否存在数据
+     * @return
+     */
+    @Override
+    public Map<String,Object> existDataCount(Map map) {
+        return iexTeantCustomDAO.existDataCount(map);
+    }
 }

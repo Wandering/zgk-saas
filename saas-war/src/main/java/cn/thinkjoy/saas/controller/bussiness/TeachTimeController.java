@@ -8,6 +8,7 @@ import cn.thinkjoy.saas.service.IJwTeachDateService;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +29,8 @@ public class TeachTimeController {
     @Autowired
     private IJwTeachDateService jwTeachDateService;
     @ResponseBody
-    @RequestMapping(value = "/queryTeachTime",method = RequestMethod.GET)
-    public boolean queryTeachTime(@RequestParam Integer taskId,
+    @RequestMapping(value = "/saveTeachTime",method = RequestMethod.GET)
+    public boolean saveTeachTime(@RequestParam Integer taskId,
                                  @RequestParam String teachDate,
                                  @RequestParam String teachTime){
         if (StringUtils.isEmpty(teachDate)||StringUtils.isEmpty(teachTime)){
@@ -38,30 +39,37 @@ public class TeachTimeController {
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         String[] dates = teachDate.split("\\|");
         char[] times = teachTime.toCharArray();
-        for (String date : dates){
-            JwTeachDate jwTeachDate = new JwTeachDate();
-            jwTeachDate.setTaskId(taskId);
-            jwTeachDate.setTnId(tnId);
-            jwTeachDate.setCreateDate(System.currentTimeMillis());
-            jwTeachDate.setTeachDate(date);
-            jwTeachDate.setTeachDetail(getTime(times));
-            jwTeachDateService.add(jwTeachDate);
+        try {
+            for (String date : dates) {
+                JwTeachDate jwTeachDate = new JwTeachDate();
+                jwTeachDate.setTaskId(taskId);
+                jwTeachDate.setTnId(tnId);
+                jwTeachDate.setCreateDate(System.currentTimeMillis());
+                jwTeachDate.setTeachDate(date);
+                jwTeachDate.setTeachDetail(getTime(times));
+                jwTeachDateService.add(jwTeachDate);
+            }
+        }catch (DuplicateKeyException e){
+            return false;
         }
         return true;
     }
 
     @ResponseBody
-    @RequestMapping(value = "/saveTeachTime",method = RequestMethod.POST)
-    public String saveTeachTime(@RequestParam Integer taskId){
+    @RequestMapping(value = "/queryTeachTime",method = RequestMethod.GET)
+    public Map<String, Object> queryTeachTime(@RequestParam Integer taskId){
         Map<String,Object> result = Maps.newHashMap();
         Map<String,Object> map = Maps.newHashMap();
         map.put("taskId",taskId);
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         map.put("tnId",tnId);
-        List<JwTeachDate> list = jwTeachDateService.queryList(map,"id","asc");
+        List<JwTeachDate> list = jwTeachDateService.queryList(map,"tid","asc");
+        if (list.size()==0){
+            return result;
+        }
         StringBuffer buffer = new StringBuffer();
         for (JwTeachDate jwTeachDate:list){
-            buffer.append(jwTeachDate.getTeachDate()).append("|");
+            buffer.append(jwTeachDate.getTeachDate()).append("\\|");
         }
         if (buffer.length()>0){
             buffer.delete(buffer.length()-1,buffer.length());
@@ -77,7 +85,7 @@ public class TeachTimeController {
 
         result.put("teachDate",buffer.toString());
         result.put("teachTime",time);
-        return null;
+        return result;
     }
 
 

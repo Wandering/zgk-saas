@@ -66,4 +66,17 @@
         </foreach>
 
     </delete>
+    <!--判断表中列是否存在数据-->
+    <select id="existDataCount" resultType="java.util.Map">
+        SELECT
+        <foreach item="column" collection="columns" separator=",">
+            count(${column}) as ${column}
+        </foreach>
+        from ${tableName}
+        <where>
+            <if test="searchKey!=null and searchValue!=null">
+                ${searchKey}=#{searchValue}
+            </if>
+        </where>
+    </select>
 </mapper>
