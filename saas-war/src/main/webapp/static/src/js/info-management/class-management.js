@@ -9,6 +9,10 @@ var tnId = Common.cookie.getCookie('tnId');
 function ClassManagement () {
     this.tnId = tnId;
     this.type = 'class';
+    this.classOffset = 0;
+    this.classRows = 10;
+    this.classCount = 0;
+    this.pageCount = 1;
     this.columnArr = [];
 }
 ClassManagement.prototype = {
@@ -76,6 +80,41 @@ ClassManagement.prototype = {
             layer.msg("出错了");
         }, true);
     },
+    loadPage: function (offset, rows) {
+        var that = this;
+        this.classOffset = offset;
+        this.classRows = rows;
+        Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
+            's': that.classOffset,
+            'r': that.classRows
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData;
+                that.showData(data);
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, false);
+    },
+    showData: function (result) {
+        this.classCount = result.count;
+        this.pageCount = Math.ceil(this.classCount / this.classRows);
+
+
+        this.pagination();
+    },
+    pagination: function () {
+        var that = this;
+        $(".pagination").createPage({
+            pageCount: Math.ceil(that.classCount / that.classRows),
+            current: Math.ceil(that.classOffset / that.classRows) + 1,
+            backFn: function (p) {
+                $(".pagination-bar .current-page").html(p);
+                that.classOffset = (p - 1) * that.classRows;
+                that.loadPage(that.classOffset, that.classRows);
+            }
+        });
+    },
     removeClass: function () {//删除某一行班级数据
         var that = this;
         var checkedLen = $("#class-manage-list input[type='checkbox']:checked").size();
@@ -133,7 +172,8 @@ ClassManagement.prototype = {
                     }
                 });
                 $('#grade-level').html(gradeListHtml.join(''));
-                that.getClassData();
+                //that.getClassData();
+                that.loadPage(0, that.classRows);
             }
         }, function (res) {
             layer.msg("出错了");
