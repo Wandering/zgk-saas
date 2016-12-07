@@ -120,6 +120,9 @@
     </div>
 </div>
 <%@ include file="./../common/footer.jsp"%>
+<link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/datepicker.css">
+<script src="<%=ctx%>/static/src/lib/assets/js/date-time/bootstrap-datepicker.min.js"></script>
 <script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling.js"></script>
+
 </body>
 </html>
