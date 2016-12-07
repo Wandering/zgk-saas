@@ -18,7 +18,7 @@
         <a href="/course-scheduling-step3"><i>3</i>自动排课</a>
     </div>
 </div>
-<div id="one-key-page" class="dh">
+<div id="one-key-page" class="">
     <div class="btn-one-key">一键生成课表</div>
     <div class="info-modify">
         <p>基础信息/排课规则已更改，是否重新排课</p>
@@ -26,6 +26,7 @@
         <div class="look-origin-schedule">查看原课表</div>
     </div>
     <div class="scheduling-error">
+        <i class="icon-cry-face"></i>
         <p>排课失败~ 因为*******，所以无法排出课表。请调整**规则/信息后，再进行排课</p>
     </div>
 </div>
@@ -44,5 +45,4 @@
     </div>
 </div>
 <%@ include file="./../common/footer.jsp" %>
-<script src="<%=ctx%>/static/src/js/course-scheduling/step3-common.js"></script>
 

@@ -24,23 +24,26 @@ selectOne
 selectList
 -->
     <sql id="Base_Column_List">
-        id,
-        course_hour,
-        chour,
-        tn_id,
-        course_id
+        id as id,
+        course_hour as courseHour,
+        chour as chour,
+        tn_id as tnId,
+        course_id as courseId,
+        task_id as taskId
     </sql>
     <insert id="insert" parameterType="JwCourse">
         INSERT INTO saas_jw_course (
         course_hour,
         chour,
         tn_id,
-        course_id
+        course_id,
+        task_id
         ) VALUES (
         #{courseHour},
         #{chour},
         #{tnId},
-        #{courseId}
+        #{courseId},
+        #{taskId}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
         SELECT LAST_INSERT_ID() AS ID
@@ -63,6 +66,9 @@ selectList
             <if test="courseId!=null">
                 course_id = #{courseId},
             </if>
+            <if test="taskId!=null">
+                task_id = #{taskId},
+            </if>
         </trim>
         WHERE
         id = #{id}
@@ -82,6 +88,9 @@ selectList
             </if>
             <if test="map.courseId!=null">
                 course_id = #{map.courseId},
+            </if>
+            <if test="map.taskId!=null">
+                task_id = #{map.taskId},
             </if>
         </trim>
         WHERE
@@ -103,6 +112,9 @@ selectList
             <if test="update.courseId!=null">
                 course_id = #{update.courseId},
             </if>
+            <if test="update.taskId!=null">
+                task_id = #{update.taskId},
+            </if>
         </trim>
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -121,6 +133,9 @@ selectList
             <if test="condition.courseId!=null">
                 AND course_id = #{condition.courseId}
             </if>
+            <if test="condition.taskId!=null">
+                AND task_id = #{condition.taskId}
+            </if>
         </trim>
     </update>
 
@@ -129,12 +144,14 @@ selectList
                 course_hour,
                 chour,
                 tn_id,
-                course_id
+                course_id,
+                task_id
         ) VALUES (
                     #{map.courseHour},
                     #{map.chour},
                     #{map.tnId},
-                    #{map.courseId}
+                    #{map.courseId},
+                    #{map.taskId}
         )
     </insert>
 
@@ -146,6 +163,7 @@ selectList
             chour = #{chour},
             tn_id = #{tnId},
             course_id = #{courseId},
+            task_id = #{taskId},
         </trim>
         WHERE
         id = #{id} 
@@ -177,6 +195,9 @@ selectList
             </if>
             <if test="courseId!=null">
                 AND course_id = #{courseId}
+            </if>
+            <if test="taskId!=null">
+                AND task_id = #{taskId}
             </if>
         </trim>
     </delete>
@@ -239,16 +260,19 @@ selectList
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
             <if test="condition.courseHour!=null">
-                ${condition.groupOp}   course_hour  ${condition.course_hour.op}  #{condition.course_hour.data}
+                ${condition.groupOp}   course_hour  ${condition.courseHour.op}  #{condition.courseHour.data}
             </if>
             <if test="condition.chour!=null">
                 ${condition.groupOp}   chour  ${condition.chour.op}  #{condition.chour.data}
             </if>
             <if test="condition.tnId!=null">
-                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+                ${condition.groupOp}   tn_id  ${condition.tnId.op}  #{condition.tnId.data}
             </if>
             <if test="condition.courseId!=null">
-                ${condition.groupOp}   course_id  ${condition.course_id.op}  #{condition.course_id.data}
+                ${condition.groupOp}   course_id  ${condition.courseId.op}  #{condition.courseId.data}
+            </if>
+            <if test="condition.taskId!=null">
+                ${condition.groupOp}   task_id  ${condition.taskId.op}  #{condition.taskId.data}
             </if>
 
 
@@ -282,6 +306,9 @@ selectList
             <if test="courseId!=null">
                 AND course_id like CONCAT('%', #{courseId} , '%')
             </if>
+            <if test="taskId!=null">
+                AND task_id like CONCAT('%', #{taskId} , '%')
+            </if>
         </trim>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -309,6 +336,9 @@ selectList
             <if test="condition.courseId!=null">
                 AND course_id = #{condition.courseId}
             </if>
+            <if test="condition.taskId!=null">
+                AND task_id = #{condition.taskId}
+            </if>
         </trim>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -335,6 +365,9 @@ selectList
             <if test="condition.courseId!=null">
                 AND course_id = #{condition.courseId}
             </if>
+            <if test="condition.taskId!=null">
+                AND task_id = #{condition.taskId}
+            </if>
         </trim>
         limit 0,1
     </select>
@@ -346,16 +379,19 @@ selectList
                ${groupOp} id ${id.op}  #{id.data}
            </if>
            <if test="courseHour!=null">
-               ${groupOp} course_hour ${course_hour.op}  #{course_hour.data}
+               ${groupOp} course_hour ${courseHour.op}  #{courseHour.data}
            </if>
            <if test="chour!=null">
                ${groupOp} chour ${chour.op}  #{chour.data}
            </if>
            <if test="tnId!=null">
-               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+               ${groupOp} tn_id ${tnId.op}  #{tnId.data}
            </if>
            <if test="courseId!=null">
-               ${groupOp} course_id ${course_id.op}  #{course_id.data}
+               ${groupOp} course_id ${courseId.op}  #{courseId.data}
+           </if>
+           <if test="taskId!=null">
+               ${groupOp} task_id ${taskId.op}  #{taskId.data}
            </if>
 
        </where>

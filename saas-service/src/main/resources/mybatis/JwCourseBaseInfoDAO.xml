@@ -24,11 +24,11 @@ selectOne
 selectList
 -->
     <sql id="Base_Column_List">
-        id,
-        tn_id,
-        course_name,
-        course_type,
-        grade
+        id as id,
+        tn_id as tnId,
+        course_name as courseName,
+        course_type as courseType,
+        grade as grade
     </sql>
     <insert id="insert" parameterType="JwCourseBaseInfo">
         INSERT INTO saas_jw_course_base_info (
@@ -239,13 +239,13 @@ selectList
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
             <if test="condition.tnId!=null">
-                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+                ${condition.groupOp}   tn_id  ${condition.tnId.op}  #{condition.tnId.data}
             </if>
             <if test="condition.courseName!=null">
-                ${condition.groupOp}   course_name  ${condition.course_name.op}  #{condition.course_name.data}
+                ${condition.groupOp}   course_name  ${condition.courseName.op}  #{condition.courseName.data}
             </if>
             <if test="condition.courseType!=null">
-                ${condition.groupOp}   course_type  ${condition.course_type.op}  #{condition.course_type.data}
+                ${condition.groupOp}   course_type  ${condition.courseType.op}  #{condition.courseType.data}
             </if>
             <if test="condition.grade!=null">
                 ${condition.groupOp}   grade  ${condition.grade.op}  #{condition.grade.data}
@@ -346,13 +346,13 @@ selectList
                ${groupOp} id ${id.op}  #{id.data}
            </if>
            <if test="tnId!=null">
-               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+               ${groupOp} tn_id ${tnId.op}  #{tnId.data}
            </if>
            <if test="courseName!=null">
-               ${groupOp} course_name ${course_name.op}  #{course_name.data}
+               ${groupOp} course_name ${courseName.op}  #{courseName.data}
            </if>
            <if test="courseType!=null">
-               ${groupOp} course_type ${course_type.op}  #{course_type.data}
+               ${groupOp} course_type ${courseType.op}  #{courseType.data}
            </if>
            <if test="grade!=null">
                ${groupOp} grade ${grade.op}  #{grade.data}

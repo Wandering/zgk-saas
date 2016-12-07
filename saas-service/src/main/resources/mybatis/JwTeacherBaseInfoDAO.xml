@@ -24,11 +24,11 @@ selectOne
 selectList
 -->
     <sql id="Base_Column_List">
-        id,
-        tn_id,
-        teacher_name,
-        teacher_class,
-        grade
+        id as id,
+        tn_id as tnId,
+        teacher_name as teacherName,
+        teacher_class as teacherClass,
+        grade as grade
     </sql>
     <insert id="insert" parameterType="JwTeacherBaseInfo">
         INSERT INTO saas_jw_teacher_base_info (
@@ -239,13 +239,13 @@ selectList
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
             <if test="condition.tnId!=null">
-                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+                ${condition.groupOp}   tn_id  ${condition.tnId.op}  #{condition.tnId.data}
             </if>
             <if test="condition.teacherName!=null">
-                ${condition.groupOp}   teacher_name  ${condition.teacher_name.op}  #{condition.teacher_name.data}
+                ${condition.groupOp}   teacher_name  ${condition.teacherName.op}  #{condition.teacherName.data}
             </if>
             <if test="condition.teacherClass!=null">
-                ${condition.groupOp}   teacher_class  ${condition.teacher_class.op}  #{condition.teacher_class.data}
+                ${condition.groupOp}   teacher_class  ${condition.teacherClass.op}  #{condition.teacherClass.data}
             </if>
             <if test="condition.grade!=null">
                 ${condition.groupOp}   grade  ${condition.grade.op}  #{condition.grade.data}
@@ -346,13 +346,13 @@ selectList
                ${groupOp} id ${id.op}  #{id.data}
            </if>
            <if test="tnId!=null">
-               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+               ${groupOp} tn_id ${tnId.op}  #{tnId.data}
            </if>
            <if test="teacherName!=null">
-               ${groupOp} teacher_name ${teacher_name.op}  #{teacher_name.data}
+               ${groupOp} teacher_name ${teacherName.op}  #{teacherName.data}
            </if>
            <if test="teacherClass!=null">
-               ${groupOp} teacher_class ${teacher_class.op}  #{teacher_class.data}
+               ${groupOp} teacher_class ${teacherClass.op}  #{teacherClass.data}
            </if>
            <if test="grade!=null">
                ${groupOp} grade ${grade.op}  #{grade.data}

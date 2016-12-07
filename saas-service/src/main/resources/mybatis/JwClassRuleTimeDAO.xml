@@ -24,10 +24,10 @@ selectOne
 selectList
 -->
     <sql id="Base_Column_List">
-        id,
-        teach_time,
-        create_time,
-        class_rule_id
+        id as id,
+        teach_time as teachTime,
+        create_time as createTime,
+        class_rule_id as classRuleId
     </sql>
     <insert id="insert" parameterType="JwClassRuleTime">
         INSERT INTO saas_jw_class_rule_time (
@@ -218,13 +218,13 @@ selectList
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
             <if test="condition.teachTime!=null">
-                ${condition.groupOp}   teach_time  ${condition.teach_time.op}  #{condition.teach_time.data}
+                ${condition.groupOp}   teach_time  ${condition.teachTime.op}  #{condition.teachTime.data}
             </if>
             <if test="condition.createTime!=null">
-                ${condition.groupOp}   create_time  ${condition.create_time.op}  #{condition.create_time.data}
+                ${condition.groupOp}   create_time  ${condition.createTime.op}  #{condition.createTime.data}
             </if>
             <if test="condition.classRuleId!=null">
-                ${condition.groupOp}   class_rule_id  ${condition.class_rule_id.op}  #{condition.class_rule_id.data}
+                ${condition.groupOp}   class_rule_id  ${condition.classRuleId.op}  #{condition.classRuleId.data}
             </if>
 
 
@@ -313,13 +313,13 @@ selectList
                ${groupOp} id ${id.op}  #{id.data}
            </if>
            <if test="teachTime!=null">
-               ${groupOp} teach_time ${teach_time.op}  #{teach_time.data}
+               ${groupOp} teach_time ${teachTime.op}  #{teachTime.data}
            </if>
            <if test="createTime!=null">
-               ${groupOp} create_time ${create_time.op}  #{create_time.data}
+               ${groupOp} create_time ${createTime.op}  #{createTime.data}
            </if>
            <if test="classRuleId!=null">
-               ${groupOp} class_rule_id ${class_rule_id.op}  #{class_rule_id.data}
+               ${groupOp} class_rule_id ${classRuleId.op}  #{classRuleId.data}
            </if>
 
        </where>
