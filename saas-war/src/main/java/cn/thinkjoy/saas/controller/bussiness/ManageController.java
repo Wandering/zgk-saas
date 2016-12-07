@@ -416,8 +416,8 @@ public class ManageController {
         Map resultMap = new HashMap();
         List<LinkedHashMap<String, Object>> tenantCustom = iexTenantCustomService.getTenantCustom(type, tnId, grade, s);
         resultMap.put("result", tenantCustom);
-        Integer pageCount = iexTenantCustomService.getTenantCustomCount(type, tnId, grade);
-        resultMap.put("pageCount", pageCount);
+        Integer count = iexTenantCustomService.getTenantCustomCount(type, tnId, grade);
+        resultMap.put("count", count);
         return resultMap;
     }
 
