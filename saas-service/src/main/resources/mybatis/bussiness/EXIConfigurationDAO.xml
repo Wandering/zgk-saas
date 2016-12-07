@@ -62,7 +62,7 @@
         </if>
     </select>
 
-    <select id="selectColumnName" parameterType="java.util.Map" resultMap="java.lang.String">
+    <select id="selectColumnName" parameterType="java.util.Map" resultType="java.lang.String">
         SELECT
         ch_name
         FROM saas_configuration
