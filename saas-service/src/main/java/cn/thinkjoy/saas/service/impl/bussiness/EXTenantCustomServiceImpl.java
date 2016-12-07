@@ -108,7 +108,7 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
      * @return
      */
     @Override
-    public List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId,String g,Integer s) {
+    public List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId,String g,Integer s,Integer r) {
         if (tnId <= 0)
             return null;
 
@@ -122,7 +122,7 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         map.put("searchKey",ParamsUtils.getGradeKey(type));
         map.put("searchValue",g);
         map.put("offset",s);
-        map.put("rows",30);
+        map.put("rows",r);
         List<LinkedHashMap<String, Object>> tenantCustoms = iexTeantCustomDAO.getTenantCustom(map);
 
 

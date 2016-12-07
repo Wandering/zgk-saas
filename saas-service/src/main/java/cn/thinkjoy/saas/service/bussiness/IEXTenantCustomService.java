@@ -48,7 +48,7 @@ public interface IEXTenantCustomService {
      * @param tnId 租户ID
      * @return
      */
-    List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId,String g,Integer s);
+    List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId,String g,Integer s,Integer r);
 
     public Integer getTenantCustomCount(String type,Integer tnId,String g);
     /**

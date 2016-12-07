@@ -37,19 +37,25 @@
     </delete>
 
     <select id="getTenantCustom" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
-         select * from ${tableName} order by id asc
-        <if test="searchKey!=null and searchValue!=null">
-            ${searchKey}=#{searchValue}
-        </if>
+         select * from ${tableName}
+        <where>
+            <if test="searchKey!=null and searchValue!=null">
+                ${searchKey}=#{searchValue}
+            </if>
+        </where>
+        order by id asc
         <if test="offset != null">
             limit ${offset}, ${rows}
         </if>
     </select>
     <select id="getTenantCustomCount" parameterType="java.util.Map" resultType="Integer">
-        select count(1) from ${tableName} order by id asc
-        <if test="searchKey!=null and searchValue!=null">
-            ${searchKey}=#{searchValue}
-        </if>
+        select count(1) from ${tableName}
+        <where>
+            <if test="searchKey!=null and searchValue!=null">
+                ${searchKey}=#{searchValue}
+            </if>
+        </where>
+        order by id asc
     </select>
     <delete id="removeTenantCustomList" >
 

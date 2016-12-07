@@ -409,12 +409,14 @@ public class ManageController {
     public Map  getTenantCustomData(@PathVariable String type,
                                     @PathVariable Integer tnId,HttpServletRequest _req) {
         String grade = _req.getParameter("g"),
-                star = _req.getParameter("s");
+                star = _req.getParameter("s"),
+                row = _req.getParameter("r");
 
 
-        Integer s = (star == null) ? null : Integer.valueOf(star);
+        Integer s = (star == null) ? null : Integer.valueOf(star),
+                r=(row==null)?null:Integer.valueOf(row);
         Map resultMap = new HashMap();
-        List<LinkedHashMap<String, Object>> tenantCustom = iexTenantCustomService.getTenantCustom(type, tnId, grade, s);
+        List<LinkedHashMap<String, Object>> tenantCustom = iexTenantCustomService.getTenantCustom(type, tnId, grade, s,r);
         resultMap.put("result", tenantCustom);
         Integer count = iexTenantCustomService.getTenantCustomCount(type, tnId, grade);
         resultMap.put("count", count);
@@ -476,7 +478,7 @@ public class ManageController {
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
         String[] columnNames = exiTenantConfigInstanceService.getTenantConfigListArrByTnIdAndType(type, tnId);
-        List<LinkedHashMap<String, Object>> tenantCustoms=iexTenantCustomService.getTenantCustom(type, tnId,null,null);
+        List<LinkedHashMap<String, Object>> tenantCustoms=iexTenantCustomService.getTenantCustom(type, tnId,null,null,null);
         List<Map<Integer,Object>> maps=iexTenantCustomService.isExcelAddSelect(tnId, columnNames);
 
 
