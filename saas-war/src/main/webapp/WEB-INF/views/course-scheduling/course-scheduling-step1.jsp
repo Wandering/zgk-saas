@@ -63,33 +63,33 @@
                         </ul>
                         <div class="base-content">
                             <div class="item-title">每周上课天数</div>
-                            <ul>
+                            <ul class="week-list">
                                 <li>
-                                    <input type="checkbox" id="monday" />
+                                    <input type="checkbox" data="星期一" id="monday" />
                                     <label for="monday">星期一</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" id="tuesday" />
+                                    <input type="checkbox" data="星期二" id="tuesday" />
                                     <label for="tuesday">星期二</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" id="wednesday" />
+                                    <input type="checkbox" data="星期三" id="wednesday" />
                                     <label for="wednesday">星期三</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" id="thursday" />
+                                    <input type="checkbox" data="星期四" id="thursday" />
                                     <label for="thursday">星期四</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" id="friday" />
+                                    <input type="checkbox" data="星期五" id="friday" />
                                     <label for="friday">星期五</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" id="saturday" />
+                                    <input type="checkbox" data="星期六" id="saturday" />
                                     <label for="saturday">星期六</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" id="sunday" />
+                                    <input type="checkbox" data="星期日" id="sunday" />
                                     <label for="sunday">星期日</label>
                                 </li>
                             </ul>
@@ -101,8 +101,7 @@
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
+                                        <option value="4" selected="selected">4</option>
                                     </select>
                                 </div>
                                 <div class="item">
@@ -110,19 +109,17 @@
                                     <select id="afternoon-list">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
-                                        <option value="3">3</option>
+                                        <option value="3" selected="selected">3</option>
                                         <option value="4">4</option>
-                                        <option value="5">5</option>
                                     </select>
                                 </div>
                                 <div class="item">
                                     <span>晚上：</span>
                                     <select id="evening-list">
-                                        <option value="0">0</option>
+                                        <option value="0" selected="selected">0</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
-                                        <option value="4">4</option>
                                     </select>
                                 </div>
                             </div>
