@@ -4,8 +4,8 @@ package cn.thinkjoy.saas.enums;
  * Created by yangyongping on 2016/12/7.
  */
 public enum StatusEnum {
-    Y(1,"正常"),
-    D(2,"删除")
+    Y(0,"正常"),
+    D(-1,"删除")
     ;
     private final Integer code;
     private final String status;
