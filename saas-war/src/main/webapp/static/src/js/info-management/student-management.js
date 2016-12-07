@@ -26,6 +26,7 @@ var App = {
         this.renderTableHeader();
         this.fetchGrade();
         this.addEvent();
+        // this.loadPage();
     },
     renderTableHeader: function () {
         Common.ajaxFun('/config/get/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
@@ -115,6 +116,23 @@ var App = {
                 });
         })
     },
+    // loadPage: function (offset, rows) {
+    //     var that = this;
+    //     this.classOffset = offset;
+    //     this.classRows = rows;
+    //     Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
+    //         's': that.classOffset,
+    //         'r': that.classRows,
+    //         'g': that.gradeName
+    //     }, function (res) {
+    //         if (res.rtnCode == "0000000") {
+    //             var data = res.bizData;
+    //             that.showData(data);
+    //         }
+    //     }, function (res) {
+    //         layer.msg("出错了");
+    //     }, false);
+    // },
     //所属年级
     fetchGrade: function () {
         Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
