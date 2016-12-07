@@ -7,6 +7,7 @@ import cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO;
 import cn.thinkjoy.saas.domain.Configuration;
 import cn.thinkjoy.saas.domain.TenantConfigInstance;
 import cn.thinkjoy.saas.service.bussiness.EXIConfigurationService;
+import cn.thinkjoy.saas.service.common.ParamsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,6 @@ public class EXConfigurationServiceImpl extends AbstractPageService<IBaseDAO<Con
     private EXIConfigurationDAO exiConfigurationDAO;
     @Autowired
     private EXITenantConfigInstanceDAO exiTenantConfigInstanceDAO;
-
     @Override
     public IBaseDAO<Configuration> getDao() {
         return exiConfigurationDAO;
@@ -58,10 +58,10 @@ public class EXConfigurationServiceImpl extends AbstractPageService<IBaseDAO<Con
         paramsMap.put("isRetain", 1);
         List<Configuration> configurations = exiConfigurationDAO.selectListRetain(paramsMap);
 
-        List<TenantConfigInstance>  tenantConfigInstances=new ArrayList<>();
+        List<TenantConfigInstance> tenantConfigInstances = new ArrayList<>();
 
-        for(Configuration configuration:configurations) {
-            TenantConfigInstance tenantConfigInstance=new TenantConfigInstance();
+        for (Configuration configuration : configurations) {
+            TenantConfigInstance tenantConfigInstance = new TenantConfigInstance();
             tenantConfigInstance.setCheckRule(configuration.getCheckRule());
             tenantConfigInstance.setIsRetain(configuration.getIsRetain());
             tenantConfigInstance.setDataValue(configuration.getDataValue());
@@ -75,7 +75,12 @@ public class EXConfigurationServiceImpl extends AbstractPageService<IBaseDAO<Con
 
             tenantConfigInstances.add(tenantConfigInstance);
         }
-        Integer result=exiTenantConfigInstanceDAO.addConfigs(tenantConfigInstances);
-        return result>0;
+        Integer result = exiTenantConfigInstanceDAO.addConfigs(tenantConfigInstances);
+
+        if (result > 0 && type.equals("student")) {
+            String tableName = ParamsUtils.combinationTableName(type, tnid);
+            result = exiTenantConfigInstanceDAO.createConfigTable(tableName, configurations);
+        }
+        return result > 0;
     }
 }
