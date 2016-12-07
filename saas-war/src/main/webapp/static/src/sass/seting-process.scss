@@ -85,4 +85,14 @@
   cursor: text;
   outline: 0;
 }
-
+.initClassBtn{
+  display: block;
+  margin:50px auto;
+  padding:0;
+  overflow: hidden;
+  text-align: center;
+  button{
+    width:100px;
+    height:40px;
+  }
+}
