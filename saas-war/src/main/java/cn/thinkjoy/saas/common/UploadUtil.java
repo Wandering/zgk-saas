@@ -76,7 +76,7 @@ public class UploadUtil
                     param.add("dirId", "0");
                     template.getMessageConverters().add(new FastJsonHttpMessageConverter());
                     String returnJson =
-                        template.postForObject("http://cs-dev.thinkjoy.com.cn/rest/v1/uploadFile", param, String.class);
+                        template.postForObject("http://cs-dev.qtonecloud.cn/rest/v1/uploadFile", param, String.class);
                     UploadFileReturn uploadFileReturn = JSON.parseObject(returnJson, UploadFileReturn.class);
                     if (uploadFileReturn != null && "0000000".equals(uploadFileReturn.getRtnCode()))
                     {
