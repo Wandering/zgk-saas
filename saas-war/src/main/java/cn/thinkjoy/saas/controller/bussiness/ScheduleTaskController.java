@@ -5,6 +5,8 @@ import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
+import cn.thinkjoy.saas.dao.IJwCourseDAO;
+import cn.thinkjoy.saas.domain.JwCourse;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.JwScheduleTaskDto;
@@ -44,6 +46,9 @@ public class ScheduleTaskController {
 
     @Autowired
     private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
+
+    @Autowired
+    private IJwCourseDAO jwCourseDAO;
 
     /**
      * 新建排课任务
@@ -195,22 +200,53 @@ public class ScheduleTaskController {
     @ResponseBody
     @ApiDesc(value = "根据任务ID获取课程信息",owner = "gryang")
     @RequestMapping(value = "/queryCourseInfoByTaskId",method = RequestMethod.GET)
-    public List<CourseBaseDto> queryCourseInfoByTaskId(@RequestParam long taskId){
+    public List<CourseBaseDto> queryCourseInfoByTaskId(@RequestParam int taskId){
         List<CourseBaseDto> dtos = iexScheduleBaseInfoService.queryCourseInfoByTaskId(taskId);
         return dtos;
     }
 
     @ResponseBody
-    @ApiDesc(value = "添加课程课时信息",owner = "gryang")
-    @RequestMapping(value = "/updateCourseTime",method = RequestMethod.POST)
-    public Map updateCourseTime(@RequestParam long taskId,@RequestParam long courseId,@RequestParam String time){
-        return null;
+    @ApiDesc(value = "添加或修改课程课时信息",owner = "gryang")
+    @RequestMapping(value = "/saveOrUpdateCourseTime",method = RequestMethod.POST)
+    public Map saveOrUpdateCourseTime(@RequestParam int taskId,@RequestParam int courseId,@RequestParam String time){
+
+        if(StringUtils.isEmpty(time)){
+            ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
+        }
+
+        int chour = 0;
+        String [] arr = time.split("\\+");
+        if(arr.length == 1){
+            chour = Integer.valueOf(arr[0]);
+        }else if (arr.length == 2){
+            chour = Integer.valueOf(arr[0]) + 2*Integer.valueOf(arr[1]);
+        }
+
+        Map<String,Object> paramMap = Maps.newHashMap();
+        paramMap.put("task_id",taskId);
+        paramMap.put("course_id",courseId);
+        JwCourse course = jwCourseDAO.queryOne(paramMap,"id",Constant.DESC);
+        if(course != null){
+            course.setCourseHour(time);
+            course.setChour(chour);
+            jwCourseDAO.update(course);
+        }else {
+            course = new JwCourse();
+            course.setCourseId(courseId);
+            course.setCourseHour(time);
+            course.setChour(chour);
+            course.setTaskId(taskId);
+            course.setTnId(iexScheduleBaseInfoService.getTnIdByTaskId(taskId));
+            jwCourseDAO.insert(course);
+        }
+
+        return Maps.newHashMap();
     }
 
     @ResponseBody
     @ApiDesc(value = "根据任务ID获取教师信息",owner = "gryang")
     @RequestMapping(value = "/queryTeacherByTaskId",method = RequestMethod.GET)
-    public TeacherBaseDto queryTeacherByTaskId(@RequestParam long taskId){
+    public TeacherBaseDto queryTeacherByTaskId(@RequestParam int taskId){
         return null;
     }
 
@@ -224,9 +260,9 @@ public class ScheduleTaskController {
     @ResponseBody
     @ApiDesc(value = "保存或修改教师配置信息",owner = "gryang")
     @RequestMapping(value = "/saveOrUpdateTeacher",method = RequestMethod.POST)
-    public Map saveOrUpdateTeacher(@RequestParam long taskId,
-                                   @RequestParam long tnId,
-                                   @RequestParam long teacherId,
+    public Map saveOrUpdateTeacher(@RequestParam int taskId,
+                                   @RequestParam int tnId,
+                                   @RequestParam int teacherId,
                                    @RequestParam int classNum,
                                    @RequestParam String classId){
         return null;
@@ -235,7 +271,7 @@ public class ScheduleTaskController {
     @ResponseBody
     @ApiDesc(value = "删除教师配置信息",owner = "gryang")
     @RequestMapping(value = "/deleteTeacher",method = RequestMethod.GET)
-    public TeacherBaseDto deleteTeacher(@RequestParam long taskId,@RequestParam long teacherId){
+    public TeacherBaseDto deleteTeacher(@RequestParam int taskId,@RequestParam int teacherId){
         return null;
     }
 

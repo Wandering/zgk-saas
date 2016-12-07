@@ -17,5 +17,13 @@ public interface IEXScheduleBaseInfoService {
      * @param taskId
      * @return
      */
-    List<CourseBaseDto> queryCourseInfoByTaskId(long taskId);
+    List<CourseBaseDto> queryCourseInfoByTaskId(int taskId);
+
+    /**
+     * 根据任务ID获取租户ID
+     *
+     * @param taskId
+     * @return
+     */
+    int getTnIdByTaskId(int taskId);
 }
