@@ -23,10 +23,13 @@ var App = {
     init: function () {
         this.tableData = [];
         this.checkGradeName = '';
-        this.renderTableHeader();
+        this.page = {
+            'offset': 0,
+            'rows': 10
+        }
         this.fetchGrade();
+        this.renderTableHeader();
         this.addEvent();
-        // this.loadPage();
     },
     renderTableHeader: function () {
         Common.ajaxFun('/config/get/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
@@ -63,7 +66,11 @@ var App = {
     },
     renderTableBody: function (data) {
         var that = this
-        Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {
+            's': App.page.offset,
+            'r': App.page.rows,
+            'g': App.checkGradeName
+        }, function (res) {
             if (res.rtnCode == "0000000") {
                 var tpl = [];
                 var dataJson = res.bizData.result;
@@ -116,23 +123,6 @@ var App = {
                 });
         })
     },
-    // loadPage: function (offset, rows) {
-    //     var that = this;
-    //     this.classOffset = offset;
-    //     this.classRows = rows;
-    //     Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
-    //         's': that.classOffset,
-    //         'r': that.classRows,
-    //         'g': that.gradeName
-    //     }, function (res) {
-    //         if (res.rtnCode == "0000000") {
-    //             var data = res.bizData;
-    //             that.showData(data);
-    //         }
-    //     }, function (res) {
-    //         layer.msg("出错了");
-    //     }, false);
-    // },
     //所属年级
     fetchGrade: function () {
         Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
@@ -154,10 +144,42 @@ var App = {
             layer.msg("出错了");
         }, true);
     },
+    loadPage: function () {
+        var that = this;
+        Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {
+            's': App.page.offset,
+            'r': App.page.rows,
+            'g': App.checkGradeName
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var tpl = [];
+                var dataJson = res.bizData.result;
+                $.each(dataJson, function (m, n) {
+                    var obj = dataJson[m];
+                    tpl.push('<tr>');
+                    tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
+                    $.each(App.tableData, function (i, k) {
+                        var enName = App.tableData[i].enName;
+                        var dType = App.tableData[i].dataType;
+                        if (obj[enName]) {
+                            tpl.push('<td class="center" iName="' + enName + '" dataType="' + dType + '" pid="' + n.id + '">' + obj[enName] + '</td>');
+                        } else {
+                            tpl.push('<td class="center">-</td>');
+                        }
+                    });
+                    tpl.push('</tr>');
+                });
+                $("#student-table tbody").html(tpl.join(''));
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, false);
+    },
     addEvent: function () {
         var targetDom = $('#grade-list input');
         $(document).on('click', '.grade-list input[name="grade-li"]', function () {
             App.checkGradeName = $('input[name="grade-li"]:checked').next().text();
+            App.loadPage(0, 1);
         })
     }
 }
@@ -430,7 +452,7 @@ var CRUDStd = {
             type: 1,
             title: '修改学生',
             offset: 'auto',
-            area: ['425px', 'auto'],
+            area: ['475px', 'auto'],
             content: $('#student-add-layer'),
             cancel: function () {
                 layer.closeAll();

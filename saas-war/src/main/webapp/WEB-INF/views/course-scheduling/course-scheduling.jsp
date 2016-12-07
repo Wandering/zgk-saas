@@ -40,9 +40,9 @@
                         <div class="title-2">
                             <span class="txt-t"></span>
                             <div class="btns">
-                                <button class="btn btn-pink" id="addRole-btn">新建排课任务</button>
-                                <button class="btn btn-inverse" id="updateRole-btn">修改</button>
-                                <button class="btn btn-success" id="deleteRole-btn">删除</button>
+                                <button class="btn btn-pink" id="addTask-btn">新建排课任务</button>
+                                <button class="btn btn-inverse" id="updateTask-btn">修改</button>
+                                <button class="btn btn-success" id="deleteTask-btn">删除</button>
                             </div>
                         </div>
                         <div class="">
@@ -51,7 +51,7 @@
                                 <tr>
                                     <th class="center" width="50px">
                                         <label>
-                                            <input type="checkbox" class="ace" />
+                                            <input type="checkbox" class="ace checkAll" id="checkAll" />
                                             <span class="lbl"></span>
                                         </label>
                                     </th>
@@ -59,7 +59,7 @@
                                     <th class="center" width="250px">名称</th>
                                     <th class="center" width="250px">年级</th>
                                     <th class="center" width="250px">学期</th>
-                                    <th class="center"></th>
+                                    <th class="center">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody id="schedule-list" class="check-template">
@@ -75,7 +75,7 @@
                                         <td class="center">高二</td>
                                         <td class="center">2016年第一学期</td>
                                         <td class="center">
-                                            <a href="/course-scheduling-step1" class="start-schedule-btn">开始排课</a>
+                                            <a href="" class="start-schedule-btn">开始排课</a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -119,7 +119,28 @@
         </div>
     </div>
 </div>
+<script id="task-template" type="text/x-handlebars-template">
+    {{#each bizData}}
+    <tr>
+        <td class="center">
+            <label>
+                <input type="checkbox" dataId="{{id}}" scheduleName="{{scheduleName}}" gradeName="{{gradeName}}" year="{{year}}" termName="{{termName}}" class="ace"/>
+                <span class="lbl"></span>
+            </label>
+        </td>
+        <td class="center">{{addOne @index}}</td>
+        <td class="center">{{scheduleName}}</td>
+        <td class="center">{{gradeName}}</td>
+        <td class="center">{{year}}年{{termName}}</td>
+        <td class="center" dataId="{{id}}">{{{reStatus status}}}</td>
+        </td>
+    </tr>
+    {{/each}}
+</script>
 <%@ include file="./../common/footer.jsp"%>
+<link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/datepicker.css">
+<script src="<%=ctx%>/static/src/lib/assets/js/date-time/bootstrap-datepicker.min.js"></script>
 <script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling.js"></script>
+
 </body>
 </html>
