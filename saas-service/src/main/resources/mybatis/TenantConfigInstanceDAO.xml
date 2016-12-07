@@ -35,7 +35,7 @@ selectList
         data_type as dataType,
         data_url as dataUrl,
         data_value as dataValue,
-        is_retain as isRetain,
+        is_retain as isRetain
     </sql>
     <insert id="insert" parameterType="TenantConfigInstance">
         INSERT INTO saas_tenant_config_instance (
@@ -144,7 +144,7 @@ selectList
                 data_value = #{map.dataValue},
             </if>
             <if test="map.isRetain!=null">
-                is_retain=#{map.isRetain},
+                is_retain=#{map.isRetain}
             </if>
         </trim>
         WHERE
@@ -185,7 +185,7 @@ selectList
                 data_value = #{update.dataValue},
             </if>
             <if test="update.isRetain!=null">
-                is_retain=#{update.isRetain},
+                is_retain=#{update.isRetain}
             </if>
         </trim>
 

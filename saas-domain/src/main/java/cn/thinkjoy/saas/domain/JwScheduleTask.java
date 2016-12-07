@@ -22,7 +22,7 @@ public class JwScheduleTask extends BaseDomain{
     private String grade;
     private String year;
     private String term;
-    private Integer createDate;
+    private Long createDate;
     private Integer tnId;
     private Integer status;
 
@@ -56,13 +56,15 @@ public class JwScheduleTask extends BaseDomain{
     public String getTerm() {
         return this.term;
     }
-    public void setCreateDate(Integer value) {
-        this.createDate = value;
+
+    public Long getCreateDate() {
+        return createDate;
     }
 
-    public Integer getCreateDate() {
-        return this.createDate;
+    public void setCreateDate(Long createDate) {
+        this.createDate = createDate;
     }
+
     public void setTnId(Integer value) {
         this.tnId = value;
     }
@@ -91,13 +93,13 @@ public class JwScheduleTask extends BaseDomain{
 			.append("TnId",getTnId())
 			.toString();
 	}
-	
+
 	public int hashCode() {
 		return new HashCodeBuilder()
 			.append(getId())
 			.toHashCode();
 	}
-	
+
 	public boolean equals(Object obj) {
 		if(obj instanceof JwScheduleTask == false) return false;
 		if(this == obj) return true;

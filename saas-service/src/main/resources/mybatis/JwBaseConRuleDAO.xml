@@ -24,14 +24,14 @@ selectOne
 selectList
 -->
     <sql id="Base_Column_List">
-        id,
-        tn_id,
-        course_id,
-        teacher_id,
-        important_type,
-        day_con_type,
-        create_date,
-        task_id
+        id as id,
+        tn_id as tnId,
+        course_id as courseId,
+        teacher_id as teacherId,
+        important_type as importantType,
+        day_con_type as dayConType,
+        create_date as createDate,
+        task_id as taskId
     </sql>
     <insert id="insert" parameterType="JwBaseConRule">
         INSERT INTO saas_jw_base_con_rule (
@@ -302,25 +302,25 @@ selectList
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
             <if test="condition.tnId!=null">
-                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+                ${condition.groupOp}   tn_id  ${condition.tnId.op}  #{condition.tnId.data}
             </if>
             <if test="condition.courseId!=null">
-                ${condition.groupOp}   course_id  ${condition.course_id.op}  #{condition.course_id.data}
+                ${condition.groupOp}   course_id  ${condition.courseId.op}  #{condition.courseId.data}
             </if>
             <if test="condition.teacherId!=null">
-                ${condition.groupOp}   teacher_id  ${condition.teacher_id.op}  #{condition.teacher_id.data}
+                ${condition.groupOp}   teacher_id  ${condition.teacherId.op}  #{condition.teacherId.data}
             </if>
             <if test="condition.importantType!=null">
-                ${condition.groupOp}   important_type  ${condition.important_type.op}  #{condition.important_type.data}
+                ${condition.groupOp}   important_type  ${condition.importantType.op}  #{condition.importantType.data}
             </if>
             <if test="condition.dayConType!=null">
-                ${condition.groupOp}   day_con_type  ${condition.day_con_type.op}  #{condition.day_con_type.data}
+                ${condition.groupOp}   day_con_type  ${condition.dayConType.op}  #{condition.dayConType.data}
             </if>
             <if test="condition.createDate!=null">
-                ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
+                ${condition.groupOp}   create_date  ${condition.createDate.op}  #{condition.createDate.data}
             </if>
             <if test="condition.taskId!=null">
-                ${condition.groupOp}   task_id  ${condition.task_id.op}  #{condition.task_id.data}
+                ${condition.groupOp}   task_id  ${condition.taskId.op}  #{condition.taskId.data}
             </if>
 
 
@@ -445,25 +445,25 @@ selectList
                ${groupOp} id ${id.op}  #{id.data}
            </if>
            <if test="tnId!=null">
-               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+               ${groupOp} tn_id ${tnId.op}  #{tnId.data}
            </if>
            <if test="courseId!=null">
-               ${groupOp} course_id ${course_id.op}  #{course_id.data}
+               ${groupOp} course_id ${courseId.op}  #{courseId.data}
            </if>
            <if test="teacherId!=null">
-               ${groupOp} teacher_id ${teacher_id.op}  #{teacher_id.data}
+               ${groupOp} teacher_id ${teacherId.op}  #{teacherId.data}
            </if>
            <if test="importantType!=null">
-               ${groupOp} important_type ${important_type.op}  #{important_type.data}
+               ${groupOp} important_type ${importantType.op}  #{importantType.data}
            </if>
            <if test="dayConType!=null">
-               ${groupOp} day_con_type ${day_con_type.op}  #{day_con_type.data}
+               ${groupOp} day_con_type ${dayConType.op}  #{dayConType.data}
            </if>
            <if test="createDate!=null">
-               ${groupOp} create_date ${create_date.op}  #{create_date.data}
+               ${groupOp} create_date ${createDate.op}  #{createDate.data}
            </if>
            <if test="taskId!=null">
-               ${groupOp} task_id ${task_id.op}  #{task_id.data}
+               ${groupOp} task_id ${taskId.op}  #{taskId.data}
            </if>
 
        </where>

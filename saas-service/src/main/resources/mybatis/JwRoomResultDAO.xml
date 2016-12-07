@@ -24,12 +24,12 @@ selectOne
 selectList
 -->
     <sql id="Base_Column_List">
-        id,
-        room_id,
-        result,
-        create_date,
-        tn_id,
-        task_id
+        id as id,
+        room_id as roomId,
+        result as result,
+        create_date as createDate,
+        tn_id as tnId,
+        task_id as taskId
     </sql>
     <insert id="insert" parameterType="JwRoomResult">
         INSERT INTO saas_jw_room_result (
@@ -260,19 +260,19 @@ selectList
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
             <if test="condition.roomId!=null">
-                ${condition.groupOp}   room_id  ${condition.room_id.op}  #{condition.room_id.data}
+                ${condition.groupOp}   room_id  ${condition.roomId.op}  #{condition.roomId.data}
             </if>
             <if test="condition.result!=null">
                 ${condition.groupOp}   result  ${condition.result.op}  #{condition.result.data}
             </if>
             <if test="condition.createDate!=null">
-                ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
+                ${condition.groupOp}   create_date  ${condition.createDate.op}  #{condition.createDate.data}
             </if>
             <if test="condition.tnId!=null">
-                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+                ${condition.groupOp}   tn_id  ${condition.tnId.op}  #{condition.tnId.data}
             </if>
             <if test="condition.taskId!=null">
-                ${condition.groupOp}   task_id  ${condition.task_id.op}  #{condition.task_id.data}
+                ${condition.groupOp}   task_id  ${condition.taskId.op}  #{condition.taskId.data}
             </if>
 
 
@@ -379,19 +379,19 @@ selectList
                ${groupOp} id ${id.op}  #{id.data}
            </if>
            <if test="roomId!=null">
-               ${groupOp} room_id ${room_id.op}  #{room_id.data}
+               ${groupOp} room_id ${roomId.op}  #{roomId.data}
            </if>
            <if test="result!=null">
                ${groupOp} result ${result.op}  #{result.data}
            </if>
            <if test="createDate!=null">
-               ${groupOp} create_date ${create_date.op}  #{create_date.data}
+               ${groupOp} create_date ${createDate.op}  #{createDate.data}
            </if>
            <if test="tnId!=null">
-               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+               ${groupOp} tn_id ${tnId.op}  #{tnId.data}
            </if>
            <if test="taskId!=null">
-               ${groupOp} task_id ${task_id.op}  #{task_id.data}
+               ${groupOp} task_id ${taskId.op}  #{taskId.data}
            </if>
 
        </where>

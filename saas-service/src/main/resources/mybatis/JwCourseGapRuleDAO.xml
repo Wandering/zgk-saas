@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IJwCourseGapRuleDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+
+    <sql id="Base_Column_List">
+        id as id ,
+        taskId as taskId ,
+        rule as rule ,
+        createDate as createDate 
+    </sql>
+    <insert id="insert" parameterType="JwCourseGapRule">
+        INSERT INTO saas_jw_course_gap_rule (
+        taskId,
+        rule,
+        createDate
+        ) VALUES (
+        #{taskId},
+        #{rule},
+        #{createDate}
+        )
+            <selectKey resultType="java.lang.Long" keyProperty="id">
+                SELECT LAST_INSERT_ID() AS ID
+            </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="JwCourseGapRule">
+        UPDATE saas_jw_course_gap_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId!=null">
+                taskId = #{taskId},
+            </if>
+            <if test="rule!=null">
+                rule = #{rule},
+            </if>
+            <if test="createDate!=null">
+                createDate = #{createDate},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_jw_course_gap_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.taskId!=null">
+                taskId = #{map.taskId},
+            </if>
+            <if test="map.rule!=null">
+                rule = #{map.rule},
+            </if>
+            <if test="map.createDate!=null">
+                createDate = #{map.createDate},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_jw_course_gap_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.taskId!=null">
+                taskId = #{update.taskId},
+            </if>
+            <if test="update.rule!=null">
+                rule = #{update.rule},
+            </if>
+            <if test="update.createDate!=null">
+                createDate = #{update.createDate},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId = #{condition.taskId}
+            </if>
+            <if test="condition.rule!=null">
+                AND rule = #{condition.rule}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_jw_course_gap_rule (
+                taskId,
+                rule,
+                createDate
+        ) VALUES (
+                    #{map.taskId},
+                    #{map.rule},
+                    #{map.createDate}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="JwCourseGapRule">
+        UPDATE saas_jw_course_gap_rule
+        <trim prefix="SET" suffixOverrides=",">
+            taskId = #{taskId},
+            rule = #{rule},
+            createDate = #{createDate},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM saas_jw_course_gap_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_jw_course_gap_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="taskId!=null">
+                AND taskId = #{taskId}
+            </if>
+            <if test="rule!=null">
+                AND rule = #{rule}
+            </if>
+            <if test="createDate!=null">
+                AND createDate = #{createDate}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_jw_course_gap_rule WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Long" resultType="JwCourseGapRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_course_gap_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="JwCourseGapRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_course_gap_rule WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="JwCourseGapRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_course_gap_rule WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="JwCourseGapRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_course_gap_rule
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="JwCourseGapRule">
+        SELECT
+        <if test="selector!=null">
+            <trim prefixOverrides=",">
+                        <if test="selector.id!=null">
+                            , id
+                        </if>
+                        <if test="selector.taskId!=null">
+                            , taskId
+                        </if>
+                        <if test="selector.rule!=null">
+                            , rule
+                        </if>
+                        <if test="selector.createDate!=null">
+                            , createDate
+                        </if>
+            </trim>
+        </if>
+        <if test="selector==null">
+        <include refid="Base_Column_List" />
+        </if>
+        FROM saas_jw_course_gap_rule
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   ${condition.id.field}  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.taskId!=null">
+                ${condition.groupOp}   ${condition.taskId.field}  ${condition.taskId.op}  #{condition.taskId.data}
+            </if>
+            <if test="condition.rule!=null">
+                ${condition.groupOp}   ${condition.rule.field}  ${condition.rule.op}  #{condition.rule.data}
+            </if>
+            <if test="condition.createDate!=null">
+                ${condition.groupOp}   ${condition.createDate.field}  ${condition.createDate.op}  #{condition.createDate.data}
+            </if>
+
+
+    </where>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="JwCourseGapRule">
+        SELECT
+        <if test="selector!=null">
+            <trim prefixOverrides=",">
+                    <if test="selector.id!=null">
+                        , id
+                    </if>
+                    <if test="selector.taskId!=null">
+                        , taskId
+                    </if>
+                    <if test="selector.rule!=null">
+                        , rule
+                    </if>
+                    <if test="selector.createDate!=null">
+                        , createDate
+                    </if>
+            </trim>
+        </if>
+        <if test="selector==null">
+            <include refid="Base_Column_List" />
+        </if>
+        FROM saas_jw_course_gap_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId like CONCAT('%', #{condition.taskId} , '%')
+            </if>
+            <if test="condition.rule!=null">
+                AND rule like CONCAT('%', #{condition.rule} , '%')
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate like CONCAT('%', #{condition.createDate} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="JwCourseGapRule">
+        SELECT
+        <if test="selector!=null">
+            <trim prefixOverrides=",">
+                <if test="selector.id!=null">
+                    , id
+                </if>
+                <if test="selector.taskId!=null">
+                    , taskId
+                </if>
+                <if test="selector.rule!=null">
+                    , rule
+                </if>
+                <if test="selector.createDate!=null">
+                    , createDate
+                </if>
+        </trim>
+    </if>
+<if test="selector==null">
+<include refid="Base_Column_List" />
+</if>
+        FROM saas_jw_course_gap_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId = #{condition.taskId}
+            </if>
+            <if test="condition.rule!=null">
+                AND rule = #{condition.rule}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="JwCourseGapRule">
+        SELECT
+        <if test="selector!=null">
+            <trim prefixOverrides=",">
+                    <if test="selector.id!=null">
+                        , id
+                    </if>
+                    <if test="selector.taskId!=null">
+                        , taskId
+                    </if>
+                    <if test="selector.rule!=null">
+                        , rule
+                    </if>
+                    <if test="selector.createDate!=null">
+                        , createDate
+                    </if>
+            </trim>
+        </if>
+        <if test="selector==null">
+            <include refid="Base_Column_List" />
+        </if>
+        FROM saas_jw_course_gap_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId = #{condition.taskId}
+            </if>
+            <if test="condition.rule!=null">
+                AND rule = #{condition.rule}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_jw_course_gap_rule
+       <where>
+           <if test="id!=null">
+               ${groupOp} ${id.field} ${id.op}  #{id.data}
+           </if>
+           <if test="taskId!=null">
+               ${groupOp} ${taskId.field} ${taskId.op}  #{taskId.data}
+           </if>
+           <if test="rule!=null">
+               ${groupOp} ${rule.field} ${rule.op}  #{rule.data}
+           </if>
+           <if test="createDate!=null">
+               ${groupOp} ${createDate.field} ${createDate.op}  #{createDate.data}
+           </if>
+
+       </where>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Long">
+        SELECT
+        MAX(id)
+        FROM saas_jw_course_gap_rule
+    </select>
+
+</mapper>
+

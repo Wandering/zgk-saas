@@ -24,10 +24,10 @@ selectOne
 selectList
 -->
     <sql id="Base_Column_List">
-        id,
-        tn_id,
-        teacher_id,
-        class_id
+        id as id,
+        tn_id as tnId,
+        teacher_id as teacherId,
+        class_id as classId
     </sql>
     <insert id="insert" parameterType="SaasClass">
         INSERT INTO saas_saas_class (
@@ -218,13 +218,13 @@ selectList
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
             <if test="condition.tnId!=null">
-                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+                ${condition.groupOp}   tn_id  ${condition.tnId.op}  #{condition.tnId.data}
             </if>
             <if test="condition.teacherId!=null">
-                ${condition.groupOp}   teacher_id  ${condition.teacher_id.op}  #{condition.teacher_id.data}
+                ${condition.groupOp}   teacher_id  ${condition.teacherId.op}  #{condition.teacherId.data}
             </if>
             <if test="condition.classId!=null">
-                ${condition.groupOp}   class_id  ${condition.class_id.op}  #{condition.class_id.data}
+                ${condition.groupOp}   class_id  ${condition.classId.op}  #{condition.classId.data}
             </if>
 
 
@@ -313,13 +313,13 @@ selectList
                ${groupOp} id ${id.op}  #{id.data}
            </if>
            <if test="tnId!=null">
-               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+               ${groupOp} tn_id ${tnId.op}  #{tnId.data}
            </if>
            <if test="teacherId!=null">
-               ${groupOp} teacher_id ${teacher_id.op}  #{teacher_id.data}
+               ${groupOp} teacher_id ${teacherId.op}  #{teacherId.data}
            </if>
            <if test="classId!=null">
-               ${groupOp} class_id ${class_id.op}  #{class_id.data}
+               ${groupOp} class_id ${classId.op}  #{classId.data}
            </if>
 
        </where>

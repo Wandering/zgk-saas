@@ -24,9 +24,9 @@ selectOne
 selectList
 -->
     <sql id="Base_Column_List">
-        id,
-        stu_name,
-        tn_id
+        id as id,
+        stu_name as stuName,
+        tn_id as tnId
     </sql>
     <insert id="insert" parameterType="JwStuInfo">
         INSERT INTO saas_jw_stu_info (
@@ -197,10 +197,10 @@ selectList
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
             <if test="condition.stuName!=null">
-                ${condition.groupOp}   stu_name  ${condition.stu_name.op}  #{condition.stu_name.data}
+                ${condition.groupOp}   stu_name  ${condition.stuName.op}  #{condition.stuName.data}
             </if>
             <if test="condition.tnId!=null">
-                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+                ${condition.groupOp}   tn_id  ${condition.tnId.op}  #{condition.tnId.data}
             </if>
 
 
@@ -280,10 +280,10 @@ selectList
                ${groupOp} id ${id.op}  #{id.data}
            </if>
            <if test="stuName!=null">
-               ${groupOp} stu_name ${stu_name.op}  #{stu_name.data}
+               ${groupOp} stu_name ${stuName.op}  #{stuName.data}
            </if>
            <if test="tnId!=null">
-               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+               ${groupOp} tn_id ${tnId.op}  #{tnId.data}
            </if>
 
        </where>
