@@ -9,6 +9,7 @@
 
 package cn.thinkjoy.saas.domain;
 
+import cn.thinkjoy.saas.enums.StatusEnum;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -25,8 +26,10 @@ public class JwScheduleTask extends BaseDomain{
     private Long createDate;
     private Integer tnId;
     private Integer status;
+    private Integer delStatus;
 
 	public JwScheduleTask(){
+
 	}
     public void setScheduleName(String value) {
         this.scheduleName = value;
@@ -91,10 +94,19 @@ public class JwScheduleTask extends BaseDomain{
 			.append("Status",getStatus())
 			.append("CreateDate",getCreateDate())
 			.append("TnId",getTnId())
+			.append("delStatus",getDelStatus())
 			.toString();
 	}
 
-	public int hashCode() {
+    public Integer getDelStatus() {
+        return delStatus;
+    }
+
+    public void setDelStatus(Integer delStatus) {
+        this.delStatus = delStatus;
+    }
+
+    public int hashCode() {
 		return new HashCodeBuilder()
 			.append(getId())
 			.toHashCode();
