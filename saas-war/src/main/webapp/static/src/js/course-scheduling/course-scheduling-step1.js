@@ -11,11 +11,19 @@ TeachDate.prototype = {
 
     },
     // 查询学习时间
-    queryTeachTime:function(){
-        Common.ajaxFun('/teachTime/queryTeachTime.do', 'GET', {},
+    queryTeachTime:function(taskId){
+        Common.ajaxFun('/teachTime/queryTeachTime.do', 'GET', {
+            'taskId':taskId
+        },
             function (res) {
                 console.log(res)
                 if (res.rtnCode == "0000000") {
+                    var teachDate = res.bizData.teachDate;
+                    var teachTime = res.bizData.teachTime;
+
+
+
+
 
                 }
             }, function (res) {
@@ -53,15 +61,17 @@ $(function(){
         }
         var teachDate = [];
         $.each(weekV,function(i,v){
-            teachDate.push($(this).attr('data'))
+            teachDate.push($(this).attr('data'));
         });
         var morningNum = $('#morning-list').val();
         var afternoonNum = $('#afternoon-list').val();
         var eveningNum = $('#evening-list').val();
         var teachTime = morningNum+afternoonNum+eveningNum;
         TeachDateIns.saveTeachTime(taskId,teachDate.join('|'),teachTime);
-
     });
+
+    //
+    TeachDateIns.queryTeachTime(taskId);
 });
 
 

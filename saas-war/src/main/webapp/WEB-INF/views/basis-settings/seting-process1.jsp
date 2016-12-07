@@ -56,11 +56,6 @@
                         </div>
 
 
-
-
-
-
-
                         <div class="setting-grade">
                             <table id="" class="table">
                                 <thead>
@@ -75,19 +70,19 @@
                                 <tr>
                                     <td class="center">1</td>
                                     <td class="center">
-                                        <input type="text" id="seting-process1-1" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
+                                        <input type="text" id="seting-process1-1" disabled="disabled" value="高一年级" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="center">2</td>
                                     <td class="center">
-                                        <input type="text" id="seting-process1-2" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
+                                        <input type="text" id="seting-process1-2" disabled="disabled"  value="高二年级" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="center">3</td>
                                     <td class="center">
-                                        <input type="text" id="seting-process1-3" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
+                                        <input type="text" id="seting-process1-3" disabled="disabled"  value="高三年级" placeholder="" class="col-xs-10 col-sm-10 seting-process1-input"/>
                                     </td>
                                 </tr>
                                 <tr>

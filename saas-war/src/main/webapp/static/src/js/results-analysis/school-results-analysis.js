@@ -598,6 +598,7 @@ var SchoolResultsAnalysisIns = new SchoolResultsAnalysis();
 $(function () {
 
 
+
 });
 
 
