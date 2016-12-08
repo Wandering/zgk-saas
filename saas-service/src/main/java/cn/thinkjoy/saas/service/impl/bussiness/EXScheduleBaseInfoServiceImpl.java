@@ -185,7 +185,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
             dto.setTeacherId((int)info.getId());
             dto.setTeacherName(info.getTeacherName());
             dto.setCourseName(info.getTeacherCourse());
-            dto.setClassInfo(getClassBaseDtosByCourse(info.getGrade(),info.getTeacherCourse()));
+            dto.setClassInfo(getClassBaseDtosByCourse(tnId,info.getGrade(),info.getTeacherCourse()));
             dtos.add(dto);
         }
 
@@ -195,11 +195,12 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
     /**
      * 根据年级和课程名获取班级信息
      *
+     * @param tnId
      * @param grade
      * @param course
      * @return
      */
-    private List<ClassBaseDto> getClassBaseDtosByCourse(int grade,String course){
+    private List<ClassBaseDto> getClassBaseDtosByCourse(int tnId,int grade,String course){
 
         List<ClassBaseDto> dtos = Lists.newArrayList();
 
@@ -207,6 +208,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         paramMap.put("class_name",course);
         paramMap.put("class_type",2);
         paramMap.put("grade",grade);
+        paramMap.put("tn_id",tnId);
         List<JwClassBaseInfo> infos = jwClassBaseInfoDAO.like(paramMap,"id",Constant.DESC);
 
         // 不存在则查询行政班级
@@ -214,6 +216,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
             paramMap.clear();
             paramMap.put("grade",grade);
             paramMap.put("class_type",1);
+            paramMap.put("tn_id",tnId);
             infos = jwClassBaseInfoDAO.queryList(paramMap,"id",Constant.DESC);
         }
 
