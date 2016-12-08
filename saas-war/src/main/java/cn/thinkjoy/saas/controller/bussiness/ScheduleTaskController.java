@@ -140,7 +140,6 @@ public class ScheduleTaskController {
     @RequestMapping("/fetchScheduleTask")
     public JwScheduleTask fetchScheduleTask(@RequestParam Integer id){
         //参数校验
-         new JwScheduleTask();
         Map<String,Object> map = Maps.newHashMap();
         map.put("id",id);
         map.put("delStatus",StatusEnum.Y.getCode());
