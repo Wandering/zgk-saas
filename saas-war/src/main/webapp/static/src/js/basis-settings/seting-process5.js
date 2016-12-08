@@ -18,7 +18,7 @@ SetingProcess5.prototype = {
         }
     },
     initTeacher:function(){
-        var initTeacherBtn = '<div class="initClassBtn"><button class="btn btn-info" id="initBtn">初始化班级</button></div>';
+        var initTeacherBtn = '<div class="initClassBtn"><button class="btn btn-info" id="initBtn">初始化教师</button></div>';
         layer.open({
             type: 1,
             title: "请初始化教师",
