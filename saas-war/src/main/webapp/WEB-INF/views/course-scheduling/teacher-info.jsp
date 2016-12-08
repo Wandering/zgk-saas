@@ -61,131 +61,6 @@
                                 <a href="/teacher-info" class="active">教师信息</a>
                             </li>
                         </ul>
-                        <%--<div class="base-content">--%>
-                            <%--<div class="item-title">每周上课天数</div>--%>
-                            <%--<ul>--%>
-                                <%--<li>--%>
-                                    <%--<input type="checkbox" id="monday" />--%>
-                                    <%--<label for="monday">星期一</label>--%>
-                                <%--</li>--%>
-                                <%--<li>--%>
-                                    <%--<input type="checkbox" id="tuesday" />--%>
-                                    <%--<label for="tuesday">星期二</label>--%>
-                                <%--</li>--%>
-                                <%--<li>--%>
-                                    <%--<input type="checkbox" id="wednesday" />--%>
-                                    <%--<label for="wednesday">星期三</label>--%>
-                                <%--</li>--%>
-                                <%--<li>--%>
-                                    <%--<input type="checkbox" id="thursday" />--%>
-                                    <%--<label for="thursday">星期四</label>--%>
-                                <%--</li>--%>
-                                <%--<li>--%>
-                                    <%--<input type="checkbox" id="friday" />--%>
-                                    <%--<label for="friday">星期五</label>--%>
-                                <%--</li>--%>
-                                <%--<li>--%>
-                                    <%--<input type="checkbox" id="saturday" />--%>
-                                    <%--<label for="saturday">星期六</label>--%>
-                                <%--</li>--%>
-                                <%--<li>--%>
-                                    <%--<input type="checkbox" id="sunday" />--%>
-                                    <%--<label for="sunday">星期日</label>--%>
-                                <%--</li>--%>
-                            <%--</ul>--%>
-                            <%--<div class="item-title">每天上课节次</div>--%>
-                            <%--<div class="day-class">--%>
-                                <%--<div class="item">--%>
-                                    <%--<span>上午：</span>--%>
-                                    <%--<select id="morning-list">--%>
-                                        <%--<option value="1">1</option>--%>
-                                        <%--<option value="2">2</option>--%>
-                                        <%--<option value="3">3</option>--%>
-                                        <%--<option value="4">4</option>--%>
-                                        <%--<option value="5">5</option>--%>
-                                    <%--</select>--%>
-                                <%--</div>--%>
-                                <%--<div class="item">--%>
-                                    <%--<span>下午：</span>--%>
-                                    <%--<select id="afternoon-list">--%>
-                                        <%--<option value="1">1</option>--%>
-                                        <%--<option value="2">2</option>--%>
-                                        <%--<option value="3">3</option>--%>
-                                        <%--<option value="4">4</option>--%>
-                                        <%--<option value="5">5</option>--%>
-                                    <%--</select>--%>
-                                <%--</div>--%>
-                                <%--<div class="item">--%>
-                                    <%--<span>晚上：</span>--%>
-                                    <%--<select id="evening-list">--%>
-                                        <%--<option value="0">0</option>--%>
-                                        <%--<option value="1">1</option>--%>
-                                        <%--<option value="2">2</option>--%>
-                                        <%--<option value="3">3</option>--%>
-                                        <%--<option value="4">4</option>--%>
-                                    <%--</select>--%>
-                                <%--</div>--%>
-                            <%--</div>--%>
-                            <%--<button type="button" class="btn-save-base" id="btn-save-base">保存</button>--%>
-                        <%--</div>--%>
-                        <%--<div class="base-content">--%>
-                            <%--<div class="title-2">--%>
-                                <%--<span class="txt-t"></span>--%>
-                                <%--<div class="btns">--%>
-                                    <%--<button class="btn btn-pink" id="settings-class-btn">设置课时</button>--%>
-                                <%--</div>--%>
-                            <%--</div>--%>
-                            <%--<table id="schedule-table" class="table">--%>
-                                <%--<thead>--%>
-                                    <%--<tr>--%>
-                                        <%--<th class="center" width="50px">--%>
-                                            <%--<label>--%>
-                                                <%--<input type="checkbox" class="ace" />--%>
-                                                <%--<span class="lbl"></span>--%>
-                                            <%--</label>--%>
-                                        <%--</th>--%>
-                                        <%--<th class="center" width="80px">序号</th>--%>
-                                        <%--<th class="center" width="250px">课程名称</th>--%>
-                                        <%--<th class="center" width="250px">课时</th>--%>
-                                    <%--</tr>--%>
-                                <%--</thead>--%>
-                                <%--<tbody id="schedule-list" class="check-template">--%>
-                                    <%--<tr>--%>
-                                        <%--<td class="center">--%>
-                                            <%--<label>--%>
-                                                <%--<input type="checkbox" class="ace" />--%>
-                                                <%--<span class="lbl"></span>--%>
-                                            <%--</label>--%>
-                                        <%--</td>--%>
-                                        <%--<td class="center">1</td>--%>
-                                        <%--<td class="center">语文</td>--%>
-                                        <%--<td class="center">1节/周</td>--%>
-                                    <%--</tr>--%>
-                                    <%--<tr>--%>
-                                        <%--<td class="center">--%>
-                                            <%--<label>--%>
-                                                <%--<input type="checkbox" class="ace" />--%>
-                                                <%--<span class="lbl"></span>--%>
-                                            <%--</label>--%>
-                                        <%--</td>--%>
-                                        <%--<td class="center">2</td>--%>
-                                        <%--<td class="center">数学</td>--%>
-                                        <%--<td class="center">2节/周</td>--%>
-                                    <%--</tr>--%>
-                                    <%--<tr>--%>
-                                        <%--<td class="center">--%>
-                                            <%--<label>--%>
-                                                <%--<input type="checkbox" class="ace" />--%>
-                                                <%--<span class="lbl"></span>--%>
-                                            <%--</label>--%>
-                                        <%--</td>--%>
-                                        <%--<td class="center">3</td>--%>
-                                        <%--<td class="center">英语</td>--%>
-                                        <%--<td class="center">6节/周</td>--%>
-                                    <%--</tr>--%>
-                                <%--</tbody>--%>
-                            <%--</table>--%>
-                        <%--</div>--%>
                         <div class="base-content">
                             <div class="title-2">
                                 <span class="txt-t"></span>
@@ -212,45 +87,45 @@
                                     </tr>
                                 </thead>
                                 <tbody id="teacher-list" class="check-template">
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">1</td>
-                                        <td class="center">黎明</td>
-                                        <td class="center">语文</td>
-                                        <td class="center">2</td>
-                                        <td class="center">高一二班</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">2</td>
-                                        <td class="center">张华</td>
-                                        <td class="center">物理</td>
-                                        <td class="center">2</td>
-                                        <td class="center">高一三班</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">3</td>
-                                        <td class="center">张华</td>
-                                        <td class="center">化学</td>
-                                        <td class="center">3</td>
-                                        <td class="center">高一四班</td>
-                                    </tr>
+                                    <%--<tr>--%>
+                                        <%--<td class="center">--%>
+                                            <%--<label>--%>
+                                                <%--<input type="checkbox" class="ace" />--%>
+                                                <%--<span class="lbl"></span>--%>
+                                            <%--</label>--%>
+                                        <%--</td>--%>
+                                        <%--<td class="center">1</td>--%>
+                                        <%--<td class="center">黎明</td>--%>
+                                        <%--<td class="center">语文</td>--%>
+                                        <%--<td class="center">2</td>--%>
+                                        <%--<td class="center">高一二班</td>--%>
+                                    <%--</tr>--%>
+                                    <%--<tr>--%>
+                                        <%--<td class="center">--%>
+                                            <%--<label>--%>
+                                                <%--<input type="checkbox" class="ace" />--%>
+                                                <%--<span class="lbl"></span>--%>
+                                            <%--</label>--%>
+                                        <%--</td>--%>
+                                        <%--<td class="center">2</td>--%>
+                                        <%--<td class="center">张华</td>--%>
+                                        <%--<td class="center">物理</td>--%>
+                                        <%--<td class="center">2</td>--%>
+                                        <%--<td class="center">高一三班</td>--%>
+                                    <%--</tr>--%>
+                                    <%--<tr>--%>
+                                        <%--<td class="center">--%>
+                                            <%--<label>--%>
+                                                <%--<input type="checkbox" class="ace" />--%>
+                                                <%--<span class="lbl"></span>--%>
+                                            <%--</label>--%>
+                                        <%--</td>--%>
+                                        <%--<td class="center">3</td>--%>
+                                        <%--<td class="center">张华</td>--%>
+                                        <%--<td class="center">化学</td>--%>
+                                        <%--<td class="center">3</td>--%>
+                                        <%--<td class="center">高一四班</td>--%>
+                                    <%--</tr>--%>
                                 </tbody>
                             </table>
                         </div>
@@ -260,7 +135,30 @@
         </div>
     </div>
 </div>
+<script id="teacher-template" type="text/x-handlebars-template">
+    {{#each bizData}}
+    <tr>
+        <td class="center">
+            <label>
+                <input type="checkbox" teacherId="{{teacherId}}" teacherName="{{teacherName}}" courseName="{{courseName}}" classNum="{{classNum}}" class="ace"/>
+                <span class="lbl"></span>
+            </label>
+        </td>
+        <td class="center">{{addOne @index}}</td>
+        <td class="center">{{teacherName}}</td>
+        <td class="center">{{courseName}}</td>
+        <td class="center">{{classNum}}</td>
+        <td class="center">
+            {{#each classInfo}}
+            {{className}}
+            {{/each}}
+        </td>
+        </td>
+    </tr>
+    {{/each}}
+</script>
 <%@ include file="./../common/footer.jsp"%>
+<script src="<%=ctx%>/static/src/lib/assets/js/jquery-ui-1.12.1.js"></script>
 <script src="<%=ctx%>/static/src/js/course-scheduling/teacher-info.js"></script>
 </body>
 </html>

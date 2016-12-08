@@ -83,39 +83,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="schedule-list" class="check-template">
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">1</td>
-                                        <td class="center">语文</td>
-                                        <td class="center">1节/周</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">2</td>
-                                        <td class="center">数学</td>
-                                        <td class="center">2节/周</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">3</td>
-                                        <td class="center">英语</td>
-                                        <td class="center">6节/周</td>
-                                    </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -125,6 +93,22 @@
         </div>
     </div>
 </div>
+<script id="schedule-template" type="text/x-handlebars-template">
+    {{#each bizData}}
+    <tr>
+        <td class="center">
+            <label>
+                <input type="checkbox" dataId="{{courseId}}" courseName="{{courseName}}" time="{{time}}" class="ace"/>
+                <span class="lbl"></span>
+            </label>
+        </td>
+        <td class="center">{{addOne @index}}</td>
+        <td class="center">{{courseName}}</td>
+        <td class="center">{{time}}节/周</td>
+        </td>
+    </tr>
+    {{/each}}
+</script>
 <%@ include file="./../common/footer.jsp"%>
 <script src="<%=ctx%>/static/src/js/course-scheduling/course-info.js"></script>
 </body>

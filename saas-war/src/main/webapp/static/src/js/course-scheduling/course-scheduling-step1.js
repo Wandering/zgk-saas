@@ -20,13 +20,12 @@ TeachDate.prototype = {
                 if (res.rtnCode == "0000000") {
                     var teachDate = res.bizData.teachDate;
                     var teachTime = res.bizData.teachTime;
-                    var teachDateArr = []
-                    console.log(teachDate)
-
-
-
-
-
+                    for(var i in teachDate.split('|')){
+                        $('.week-list input[data="'+ teachDate.split('|')[i]  +'"]').attr('checked','checked');
+                    }
+                    $('#morning-list option[value="'+ teachTime.split("")[0] +'"]').attr('selected','selected');
+                    $('#afternoon-list option[value="'+ teachTime.split("")[1] +'"]').attr('selected','selected');
+                    $('#evening-list option[value="'+ teachTime.split("")[2] +'"]').attr('selected','selected');
                 }
             }, function (res) {
                 layer.msg(res.msg);

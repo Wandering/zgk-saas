@@ -109,7 +109,7 @@ Schedule.prototype = {
     saveScheduleTask: function (id,scheduleName, grade, year, term) {
         var that = this;
         if(id){
-            Common.ajaxFun('/scheduleTask /updateScheduleTask.do', 'POST', {
+            Common.ajaxFun('/scheduleTask/updateScheduleTask.do', 'POST', {
                 'id':id,
                 'scheduleName': scheduleName,
                 'grade': grade,
