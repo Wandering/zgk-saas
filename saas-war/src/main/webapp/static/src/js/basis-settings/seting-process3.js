@@ -1,7 +1,7 @@
 var tnId = Common.cookie.getCookie('tnId');
 
 
-//Common.flowSteps();
+Common.flowSteps();
 
 function SetingProcess3() {
     this.init();
@@ -319,8 +319,8 @@ jQuery(function () {
         // 只允许选择文件，可选。
         accept: {
             title: 'excel',
-            extensions: 'xls',
-            mimeTypes: 'application/vnd.ms-excel'
+            extensions: 'xlsx,xls',
+            mimeTypes: '.xlsx,.xls'
         },
         fileVal: 'inputFile',
         duplicate: new Date()

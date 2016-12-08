@@ -189,25 +189,39 @@ TeacherInfo.prototype = {
                     "ts": 1480990693884
                 }
                 if (res.rtnCode == "0000000") {
-                    $.each(res.bizData,function(j,k){
-                        that.teacherArr.push(k.teacherName);
-                    });
-
-                    console.log(11)
 
 
-                    $('.teaching-class-list').html('');
-                    $('.subject-name').text(res.bizData.courseName);
-                    var classItem = [];
-                    $.each(res.bizData.classInfo,function (i,v) {
-                        classItem.push('<li><input type="checkbox" classId="'+ v.classId +'" /><label for="item1">'+ v.className +'</label></li>');
-                    });
-                    $('.teaching-class-list').append(classItem.join(''));
+                    //$.each(res.bizData,function(j,k){
+                    //    that.teacherArr.push(k.teacherName);
+                    //});
+                    //
+                    //console.log(11)
+                    //
+                    //
+                    //$('.teaching-class-list').html('');
+                    //$('.subject-name').text(res.bizData.courseName);
+                    //var classItem = [];
+                    //$.each(res.bizData.classInfo,function (i,v) {
+                    //    classItem.push('<li><input type="checkbox" classId="'+ v.classId +'" /><label for="item1">'+ v.className +'</label></li>');
+                    //});
+                    //$('.teaching-class-list').append(classItem.join(''));
 
                 }
             }, function (res) {
                 layer.msg(res.msg);
             },true);
+    },
+    // 所授课程
+    teachingCourses:function(data){
+
+    },
+    // 最大带班数
+    maxClassNum:function(data){
+
+    },
+    // 所带班级
+    classItem:function(data){
+
     }
 };
 
