@@ -123,7 +123,7 @@
                                     <%--<label for="proceed7">7-8节</label>--%>
                                 <%--</li>--%>
                             </ul>
-                            <div class="conflict-tips">您设置的不连堂节次与已设连堂科目课时冲突！</div>
+                            <%--<div class="conflict-tips">您设置的不连堂节次与已设连堂科目课时冲突！</div>--%>
                             <button type="button" class="btn-save-rule" id="btn-save-link">保存</button>
                         </div>
                     </div>
