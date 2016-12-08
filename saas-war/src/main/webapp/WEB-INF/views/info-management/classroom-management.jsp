@@ -56,21 +56,12 @@
                                                 </th>
                                                 <th class="center">编号</th>
                                                 <th class="center">年级</th>
-                                                <th class="center">教室数量</th>
+                                                <th class="center">行政教室数量</th>
+                                                <th class="center">走班教室数量</th>
                                             </tr>
                                         </thead>
                                         <tbody id="classroom-manage-list" class="check-template">
-                                            <%--<tr>--%>
-                                                <%--<td class="center">--%>
-                                                    <%--<label>--%>
-                                                        <%--<input type="checkbox" class="ace" />--%>
-                                                        <%--<span class="lbl"></span>--%>
-                                                    <%--</label>--%>
-                                                <%--</td>--%>
-                                                <%--<td class="center">1</td>--%>
-                                                <%--<td class="center">1</td>--%>
-                                                <%--<td class="center">1</td>--%>
-                                            <%--</tr>--%>
+
                                         </tbody>
                                     </table>
                                 </div>

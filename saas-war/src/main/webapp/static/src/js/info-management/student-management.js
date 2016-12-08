@@ -22,7 +22,15 @@ var GLOBAL_CONSTANT = {
 var App = {
     init: function () {
         this.tableData = [];
+        this.checkGradeName = '';
+        this.page = {
+            'offset': 0,
+            'rows': 30,
+            'count': ''
+        }
+        this.fetchGrade();
         this.renderTableHeader();
+        this.addEvent();
     },
     renderTableHeader: function () {
         Common.ajaxFun('/config/get/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
@@ -59,10 +67,15 @@ var App = {
     },
     renderTableBody: function (data) {
         var that = this
-        Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {
+            's': App.page.offset,
+            'r': App.page.rows,
+            'g': App.checkGradeName
+        }, function (res) {
             if (res.rtnCode == "0000000") {
                 var tpl = [];
                 var dataJson = res.bizData.result;
+                App.page.count = res.bizData.count;
                 $.each(dataJson, function (m, n) {
                     var obj = dataJson[m];
                     tpl.push('<tr>');
@@ -79,6 +92,7 @@ var App = {
                     tpl.push('</tr>');
                 });
                 $("#student-table tbody").html(tpl.join(''));
+                that.pagination();
             }
         }, function (res) {
             layer.msg("出错了");
@@ -96,7 +110,7 @@ var App = {
             content: '<div class="init-page-layer"><button class="btn btn-info" id="init-btn">初始化学生数据</button></div>'
         });
         $(document).on('click', '#init-btn', function () {
-            Common.ajaxFun('/config/retain/'+GLOBAL_CONSTANT.type+'/' + GLOBAL_CONSTANT.tnId + '.do', 'POST', {},
+            Common.ajaxFun('/config/retain/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do', 'POST', {},
                 function (res) {
                     if (res.rtnCode == "0000000") {
                         if (res.bizData.result == true) {
@@ -110,6 +124,83 @@ var App = {
                 }, function (res) {
                     layer.msg(res.msg);
                 });
+        })
+    },
+    //所属年级
+    fetchGrade: function () {
+        Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
+                var dataJson = res.bizData.grades;
+                //初始页面table-header渲染
+                var template = Handlebars.compile($('#grade-list-tpl').html());
+                $('#grade-list').html(template(dataJson));
+                //弹层渲染
+                // var tpl = '';
+                // $.each(dataJson, function (i, v) {
+                //     tpl += v.grade + '-';
+                // })
+                // tpl = tpl.substr(0, tpl.length - 1);
+                // CRUDStd.CRUDStdData.gradeData = tpl;
+                if (dataJson[0].grade) {
+                    App.checkGradeName = dataJson[0].grade;
+                }
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
+    },
+    loadPage: function () {
+        var that = this;
+        Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {
+            's': App.page.offset,
+            'r': App.page.rows,
+            'g': App.checkGradeName
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var tpl = [];
+                var dataJson = res.bizData.result;
+                // App.page.count = res.bizData.count;
+                App.page.count = Math.ceil(App.page.count / App.page.rows);
+                $.each(dataJson, function (m, n) {
+                    var obj = dataJson[m];
+                    tpl.push('<tr>');
+                    tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
+                    $.each(App.tableData, function (i, k) {
+                        var enName = App.tableData[i].enName;
+                        var dType = App.tableData[i].dataType;
+                        if (obj[enName]) {
+                            tpl.push('<td class="center" iName="' + enName + '" dataType="' + dType + '" pid="' + n.id + '">' + obj[enName] + '</td>');
+                        } else {
+                            tpl.push('<td class="center">-</td>');
+                        }
+                    });
+                    tpl.push('</tr>');
+                });
+                $("#student-table tbody").html(tpl.join(''));
+                that.pagination();
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, false);
+    },
+    pagination: function () {
+        var that = this;
+        $(".pagination").createPage({
+            pageCount: Math.ceil(App.page.count / App.page.rows),
+            current: Math.ceil(App.page.offset / App.page.rows) + 1,
+            backFn: function (p) {
+                $(".pagination-bar .current-page").html(p);
+                App.page.offset = (p - 1) * App.page.rows;
+                App.loadPage();
+            }
+        });
+    },
+    addEvent: function () {
+        var targetDom = $('#grade-list input');
+        $(document).on('click', '.grade-list input[name="grade-li"]', function () {
+            App.checkGradeName = $('input[name="grade-li"]:checked').next().text();
+            App.loadPage();
+            App.pagination();
         })
     }
 }
@@ -129,30 +220,31 @@ var CRUDStd = {
             yearData: '',
             classData: ''
         };
-        this.fetchGrade(); //拉取渲染grade 12.7
+        // this.fetchGrade(); //拉取渲染grade 12.7
     },
-    //所属年级
-    fetchGrade: function () {
-        Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
-            if (res.rtnCode == "0000000") {
-                var dataJson = res.bizData.grades;
-                //初始页面table-header渲染
-
-                var template = Handlebars.compile($('#grade-list-tpl').html());
-                $('#grade-list').html(template(dataJson));
-
-                //弹层渲染
-                var tpl = '';
-                $.each(dataJson, function (i, v) {
-                    tpl += v.grade + '-';
-                })
-                tpl = tpl.substr(0, tpl.length - 1);
-                CRUDStd.CRUDStdData.gradeData = tpl;
-            }
-        }, function (res) {
-            layer.msg("出错了");
-        }, true);
-    },
+    // //所属年级
+    // fetchGrade: function () {
+    //     Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
+    //         if (res.rtnCode == "0000000") {
+    //             var dataJson = res.bizData.grades;
+    //             //初始页面table-header渲染
+    //
+    //             var template = Handlebars.compile($('#grade-list-tpl').html());
+    //             $('#grade-list').html(template(dataJson));
+    //
+    //             //弹层渲染
+    //             // var tpl = '';
+    //             // $.each(dataJson, function (i, v) {
+    //             //     tpl += v.grade + '-';
+    //             // })
+    //             // tpl = tpl.substr(0, tpl.length - 1);
+    //             // CRUDStd.CRUDStdData.gradeData = tpl;
+    //             CRUDStd.CRUDStdData.gradeData = dataJson[0].grade;
+    //         }
+    //     }, function (res) {
+    //         layer.msg("出错了");
+    //     }, true);
+    // },
     //入学年份
     fetchEntranceYear: function () {
         Common.ajaxFun('/config/get/school/year.do', 'GET', {}, function (res) {
@@ -191,7 +283,8 @@ var CRUDStd = {
                 switch (v.enName) {
                     case 'student_grade':  //所在年级
                         // CRUDStd.fetchGrade(); 初始化调用了12.7
-                        v.dataValue = CRUDStd.CRUDStdData.gradeData;
+                        // console.info('CRUDStd.CRUDStdData.gradeData', CRUDStd.CRUDStdData.gradeData);
+                        v.dataValue = App.checkGradeName;
                         break;
                     case 'student_class_in_year':  //入学年份
                         CRUDStd.fetchEntranceYear();
@@ -265,12 +358,16 @@ var CRUDStd = {
          * @returns {string}
          */
         var renderSelect = function (v) {
-            var selectLen = (v.dataValue).split('-'),
-                selectTpl = '';
-            for (var i = 0; i < selectLen.length; i++) {
-                selectTpl += '<option>' + selectLen[i] + '</option>'
+            if (v.enName == "student_grade") {
+                return '<li><span>' + v.name + '</span><select id="' + v.enName + '" readonly disabled style="cursor: not-allowed;background-color: #eee;"><option>' + App.checkGradeName + '</option></select></li>'
+            } else {
+                var selectLen = (v.dataValue).split('-'),
+                    selectTpl = '';
+                for (var i = 0; i < selectLen.length; i++) {
+                    selectTpl += '<option>' + selectLen[i] + '</option>'
+                }
+                return '<li><span>' + v.name + '</span><select id="' + v.enName + '">' + selectTpl + '</select></li>'
             }
-            return '<li><span>' + v.name + '</span><select id="' + v.enName + '">' + selectTpl + '</select></li>'
         }
         /**
          * 渲染Text
@@ -319,6 +416,7 @@ var CRUDStd = {
         $(document).on('click', '#add-btn', function () {
             if (that.CRUDStdVerify('add')) {
                 that.addStdEvent(that.CRUDStdVerify('add'));
+                // window.location.reload();
             }
         })
         //删除
@@ -353,7 +451,7 @@ var CRUDStd = {
             type: 1,
             title: '添加学生',
             offset: 'auto',
-            area: ['425px', 'auto'],
+            area: ['475px', 'auto'],
             content: $('#student-add-layer'),
             cancel: function () {
                 layer.closeAll();
@@ -376,7 +474,7 @@ var CRUDStd = {
             type: 1,
             title: '修改学生',
             offset: 'auto',
-            area: ['425px', 'auto'],
+            area: ['475px', 'auto'],
             content: $('#student-add-layer'),
             cancel: function () {
                 layer.closeAll();
@@ -429,6 +527,7 @@ var CRUDStd = {
                         $('#check-all').prop('checked', false);
                         layer.msg('删除成功', {time: 1000});
                         App.renderTableHeader();
+                        // window.location.reload();
                     }
                 }
             }, function (res) {
@@ -451,7 +550,7 @@ var CRUDStd = {
                         return false
                     }
                     var reg = eval(v.checkRule);
-                    var regV = eval($('#' + v.enName).val());
+                    var regV = $('#' + v.enName).val();
                     if (!reg.test(regV)) {
                         layer.msg(v.name + '输入不合法', {time: 1000});
                         $('#' + v.enName).focus();
@@ -686,7 +785,7 @@ var StdSet = {
                 type: 1,
                 title: '选择添加字段',
                 content: $('#sub-choose-field'),
-                area: ['550px', '280px'],
+                area: ['668px', '230px'],
                 cancel: function () {
                     $('#field').html('');
                 }
@@ -726,9 +825,9 @@ var StdSet = {
                     var isCheck = false;
                     $.each(StdSet.fetchTableHeaderData.bizData.configList, function (j, k) {
                         if (v.id == k.configKey) {
-                            if(v.isRetain == 1){
+                            if (v.isRetain == 1) {
                                 tpl.push('<input type="checkbox" class="ace" id="li-' + v.id + '" checked="checked" disabled>');
-                            }else{
+                            } else {
                                 tpl.push('<input type="checkbox" class="ace" id="li-' + v.id + '" checked="checked">');
                             }
                             isCheck = true;

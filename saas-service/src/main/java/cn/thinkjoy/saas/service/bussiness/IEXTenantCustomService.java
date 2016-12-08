@@ -57,4 +57,10 @@ public interface IEXTenantCustomService {
      * @return
      */
     List<Map<Integer,Object>> isExcelAddSelect(Integer tnId ,String[] columnNames);
+
+    /**
+     * 判断表中列是否存在数据
+     * @return
+     */
+    Map<String,Object> existDataCount(Map map);
 }

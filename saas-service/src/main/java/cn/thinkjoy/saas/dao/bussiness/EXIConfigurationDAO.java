@@ -25,4 +25,7 @@ public interface EXIConfigurationDAO extends IBaseDAO<Configuration> {
      * @return
      */
     public List<Configuration> selectListRetain(Map map);
+
+
+    String selectColumnName(Map map);
 }
