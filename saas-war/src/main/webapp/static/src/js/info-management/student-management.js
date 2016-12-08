@@ -159,8 +159,7 @@ var App = {
             if (res.rtnCode == "0000000") {
                 var tpl = [];
                 var dataJson = res.bizData.result;
-                // App.page.count = res.bizData.count;
-                App.page.count = Math.ceil(App.page.count / App.page.rows);
+                App.page.count = res.bizData.count;
                 $.each(dataJson, function (m, n) {
                     var obj = dataJson[m];
                     tpl.push('<tr>');
@@ -185,10 +184,12 @@ var App = {
     },
     pagination: function () {
         var that = this;
+        console.info("zongyeshu: " + App.page.count);
         $(".pagination").createPage({
             pageCount: Math.ceil(App.page.count / App.page.rows),
             current: Math.ceil(App.page.offset / App.page.rows) + 1,
             backFn: function (p) {
+                console.info('p',p);
                 $(".pagination-bar .current-page").html(p);
                 App.page.offset = (p - 1) * App.page.rows;
                 App.loadPage();
@@ -694,8 +695,8 @@ var TplHandler = {
                 // 只允许选择文件，可选。
                 accept: {
                     title: 'excel',
-                    extensions: 'xls',
-                    mimeTypes: 'application/vnd.ms-excel'
+                    extensions: 'xlsx,xls',
+                    mimeTypes: '.xlsx,.xls'
                 },
                 fileVal: 'inputFile',
                 duplicate: new Date()
