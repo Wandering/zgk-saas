@@ -92,34 +92,34 @@
                             </table>
                             <div class="item-title">不可连堂节次</div>
                             <ul class="course-no-proceed-list">
-                                <li>
-                                    <input type="checkbox" id="proceed1" />
-                                    <label for="proceed1">1-2节</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="proceed2" />
-                                    <label for="proceed2">2-3节</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="proceed3" />
-                                    <label for="proceed3">3-4节</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="proceed4" />
-                                    <label for="proceed4">4-5节</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="proceed5" />
-                                    <label for="proceed5">5-6节</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="proceed6" />
-                                    <label for="proceed6">6-7节</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="proceed7" />
-                                    <label for="proceed7">7-8节</label>
-                                </li>
+                                <%--<li>--%>
+                                    <%--<input type="checkbox" id="proceed1" />--%>
+                                    <%--<label for="proceed1">1-2节</label>--%>
+                                <%--</li>--%>
+                                <%--<li>--%>
+                                    <%--<input type="checkbox" id="proceed2" />--%>
+                                    <%--<label for="proceed2">2-3节</label>--%>
+                                <%--</li>--%>
+                                <%--<li>--%>
+                                    <%--<input type="checkbox" id="proceed3" />--%>
+                                    <%--<label for="proceed3">3-4节</label>--%>
+                                <%--</li>--%>
+                                <%--<li>--%>
+                                    <%--<input type="checkbox" id="proceed4" />--%>
+                                    <%--<label for="proceed4">4-5节</label>--%>
+                                <%--</li>--%>
+                                <%--<li>--%>
+                                    <%--<input type="checkbox" id="proceed5" />--%>
+                                    <%--<label for="proceed5">5-6节</label>--%>
+                                <%--</li>--%>
+                                <%--<li>--%>
+                                    <%--<input type="checkbox" id="proceed6" />--%>
+                                    <%--<label for="proceed6">6-7节</label>--%>
+                                <%--</li>--%>
+                                <%--<li>--%>
+                                    <%--<input type="checkbox" id="proceed7" />--%>
+                                    <%--<label for="proceed7">7-8节</label>--%>
+                                <%--</li>--%>
                             </ul>
                             <div class="conflict-tips">您设置的不连堂节次与已设连堂科目课时冲突！</div>
                             <button type="button" class="btn-save-rule" id="btn-save-rule">保存</button>
