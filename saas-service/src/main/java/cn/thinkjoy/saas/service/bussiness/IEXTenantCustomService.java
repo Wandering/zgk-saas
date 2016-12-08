@@ -1,5 +1,7 @@
 package cn.thinkjoy.saas.service.bussiness;
 
+import cn.thinkjoy.saas.domain.bussiness.SyncClass;
+import cn.thinkjoy.saas.domain.bussiness.SyncCourse;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 
 import java.util.LinkedHashMap;
@@ -63,4 +65,15 @@ public interface IEXTenantCustomService {
      * @return
      */
     Map<String,Object> existDataCount(Map map);
+
+    /**
+     * 同步课程
+     * @return
+     */
+    List<SyncCourse> selectCourseGroup(Map map);
+    /**
+     * 同步班级
+     * @return
+     */
+    List<SyncClass> selectClassGroup(Map map);
 }
