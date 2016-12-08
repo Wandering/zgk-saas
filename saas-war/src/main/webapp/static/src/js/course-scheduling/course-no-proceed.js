@@ -1,9 +1,11 @@
 /**
  * Created by machengcheng on 16/12/6.
  */
-var taskId = Common.cookie.getCookie('taskId');
+//var taskId = Common.cookie.getCookie('taskId');
+var taskId = 1;
 function CourseNoProceed () {
-    this.params = '';
+    this.params = {};
+    this.init();
 }
 CourseNoProceed.prototype = {
     constructor: CourseNoProceed,
@@ -62,13 +64,16 @@ CourseNoProceed.prototype = {
     },
     //更新不连堂信息
     updateLinkList: function () {
-        Common.ajaxFun('/disSelectRule/addOrUpdateGapRule/' + taskId, 'POST', {
-            '1-2节': '0',
-            '2-3节': '1'
-        }, function (res) {
+        var that = this;
+        Common.ajaxFun('/disSelectRule/addOrUpdateGapRule/' + taskId, 'POST', that.params, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
-
+                if (parseInt(data) == 1) {
+                    layer.msg("保存成功", {time: 1000});
+                    history.go(0);
+                }
+            } else {
+                layer.msg(data, {time: 1000});
             }
         }, function (res) {
             layer.msg("出错了", {time: 1000});
@@ -81,26 +86,18 @@ $(function () {
     var courseNoProceed = new CourseNoProceed();
 
     $(document).on('click', '#btn-save-link', function () {
-        var params = '';
-        var nodeCount = $('.course-no-proceed-list li').length;
+        courseNoProceed.params = {};
         $('.course-no-proceed-list li').each(function (i) {
             var tempChk = $(this).find('input[type="checkbox"]');
-            if (i != (nodeCount - 1)) {
-                if (tempChk.prop('checked')) {
-                    params += tempChk.next().text() + ', ' + 1 + ','
-                } else {
-                    params += tempChk.next().text() + ', ' + 0 + ','
-                }
+            var tempKey = tempChk.next().text();
+                //tempKey = '"' + curKey + '"';
+            if (tempChk.prop('checked')) {
+                courseNoProceed.params[tempKey] = "1";
             } else {
-                if (tempChk.prop('checked')) {
-                    params += tempChk.next().text() + ', ' + 1
-                } else {
-                    params += tempChk.next().text() + ', ' + 0
-                }
+                courseNoProceed.params[tempKey] = "0";
             }
         });
-        console.info(courseNoProceed.params);
-        //courseNoProceed.updateLinkList();
+        courseNoProceed.updateLinkList();
     });
 
 });
