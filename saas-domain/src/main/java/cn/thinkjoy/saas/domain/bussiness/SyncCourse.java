@@ -1,9 +1,11 @@
 package cn.thinkjoy.saas.domain.bussiness;
 
+import java.io.Serializable;
+
 /**
  * Created by douzy on 16/12/8.
  */
-public class SyncCourse {
+public class SyncCourse implements Serializable {
     private String major;
     private String stuClass;
     private String grade;

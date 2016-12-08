@@ -79,4 +79,21 @@
             </if>
         </where>
     </select>
+    <select id="selectCourseGroup" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.domain.bussiness.SyncCourse">
+        select major,grade from (select student_check_major1 as major,student_grade as grade from ${tableName} group by grade,major
+        union all
+        select student_check_major2 as major,student_grade as grade from ${tableName} group by grade,major
+        union all
+        select student_check_major3 as major,student_grade as grade from ${tableName} group by grade,major
+        )t group by major,grade
+    </select>
+    <select id="selectClassGroup" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.domain.bussiness.SyncClass">
+        select majorClass,grade from (
+        select student_check_major_class1 as majorClass ,student_grade as grade from ${tableName} group by grade,student_check_major_class1
+        union all
+        select student_check_major_class2 as majorClass ,student_grade as grade from ${tableName} group by grade,student_check_major_class2
+        union all
+        select student_check_major_class3 as majorClass ,student_grade as grade from ${tableName} group by grade,student_check_major_class3
+        )t group by majorClass,grade
+    </select>
 </mapper>

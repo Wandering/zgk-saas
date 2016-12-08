@@ -2,17 +2,12 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 
 import cn.thinkjoy.common.dao.IBaseDAO;
 import cn.thinkjoy.common.service.impl.AbstractPageService;
-import cn.thinkjoy.saas.dao.IConfigurationDAO;
-import cn.thinkjoy.saas.dao.ITenantConfigInstanceDAO;
-import cn.thinkjoy.saas.dao.ITenantDAO;
-import cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO;
-import cn.thinkjoy.saas.dao.bussiness.IEXJwTeacherBaseInfoDAO;
-import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
-import cn.thinkjoy.saas.domain.Configuration;
-import cn.thinkjoy.saas.domain.JwTeacherBaseInfo;
-import cn.thinkjoy.saas.domain.Tenant;
-import cn.thinkjoy.saas.domain.TenantConfigInstance;
+import cn.thinkjoy.saas.dao.*;
+import cn.thinkjoy.saas.dao.bussiness.*;
+import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.domain.bussiness.ClassView;
+import cn.thinkjoy.saas.domain.bussiness.SyncClass;
+import cn.thinkjoy.saas.domain.bussiness.SyncCourse;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import cn.thinkjoy.saas.service.common.ConvertUtil;
@@ -48,7 +43,18 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
     @Resource
     IEXJwTeacherBaseInfoDAO iexJwTeacherBaseInfoDAO;
     @Resource
+    IJwTeacherBaseInfoDAO iJwTeacherBaseInfoDAO;
+    @Resource
     IEXTeantCustomDAO iexTeantCustomDAO;
+    @Resource
+    IEXCourseBaseInfoDAO iexCourseBaseInfoDAO;
+    @Resource
+    IJwCourseBaseInfoDAO iJwCourseBaseInfoDAO;
+
+    @Resource
+    IEXClassBaseInfoDAO iexClassBaseInfoDAO;
+    @Resource
+    IJwClassBaseInfoDAO jwClassBaseInfoDAO;
 
 
     @Override
@@ -496,8 +502,11 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
         Integer reuslt = 0;
 
-        if (excelValid)
+        if (excelValid)                {
             reuslt = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
+            if(reuslt>0)
+                syncProcedureData(type,tnId);
+        }
 
         LOGGER.info("===========解析excel E===========");
         return (reuslt > 0 ? true : false);
@@ -511,12 +520,16 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
     @Override
     public void syncProcedureData(String type,Integer tnId) {
         String tableName = ParamsUtils.combinationTableName(type, tnId);
+        Map map=new HashMap();
+        map.put("tableName",tableName);
+        List<LinkedHashMap<String,Object>> linkedHashMaps=iexTeantCustomDAO.getTenantCustom(map);
+
+        Map removeMap=new HashMap();
+        removeMap.put("tnId",tnId);
         switch (type){
             case "teacher":
-                Map map=new HashMap();
-                map.put("tableName",tableName);
-                List<LinkedHashMap<String,Object>> linkedHashMaps=iexTeantCustomDAO.getTenantCustom(map);
                 if(linkedHashMaps!=null&& linkedHashMaps.size()>0) {
+
                     List<JwTeacherBaseInfo> jwTeacherBaseInfos=new ArrayList<>();
                     for(LinkedHashMap<String,Object> linkedHashMap:linkedHashMaps) {
                         JwTeacherBaseInfo jwTeacherBaseInfo = new JwTeacherBaseInfo();
@@ -527,11 +540,41 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                         jwTeacherBaseInfo.setTeacherCourse(linkedHashMap.get("teacher_major_type").toString());
                         jwTeacherBaseInfos.add(jwTeacherBaseInfo);
                     }
+                    iJwTeacherBaseInfoDAO.deleteByCondition(removeMap);
                     iexJwTeacherBaseInfoDAO.syncTeacherInfo(jwTeacherBaseInfos);
                 }
                 break;
             case "student":
-
+                if(linkedHashMaps!=null&& linkedHashMaps.size()>0) {
+                   List<SyncCourse> syncCourses = iexTeantCustomDAO.selectCourseGroup(map);
+                    if(syncCourses!=null) {
+                        List<JwCourseBaseInfo> jwCourseBaseInfos=new ArrayList<>();
+                        for(SyncCourse syncCourse:syncCourses){
+                            JwCourseBaseInfo jwCourseBaseInfo=new JwCourseBaseInfo();
+                            jwCourseBaseInfo.setTnId(tnId);
+                            jwCourseBaseInfo.setCourseName(syncCourse.getMajor());
+                            jwCourseBaseInfo.setGrade(ConvertUtil.converGrade(syncCourse.getGrade()).toString());
+                            jwCourseBaseInfo.setCourseType(ConvertUtil.converClassType(syncCourse.getMajor()));
+                            jwCourseBaseInfos.add(jwCourseBaseInfo);
+                        }
+                        iJwCourseBaseInfoDAO.deleteByCondition(removeMap);
+                        iexCourseBaseInfoDAO.syncCourseInfo(jwCourseBaseInfos);
+                    }
+                    List<SyncClass> syncClasses=iexTeantCustomDAO.selectClassGroup(map);
+                    if(syncClasses!=null) {
+                        List<JwClassBaseInfo> jwClassBaseInfos = new ArrayList<>();
+                        for (SyncClass syncClass : syncClasses) {
+                            JwClassBaseInfo jwClassBaseInfo = new JwClassBaseInfo();
+                            jwClassBaseInfo.setTnId(tnId);
+                            jwClassBaseInfo.setClassName(syncClass.getMajorClass());
+                            jwClassBaseInfo.setClassType(1);
+                            jwClassBaseInfo.setGrade(ConvertUtil.converGrade(syncClass.getGrade()));
+                            jwClassBaseInfos.add(jwClassBaseInfo);
+                        }
+                        jwClassBaseInfoDAO.deleteByCondition(removeMap);
+                        iexClassBaseInfoDAO.syncClassInfo(jwClassBaseInfos);
+                    }
+                }
                 break;
         }
     }
