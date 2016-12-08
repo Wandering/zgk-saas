@@ -12,7 +12,7 @@ ArrangeCourse.prototype = {
 
     },
     //获取不排课信息
-    getNoArrangeCourseInfo: function () {
+    getNoArrangeCourseInfo: function (type, id) {
         Common.ajaxFun('/disSelectRule/getRule/' + taskId + '/' + type + '/' + id + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
 

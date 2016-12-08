@@ -29,6 +29,12 @@ public class JwCourseGapRuleServiceImpl extends AbstractPageService<IBaseDAO<JwC
         return jwCourseGapRuleDAO;
     }
 
+    @Override
+    public List<Map<String, Object>> queryLinkList(Map<String, String> map)
+    {
+        return jwCourseGapRuleDAO.queryLinkList(map);
+    }
+
 //    @Override
 //    public void insert(BaseDomain entity) {
 //

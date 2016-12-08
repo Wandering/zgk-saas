@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.IEXClassBaseInfoDAO">
+    <insert id="syncClassInfo" useGeneratedKeys="true" parameterType="java.util.List">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        insert into saas_jw_class_base_info(
+        tn_id,
+        class_name,
+        class_type,
+        grade)
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.tnId},#{item.className},#{item.classType},#{item.grade})
+        </foreach>
+    </insert>
+</mapper>
