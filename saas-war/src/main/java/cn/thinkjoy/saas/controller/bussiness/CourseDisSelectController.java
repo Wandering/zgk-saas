@@ -209,8 +209,8 @@ public class CourseDisSelectController
         if(null == rule)
         {
             rule = new JwCourseGapRule();
-            rule.setTaskId(taskIdValue);
             rule.setRule(rules);
+            rule.setTaskId(taskIdValue);
             rule.setCreateDate(System.currentTimeMillis());
             result = jwCourseGapRuleService.insert(rule);
         }
