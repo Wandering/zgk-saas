@@ -72,10 +72,10 @@
                                 <thead>
                                     <tr>
                                         <th class="center" width="50px">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
+                                            <%--<label>--%>
+                                                <%--<input type="checkbox" class="ace" />--%>
+                                                <%--<span class="lbl"></span>--%>
+                                            <%--</label>--%>
                                         </th>
                                         <th class="center" width="80px">序号</th>
                                         <th class="center" width="250px">课程名称</th>
@@ -104,7 +104,7 @@
         </td>
         <td class="center">{{addOne @index}}</td>
         <td class="center">{{courseName}}</td>
-        <td class="center">{{time}}节/周</td>
+        <td class="center">{{times time}}</td>
         </td>
     </tr>
     {{/each}}

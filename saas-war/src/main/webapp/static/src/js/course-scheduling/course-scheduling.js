@@ -189,6 +189,13 @@ var schedule = new Schedule();
 $(function () {
 
 
+    var scheduleListlen =  $('#schedule-list tr').length;
+    console.log(scheduleListlen)
+    if(scheduleListlen=='0'){
+        $('#updateTask-btn,#deleteTask-btn,#schedule-table').hide();
+    }else{
+        $('#updateTask-btn,#deleteTask-btn,#schedule-table').show();
+    }
 
     // 新建任务
     $(document).on('click', '#addTask-btn', function () {
