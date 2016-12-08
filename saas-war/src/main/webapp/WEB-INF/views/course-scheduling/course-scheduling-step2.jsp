@@ -66,9 +66,9 @@
                         </ul>
                         <div class="rule-content">
                             <select id="no-course-time">
-                                <option value="1">班级不排课时间</option>
-                                <option value="2">教师不排课时间</option>
-                                <option value="3">课程不排课时间</option>
+                                <option value="class">班级不排课时间</option>
+                                <option value="teacher">教师不排课时间</option>
+                                <option value="course">课程不排课时间</option>
                             </select>
                             <div class="no-course-time">
                                 <div class="class-no-course">
@@ -240,6 +240,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <button type="button" class="btn-save-rule" id="btn-save-assign">保存</button>
                         </div>
                     </div>
                 </div>

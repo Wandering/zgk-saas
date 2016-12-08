@@ -37,7 +37,15 @@ public enum ErrorCode {
 
     ROLE_HAS_EXIST("0000012","同名的角色已经存在"),
 
-    TASK_NOT_EXIST("0000013","任务不存在");
+    TASK_NOT_EXIST("0000013","任务不存在"),
+
+    TEACH_DATE_ERROR("0000014","教学时间信息未填写"),
+
+    COURSE_INFO_ERROR("0000015","课程信息未填写"),
+
+    TEACHER_INFO_ERROR("0000016","教师信息未填写"),
+
+    TEACHER_INFO_NOT_PERFECT("0000017","教师信息未填写完善");
 
     private final String code;
 

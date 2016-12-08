@@ -5,8 +5,7 @@ import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
-import cn.thinkjoy.saas.domain.JwCourse;
-import cn.thinkjoy.saas.domain.JwScheduleTask;
+import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.JwScheduleTaskDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
@@ -14,15 +13,15 @@ import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.enums.GradeEnum;
 import cn.thinkjoy.saas.enums.StatusEnum;
 import cn.thinkjoy.saas.enums.TermEnum;
-import cn.thinkjoy.saas.service.IJwCourseService;
-import cn.thinkjoy.saas.service.IJwScheduleTaskService;
-import cn.thinkjoy.saas.service.IJwTeacherService;
+import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.EXIConfigurationService;
 import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,6 +45,8 @@ import java.util.Map;
 @RequestMapping("/scheduleTask")
 public class ScheduleTaskController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ScheduleTaskController.class);
+
     @Autowired
     IJwScheduleTaskService jwScheduleTaskService;
 
@@ -63,6 +64,13 @@ public class ScheduleTaskController {
 
     @Autowired
     private EXIConfigurationService exiConfigurationService;
+
+    @Autowired
+    private IJwTeachDateService jwTeachDateService;
+
+    @Autowired
+    private IJwCourseBaseInfoService jwCourseBaseInfoService;
+
     /**
      * 新建排课任务
      * @return
@@ -205,7 +213,7 @@ public class ScheduleTaskController {
         List<String> emptyColumns = new ArrayList<>();
         while (iterator.hasNext()){
             String key = iterator.next();
-            if (!"0".equals(map.get(key))) {
+            if ("0".equals(map.get(key))) {
                 emptyColumns.add(key);
             }
         }
@@ -260,16 +268,17 @@ public class ScheduleTaskController {
     @RequestMapping(value = "/saveOrUpdateCourseTime",method = RequestMethod.POST)
     public Map saveOrUpdateCourseTime(@RequestParam int taskId,@RequestParam int courseId,@RequestParam String time){
 
-        if(StringUtils.isEmpty(time)){
-            ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
-        }
-
         int chour = 0;
-        String [] arr = time.split("\\+");
-        if(arr.length == 1){
-            chour = Integer.valueOf(arr[0]);
-        }else if (arr.length == 2){
-            chour = Integer.valueOf(arr[0]) + 2*Integer.valueOf(arr[1]);
+        try {
+            String [] arr = time.split("\\+");
+            if(arr.length == 1){
+                chour = Integer.valueOf(arr[0]);
+            }else if (arr.length == 2){
+                chour = Integer.valueOf(arr[0]) + 2*Integer.valueOf(arr[1]);
+            }
+        }catch (Exception e){
+            logger.error("课时输入错误 : time = "+time,e);
+            ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
         }
 
         Map<String,Object> paramMap = Maps.newHashMap();
@@ -338,6 +347,49 @@ public class ScheduleTaskController {
         paramMap.put("teacher_id",teacherId);
         paramMap.put("task_id",taskId);
         jwTeacherService.deleteByCondition(paramMap);
+
+        return Maps.newHashMap();
+    }
+
+    @ResponseBody
+    @ApiDesc(value = "根据任务ID检测基础信息是否完善",owner = "gryang")
+    @RequestMapping(value = "/checkInfoIsPerfect",method = RequestMethod.GET)
+    public Map checkInfoIsPerfect(@RequestParam int taskId){
+
+        // 检测教学时间是否填写
+        List<JwTeachDate> dates = jwTeachDateService.findList("task_id",taskId);
+        if(dates.size() == 0){
+            ExceptionUtil.throwException(ErrorCode.TEACH_DATE_ERROR);
+        }
+
+        // 检测课程信息是否填写
+        List<JwCourse> courses = jwCourseService.findList("task_id",taskId);
+        if(courses.size() == 0){
+            ExceptionUtil.throwException(ErrorCode.COURSE_INFO_ERROR);
+        }
+
+        // 检测教师信息是否填写
+        List<JwTeacher> teachers = jwTeacherService.findList("task_id",taskId);
+        if(teachers.size() == 0){
+            ExceptionUtil.throwException(ErrorCode.TEACHER_INFO_ERROR);
+        }
+
+        // 检测教师信息是否填写完整(给所有课程是否已经设置教师)
+        for(JwCourse course : courses){
+            JwCourseBaseInfo info = (JwCourseBaseInfo) jwCourseBaseInfoService.fetch(course.getCourseId());
+
+            boolean flag = false;
+            for(JwTeacher teacher : teachers){
+                if(teacher.getCourse().equals(info.getCourseName())){
+                    flag = true;
+                    continue;
+                }
+            }
+
+            if(!flag){
+                ExceptionUtil.throwException(ErrorCode.TEACHER_INFO_NOT_PERFECT);
+            }
+        }
 
         return Maps.newHashMap();
     }
