@@ -76,4 +76,11 @@ public interface IEXTenantCustomService {
      * @return
      */
     List<SyncClass> selectClassGroup(Map map);
+
+    /**
+     * 同步走读班基础信息
+     * @param map
+     * @return
+     */
+    List<SyncClass> selectExecutiveClassGroup(Map map);
 }

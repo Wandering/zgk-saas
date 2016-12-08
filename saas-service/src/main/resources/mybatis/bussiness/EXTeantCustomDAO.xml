@@ -96,4 +96,7 @@
         select student_check_major_class3 as majorClass ,student_grade as grade from ${tableName} group by grade,student_check_major_class3
         )t group by majorClass,grade
     </select>
+    <select id="selectExecutiveClassGroup" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.domain.bussiness.SyncClass">
+        select student_class as majorClass ,student_grade as grade from ${tableName} group by grade,student_class
+    </select>
 </mapper>

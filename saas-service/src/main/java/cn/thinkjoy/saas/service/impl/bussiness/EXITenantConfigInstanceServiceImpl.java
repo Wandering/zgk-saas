@@ -546,11 +546,11 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                 break;
             case "student":
                 if(linkedHashMaps!=null&& linkedHashMaps.size()>0) {
-                   List<SyncCourse> syncCourses = iexTeantCustomDAO.selectCourseGroup(map);
-                    if(syncCourses!=null) {
-                        List<JwCourseBaseInfo> jwCourseBaseInfos=new ArrayList<>();
-                        for(SyncCourse syncCourse:syncCourses){
-                            JwCourseBaseInfo jwCourseBaseInfo=new JwCourseBaseInfo();
+                    List<SyncCourse> syncCourses = iexTeantCustomDAO.selectCourseGroup(map);
+                    if (syncCourses != null) {
+                        List<JwCourseBaseInfo> jwCourseBaseInfos = new ArrayList<>();
+                        for (SyncCourse syncCourse : syncCourses) {
+                            JwCourseBaseInfo jwCourseBaseInfo = new JwCourseBaseInfo();
                             jwCourseBaseInfo.setTnId(tnId);
                             jwCourseBaseInfo.setCourseName(syncCourse.getMajor());
                             jwCourseBaseInfo.setGrade(ConvertUtil.converGrade(syncCourse.getGrade()).toString());
@@ -560,20 +560,41 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                         iJwCourseBaseInfoDAO.deleteByCondition(removeMap);
                         iexCourseBaseInfoDAO.syncCourseInfo(jwCourseBaseInfos);
                     }
-                    List<SyncClass> syncClasses=iexTeantCustomDAO.selectClassGroup(map);
-                    if(syncClasses!=null) {
-                        List<JwClassBaseInfo> jwClassBaseInfos = new ArrayList<>();
+                    List<SyncClass> syncClasses = iexTeantCustomDAO.selectClassGroup(map);
+                    List<JwClassBaseInfo> dayJwClassBaseInfos = new ArrayList<>();
+                    if (syncClasses != null) {
+
                         for (SyncClass syncClass : syncClasses) {
+                            JwClassBaseInfo jwClassBaseInfo = new JwClassBaseInfo();
+                            jwClassBaseInfo.setTnId(tnId);
+                            jwClassBaseInfo.setClassName(syncClass.getMajorClass());
+                            jwClassBaseInfo.setClassType(2);
+                            jwClassBaseInfo.setGrade(ConvertUtil.converGrade(syncClass.getGrade()));
+                            dayJwClassBaseInfos.add(jwClassBaseInfo);
+                        }
+
+                    }
+                    List<SyncClass> syncExecutiveClasses = iexTeantCustomDAO.selectExecutiveClassGroup(map);
+                    List<JwClassBaseInfo> executiveJwClassBaseInfos = new ArrayList<>();
+                    if (syncExecutiveClasses != null) {
+                        for (SyncClass syncClass : syncExecutiveClasses) {
                             JwClassBaseInfo jwClassBaseInfo = new JwClassBaseInfo();
                             jwClassBaseInfo.setTnId(tnId);
                             jwClassBaseInfo.setClassName(syncClass.getMajorClass());
                             jwClassBaseInfo.setClassType(1);
                             jwClassBaseInfo.setGrade(ConvertUtil.converGrade(syncClass.getGrade()));
-                            jwClassBaseInfos.add(jwClassBaseInfo);
+                            executiveJwClassBaseInfos.add(jwClassBaseInfo);
                         }
-                        jwClassBaseInfoDAO.deleteByCondition(removeMap);
-                        iexClassBaseInfoDAO.syncClassInfo(jwClassBaseInfos);
                     }
+                    if (dayJwClassBaseInfos != null || executiveJwClassBaseInfos != null)
+                        jwClassBaseInfoDAO.deleteByCondition(removeMap);
+
+                    if (dayJwClassBaseInfos != null && dayJwClassBaseInfos.size() > 0)
+                        iexClassBaseInfoDAO.syncClassInfo(dayJwClassBaseInfos);
+
+                    if (executiveJwClassBaseInfos != null && executiveJwClassBaseInfos.size() > 0)
+                        iexClassBaseInfoDAO.syncClassInfo(executiveJwClassBaseInfos);
+
                 }
                 break;
         }
