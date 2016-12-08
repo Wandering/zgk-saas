@@ -4,9 +4,9 @@ package cn.thinkjoy.saas.enums;
  * Created by yangyongping on 2016/12/6.
  */
 public enum GradeEnum {
-    GAOYI(1,"高一"),
-    GAOER(2,"高二"),
-    GAOSAN(3,"高三"),
+    GAOYI(1,"高一年级"),
+    GAOER(2,"高二年级"),
+    GAOSAN(3,"高三年级"),
     ;
     private final Integer code;
     private final String gradeName;
