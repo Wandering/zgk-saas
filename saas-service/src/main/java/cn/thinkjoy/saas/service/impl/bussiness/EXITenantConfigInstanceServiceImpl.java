@@ -6,12 +6,16 @@ import cn.thinkjoy.saas.dao.IConfigurationDAO;
 import cn.thinkjoy.saas.dao.ITenantConfigInstanceDAO;
 import cn.thinkjoy.saas.dao.ITenantDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO;
+import cn.thinkjoy.saas.dao.bussiness.IEXJwTeacherBaseInfoDAO;
+import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
 import cn.thinkjoy.saas.domain.Configuration;
+import cn.thinkjoy.saas.domain.JwTeacherBaseInfo;
 import cn.thinkjoy.saas.domain.Tenant;
 import cn.thinkjoy.saas.domain.TenantConfigInstance;
 import cn.thinkjoy.saas.domain.bussiness.ClassView;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
+import cn.thinkjoy.saas.service.common.ConvertUtil;
 import cn.thinkjoy.saas.service.common.EnumUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import cn.thinkjoy.saas.service.common.ReadExcel;
@@ -41,6 +45,11 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
     IConfigurationDAO iConfigurationDAO;
     @Resource
     ITenantDAO iTenantDAO;
+    @Resource
+    IEXJwTeacherBaseInfoDAO iexJwTeacherBaseInfoDAO;
+    @Resource
+    IEXTeantCustomDAO iexTeantCustomDAO;
+
 
     @Override
     public IBaseDAO<TenantConfigInstance> getDao() {
@@ -494,6 +503,38 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         return (reuslt > 0 ? true : false);
     }
 
+    /**
+     * 流程数据同步
+     * @param type
+     * @return
+     */
+    @Override
+    public void syncProcedureData(String type,Integer tnId) {
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+        switch (type){
+            case "teacher":
+                Map map=new HashMap();
+                map.put("tableName",tableName);
+                List<LinkedHashMap<String,Object>> linkedHashMaps=iexTeantCustomDAO.getTenantCustom(map);
+                if(linkedHashMaps!=null&& linkedHashMaps.size()>0) {
+                    List<JwTeacherBaseInfo> jwTeacherBaseInfos=new ArrayList<>();
+                    for(LinkedHashMap<String,Object> linkedHashMap:linkedHashMaps) {
+                        JwTeacherBaseInfo jwTeacherBaseInfo = new JwTeacherBaseInfo();
+                        jwTeacherBaseInfo.setTnId(tnId);
+                        jwTeacherBaseInfo.setGrade(ConvertUtil.converGrade(linkedHashMap.get("teacher_grade").toString()));
+                        jwTeacherBaseInfo.setTeacherName(linkedHashMap.get("teacher_name").toString());
+                        jwTeacherBaseInfo.setTeacherClass(linkedHashMap.get("teacher_class").toString());
+                        jwTeacherBaseInfo.setTeacherCourse(linkedHashMap.get("teacher_major_type").toString());
+                        jwTeacherBaseInfos.add(jwTeacherBaseInfo);
+                    }
+                    iexJwTeacherBaseInfoDAO.syncTeacherInfo(jwTeacherBaseInfos);
+                }
+                break;
+            case "student":
+
+                break;
+        }
+    }
     /**
      * 租户动态表名校验  -表级别校验  存在则删除
      * @param tableName 表名

@@ -56,7 +56,7 @@ Schedule.prototype = {
             if (res.rtnCode == "0000000") {
                 var resData = res.bizData;
                 $.each(resData, function (i, v) {
-                    grade.push('<option gradeV="'+ v['value'] +'" value="' + v['key'] + '">' + v['value'] + '</option>');
+                    grade.push('<option gradeV="' + v['value'] + '" value="' + v['key'] + '">' + v['value'] + '</option>');
                 });
             } else {
                 layer.msg(res.msg);
@@ -106,11 +106,11 @@ Schedule.prototype = {
         });
     },
     // 保存 更新
-    saveScheduleTask: function (id,scheduleName, grade, year, term) {
+    saveScheduleTask: function (id, scheduleName, grade, year, term) {
         var that = this;
-        if(id){
+        if (id) {
             Common.ajaxFun('/scheduleTask/updateScheduleTask.do', 'POST', {
-                'id':id,
+                'id': id,
                 'scheduleName': scheduleName,
                 'grade': grade,
                 'year': year,
@@ -126,7 +126,7 @@ Schedule.prototype = {
             }, function (res) {
                 layer.msg(res.msg);
             });
-        }else{
+        } else {
             Common.ajaxFun('/scheduleTask/saveScheduleTask.do', 'POST', {
                 'scheduleName': scheduleName,
                 'grade': grade,
@@ -146,7 +146,7 @@ Schedule.prototype = {
         }
     },
     // 删除任务
-    deleteScheduleTask:function(id){
+    deleteScheduleTask: function (id) {
         var that = this;
         Common.ajaxFun('/scheduleTask/deleteScheduleTask.do', 'GET', {
             'id': id
@@ -155,7 +155,7 @@ Schedule.prototype = {
                 layer.closeAll();
                 layer.msg('删除成功!');
                 that.queryScheduleTask();
-            }else{
+            } else {
                 layer.msg(res.msg);
             }
         }, function (res) {
@@ -163,16 +163,19 @@ Schedule.prototype = {
         });
     },
     // 查询排课基础信息完整性
-    checkTaskBaseInfo:function(taskId){
+    checkTaskBaseInfo: function (taskId) {
         var that = this;
         Common.ajaxFun('/scheduleTask/checkTaskBaseInfo.do', 'GET', {
             'taskId': taskId
         }, function (res) {
-            if (res.rtnCode == "0000000" && res.bizData==true) {
+            if (res.rtnCode == "0000000" && res.bizData == true) {
                 Common.cookie.setCookie('taskId', taskId);
-                window.location.href='/course-scheduling-step1';
-            }else if(res.rtnCode == "0500001"){
-                layer.msg(res.msg);
+                window.location.href = '/course-scheduling-step1';
+            } else if (res.rtnCode == "0500001") {
+                layer.open({
+                    title:'温馨提示',
+                    content: res.msg
+                });
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -215,13 +218,13 @@ $(function () {
             layer.tips('请选择学期!', '#term-list');
             return false;
         }
-        schedule.saveScheduleTask(id,taskName, gradeV, termYear, termV);
+        schedule.saveScheduleTask(id, taskName, gradeV, termYear, termV);
     });
 
     // 修改新建任务
     $(document).on('click', '#updateTask-btn', function () {
         var checkboxLen = $('#schedule-list input:checked').length;
-        var scheduleV= $('#schedule-list input:checked')
+        var scheduleV = $('#schedule-list input:checked')
         if (checkboxLen == 0) {
             layer.tips('选择一项', $(this));
             return false;
@@ -237,10 +240,10 @@ $(function () {
         var year = scheduleV.attr('year');
         var termname = scheduleV.attr('termname');
         $('#task-name').val(schedulename);
-        $('#grade-list').children('option[gradeV="'+ gradename +'"]').attr('selected','selected');
+        $('#grade-list').children('option[gradeV="' + gradename + '"]').attr('selected', 'selected');
         $('#term-year').val(year);
-        $('#term-list').children('option[termV="'+ termname +'"]').attr('selected','selected');
-        $('#save-schedule-btn').attr('dataId',id);
+        $('#term-list').children('option[termV="' + termname + '"]').attr('selected', 'selected');
+        $('#save-schedule-btn').attr('dataId', id);
     });
     // 删除
     $('#deleteTask-btn').on('click', function () {
@@ -263,7 +266,7 @@ $(function () {
         });
     });
     // 跳转进入流程设置,检测完整性
-    $('body').on('click','.start-schedule-btn',function(){
+    $('body').on('click', '.start-schedule-btn', function () {
         var id = $(this).parent().attr('dataid');
         schedule.checkTaskBaseInfo(id);
     });

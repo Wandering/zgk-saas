@@ -144,7 +144,6 @@ public class ScheduleTaskController {
     @RequestMapping("/fetchScheduleTask")
     public JwScheduleTask fetchScheduleTask(@RequestParam Integer id){
         //参数校验
-         new JwScheduleTask();
         Map<String,Object> map = Maps.newHashMap();
         map.put("id",id);
         map.put("delStatus",StatusEnum.Y.getCode());
@@ -157,16 +156,16 @@ public class ScheduleTaskController {
     public List<Map<String,Object>> queryGradeInfo(){
         List<Map<String,Object>> list = new ArrayList();
         Map<String,Object> map = Maps.newHashMap();
-        map.put("key","1");
-        map.put("value","高一");
+        map.put("key",GradeEnum.GAOYI.getCode());
+        map.put("value",GradeEnum.GAOYI.getGradeName());
         list.add(map);
         map = Maps.newHashMap();
-        map.put("key","2");
-        map.put("value","高二");
+        map.put("key",GradeEnum.GAOER.getCode());
+        map.put("value",GradeEnum.GAOER.getGradeName());
         list.add(map);
         map = Maps.newHashMap();
-        map.put("key","3");
-        map.put("value","高三");
+        map.put("key",GradeEnum.GAOSAN.getCode());
+        map.put("value",GradeEnum.GAOSAN.getGradeName());
         list.add(map);
         return list;
     }
@@ -230,6 +229,8 @@ public class ScheduleTaskController {
         }
         return true;
     }
+
+
 
     private List<JwScheduleTaskDto> JwScheduleTask2Dto(List<JwScheduleTask> jwScheduleTasks){
         List<JwScheduleTaskDto> list = new ArrayList<>();
