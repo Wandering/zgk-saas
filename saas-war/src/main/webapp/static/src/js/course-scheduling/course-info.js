@@ -44,34 +44,36 @@ CourseInfo.prototype = {
                 'taskId': taskId
             },
             function (res) {
-                //var res = {
-                //    "bizData": [
-                //        {
-                //            "courseId": "课程ID",
-                //            "courseName": "课程名",
-                //            "time": "课时"
-                //        },
-                //        {
-                //            "courseId": "课程ID",
-                //            "courseName": "课程名",
-                //            "time": "课时"
-                //        },
-                //        {
-                //            "courseId": "课程ID",
-                //            "courseName": "课程名",
-                //            "time": "课时"
-                //        }
-                //    ],
-                //    "rtnCode": "0000000",
-                //    "ts": 1480990693884
-                //};
+                var res = {
+                    "bizData": [
+                        {
+                            "courseId": "课程ID",
+                            "courseName": "课程名",
+                            "time": "课时"
+                        },
+                        {
+                            "courseId": "课程ID",
+                            "courseName": "课程名",
+                            "time": "课时"
+                        },
+                        {
+                            "courseId": "课程ID",
+                            "courseName": "课程名",
+                            "time": "课时"
+                        }
+                    ],
+                    "rtnCode": "0000000",
+                    "ts": 1480990693884
+                };
                 if (res.rtnCode == "0000000") {
-                    $('#teacher-list').html('');
-                    var myTemplate = Handlebars.compile($("#teacher-template").html());
-                    Handlebars.registerHelper("addOne", function (index, options) {
-                        return parseInt(index) + 1;
-                    });
-                    $('#teacher-list').html(myTemplate(res));
+                    if(res.bizData.length>0){
+                        $('#teacher-list').html('');
+                        var myTemplate = Handlebars.compile($("#teacher-template").html());
+                        Handlebars.registerHelper("addOne", function (index, options) {
+                            return parseInt(index) + 1;
+                        });
+                        $('#teacher-list').html(myTemplate(res));
+                    }
                 }
             }, function (res) {
                 layer.msg(res.msg);
