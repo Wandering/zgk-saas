@@ -48,13 +48,19 @@ public interface IEXTenantCustomService {
      * @param tnId 租户ID
      * @return
      */
-    List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId);
+    List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId,String g,Integer s,Integer r);
 
-
+    public Integer getTenantCustomCount(String type,Integer tnId,String g);
     /**
      * excel内添加select
      * @param columnNames
      * @return
      */
     List<Map<Integer,Object>> isExcelAddSelect(Integer tnId ,String[] columnNames);
+
+    /**
+     * 判断表中列是否存在数据
+     * @return
+     */
+    Map<String,Object> existDataCount(Map map);
 }

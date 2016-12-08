@@ -200,7 +200,7 @@ var Common = {
             //menus.push('<span class="menu-text">首页</span>');
             //menus.push('</a>');
             //menus.push('</li>');
-            var icons = ['icon-desktop','icon-edit','icon-list-alt','icon-dashboard','icon-tag','icon-tag','icon-tasks','icon-group']
+            var icons = ['icon-flag','icon-lightbulb','icon-globe','icon-book','icon-dashboard','icon-credit-card','icon-tasks','icon-cog']
             $.each(siderMenu,function(i,v){
 
                 if(pathName==v.meunUrl){

@@ -29,6 +29,25 @@ public class ConvertUtil {
     }
 
     /**
+     * 年级转换
+     * @return
+     */
+    public static Integer converGrade(String grade) {
+        Integer g = 0;
+        switch (grade) {
+            case "高一年级":
+                g = 1;
+                break;
+            case "高二年级":
+                g = 2;
+                break;
+            case "高三年级":
+                g = 3;
+                break;
+        }
+        return g;
+    }
+    /**
      * 重新组装资源菜单
      *
      * @param resources

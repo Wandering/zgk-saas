@@ -1,6 +1,6 @@
 var tnId = Common.cookie.getCookie('tnId');
 
-//Common.flowSteps();
+Common.flowSteps();
 
 
 function SetingProcess5() {
@@ -18,7 +18,7 @@ SetingProcess5.prototype = {
         }
     },
     initTeacher:function(){
-        var initTeacherBtn = '<div class="initClassBtn"><button class="btn btn-info" id="initBtn">初始化班级</button></div>';
+        var initTeacherBtn = '<div class="initClassBtn"><button class="btn btn-info" id="initBtn">初始化教师</button></div>';
         layer.open({
             type: 1,
             title: "请初始化教师",
@@ -62,7 +62,7 @@ SetingProcess5.prototype = {
             }
         }, function (res) {
             layer.msg(res.msg);
-        });
+        },true);
     },
     initClassItem: function () {
         var name = {};
@@ -288,6 +288,7 @@ $(function () {
                 if (res.rtnCode == "0000000") {
                     if (res.bizData.result == 5) {
                         layer.msg('请完成该流程再开始SAAS!');
+                        window.location.href='/course-guide'
                     }else if(res.bizData.result == 0){
                         window.location.href='/course-guide'
                     }
@@ -331,8 +332,8 @@ jQuery(function () {
         // 只允许选择文件，可选。
         accept: {
             title: 'excel',
-            extensions: 'xls',
-            mimeTypes: 'application/vnd.ms-excel'
+            extensions: 'xlsx,xls',
+            mimeTypes: '.xlsx,.xls'
         },
         fileVal: 'inputFile',
         duplicate: new Date()
