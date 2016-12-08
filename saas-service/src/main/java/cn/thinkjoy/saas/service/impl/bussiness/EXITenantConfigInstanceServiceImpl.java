@@ -546,6 +546,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                 break;
             case "student":
                 if(linkedHashMaps!=null&& linkedHashMaps.size()>0) {
+                    //同步课程
                     List<SyncCourse> syncCourses = iexTeantCustomDAO.selectCourseGroup(map);
                     if (syncCourses != null) {
                         List<JwCourseBaseInfo> jwCourseBaseInfos = new ArrayList<>();
@@ -562,6 +563,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                     }
                     List<SyncClass> syncClasses = iexTeantCustomDAO.selectClassGroup(map);
                     List<JwClassBaseInfo> dayJwClassBaseInfos = new ArrayList<>();
+                    //同步走读、行政班级
                     if (syncClasses != null) {
 
                         for (SyncClass syncClass : syncClasses) {
