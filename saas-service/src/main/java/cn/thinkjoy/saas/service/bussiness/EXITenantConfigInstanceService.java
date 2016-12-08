@@ -145,6 +145,8 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
 
     public Configuration queryConfigurationOne(Map map);
 
+    public void syncProcedureData(String type,Integer tnId);
+
     /**
      * 是否存在当前列
      * @param map
