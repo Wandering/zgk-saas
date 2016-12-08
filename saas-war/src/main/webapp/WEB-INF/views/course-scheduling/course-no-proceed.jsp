@@ -65,31 +65,33 @@
                             </li>
                         </ul>
                         <div class="rule-content">
-                            <div class="item-title">已设连堂科目</div>
-                            <table class="proceed-course-table" cellpadding="0" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>科目</th>
-                                        <th>课时</th>
-                                        <th>连堂数</th>
-                                        <th>单堂数</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>语文</td>
-                                        <td>6</td>
-                                        <td>1</td>
-                                        <td>4</td>
-                                    </tr>
-                                    <tr>
-                                        <td>数学</td>
-                                        <td>5</td>
-                                        <td>1</td>
-                                        <td>3</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div id="link-subjects">
+                                <div class="item-title">已设连堂科目</div>
+                                <table class="proceed-course-table" cellpadding="0" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>科目</th>
+                                            <th>课时</th>
+                                            <th>连堂数</th>
+                                            <th>单堂数</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="link-list-data">
+                                        <%--<tr>--%>
+                                        <%--<td>语文</td>--%>
+                                        <%--<td>6</td>--%>
+                                        <%--<td>1</td>--%>
+                                        <%--<td>4</td>--%>
+                                        <%--</tr>--%>
+                                        <%--<tr>--%>
+                                        <%--<td>数学</td>--%>
+                                        <%--<td>5</td>--%>
+                                        <%--<td>1</td>--%>
+                                        <%--<td>3</td>--%>
+                                        <%--</tr>--%>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div class="item-title">不可连堂节次</div>
                             <ul class="course-no-proceed-list">
                                 <%--<li>--%>
@@ -122,7 +124,7 @@
                                 <%--</li>--%>
                             </ul>
                             <div class="conflict-tips">您设置的不连堂节次与已设连堂科目课时冲突！</div>
-                            <button type="button" class="btn-save-rule" id="btn-save-rule">保存</button>
+                            <button type="button" class="btn-save-rule" id="btn-save-link">保存</button>
                         </div>
                     </div>
                 </div>

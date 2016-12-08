@@ -2,7 +2,7 @@
  * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
  *
  * Project Name: saas
- * $Id:  JwBaseConRule.java 2016-12-06 15:06:23 $
+ * $Id:  JwBaseDayRule.java 2016-12-08 17:19:57 $
  */
 
 
@@ -17,30 +17,30 @@ import cn.thinkjoy.common.domain.BaseDomain;
 
 import java.util.*;
 
-public class JwBaseConRule extends BaseDomain{
-    private Integer tnId;
+public class JwBaseDayRule extends BaseDomain{
     private Integer courseId;
+    private Integer tnId;
     private Integer teacherId;
     private Integer importantType;
-    private Integer dayConType;
-    private long createDate;
+    private Integer dayType;
+    private Long createDate;
     private Integer taskId;
 
-	public JwBaseConRule(){
+	public JwBaseDayRule(){
 	}
-    public void setTnId(Integer value) {
-        this.tnId = value;
-    }
-
-    public Integer getTnId() {
-        return this.tnId;
-    }
     public void setCourseId(Integer value) {
         this.courseId = value;
     }
 
     public Integer getCourseId() {
         return this.courseId;
+    }
+    public void setTnId(Integer value) {
+        this.tnId = value;
+    }
+
+    public Integer getTnId() {
+        return this.tnId;
     }
     public void setTeacherId(Integer value) {
         this.teacherId = value;
@@ -56,18 +56,18 @@ public class JwBaseConRule extends BaseDomain{
     public Integer getImportantType() {
         return this.importantType;
     }
-    public void setDayConType(Integer value) {
-        this.dayConType = value;
+    public void setDayType(Integer value) {
+        this.dayType = value;
     }
 
-    public Integer getDayConType() {
-        return this.dayConType;
+    public Integer getDayType() {
+        return this.dayType;
     }
-    public void setCreateDate(long value) {
+    public void setCreateDate(Long value) {
         this.createDate = value;
     }
 
-    public long getCreateDate() {
+    public Long getCreateDate() {
         return this.createDate;
     }
     public void setTaskId(Integer value) {
@@ -81,11 +81,11 @@ public class JwBaseConRule extends BaseDomain{
 	public String toString() {
 		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
 			.append("Id",getId())
-			.append("TnId",getTnId())
 			.append("CourseId",getCourseId())
+			.append("TnId",getTnId())
 			.append("TeacherId",getTeacherId())
 			.append("ImportantType",getImportantType())
-			.append("DayConType",getDayConType())
+			.append("DayType",getDayType())
 			.append("CreateDate",getCreateDate())
 			.append("TaskId",getTaskId())
 			.toString();
@@ -98,9 +98,9 @@ public class JwBaseConRule extends BaseDomain{
 	}
 	
 	public boolean equals(Object obj) {
-		if(obj instanceof JwBaseConRule == false) return false;
+		if(obj instanceof JwBaseDayRule == false) return false;
 		if(this == obj) return true;
-		JwBaseConRule other = (JwBaseConRule)obj;
+		JwBaseDayRule other = (JwBaseDayRule)obj;
 		return new EqualsBuilder()
 			.append(getId(),other.getId())
 			.isEquals();

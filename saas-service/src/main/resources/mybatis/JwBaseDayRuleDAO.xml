@@ -1,0 +1,482 @@
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IJwBaseDayRuleDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+<sql id="Base_Column_List">
+    id as id,
+    course_id as courseId,
+    tn_id as tnId,
+    teacher_id as teacherId,
+    important_type as importantType,
+    day_type as dayType,
+    create_date as createDate,
+    task_id as taskId
+        </sql>
+<insert id="insert" parameterType="JwBaseDayRule">
+INSERT INTO saas_jw_base_day_rule (
+course_id,
+tn_id,
+teacher_id,
+important_type,
+day_type,
+create_date,
+task_id
+        ) VALUES (
+#{courseId},
+#{tnId},
+#{teacherId},
+#{importantType},
+#{dayType},
+#{createDate},
+#{taskId}
+        )
+<selectKey resultType="java.lang.Long" keyProperty="id">
+SELECT LAST_INSERT_ID() AS ID
+</selectKey>
+        </insert>
+
+        <!-- 更新 -->
+<update id="update" parameterType="JwBaseDayRule">
+UPDATE saas_jw_base_day_rule
+<trim prefix="SET" suffixOverrides=",">
+    <if test="courseId!=null">
+        course_id = #{courseId},
+    </if>
+    <if test="tnId!=null">
+        tn_id = #{tnId},
+    </if>
+    <if test="teacherId!=null">
+        teacher_id = #{teacherId},
+    </if>
+    <if test="importantType!=null">
+        important_type = #{importantType},
+    </if>
+    <if test="dayType!=null">
+        day_type = #{dayType},
+    </if>
+    <if test="createDate!=null">
+        create_date = #{createDate},
+    </if>
+    <if test="taskId!=null">
+        task_id = #{taskId},
+    </if>
+</trim>
+        WHERE
+        id = #{id}
+        </update>
+
+<update id="updateMap">
+UPDATE saas_jw_base_day_rule
+<trim prefix="SET" suffixOverrides=",">
+    <if test="map.courseId!=null">
+        course_id = #{map.courseId},
+    </if>
+    <if test="map.tnId!=null">
+        tn_id = #{map.tnId},
+    </if>
+    <if test="map.teacherId!=null">
+        teacher_id = #{map.teacherId},
+    </if>
+    <if test="map.importantType!=null">
+        important_type = #{map.importantType},
+    </if>
+    <if test="map.dayType!=null">
+        day_type = #{map.dayType},
+    </if>
+    <if test="map.createDate!=null">
+        create_date = #{map.createDate},
+    </if>
+    <if test="map.taskId!=null">
+        task_id = #{map.taskId},
+    </if>
+</trim>
+        WHERE
+        id = #{map.id}
+        </update>
+
+<update id="updateByCondition">
+UPDATE saas_jw_base_day_rule
+<trim prefix="SET" suffixOverrides=",">
+    <if test="update.courseId!=null">
+        course_id = #{update.courseId},
+    </if>
+    <if test="update.tnId!=null">
+        tn_id = #{update.tnId},
+    </if>
+    <if test="update.teacherId!=null">
+        teacher_id = #{update.teacherId},
+    </if>
+    <if test="update.importantType!=null">
+        important_type = #{update.importantType},
+    </if>
+    <if test="update.dayType!=null">
+        day_type = #{update.dayType},
+    </if>
+    <if test="update.createDate!=null">
+        create_date = #{update.createDate},
+    </if>
+    <if test="update.taskId!=null">
+        task_id = #{update.taskId},
+    </if>
+</trim>
+
+<trim prefix="WHERE" prefixOverrides="AND | OR">
+<if test="condition.id!=null">
+    AND id = #{condition.id}
+</if>
+<if test="condition.courseId!=null">
+    AND course_id = #{condition.courseId}
+</if>
+<if test="condition.tnId!=null">
+    AND tn_id = #{condition.tnId}
+</if>
+<if test="condition.teacherId!=null">
+    AND teacher_id = #{condition.teacherId}
+</if>
+<if test="condition.importantType!=null">
+    AND important_type = #{condition.importantType}
+</if>
+<if test="condition.dayType!=null">
+    AND day_type = #{condition.dayType}
+</if>
+<if test="condition.createDate!=null">
+    AND create_date = #{condition.createDate}
+</if>
+<if test="condition.taskId!=null">
+    AND task_id = #{condition.taskId}
+</if>
+        </trim>
+        </update>
+
+<insert id="insertMap" >
+INSERT INTO saas_jw_base_day_rule (
+course_id,
+tn_id,
+teacher_id,
+important_type,
+day_type,
+create_date,
+task_id
+        ) VALUES (
+#{map.courseId},
+#{map.tnId},
+#{map.teacherId},
+#{map.importantType},
+#{map.dayType},
+#{map.createDate},
+#{map.taskId}
+        )
+        </insert>
+
+
+<update id="updateNull" parameterType="JwBaseDayRule">
+UPDATE saas_jw_base_day_rule
+<trim prefix="SET" suffixOverrides=",">
+    course_id = #{courseId},
+    tn_id = #{tnId},
+    teacher_id = #{teacherId},
+    important_type = #{importantType},
+    day_type = #{dayType},
+    create_date = #{createDate},
+    task_id = #{taskId},
+</trim>
+        WHERE
+        id = #{id} 
+        </update>
+
+        <!-- 按Id删除 -->
+<delete id="deleteById" parameterType="java.lang.Integer">
+DELETE FROM saas_jw_base_day_rule
+<trim prefix="WHERE" prefixOverrides="AND | OR">
+    AND id = #{id}
+</trim>
+        </delete>
+
+
+<delete id="deleteByCondition" parameterType="java.util.Map">
+DELETE FROM saas_jw_base_day_rule
+<trim prefix="WHERE" prefixOverrides="AND | OR">
+    <if test="id!=null">
+        AND id = #{id}
+    </if>
+    <if test="courseId!=null">
+        AND course_id = #{courseId}
+    </if>
+    <if test="tnId!=null">
+        AND tn_id = #{tnId}
+    </if>
+    <if test="teacherId!=null">
+        AND teacher_id = #{teacherId}
+    </if>
+    <if test="importantType!=null">
+        AND important_type = #{importantType}
+    </if>
+    <if test="dayType!=null">
+        AND day_type = #{dayType}
+    </if>
+    <if test="createDate!=null">
+        AND create_date = #{createDate}
+    </if>
+    <if test="taskId!=null">
+        AND task_id = #{taskId}
+    </if>
+</trim>
+        </delete>
+
+<delete id="deleteByProperty" parameterType="java.util.Map">
+DELETE FROM saas_jw_base_day_rule WHERE
+${property} = #{value}
+</delete>
+
+<select id="fetch" parameterType="java.lang.Integer" resultType="JwBaseDayRule">
+SELECT
+<include refid="Base_Column_List" />
+FROM saas_jw_base_day_rule
+<trim prefix="WHERE" prefixOverrides="AND | OR">
+    AND id = #{id}
+</trim>
+<if test="orderBy!=null">
+ORDER BY ${orderBy} ${sortBy}
+</if>
+        </select>
+
+<select id="findOne" parameterType="java.util.Map" resultType="JwBaseDayRule">
+SELECT
+<include refid="Base_Column_List" />
+FROM saas_jw_base_day_rule WHERE
+${property} = #{value}
+LIMIT 0,1
+</select>
+
+<select id="findList" parameterType="java.util.Map" resultType="JwBaseDayRule">
+SELECT
+<include refid="Base_Column_List" />
+FROM saas_jw_base_day_rule WHERE
+${property} = #{value}
+<if test="orderBy!=null">
+    ORDER BY ${orderBy} ${sortBy}
+</if>
+</select>
+
+<select id="findAll" resultType="JwBaseDayRule">
+SELECT
+<include refid="Base_Column_List" />
+FROM saas_jw_base_day_rule
+<if test="orderBy!=null">
+    ORDER BY ${orderBy} ${sortBy}
+</if>
+</select>
+
+<select id="queryPage" resultType="JwBaseDayRule">
+SELECT
+<include refid="Base_Column_List" />
+FROM saas_jw_base_day_rule
+<where>
+
+    <if test="condition.whereSql != null">
+        and id in (#{condition.whereSql})
+    </if>
+
+    <if test="condition.id!=null">
+        ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+    </if>
+    <if test="condition.courseId!=null">
+        ${condition.groupOp}   course_id  ${condition.courseId.op}  #{condition.courseId.data}
+    </if>
+    <if test="condition.tnId!=null">
+        ${condition.groupOp}   tn_id  ${condition.tnId.op}  #{condition.tnId.data}
+    </if>
+    <if test="condition.teacherId!=null">
+        ${condition.groupOp}   teacher_id  ${condition.teacherId.op}  #{condition.teacherId.data}
+    </if>
+    <if test="condition.importantType!=null">
+        ${condition.groupOp}   important_type  ${condition.importantType.op}  #{condition.importantType.data}
+    </if>
+    <if test="condition.dayType!=null">
+        ${condition.groupOp}   day_type  ${condition.dayType.op}  #{condition.dayType.data}
+    </if>
+    <if test="condition.createDate!=null">
+        ${condition.groupOp}   create_date  ${condition.createDate.op}  #{condition.createDate.data}
+    </if>
+    <if test="condition.taskId!=null">
+        ${condition.groupOp}   task_id  ${condition.taskId.op}  #{condition.taskId.data}
+    </if>
+
+
+</where>
+
+<if test="orderBy!=null">
+ORDER BY ${orderBy} ${sortBy}
+</if>
+<if test="offset != null">
+limit ${offset}, ${rows}
+</if>
+        </select>
+
+<select id="like" parameterType="java.util.Map" resultType="JwBaseDayRule">
+SELECT
+<include refid="Base_Column_List" />
+FROM saas_jw_base_day_rule
+<trim prefix="WHERE" prefixOverrides="AND | OR">
+    <if test="id!=null">
+        AND id like CONCAT('%', #{id} , '%')
+    </if>
+    <if test="courseId!=null">
+        AND course_id like CONCAT('%', #{courseId} , '%')
+    </if>
+    <if test="tnId!=null">
+        AND tn_id like CONCAT('%', #{tnId} , '%')
+    </if>
+    <if test="teacherId!=null">
+        AND teacher_id like CONCAT('%', #{teacherId} , '%')
+    </if>
+    <if test="importantType!=null">
+        AND important_type like CONCAT('%', #{importantType} , '%')
+    </if>
+    <if test="dayType!=null">
+        AND day_type like CONCAT('%', #{dayType} , '%')
+    </if>
+    <if test="createDate!=null">
+        AND create_date like CONCAT('%', #{createDate} , '%')
+    </if>
+    <if test="taskId!=null">
+        AND task_id like CONCAT('%', #{taskId} , '%')
+    </if>
+</trim>
+<if test="orderBy!=null">
+ORDER BY ${orderBy} ${sortBy}
+</if>
+        </select>
+
+
+<select id="queryList" parameterType="java.util.Map" resultType="JwBaseDayRule">
+SELECT
+<include refid="Base_Column_List" />
+FROM saas_jw_base_day_rule
+<trim prefix="WHERE" prefixOverrides="AND | OR">
+    <if test="condition.id!=null">
+        AND id = #{condition.id}
+    </if>
+    <if test="condition.courseId!=null">
+        AND course_id = #{condition.courseId}
+    </if>
+    <if test="condition.tnId!=null">
+        AND tn_id = #{condition.tnId}
+    </if>
+    <if test="condition.teacherId!=null">
+        AND teacher_id = #{condition.teacherId}
+    </if>
+    <if test="condition.importantType!=null">
+        AND important_type = #{condition.importantType}
+    </if>
+    <if test="condition.dayType!=null">
+        AND day_type = #{condition.dayType}
+    </if>
+    <if test="condition.createDate!=null">
+        AND create_date = #{condition.createDate}
+    </if>
+    <if test="condition.taskId!=null">
+        AND task_id = #{condition.taskId}
+    </if>
+</trim>
+<if test="orderBy!=null">
+ORDER BY ${orderBy} ${sortBy}
+</if>
+        </select>
+
+<select id="queryOne" parameterType="java.util.Map" resultType="JwBaseDayRule">
+SELECT
+<include refid="Base_Column_List" />
+FROM saas_jw_base_day_rule
+<trim prefix="WHERE" prefixOverrides="AND | OR">
+    <if test="condition.id!=null">
+        AND id = #{condition.id}
+    </if>
+    <if test="condition.courseId!=null">
+        AND course_id = #{condition.courseId}
+    </if>
+    <if test="condition.tnId!=null">
+        AND tn_id = #{condition.tnId}
+    </if>
+    <if test="condition.teacherId!=null">
+        AND teacher_id = #{condition.teacherId}
+    </if>
+    <if test="condition.importantType!=null">
+        AND important_type = #{condition.importantType}
+    </if>
+    <if test="condition.dayType!=null">
+        AND day_type = #{condition.dayType}
+    </if>
+    <if test="condition.createDate!=null">
+        AND create_date = #{condition.createDate}
+    </if>
+    <if test="condition.taskId!=null">
+        AND task_id = #{condition.taskId}
+    </if>
+</trim>
+        limit 0,1
+        </select>
+
+<select id="count" resultType="java.lang.Integer">
+SELECT count(id) FROM saas_jw_base_day_rule
+<where>
+    <if test="id!=null">
+        ${groupOp} id ${id.op}  #{id.data}
+    </if>
+    <if test="courseId!=null">
+        ${groupOp} course_id ${courseId.op}  #{courseId.data}
+    </if>
+    <if test="tnId!=null">
+        ${groupOp} tn_id ${tnId.op}  #{tnId.data}
+    </if>
+    <if test="teacherId!=null">
+        ${groupOp} teacher_id ${teacherId.op}  #{teacherId.data}
+    </if>
+    <if test="importantType!=null">
+        ${groupOp} important_type ${importantType.op}  #{importantType.data}
+    </if>
+    <if test="dayType!=null">
+        ${groupOp} day_type ${dayType.op}  #{dayType.data}
+    </if>
+    <if test="createDate!=null">
+        ${groupOp} create_date ${createDate.op}  #{createDate.data}
+    </if>
+    <if test="taskId!=null">
+        ${groupOp} task_id ${taskId.op}  #{taskId.data}
+    </if>
+
+</where>
+<if test="orderBy!=null">
+ORDER BY ${orderBy} ${sortBy}
+</if>
+        </select>
+
+<select id="selectMaxId" resultType="java.lang.Integer">
+SELECT
+MAX(id)
+FROM saas_jw_base_day_rule
+</select>
+
+        </mapper>
+
