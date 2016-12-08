@@ -110,9 +110,9 @@
                                 </ul>
                                 <script type="text/x-handlebars-template"  id="choose-class-list-tpl">
                                     {{#each this}}
-                                        <li>
-                                            <input type="checkbox" id="class7" />
-                                            <label for="class7">高二7班</label>
+                                        <li class-grade="{{class_grade}}">
+                                            <input type="checkbox" id="class{{id}}" />
+                                            <label for="class{{id}}">{{class_name}}</label>
                                         </li>
                                     {{/each}}
                                 </script>

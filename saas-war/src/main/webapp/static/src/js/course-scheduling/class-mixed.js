@@ -7,7 +7,6 @@ var GLOBAL_CONSTANT = {
     tnId: Common.cookie.getCookie('tnId'), //租户ID
     taskId: Common.cookie.getCookie('taskId'), //租户ID
 }
-alert(GLOBAL_CONSTANT.taskId)
 
 /**
  * 排课任务 -> 排课规则设置 ->合班
@@ -21,25 +20,8 @@ var MixedClass = {
     },
     fetchAndRenderSubject: function () {
         Common.ajaxFun('/scheduleTask/queryCourseInfoByTaskId.do', 'get', {
-            'taskId': '1'
+            'taskId': GLOBAL_CONSTANT.taskId
         }, function (res) {
-            var res = {
-                "bizData": [{
-                    "courseId": "课程ID",
-                    "courseName": "语文",
-                    "time": "课时"
-                }, {
-                    "courseId": "课程ID",
-                    "courseName": "通用技术",
-                    "time": "课时"
-                }, {
-                    "courseId": "课程ID",
-                    "courseName": "数学",
-                    "time": "课时"
-                }],
-                "rtnCode": "0000000",
-                "ts": 1480990693884
-            }
             if (res.rtnCode == '0000000') {
                 var tpl = Handlebars.compile($('#course-select-tpl').html());
                 $('#course-select').html(tpl(res.bizData));
@@ -52,7 +34,7 @@ var MixedClass = {
         Common.ajaxFun('/manage/class/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var tpl = Handlebars.compile($('#choose-class-list-tpl').html());
-                $('#choose-class-list').html(tpl(res.bizData));
+                $('#choose-class-list').html(tpl(res.bizData.result));
             }
         });
     },
