@@ -39,7 +39,7 @@ CourseNoProceed.prototype = {
     },
     //获取已设连堂科目
     getLinkList: function () {
-        Common.ajaxFun('/disSelectRule/getLinkList/' + taskId + '.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/disSelectRule/getLinkList/' + taskId, 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
 
             }
