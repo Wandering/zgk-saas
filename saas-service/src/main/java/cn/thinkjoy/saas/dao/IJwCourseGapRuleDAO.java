@@ -9,7 +9,10 @@ package cn.thinkjoy.saas.dao;
 import cn.thinkjoy.common.dao.IBaseDAO;
 import cn.thinkjoy.saas.domain.JwCourseGapRule;
 
+import java.util.List;
+import java.util.Map;
+
 public interface IJwCourseGapRuleDAO extends IBaseDAO<JwCourseGapRule>{
 	
-
+    List<Map<String, Object>> queryLinkList(Map<String, String> map);
 }

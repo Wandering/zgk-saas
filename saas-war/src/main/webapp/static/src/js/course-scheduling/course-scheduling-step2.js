@@ -1,23 +1,44 @@
 /**
  * Created by machengcheng on 16/12/6.
  */
+var taskId = Common.cookie.getCookie('taskId');
+
+function ArrangeCourse () {
+
+}
+ArrangeCourse.prototype = {
+    constructor: ArrangeCourse,
+    init: function () {
+
+    },
+    //获取不排课信息
+    getNoArrangeCourseInfo: function (type, id) {
+        Common.ajaxFun('/disSelectRule/getRule/' + taskId + '/' + type + '/' + id + '.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
+
+            }
+        }, function (res) {
+            layer.msg("出错了", {time: 1000});
+        }, false);
+    }
+};
 
 $(function () {
 
     $(document).on('change', '#no-course-time', function () {
-        var itemVal = parseInt($(this).val());
+        var itemVal = $(this).val().trim();
         switch(itemVal) {
-            case 1:
+            case 'class':
                 $('#class-no-array').show();
                 $('#teacher-no-array').hide();
                 $('#course-no-array').hide();
                 break;
-            case 2:
+            case 'teacher':
                 $('#class-no-array').hide();
                 $('#teacher-no-array').show();
                 $('#course-no-array').hide();
                 break;
-            case 3:
+            case 'course':
                 $('#class-no-array').hide();
                 $('#teacher-no-array').hide();
                 $('#course-no-array').show();

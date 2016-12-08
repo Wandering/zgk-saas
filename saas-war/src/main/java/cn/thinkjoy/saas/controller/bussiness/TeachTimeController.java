@@ -36,6 +36,7 @@ public class TeachTimeController {
         if (StringUtils.isEmpty(teachDate)||StringUtils.isEmpty(teachTime)){
             ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
         }
+        jwTeachDateService.deleteByProperty("task_id",taskId);
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         String[] dates = teachDate.split("\\|");
         char[] times = teachTime.toCharArray();

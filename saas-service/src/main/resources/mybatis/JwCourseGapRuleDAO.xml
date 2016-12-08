@@ -406,5 +406,11 @@ selectList
         FROM saas_jw_course_gap_rule
     </select>
 
+    <select id="queryLinkList" resultType="java.util.Map" >
+        select b.course_name,b.grade,c.course_hour,c.chour
+        from saas_jw_course_base_info b
+        inner join saas_jw_course c on b.id=c.course_id
+        where c.task_id=#{taskId}
+    </select>
 </mapper>
 

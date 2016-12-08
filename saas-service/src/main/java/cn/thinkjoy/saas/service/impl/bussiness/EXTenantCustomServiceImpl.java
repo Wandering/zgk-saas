@@ -3,6 +3,8 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 import cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO;
 import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
 import cn.thinkjoy.saas.domain.Grade;
+import cn.thinkjoy.saas.domain.bussiness.SyncClass;
+import cn.thinkjoy.saas.domain.bussiness.SyncCourse;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
 import cn.thinkjoy.saas.service.common.EnumUtil;
@@ -267,4 +269,22 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
     public Map<String,Object> existDataCount(Map map) {
         return iexTeantCustomDAO.existDataCount(map);
     }
+
+
+    @Override
+    public List<SyncCourse> selectCourseGroup(Map map) {
+        return iexTeantCustomDAO.selectCourseGroup(map);
+    }
+
+    @Override
+    public List<SyncClass> selectClassGroup(Map map) {
+        return iexTeantCustomDAO.selectClassGroup(map);
+    }
+
+
+    @Override
+    public List<SyncClass> selectExecutiveClassGroup(Map map){
+        return iexTeantCustomDAO.selectExecutiveClassGroup(map);
+    }
+
 }
