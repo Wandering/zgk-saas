@@ -5,7 +5,6 @@ import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
-import cn.thinkjoy.saas.dao.IJwCourseDAO;
 import cn.thinkjoy.saas.domain.JwCourse;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
@@ -154,16 +153,16 @@ public class ScheduleTaskController {
     public List<Map<String,Object>> queryGradeInfo(){
         List<Map<String,Object>> list = new ArrayList();
         Map<String,Object> map = Maps.newHashMap();
-        map.put("key","1");
-        map.put("value","高一");
+        map.put("key",GradeEnum.GAOYI.getCode());
+        map.put("value",GradeEnum.GAOYI.getGradeName());
         list.add(map);
         map = Maps.newHashMap();
-        map.put("key","2");
-        map.put("value","高二");
+        map.put("key",GradeEnum.GAOER.getCode());
+        map.put("value",GradeEnum.GAOER.getGradeName());
         list.add(map);
         map = Maps.newHashMap();
-        map.put("key","3");
-        map.put("value","高三");
+        map.put("key",GradeEnum.GAOSAN.getCode());
+        map.put("value",GradeEnum.GAOSAN.getGradeName());
         list.add(map);
         return list;
     }
@@ -227,6 +226,8 @@ public class ScheduleTaskController {
         }
         return true;
     }
+
+
 
     private List<JwScheduleTaskDto> JwScheduleTask2Dto(List<JwScheduleTask> jwScheduleTasks){
         List<JwScheduleTaskDto> list = new ArrayList<>();
