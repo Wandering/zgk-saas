@@ -282,8 +282,8 @@ public class ScheduleTaskController {
         }
 
         Map<String,Object> paramMap = Maps.newHashMap();
-        paramMap.put("task_id",taskId);
-        paramMap.put("course_id",courseId);
+        paramMap.put("taskId",taskId);
+        paramMap.put("courseId",courseId);
         JwCourse course = (JwCourse) jwCourseService.queryOne(paramMap,"id",SqlOrderEnum.DESC);
         if(course != null){
             course.setCourseHour(time);
@@ -344,8 +344,8 @@ public class ScheduleTaskController {
     public Map deleteTeacher(@RequestParam int taskId,@RequestParam int teacherId){
 
         Map<String,Object> paramMap = Maps.newHashMap();
-        paramMap.put("teacher_id",teacherId);
-        paramMap.put("task_id",taskId);
+        paramMap.put("teacherId",teacherId);
+        paramMap.put("taskId",taskId);
         jwTeacherService.deleteByCondition(paramMap);
 
         return Maps.newHashMap();
