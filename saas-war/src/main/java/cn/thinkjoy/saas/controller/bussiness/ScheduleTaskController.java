@@ -190,41 +190,41 @@ public class ScheduleTaskController {
     @ResponseBody
     @RequestMapping("/checkTaskBaseInfo")
     public boolean checkTaskBaseInfo(@RequestParam Integer taskId){
-//        JwScheduleTask jwScheduleTask = fetchScheduleTask(taskId);
-//        if (jwScheduleTask.getGrade()==null){
-//            throw new BizException("error","该任务已经被删除或未创建");
-//        }
-//        //获取所有字段名称
-//        Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-//        String tableName = ParamsUtils.combinationTableName("student",tnId );
-//        Map<String,Object> params = Maps.newHashMap();
-//        params.put("tableName",tableName);
-//        params.put("columns",Constant.CHECK_TABLE_STUDENT_COLUMNS);
-//        params.put("searchKey",Constant.STUDENT_GRADE);
-//        params.put("searchValue",GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())));
-//        Map<String,Object> map = iexTenantCustomService.existDataCount(params);
-//        Iterator<String> iterator = map.keySet().iterator();
-//        List<String> emptyColumns = new ArrayList<>();
-//        while (iterator.hasNext()){
-//            String key = iterator.next();
-//            Integer num  = (Integer) map.get(key);
-//            if (num==0) {
-//                emptyColumns.add(key);
-//            }
-//        }
-//        if (emptyColumns.size()>0) {
-//            StringBuffer buffer = new StringBuffer();
-//            buffer.append("您还未填写");
-//            for (String s : emptyColumns) {
-//                Map<String, Object> queryMap = Maps.newHashMap();
-//                queryMap.put("domain", Constant.TABLE_TYPE_STUDENT);
-//                queryMap.put("enName", s);
-//                String cnName = exiConfigurationService.selectColumnName(queryMap);
-//                buffer.append(cnName);
-//            }
-//            buffer.append("字段信息，请至学生管理中完善");
-//            throw new BizException(ErrorCode.TASK_ERROR.getCode(), buffer.toString());
-//        }
+        JwScheduleTask jwScheduleTask = fetchScheduleTask(taskId);
+        if (jwScheduleTask.getGrade()==null){
+            throw new BizException("error","该任务已经被删除或未创建");
+        }
+        //获取所有字段名称
+        Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        String tableName = ParamsUtils.combinationTableName("student",tnId );
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("tableName",tableName);
+        params.put("columns",Constant.CHECK_TABLE_STUDENT_COLUMNS);
+        params.put("searchKey",Constant.STUDENT_GRADE);
+        params.put("searchValue",GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())));
+        Map<String,Object> map = iexTenantCustomService.existDataCount(params);
+        Iterator<String> iterator = map.keySet().iterator();
+        List<String> emptyColumns = new ArrayList<>();
+        while (iterator.hasNext()){
+            String key = iterator.next();
+            if (!"0".equals(map.get(key))) {
+                emptyColumns.add(key);
+            }
+        }
+        if (emptyColumns.size()>0) {
+            StringBuffer buffer = new StringBuffer();
+            buffer.append("您还未填写");
+            for (String s : emptyColumns) {
+                Map<String, Object> queryMap = Maps.newHashMap();
+                queryMap.put("domain", Constant.TABLE_TYPE_STUDENT);
+                queryMap.put("enName", s);
+                String cnName = exiConfigurationService.selectColumnName(queryMap);
+                buffer.append(cnName).append("、");
+            }
+            buffer.delete(buffer.length()-1,buffer.length());
+            buffer.append("字段信息，请至学生管理中完善");
+            throw new BizException(ErrorCode.TASK_ERROR.getCode(), buffer.toString());
+        }
         return true;
     }
 

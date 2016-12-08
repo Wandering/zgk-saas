@@ -15,7 +15,7 @@
 }
 
 .student-add-box {
-  padding: 20px 30px;
+  padding: 20px 30px 30px;
   .f50, .f70, .f20 {
     width: 50%;
     float: left;
@@ -131,5 +131,71 @@ a.download-link:hover {
     margin-left: -60px;
     left: 50%;
     outline: none;
+  }
+}
+
+//分页
+.pagination-bar {
+  .pagination-info {
+    display: inline-block;
+    float: left;
+    margin-top: 40px;
+    margin-left: 28px;
+    text-align: center;
+    font-size: 14px;
+    color: #9B9B9B;
+  }
+  .pagination {
+    display: inline-block;
+    float: right;
+    margin-top: 40px;
+    margin-right: -7px;
+    text-align: center;
+    a:link,
+    a:visited,
+    a:hover {
+      margin-right: 10px !important;
+      font-size: 14px;
+      color: #575757;
+      letter-spacing: -0.66px;
+      border: 1px solid #ddd;
+      background: #EFF2F5;
+      border-radius: 2px;
+      text-decoration: none;
+      outline: 0;
+      padding: 4px 15px 4px 15px!important;
+    }
+    a.pageNum {
+      cursor: auto;
+      color: #9B9B9B;
+      background: #fff;
+    }
+    .disabled {
+      padding: 9px 15px 10px 15px;
+      margin-right: 10px !important;
+      font-size: 14px;
+      letter-spacing: -0.66px;
+      border-radius: 2px;
+      color: #ccc;
+      border: 1px solid #ddd;
+      background: #EFF2F5;
+    }
+    span {
+      padding: 4px 15px 4px 15px!important;
+      margin-right: 10px !important;
+    }
+    .current {
+      padding: 9px 15px 10px 15px;
+      margin-right: 10px !important;
+      font-size: 14px;
+      letter-spacing: -0.66px;
+      border-radius: 2px;
+      color: #fff;
+      background: #D80C18;
+      border: 1px solid #D80C18;
+    }
+    a:last-of-type {
+      margin-left: 10px !important;
+    }
   }
 }

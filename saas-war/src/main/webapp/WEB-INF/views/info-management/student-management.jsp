@@ -84,6 +84,10 @@
                                     <thead></thead>
                                     <tbody></tbody>
                                 </table>
+
+                                <div class="pagination-bar">
+                                    <div class="pagination"></div>
+                                </div>
                         </div>
                         <%--<script type="text/x-handlebars-template" id="student-table-tpl">--%>
                             <%--<table class="table">--%>
@@ -206,7 +210,7 @@
                                                 <button class="btn btn-success" id="sub-student-remove">移除</button>
                                             </div>
                                         </div>
-                                        <div class="">
+                                        <div>
                                             <table class="table">
                                                 <thead>
                                                 <tr>

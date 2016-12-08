@@ -69,7 +69,7 @@ public class TeachTimeController {
         }
         StringBuffer buffer = new StringBuffer();
         for (JwTeachDate jwTeachDate:list){
-            buffer.append(jwTeachDate.getTeachDate()).append("\\|");
+            buffer.append(jwTeachDate.getTeachDate()).append("|");
         }
         if (buffer.length()>0){
             buffer.delete(buffer.length()-1,buffer.length());
@@ -80,6 +80,9 @@ public class TeachTimeController {
             String[] strings = jwTeachDate.getTeachDetail().split(Constant.TIME_INTERVAL);
             for (String s:strings){
                 time+=s.length();
+            }
+            if (strings.length<3){
+                time+=0;
             }
         }
 
