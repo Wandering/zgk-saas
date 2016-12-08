@@ -79,8 +79,11 @@ Schedule.prototype = {
         addScheduleContentHtml.push('<span><i>*</i>年级：</span><select id="grade-list">' + that.queryGradeInfo() + '</select>');
         addScheduleContentHtml.push('</div>');
         addScheduleContentHtml.push('<div class="box-row">');
-        addScheduleContentHtml.push('<span><i>*</i>学期：</span><input id="term-year" placeholder="请选择年份"  data-date-format="yyyy" type="text" />年');
-        addScheduleContentHtml.push('<select id="term-list">');
+        addScheduleContentHtml.push('<span><i>*</i>学期：</span>');
+        addScheduleContentHtml.push('<select id="term-year">');
+        addScheduleContentHtml.push('<option value="00">请选择年份</option>');
+        addScheduleContentHtml.push('</select>');
+        addScheduleContentHtml.push('年<select id="term-list">');
         addScheduleContentHtml.push('<option value="00">请选择学期</option>');
         addScheduleContentHtml.push('<option termV="第一学期" value="1">第一学期</option>');
         addScheduleContentHtml.push('<option termV="第二学期" value="2">第二学期</option>');
@@ -98,12 +101,19 @@ Schedule.prototype = {
             area: ['362px', '281px'],
             content: addScheduleContentHtml.join(''),
             success: function () {
-                $('#term-year').datepicker(
-                    {format: 'yyyy'},
-                    {autoclose: true}
-                );
+                that.getYears();
             }
         });
+    },
+    // 学期年份  当前年往前推5年
+    getYears:function(){
+        var years = [];
+        var date = new Date();
+        var year = date.getFullYear();
+        for(var i = (year-2);i<(year+1);i++){
+            years.push('<option value="'+ i +'">'+ i +'</option>');
+        }
+        $('#term-year').append(years.join(''));
     },
     // 保存 更新
     saveScheduleTask: function (id, scheduleName, grade, year, term) {
