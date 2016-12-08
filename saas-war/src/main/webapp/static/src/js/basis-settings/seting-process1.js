@@ -23,10 +23,8 @@ $('#seting-process1-btn').on('click', function () {
     //    layer.tips('至少添加一项!', that);
     //    return false;
     //}
-    Common.ajaxFun('/config/class/setting/' + tnId + '/' + numsArr + '.do', 'POST', {
-        'tnId': tnId,
-        'nums': "高一年级-高二年级-高三年级"
-    }, function (res) {
+    var numsArr = "高一年级-高二年级-高三年级";
+    Common.ajaxFun('/config/class/setting/' + tnId + '/' + numsArr + '.do', 'POST', {}, function (res) {
         if (res.rtnCode == "0000000") {
             if (res.bizData.result == "SUCCESS") {
                 window.location.href="/seting-process2";

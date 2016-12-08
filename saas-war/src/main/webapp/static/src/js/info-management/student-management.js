@@ -25,7 +25,8 @@ var App = {
         this.checkGradeName = '';
         this.page = {
             'offset': 0,
-            'rows': 10
+            'rows': 30,
+            'count': ''
         }
         this.fetchGrade();
         this.renderTableHeader();
@@ -74,6 +75,7 @@ var App = {
             if (res.rtnCode == "0000000") {
                 var tpl = [];
                 var dataJson = res.bizData.result;
+                App.page.count = res.bizData.count;
                 $.each(dataJson, function (m, n) {
                     var obj = dataJson[m];
                     tpl.push('<tr>');
@@ -90,6 +92,7 @@ var App = {
                     tpl.push('</tr>');
                 });
                 $("#student-table tbody").html(tpl.join(''));
+                that.pagination();
             }
         }, function (res) {
             layer.msg("出错了");
@@ -138,7 +141,9 @@ var App = {
                 // })
                 // tpl = tpl.substr(0, tpl.length - 1);
                 // CRUDStd.CRUDStdData.gradeData = tpl;
-                App.checkGradeName = dataJson[0].grade;
+                if (dataJson[0].grade) {
+                    App.checkGradeName = dataJson[0].grade;
+                }
             }
         }, function (res) {
             layer.msg("出错了");
@@ -154,6 +159,7 @@ var App = {
             if (res.rtnCode == "0000000") {
                 var tpl = [];
                 var dataJson = res.bizData.result;
+                App.page.count = res.bizData.count;
                 $.each(dataJson, function (m, n) {
                     var obj = dataJson[m];
                     tpl.push('<tr>');
@@ -170,16 +176,32 @@ var App = {
                     tpl.push('</tr>');
                 });
                 $("#student-table tbody").html(tpl.join(''));
+                that.pagination();
             }
         }, function (res) {
             layer.msg("出错了");
         }, false);
     },
+    pagination: function () {
+        var that = this;
+        console.info("zongyeshu: " + App.page.count);
+        $(".pagination").createPage({
+            pageCount: Math.ceil(App.page.count / App.page.rows),
+            current: Math.ceil(App.page.offset / App.page.rows) + 1,
+            backFn: function (p) {
+                console.info('p',p);
+                $(".pagination-bar .current-page").html(p);
+                App.page.offset = (p - 1) * App.page.rows;
+                App.loadPage();
+            }
+        });
+    },
     addEvent: function () {
         var targetDom = $('#grade-list input');
         $(document).on('click', '.grade-list input[name="grade-li"]', function () {
             App.checkGradeName = $('input[name="grade-li"]:checked').next().text();
-            App.loadPage(0, 1);
+            App.loadPage();
+            App.pagination();
         })
     }
 }
@@ -395,7 +417,7 @@ var CRUDStd = {
         $(document).on('click', '#add-btn', function () {
             if (that.CRUDStdVerify('add')) {
                 that.addStdEvent(that.CRUDStdVerify('add'));
-                window.location.reload();
+                // window.location.reload();
             }
         })
         //删除
@@ -406,7 +428,6 @@ var CRUDStd = {
         $(document).on("click", "#update-btn", function () {
             if (that.CRUDStdVerify('update')) {
                 that.updateStdEvent(that.CRUDStdVerify('update'));
-                window.location.reload();
             }
         })
         //获取修改前数据 [组装修改前的数据]
@@ -507,7 +528,7 @@ var CRUDStd = {
                         $('#check-all').prop('checked', false);
                         layer.msg('删除成功', {time: 1000});
                         App.renderTableHeader();
-                        window.location.reload();
+                        // window.location.reload();
                     }
                 }
             }, function (res) {
@@ -674,8 +695,8 @@ var TplHandler = {
                 // 只允许选择文件，可选。
                 accept: {
                     title: 'excel',
-                    extensions: 'xls',
-                    mimeTypes: 'application/vnd.ms-excel'
+                    extensions: 'xlsx,xls',
+                    mimeTypes: '.xlsx,.xls'
                 },
                 fileVal: 'inputFile',
                 duplicate: new Date()

@@ -63,53 +63,6 @@
                                 </tr>
                                 </thead>
                                 <tbody id="schedule-list" class="check-template">
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">1</td>
-                                        <td class="center">高二排课</td>
-                                        <td class="center">高二</td>
-                                        <td class="center">2016年第一学期</td>
-                                        <td class="center">
-                                            <a href="" class="start-schedule-btn">开始排课</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">2</td>
-                                        <td class="center">高一排课</td>
-                                        <td class="center">高一</td>
-                                        <td class="center">2016年第一学期</td>
-                                        <td class="center">
-                                            <a href="javascript: void(0);" class="fail-schedule-btn btn-split">排课失败</a>
-                                            <a href="javascript: void(0);" class="again-schedule-btn btn-split">重新排课</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </td>
-                                        <td class="center">3</td>
-                                        <td class="center">高三排课</td>
-                                        <td class="center">高三</td>
-                                        <td class="center">2016年第一学期</td>
-                                        <td class="center">
-                                            <a href="javascript: void(0);" class="timetable-btn btn-split">查看课表</a>
-                                            <a href="javascript: void(0);" class="again-schedule-btn btn-split">重新排课</a>
-                                        </td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
