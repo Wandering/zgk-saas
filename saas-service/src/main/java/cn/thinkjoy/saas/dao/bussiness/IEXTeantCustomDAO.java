@@ -93,4 +93,11 @@ public interface IEXTeantCustomDAO {
      */
     List<SyncClass> selectClassGroup(Map map);
 
+    /**
+     * 同步行政班基础信息
+     * @param map
+     * @return
+     */
+    List<SyncClass> selectExecutiveClassGroup(Map map);
+
 }

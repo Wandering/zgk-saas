@@ -281,4 +281,10 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         return iexTeantCustomDAO.selectClassGroup(map);
     }
 
+
+    @Override
+    public List<SyncClass> selectExecutiveClassGroup(Map map){
+        return iexTeantCustomDAO.selectExecutiveClassGroup(map);
+    }
+
 }

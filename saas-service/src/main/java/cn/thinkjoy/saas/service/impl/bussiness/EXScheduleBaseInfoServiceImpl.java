@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -184,7 +185,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
             dto.setTeacherId((int)info.getId());
             dto.setTeacherName(info.getTeacherName());
             dto.setCourseName(info.getTeacherCourse());
-            dto.setClassInfo(getClassBaseDtosByCourse(info.getGrade(),info.getTeacherCourse()));
+            dto.setClassInfo(getClassBaseDtosByCourse(tnId,info.getGrade(),info.getTeacherCourse()));
             dtos.add(dto);
         }
 
@@ -194,11 +195,12 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
     /**
      * 根据年级和课程名获取班级信息
      *
+     * @param tnId
      * @param grade
      * @param course
      * @return
      */
-    private List<ClassBaseDto> getClassBaseDtosByCourse(int grade,String course){
+    private List<ClassBaseDto> getClassBaseDtosByCourse(int tnId,int grade,String course){
 
         List<ClassBaseDto> dtos = Lists.newArrayList();
 
@@ -206,6 +208,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         paramMap.put("class_name",course);
         paramMap.put("class_type",2);
         paramMap.put("grade",grade);
+        paramMap.put("tn_id",tnId);
         List<JwClassBaseInfo> infos = jwClassBaseInfoDAO.like(paramMap,"id",Constant.DESC);
 
         // 不存在则查询行政班级
@@ -213,6 +216,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
             paramMap.clear();
             paramMap.put("grade",grade);
             paramMap.put("class_type",1);
+            paramMap.put("tn_id",tnId);
             infos = jwClassBaseInfoDAO.queryList(paramMap,"id",Constant.DESC);
         }
 
@@ -245,7 +249,63 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
             jwTeacher.setCourse(course);
             jwTeacher.setTeacherId(teacherId);
             jwTeacher.setTeachNum(classNum);
+
+            // 异步添加教师基本规则
+            insertBaseRule(taskId,teacherId,jwTeacher.getTnId(),course);
         }
 
+    }
+
+    @Async
+    private void insertBaseRule(int taskId, int teacherId,int tnId,String course){
+
+        Map<String,Object> paramMap = Maps.newHashMap();
+        paramMap.put("tn_id",tnId);
+        paramMap.put("course_name",course);
+        JwCourseBaseInfo info = jwCourseBaseInfoDAO.queryOne(paramMap,"id",Constant.DESC);
+        if(info == null){
+            return;
+        }
+        int courseId = (int)info.getId();
+        long currentTime = System.currentTimeMillis();
+
+        // 连上规则
+        JwBaseConRule conRule = new JwBaseConRule();
+        conRule.setTeacherId(teacherId);
+        conRule.setTnId(tnId);
+        conRule.setCourseId(courseId);
+        conRule.setCreateDate(currentTime);
+        conRule.setDayConType(1);
+        conRule.setImportantType(2);
+        conRule.setTaskId(taskId);
+
+        // 日任课规则
+        JwBaseDayRule dayRule = new JwBaseDayRule();
+        dayRule.setCreateDate(currentTime);
+        dayRule.setTaskId(taskId);
+        dayRule.setImportantType(2);
+        dayRule.setCourseId(courseId);
+        dayRule.setDayType(1);
+        dayRule.setTeacherId(teacherId);
+        dayRule.setTnId(tnId);
+
+        // 周任课规则
+        JwBaseWeekRule weekRule = new JwBaseWeekRule();
+        weekRule.setCreateDate(currentTime);
+        weekRule.setTnId(tnId);
+        weekRule.setTeacherId(teacherId);
+        weekRule.setCourseId(courseId);
+        weekRule.setImportantType(2);
+        weekRule.setTaskId(taskId);
+        weekRule.setWeekType(1);
+
+        // 教案齐平规则
+        JwBaseJaqpRule jaqpRule = new JwBaseJaqpRule();
+        jaqpRule.setCreateDate(currentTime);
+        jaqpRule.setTaskId(taskId);
+        jaqpRule.setImportantType(2);
+        jaqpRule.setCourseId(courseId);
+        jaqpRule.setTeacherId(teacherId);
+        jaqpRule.setTnId(tnId);
     }
 }
