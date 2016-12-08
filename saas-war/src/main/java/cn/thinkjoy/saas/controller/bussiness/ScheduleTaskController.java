@@ -20,6 +20,8 @@ import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +44,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/scheduleTask")
 public class ScheduleTaskController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ScheduleTaskController.class);
 
     @Autowired
     IJwScheduleTaskService jwScheduleTaskService;
@@ -264,16 +268,17 @@ public class ScheduleTaskController {
     @RequestMapping(value = "/saveOrUpdateCourseTime",method = RequestMethod.POST)
     public Map saveOrUpdateCourseTime(@RequestParam int taskId,@RequestParam int courseId,@RequestParam String time){
 
-        if(StringUtils.isEmpty(time)){
-            ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
-        }
-
         int chour = 0;
-        String [] arr = time.split("\\+");
-        if(arr.length == 1){
-            chour = Integer.valueOf(arr[0]);
-        }else if (arr.length == 2){
-            chour = Integer.valueOf(arr[0]) + 2*Integer.valueOf(arr[1]);
+        try {
+            String [] arr = time.split("\\+");
+            if(arr.length == 1){
+                chour = Integer.valueOf(arr[0]);
+            }else if (arr.length == 2){
+                chour = Integer.valueOf(arr[0]) + 2*Integer.valueOf(arr[1]);
+            }
+        }catch (Exception e){
+            logger.error("课时输入错误 : time = "+time,e);
+            ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
         }
 
         Map<String,Object> paramMap = Maps.newHashMap();
