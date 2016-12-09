@@ -254,7 +254,7 @@ public class CourseDisSelectController
 
     @RequestMapping(value = "/list/{type}/{taskId}", method = RequestMethod.GET)
     public List<Map<String, String>> getList(@PathVariable String taskId,@PathVariable String type
-        ,@RequestParam(value = "teacherCourse", required = true) String teacherCourse)
+        ,@RequestParam(value = "teacherCourse", required = false) String teacherCourse)
     {
         List<Map<String, String>> list;
         Map<String, String> params = new HashMap<>();
