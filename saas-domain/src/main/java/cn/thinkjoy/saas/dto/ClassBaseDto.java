@@ -9,6 +9,15 @@ public class ClassBaseDto implements Serializable {
 
     private int classId; // 所带班级ID
     private String className; // 所带班级名称
+    private String isMerge;
+
+    public String getIsMerge() {
+        return isMerge;
+    }
+
+    public void setIsMerge(String isMerge) {
+        this.isMerge = isMerge;
+    }
 
     public int getClassId() {
         return classId;

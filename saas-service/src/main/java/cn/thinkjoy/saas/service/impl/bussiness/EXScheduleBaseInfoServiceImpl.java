@@ -223,7 +223,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
      * @param course
      * @return
      */
-    private List<ClassBaseDto> getClassBaseDtosByCourse(int tnId,int grade,String course){
+    public List<ClassBaseDto> getClassBaseDtosByCourse(int tnId,int grade,String course){
 
         List<ClassBaseDto> dtos = Lists.newArrayList();
 
