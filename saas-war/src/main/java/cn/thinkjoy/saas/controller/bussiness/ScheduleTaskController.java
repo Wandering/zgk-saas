@@ -6,6 +6,7 @@ import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.*;
+import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.JwScheduleTaskDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
@@ -15,6 +16,7 @@ import cn.thinkjoy.saas.enums.StatusEnum;
 import cn.thinkjoy.saas.enums.TermEnum;
 import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.EXIConfigurationService;
+import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
 import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
@@ -26,15 +28,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * Created by yangyongping on 2016/12/6.
@@ -70,6 +67,9 @@ public class ScheduleTaskController {
 
     @Autowired
     private IJwCourseBaseInfoService jwCourseBaseInfoService;
+
+    @Resource
+    private IEXJwScheduleTaskService iexJwScheduleTaskService;
 
     /**
      * 新建排课任务
@@ -392,6 +392,22 @@ public class ScheduleTaskController {
         }
 
         return Maps.newHashMap();
+    }
+
+    /**
+     * 排课结果
+     * @return
+     */
+    @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getCourseResult(@PathVariable String type) {
+
+        Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type, tnId);
+
+        Map resultMap = new HashMap();
+        resultMap.put("result",courseResultView);
+        return resultMap;
     }
 
 }
