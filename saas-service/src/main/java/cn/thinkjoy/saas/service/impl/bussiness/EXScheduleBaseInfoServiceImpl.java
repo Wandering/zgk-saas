@@ -197,6 +197,9 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
 
         List<JwTeacherBaseInfo> infos = jwTeacherBaseInfoDAO.findList("tn_id",tnId,"id",Constant.DESC);
         for(JwTeacherBaseInfo info : infos){
+            if(keyword.indexOf(info.getTeacherName()) == -1){
+                continue;
+            }
             TeacherBaseDto dto = new TeacherBaseDto();
             dto.setTeacherId((int)info.getId());
             dto.setTeacherName(info.getTeacherName());
