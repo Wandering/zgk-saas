@@ -50,7 +50,6 @@ public class TeachTimeController {
         jwClassRuleService.deleteByProperty("task_id",taskId);
         jwCourseRuleService.deleteByProperty("task_id",taskId);
         jwTeacherRuleService.deleteByProperty("task_id",taskId);
-        jwTeacherRuleService.deleteByProperty("task_id",taskId);
         jwCourseGapRuleService.deleteByProperty("task_id",taskId);
 
 
