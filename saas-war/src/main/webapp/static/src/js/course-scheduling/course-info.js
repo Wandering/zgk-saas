@@ -57,7 +57,7 @@ CourseInfo.prototype = {
                     });
                     Handlebars.registerHelper("times", function (v) {
                         console.log(v)
-                        if(v=="0"){
+                        if(!v){
                             return "-";
                         }else{
                             return (v + "节/周");

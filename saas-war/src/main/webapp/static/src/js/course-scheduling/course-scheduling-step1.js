@@ -8,7 +8,7 @@ function TeachDate() {
 TeachDate.prototype = {
     constructor: TeachDate,
     init: function () {
-
+        this.queryTeachTime(taskId);
     },
     // 查询学习时间
     queryTeachTime: function (taskId) {
@@ -41,6 +41,7 @@ TeachDate.prototype = {
     },
     // 保存教学时间
     saveTeachTime: function (taskId, teachDate, teachTime) {
+        var that = this;
         Common.ajaxFun('/teachTime/saveTeachTime.do', 'POST', {
                 'taskId': taskId,
                 'teachDate': teachDate,
@@ -48,6 +49,7 @@ TeachDate.prototype = {
             },
             function (res) {
                 if (res.rtnCode == "0000000" && res.bizData == true) {
+                    that.state = true;
                     layer.msg('保存成功!');
                 }
             }, function (res) {
@@ -59,21 +61,19 @@ TeachDate.prototype = {
 var TeachDateIns = new TeachDate();
 
 $(function () {
-    TeachDateIns.queryTeachTime(taskId);
-
     // 保存确认
     $('#btn-save-base').on('click', function () {
-        var that = $(this);
         var checkboxLen = $('.week-list input:checked').length;
         var weekV = $('.week-list input:checked');
         if (checkboxLen == 0) {
-            layer.tips('每周上课天数至少选择一项', that);
+            layer.tips('每周上课天数至少选择一项', $(this));
             return false;
         }
         var teachDate = [];
         $.each(weekV, function (i, v) {
-            teachDate.push(that.attr('data'));
+            teachDate.push($(this).attr('data'));
         });
+        console.log(teachDate)
         var morningNum = $('#morning-list').val();
         var afternoonNum = $('#afternoon-list').val();
         var eveningNum = $('#evening-list').val();
@@ -91,27 +91,4 @@ $(function () {
             TeachDateIns.saveTeachTime(taskId, teachDate.join('|'), teachTime);
         }
     });
-
-
-    // 保存
-
-    //$('#btn-save-base').on('click',function(){
-    //    var checkboxLen = $('.week-list input:checked').length;
-    //    var weekV= $('.week-list input:checked');
-    //    if (checkboxLen == 0) {
-    //        layer.tips('每周上课天数至少选择一项', $(this));
-    //        return false;
-    //    }
-    //    var teachDate = [];
-    //    $.each(weekV,function(i,v){
-    //        teachDate.push($(this).attr('data'));
-    //    });
-    //    var morningNum = $('#morning-list').val();
-    //    var afternoonNum = $('#afternoon-list').val();
-    //    var eveningNum = $('#evening-list').val();
-    //    var teachTime = morningNum+afternoonNum+eveningNum;
-    //    TeachDateIns.saveTeachTime(taskId,teachDate.join('|'),teachTime);
-    //});
-
-
 });
