@@ -2,7 +2,7 @@
  * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
  *
  * Project Name: saas
- * $Id:  JwBaseConRule.java 2016-12-06 15:06:23 $
+ * $Id:  JwBaseWeekRule.java 2016-12-08 17:19:58 $
  */
 
 
@@ -17,16 +17,16 @@ import cn.thinkjoy.common.domain.BaseDomain;
 
 import java.util.*;
 
-public class JwBaseConRule extends BaseDomain{
+public class JwBaseWeekRule extends BaseDomain{
     private Integer tnId;
     private Integer courseId;
     private Integer teacherId;
     private Integer importantType;
-    private Integer dayConType;
-    private long createDate;
+    private Integer weekType;
+    private Long createDate;
     private Integer taskId;
 
-	public JwBaseConRule(){
+	public JwBaseWeekRule(){
 	}
     public void setTnId(Integer value) {
         this.tnId = value;
@@ -56,18 +56,18 @@ public class JwBaseConRule extends BaseDomain{
     public Integer getImportantType() {
         return this.importantType;
     }
-    public void setDayConType(Integer value) {
-        this.dayConType = value;
+    public void setWeekType(Integer value) {
+        this.weekType = value;
     }
 
-    public Integer getDayConType() {
-        return this.dayConType;
+    public Integer getWeekType() {
+        return this.weekType;
     }
-    public void setCreateDate(long value) {
+    public void setCreateDate(Long value) {
         this.createDate = value;
     }
 
-    public long getCreateDate() {
+    public Long getCreateDate() {
         return this.createDate;
     }
     public void setTaskId(Integer value) {
@@ -85,7 +85,7 @@ public class JwBaseConRule extends BaseDomain{
 			.append("CourseId",getCourseId())
 			.append("TeacherId",getTeacherId())
 			.append("ImportantType",getImportantType())
-			.append("DayConType",getDayConType())
+			.append("WeekType",getWeekType())
 			.append("CreateDate",getCreateDate())
 			.append("TaskId",getTaskId())
 			.toString();
@@ -98,9 +98,9 @@ public class JwBaseConRule extends BaseDomain{
 	}
 	
 	public boolean equals(Object obj) {
-		if(obj instanceof JwBaseConRule == false) return false;
+		if(obj instanceof JwBaseWeekRule == false) return false;
 		if(this == obj) return true;
-		JwBaseConRule other = (JwBaseConRule)obj;
+		JwBaseWeekRule other = (JwBaseWeekRule)obj;
 		return new EqualsBuilder()
 			.append(getId(),other.getId())
 			.isEquals();

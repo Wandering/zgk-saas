@@ -15,6 +15,12 @@ CourseInfo.prototype = {
     },
     addCourse: function (id,coursename,time) {
         var that = this;
+        var timeV = '';
+        if(time=="0"){
+            timeV='';
+        }else{
+            timeV = time;
+        }
         var addCourseContentHtml = [];
         addCourseContentHtml.push('<div class="add-course-box">');
         addCourseContentHtml.push('<div class="course-box">');
@@ -22,11 +28,11 @@ CourseInfo.prototype = {
         addCourseContentHtml.push('<span class="title">课程名称：</span><span>'+ coursename +'</span>');
         addCourseContentHtml.push('</div>');
         addCourseContentHtml.push('<div class="box-row">');
-        addCourseContentHtml.push('<span class="title"><i>*</i>每周课时：</span><input class="week-input" value="'+ time +'" type="text" />节/周');
+        addCourseContentHtml.push('<span class="title"><i>*</i>每周课时：</span><input class="week-input" value="'+ timeV +'" type="text" />节/周');
         addCourseContentHtml.push('<span class="tips">“4+1”表示4节单堂一节连堂共六课时</span>');
         addCourseContentHtml.push('</div>');
         addCourseContentHtml.push('<div class="box-row">');
-        addCourseContentHtml.push('<button type="button" id="save-course-btn" dataid="'+ id +'" coursename="'+ coursename +'" time="'+ time +'">保存</button>');
+        addCourseContentHtml.push('<button type="button" id="save-course-btn" dataid="'+ id +'" coursename="'+ coursename +'" time="'+ timeV +'">保存</button>');
         addCourseContentHtml.push('</div>');
         addCourseContentHtml.push('</div>');
         addCourseContentHtml.push('</div>');
@@ -44,33 +50,21 @@ CourseInfo.prototype = {
                 'taskId': taskId
             },
             function (res) {
-                var res = {
-                    "bizData": [
-                        {
-                            "courseId": "课程ID",
-                            "courseName": "课程名",
-                            "time": "课时"
-                        },
-                        {
-                            "courseId": "课程ID",
-                            "courseName": "课程名",
-                            "time": "课时"
-                        },
-                        {
-                            "courseId": "课程ID",
-                            "courseName": "课程名",
-                            "time": "课时"
-                        }
-                    ],
-                    "rtnCode": "0000000",
-                    "ts": 1480990693884
-                };
                 if (res.rtnCode == "0000000") {
-                    var myTemplate = Handlebars.compile($("#teacher-template").html());
+                    var myTemplate = Handlebars.compile($("#schedule-template").html());
                     Handlebars.registerHelper("addOne", function (index, options) {
                         return parseInt(index) + 1;
                     });
-                    $('#teacher-list').html(myTemplate(res));
+                    Handlebars.registerHelper("times", function (v) {
+                        console.log(v)
+                        if(v=="0"){
+                            return "-";
+                        }else{
+                            return (v + "节/周");
+                        }
+                    });
+
+                    $('#schedule-list').html(myTemplate(res));
                 }
             }, function (res) {
                 layer.msg(res.msg);
@@ -87,6 +81,7 @@ CourseInfo.prototype = {
             function (res) {
                 if (res.rtnCode == "0000000") {
                     that.queryCourseInfoByTaskId(taskId);
+                    layer.closeAll();
                     layer.msg('保存成功!');
                 }
             }, function (res) {
@@ -122,7 +117,6 @@ $(function () {
             return false;
         }
         var courseId = $(this).attr('dataid');
-        var times = $(this).attr('time');
-        CourseInfoIns.saveOrUpdateCourseTime(taskId, courseId, times);
+        CourseInfoIns.saveOrUpdateCourseTime(taskId, courseId, weekInput);
     });
 });

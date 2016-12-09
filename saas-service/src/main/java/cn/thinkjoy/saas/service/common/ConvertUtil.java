@@ -48,6 +48,28 @@ public class ConvertUtil {
         return g;
     }
     /**
+     * 班级类型转换
+     * @return
+     */
+    public static Integer converClassType(String course) {
+        Integer g = 2;
+        switch (course) {
+            case "语文":
+                g = 1;
+                break;
+            case "数学":
+                g = 1;
+                break;
+            case "英语":
+                g = 1;
+                break;
+            case "外语":
+                g = 1;
+                break;
+        }
+        return g;
+    }
+    /**
      * 重新组装资源菜单
      *
      * @param resources
