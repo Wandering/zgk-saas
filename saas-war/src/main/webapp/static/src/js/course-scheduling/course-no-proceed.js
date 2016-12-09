@@ -90,7 +90,6 @@ $(function () {
         $('.course-no-proceed-list li').each(function (i) {
             var tempChk = $(this).find('input[type="checkbox"]');
             var tempKey = tempChk.next().text();
-                //tempKey = '"' + curKey + '"';
             if (tempChk.prop('checked')) {
                 courseNoProceed.params[tempKey] = "1";
             } else {
