@@ -16,7 +16,7 @@ var MixedClass = {
     init: function () {
         this.fetchAndRenderSubject();
         this.fetchBelongClass();
-        console.info(Common.cookie.getCookie('taskId'));
+        this.addEvent();
     },
     fetchAndRenderSubject: function () {
         Common.ajaxFun('/scheduleTask/queryCourseInfoByTaskId.do', 'get', {
@@ -49,7 +49,7 @@ var MixedClass = {
         Common.ajaxFun('/mergeClassController/addMergeInfo.do', 'get', {
             'tnId': GLOBAL_CONSTANT.tnId,
             'taskId': GLOBAL_CONSTANT.taskId,
-            'courseId': '',
+            'courseId': $('#course-select').val(),
             'classIds': '',//班级Id，多个班级有英文逗号分隔
         }, function (res) {
             if (res.rtnCode === '0000000') {
