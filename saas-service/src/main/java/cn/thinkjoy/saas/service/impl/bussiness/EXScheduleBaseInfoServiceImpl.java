@@ -60,7 +60,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         }
 
         Map<String,Object> paramMap = Maps.newHashMap();
-        paramMap.put("tn_id",task.getTnId());
+        paramMap.put("tnId",task.getTnId());
         paramMap.put("grade",task.getGrade());
         List<JwCourseBaseInfo> infos = jwCourseBaseInfoDAO.queryList(paramMap,"id",Constant.DESC);
 
@@ -205,18 +205,18 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         List<ClassBaseDto> dtos = Lists.newArrayList();
 
         Map<String,Object> paramMap = Maps.newHashMap();
-        paramMap.put("class_name",course);
-        paramMap.put("class_type",2);
+        paramMap.put("className",course);
+        paramMap.put("classType",2);
         paramMap.put("grade",grade);
-        paramMap.put("tn_id",tnId);
+        paramMap.put("tnId",tnId);
         List<JwClassBaseInfo> infos = jwClassBaseInfoDAO.like(paramMap,"id",Constant.DESC);
 
         // 不存在则查询行政班级
         if(infos.size() == 0){
             paramMap.clear();
             paramMap.put("grade",grade);
-            paramMap.put("class_type",1);
-            paramMap.put("tn_id",tnId);
+            paramMap.put("classType",1);
+            paramMap.put("tnId",tnId);
             infos = jwClassBaseInfoDAO.queryList(paramMap,"id",Constant.DESC);
         }
 
@@ -234,8 +234,8 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
     public void saveOrUpdateTeacher(int taskId, int teacherId, int classNum,String course, String classId) {
 
         Map<String,Object> paramMap = Maps.newHashMap();
-        paramMap.put("teacher_id",teacherId);
-        paramMap.put("task_id",taskId);
+        paramMap.put("teacherId",teacherId);
+        paramMap.put("taskId",taskId);
         JwTeacher jwTeacher = jwTeacherDAO.queryOne(paramMap,"id",Constant.DESC);
         if(jwTeacher != null){
             jwTeacher.setTeachNum(classNum);
@@ -260,8 +260,8 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
     private void insertBaseRule(int taskId, int teacherId,int tnId,String course){
 
         Map<String,Object> paramMap = Maps.newHashMap();
-        paramMap.put("tn_id",tnId);
-        paramMap.put("course_name",course);
+        paramMap.put("tnId",tnId);
+        paramMap.put("courseName",course);
         JwCourseBaseInfo info = jwCourseBaseInfoDAO.queryOne(paramMap,"id",Constant.DESC);
         if(info == null){
             return;
