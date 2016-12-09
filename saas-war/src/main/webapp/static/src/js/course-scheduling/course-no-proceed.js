@@ -1,8 +1,7 @@
 /**
  * Created by machengcheng on 16/12/6.
  */
-//var taskId = Common.cookie.getCookie('taskId');
-var taskId = 1;
+var taskId = Common.cookie.getCookie('taskId');
 function CourseNoProceed () {
     this.params = {};
     this.init();
