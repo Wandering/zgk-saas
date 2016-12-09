@@ -209,8 +209,8 @@ public class CourseDisSelectController
         if(null == rule)
         {
             rule = new JwCourseGapRule();
-            rule.setTaskId(taskIdValue);
             rule.setRule(rules);
+            rule.setTaskId(taskIdValue);
             rule.setCreateDate(System.currentTimeMillis());
             result = jwCourseGapRuleService.insert(rule);
         }
@@ -222,4 +222,73 @@ public class CourseDisSelectController
         return result;
     }
 
+    @RequestMapping(value = "/getLinkList/{taskId}", method = RequestMethod.GET)
+    public List<Map<String, String>> getLinkList(@PathVariable String taskId)
+    {
+        List<Map<String, String>> list = new ArrayList<>();
+        Map<String, String> params = new HashMap<>();
+        params.put("taskId", taskId);
+        List<Map<String, Object>>  l =jwCourseGapRuleService.queryLinkList(params);
+        for (Map<String, Object> m: l)
+        {
+            String c = (String)m.get("course_hour");
+            if(StringUtils.isNotEmpty(c) && c.contains("+"))
+            {
+               String[] cs = c.split("\\+");
+               if(cs.length<2)
+               {
+                   continue;
+               }
+               String singleCount = cs[0];
+               String linkCount = cs[1];
+               Map<String, String> map = new HashMap<>();
+               map.put("courseName", m.get("course_name")+ "");
+               map.put("singleCount", singleCount);
+               map.put("linkCount", linkCount);
+               map.put("hour", m.get("chour")+ "");
+               list.add(map);
+            }
+        }
+        return list;
+    }
+
+    @RequestMapping(value = "/list/{type}/{taskId}", method = RequestMethod.GET)
+    public List<Map<String, String>> getList(@PathVariable String taskId,@PathVariable String type
+        ,@RequestParam(value = "teacherCourse", required = false) String teacherCourse)
+    {
+        List<Map<String, String>> list;
+        Map<String, String> params = new HashMap<>();
+        params.put("taskId", taskId);
+        if ("class".equals(type))
+        {
+            list = jwCourseGapRuleService.queryClassList(params);
+        }
+        else if ("course".equals(type))
+        {
+            list = jwCourseGapRuleService.queryCourseList(params);
+        }
+        else if ("teacher".equals(type))
+        {
+            params.put("teacherCourse", teacherCourse);
+            list = jwCourseGapRuleService.queryTeacherList(params);
+        }
+        else
+        {
+            throw new BizException("1100222", "type参数有误!");
+        }
+        if(null == list)
+        {
+            throw new BizException("1122334", "请先导入列表信息！");
+        }
+        return list;
+    }
+
+    @RequestMapping(value = "/teacherCourseList/{taskId}", method = RequestMethod.GET)
+    public List<Map<String, String>> getList(@PathVariable String taskId)
+    {
+        Map<String, String> params = new HashMap<>();
+        params.put("taskId", taskId);
+        List<Map<String, String>> list = jwCourseGapRuleService.queryTeacherCourseList(params);
+        return list;
+    }
 }

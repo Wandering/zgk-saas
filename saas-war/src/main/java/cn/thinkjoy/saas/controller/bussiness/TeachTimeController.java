@@ -4,7 +4,7 @@ import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.JwTeachDate;
 import cn.thinkjoy.saas.enums.ErrorCode;
-import cn.thinkjoy.saas.service.IJwTeachDateService;
+import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,15 @@ import java.util.Map;
 public class TeachTimeController {
     @Autowired
     private IJwTeachDateService jwTeachDateService;
+    @Autowired
+    private IJwClassRuleService jwClassRuleService;
+    @Autowired
+    private IJwCourseRuleService jwCourseRuleService;
+    @Autowired
+    private IJwTeacherRuleService jwTeacherRuleService;
+    @Autowired
+    private IJwCourseGapRuleService jwCourseGapRuleService;
+
     @ResponseBody
     @RequestMapping(value = "/saveTeachTime",method = RequestMethod.POST)
     public boolean saveTeachTime(@RequestParam Integer taskId,
@@ -36,6 +45,14 @@ public class TeachTimeController {
         if (StringUtils.isEmpty(teachDate)||StringUtils.isEmpty(teachTime)){
             ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
         }
+        //删除原来的规则
+        jwTeachDateService.deleteByProperty("task_id",taskId);
+        jwClassRuleService.deleteByProperty("taskId",taskId);
+        jwCourseRuleService.deleteByProperty("taskId",taskId);
+        jwTeacherRuleService.deleteByProperty("taskId",taskId);
+        jwCourseGapRuleService.deleteByProperty("taskId",taskId);
+
+
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         String[] dates = teachDate.split("\\|");
         char[] times = teachTime.toCharArray();
@@ -54,6 +71,7 @@ public class TeachTimeController {
         }
         return true;
     }
+
 
     @ResponseBody
     @RequestMapping(value = "/queryTeachTime",method = RequestMethod.GET)
@@ -92,11 +110,6 @@ public class TeachTimeController {
     }
 
 
-//    public static void main(String[] args) {
-//        String s = "430";
-//        System.out.println(getTime(s.toCharArray()));
-//    }
-
     private static Integer getTimeString(char c){
         Integer ct = Integer.valueOf(String.valueOf(c));
         double rtn = 0;
@@ -122,5 +135,4 @@ public class TeachTimeController {
         }
         return s.toString();
     }
-
 }

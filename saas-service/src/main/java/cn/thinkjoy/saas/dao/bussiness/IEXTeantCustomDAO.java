@@ -1,5 +1,7 @@
 package cn.thinkjoy.saas.dao.bussiness;
 
+import cn.thinkjoy.saas.domain.bussiness.SyncClass;
+import cn.thinkjoy.saas.domain.bussiness.SyncCourse;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 import org.apache.ibatis.annotations.Param;
 
@@ -75,4 +77,27 @@ public interface IEXTeantCustomDAO {
      * @return
      */
     Map<String,Object> existDataCount(Map map);
+
+
+    /**
+     * 课程
+     * @param map
+     * @return
+     */
+    List<SyncCourse> selectCourseGroup(Map map);
+
+    /**
+     * 同步班级基础信息
+     * @param map
+     * @return
+     */
+    List<SyncClass> selectClassGroup(Map map);
+
+    /**
+     * 同步行政班基础信息
+     * @param map
+     * @return
+     */
+    List<SyncClass> selectExecutiveClassGroup(Map map);
+
 }

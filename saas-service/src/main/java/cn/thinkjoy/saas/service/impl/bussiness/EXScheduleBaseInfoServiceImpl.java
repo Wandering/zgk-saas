@@ -2,6 +2,7 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.*;
+import cn.thinkjoy.saas.dao.bussiness.IEXClassBaseInfoDAO;
 import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.dto.ClassBaseDto;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
@@ -14,6 +15,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,6 +45,9 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
     @Autowired
     private IJwClassBaseInfoDAO jwClassBaseInfoDAO;
 
+    @Autowired
+    private IEXClassBaseInfoDAO iexClassBaseInfoDAO;
+
     @Override
     public List<CourseBaseDto> queryCourseInfoByTaskId(int taskId) {
 
@@ -59,11 +64,11 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         }
 
         Map<String,Object> paramMap = Maps.newHashMap();
-        paramMap.put("tn_id",task.getTnId());
+        paramMap.put("tnId",task.getTnId());
         paramMap.put("grade",task.getGrade());
         List<JwCourseBaseInfo> infos = jwCourseBaseInfoDAO.queryList(paramMap,"id",Constant.DESC);
 
-        return convertInfos2Dtos(infos);
+        return convertInfos2Dtos(infos,taskId);
     }
 
     /**
@@ -92,17 +97,33 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
      * @param infos
      * @return
      */
-    private List<CourseBaseDto> convertInfos2Dtos(List<JwCourseBaseInfo> infos){
+    private List<CourseBaseDto> convertInfos2Dtos(List<JwCourseBaseInfo> infos,int taskId){
 
         List<CourseBaseDto> dtos = Lists.newArrayList();
         for(JwCourseBaseInfo info : infos){
             CourseBaseDto dto = new CourseBaseDto();
-            dto.setCourseId((long)info.getId());
+            dto.setCourseId(Integer.valueOf(info.getId().toString()));
             dto.setCourseName(info.getCourseName());
             dto.setTime("0");
             dtos.add(dto);
+
+            insertJwCourse(info,taskId);
         }
         return dtos;
+    }
+
+    /**
+     * 插入课程课时信息
+     *
+     * @param info
+     * @param taskId
+     */
+    private void insertJwCourse(JwCourseBaseInfo info,int taskId){
+        JwCourse course = new JwCourse();
+        course.setTaskId(taskId);
+        course.setTnId(info.getTnId());
+        course.setCourseId(Integer.valueOf(info.getId().toString()));
+        jwCourseDAO.insert(course);
     }
 
     @Override
@@ -180,11 +201,14 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
 
         List<JwTeacherBaseInfo> infos = jwTeacherBaseInfoDAO.findList("tn_id",tnId,"id",Constant.DESC);
         for(JwTeacherBaseInfo info : infos){
+            if(info.getTeacherName().indexOf(keyword) == -1){
+                continue;
+            }
             TeacherBaseDto dto = new TeacherBaseDto();
-            dto.setTeacherId((int)info.getId());
+            dto.setTeacherId(Integer.valueOf(info.getId().toString()));
             dto.setTeacherName(info.getTeacherName());
             dto.setCourseName(info.getTeacherCourse());
-            dto.setClassInfo(getClassBaseDtosByCourse(info.getGrade(),info.getTeacherCourse()));
+            dto.setClassInfo(getClassBaseDtosByCourse(tnId,info.getGrade(),info.getTeacherCourse()));
             dtos.add(dto);
         }
 
@@ -194,31 +218,34 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
     /**
      * 根据年级和课程名获取班级信息
      *
+     * @param tnId
      * @param grade
      * @param course
      * @return
      */
-    private List<ClassBaseDto> getClassBaseDtosByCourse(int grade,String course){
+    public List<ClassBaseDto> getClassBaseDtosByCourse(int tnId,int grade,String course){
 
         List<ClassBaseDto> dtos = Lists.newArrayList();
 
         Map<String,Object> paramMap = Maps.newHashMap();
-        paramMap.put("class_name",course);
-        paramMap.put("class_type",2);
+        paramMap.put("className",course);
+        paramMap.put("classType",2);
         paramMap.put("grade",grade);
-        List<JwClassBaseInfo> infos = jwClassBaseInfoDAO.like(paramMap,"id",Constant.DESC);
+        paramMap.put("tnId",tnId);
+        List<JwClassBaseInfo> infos = iexClassBaseInfoDAO.queryClassList(paramMap);
 
         // 不存在则查询行政班级
         if(infos.size() == 0){
             paramMap.clear();
             paramMap.put("grade",grade);
-            paramMap.put("class_type",1);
-            infos = jwClassBaseInfoDAO.queryList(paramMap,"id",Constant.DESC);
+            paramMap.put("classType",1);
+            paramMap.put("tnId",tnId);
+            infos = iexClassBaseInfoDAO.queryClassList(paramMap);
         }
 
         for(JwClassBaseInfo info : infos){
             ClassBaseDto dto = new ClassBaseDto();
-            dto.setClassId((int)info.getId());
+            dto.setClassId(Integer.valueOf(info.getId().toString()));
             dto.setClassName(info.getClassName());
             dtos.add(dto);
         }
@@ -230,8 +257,8 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
     public void saveOrUpdateTeacher(int taskId, int teacherId, int classNum,String course, String classId) {
 
         Map<String,Object> paramMap = Maps.newHashMap();
-        paramMap.put("teacher_id",teacherId);
-        paramMap.put("task_id",taskId);
+        paramMap.put("teacherId",teacherId);
+        paramMap.put("taskId",taskId);
         JwTeacher jwTeacher = jwTeacherDAO.queryOne(paramMap,"id",Constant.DESC);
         if(jwTeacher != null){
             jwTeacher.setTeachNum(classNum);
@@ -245,7 +272,63 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
             jwTeacher.setCourse(course);
             jwTeacher.setTeacherId(teacherId);
             jwTeacher.setTeachNum(classNum);
+
+            // 异步添加教师基本规则
+            insertBaseRule(taskId,teacherId,jwTeacher.getTnId(),course);
         }
 
+    }
+
+    @Async
+    private void insertBaseRule(int taskId, int teacherId,int tnId,String course){
+
+        Map<String,Object> paramMap = Maps.newHashMap();
+        paramMap.put("tnId",tnId);
+        paramMap.put("courseName",course);
+        JwCourseBaseInfo info = jwCourseBaseInfoDAO.queryOne(paramMap,"id",Constant.DESC);
+        if(info == null){
+            return;
+        }
+        int courseId = Integer.valueOf(info.getId().toString());
+        long currentTime = System.currentTimeMillis();
+
+        // 连上规则
+        JwBaseConRule conRule = new JwBaseConRule();
+        conRule.setTeacherId(teacherId);
+        conRule.setTnId(tnId);
+        conRule.setCourseId(courseId);
+        conRule.setCreateDate(currentTime);
+        conRule.setDayConType(1);
+        conRule.setImportantType(2);
+        conRule.setTaskId(taskId);
+
+        // 日任课规则
+        JwBaseDayRule dayRule = new JwBaseDayRule();
+        dayRule.setCreateDate(currentTime);
+        dayRule.setTaskId(taskId);
+        dayRule.setImportantType(2);
+        dayRule.setCourseId(courseId);
+        dayRule.setDayType(1);
+        dayRule.setTeacherId(teacherId);
+        dayRule.setTnId(tnId);
+
+        // 周任课规则
+        JwBaseWeekRule weekRule = new JwBaseWeekRule();
+        weekRule.setCreateDate(currentTime);
+        weekRule.setTnId(tnId);
+        weekRule.setTeacherId(teacherId);
+        weekRule.setCourseId(courseId);
+        weekRule.setImportantType(2);
+        weekRule.setTaskId(taskId);
+        weekRule.setWeekType(1);
+
+        // 教案齐平规则
+        JwBaseJaqpRule jaqpRule = new JwBaseJaqpRule();
+        jaqpRule.setCreateDate(currentTime);
+        jaqpRule.setTaskId(taskId);
+        jaqpRule.setImportantType(2);
+        jaqpRule.setCourseId(courseId);
+        jaqpRule.setTeacherId(teacherId);
+        jaqpRule.setTnId(tnId);
     }
 }

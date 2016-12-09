@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.IEXClassBaseInfoDAO">
+    <insert id="syncClassInfo" useGeneratedKeys="true" parameterType="java.util.List">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        insert into saas_jw_class_base_info(
+        tn_id,
+        class_name,
+        class_type,
+        grade)
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.tnId},#{item.className},#{item.classType},#{item.grade})
+        </foreach>
+    </insert>
+
+    <!-- 查询教室集合 -->
+    <select id="queryClassList" parameterType="map" resultType="cn.thinkjoy.saas.domain.JwClassBaseInfo">
+        SELECT
+            id,
+            tn_id AS tnId,
+            class_name AS className,
+            class_type AS classType,
+            grade
+        FROM
+            saas_jw_class_base_info
+        WHERE
+            tn_id = #{tnId}
+        AND grade = #{grade}
+        AND class_type = #{classType}
+        <if test="className != null and className != ''">
+            AND class_name LIKE CONCAT('%', #{className} , '%')
+        </if>
+    </select>
+</mapper>

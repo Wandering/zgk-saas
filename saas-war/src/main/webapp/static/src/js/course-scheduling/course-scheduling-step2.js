@@ -4,15 +4,16 @@
 var taskId = Common.cookie.getCookie('taskId');
 
 function ArrangeCourse () {
-
+    this.types = ['class', 'teacher', 'course'];
+    this.init();
 }
 ArrangeCourse.prototype = {
     constructor: ArrangeCourse,
     init: function () {
-
+        this.getNoArrangeCourseInfo();
     },
     //获取不排课信息
-    getNoArrangeCourseInfo: function () {
+    getNoArrangeCourseInfo: function (type, id) {
         Common.ajaxFun('/disSelectRule/getRule/' + taskId + '/' + type + '/' + id + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
 
@@ -76,6 +77,10 @@ $(function () {
         } else {
             $(this).text('');
         }
+    });
+
+    $(document).on('click', '#btn-save-assign', function () {
+        alert('保存');
     });
 
 });
