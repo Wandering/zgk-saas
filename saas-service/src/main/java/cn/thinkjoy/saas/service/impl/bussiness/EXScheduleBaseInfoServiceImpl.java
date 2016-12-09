@@ -98,7 +98,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         List<CourseBaseDto> dtos = Lists.newArrayList();
         for(JwCourseBaseInfo info : infos){
             CourseBaseDto dto = new CourseBaseDto();
-            dto.setCourseId((long)info.getId());
+            dto.setCourseId(Integer.valueOf(info.getId().toString()));
             dto.setCourseName(info.getCourseName());
             dto.setTime("0");
             dtos.add(dto);
@@ -118,7 +118,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         JwCourse course = new JwCourse();
         course.setTaskId(taskId);
         course.setTnId(info.getTnId());
-        course.setCourseId((int)info.getId());
+        course.setCourseId(Integer.valueOf(info.getId().toString()));
         jwCourseDAO.insert(course);
     }
 
@@ -201,7 +201,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
                 continue;
             }
             TeacherBaseDto dto = new TeacherBaseDto();
-            dto.setTeacherId((int)info.getId());
+            dto.setTeacherId(Integer.valueOf(info.getId().toString()));
             dto.setTeacherName(info.getTeacherName());
             dto.setCourseName(info.getTeacherCourse());
             dto.setClassInfo(getClassBaseDtosByCourse(tnId,info.getGrade(),info.getTeacherCourse()));
@@ -241,7 +241,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
 
         for(JwClassBaseInfo info : infos){
             ClassBaseDto dto = new ClassBaseDto();
-            dto.setClassId((int)info.getId());
+            dto.setClassId(Integer.valueOf(info.getId().toString()));
             dto.setClassName(info.getClassName());
             dtos.add(dto);
         }
@@ -285,7 +285,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         if(info == null){
             return;
         }
-        int courseId = (int)info.getId();
+        int courseId = Integer.valueOf(info.getId().toString());
         long currentTime = System.currentTimeMillis();
 
         // 连上规则
