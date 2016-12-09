@@ -23,18 +23,27 @@ var MixedClass = {
             'taskId': GLOBAL_CONSTANT.taskId
         }, function (res) {
             if (res.rtnCode == '0000000') {
+                MixedClass.subjectData = res.bizData;
                 var tpl = Handlebars.compile($('#course-select-tpl').html());
                 $('#course-select').html(tpl(res.bizData));
             } else {
                 layer.msg(res.msg);
             }
-        });
+        },function(){},'true');
     },
     fetchBelongClass: function () {
-        Common.ajaxFun('/manage/class/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {}, function (res) {
+        var paramsData = {
+            'tnId': GLOBAL_CONSTANT.tnId,
+            'taskId': GLOBAL_CONSTANT.taskId,
+            'grade':'1',
+            'courseName':'地理',
+            'courseId':'20',
+        }
+        Common.ajaxFun('/mergeClassController/getClassDtoByCourse.do', 'GET', paramsData, function (res) {
             if (res.rtnCode == "0000000") {
+                // isMerge 1:已合过，置灰
                 var tpl = Handlebars.compile($('#choose-class-list-tpl').html());
-                $('#choose-class-list').html(tpl(res.bizData.result));
+                $('#choose-class-list').html(tpl(res.bizData.classBaseDtoList));
             }
         });
     },
@@ -43,17 +52,27 @@ var MixedClass = {
         $('.mixed-class-btn').click(function () {
             that.submitMixedClass();
         });
+        $(document).on('change','#course-select',function(){
+            that.fetchBelongClass();
+        });
+        $(document).on('click','#mixed-list .del-class',function(){
+            var cId = $(this).attr('classIds');
+            that.delMixedClass(cId);
+        });
     },
     submitMixedClass: function () {
-        var that = this;
+        var that = this,classIds='';
+        $('input[name="merge-class"]:checked').each(function(){
+            classIds += $(this).val()+','
+        });
         Common.ajaxFun('/mergeClassController/addMergeInfo.do', 'get', {
             'tnId': GLOBAL_CONSTANT.tnId,
             'taskId': GLOBAL_CONSTANT.taskId,
             'courseId': $('#course-select').val(),
-            'classIds': '',//班级Id，多个班级有英文逗号分隔
+            'classIds': classIds.substr(0,classIds.length-1),//班级Id，多个班级有英文逗号分隔
         }, function (res) {
             if (res.rtnCode === '0000000') {
-                console.info(res);
+                layer.msg('合班成功')
                 that.fetchResult();
             } else {
                 layer.msg(res.msg);
@@ -67,6 +86,44 @@ var MixedClass = {
             'taskId': GLOBAL_CONSTANT.taskId,
             'grade': '',
         }, function (res) {
+            var res = {
+                "bizData": {
+                    "mergeClassInfoList": [
+                        {
+                            "classIds": "3,2,3",
+                            "classNames": "语文1班、语文2班、语文3班",
+                            "courseId": "1",
+                            "courseName": "语文",
+                            "createDate": "",
+                            "id": "1",
+                            "taskId": "1",
+                            "tnId": "1"
+                        },
+                        {
+                            "classIds": "1,2,3",
+                            "classNames": "通用技术1、通用技术2、通用技术4",
+                            "courseId": "1",
+                            "courseName": "通用技术",
+                            "createDate": "",
+                            "id": "1",
+                            "taskId": "1",
+                            "tnId": "1"
+                        },
+                        {
+                            "classIds": "4,2,3",
+                            "classNames": "化学4、化学2、化学10",
+                            "courseId": "1",
+                            "courseName": "化学",
+                            "createDate": "",
+                            "id": "1",
+                            "taskId": "1",
+                            "tnId": "1"
+                        }
+                    ]
+                },
+                "rtnCode": "0000000",
+                "ts": 1481079183282
+            }
             if (res.rtnCode === '0000000') {
                 that.renderResult(res.bizData)
             } else {
@@ -75,7 +132,21 @@ var MixedClass = {
         });
     },
     renderResult:function(dataJson){
-        console.info('dataJson',dataJson);
-    }
+        var tpl = Handlebars.compile($('#mixed-list-tpl').html());
+        $('#mixed-list').html(tpl(dataJson.mergeClassInfoList));
+        $('.mixed-class-tips').removeClass('dh');
+    },
+    delMixedClass:function(cId){
+        Common.ajaxFun('/mergeClassController/deleteMergeInfo.do', 'get', {
+            'id': cId
+        }, function (res) {
+            if(res.rtnCode === '0000000'){
+                layer.msg('删除成功');
+                that.fetchResult();
+            }else{
+                layer.msg(res.msg);
+            }
+        });
+    },
 }
 MixedClass.init();
