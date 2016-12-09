@@ -184,38 +184,38 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>不排课</td>
+                                                    <td>不排课</td>
                                                 </tr>
                                                 <tr>
                                                     <td>2</td>
                                                     <td>不排课</td>
+                                                    <td>不排课</td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>不排课</td>
                                                 </tr>
                                                 <tr>
                                                     <td>3</td>
+                                                    <td>不排课</td>
                                                     <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>不排课</td>
+                                                    <td>不排课</td>
+                                                    <td>不排课</td>
                                                 </tr>
                                                 <tr>
                                                     <td>4</td>
                                                     <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>不排课</td>
+                                                    <td>不排课</td>
+                                                    <td>不排课</td>
                                                     <td></td>
                                                 </tr>
                                                 <tr>
                                                     <td>5</td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td></td>
+                                                    <td>不排课</td>
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
@@ -224,16 +224,16 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>不排课</td>
+                                                    <td>不排课</td>
                                                 </tr>
                                                 <tr>
                                                     <td>7</td>
                                                     <td></td>
+                                                    <td>不排课</td>
                                                     <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>不排课</td>
+                                                    <td>不排课</td>
                                                 </tr>
                                             </tbody>
                                         </table>

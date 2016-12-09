@@ -251,4 +251,44 @@ public class CourseDisSelectController
         }
         return list;
     }
+
+    @RequestMapping(value = "/list/{type}/{taskId}", method = RequestMethod.GET)
+    public List<Map<String, String>> getList(@PathVariable String taskId,@PathVariable String type
+        ,@RequestParam(value = "teacherCourse", required = false) String teacherCourse)
+    {
+        List<Map<String, String>> list;
+        Map<String, String> params = new HashMap<>();
+        params.put("taskId", taskId);
+        if ("class".equals(type))
+        {
+            list = jwCourseGapRuleService.queryClassList(params);
+        }
+        else if ("course".equals(type))
+        {
+            list = jwCourseGapRuleService.queryCourseList(params);
+        }
+        else if ("teacher".equals(type))
+        {
+            params.put("teacherCourse", teacherCourse);
+            list = jwCourseGapRuleService.queryTeacherList(params);
+        }
+        else
+        {
+            throw new BizException("1100222", "type参数有误!");
+        }
+        if(null == list)
+        {
+            throw new BizException("1122334", "请先导入列表信息！");
+        }
+        return list;
+    }
+
+    @RequestMapping(value = "/teacherCourseList/{taskId}", method = RequestMethod.GET)
+    public List<Map<String, String>> getList(@PathVariable String taskId)
+    {
+        Map<String, String> params = new HashMap<>();
+        params.put("taskId", taskId);
+        List<Map<String, String>> list = jwCourseGapRuleService.queryTeacherCourseList(params);
+        return list;
+    }
 }

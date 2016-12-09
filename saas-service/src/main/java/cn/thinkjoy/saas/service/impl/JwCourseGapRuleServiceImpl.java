@@ -6,12 +6,11 @@
  */
 package cn.thinkjoy.saas.service.impl;
 
-import cn.thinkjoy.common.domain.BaseDomain;
 import cn.thinkjoy.common.dao.IBaseDAO;
+import cn.thinkjoy.common.service.impl.AbstractPageService;
 import cn.thinkjoy.saas.dao.IJwCourseGapRuleDAO;
 import cn.thinkjoy.saas.domain.JwCourseGapRule;
 import cn.thinkjoy.saas.service.IJwCourseGapRuleService;
-import cn.thinkjoy.common.service.impl.AbstractPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +32,30 @@ public class JwCourseGapRuleServiceImpl extends AbstractPageService<IBaseDAO<JwC
     public List<Map<String, Object>> queryLinkList(Map<String, String> map)
     {
         return jwCourseGapRuleDAO.queryLinkList(map);
+    }
+
+    @Override
+    public List<Map<String, Object>> queryClassList(Map<String, String> map)
+    {
+        return jwCourseGapRuleDAO.queryClassList(map);
+    }
+
+    @Override
+    public List<Map<String, Object>> queryCourseList(Map<String, String> map)
+    {
+        return jwCourseGapRuleDAO.queryCourseList(map);
+    }
+
+    @Override
+    public List<Map<String, Object>> queryTeacherList(Map<String, String> map)
+    {
+        return jwCourseGapRuleDAO.queryTeacherList(map);
+    }
+
+    @Override
+    public List<String> queryTeacherCourseList(Map<String, String> map)
+    {
+        return jwCourseGapRuleDAO.queryTeacherCourseList(map);
     }
 
 //    @Override
