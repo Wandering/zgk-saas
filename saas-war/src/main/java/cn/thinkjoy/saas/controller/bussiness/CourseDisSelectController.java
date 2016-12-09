@@ -278,7 +278,7 @@ public class CourseDisSelectController
         }
         if(null == list)
         {
-            throw new BizException("1122334", "请先导入信息！");
+            throw new BizException("1122334", "请先导入列表信息！");
         }
         return list;
     }
