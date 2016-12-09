@@ -7,17 +7,17 @@ import java.io.Serializable;
  */
 public class CourseBaseDto implements Serializable {
 
-    private long courseId; // 课程ID
+    private int courseId; // 课程ID
 
     private String courseName; // 课程名
 
     private String time; // 课时
 
-    public long getCourseId() {
+    public int getCourseId() {
         return courseId;
     }
 
-    public void setCourseId(long courseId) {
+    public void setCourseId(int courseId) {
         this.courseId = courseId;
     }
 

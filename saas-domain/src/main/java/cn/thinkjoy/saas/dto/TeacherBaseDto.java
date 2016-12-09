@@ -8,17 +8,17 @@ import java.util.List;
  */
 public class TeacherBaseDto implements Serializable {
 
-    private long teacherId; // 教师ID
+    private int teacherId; // 教师ID
     private String teacherName; // 教师姓名
     private String courseName; // 课程名
     private int classNum; // 最大带班数
     private List<ClassBaseDto> classInfo;
 
-    public long getTeacherId() {
+    public int getTeacherId() {
         return teacherId;
     }
 
-    public void setTeacherId(long teacherId) {
+    public void setTeacherId(int teacherId) {
         this.teacherId = teacherId;
     }
 

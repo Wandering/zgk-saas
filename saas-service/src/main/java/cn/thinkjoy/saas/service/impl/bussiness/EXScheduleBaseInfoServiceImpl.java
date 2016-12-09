@@ -2,6 +2,7 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.*;
+import cn.thinkjoy.saas.dao.bussiness.IEXClassBaseInfoDAO;
 import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.dto.ClassBaseDto;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
@@ -44,6 +45,9 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
     @Autowired
     private IJwClassBaseInfoDAO jwClassBaseInfoDAO;
 
+    @Autowired
+    private IEXClassBaseInfoDAO iexClassBaseInfoDAO;
+
     @Override
     public List<CourseBaseDto> queryCourseInfoByTaskId(int taskId) {
 
@@ -64,7 +68,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         paramMap.put("grade",task.getGrade());
         List<JwCourseBaseInfo> infos = jwCourseBaseInfoDAO.queryList(paramMap,"id",Constant.DESC);
 
-        return convertInfos2Dtos(infos);
+        return convertInfos2Dtos(infos,taskId);
     }
 
     /**
@@ -93,17 +97,33 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
      * @param infos
      * @return
      */
-    private List<CourseBaseDto> convertInfos2Dtos(List<JwCourseBaseInfo> infos){
+    private List<CourseBaseDto> convertInfos2Dtos(List<JwCourseBaseInfo> infos,int taskId){
 
         List<CourseBaseDto> dtos = Lists.newArrayList();
         for(JwCourseBaseInfo info : infos){
             CourseBaseDto dto = new CourseBaseDto();
-            dto.setCourseId((long)info.getId());
+            dto.setCourseId(Integer.valueOf(info.getId().toString()));
             dto.setCourseName(info.getCourseName());
             dto.setTime("0");
             dtos.add(dto);
+
+            insertJwCourse(info,taskId);
         }
         return dtos;
+    }
+
+    /**
+     * 插入课程课时信息
+     *
+     * @param info
+     * @param taskId
+     */
+    private void insertJwCourse(JwCourseBaseInfo info,int taskId){
+        JwCourse course = new JwCourse();
+        course.setTaskId(taskId);
+        course.setTnId(info.getTnId());
+        course.setCourseId(Integer.valueOf(info.getId().toString()));
+        jwCourseDAO.insert(course);
     }
 
     @Override
@@ -181,8 +201,11 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
 
         List<JwTeacherBaseInfo> infos = jwTeacherBaseInfoDAO.findList("tn_id",tnId,"id",Constant.DESC);
         for(JwTeacherBaseInfo info : infos){
+            if(info.getTeacherName().indexOf(keyword) == -1){
+                continue;
+            }
             TeacherBaseDto dto = new TeacherBaseDto();
-            dto.setTeacherId((int)info.getId());
+            dto.setTeacherId(Integer.valueOf(info.getId().toString()));
             dto.setTeacherName(info.getTeacherName());
             dto.setCourseName(info.getTeacherCourse());
             dto.setClassInfo(getClassBaseDtosByCourse(tnId,info.getGrade(),info.getTeacherCourse()));
@@ -209,7 +232,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         paramMap.put("classType",2);
         paramMap.put("grade",grade);
         paramMap.put("tnId",tnId);
-        List<JwClassBaseInfo> infos = jwClassBaseInfoDAO.like(paramMap,"id",Constant.DESC);
+        List<JwClassBaseInfo> infos = iexClassBaseInfoDAO.queryClassList(paramMap);
 
         // 不存在则查询行政班级
         if(infos.size() == 0){
@@ -217,12 +240,12 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
             paramMap.put("grade",grade);
             paramMap.put("classType",1);
             paramMap.put("tnId",tnId);
-            infos = jwClassBaseInfoDAO.queryList(paramMap,"id",Constant.DESC);
+            infos = iexClassBaseInfoDAO.queryClassList(paramMap);
         }
 
         for(JwClassBaseInfo info : infos){
             ClassBaseDto dto = new ClassBaseDto();
-            dto.setClassId((int)info.getId());
+            dto.setClassId(Integer.valueOf(info.getId().toString()));
             dto.setClassName(info.getClassName());
             dtos.add(dto);
         }
@@ -266,7 +289,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         if(info == null){
             return;
         }
-        int courseId = (int)info.getId();
+        int courseId = Integer.valueOf(info.getId().toString());
         long currentTime = System.currentTimeMillis();
 
         // 连上规则
