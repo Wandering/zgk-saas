@@ -36,6 +36,9 @@
         <if test="grade!=null">
           and cc.grade=#{grade}
         </if>
+        <if test="courseId!=null">
+          and cc.id=#{courseId}
+        </if>
     </select>
 
     <delete id="deleteMergeInfo" parameterType="java.util.Map">

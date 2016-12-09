@@ -223,7 +223,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
      * @param course
      * @return
      */
-    private List<ClassBaseDto> getClassBaseDtosByCourse(int tnId,int grade,String course){
+    public List<ClassBaseDto> getClassBaseDtosByCourse(int tnId,int grade,String course){
 
         List<ClassBaseDto> dtos = Lists.newArrayList();
 
@@ -272,6 +272,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
             jwTeacher.setCourse(course);
             jwTeacher.setTeacherId(teacherId);
             jwTeacher.setTeachNum(classNum);
+            jwTeacherDAO.insert(jwTeacher);
 
             // 异步添加教师基本规则
             insertBaseRule(taskId,teacherId,jwTeacher.getTnId(),course);
