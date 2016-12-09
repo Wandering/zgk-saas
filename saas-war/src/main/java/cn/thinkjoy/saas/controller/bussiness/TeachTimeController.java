@@ -47,10 +47,10 @@ public class TeachTimeController {
         }
         //删除原来的规则
         jwTeachDateService.deleteByProperty("task_id",taskId);
-        jwClassRuleService.deleteByProperty("task_id",taskId);
-        jwCourseRuleService.deleteByProperty("task_id",taskId);
-        jwTeacherRuleService.deleteByProperty("task_id",taskId);
-        jwCourseGapRuleService.deleteByProperty("task_id",taskId);
+        jwClassRuleService.deleteByProperty("taskId",taskId);
+        jwCourseRuleService.deleteByProperty("taskId",taskId);
+        jwTeacherRuleService.deleteByProperty("taskId",taskId);
+        jwCourseGapRuleService.deleteByProperty("taskId",taskId);
 
 
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
@@ -135,38 +135,61 @@ public class TeachTimeController {
         return s.toString();
     }
 
-//    public static void main(String[] args) {
-//        test("10100","11-11-","111-11-");
-//    }
-//
-//    public static String test(String v1,String v2,String v3){
-//        //校验字符串
-//        if (StringUtils.isEmpty(v1)){
-//            return v1;
-//        }
-//        //拆分v2
-//        String[] strings1 = v2.split(Constant.TIME_INTERVAL);
-//        Integer num = 0;
-//        for (String s : strings1){
-//            num+=s.length();
-//        }
-//        if (v1.length()==num){
-//            return v1;
-//        }
-//        //拆分v3
-//        String[] strings2 = v3.split(Constant.TIME_INTERVAL);
-//        String[] strings = strings1.length>strings2.length?strings1:strings2;
-//        for (int i = strings.length;i >0;i-- ){
-//            //判断是在什么位置加0
-//
-//        }
-//        System.out.println(test2(1,"0",v1));
-//        return null;
-//    }
-//    private static String test2(int i,String value,String mubiao){
-//        StringBuffer buffer = new StringBuffer(mubiao);
-//        buffer.insert(i,value);
-//        return buffer.toString();
-//    }
+    public static void main(String[] args) {
+        test("10100","11-11-","111-11-");
+    }
 
+    /**
+     *
+     * @param v1 原始表中存储串
+     * @param v2 新的课节串
+     * @param v3 原始表中存储的课节串
+     * @return 生成的串
+     */
+    public static String test(String v1,String v2,String v3){
+        //校验字符串
+        if (StringUtils.isEmpty(v1)){
+            return v1;
+        }
+        //拆分v2
+        String[] strings1 = v2.split(Constant.TIME_INTERVAL);
+        Integer num = 0;
+        for (String s : strings1){
+            num+=s.length();
+        }
+        if (v1.length()==num){
+            return v1;
+        }
+        //拆分v3
+        String[] strings2 = v3.split(Constant.TIME_INTERVAL);
+        String[] strings = strings1.length>strings2.length?strings1:strings2;
+        for (int i = strings.length;i >0;i-- ){
+            //判断是在什么位置加0
+            if (strings1.length>strings2.length){
+                if (strings1[i].length()-strings2[i].length()>0){
+                    //大于0情况下
+                    test2(strings1[i].length(),"0",v1);
+                }else if (strings1[i].length()-strings2[i].length() == 0){
+                    //等于0
+                }else {
+                    //小于0
+                    test3(i,v1);
+                }
+            }else {
+
+            }
+        }
+        System.out.println();
+        return null;
+    }
+    private static String test2(int i,String value,String mubiao){
+        StringBuffer buffer = new StringBuffer(mubiao);
+        buffer.insert(i,value);
+        return buffer.toString();
+    }
+    private static String test3(int i,String mubiao){
+        StringBuffer buffer = new StringBuffer(mubiao);
+        buffer.deleteCharAt(i);
+        return buffer.toString();
+    }
 }
