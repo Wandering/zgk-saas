@@ -10,6 +10,7 @@ TeacherInfo.prototype = {
     constructor: TeacherInfo,
     init: function () {
         this.queryTeacherByTaskId(taskId);
+
     },
     // 根据任务ID获取教师信息
     queryTeacherByTaskId: function (taskId) {
@@ -17,36 +18,36 @@ TeacherInfo.prototype = {
                 'taskId': taskId
             },
             function (res) {
-                var res = {
-                    "bizData": [
-                        {
-                            "teacherId": "教师ID",
-                            "teacherName": "教师姓名",
-                            "courseName": "课程名",
-                            "classNum": "最大带班数",
-                            "classInfo": [
-                                {
-                                    "classId": "所带班级ID",
-                                    "className": "所带班级名称"
-                                }
-                            ]
-                        },
-                        {
-                            "teacherId": "教师ID",
-                            "teacherName": "教师姓名",
-                            "courseName": "课程名",
-                            "classNum": "最大带班数",
-                            "classInfo": [
-                                {
-                                    "classId": "所带班级ID",
-                                    "className": "所带班级名称"
-                                }
-                            ]
-                        }
-                    ],
-                    "rtnCode": "0000000",
-                    "ts": 1480990693884
-                }
+                //var res = {
+                //    "bizData": [
+                //        {
+                //            "teacherId": "教师ID",
+                //            "teacherName": "教师姓名",
+                //            "courseName": "课程名",
+                //            "classNum": "最大带班数",
+                //            "classInfo": [
+                //                {
+                //                    "classId": "所带班级ID",
+                //                    "className": "所带班级名称"
+                //                }
+                //            ]
+                //        },
+                //        {
+                //            "teacherId": "教师ID",
+                //            "teacherName": "教师姓名",
+                //            "courseName": "课程名",
+                //            "classNum": "最大带班数",
+                //            "classInfo": [
+                //                {
+                //                    "classId": "所带班级ID",
+                //                    "className": "所带班级名称"
+                //                }
+                //            ]
+                //        }
+                //    ],
+                //    "rtnCode": "0000000",
+                //    "ts": 1480990693884
+                //}
                 if (res.rtnCode == "0000000") {
                     $('#teacher-list').html('');
                     var myTemplate = Handlebars.compile($("#teacher-template").html());
@@ -95,55 +96,110 @@ TeacherInfo.prototype = {
             area: ['471px', '350px'],
             content: addTeacherContentHtml.join(''),
             success: function () {
-                // 模糊匹配
-                that.keywordsPropertychange();
-                // 点击选项
-                that.listClick();
+                that.queryTeacherByKeyWord(taskId,"");
+            }
+        });
+    },
+    // 自动补全教师姓名
+    queryTeacherByKeyWord: function (taskId, keyWord) {
+        var that = this;
+        Common.ajaxFun('/scheduleTask/queryTeacherByKeyWord.do', 'GET', {
+                'taskId': taskId,
+                'keyWord': keyWord
+            },
+            function (res) {
+                if (res.rtnCode == "0000000") {
+                    if(keyWord==""){
+                       that.getWordList(res.bizData);
+                    }
+                }
+            }, function (res) {
+                layer.msg(res.msg);
+            }, true);
+    },
+    getWordList:function(wordData){
+        var wordArr = [];
+        $.each(wordData,function(i,v){
+            var wordsObj = {}
+            wordsObj['title']= v['teacherName'];
+            wordsObj['teacherId']= v['teacherId'];
+            wordsObj['courseName']= v['courseName'];
+            wordsObj['classNum']= v['classInfo'].length;
+            wordsObj['classInfo']= v['classInfo'];
+            wordArr.push(wordsObj);
+        });
+        $("#teacher-keywords").bigAutocomplete({
+            width:159,
+            data: wordArr,
+            callback:function(data){
+                alert(data.classNum);
+                $('.teach-subject').show().find('.subject-name').text(data.courseName);
+                $('.class-box').show();
+                var maxClassCount = [];
+                for (var i = 0; i < data.classNum; i++) {
+                    maxClassCount.push('<option value="' + (i + 1) + '">' + (i + 1) + '</option>');
+                }
+                $('#max-class-count').append(maxClassCount);
+                var teachingClassList = [];
+                var dataClassInfo = data.classInfo;
+                $('#save-course-btn').attr(
+                    {
+                        'teacherId': data.teacherId,
+                        'courseName': data.courseName,
+                        'classInfoData': JSON.stringify(dataClassInfo)
+                    }
+                );
+                console.log(JSON.stringify(dataClassInfo));
+                for (var j = 0; j < data.classInfo.length; j++) {
+                    teachingClassList.push('<li><input type="checkbox" classId="' + dataClassInfo[j].classId + '" className="' + dataClassInfo[j].className + '" id="classInfo' + j + '" /><label for="classInfo' + j + '">' + dataClassInfo[j].className + '</label></li>');
+                }
+                $('.teaching-class-list').append(teachingClassList);
             }
         });
     },
     // 模糊匹配
-    keywordsPropertychange: function () {
-        var that = this;
-        $('#teacher-keywords').unbind('input propertychange').bind('input propertychange', function () {
-            var keyWord = $.trim($(this).val());
-            if (keyWord == "") {
-                $('.teach-subject,.class-box').hide();
-            }
-            that.queryTeacherByKeyWord(taskId, keyWord);
-        });
-    },
+    //keywordsPropertychange: function () {
+    //    var that = this;
+    //    $('#teacher-keywords').unbind('input propertychange').bind('input propertychange', function () {
+    //        var keyWord = $.trim($(this).val());
+    //        if (keyWord == "") {
+    //            $('.teach-subject,.class-box').hide();
+    //        }
+    //        that.queryTeacherByKeyWord(taskId, keyWord);
+    //    });
+    //},
     // 模糊下拉点击
-    listClick: function () {
-        $(document).on('click', '#search-list li', function () {
-            $('.teaching-class-list').html('');
-            $('#max-class-count option:gt(0)').remove();
-            $('#teacher-keywords').val($(this).text());
-            $('#save-course-btn').attr(
-                {
-                    'teacherId': $(this).attr('teacherId'),
-                    'courseName': $(this).attr('courseName')
-                }
-            );
-            $('.teach-subject,.class-box').show();
-            $('.subject-name').text($(this).attr('courseName'));
-            $('#search-list').html('').hide();
-            var maxClassNum = $(this).attr('maxClass');
-            var maxClassCount = [];
-            for (var i = 0; i < maxClassNum; i++) {
-                maxClassCount.push('<option value="' + (i + 1) + '">' + (i + 1) + '</option>');
-            }
-            $('#max-class-count').append(maxClassCount);
-            var teachingClassList = [];
-            var classInfo = $(this).attr('classInfo');
-            console.log(JSON.parse(classInfo))
-            var classInfoData = JSON.parse(classInfo);
-            for (var j = 0; j < classInfoData.length; j++) {
-                teachingClassList.push('<li><input type="checkbox" classId="' + classInfoData[j].classId + '" className="' + classInfoData[j].className + '" id="classInfo' + j + '" /><label for="classInfo' + j + '">' + classInfoData[j].className + '</label></li>');
-            }
-            $('.teaching-class-list').append(teachingClassList);
-        })
-    },
+    //listClick: function () {
+    //    $(document).on('click', '#search-list li', function () {
+    //        $('.teaching-class-list').html('');
+    //        $('#max-class-count option:gt(0)').remove();
+    //        $('#teacher-keywords').val($(this).text());
+    //        $('.teach-subject,.class-box').show();
+    //        $('.subject-name').text($(this).attr('courseName'));
+    //        $('#search-list').html('').hide();
+    //        var maxClassNum = $(this).attr('maxClass');
+    //        var maxClassCount = [];
+    //        for (var i = 0; i < maxClassNum; i++) {
+    //            maxClassCount.push('<option value="' + (i + 1) + '">' + (i + 1) + '</option>');
+    //        }
+    //        $('#max-class-count').append(maxClassCount);
+    //        var teachingClassList = [];
+    //        var classInfo = $(this).attr('classInfo');
+    //        var classInfoData = JSON.parse(classInfo);
+    //        console.log(classInfo)
+    //        $('#save-course-btn').attr(
+    //            {
+    //                'teacherId': $(this).attr('teacherId'),
+    //                'courseName': $(this).attr('courseName'),
+    //                'classInfoData': classInfo
+    //            }
+    //        );
+    //        for (var j = 0; j < classInfoData.length; j++) {
+    //            teachingClassList.push('<li><input type="checkbox" classId="' + classInfoData[j].classId + '" className="' + classInfoData[j].className + '" id="classInfo' + j + '" /><label for="classInfo' + j + '">' + classInfoData[j].className + '</label></li>');
+    //        }
+    //        $('.teaching-class-list').append(teachingClassList);
+    //    })
+    //},
     // 删除教师配置信息
     deleteTeacher: function (taskId, teacherId) {
         Common.ajaxFun('/scheduleTask/deleteTeacher.do', 'GET', {
@@ -176,74 +232,7 @@ TeacherInfo.prototype = {
         });
         $('#search-list').html(tpl).show();
     },
-    // 自动补全教师姓名
-    queryTeacherByKeyWord: function (taskId, keyWord) {
-        var that = this;
-        Common.ajaxFun('/scheduleTask/queryTeacherByKeyWord.do', 'GET', {
-                'taskId': taskId,
-                'keyWord': keyWord
-            },
-            function (res) {
-                var res = {
-                    "bizData": [
-                        {
-                            "teacherId": "教师ID1",
-                            "teacherName": "教师姓名1",
-                            "courseName": "课程名1",
-                            "classInfo": [
-                                {
-                                    "classId": "班级ID1",
-                                    "className": "班级名称1"
-                                },
-                                {
-                                    "classId": "班级ID2",
-                                    "className": "班级名称2"
-                                },
-                                {
-                                    "classId": "班级ID3",
-                                    "className": "班级名称3"
-                                }
-                            ]
-                        },
-                        {
-                            "teacherId": "教师ID2",
-                            "teacherName": "教师姓名2",
-                            "courseName": "课程名2",
-                            "classInfo": [
-                                {
-                                    "classId": "班级ID1",
-                                    "className": "班级名称1"
-                                },
-                                {
-                                    "classId": "班级ID2",
-                                    "className": "班级名称2"
-                                },
-                                {
-                                    "classId": "班级ID3",
-                                    "className": "班级名称3"
-                                },
-                                {
-                                    "classId": "班级ID4",
-                                    "className": "班级名称4"
-                                }
-                            ]
-                        }
-                    ],
-                    "rtnCode": "0000000",
-                    "ts": 1480990693884
-                };
-                if (res.rtnCode == "0000000") {
-                    if (res.bizData.length > 0) {
-                        that.renderSearchList(res.bizData);
-                    } else {
-                        layer.msg("请至教师管理添加教师信息");
-                    }
 
-                }
-            }, function (res) {
-                layer.msg(res.msg);
-            }, true);
-    },
     // 所授课程
     teachingCourses: function (data) {
 
@@ -270,6 +259,7 @@ TeacherInfo.prototype = {
                 if (res.rtnCode == "0000000") {
                     layer.msg("添加成功!");
                     that.queryTeacherByTaskId(taskId);
+                    layer.closeAll();
                 }
             }, function (res) {
                 layer.msg(res.msg);
@@ -287,14 +277,14 @@ $(function () {
     });
 
     // 模糊搜索
-    $(document).on('mouseover', '#teacher-keywords', function () {
-        $('.like-teacher-list').show();
-    });
-
-    $(document).on('click', function (e) {
-        $('.like-teacher-list').hide();
-        e.stopPropagation();
-    });
+    //$(document).on('mouseover', '#teacher-keywords', function () {
+    //    $('.like-teacher-list').show();
+    //});
+    //
+    //$(document).on('click', function (e) {
+    //    $('.like-teacher-list').hide();
+    //    e.stopPropagation();
+    //});
 
 
     // 修改
@@ -310,11 +300,16 @@ $(function () {
             return false;
         }
         TeacherInfoIns.addOrUpdateTeacher('修改教师');
+        $('.teach-subject, .class-box').show();
         $('#teacher-keywords').val(teacherV.attr('teachername'));
         $('.subject-name').text(teacherV.attr('coursename'));
+        //for (var j = 0; j < classInfoData.length; j++) {
+        //    teachingClassList.push('<li><input type="checkbox" classId="' + classInfoData[j].classId + '" className="' + classInfoData[j].className + '" id="classInfo' + j + '" /><label for="classInfo' + j + '">' + classInfoData[j].className + '</label></li>');
+        //}
+        //$('.teaching-class-list').append(teachingClassList);
+
     });
 
-    // 删除
     // 删除详情列表
     $('body').on('click', '#delete-teacher-btn', function () {
         var checkboxLen = $('#teacher-list input[type="checkbox"]:checked').length;
@@ -363,5 +358,11 @@ $(function () {
 
 
     });
+
+
+
+
+
+
 
 });

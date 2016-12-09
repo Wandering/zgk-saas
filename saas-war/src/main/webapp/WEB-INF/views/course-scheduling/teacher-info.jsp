@@ -157,7 +157,11 @@
     </tr>
     {{/each}}
 </script>
+
+
+
 <%@ include file="./../common/footer.jsp"%>
+<script src="<%=ctx%>/static/src/lib/jquery.bigautocomplete/jquery.bigautocomplete.js"></script>
 <script src="<%=ctx%>/static/src/js/course-scheduling/teacher-info.js"></script>
 </body>
 </html>
