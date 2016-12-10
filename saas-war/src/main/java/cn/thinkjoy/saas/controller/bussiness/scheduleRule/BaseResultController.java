@@ -2,8 +2,11 @@ package cn.thinkjoy.saas.controller.bussiness.scheduleRule;
 
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
+import cn.thinkjoy.saas.domain.JwClassBaseInfo;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
 import cn.thinkjoy.saas.service.*;
+import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
+import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +35,8 @@ public class BaseResultController {
     private IJwCourseBaseInfoService jwCourseBaseInfoService;
     @Autowired
     private IJwClassBaseInfoService jwClassBaseInfoService;
+    @Autowired
+    private IEXTenantCustomService iexTenantCustomService;
     /**
      * 获取教室名称
      * @return
@@ -99,14 +105,21 @@ public class BaseResultController {
      */
     @RequestMapping(value = "/queryStudent",method = RequestMethod.GET)
     @ResponseBody
-    public List queryStudent(@RequestParam Integer taskId,@RequestParam String grade) {
-
-        Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        Map<String,Object>  map = Maps.newHashMap();
-        map.put("tnId",tnId);
-        map.put("taskId",taskId);
-        List list = jwCourseBaseInfoService.queryList(map,"id","desc");
-        return list;
+    public List queryStudent(@RequestParam Integer taskId,@RequestParam Integer classId) {
+        List<Map<String,Object>>  resultMap = new ArrayList<>();
+        Map<String,Object> map = Maps.newHashMap();
+        map.put("id",1);
+        map.put("studentName","张一");
+        resultMap.add(map);
+        map = Maps.newHashMap();
+        map.put("id",2);
+        map.put("studentName","张二");
+        resultMap.add(map);
+        map = Maps.newHashMap();
+        map.put("id",3);
+        map.put("studentName","张三");
+        resultMap.add(map);
+        return resultMap;
     }
 
 }
