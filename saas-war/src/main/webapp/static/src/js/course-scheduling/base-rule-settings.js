@@ -15,47 +15,6 @@ var JAPQModule = {
             'taskId': GLOBAL_CONSTANT.taskId,
             'courseId': courseId || ''
         }, function (res) {
-            var res = {
-                "bizData": {
-                    "baseRuleList": [
-                        {
-                            "courseId": "1",
-                            "courseName": "语文",
-                            "createDate": "",
-                            "id": "1",
-                            "importantType": "2",
-                            "taskId": "1",
-                            "teacherId": "1",
-                            "teacherName": "左浩",
-                            "tnId": "1"
-                        },
-                        {
-                            "courseId": "1",
-                            "courseName": "历史",
-                            "createDate": "",
-                            "id": "2",
-                            "importantType": "3",
-                            "taskId": "1",
-                            "teacherId": "2",
-                            "teacherName": "韩嘉琛",
-                            "tnId": "1"
-                        },
-                        {
-                            "courseId": "1",
-                            "courseName": "通用技术",
-                            "createDate": "",
-                            "id": "4",
-                            "importantType": "1",
-                            "taskId": "1",
-                            "teacherId": "2",
-                            "teacherName": "pdeng",
-                            "tnId": "1"
-                        }
-                    ]
-                },
-                "rtnCode": "0000000",
-                "ts": 1481080799397
-            };
             if (res.rtnCode == '0000000') {
                 var tpl = Handlebars.compile($('#japq-list-tpl').html());
                 $('#japq-list').html(tpl(res.bizData.baseRuleList));
@@ -91,50 +50,6 @@ var ZRKModule = {
             'taskId': GLOBAL_CONSTANT.taskId,
             'courseId': courseId || ''
         }, function (res) {
-            var res = {
-                "bizData": {
-                    "baseRuleList": [
-                        {
-                            "courseId": "1",
-                            "courseName": "通用技术",
-                            "createDate": "",
-                            "id": "12",
-                            "importantType": "1",//重要程度
-                            "taskId": "1",
-                            "teacherId": "1",
-                            "teacherName": "小花",
-                            "tnId": "1",
-                            "weekType": "2"//周内分布
-                        },
-                        {
-                            "courseId": "2",
-                            "courseName": "数学",
-                            "createDate": "",
-                            "id": "11",
-                            "importantType": "2",//重要程度
-                            "taskId": "2",
-                            "teacherId": "2",
-                            "teacherName": "韩嘉琛",
-                            "tnId": "2",
-                            "weekType": "1"//周内分布
-                        },
-                        {
-                            "courseId": "2",
-                            "courseName": "数学",
-                            "createDate": "",
-                            "id": "5",
-                            "importantType": "3",//重要程度
-                            "taskId": "2",
-                            "teacherId": "2",
-                            "teacherName": "韩嘉琛",
-                            "tnId": "2",
-                            "weekType": "2"//周内分布
-                        }
-                    ]
-                },
-                "rtnCode": "0000000",
-                "ts": 1481081711303
-            }
             if (res.rtnCode == '0000000') {
                 var tpl = Handlebars.compile($('#zrk-list-tpl').html());
                 $('#zrk-list').html(tpl(res.bizData.baseRuleList));
@@ -172,38 +87,6 @@ var RRKModule = {
             'taskId': GLOBAL_CONSTANT.taskId,
             'courseId': courseId || ''
         }, function (res) {
-            var res = {
-                "bizData": {
-                    "baseRuleList": [
-                        {
-                            "courseId": "1",
-                            "courseName": "化学",
-                            "createDate": "",
-                            "id": "1",
-                            "importantType": "3",//重要程度
-                            "taskId": "1",
-                            "teacherId": "1",
-                            "teacherName": "韩寒",
-                            "tnId": "1",
-                            "dayType": "2"//日内分布
-                        },
-                        {
-                            "courseId": "1",
-                            "courseName": "语文",
-                            "createDate": "",
-                            "id": "2",
-                            "importantType": "2",//重要程度
-                            "taskId": "1",
-                            "teacherId": "1",
-                            "teacherName": "韩寒1",
-                            "tnId": "1",
-                            "dayType": "1"//日内分布
-                        }
-                    ]
-                },
-                "rtnCode": "0000000",
-                "ts": 1481081711303
-            }
             if (res.rtnCode == '0000000') {
                 var tpl = Handlebars.compile($('#rrk-list-tpl').html());
                 $('#rrk-list').html(tpl(res.bizData.baseRuleList));
@@ -241,62 +124,6 @@ var LSModule = {
             'taskId': GLOBAL_CONSTANT.taskId,
             'courseId': courseId || ''
         }, function (res) {
-            var res = {
-                "bizData": {
-                    "baseRuleList": [
-                        {
-                            "courseId": "1",
-                            "courseName": "屋里",
-                            "createDate": "",
-                            "id": "1",
-                            "importantType": "3",//重要程度
-                            "taskId": "1",
-                            "teacherId": "1",
-                            "teacherName": "巴拉巴拉小魔法",
-                            "tnId": "1",
-                            "dayConType": "1"//周内分布
-                        },
-                        {
-                            "courseId": "1",
-                            "courseName": "历史",
-                            "createDate": "",
-                            "id": "1",
-                            "importantType": "1",//重要程度
-                            "taskId": "1",
-                            "teacherId": "1",
-                            "teacherName": "巴拉巴拉小魔法1",
-                            "tnId": "1",
-                            "dayConType": "2"//周内分布
-                        },
-                        {
-                            "courseId": "1",
-                            "courseName": "政治",
-                            "createDate": "",
-                            "id": "1",
-                            "importantType": "2",//重要程度
-                            "taskId": "1",
-                            "teacherId": "1",
-                            "teacherName": "巴拉巴拉小魔法2",
-                            "tnId": "1",
-                            "dayConType": "1"//周内分布
-                        },
-                        {
-                            "courseId": "1",
-                            "courseName": "地理",
-                            "createDate": "",
-                            "id": "1",
-                            "importantType": "3",//重要程度
-                            "taskId": "1",
-                            "teacherId": "1",
-                            "teacherName": "巴拉巴拉小魔法3",
-                            "tnId": "1",
-                            "dayConType": "2"//周内分布
-                        }
-                    ]
-                },
-                "rtnCode": "0000000",
-                "ts": 1481081711303
-            }
             if (res.rtnCode == '0000000') {
                 var tpl = Handlebars.compile($('#ls-list-tpl').html());
                 $('#ls-list').html(tpl(res.bizData.baseRuleList));
