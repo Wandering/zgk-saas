@@ -3,7 +3,9 @@ dependencies {
 
     compile "org.freemarker:freemarker:$freemarkerVersion"
 
-    compile group: "cn.thinkjoy.common", name: "thinkjoy-web-common", version: "$thinkjoyCommonVersion", changing: true
+    compile (group: "cn.thinkjoy.common", name: "thinkjoy-web-common", version: "$thinkjoyCommonVersion", changing: true){
+        exclude group: 'cn.thinkjoy.cloudstack', module: 'cs-monitor-client'
+    }
 
     compile project(':saas-service')
 
