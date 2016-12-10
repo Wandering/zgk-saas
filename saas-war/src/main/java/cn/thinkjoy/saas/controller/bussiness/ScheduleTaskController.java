@@ -401,7 +401,7 @@ public class ScheduleTaskController {
      */
     @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
     @ResponseBody
-    public Map getCourseResult(@PathVariable String type,@RequestParam String param) {
+    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,@RequestParam String param) {
         Map<String,Object> paramsMap = Maps.newHashMap();
         try {
             paramsMap = JSON.parseObject(param,Map.class);
@@ -410,7 +410,7 @@ public class ScheduleTaskController {
         }
 
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type, tnId,paramsMap);
+        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap);
 
         Map resultMap = new HashMap();
         resultMap.put("result",courseResultView);
