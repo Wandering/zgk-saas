@@ -5,6 +5,7 @@ import cn.thinkjoy.saas.dto.MergeClassInfoDto;
 import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.saas.service.bussiness.scheduleRule.IMergeClass;
 import cn.thinkjoy.saas.service.impl.bussiness.EXScheduleBaseInfoServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,14 +36,17 @@ public class MergeClassController {
                                            @RequestParam("taskId")String taskId,
                                            @RequestParam("courseId")String courseId,
                                            @RequestParam("classIds")String classIds){
-
+        Map<String,Object> resultMap=new HashMap<>();
+        if (!(StringUtils.isNotBlank(classIds)&&classIds.contains(","))){
+            resultMap.put("massge", "请选择至少两个个班级");
+            return resultMap;
+        }
         Map<String,Object> paramMap=new HashMap<>();
         paramMap.put("tnId",tnId);
         paramMap.put("taskId",taskId);
         paramMap.put("courseId",courseId);
         paramMap.put("classIds",classIds);
         iMergeClass.insertMergeInfo(paramMap);
-        Map<String,Object> resultMap=new HashMap<>();
         return resultMap;
     }
 

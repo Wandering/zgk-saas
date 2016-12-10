@@ -1,11 +1,12 @@
 /**
- * @wiki: http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=44458344
  * 全局常量
- * @type {{tnId: *, typ: string}}
+ * @wiki: http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=44458344
+ * @type {{tnId: *, taskId: *, grade: GLOBAL_CONSTANT.grade}}
+ * @by:pdeng
  */
 var GLOBAL_CONSTANT = {
-    tnId: Common.cookie.getCookie('tnId'), //租户ID
-    taskId: Common.cookie.getCookie('taskId'), //租户ID
+    tnId: Common.cookie.getCookie('tnId'),
+    taskId: Common.cookie.getCookie('taskId'),
     grade: function(){
         var gradeId = Common.cookie.getCookie('gradeName');
         switch (gradeId){
@@ -25,12 +26,13 @@ var GLOBAL_CONSTANT = {
 
 /**
  * 排课任务 -> 排课规则设置 ->合班
- * @type {{init: MixedClass.init, fetchAndRenderSubject: MixedClass.fetchAndRenderSubject, fetchBelongClass: MixedClass.fetchBelongClass}}
+ * @type {{init: MixedClass.init, fetchAndRenderSubject: MixedClass.fetchAndRenderSubject, fetchBelongClass: MixedClass.fetchBelongClass, addEvent: MixedClass.addEvent, submitMixedClass: MixedClass.submitMixedClass, fetchResult: MixedClass.fetchResult, renderResult: MixedClass.renderResult, delMixedClass: MixedClass.delMixedClass}}
  */
 var MixedClass = {
     init: function () {
         this.fetchAndRenderSubject();
         this.fetchBelongClass(MixedClass.subjectData[0].courseName,MixedClass.subjectData[0].courseId);
+        this.fetchResult();
         this.addEvent();
     },
     fetchAndRenderSubject: function () {
@@ -73,7 +75,7 @@ var MixedClass = {
         });
         $(document).on('change','#course-select',function(){
             var cName = $('#course-select option:selected').text(),
-                cId = $(this).val();
+                cId = $('#course-select option:selected').val();
             that.fetchBelongClass(cName,cId);
         });
         $(document).on('click','#mixed-list .del-class',function(){
@@ -95,6 +97,9 @@ var MixedClass = {
             if (res.rtnCode === '0000000') {
                 layer.msg('合班成功')
                 that.fetchResult();
+                var cName = $('#course-select option:selected').text(),
+                    cId = $('#course-select option:selected').val();
+                that.fetchBelongClass(cName,cId);
             } else {
                 layer.msg(res.msg);
             }
@@ -120,12 +125,16 @@ var MixedClass = {
         $('.mixed-class-tips').removeClass('dh');
     },
     delMixedClass:function(cId){
+        var that = this;
         Common.ajaxFun('/mergeClassController/deleteMergeInfo.do', 'get', {
             'id': cId
         }, function (res) {
             if(res.rtnCode === '0000000'){
                 layer.msg('删除成功');
                 that.fetchResult();
+                var cName = $('#course-select option:selected').text(),
+                    cId = $('#course-select option:selected').val();
+                that.fetchBelongClass(cName,cId);
             }else{
                 layer.msg(res.msg);
             }
