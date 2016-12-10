@@ -84,17 +84,33 @@
     <%--&lt;%&ndash;<td class="center index">化学</td>&ndash;%&gt;--%>
     <%--&lt;%&ndash;<td class="center index">通用技术</td>&ndash;%&gt;--%>
     <%--</tr>--%>
-    {{#each this}}
-        <tr class="ui-sortable-handle">
-        {{#each this}}
-            <%--<td class="center index">{{addOne @index this}}</td>--%>
-            <td class="center index">
 
-            {{this}}
-            </td>
-        {{/each}}
+        <%--<tr class="ui-sortable-handle">--%>
+        <%--&lt;%&ndash;{{#each this}}&ndash;%&gt;--%>
+            <%--&lt;%&ndash;&lt;%&ndash;<td class="center index">{{addOne @index this}}</td>&ndash;%&gt;&ndash;%&gt;--%>
+            <%--&lt;%&ndash;<td class="center index">&ndash;%&gt;--%>
 
-        </tr>
+            <%--&lt;%&ndash;</td>&ndash;%&gt;--%>
+            <%--&lt;%&ndash;&ndash;%&gt;--%>
+        <%--&lt;%&ndash;{{/each}}&ndash;%&gt;--%>
+            <%----%>
+
+        <%--</tr>--%>
+    <%--<tr>--%>
+        <%--<td></td>--%>
+    <%--</tr>--%>
+    {{#each week}}
+    <tr>
+        <td>
+            {{weekList this}}
+        </td>
+    </tr>
     {{/each}}
+
+
+
+
+
+
 </script>
 <script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>

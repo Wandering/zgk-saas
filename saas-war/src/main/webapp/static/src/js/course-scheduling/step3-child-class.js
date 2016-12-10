@@ -60,7 +60,6 @@ ClassRoomTable.prototype = {
                 ]
             ]
         };
-
         var weekList = res.thechDate.split('|');
 
         console.log(weekList);
@@ -68,16 +67,26 @@ ClassRoomTable.prototype = {
         $('#grade-thead-list').html(theadTemplate(weekList));
 
 
+        var weekArr = [];
+        $.each(res.week,function(i,v){
+            $.each(v,function(j,k){
+                console.log(weekArr[j]);
+            })
+        });
 
 
+
+
+
+
+        var tbodyTemplate = Handlebars.compile($("#grade-tbody-list-template").html());
         var classOrder = res.thechTime.split('');
         var classOrderCount = parseInt(classOrder[0]) + parseInt(classOrder[1]) + parseInt(classOrder[2]);
-        var tbodyTemplate = Handlebars.compile($("#grade-tbody-list-template").html());
         Handlebars.registerHelper("addOne", function (index, options) {
             console.log(index)
-            return parseInt(index) + 1;
+            return parseInt(index) + classOrderCount;
         });
-        $('#grade-tbody-list').html(tbodyTemplate(res.week));
+        $('#grade-tbody-list').html(tbodyTemplate(res));
 
 
         //var trTemplate = Handlebars.compile($("#grade-tr-list-template").html());
