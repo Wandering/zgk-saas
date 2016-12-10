@@ -79,7 +79,7 @@ ArrangeCourse.prototype = {
                         for (var i = 0; i < classCount; i++) {
                             if (i != 0) {
                                 classesHtml.push('<tr>');
-                                classesHtml.push('<td>' + (i + 1) + '</td>');
+                                classesHtml.push('<td class="order">' + (i + 1) + '</td>');
                                 if (weeks.length != 0) {
                                     for (var j = 0; j < weeks.length; j++) {
                                         var curIndex = "week" + j;
@@ -89,7 +89,7 @@ ArrangeCourse.prototype = {
                                 }
                             } else {
                                 classesHtml.push('<tr>');
-                                classesHtml.push('<td>' + (i + 1) + '</td>');
+                                classesHtml.push('<td class="order">' + (i + 1) + '</td>');
                                 if (weeks.length != 0) {
                                     for (var j = 0; j < weeks.length; j++) {
                                         var curIndex = "week" + j;
@@ -342,7 +342,7 @@ ArrangeCourse.prototype = {
                 for (var i = 0; i < a + b + c; i++) {
                     if (i != 0) {
                         classesHtml.push('<tr>');
-                        classesHtml.push('<td>' + (i + 1) + '</td>');
+                        classesHtml.push('<td class="order">' + (i + 1) + '</td>');
                         if (weeks.length != 0) {
                             for (var j = 0; j < weeks.length; j++) {
                                 var curIndex = "week" + j;
@@ -351,7 +351,7 @@ ArrangeCourse.prototype = {
                         }
                     } else {
                         classesHtml.push('<tr>');
-                        classesHtml.push('<td>' + (i + 1) + '</td>');
+                        classesHtml.push('<td class="order">' + (i + 1) + '</td>');
                         if (weeks.length != 0) {
                             for (var j = 0; j < weeks.length; j++) {
                                 var curIndex = "week" + j;
@@ -418,7 +418,7 @@ $(function () {
         }
     });
 
-    $(document).on('click', '.no-assign-table td', function () {
+    $(document).on('click', '.no-assign-table tr td:not(.order)', function () {
         var curText = $(this).text().trim();
         if (curText == '排课') {
             $(this).text('不排课');

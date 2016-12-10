@@ -72,10 +72,10 @@ CourseNoProceed.prototype = {
                     history.go(0);
                 }
             } else {
-                layer.msg(data, {time: 1000});
+                layer.msg(res.msg, {time: 1000});
             }
         }, function (res) {
-            layer.msg("出错了", {time: 1000});
+            layer.msg(res.msg, {time: 1000});
         }, false);
     }
 };
