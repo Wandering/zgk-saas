@@ -140,7 +140,7 @@
     <tr>
         <td class="center">
             <label>
-                <input type="checkbox" teacherId="{{teacherId}}" teacherName="{{teacherName}}" courseName="{{courseName}}" classNum="{{classNum}}" class="ace"/>
+                <input type="checkbox" classInfo="{{classInfoData classInfo}}" teacherId="{{teacherId}}" teacherName="{{teacherName}}" courseName="{{courseName}}" classNum="{{classNum}}" class="ace"/>
                 <span class="lbl"></span>
             </label>
         </td>

@@ -4,7 +4,6 @@ var taskId = Common.cookie.getCookie('taskId');
 //教师信息构造函数及其原型
 function TeacherInfo() {
     this.init();
-    this.teacherArr = [];
 }
 TeacherInfo.prototype = {
     constructor: TeacherInfo,
@@ -18,39 +17,17 @@ TeacherInfo.prototype = {
                 'taskId': taskId
             },
             function (res) {
-                //var res = {
-                //    "bizData": [
-                //        {
-                //            "teacherId": "教师ID",
-                //            "teacherName": "教师姓名",
-                //            "courseName": "课程名",
-                //            "classNum": "最大带班数",
-                //            "classInfo": [
-                //                {
-                //                    "classId": "所带班级ID",
-                //                    "className": "所带班级名称"
-                //                }
-                //            ]
-                //        },
-                //        {
-                //            "teacherId": "教师ID",
-                //            "teacherName": "教师姓名",
-                //            "courseName": "课程名",
-                //            "classNum": "最大带班数",
-                //            "classInfo": [
-                //                {
-                //                    "classId": "所带班级ID",
-                //                    "className": "所带班级名称"
-                //                }
-                //            ]
-                //        }
-                //    ],
-                //    "rtnCode": "0000000",
-                //    "ts": 1480990693884
-                //}
                 if (res.rtnCode == "0000000") {
                     $('#teacher-list').html('');
                     var myTemplate = Handlebars.compile($("#teacher-template").html());
+                    Handlebars.registerHelper("classInfoData", function (v) {
+                        var data = [];
+                        $.each(v,function(i,k){
+                            console.log(k);
+                            data.push(k.classId);
+                        });
+                        return data;
+                    });
                     Handlebars.registerHelper("addOne", function (index, options) {
                         return parseInt(index) + 1;
                     });
@@ -60,7 +37,7 @@ TeacherInfo.prototype = {
                 layer.msg(res.msg);
             });
     },
-    addOrUpdateTeacher: function (title) {
+    addOrUpdateTeacher: function (title,teachername) {
         var that = this;
         var addTeacherContentHtml = [];
         addTeacherContentHtml.push('<div class="add-teacher-box">');
@@ -96,7 +73,12 @@ TeacherInfo.prototype = {
             area: ['471px', '350px'],
             content: addTeacherContentHtml.join(''),
             success: function () {
-                that.queryTeacherByKeyWord(taskId,"");
+                if(teachername){
+                    that.queryTeacherByKeyWord(taskId,teachername);
+                }else{
+                    that.queryTeacherByKeyWord(taskId,"");
+                }
+
             }
         });
     },
@@ -109,8 +91,11 @@ TeacherInfo.prototype = {
             },
             function (res) {
                 if (res.rtnCode == "0000000") {
+
                     if(keyWord==""){
-                       that.getWordList(res.bizData);
+                        that.getWordList(res.bizData);
+                    }else{
+                        that.setWordList(res.bizData);
                     }
                 }
             }, function (res) {
@@ -120,7 +105,7 @@ TeacherInfo.prototype = {
     getWordList:function(wordData){
         var wordArr = [];
         $.each(wordData,function(i,v){
-            var wordsObj = {}
+            var wordsObj = {};
             wordsObj['title']= v['teacherName'];
             wordsObj['teacherId']= v['teacherId'];
             wordsObj['courseName']= v['courseName'];
@@ -135,13 +120,16 @@ TeacherInfo.prototype = {
                 alert(data.classNum);
                 $('.teach-subject').show().find('.subject-name').text(data.courseName);
                 $('.class-box').show();
-                var maxClassCount = [];
-                for (var i = 0; i < data.classNum; i++) {
-                    maxClassCount.push('<option value="' + (i + 1) + '">' + (i + 1) + '</option>');
-                }
-                $('#max-class-count').append(maxClassCount);
-                var teachingClassList = [];
                 var dataClassInfo = data.classInfo;
+                var teachingClassList = [];
+                var maxClassCount = [];
+                for (var i = 0; i < data.classInfo.length; i++) {
+                    maxClassCount.push('<option value="' + (i + 1) + '">' + (i + 1) + '</option>');
+                    teachingClassList.push('<li><input type="checkbox" classId="' + dataClassInfo[i].classId + '" className="' + dataClassInfo[i].className + '" id="classInfo' + i + '" /><label for="classInfo' + i + '">' + dataClassInfo[i].className + '</label></li>');
+                }
+                $('.teaching-class-list').append(teachingClassList);
+                $('#max-class-count').append(maxClassCount);
+
                 $('#save-course-btn').attr(
                     {
                         'teacherId': data.teacherId,
@@ -149,13 +137,35 @@ TeacherInfo.prototype = {
                         'classInfoData': JSON.stringify(dataClassInfo)
                     }
                 );
-                console.log(JSON.stringify(dataClassInfo));
-                for (var j = 0; j < data.classInfo.length; j++) {
-                    teachingClassList.push('<li><input type="checkbox" classId="' + dataClassInfo[j].classId + '" className="' + dataClassInfo[j].className + '" id="classInfo' + j + '" /><label for="classInfo' + j + '">' + dataClassInfo[j].className + '</label></li>');
-                }
-                $('.teaching-class-list').append(teachingClassList);
+
+
             }
         });
+    },
+    setWordList:function(result){
+        var data = result[0];
+        $('#teacher-keywords').val(data.teacherName);
+        $('.teach-subject').show().find('.subject-name').text(data.courseName);
+        $('.class-box').show();
+
+        var dataClassInfo = data.classInfo;
+        var teachingClassList = [];
+        var maxClassCount = [];
+        for (var i = 0; i < data.classInfo.length; i++) {
+            maxClassCount.push('<option value="' + (i + 1) + '">' + (i + 1) + '</option>');
+            teachingClassList.push('<li><input type="checkbox" classId="' + dataClassInfo[i].classId + '" className="' + dataClassInfo[i].className + '" id="classInfo' + i + '" /><label for="classInfo' + i + '">' + dataClassInfo[i].className + '</label></li>');
+        }
+        $('.teaching-class-list').append(teachingClassList);
+        $('#max-class-count').append(maxClassCount);
+        $('#save-course-btn').attr(
+            {
+                'teacherId': data.teacherId,
+                'courseName': data.courseName,
+                'classInfoData': JSON.stringify(dataClassInfo)
+            }
+        );
+
+
     },
     // 模糊匹配
     //keywordsPropertychange: function () {
@@ -299,15 +309,30 @@ $(function () {
             layer.tips('修改只能选择一项', $(this));
             return false;
         }
-        TeacherInfoIns.addOrUpdateTeacher('修改教师');
-        $('.teach-subject, .class-box').show();
-        $('#teacher-keywords').val(teacherV.attr('teachername'));
-        $('.subject-name').text(teacherV.attr('coursename'));
+        var teachername = teacherV.attr('teachername');
+        var classnum = teacherV.attr('classnum');
+        var classinfo = teacherV.attr('classinfo');
+        TeacherInfoIns.addOrUpdateTeacher('修改教师',teachername);
+        $('#max-class-count option[value="'+ classnum +'"]').attr('selected','selected');
+
+        console.log(classinfo.split(","))
+
+        $.each(classinfo.split(","),function(i,v){
+            console.log(v);
+            $('.teaching-class-list input[classid="'+ v +'"]').attr('checked','checked');
+        });
+
+
         //for (var j = 0; j < classInfoData.length; j++) {
         //    teachingClassList.push('<li><input type="checkbox" classId="' + classInfoData[j].classId + '" className="' + classInfoData[j].className + '" id="classInfo' + j + '" /><label for="classInfo' + j + '">' + classInfoData[j].className + '</label></li>');
         //}
         //$('.teaching-class-list').append(teachingClassList);
 
+        //var maxClassCount = [];
+        //for (var i = 0; i < data.classNum; i++) {
+        //    maxClassCount.push('<option value="' + (i + 1) + '">' + (i + 1) + '</option>');
+        //}
+        //$('#max-class-count').append(maxClassCount);
     });
 
     // 删除详情列表
@@ -342,10 +367,10 @@ $(function () {
             layer.tips('请选择最大带班数', $('#max-class-count'));
             return false;
         }
-        var teachingClassLen = $('.teaching-class-list input:checked').length
-        console.log(teachingClassLen)
+        var teachingClassLen = $('.teaching-class-list input:checked').length;
+        console.log(teachingClassLen);
         if (maxClassCount < teachingClassLen) {
-            layer.tips('最大带班数不能小于所带班级数', $('#max-class-count'));
+            layer.tips('最大带班数不能小于选中所带班级数', $('#max-class-count'));
             return false;
         }
         var teacherid = $(this).attr('teacherid');
