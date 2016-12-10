@@ -9,7 +9,7 @@
 <%--教师课表--%>
 <div id="step3-child-teacher" class="role-scheduling-content">
     <div class="select-condition">
-        <select id="select-class">
+        <select id="select-queryCourse">
             <option>语文</option>
             <option>数学</option>
         </select>
@@ -77,3 +77,4 @@
         </tbody>
     </table>
 </div>
+<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>

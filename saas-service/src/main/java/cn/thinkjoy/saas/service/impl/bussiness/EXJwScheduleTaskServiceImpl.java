@@ -63,7 +63,7 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         String course = "课程";
         List<List<String>> list1  = new ArrayList<>();
         List<String> list2;
-        for (int i = 7;i>0;i--){
+        for (int i = 6;i>0;i--){
             list2 = new ArrayList<>();
             for (int j = 7;j>0;j--){
                 list2.add(course+random.nextInt(100));

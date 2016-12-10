@@ -1,17 +1,66 @@
 var tnId = Common.cookie.getCookie('tnId');
+var taskId = Common.cookie.getCookie('taskId');
 function ClassRoomTable() {
     this.init();
 }
 ClassRoomTable.prototype = {
     constructor: ClassRoomTable,
     init: function () {
-        this.getClassRoomTable();
+        this.getClassRoom();
+        this.getQueryCourse();
+        //this.getClassRoomTable();
+    },
+    // 拉取教室
+    getClassRoom:function(){
+        Common.ajaxFun('/baseResult/queryRoom.do', 'GET', {
+            "taskId":taskId
+        }, function (result) {
+            if (result.rtnCode == "0000000") {
+                $('#select-class option:gt(0)').remove();
+                var classRoom=[];
+                $.each(result.bizData,function(i,v){
+                    classRoom.push('<option value="'+ v.id +'">'+ v.roomName +'</option>')
+                });
+                $('#select-class').append(classRoom);
+            } else {
+                layer.msg(result.msg);
+            }
+        }, function (result) {
+            layer.msg(result.msg);
+        }, true);
+    },
+    // 拉取课程
+    getQueryCourse:function(){
+        Common.ajaxFun('/baseResult/queryCourse.do', 'GET', {
+            "taskId":taskId
+        }, function (result) {
+            if (result.rtnCode == "0000000") {
+                $('#select-queryCourse option:gt(0)').remove();
+                var queryCourse=[];
+                $.each(result.bizData,function(i,v){
+                    queryCourse.push('<option value="'+ v.id +'">'+ v.roomName +'</option>')
+                });
+                $('#select-queryCourse').append(classRoom);
+            } else {
+                layer.msg(result.msg);
+            }
+        }, function (result) {
+            layer.msg(result.msg);
+        }, true);
     },
     // 拉取课表
-
-    getClassRoomTable: function () {
+    getClassRoomTable: function (roomId) {
+        if(roomId==""){
+            $('.scheduling-name').text('');
+            $('#grade-thead-list,#grade-tbody-list').html('');
+            return ;
+        }
+        var param = {
+            'roomId': roomId
+        };
         Common.ajaxFun('/scheduleTask/teacher/course/result.do', 'GET', {
-            "param":""
+            "taskId":"9",
+            "param":JSON.stringify(param)
         }, function (result) {
             console.log(result)
             if (result.rtnCode == "0000000") {
@@ -37,58 +86,6 @@ ClassRoomTable.prototype = {
         }, function (result) {
             layer.msg(result.msg);
         }, true);
-        //var res = {
-        //    "thechDate": "星期一|星期二|星期三|星期四|星期五",
-        //    "thechTime": "430",
-        //    "week": [
-        //        [
-        //            "数学(金小江1)",
-        //            "物理B1",
-        //            "物理A1",
-        //            "音乐(李颖)",
-        //            "外语(朱晓琳)",
-        //            "主题体育活动",
-        //            "23"
-        //        ],
-        //        [
-        //            "数学(金小江2)",
-        //            "物理B1",
-        //            "物理A1",
-        //            "音乐(李颖)",
-        //            "外语(朱晓琳)",
-        //            "主题体育活动",
-        //            ""
-        //        ],
-        //        [
-        //            "数学(金小江3)",
-        //            "物理B1",
-        //            "物理A1",
-        //            "音乐(李颖)",
-        //            "外语(朱晓琳)",
-        //            "主题体育活动",
-        //            ""
-        //        ],
-        //        [
-        //            "数学(金小江4)",
-        //            "物理B1",
-        //            "物理A1",
-        //            "音乐(李颖)",
-        //            "外语(朱晓琳)",
-        //            "主题体育活动",
-        //            ""
-        //        ],
-        //        [
-        //            "数学(金小江5)",
-        //            "物理B1",
-        //            "物理A1",
-        //            "音乐(李颖)",
-        //            "外语(朱晓琳)",
-        //            "主题体育活动",
-        //            "23"
-        //        ]
-        //    ]
-        //};
-
     }
 
 };
@@ -97,6 +94,20 @@ var ClassRoomTableIns = new ClassRoomTable();
 
 $(function () {
     // 选择教室
+    $("#select-class").change(function(){
+        var selectedTxt = $(this).children('option:selected').text();
+        var selectedV = $(this).children('option:selected').val();
+        $('.scheduling-name').text(selectedTxt);
+        ClassRoomTableIns.getClassRoomTable(selectedV);
+    });
+
+    // 选择课程
+    $("#select-queryCourse").change(function(){
+        var selectedTxt = $(this).children('option:selected').text();
+        var selectedV = $(this).children('option:selected').val();
+        $('.scheduling-name').text(selectedTxt);
+        ClassRoomTableIns.getClassRoomTable(selectedV);
+    });
     // 导出
 
 

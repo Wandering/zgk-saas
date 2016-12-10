@@ -2,12 +2,11 @@
 <div id="step3-child-class" class="role-scheduling-content">
     <div class="select-condition">
         <select id="select-class">
-            <option>201教室</option>
-            <option>202教室</option>
+            <option value="">请选择教室</option>
         </select>
     </div>
     <div class="scheduling-info">
-        <div class="fl scheduling-name">行政1班教室课表/走读教室1课程表</div>
+        <div class="fl scheduling-name"></div>
         <button class="fr btn btn-warning" id="output-tpl"><i class="icon-output-down"></i>导出所有教室课程表</button>
     </div>
     <table class="table">
@@ -55,4 +54,3 @@
         </tr>
     {{/with}}
 </script>
-<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>
