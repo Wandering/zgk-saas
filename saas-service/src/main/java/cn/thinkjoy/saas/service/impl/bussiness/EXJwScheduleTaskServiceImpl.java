@@ -30,11 +30,11 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
 
 
     @Override
-    public CourseResultView getCourseResult(String type,Integer tnId,Map<String,Object> paramsMap) {
+    public CourseResultView getCourseResult(String type,Integer taskId,Integer tnId,Map<String,Object> paramsMap) {
         CourseResultView courseResultView = new CourseResultView();
         Map map = new HashMap();
         map.put("tnId", tnId);
-        map.put("taskId",1);
+        map.put("taskId",taskId);
         List<JwTeachDate> list = iJwTeachDateDAO.queryList(map, "tid", "asc");
         if (list.size() == 0) {
             return null;
