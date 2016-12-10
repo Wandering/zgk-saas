@@ -139,7 +139,7 @@
                                     {{#each this}}
                                         <tr>
                                             <td>{{courseName}}：{{classNames}}</td>
-                                            <td><a href="javascript: void(0);" classIds="{{classIds}}" class="del-class">删除合班</a></td>
+                                            <td><a href="javascript: void(0);" classIds="{{id}}" class="del-class">删除合班</a></td>
                                         </tr>
                                     {{/each}}
                                 </script>

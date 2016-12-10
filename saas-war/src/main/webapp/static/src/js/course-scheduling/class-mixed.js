@@ -1,21 +1,38 @@
 /**
- * @wiki: http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=44458344
  * 全局常量
- * @type {{tnId: *, typ: string}}
+ * @wiki: http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=44458344
+ * @type {{tnId: *, taskId: *, grade: GLOBAL_CONSTANT.grade}}
+ * @by:pdeng
  */
 var GLOBAL_CONSTANT = {
-    tnId: Common.cookie.getCookie('tnId'), //租户ID
-    taskId: Common.cookie.getCookie('taskId'), //租户ID
+    tnId: Common.cookie.getCookie('tnId'),
+    taskId: Common.cookie.getCookie('taskId'),
+    grade: function(){
+        var gradeId = Common.cookie.getCookie('gradeName');
+        switch (gradeId){
+            case '高一年级':
+                gradeId = '1';
+                break;
+            case '高二年级':
+                gradeId = '2';
+                break;
+            case '高三年级':
+                gradeId = '2';
+                break;
+        }
+        return gradeId;
+    },
 }
 
 /**
  * 排课任务 -> 排课规则设置 ->合班
- * @type {{init: MixedClass.init, fetchAndRenderSubject: MixedClass.fetchAndRenderSubject, fetchBelongClass: MixedClass.fetchBelongClass}}
+ * @type {{init: MixedClass.init, fetchAndRenderSubject: MixedClass.fetchAndRenderSubject, fetchBelongClass: MixedClass.fetchBelongClass, addEvent: MixedClass.addEvent, submitMixedClass: MixedClass.submitMixedClass, fetchResult: MixedClass.fetchResult, renderResult: MixedClass.renderResult, delMixedClass: MixedClass.delMixedClass}}
  */
 var MixedClass = {
     init: function () {
         this.fetchAndRenderSubject();
-        this.fetchBelongClass();
+        this.fetchBelongClass(MixedClass.subjectData[0].courseName,MixedClass.subjectData[0].courseId);
+        this.fetchResult();
         this.addEvent();
     },
     fetchAndRenderSubject: function () {
@@ -31,17 +48,21 @@ var MixedClass = {
             }
         },function(){},'true');
     },
-    fetchBelongClass: function () {
+    fetchBelongClass: function (courseName,courseId) {
         var paramsData = {
             'tnId': GLOBAL_CONSTANT.tnId,
             'taskId': GLOBAL_CONSTANT.taskId,
-            'grade':'1',
-            'courseName':'地理',
-            'courseId':'20',
+            'grade':GLOBAL_CONSTANT.grade,
+            'courseName':courseName,
+            'courseId':courseId,
         }
         Common.ajaxFun('/mergeClassController/getClassDtoByCourse.do', 'GET', paramsData, function (res) {
             if (res.rtnCode == "0000000") {
                 // isMerge 1:已合过，置灰
+                if(res.bizData.classBaseDtoList.length === 0){
+                    $('#choose-class-list').text('暂无匹配班级');
+                    return false;
+                }
                 var tpl = Handlebars.compile($('#choose-class-list-tpl').html());
                 $('#choose-class-list').html(tpl(res.bizData.classBaseDtoList));
             }
@@ -53,7 +74,9 @@ var MixedClass = {
             that.submitMixedClass();
         });
         $(document).on('change','#course-select',function(){
-            that.fetchBelongClass();
+            var cName = $('#course-select option:selected').text(),
+                cId = $('#course-select option:selected').val();
+            that.fetchBelongClass(cName,cId);
         });
         $(document).on('click','#mixed-list .del-class',function(){
             var cId = $(this).attr('classIds');
@@ -74,6 +97,9 @@ var MixedClass = {
             if (res.rtnCode === '0000000') {
                 layer.msg('合班成功')
                 that.fetchResult();
+                var cName = $('#course-select option:selected').text(),
+                    cId = $('#course-select option:selected').val();
+                that.fetchBelongClass(cName,cId);
             } else {
                 layer.msg(res.msg);
             }
@@ -84,46 +110,8 @@ var MixedClass = {
         Common.ajaxFun('/mergeClassController/getMergeInfo.do', 'get', {
             'tnId': GLOBAL_CONSTANT.tnId,
             'taskId': GLOBAL_CONSTANT.taskId,
-            'grade': '',
+            'grade': GLOBAL_CONSTANT.grade,
         }, function (res) {
-            var res = {
-                "bizData": {
-                    "mergeClassInfoList": [
-                        {
-                            "classIds": "3,2,3",
-                            "classNames": "语文1班、语文2班、语文3班",
-                            "courseId": "1",
-                            "courseName": "语文",
-                            "createDate": "",
-                            "id": "1",
-                            "taskId": "1",
-                            "tnId": "1"
-                        },
-                        {
-                            "classIds": "1,2,3",
-                            "classNames": "通用技术1、通用技术2、通用技术4",
-                            "courseId": "1",
-                            "courseName": "通用技术",
-                            "createDate": "",
-                            "id": "1",
-                            "taskId": "1",
-                            "tnId": "1"
-                        },
-                        {
-                            "classIds": "4,2,3",
-                            "classNames": "化学4、化学2、化学10",
-                            "courseId": "1",
-                            "courseName": "化学",
-                            "createDate": "",
-                            "id": "1",
-                            "taskId": "1",
-                            "tnId": "1"
-                        }
-                    ]
-                },
-                "rtnCode": "0000000",
-                "ts": 1481079183282
-            }
             if (res.rtnCode === '0000000') {
                 that.renderResult(res.bizData)
             } else {
@@ -137,12 +125,16 @@ var MixedClass = {
         $('.mixed-class-tips').removeClass('dh');
     },
     delMixedClass:function(cId){
+        var that = this;
         Common.ajaxFun('/mergeClassController/deleteMergeInfo.do', 'get', {
             'id': cId
         }, function (res) {
             if(res.rtnCode === '0000000'){
                 layer.msg('删除成功');
                 that.fetchResult();
+                var cName = $('#course-select option:selected').text(),
+                    cId = $('#course-select option:selected').val();
+                that.fetchBelongClass(cName,cId);
             }else{
                 layer.msg(res.msg);
             }
