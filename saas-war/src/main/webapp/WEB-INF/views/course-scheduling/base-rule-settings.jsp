@@ -87,7 +87,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <select id="course-list" tabIndex="0">
+                            <select id="course-list" tabIndex="0" class="cList">
                             </select>
                             <script type="text/x-handlebars-template" id="course-list-tpl">
                                 {{#each this}}
@@ -95,7 +95,7 @@
                                 {{/each}}
                             </script>
                             <%--教案平齐--%>
-                            <div class="base-rule-content">
+                            <div class="base-rule-content baseRuleContent">
 
                                 <span class="rule-tips">教案平齐：张三老师教完1班教2班，而不是1班上了两节课后2班才上1节课</span>
                                 <table class="base-rule-table table  table-bordered table-hover">
