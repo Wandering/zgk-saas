@@ -17,6 +17,7 @@ ClassRoomTable.prototype = {
         this.getQueryCourse();
         this.getQueryTeacher();
         this.getQueryClass();
+        this.getQueryStudent();
         //this.getClassRoomTable();
     },
     // 拉取教室
@@ -98,7 +99,8 @@ ClassRoomTable.prototype = {
     // 拉取班级
     getQueryStudent:function(){
         Common.ajaxFun('/baseResult/queryStudent.do', 'GET', {
-            "taskId":taskId
+            "taskId":taskId,
+            "classId":'1'
         }, function (result) {
             if (result.rtnCode == "0000000") {
                 $('#select-student option:gt(0)').remove();
@@ -179,7 +181,7 @@ $(function () {
     $("#select-classes").change(function(){
         ClassRoomTableIns.className = $(this).children('option:selected').text();
         ClassRoomTableIns.classId = $(this).children('option:selected').val();
-        $('.teacher-label').text(ClassRoomTableIns.className);
+        $('.classes-label').text(ClassRoomTableIns.className);
         ClassRoomTableIns.getClassRoomTable('student', {'classId': ClassRoomTableIns.classId,'studentId':ClassRoomTableIns.studentId});
     });
 
@@ -190,12 +192,6 @@ $(function () {
         $('.student-label').text(ClassRoomTableIns.studentName + "学生");
         ClassRoomTableIns.getClassRoomTable('student', {'classId': ClassRoomTableIns.classId,'studentId':ClassRoomTableIns.studentId});
     });
-
-
-
-    // 导出
-
-
 });
 
 
