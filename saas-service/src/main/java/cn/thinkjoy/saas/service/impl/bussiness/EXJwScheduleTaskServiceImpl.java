@@ -47,11 +47,13 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
             buffer.delete(buffer.length() - 1, buffer.length());
         }
         String time = "";
+        Integer count = 0;
         if (list != null && list.size() > 0) {
             JwTeachDate jwTeachDate = list.get(0);
             String[] strings = jwTeachDate.getTeachDetail().split(Constant.TIME_INTERVAL);
             for (String s : strings) {
                 time += s.length();
+                count += s.length();
             }
             if (strings.length < 3) {
                 time += 0;
@@ -63,9 +65,9 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         String course = "课程";
         List<List<String>> list1  = new ArrayList<>();
         List<String> list2;
-        for (int i = 6;i>0;i--){
+        for (int i = list.size();i>0;i--){
             list2 = new ArrayList<>();
-            for (int j = 7;j>0;j--){
+            for (int j = count;j>0;j--){
                 list2.add(course+random.nextInt(100));
             }
             list1.add(list2);
