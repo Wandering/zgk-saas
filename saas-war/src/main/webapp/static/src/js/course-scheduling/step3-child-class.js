@@ -66,7 +66,7 @@ ClassRoomTable.prototype = {
         Handlebars.registerHelper("createN", function (res) {
             var str = '';
             for(var i=1;i<=res;i++){
-                str += '<p style="border-bottom:1px solid #ccc;margin:0;height:35px;line-height:35px;text-align:center">'+i+'</p>'
+                str += '<p class="tbody-item">'+i+'</p>'
             }
             return str;
         });

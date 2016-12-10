@@ -1,9 +1,10 @@
 @import "../common/common";
 
 //step comm
-.mt15{
+.mt15 {
   margin-top: 15px;
 }
+
 .table {
   border: 1px solid #ddd !important;
   tbody > tr > td {
@@ -125,12 +126,11 @@
   .scheduling-error {
     margin: $parentMargin;
     text-align: center;
-    .icon-cry-face{
+    .icon-cry-face {
       margin-bottom: 20px;
     }
   }
 }
-
 
 #role-scheduling-tab {
   .role-tab {
@@ -214,6 +214,17 @@
       display: inline-block !important;
     }
   }
+}
+p.tbody-item{
+  border-bottom: 1px solid #ccc;
+  margin: 0;
+  height: 35px;
+  line-height: 35px;
+  text-align: center
+}
+.table tbody>tr>td.pm0{
+  margin:0;
+  padding:0;
 }
 
 

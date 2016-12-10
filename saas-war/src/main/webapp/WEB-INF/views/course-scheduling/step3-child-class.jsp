@@ -44,12 +44,12 @@
 <script id="grade-tbody-list-template" type="text/x-handlebars-template">
     {{#with this}}
         <tr class="ui-sortable-handle">
-            <td style="margin:0;padding:0">
+            <td class="pm0">
                     {{{createN this.[0].length}}}
             </td>
             {{#each this}}
-                <td style="margin:0;padding:0">
-                    {{#each this}}<p style="border-bottom:1px solid #ccc;margin:0;height:35px;line-height:35px;text-align:center">{{this}}</p>{{/each}}
+                <td class="pm0">
+                    {{#each this}}<p class="tbody-item">{{this}}</p>{{/each}}
                 </td>
             {{/each}}
         </tr>
