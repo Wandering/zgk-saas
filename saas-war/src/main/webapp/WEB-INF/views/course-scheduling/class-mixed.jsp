@@ -72,65 +72,79 @@
                             </div>
                             <div class="choose-course">
                                 <span>选择课程：</span>
-                                <select class="course-select">
-                                    <option value="语文">语文</option>
-                                    <option value="数学">数学</option>
-                                    <option value="英语">英语</option>
-                                </select>
+                                <select class="course-select" id="course-select"></select>
+                                <script type="text/x-handlebars-template" id="course-select-tpl">
+                                    {{#each this}}
+                                        <option value="{{courseId}}" cTime="{{time}}">{{courseName}}</option>
+                                    {{/each}}
+                                </script>
                             </div>
                             <div class="choose-class">
                                 <div class="title">勾选班级：</div>
-                                <ul class="choose-class-list">
-                                    <li>
-                                        <input type="checkbox" id="class1" />
-                                        <label for="class1">高二1班</label>
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" id="class2" />
-                                        <label for="class2">高二2班</label>
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" id="class3" />
-                                        <label for="class3">高二3班</label>
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" id="class4" />
-                                        <label for="class4">高二4班</label>
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" id="class5" />
-                                        <label for="class5">高二5班</label>
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" id="class6" />
-                                        <label for="class6">高二6班</label>
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" id="class7" />
-                                        <label for="class7">高二7班</label>
-                                    </li>
+                                <ul class="choose-class-list" id="choose-class-list">
+                                    <%--<li>--%>
+                                        <%--<input type="checkbox" id="class1" />--%>
+                                        <%--<label for="class1">高二1班</label>--%>
+                                    <%--</li>--%>
+                                    <%--<li>--%>
+                                        <%--<input type="checkbox" id="class2" />--%>
+                                        <%--<label for="class2">高二2班</label>--%>
+                                    <%--</li>--%>
+                                    <%--<li>--%>
+                                        <%--<input type="checkbox" id="class3" />--%>
+                                        <%--<label for="class3">高二3班</label>--%>
+                                    <%--</li>--%>
+                                    <%--<li>--%>
+                                        <%--<input type="checkbox" id="class4" />--%>
+                                        <%--<label for="class4">高二4班</label>--%>
+                                    <%--</li>--%>
+                                    <%--<li>--%>
+                                        <%--<input type="checkbox" id="class5" />--%>
+                                        <%--<label for="class5">高二5班</label>--%>
+                                    <%--</li>--%>
+                                    <%--<li>--%>
+                                        <%--<input type="checkbox" id="class6" />--%>
+                                        <%--<label for="class6">高二6班</label>--%>
+                                    <%--</li>--%>
+                                    <%----%>
                                 </ul>
+                                <script type="text/x-handlebars-template"  id="choose-class-list-tpl">
+                                    {{#each this}}
+                                        {{#compare isMerge '==' 1}}
+                                            <li>
+                                                <input type="checkbox" name="merge-class" value="{{classId}}" id="class{{classId}}" checked disabled/>
+                                                <label for="class{{classId}}">{{className}}</label>
+                                            </li>
+                                        {{else}}
+                                            <li>
+                                                <input type="checkbox" name="merge-class" value="{{classId}}" id="class{{classId}}"/>
+                                                <label for="class{{classId}}">{{className}}</label>
+                                            </li>
+                                        {{/compare}}
+                                    {{/each}}
+                                </script>
                             </div>
                             <button type="button" class="mixed-class-btn">合班</button>
-                            <div class="mixed-class-tips">合班结果：</div>
-                            <table class="class-mixed-table" cellpadding="0" cellspacing="0">
+                            <div class="mixed-class-tips dh">合班结果：
+                            <table class="class-mixed-table table">
                                 <thead>
                                     <tr>
                                         <th>合班结果</th>
                                         <th></th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>语文：高二3班、高二4班</td>
-                                        <td><a href="javascript: void(0);">删除合班</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>语文：高二3班、高二4班</td>
-                                        <td><a href="javascript: void(0);">删除合班</a></td>
-                                    </tr>
+                                <tbody id="mixed-list">
                                 </tbody>
+                                <script type="text/x-handlebars-template" id="mixed-list-tpl">
+                                    {{#each this}}
+                                        <tr>
+                                            <td>{{courseName}}：{{classNames}}</td>
+                                            <td><a href="javascript: void(0);" classIds="{{id}}" class="del-class">删除合班</a></td>
+                                        </tr>
+                                    {{/each}}
+                                </script>
                             </table>
+                            </div>
                         </div>
                     </div>
                 </div>
