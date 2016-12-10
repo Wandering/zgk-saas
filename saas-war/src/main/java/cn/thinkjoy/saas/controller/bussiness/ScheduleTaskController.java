@@ -21,6 +21,7 @@ import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -400,10 +401,16 @@ public class ScheduleTaskController {
      */
     @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
     @ResponseBody
-    public Map getCourseResult(@PathVariable String type) {
+    public Map getCourseResult(@PathVariable String type,@RequestParam String param) {
+        Map<String,Object> paramsMap = Maps.newHashMap();
+        try {
+            paramsMap = JSON.parseObject(param,Map.class);
+        }catch (Exception e){
+            paramsMap = Maps.newHashMap();
+        }
 
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type, tnId);
+        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type, tnId,paramsMap);
 
         Map resultMap = new HashMap();
         resultMap.put("result",courseResultView);

@@ -14,6 +14,7 @@ import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
 
 
     @Override
-    public CourseResultView getCourseResult(String type,Integer tnId) {
+    public CourseResultView getCourseResult(String type,Integer tnId,Map<String,Object> paramsMap) {
         CourseResultView courseResultView = new CourseResultView();
         Map map = new HashMap();
         map.put("tnId", tnId);
@@ -57,7 +58,18 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         }
         courseResultView.setTeachDate(buffer.toString());
         courseResultView.setTeachTime(time);
-
+        java.util.Random random=new java.util.Random();// 定义随机类
+        String course = "课程";
+        List<List<String>> list1  = new ArrayList<>();
+        List<String> list2;
+        for (int i = 7;i>0;i--){
+            list2 = new ArrayList<>();
+            for (int j = 7;j>0;j--){
+                list2.add(course+random.nextInt(100));
+            }
+            list1.add(list2);
+        }
+        courseResultView.setWeek(list1);
         return courseResultView;
     }
 //    private List<String> getClassCourseResult(Integer teachSize,String teachDetail) {

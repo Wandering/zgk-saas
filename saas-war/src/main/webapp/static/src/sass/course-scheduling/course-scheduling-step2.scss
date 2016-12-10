@@ -317,6 +317,7 @@
                         line-height: 36px;
                         tr {
                             th {
+                                height: 36px;
                                 text-align: center;
                                 vertical-align: middle;
                                 border-right: 1px solid #E0E3E8;
@@ -325,11 +326,14 @@
                         }
                     }
                     tbody {
+                        line-height: 36px;
                         tr {
                             td {
+                                height: 36px;
                                 text-align: center;
                                 vertical-align: middle;
                                 border-bottom: 1px solid #E0E3E8;
+                                cursor: pointer;
                             }
                         }
                     }
