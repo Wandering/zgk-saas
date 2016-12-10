@@ -10,16 +10,14 @@
 <div id="step3-child-teacher" class="role-scheduling-content">
     <div class="select-condition">
         <select id="select-queryCourse">
-            <option>语文</option>
-            <option>数学</option>
+            <option value="">请选择科目</option>
         </select>
-        <select id="select-class">
-            <option>数学</option>
-            <option>历史</option>
+        <select id="select-teacher">
+            <option value="">请选择老师</option>
         </select>
     </div>
     <div class="scheduling-info">
-        <div class="fl scheduling-name">韩寒 老师课表 - 语文</div>
+        <div class="fl teacher-name">韩寒 老师课表 - 语文</div>
         <button class="fr btn btn-warning" id="output-tpl"><i class="icon-output-down"></i>导出所有教师课程表</button>
     </div>
     <table class="table">
@@ -77,4 +75,3 @@
         </tbody>
     </table>
 </div>
-<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>
