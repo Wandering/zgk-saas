@@ -403,10 +403,12 @@ public class ScheduleTaskController {
     @ResponseBody
     public Map getCourseResult(@PathVariable String type,@RequestParam String param) {
         Map<String,Object> paramsMap = Maps.newHashMap();
-        if (StringUtils.isEmpty(param)){
-            ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
+        try {
+            paramsMap = JSON.parseObject(param,Map.class);
+        }catch (Exception e){
+            paramsMap = Maps.newHashMap();
         }
-        paramsMap = JSON.parseObject(param,Map.class);
+
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type, tnId,paramsMap);
 
