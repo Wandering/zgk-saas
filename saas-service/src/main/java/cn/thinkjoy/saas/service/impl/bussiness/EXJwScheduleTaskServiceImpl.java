@@ -34,6 +34,7 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         CourseResultView courseResultView = new CourseResultView();
         Map map = new HashMap();
         map.put("tnId", tnId);
+        map.put("taskId",1);
         List<JwTeachDate> list = iJwTeachDateDAO.queryList(map, "tid", "asc");
         if (list.size() == 0) {
             return null;
