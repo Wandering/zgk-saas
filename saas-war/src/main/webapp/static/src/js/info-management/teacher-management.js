@@ -40,6 +40,9 @@ TeacherManagement.prototype = {
                     columnHtml.push('</tr>');
                     $("#teacher-manage-table thead").html(columnHtml.join(''));
                     that.getTeacherData();
+
+
+
                 }
             }
         }, function (res) {
@@ -705,6 +708,7 @@ function upload () {
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
     uploader.on('uploadSuccess', function (file) {
         layer.closeAll();
+        layer.msg('上传成功!');
         if (teacherManagement != null) {
             teacherManagement.getTeacherData();
         }
