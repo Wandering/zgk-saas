@@ -401,14 +401,17 @@ public class ScheduleTaskController {
      */
     @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
     @ResponseBody
-    public Map getCourseResult(@PathVariable String type,@RequestParam String param) {
+    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) {
         Map<String,Object> paramsMap = Maps.newHashMap();
-        if (StringUtils.isEmpty(param)){
-            ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
+        if (param==null) {
+            try {
+                paramsMap = JSON.parseObject(param, Map.class);
+            } catch (Exception e) {
+                paramsMap = Maps.newHashMap();
+            }
         }
-        paramsMap = JSON.parseObject(param,Map.class);
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type, tnId,paramsMap);
+        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap);
 
         Map resultMap = new HashMap();
         resultMap.put("result",courseResultView);

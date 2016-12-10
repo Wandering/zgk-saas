@@ -334,6 +334,8 @@
                                 text-align: center;
                                 vertical-align: middle;
                                 border-bottom: 1px solid #E0E3E8;
+                            }
+                            td:not(.order) {
                                 cursor: pointer;
                             }
                         }
@@ -613,10 +615,10 @@
     display: none;
 }
 
-#course-list{
+.cList{
     min-width: 110px;
 }
-.base-rule-content{
+.baseRuleContent{
     .rule-tips{
         margin-top: 10px;
         display: block;
