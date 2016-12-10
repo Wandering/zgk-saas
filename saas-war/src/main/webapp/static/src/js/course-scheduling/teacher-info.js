@@ -117,7 +117,6 @@ TeacherInfo.prototype = {
             width:159,
             data: wordArr,
             callback:function(data){
-                alert(data.classNum);
                 $('.teach-subject').show().find('.subject-name').text(data.courseName);
                 $('.class-box').show();
                 var dataClassInfo = data.classInfo;
