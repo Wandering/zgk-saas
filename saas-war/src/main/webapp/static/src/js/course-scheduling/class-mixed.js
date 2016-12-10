@@ -6,6 +6,21 @@
 var GLOBAL_CONSTANT = {
     tnId: Common.cookie.getCookie('tnId'), //租户ID
     taskId: Common.cookie.getCookie('taskId'), //租户ID
+    grade: function(){
+        var gradeId = Common.cookie.getCookie('gradeName');
+        switch (gradeId){
+            case '高一年级':
+                gradeId = '1';
+                break;
+            case '高二年级':
+                gradeId = '2';
+                break;
+            case '高三年级':
+                gradeId = '2';
+                break;
+        }
+        return gradeId;
+    },
 }
 
 /**
@@ -35,7 +50,7 @@ var MixedClass = {
         var paramsData = {
             'tnId': GLOBAL_CONSTANT.tnId,
             'taskId': GLOBAL_CONSTANT.taskId,
-            'grade':'1',
+            'grade':GLOBAL_CONSTANT.grade,
             'courseName':courseName,
             'courseId':courseId,
         }
@@ -90,46 +105,8 @@ var MixedClass = {
         Common.ajaxFun('/mergeClassController/getMergeInfo.do', 'get', {
             'tnId': GLOBAL_CONSTANT.tnId,
             'taskId': GLOBAL_CONSTANT.taskId,
-            'grade': '',
+            'grade': GLOBAL_CONSTANT.grade,
         }, function (res) {
-            // var res = {
-            //     "bizData": {
-            //         "mergeClassInfoList": [
-            //             {
-            //                 "classIds": "3,2,3",
-            //                 "classNames": "语文1班、语文2班、语文3班",
-            //                 "courseId": "1",
-            //                 "courseName": "语文",
-            //                 "createDate": "",
-            //                 "id": "1",
-            //                 "taskId": "1",
-            //                 "tnId": "1"
-            //             },
-            //             {
-            //                 "classIds": "1,2,3",
-            //                 "classNames": "通用技术1、通用技术2、通用技术4",
-            //                 "courseId": "1",
-            //                 "courseName": "通用技术",
-            //                 "createDate": "",
-            //                 "id": "1",
-            //                 "taskId": "1",
-            //                 "tnId": "1"
-            //             },
-            //             {
-            //                 "classIds": "4,2,3",
-            //                 "classNames": "化学4、化学2、化学10",
-            //                 "courseId": "1",
-            //                 "courseName": "化学",
-            //                 "createDate": "",
-            //                 "id": "1",
-            //                 "taskId": "1",
-            //                 "tnId": "1"
-            //             }
-            //         ]
-            //     },
-            //     "rtnCode": "0000000",
-            //     "ts": 1481079183282
-            // }
             if (res.rtnCode === '0000000') {
                 that.renderResult(res.bizData)
             } else {
