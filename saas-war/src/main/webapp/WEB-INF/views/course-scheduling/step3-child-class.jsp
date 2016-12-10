@@ -10,7 +10,7 @@
         <button class="fr btn btn-warning" id="output-tpl"><i class="icon-output-down"></i>导出所有教室课程表</button>
     </div>
     <table class="table">
-        <thead id="grade-thead-list">
+        <thead id="room-thead-list">
             <%--<tr>--%>
             <%--<th></th>--%>
             <%--<th class="center">星期一</th>--%>
@@ -20,7 +20,7 @@
             <%--<th class="center">星期五</th>--%>
             <%--</tr>--%>
         </thead>
-        <tbody id="grade-tbody-list" class="check-template ui-sortable">
+        <tbody id="room-tbody-list" class="check-template ui-sortable">
             <%--<tr class="ui-sortable-handle">--%>
                 <%--<td class="center index">1</td>--%>
                 <%--<td class="center index">英语（韩嘉琛）行政1班</td>--%>
@@ -32,7 +32,7 @@
         </tbody>
     </table>
 </div>
-<script id="grade-thead-list-template" type="text/x-handlebars-template">
+<script id="room-thead-list-template" type="text/x-handlebars-template">
     <tr>
         <th></th>
         {{#each this}}
@@ -40,7 +40,7 @@
         {{/each}}
     </tr>
 </script>
-<script id="grade-tbody-list-template" type="text/x-handlebars-template">
+<script id="room-tbody-list-template" type="text/x-handlebars-template">
     {{#with this}}
         <tr class="ui-sortable-handle">
             <td class="pm0">
