@@ -23,7 +23,7 @@ Schedule.prototype = {
                     return parseInt(index) + 1;
                 });
                 Handlebars.registerHelper('reStatus', function (v) {
-                    console.log(v)
+                    //console.log(v)
                     var result = '';
                     switch (v) {
                         case 1:
@@ -285,6 +285,9 @@ $(function () {
     // 跳转进入流程设置,检测完整性
     $('body').on('click', '.start-schedule-btn', function () {
         var id = $(this).parent().attr('dataid');
+        var gradeName = $(this).parent().attr('gradeName');
+        Common.cookie.setCookie('gradeName', gradeName);
         schedule.checkTaskBaseInfo(id);
+
     });
 });
