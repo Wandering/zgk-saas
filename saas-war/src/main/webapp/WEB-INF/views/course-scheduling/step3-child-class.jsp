@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<div id="step3-child-class" class="role-scheduling-content">
+<div id="step3-child-class" class="role-scheduling-content dh">
     <div class="select-condition">
         <select id="select-class">
             <option>201教室</option>

@@ -33,3 +33,17 @@ var HashHandle = {
 }
 HashHandle.init();
 
+
+/**
+ * 一键生成课表
+ * lockSubject 0,1
+ */
+$('.btn-one-key').click(function(){
+    $(this).hide();
+    $('#role-scheduling-tab,#step3-child-class').show();
+    Common.cookie.setCookie('lockSubject',1);
+})
+if(Common.cookie.getCookie('lockSubject') == 1){
+    $('.btn-one-key').hide();
+    $('#role-scheduling-tab,#step3-child-class').removeClass('dh');
+}
