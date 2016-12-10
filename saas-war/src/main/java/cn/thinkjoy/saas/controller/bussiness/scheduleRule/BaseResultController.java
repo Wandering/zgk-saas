@@ -49,14 +49,13 @@ public class BaseResultController {
      */
     @RequestMapping(value = "/queryTeacher",method = RequestMethod.GET)
     @ResponseBody
-    public List getTeacher(@RequestParam Integer taskId,@RequestParam String courseName) {
+    public List getTeacher(@RequestParam Integer taskId) {
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
         Map<String,Object>  map = Maps.newHashMap();
         map.put("tnId",tnId);
         map.put("taskId",taskId);
         map.put("grade",jwScheduleTask.getGrade());
-        map.put("teacherCourse",courseName);
         List list = jwTeacherBaseInfoService.queryList(map,"id","desc");
         return list;
     }
