@@ -17,6 +17,8 @@ public class CourseResultView implements Serializable {
     private String teachTime;
     private List<String> courseCon;
 
+    private List<List<String>> week;
+
     public String getTeachDate() {
         return teachDate;
     }
@@ -39,5 +41,13 @@ public class CourseResultView implements Serializable {
 
     public void setCourseCon(List<String> courseCon) {
         this.courseCon = courseCon;
+    }
+
+    public List<List<String>> getWeek() {
+        return week;
+    }
+
+    public void setWeek(List<List<String>> week) {
+        this.week = week;
     }
 }
