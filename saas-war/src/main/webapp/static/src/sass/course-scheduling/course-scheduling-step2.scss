@@ -607,7 +607,14 @@
 .rule-content-none {
     display: none;
 }
+
 #course-list{
-    margin-bottom: 10px;
     min-width: 110px;
+}
+.base-rule-content{
+    .rule-tips{
+        margin-top: 10px;
+        display: block;
+        margin-left: 0!important;
+    }
 }

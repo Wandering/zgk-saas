@@ -246,8 +246,7 @@
                                         <td class="center index" indexid="{{id}}">{{configKey}}</td>
                                         <td class="center">{{name}}</td>
                                         <td class="center">
-                                            <a href="javascript:void(0)" class="active student-setting-remove-head"
-                                               data-id="{{id}}">-</a>
+                                            <a href="javascript:void(0)" class="active student-setting-remove-head" disabled>-</a>
                                         </td>
                                     </tr>
                                 {{else}}

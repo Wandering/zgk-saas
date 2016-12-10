@@ -110,15 +110,22 @@
                                 </ul>
                                 <script type="text/x-handlebars-template"  id="choose-class-list-tpl">
                                     {{#each this}}
-                                        <li class-grade="{{class_grade}}">
-                                            <input type="checkbox" id="class{{id}}" />
-                                            <label for="class{{id}}">{{class_name}}</label>
-                                        </li>
+                                        {{#compare isMerge '==' 1}}
+                                            <li>
+                                                <input type="checkbox" name="merge-class" value="{{classId}}" id="class{{classId}}" checked disabled/>
+                                                <label for="class{{classId}}">{{className}}</label>
+                                            </li>
+                                        {{else}}
+                                            <li>
+                                                <input type="checkbox" name="merge-class" value="{{classId}}" id="class{{classId}}"/>
+                                                <label for="class{{classId}}">{{className}}</label>
+                                            </li>
+                                        {{/compare}}
                                     {{/each}}
                                 </script>
                             </div>
                             <button type="button" class="mixed-class-btn">合班</button>
-                            <div class="mixed-class-tips">合班结果：</div>
+                            <div class="mixed-class-tips dh">合班结果：
                             <table class="class-mixed-table table">
                                 <thead>
                                     <tr>
@@ -126,17 +133,18 @@
                                         <th></th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>语文：高二3班、高二4班</td>
-                                        <td><a href="javascript: void(0);">删除合班</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>语文：高二3班、高二4班</td>
-                                        <td><a href="javascript: void(0);">删除合班</a></td>
-                                    </tr>
+                                <tbody id="mixed-list">
                                 </tbody>
+                                <script type="text/x-handlebars-template" id="mixed-list-tpl">
+                                    {{#each this}}
+                                        <tr>
+                                            <td>{{courseName}}：{{classNames}}</td>
+                                            <td><a href="javascript: void(0);" classIds="{{classIds}}" class="del-class">删除合班</a></td>
+                                        </tr>
+                                    {{/each}}
+                                </script>
                             </table>
+                            </div>
                         </div>
                     </div>
                 </div>
