@@ -135,6 +135,14 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         return task.getTnId();
     }
 
+    private JwScheduleTask getTaskByTaskId(int taskId) {
+        JwScheduleTask task = jwScheduleTaskDAO.findOne("id",taskId,"id", Constant.DESC);
+        if(task == null || task.getDelStatus() == StatusEnum.D.getCode()){
+            ExceptionUtil.throwException(ErrorCode.TASK_NOT_EXIST);
+        }
+        return task;
+    }
+
     @Override
     public List<TeacherBaseDto> queryTeacherByTaskId(int taskId) {
 
@@ -197,9 +205,9 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         List<TeacherBaseDto> dtos = Lists.newArrayList();
 
         // 根据租户ID和关键词搜索教师信息
-        int tnId = getTnIdByTaskId(taskId);
+        JwScheduleTask task = getTaskByTaskId(taskId);
 
-        List<JwTeacherBaseInfo> infos = jwTeacherBaseInfoDAO.findList("tn_id",tnId,"id",Constant.DESC);
+        List<JwTeacherBaseInfo> infos = jwTeacherBaseInfoDAO.findList("tn_id",task.getTnId(),"id",Constant.DESC);
         for(JwTeacherBaseInfo info : infos){
             if(info.getTeacherName().indexOf(keyword) == -1){
                 continue;
@@ -208,7 +216,12 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
             dto.setTeacherId(Integer.valueOf(info.getId().toString()));
             dto.setTeacherName(info.getTeacherName());
             dto.setCourseName(info.getTeacherCourse());
-            dto.setClassInfo(getClassBaseDtosByCourse(tnId,info.getGrade(),info.getTeacherCourse()));
+            dto.setClassInfo(
+                    getClassBaseDtosByCourse(
+                    task.getTnId(),
+                    Integer.valueOf(task.getGrade()),
+                    info.getTeacherCourse())
+            );
             dtos.add(dto);
         }
 
