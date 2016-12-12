@@ -209,7 +209,13 @@ public class ScheduleTaskController {
         params.put("columns",Constant.CHECK_TABLE_STUDENT_COLUMNS);
         params.put("searchKey",Constant.STUDENT_GRADE);
         params.put("searchValue",GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())));
-        Map<String,Object> map = iexTenantCustomService.existDataCount(params);
+        Map<String,Object> map = null;
+        try {
+            map = iexTenantCustomService.existDataCount(params);
+        }catch (Exception e){
+            throw new BizException("error","您还未完善用户信息,请完善后再进行排课!");
+        }
+
         Iterator<String> iterator = map.keySet().iterator();
         List<String> emptyColumns = new ArrayList<>();
         while (iterator.hasNext()){
