@@ -231,6 +231,7 @@
                     li {
                         margin-bottom: 15px;
                         position: relative;
+                        padding-left: 25px;
                         a:link,
                         a:visited {
                             display: inline-block;
@@ -317,6 +318,7 @@
                         line-height: 36px;
                         tr {
                             th {
+                                height: 36px;
                                 text-align: center;
                                 vertical-align: middle;
                                 border-right: 1px solid #E0E3E8;
@@ -325,11 +327,16 @@
                         }
                     }
                     tbody {
+                        line-height: 36px;
                         tr {
                             td {
+                                height: 36px;
                                 text-align: center;
                                 vertical-align: middle;
                                 border-bottom: 1px solid #E0E3E8;
+                            }
+                            td:not(.order) {
+                                cursor: pointer;
                             }
                         }
                     }
@@ -607,7 +614,14 @@
 .rule-content-none {
     display: none;
 }
-#course-list{
-    margin-bottom: 10px;
+
+.cList{
     min-width: 110px;
+}
+.baseRuleContent{
+    .rule-tips{
+        margin-top: 10px;
+        display: block;
+        margin-left: 0!important;
+    }
 }

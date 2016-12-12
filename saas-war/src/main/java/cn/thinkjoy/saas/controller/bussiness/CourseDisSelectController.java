@@ -3,6 +3,7 @@ package cn.thinkjoy.saas.controller.bussiness;
 import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.domain.JwBaseRule;
 import cn.thinkjoy.saas.domain.JwCourseGapRule;
+import cn.thinkjoy.saas.domain.JwTeachDate;
 import cn.thinkjoy.saas.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class CourseDisSelectController
 
     @Autowired
     private IJwCourseGapRuleService jwCourseGapRuleService;
+
+    @Autowired
+    private IJwTeachDateService jwTeachDateService;
 
     @RequestMapping(value = "/getRule/{taskId}/{type}/{id}", method = RequestMethod.GET)
     public List<Map<String, String>> getRule(@PathVariable String taskId,
@@ -61,7 +65,7 @@ public class CourseDisSelectController
                     {
                         Map<String, String> condition = new HashMap<>();
                         condition.put("taskId", map.get("taskId"));
-                        condition.put(type +"Id", map.get(type +"Id"));
+                        condition.put(type + "Id", map.get(type + "Id"));
                         result += getServiceByType(type).updateByCondition(map, condition);
                     }
                 }
@@ -136,7 +140,7 @@ public class CourseDisSelectController
         rule.put("sut", jwBaseRule.getSut());
         rule.put("sun", jwBaseRule.getSun());
         rule.put("taskId", taskId);
-        rule.put("createDate", System.currentTimeMillis()+ "");
+        rule.put("createDate", System.currentTimeMillis() + "");
         return rule;
     }
 
@@ -147,7 +151,7 @@ public class CourseDisSelectController
         params.put("taskId", taskId);
         JwCourseGapRule rule = (JwCourseGapRule)jwCourseGapRuleService.queryOne(params);
         Map<String, String> resultMap = new HashMap<>();
-        if(null == rule || StringUtils.isEmpty(rule.getRule()))
+        if (null == rule || StringUtils.isEmpty(rule.getRule()))
         {
             resultMap.put("1-2节", "0");
             resultMap.put("2-3节", "0");
@@ -161,12 +165,12 @@ public class CourseDisSelectController
         {
             String[] rules = rule.getRule().split("@@");
             int len = rules.length;
-            if(len > 0)
+            if (len > 0)
             {
-                for (int i = 0; i < len ; i++)
+                for (int i = 0; i < len; i++)
                 {
                     String[] detail = rules[i].split(":");
-                    if(detail.length<2)
+                    if (detail.length < 2)
                         continue;
                     resultMap.put(detail[0], detail[1]);
                 }
@@ -193,20 +197,51 @@ public class CourseDisSelectController
         JwCourseGapRule rule = (JwCourseGapRule)jwCourseGapRuleService.queryOne(params);
         Enumeration<String> paramNames = req.getParameterNames();
         StringBuffer sb = new StringBuffer();
+        int unCheckNum = 0;
         while (paramNames.hasMoreElements())
         {
             String name = paramNames.nextElement();
-            if(name.contains("节"))
+            if (name.contains("节"))
             {
+                String v1 = req.getParameter(name);
+                if ("0".equals(v1))
+                {
+                    unCheckNum++;
+                }
                 sb.append("@@").append(name).append(":").append(req.getParameter(name));
             }
         }
+        List<JwTeachDate> list = jwTeachDateService.queryList(params, "tid", "asc");
+        List<Map<String, String>> linkList = getLinkList(taskId);
+        if (list != null && list.size() > 0 && linkList.size() > 0)
+        {
+            int maxLink = 0;
+            for (Map<String, String> m : linkList)
+            {
+                try
+                {
+                    int link = Integer.parseInt(m.get("linkCount"));
+                    if (link > maxLink)
+                    {
+                        maxLink = link;
+                    }
+                }
+                catch (Exception e)
+                {
+                }
+            }
+            int maxLinkPerDay = getCeilValue(maxLink, list.size());
+            if(unCheckNum < maxLinkPerDay)
+            {
+                throw new BizException("890929", "最大连课数为"+ maxLink + ", 每周最少有一天会有" + maxLinkPerDay+"次连课！");
+            }
+        }
         String rules = "";
-        if(sb.toString().length()>=2)
+        if (sb.toString().length() >= 2)
         {
             rules = sb.substring(2);
         }
-        if(null == rule)
+        if (null == rule)
         {
             rule = new JwCourseGapRule();
             rule.setRule(rules);
@@ -228,33 +263,33 @@ public class CourseDisSelectController
         List<Map<String, String>> list = new ArrayList<>();
         Map<String, String> params = new HashMap<>();
         params.put("taskId", taskId);
-        List<Map<String, Object>>  l =jwCourseGapRuleService.queryLinkList(params);
-        for (Map<String, Object> m: l)
+        List<Map<String, Object>> l = jwCourseGapRuleService.queryLinkList(params);
+        for (Map<String, Object> m : l)
         {
             String c = (String)m.get("course_hour");
-            if(StringUtils.isNotEmpty(c) && c.contains("+"))
+            if (StringUtils.isNotEmpty(c) && c.contains("+"))
             {
-               String[] cs = c.split("\\+");
-               if(cs.length<2)
-               {
-                   continue;
-               }
-               String singleCount = cs[0];
-               String linkCount = cs[1];
-               Map<String, String> map = new HashMap<>();
-               map.put("courseName", m.get("course_name")+ "");
-               map.put("singleCount", singleCount);
-               map.put("linkCount", linkCount);
-               map.put("hour", m.get("chour")+ "");
-               list.add(map);
+                String[] cs = c.split("\\+");
+                if (cs.length < 2)
+                {
+                    continue;
+                }
+                String singleCount = cs[0];
+                String linkCount = cs[1];
+                Map<String, String> map = new HashMap<>();
+                map.put("courseName", m.get("course_name") + "");
+                map.put("singleCount", singleCount);
+                map.put("linkCount", linkCount);
+                map.put("hour", m.get("chour") + "");
+                list.add(map);
             }
         }
         return list;
     }
 
     @RequestMapping(value = "/list/{type}/{taskId}", method = RequestMethod.GET)
-    public List<Map<String, String>> getList(@PathVariable String taskId,@PathVariable String type
-        ,@RequestParam(value = "teacherCourse", required = false) String teacherCourse)
+    public List<Map<String, String>> getList(@PathVariable String taskId, @PathVariable String type
+        , @RequestParam(value = "teacherCourse", required = false) String teacherCourse)
     {
         List<Map<String, String>> list;
         Map<String, String> params = new HashMap<>();
@@ -276,7 +311,7 @@ public class CourseDisSelectController
         {
             throw new BizException("1100222", "type参数有误!");
         }
-        if(null == list)
+        if (null == list)
         {
             throw new BizException("1122334", "请先导入列表信息！");
         }
@@ -290,5 +325,10 @@ public class CourseDisSelectController
         params.put("taskId", taskId);
         List<Map<String, String>> list = jwCourseGapRuleService.queryTeacherCourseList(params);
         return list;
+    }
+
+    private int getCeilValue(int a, int b)
+    {
+        return a % b == 0 ? a / b : a / b + 1;
     }
 }

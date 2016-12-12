@@ -21,6 +21,7 @@ import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -208,12 +209,18 @@ public class ScheduleTaskController {
         params.put("columns",Constant.CHECK_TABLE_STUDENT_COLUMNS);
         params.put("searchKey",Constant.STUDENT_GRADE);
         params.put("searchValue",GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())));
-        Map<String,Object> map = iexTenantCustomService.existDataCount(params);
+        Map<String,Object> map = null;
+        try {
+            map = iexTenantCustomService.existDataCount(params);
+        }catch (Exception e){
+            throw new BizException(ErrorCode.TASK_ERROR.getCode(),"您还未完善学生信息，请至学生管理中完善!");
+        }
+
         Iterator<String> iterator = map.keySet().iterator();
         List<String> emptyColumns = new ArrayList<>();
         while (iterator.hasNext()){
             String key = iterator.next();
-            if ("0".equals(map.get(key))) {
+            if ("0".equals(map.get(key)==null?null:map.get(key).toString())) {
                 emptyColumns.add(key);
             }
         }
@@ -400,10 +407,17 @@ public class ScheduleTaskController {
      */
     @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
     @ResponseBody
-    public Map getCourseResult(@PathVariable String type) {
-
+    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) {
+        Map<String,Object> paramsMap = Maps.newHashMap();
+        if (param==null) {
+            try {
+                paramsMap = JSON.parseObject(param, Map.class);
+            } catch (Exception e) {
+                paramsMap = Maps.newHashMap();
+            }
+        }
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type, tnId);
+        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap);
 
         Map resultMap = new HashMap();
         resultMap.put("result",courseResultView);

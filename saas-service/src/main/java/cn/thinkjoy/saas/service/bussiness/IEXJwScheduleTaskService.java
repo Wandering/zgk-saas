@@ -9,11 +9,13 @@ package cn.thinkjoy.saas.service.bussiness;
 
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 
+import java.util.Map;
+
 public interface IEXJwScheduleTaskService {
     /**
      * 排课结果
      * @param type
      * @return
      */
-    public CourseResultView getCourseResult(String type,Integer tnId);
+    public CourseResultView getCourseResult(String type,Integer taskId, Integer tnId, Map<String,Object> paramsMap);
 }

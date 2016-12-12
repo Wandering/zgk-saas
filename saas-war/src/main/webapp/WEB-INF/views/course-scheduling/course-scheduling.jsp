@@ -82,10 +82,10 @@
             </label>
         </td>
         <td class="center">{{addOne @index}}</td>
-        <td class="center">{{scheduleName}}</td>
+        <td class="center" dataId="{{id}}"><a href="javascript:;" class="start-schedule-btn">{{scheduleName}}</a></td>
         <td class="center">{{gradeName}}</td>
         <td class="center">{{year}}年{{termName}}</td>
-        <td class="center" dataId="{{id}}">{{{reStatus status}}}</td>
+        <td class="center" gradeName="{{gradeName}}" dataId="{{id}}">{{{reStatus status}}}</td>
         </td>
     </tr>
     {{/each}}

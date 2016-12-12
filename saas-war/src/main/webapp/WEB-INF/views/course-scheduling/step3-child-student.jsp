@@ -9,71 +9,43 @@
 <%--学生课表--%>
 <div id="step3-child-student" class="role-scheduling-content">
     <div class="select-condition">
-        <select id="select-class">
-            <option>历史</option>
-            <option>数学</option>
+        <select id="select-classes">
+            <option value="">请选择班级</option>
         </select>
-        <select id="select-class">
-            <option>化学</option>
-            <option>历史</option>
+        <select id="select-student">
+            <option value="">请选择学生</option>
         </select>
     </div>
     <div class="scheduling-info">
-        <div class="fl scheduling-name">学生-小明课程表</div>
+        <div class="fl scheduling-name"><span class="student-label"></span><span class="classes-label"></span></div>
         <button class="fr btn btn-warning" id="output-tpl"><i class="icon-output-down"></i>导出学生课程表</button>
     </div>
     <table class="table">
-        <thead>
-        <tr>
-            <th></th>
-            <th class="center">星期一</th>
-            <th class="center">星期二</th>
-            <th class="center">星期三</th>
-            <th class="center">星期四</th>
-            <th class="center">星期五</th>
-        </tr>
+        <thead id="student-thead-list">
         </thead>
-        <tbody id="grade-list" class="check-template ui-sortable">
-        <tr class="ui-sortable-handle">
-            <td class="center index">1</td>
-            <td class="center index">英语</td>
-            <td class="center index">英语</td>
-            <td class="center index">生物</td>
-            <td class="center index">化学</td>
-            <td class="center index">通用技术</td>
-        </tr>
-        <tr class="ui-sortable-handle">
-            <td class="center index">2</td>
-            <td class="center index">通用技术</td>
-            <td class="center index">化学</td>
-            <td class="center index">生物</td>
-            <td class="center index">化学</td>
-            <td class="center index">通用技术</td>
-        </tr>
-        <tr class="ui-sortable-handle">
-            <td class="center index">3</td>
-            <td class="center index">生物</td>
-            <td class="center index">历史</td>
-            <td class="center index">英语</td>
-            <td class="center index">化学</td>
-            <td class="center index">英语</td>
-        </tr>
-        <tr class="ui-sortable-handle">
-            <td class="center index">4</td>
-            <td class="center index">生物</td>
-            <td class="center index">历史</td>
-            <td class="center index">生物</td>
-            <td class="center index">化学</td>
-            <td class="center index">通用技术</td>
-        </tr>
-        <tr class="ui-sortable-handle">
-            <td class="center index">5</td>
-            <td class="center index">化学</td>
-            <td class="center index">历史</td>
-            <td class="center index">生物</td>
-            <td class="center index">化学</td>
-            <td class="center index">化学</td>
-        </tr>
+        <tbody id="student-tbody-list" class="check-template ui-sortable">
         </tbody>
     </table>
 </div>
+<script id="student-thead-list-template" type="text/x-handlebars-template">
+    <tr>
+        <th></th>
+        {{#each this}}
+        <th class="center">{{this}}</th>
+        {{/each}}
+    </tr>
+</script>
+<script id="student-tbody-list-template" type="text/x-handlebars-template">
+    {{#with this}}
+    <tr class="ui-sortable-handle">
+        <td class="pm0">
+            {{{createN this.[0].length}}}
+        </td>
+        {{#each this}}
+        <td class="pm0">
+            {{#each this}}<p class="tbody-item">{{this}}</p>{{/each}}
+        </td>
+        {{/each}}
+    </tr>
+    {{/with}}
+</script>

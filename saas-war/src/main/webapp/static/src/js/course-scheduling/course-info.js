@@ -57,7 +57,7 @@ CourseInfo.prototype = {
                     });
                     Handlebars.registerHelper("times", function (v) {
                         console.log(v)
-                        if(v=="0"){
+                        if(!v){
                             return "-";
                         }else{
                             return (v + "节/周");
@@ -100,7 +100,7 @@ $(function () {
             return false;
         }
         if (checkboxLen > 1) {
-            layer.tips('修改只能选择一项', $(this));
+            layer.tips('设置课时只能选择一项', $(this));
             return false;
         }
         var id = scheduleV.attr('dataid');
