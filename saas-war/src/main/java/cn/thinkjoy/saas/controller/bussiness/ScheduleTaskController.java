@@ -220,7 +220,7 @@ public class ScheduleTaskController {
         List<String> emptyColumns = new ArrayList<>();
         while (iterator.hasNext()){
             String key = iterator.next();
-            if ("0".equals(map.get(key))) {
+            if ("0".equals(map.get(key)==null?null:map.get(key).toString())) {
                 emptyColumns.add(key);
             }
         }
