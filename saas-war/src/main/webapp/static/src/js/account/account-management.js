@@ -132,9 +132,9 @@ AccountManagementFun.prototype = {
         contentHtml.push('</div>');
         layer.open({
             type: 1,
-            title: '添加账号',
+            title: '重置密码',
             offset: 'auto',
-            area: ['362px', '380px'],
+            area: ['362px', '220px'],
             content: contentHtml.join('')
         });
     },
@@ -297,7 +297,7 @@ $('body').on('click','.save-pass-btn',function(){
         layer.tips('输入密码不一致!', $(this));
         return false;
     }
-    Common.ajaxFun('/account/updatePwd/'+ userId +'/'+ confirmPassV +'.do', 'GET', {}, function (res) {
+    Common.ajaxFun('/account/updatePwd/'+ userId +'/'+ $.md5(confirmPassV) +'.do', 'GET', {}, function (res) {
         if (res.rtnCode == "0000000") {
             layer.closeAll();
             layer.msg('重设成功!');

@@ -417,7 +417,7 @@ selectList
         select c.class_name as name,c.id,c.grade
         from saas_jw_class_base_info c
         inner join saas_jw_schedule_task t on c.tn_id=t.tn_id and c.grade=t.grade
-        where t.id=#{taskId}
+        where t.id=#{taskId} and c.class_type=1
     </select>
 
     <select id="queryCourseList" resultType="java.util.HashMap" >
