@@ -213,7 +213,7 @@ public class ScheduleTaskController {
         try {
             map = iexTenantCustomService.existDataCount(params);
         }catch (Exception e){
-            throw new BizException("error","您还未完善用户信息,请完善后再进行排课!");
+            throw new BizException("error","您还未完善学生信息,请完善后再进行排课!");
         }
 
         Iterator<String> iterator = map.keySet().iterator();
