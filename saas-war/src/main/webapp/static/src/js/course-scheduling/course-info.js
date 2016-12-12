@@ -94,7 +94,7 @@ $(function () {
     // 设置
     $(document).on('click', '#settings-class-btn', function () {
         var checkboxLen = $('#schedule-list input:checked').length;
-        var scheduleV= $('#schedule-list input:checked')
+        var scheduleV= $('#schedule-list input:checked');
         if (checkboxLen == 0) {
             layer.tips('选择一项', $(this));
             return false;
