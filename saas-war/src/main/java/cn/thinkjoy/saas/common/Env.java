@@ -30,7 +30,7 @@ public class Env {
 
     public void reInit()
             throws FileNotFoundException, IOException {
-        String filePath = "/environment.properties";
+        String filePath = "environment.properties";
         File eFile = new File(filePath);
         logger.info("filePath:" + filePath);
 
