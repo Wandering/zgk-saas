@@ -124,10 +124,10 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         Map<String, Object> map=new HashMap<>();
         map.put("tnId",tnId);
         map.put("domain","student");
-        map.put("enName","student_major_type");
-        if(selectClassesGuideDAO.selectEnName(map)<1){
-            ExceptionUtil.throwException(ErrorCode.TABLE_NOT_EXIST);
-        }
+//        map.put("enName","student_major_type");
+//        if(selectClassesGuideDAO.selectEnName(map)<1){
+//            ExceptionUtil.throwException(ErrorCode.TABLE_NOT_EXIST);
+//        }
         String tableName = "saas_"+tnId+"_student_excel";
         String classTableName = "saas_"+tnId+"_class_excel";
         List<Map<String,String>> mapList = Lists.newArrayList();

@@ -3,6 +3,7 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 import cn.thinkjoy.saas.dao.ITenantDAO;
 import cn.thinkjoy.saas.domain.Tenant;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantService;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -14,6 +15,8 @@ import java.util.Map;
  */
 @Service("EXTenantServiceImpl")
 public class EXTenantServiceImpl implements IEXTenantService {
+
+    private static final Logger logger = Logger.getLogger(EXTenantServiceImpl.class);
 
     @Resource
     ITenantDAO iTenantDAO;
@@ -33,6 +36,7 @@ public class EXTenantServiceImpl implements IEXTenantService {
             return false;
         Integer step = isLast ? 0 : tenant.getIsInit() + 1;
         tenant.setIsInit(step);
+        logger.info("租户步骤设置被执行: tnId = "+tnId+"  当前步骤:is_init = "+tenant.getIsInit());
         return (iTenantDAO.update(tenant) > 0 ? true : false);
     }
 

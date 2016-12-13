@@ -232,10 +232,10 @@
     {{/each}}
 </script>
 <script id="details-main-template" type="text/x-handlebars-template">
-    {{#each bizData}}
+    {{#each bizData.list}}
     <tr>
         <td class="center">{{classRank}}</td>
-        <td class="center">{{studentName}}</td>
+        <td class="center"><a href="javascript:;" class="student-btn">{{studentName}}</a></td>
         <td class="center">{{gradeRank}}</td>
         <td class="center">{{weakCourseOne}}</td>
         <td class="center">{{weakCourseTwo}}</td>
@@ -246,7 +246,7 @@
 <script id="progress-template" type="text/x-handlebars-template">
     {{#each bizData}}
     <tr>
-        <td class="center">{{studentName}}</td>
+        <td class="center"><a href="javascript:;" class="student-btn">{{studentName}}</a></td>
         <th class="center">{{advancedScore}}</th>
         <td class="center">{{gradeRank}}</td>
         <td class="center">{{weakCourseOne}}</td>

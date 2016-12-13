@@ -414,10 +414,10 @@ public class ScheduleTaskController {
     @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
     @ResponseBody
     public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) {
-        Map<String,Object> paramsMap = Maps.newHashMap();
-        if (param==null) {
+        Map<String,Object> paramsMap  = null;
+        if (param!=null) {
             try {
-                paramsMap = JSON.parseObject(param, Map.class);
+                paramsMap = JSON.parseObject(param);
             } catch (Exception e) {
                 paramsMap = Maps.newHashMap();
             }
@@ -430,4 +430,10 @@ public class ScheduleTaskController {
         return resultMap;
     }
 
+    public static void main(String[] args) {
+        String param = "{\"course\":\"外语\",\"teacherId\":\"\"}";
+        Map<String,Object>  map = JSON.parseObject(param);
+        System.out.println(map.size());
+
+    }
 }
