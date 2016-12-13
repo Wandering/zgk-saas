@@ -56,7 +56,7 @@ CourseInfo.prototype = {
                         return parseInt(index) + 1;
                     });
                     Handlebars.registerHelper("times", function (v) {
-                        if (!v) {
+                        if (v=="0" || !v) {
                             return "-";
                         } else {
                             return (v + "节/周");
@@ -114,6 +114,31 @@ $(function () {
         if (weekInput == "") {
             layer.tips('请输入每周课时', '.week-input');
             return false;
+        }
+        switch (weekInput.length){
+            case 1:
+                if (!(/^[1-9]\d*$/).test(weekInput)) {
+                    layer.tips('请输入正确的课时', '.week-input');
+                    return false;
+                }
+                break;
+            case 3:
+                var weekInputPos1 = weekInput.substr(0,1);
+                var weekInputPos2 = weekInput.substr(1,1);
+                var weekInputPos3 = weekInput.substr(2,1);
+                if (!(/^[1-9]\d*$/).test(weekInputPos1) || !(/^[1-9]\d*$/).test(weekInputPos3)) {
+                    layer.tips('请输入正确的课时', '.week-input');
+                    return false;
+                }
+                if (weekInputPos2!="+") {
+                    layer.tips('请输入正确的课时', '.week-input');
+                    return false;
+                }
+                break;
+            default:
+                layer.tips('请输入正确的课时', '.week-input');
+                return false;
+                break;
         }
         var courseId = $(this).attr('dataid');
         CourseInfoIns.saveOrUpdateCourseTime(taskId, courseId, weekInput);
