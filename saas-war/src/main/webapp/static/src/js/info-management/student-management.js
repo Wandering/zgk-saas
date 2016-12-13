@@ -184,12 +184,10 @@ var App = {
     },
     pagination: function () {
         var that = this;
-        console.info("zongyeshu: " + App.page.count);
         $(".pagination").createPage({
             pageCount: Math.ceil(App.page.count / App.page.rows),
             current: Math.ceil(App.page.offset / App.page.rows) + 1,
             backFn: function (p) {
-                console.info('p',p);
                 $(".pagination-bar .current-page").html(p);
                 App.page.offset = (p - 1) * App.page.rows;
                 App.loadPage();
@@ -540,34 +538,63 @@ var CRUDStd = {
     },
     CRUDStdVerify: function (type) {
         var postData = [];
+        // // (function () {
+        //     var lock = 0;
+        //     $.each(App.tableData, function (i, v) {
+        //         if (v.dataType === "text") {
+        //             if ($('#' + v.enName).val() == '') {
+        //                 layer.msg(v.name + '不能为空', {time: 1000});
+        //                 $('#' + v.enName).focus();
+        //                 lock = 1;
+        //                 return false
+        //             }
+        //             var reg = eval(v.checkRule);
+        //             var regV = $('#' + v.enName).val();
+        //             if (!reg.test(regV)) {
+        //                 layer.msg(v.name + '输入不合法', {time: 1000});
+        //                 $('#' + v.enName).focus();
+        //                 lock = 1;
+        //                 return false
+        //             }
+        //         }
+        //         if (v.dataType === "checkbox") {
+        //             if ($('#' + v.enName).find('[name="ck"]:checked').length == 0) {
+        //                 layer.msg('请至少选择一门所教科目');
+        //                 return false;
+        //             }
+        //         }
+        //     })
+        //     // return false
+        // // })()
+        // (function () {
         var lock = 0;
-        (function () {
-            $.each(App.tableData, function (i, v) {
-                if (v.dataType === "text") {
-                    if ($('#' + v.enName).val() == '') {
-                        layer.msg(v.name + '不能为空', {time: 1000});
-                        $('#' + v.enName).focus();
-                        lock = 1;
-                        return false
-                    }
-                    var reg = eval(v.checkRule);
-                    var regV = $('#' + v.enName).val();
-                    if (!reg.test(regV)) {
-                        layer.msg(v.name + '输入不合法', {time: 1000});
-                        $('#' + v.enName).focus();
-                        lock = 1;
-                        return false
-                    }
+        $.each(App.tableData, function (i, v) {
+            if (v.dataType === "text") {
+                if ($('#' + v.enName).val() == '') {
+                    layer.msg(v.name + '不能为空', {time: 1000});
+                    $('#' + v.enName).focus();
+                    lock = 1;
+                    return false
                 }
-                if (v.dataType === "checkbox") {
-                    if ($('#' + v.enName).find('[name="ck"]:checked').length == 0) {
-                        layer.msg('请至少选择一门所教科目');
-                        return false;
-                    }
+                var reg = eval(v.checkRule);
+                var regV = $('#' + v.enName).val();
+                if (!reg.test(regV)) {
+                    layer.msg(v.name + '输入不合法', {time: 1000});
+                    $('#' + v.enName).focus();
+                    lock = 1;
+                    return false
                 }
-            })
-            return false
-        })()
+            }
+            if (v.dataType === "checkbox") {
+                if ($('#' + v.enName).find('[name="ck"]:checked').length == 0) {
+                    layer.msg('请至少选择一门所教科目');
+                    return false;
+                }
+            }
+        })
+        if(lock == 1){
+            return false;
+        }
         $.each(App.tableData, function (i, v) {
             if (v.dataType === "text" || v.dataType === "select") {
                 postData.push({
@@ -910,9 +937,9 @@ var StdSet = {
                             content: $("#sub-student-setting"),
                             area: ['100%', '100%'],
                             maxmin: false,
-                            cancel: function () {
-                                StudentManage.studentTable();
-                            }
+                            // cancel: function () {
+                            //     // StudentManage.studentTable();
+                            // }
                         })
                     )
                 }
