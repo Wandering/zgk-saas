@@ -152,7 +152,7 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
      * @return
      */
     @Override
-    public List<Map<Integer, Object>> isExcelAddSelect(Integer tnId ,String[] columnNames) {
+    public List<Map<Integer, Object>>   isExcelAddSelect(Integer tnId ,String[] columnNames) {
         List<Map<Integer,Object>> lockSelectList = new ArrayList<>();
         if (columnNames.length > 0) {
             int i = 0;
@@ -183,18 +183,40 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
                         value = converGradesArr(gradeList);
                         break;
                     case EnumUtil.TEACHER_EDUCATION_CLASS://教师-所教班级
-                        String tableName= ParamsUtils.combinationTableName("class", tnId);
-                        Map maplin=new HashMap();
-                        maplin.put("tableName",tableName);
-                        List<LinkedHashMap<String, Object>> linkedHashMapList =iexTeantCustomDAO.getTenantCustom(maplin);
+                        String tableName = ParamsUtils.combinationTableName("class", tnId);
+                        Map maplin = new HashMap();
+                        maplin.put("tableName", tableName);
+                        List<LinkedHashMap<String, Object>> linkedHashMapList = iexTeantCustomDAO.getTenantCustom(maplin);
                         value = converClassName(linkedHashMapList);
                         break;
                     case EnumUtil.TEACHER_EDUCATION_MAJOYTYPE://教师-所教科目
-                        value=EnumUtil.TEACHER_EDUCATION_MAJOYTYPE_ARR;
+                        value = EnumUtil.TEACHER_EDUCATION_MAJOYTYPE_ARR;
                         break;
                     case EnumUtil.STUDENT_EDUCATION_MAJOYTYPE://学生-选择科目
-                        value=EnumUtil.STUDENT_EDUCATION_MAJOYTYPE_ARR;
-
+                        value = EnumUtil.STUDENT_EDUCATION_MAJOYTYPE_ARR;
+                        break;
+                    case EnumUtil.STUDENT_IN_GRADE://学生-所在年级
+                        Map stuGradeYear = new HashMap();
+                        stuGradeYear.put("tnId", tnId);
+                        List<Grade> stuGradeList = exiGradeDAO.selectGradeByTnId(stuGradeYear);
+                        value = converGradesArr(stuGradeList);
+                        break;
+                    case EnumUtil.STUDENT_CLASS_NAME://学生-班级名称
+                        String stuTableName = ParamsUtils.combinationTableName("class", tnId);
+                        Map mapStu = new HashMap();
+                        mapStu.put("tableName", stuTableName);
+                        List<LinkedHashMap<String, Object>> stuLinkedHashMapList = iexTeantCustomDAO.getTenantCustom(mapStu);
+                        value = converClassName(stuLinkedHashMapList);
+                        break;
+                    case EnumUtil.STUDENT_CHECK_MAJOYTYPE1:
+                        value = EnumUtil.STUDENT_EDUCATION_MAJOYTYPE_ARR;
+                        break;
+                    case EnumUtil.STUDENT_CHECK_MAJOYTYPE2:
+                        value = EnumUtil.STUDENT_EDUCATION_MAJOYTYPE_ARR;
+                        break;
+                    case EnumUtil.STUDENT_CHECK_MAJOYTYPE3:
+                        value = EnumUtil.STUDENT_EDUCATION_MAJOYTYPE_ARR;
+                        break;
                 }
 
                 if(!(value==null)) {
