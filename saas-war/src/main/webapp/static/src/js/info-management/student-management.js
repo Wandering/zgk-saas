@@ -44,7 +44,7 @@ var App = {
                     var tpl = [];
                     App.tableData = [] //制空
                     tpl.push('<tr>');
-                    tpl.push('<th class="center"><label><input type="checkbox" id="checkAll" class="ace" /><span class="lbl"></span></label></th>');
+                    tpl.push('<th class="center"><label><input type="checkbox" id="checkAll" class="ace" /><span class="lbl"></span></label></th><th>序号</th>');
                     $.each(data, function (i, k) {
                         tpl.push('<th class="center">' + k.name + '</th>');
                         App.tableData.push({
@@ -80,7 +80,7 @@ var App = {
                 $.each(dataJson, function (m, n) {
                     var obj = dataJson[m];
                     tpl.push('<tr>');
-                    tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
+                    tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td><td>'+parseInt(m+1)+'</td>');
                     $.each(App.tableData, function (i, k) {
                         var enName = App.tableData[i].enName;
                         var dType = App.tableData[i].dataType;
@@ -164,7 +164,7 @@ var App = {
                 $.each(dataJson, function (m, n) {
                     var obj = dataJson[m];
                     tpl.push('<tr>');
-                    tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
+                    tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td><th>'+parseInt(m+1)+'</th>');
                     $.each(App.tableData, function (i, k) {
                         var enName = App.tableData[i].enName;
                         var dType = App.tableData[i].dataType;
