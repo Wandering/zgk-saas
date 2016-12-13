@@ -201,6 +201,7 @@ var App = {
             App.checkGradeName = $('input[name="grade-li"]:checked').next().text();
             App.loadPage();
             App.pagination();
+            $('#checkAll').prop('checked', false);
         })
     }
 }
