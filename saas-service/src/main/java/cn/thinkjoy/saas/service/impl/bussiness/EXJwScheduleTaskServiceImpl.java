@@ -9,9 +9,14 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.IJwTeachDateDAO;
 import cn.thinkjoy.saas.domain.JwTeachDate;
+import cn.thinkjoy.saas.domain.JwTeacherBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
+import cn.thinkjoy.saas.dto.TeacherBaseDto;
+import cn.thinkjoy.saas.service.IJwTeacherBaseInfoService;
 import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
+import cn.thinkjoy.zgk.common.StringUtil;
 import com.google.common.collect.Maps;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,7 +29,8 @@ import java.util.Map;
 @Service("EXJwScheduleTaskServiceImpl")
 public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
 
-
+    @Autowired
+    IJwTeacherBaseInfoService teacherBaseInfoService;
     @Resource
     IJwTeachDateDAO iJwTeachDateDAO;
 
@@ -64,19 +70,21 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         courseResultView.setTeachTime(time);
         Map<Integer,String > rtnMap = Maps.newHashMap();
         if ("teacher".equals(type)) {
-
-            rtnMap.put(0, "");
-            rtnMap.put(1, "化学\n(张丽红)\n高一2班");
-            rtnMap.put(2, "化学\n(张丽红)\n高一3班");
-            rtnMap.put(3, "化学\n(张丽红)\n高一4班");
-            rtnMap.put(4, "化学\n(张丽红)\n高一5班");
-            rtnMap.put(5, "化学\n(张丽红)\n高一6班");
-            rtnMap.put(6, "");
-            rtnMap.put(7, "");
-            rtnMap.put(8, "");
-            rtnMap.put(10, "");
-            rtnMap.put(11, "");
-            rtnMap.put(12, "");
+            if (!StringUtil.isNulOrBlank(paramsMap.get("teacherId").toString())) {
+                JwTeacherBaseInfo jwTeacherBaseInfo = (JwTeacherBaseInfo) teacherBaseInfoService.fetch(paramsMap.get("teacherId"));
+                rtnMap.put(0, "");
+                rtnMap.put(1, paramsMap.get("course") + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n高一2班");
+                rtnMap.put(2, paramsMap.get("course") + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n高一3班");
+                rtnMap.put(3, paramsMap.get("course") + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n高一4班");
+                rtnMap.put(4, paramsMap.get("course") + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n高一5班");
+                rtnMap.put(5, paramsMap.get("course") + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n高一6班");
+                rtnMap.put(6, "");
+                rtnMap.put(7, "");
+                rtnMap.put(8, "");
+                rtnMap.put(10, "");
+                rtnMap.put(11, "");
+                rtnMap.put(12, "");
+            }
         }else if ("student".equals(type)){
             rtnMap.put(0, "");
             rtnMap.put(1, "语文\n(李明伟)\n高一2班");
