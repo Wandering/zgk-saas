@@ -1497,7 +1497,7 @@ public class ScoreAnalyseController
         Map<String, String> map = new HashMap<>();
         map.put("tnId", tnId);
         map.put("name", "line");
-        ExamProperties e = (ExamProperties)examPropertiesService.queryOne(map);
+        ExamProperties e = (ExamProperties) examPropertiesService.queryOne(map);
         try
         {
             if (null != e)
