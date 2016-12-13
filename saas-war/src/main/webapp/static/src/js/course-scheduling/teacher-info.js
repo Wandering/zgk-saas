@@ -83,7 +83,6 @@ TeacherInfo.prototype = {
                     that.queryTeacherByKeyWord(taskId,"");
                     that.keywordsPropertychange();
                 }
-
             }
         });
     },
