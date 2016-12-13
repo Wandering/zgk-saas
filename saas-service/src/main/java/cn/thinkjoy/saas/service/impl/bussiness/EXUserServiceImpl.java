@@ -152,7 +152,7 @@ public class EXUserServiceImpl implements IEXUserService {
                 Constant.DESC
         );
 
-        if(tempInstance != null){
+        if(tempInstance != null && tempInstance.getStatus() != -1){
             ExceptionUtil.throwException(ErrorCode.ACCOUNT_HAS_EXIST);
         }
 

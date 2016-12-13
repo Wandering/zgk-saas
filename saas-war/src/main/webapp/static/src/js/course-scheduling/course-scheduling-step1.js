@@ -1,6 +1,8 @@
 var taskId = Common.cookie.getCookie('taskId');
 
-Common.checkInfoIsPerfect(taskId);
+
+
+console.log(Common.checkInfoIsPerfect(taskId))
 
 
 
