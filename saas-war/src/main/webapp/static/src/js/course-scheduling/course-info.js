@@ -13,26 +13,26 @@ CourseInfo.prototype = {
     init: function () {
         this.queryCourseInfoByTaskId(taskId);
     },
-    addCourse: function (id,coursename,time) {
+    addCourse: function (id, coursename, time) {
         var that = this;
         var timeV = '';
-        if(time=="0"){
-            timeV='';
-        }else{
+        if (time == "0") {
+            timeV = '';
+        } else {
             timeV = time;
         }
         var addCourseContentHtml = [];
         addCourseContentHtml.push('<div class="add-course-box">');
         addCourseContentHtml.push('<div class="course-box">');
         addCourseContentHtml.push('<div class="box-row">');
-        addCourseContentHtml.push('<span class="title">课程名称：</span><span>'+ coursename +'</span>');
+        addCourseContentHtml.push('<span class="title">课程名称：</span><span>' + coursename + '</span>');
         addCourseContentHtml.push('</div>');
         addCourseContentHtml.push('<div class="box-row">');
-        addCourseContentHtml.push('<span class="title"><i>*</i>每周课时：</span><input class="week-input" value="'+ timeV +'" type="text" />节/周');
+        addCourseContentHtml.push('<span class="title"><i>*</i>每周课时：</span><input class="week-input" value="' + timeV + '" type="text" />节/周');
         addCourseContentHtml.push('<span class="tips">“4+1”表示4节单堂一节连堂共六课时</span>');
         addCourseContentHtml.push('</div>');
         addCourseContentHtml.push('<div class="box-row">');
-        addCourseContentHtml.push('<button type="button" id="save-course-btn" dataid="'+ id +'" coursename="'+ coursename +'" time="'+ timeV +'">保存</button>');
+        addCourseContentHtml.push('<button type="button" id="save-course-btn" dataid="' + id + '" coursename="' + coursename + '" time="' + timeV + '">保存</button>');
         addCourseContentHtml.push('</div>');
         addCourseContentHtml.push('</div>');
         addCourseContentHtml.push('</div>');
@@ -56,10 +56,9 @@ CourseInfo.prototype = {
                         return parseInt(index) + 1;
                     });
                     Handlebars.registerHelper("times", function (v) {
-                        console.log(v)
-                        if(!v){
+                        if (!v) {
                             return "-";
-                        }else{
+                        } else {
                             return (v + "节/周");
                         }
                     });
@@ -94,7 +93,7 @@ $(function () {
     // 设置
     $(document).on('click', '#settings-class-btn', function () {
         var checkboxLen = $('#schedule-list input:checked').length;
-        var scheduleV= $('#schedule-list input:checked');
+        var scheduleV = $('#schedule-list input:checked')
         if (checkboxLen == 0) {
             layer.tips('选择一项', $(this));
             return false;
@@ -106,7 +105,7 @@ $(function () {
         var id = scheduleV.attr('dataid');
         var coursename = scheduleV.attr('coursename');
         var time = scheduleV.attr('time');
-        CourseInfoIns.addCourse(id,coursename,time);
+        CourseInfoIns.addCourse(id, coursename, time);
     });
 
     // 保存

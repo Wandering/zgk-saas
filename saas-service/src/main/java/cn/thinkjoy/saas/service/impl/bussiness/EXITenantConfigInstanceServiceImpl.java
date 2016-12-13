@@ -15,6 +15,7 @@ import cn.thinkjoy.saas.service.common.EnumUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import cn.thinkjoy.saas.service.common.ReadExcel;
 import com.alibaba.dubbo.common.utils.StringUtils;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -555,10 +556,11 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                             jwCourseBaseInfo.setTnId(tnId);
                             jwCourseBaseInfo.setCourseName(syncCourse.getMajor());
                             jwCourseBaseInfo.setGrade(ConvertUtil.converGrade(syncCourse.getGrade()).toString());
-                            jwCourseBaseInfo.setCourseType(ConvertUtil.converClassType(syncCourse.getMajor()));
+                            jwCourseBaseInfo.setCourseType(2);
                             jwCourseBaseInfos.add(jwCourseBaseInfo);
                         }
                         iJwCourseBaseInfoDAO.deleteByCondition(removeMap);
+                        jwCourseBaseInfos.addAll(convertCourseList(tnId,ConvertUtil.converGrade(syncCourses.get(0).getGrade()).toString()));
                         iexCourseBaseInfoDAO.syncCourseInfo(jwCourseBaseInfos);
                     }
                     List<SyncClass> syncClasses = iexTeantCustomDAO.selectClassGroup(map);
@@ -601,6 +603,39 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                 break;
         }
     }
+
+    /**
+     * 组装基本课程信息(语,数,外)
+     *
+     * @param tnId
+     * @param grade
+     * @return
+     */
+    private List<JwCourseBaseInfo> convertCourseList(int tnId,String grade){
+        List<JwCourseBaseInfo> infos = Lists.newArrayList();
+        infos.add(convertCourse(tnId,grade,"语文"));
+        infos.add(convertCourse(tnId,grade,"数学"));
+        infos.add(convertCourse(tnId,grade,"外语"));
+        return infos;
+    }
+
+    /**
+     * 组装单个课程信息
+     *
+     * @param tnId
+     * @param grade
+     * @param courseName
+     * @return
+     */
+    private JwCourseBaseInfo convertCourse(int tnId,String grade,String courseName){
+        JwCourseBaseInfo info = new JwCourseBaseInfo();
+        info.setTnId(tnId);
+        info.setCourseName(courseName);
+        info.setCourseType(1);
+        info.setGrade(grade);
+        return info;
+    }
+
     /**
      * 租户动态表名校验  -表级别校验  存在则删除
      * @param tableName 表名

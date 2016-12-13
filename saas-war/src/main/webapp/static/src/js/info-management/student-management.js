@@ -44,7 +44,7 @@ var App = {
                     var tpl = [];
                     App.tableData = [] //制空
                     tpl.push('<tr>');
-                    tpl.push('<th class="center"><label><input type="checkbox" id="check-all" class="ace" /><span class="lbl"></span></label></th>');
+                    tpl.push('<th class="center"><label><input type="checkbox" id="checkAll" class="ace" /><span class="lbl"></span></label></th>');
                     $.each(data, function (i, k) {
                         tpl.push('<th class="center">' + k.name + '</th>');
                         App.tableData.push({
@@ -53,6 +53,7 @@ var App = {
                             dataType: k.dataType,
                             dataValue: k.dataValue,
                             checkRule: k.checkRule,
+                            isRetain: k.isRetain,
                             id: k.id,
                         });
                     });
@@ -184,12 +185,10 @@ var App = {
     },
     pagination: function () {
         var that = this;
-        console.info("zongyeshu: " + App.page.count);
         $(".pagination").createPage({
             pageCount: Math.ceil(App.page.count / App.page.rows),
             current: Math.ceil(App.page.offset / App.page.rows) + 1,
             backFn: function (p) {
-                console.info('p',p);
                 $(".pagination-bar .current-page").html(p);
                 App.page.offset = (p - 1) * App.page.rows;
                 App.loadPage();
@@ -303,7 +302,7 @@ var CRUDStd = {
                 dataType: v.dataType,
                 dataValue: v.dataValue,
                 checkRule: v.checkRule,
-                checkRule: v.checkRule,
+                isRetain: v.isRetain,
             }
             CRUDStd.CRUDStdData.renderEleData.push(eleData);
         })
@@ -324,7 +323,9 @@ var CRUDStd = {
                         '<span class="lbl">' + radioLen[i] + '</span></label>'
                 }
             }
-            return '<li><span class="f20">' + v.name + '</span>' +
+            var foo = '';
+            v.isRetain == 1 ? foo = '<b style="color:#EA4046">*</b>'+v.name : foo = v.name
+            return '<li><span class="f20">' + foo + '</span>' +
                 '<div id="' + v.enName + '" class="sex-type f70">' + radioTpl +
                 '</label>' +
                 '</div></li>'
@@ -359,15 +360,17 @@ var CRUDStd = {
          * @returns {string}
          */
         var renderSelect = function (v) {
+            var foo = '';
+            v.isRetain == 1 ? foo = '<b style="color:#EA4046">*</b>'+v.name : foo = v.name
             if (v.enName == "student_grade") {
-                return '<li><span>' + v.name + '</span><select id="' + v.enName + '" readonly disabled style="cursor: not-allowed;background-color: #eee;"><option>' + App.checkGradeName + '</option></select></li>'
+                return '<li><span>' + foo + '</span><select id="' + v.enName + '" readonly disabled style="cursor: not-allowed;background-color: #eee;"><option>' + App.checkGradeName + '</option></select></li>'
             } else {
                 var selectLen = (v.dataValue).split('-'),
                     selectTpl = '';
                 for (var i = 0; i < selectLen.length; i++) {
                     selectTpl += '<option>' + selectLen[i] + '</option>'
                 }
-                return '<li><span>' + v.name + '</span><select id="' + v.enName + '">' + selectTpl + '</select></li>'
+                return '<li><span>' + foo+ '</span><select id="' + v.enName + '">' + selectTpl + '</select></li>'
             }
         }
         /**
@@ -376,7 +379,9 @@ var CRUDStd = {
          * @returns {string}
          */
         var renderText = function (v) {
-            return '<li><span>' + v.name + '</span><input type="text" placeholder="请输入' + v.name + '" id="' + v.enName + '" checkRule="' + v.checkRule + '" class="input-common-w"/></li>'
+            var foo = '';
+            v.isRetain == 1 ? foo = '<b style="color:#EA4046">*</b>'+v.name : foo = v.name
+            return '<li><span>' + foo+ '</span><input type="text" placeholder="请输入' + v.name + '" id="' + v.enName + '" checkRule="' + v.checkRule + '" class="input-common-w"/></li>'
         }
         $.each(CRUDStd.CRUDStdData.renderEleData, function (i, v) {
             switch (v.dataType) {
@@ -525,10 +530,9 @@ var CRUDStd = {
                 if (res.rtnCode == "0000000") {
                     if (res.bizData.result = "SUCCESS") {
                         $('#class-change-list').html('');
-                        $('#check-all').prop('checked', false);
+                        $('#checkAll').prop('checked', false);
                         layer.msg('删除成功', {time: 1000});
                         App.renderTableHeader();
-                        // window.location.reload();
                     }
                 }
             }, function (res) {
@@ -540,34 +544,63 @@ var CRUDStd = {
     },
     CRUDStdVerify: function (type) {
         var postData = [];
+        // // (function () {
+        //     var lock = 0;
+        //     $.each(App.tableData, function (i, v) {
+        //         if (v.dataType === "text") {
+        //             if ($('#' + v.enName).val() == '') {
+        //                 layer.msg(v.name + '不能为空', {time: 1000});
+        //                 $('#' + v.enName).focus();
+        //                 lock = 1;
+        //                 return false
+        //             }
+        //             var reg = eval(v.checkRule);
+        //             var regV = $('#' + v.enName).val();
+        //             if (!reg.test(regV)) {
+        //                 layer.msg(v.name + '输入不合法', {time: 1000});
+        //                 $('#' + v.enName).focus();
+        //                 lock = 1;
+        //                 return false
+        //             }
+        //         }
+        //         if (v.dataType === "checkbox") {
+        //             if ($('#' + v.enName).find('[name="ck"]:checked').length == 0) {
+        //                 layer.msg('请至少选择一门所教科目');
+        //                 return false;
+        //             }
+        //         }
+        //     })
+        //     // return false
+        // // })()
+        // (function () {
         var lock = 0;
-        (function () {
-            $.each(App.tableData, function (i, v) {
-                if (v.dataType === "text") {
-                    if ($('#' + v.enName).val() == '') {
-                        layer.msg(v.name + '不能为空', {time: 1000});
-                        $('#' + v.enName).focus();
-                        lock = 1;
-                        return false
-                    }
-                    var reg = eval(v.checkRule);
-                    var regV = $('#' + v.enName).val();
-                    if (!reg.test(regV)) {
-                        layer.msg(v.name + '输入不合法', {time: 1000});
-                        $('#' + v.enName).focus();
-                        lock = 1;
-                        return false
-                    }
+        $.each(App.tableData, function (i, v) {
+            if (v.dataType === "text") {
+                if ($('#' + v.enName).val() == '') {
+                    layer.msg(v.name + '不能为空', {time: 1000});
+                    $('#' + v.enName).focus();
+                    lock = 1;
+                    return false
                 }
-                if (v.dataType === "checkbox") {
-                    if ($('#' + v.enName).find('[name="ck"]:checked').length == 0) {
-                        layer.msg('请至少选择一门所教科目');
-                        return false;
-                    }
+                var reg = eval(v.checkRule);
+                var regV = $('#' + v.enName).val();
+                if (!reg.test(regV)) {
+                    layer.msg(v.name + '输入不合法', {time: 1000});
+                    $('#' + v.enName).focus();
+                    lock = 1;
+                    return false
                 }
-            })
-            return false
-        })()
+            }
+            if (v.dataType === "checkbox") {
+                if ($('#' + v.enName).find('[name="ck"]:checked').length == 0) {
+                    layer.msg('请至少选择一门所教科目');
+                    return false;
+                }
+            }
+        })
+        if(lock == 1){
+            return false;
+        }
         $.each(App.tableData, function (i, v) {
             if (v.dataType === "text" || v.dataType === "select") {
                 postData.push({
@@ -620,6 +653,7 @@ var CRUDStd = {
         Common.ajaxFun('/manage/teant/custom/data/add.do', 'POST', JSON.stringify(data), function (res) {
             if (res.rtnCode == "0000000" && res.bizData.result === 'SUCCESS') {
                 layer.closeAll();
+                layer.msg('添加成功');
                 App.renderTableHeader();
             }
         }, function (res) {
@@ -782,13 +816,14 @@ var StdSet = {
         var that = this;
         $(document).on('click', '#sub-student-add', function () {
             that.generateTableHeader();
+            layer.closeAll()
             layer.open({
                 type: 1,
                 title: '选择添加字段',
                 content: $('#sub-choose-field'),
                 area: ['668px', '230px'],
-                cancel: function () {
-                    $('#field').html('');
+                cancel:function(){
+                    window.location.reload();
                 }
             })
         });
@@ -911,7 +946,9 @@ var StdSet = {
                             area: ['100%', '100%'],
                             maxmin: false,
                             cancel: function () {
-                                StudentManage.studentTable();
+                                // StudentManage.studentTable();
+                                layer.closeAll();
+                                window.location.reload();
                             }
                         })
                     )

@@ -46,8 +46,8 @@ public class RoleController {
         String meunIds = request.getDataString("meunIds");
 
         Map<String,Object> paramMap = Maps.newHashMap();
-        paramMap.put("tn_id",tnId);
-        paramMap.put("role_name",roleName);
+        paramMap.put("tnId",tnId);
+        paramMap.put("roleName",roleName);
         Roles tmpRole = (Roles) iRolesService.queryOne(paramMap);
         if(tmpRole != null){
             ExceptionUtil.throwException(ErrorCode.ROLE_HAS_EXIST);
