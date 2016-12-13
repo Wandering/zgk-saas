@@ -418,6 +418,11 @@ $(function () {
         }
     });
 
+    $(document).on('change', '#teacher-course', function () {
+        var teacherCourse = $(this).val().trim();
+        arrangeCourse.getNoArrangeCourseList('teacher', teacherCourse);
+    });
+
     $(document).on('click', '.no-assign-table tr td:not(.order)', function () {
         var curText = $(this).text().trim();
         if (curText == '排课') {
