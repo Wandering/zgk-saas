@@ -125,6 +125,10 @@ var MixedClass = {
     },
     renderResult:function(dataJson){
         var tpl = Handlebars.compile($('#mixed-list-tpl').html());
+        if(dataJson.mergeClassInfoList.length == 0){
+            $('.mixed-class-tips').addClass('dh');
+            return false;
+        }
         $('#mixed-list').html(tpl(dataJson.mergeClassInfoList));
         $('.mixed-class-tips').removeClass('dh');
     },
