@@ -4,11 +4,25 @@ var Common = {
         this.logout();
         this.checkAll();
         this.renderMenu();
-        $('body').on('click','.close-btn',function(){
+        $('body').on('click', '.close-btn', function () {
             layer.closeAll();
         });
+        $('.nav-li').each(function(i,v){
+            console.info(v)
+        });
+        // $(document).on('mouseover mouseout','.dropdown-toggle',function(){
+        //     var foo = $(this).find('[name="toggle-icon-url"]').attr('class');
+        //     if(event.type == "mouseover"){
+        //         if(foo.length!=14){
+        //             return false;
+        //         }
+        //         $(this).find('[name="toggle-icon-url"]').attr('class',foo+'-act');
+        //     }else if(event.type == "mouseout"){
+        //         $(this).find('[name="toggle-icon-url"]').attr('class',foo.substr(0,foo.length-4));
+        //     }
+        // })
     },
-    getLinkey: function(name) {
+    getLinkey: function (name) {
         var reg = new RegExp("(^|\\?|&)" + name + "=([^&]*)(\\s|&|$)", "i");
         if (reg.test(window.location.href)) return unescape(RegExp.$2.replace(/\+/g, " "));
         return "";
@@ -20,17 +34,17 @@ var Common = {
         key = urlArr[0];
         return key;
     },
-    flowSteps:function(){
+    flowSteps: function () {
         var pathName = window.location.pathname;
-        var pathNum = pathName.slice((pathName.length-1),pathName.length);
+        var pathNum = pathName.slice((pathName.length - 1), pathName.length);
         var tnId = this.cookie.getCookie('tnId');
-        Common.ajaxFun('/config/get/step/'+ tnId +'.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/config/get/step/' + tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
-                if(pathNum!=res.bizData.result){
-                    if(res.bizData.result =='0'){
-                        window.location.href='/course-guide';
-                    }else{
-                        window.location.href='/seting-process'+res.bizData.result;
+                if (pathNum != res.bizData.result) {
+                    if (res.bizData.result == '0') {
+                        window.location.href = '/course-guide';
+                    } else {
+                        window.location.href = '/seting-process' + res.bizData.result;
                     }
                 }
             }
@@ -78,21 +92,21 @@ var Common = {
             }
         }
     },
-    ajaxFun: function (url, method, reqData, callback, callbackError, isasync,acceptType) {
+    ajaxFun: function (url, method, reqData, callback, callbackError, isasync, acceptType) {
         var isasyncB = null;
         if (isasync) {
             isasyncB = false;
         } else {
             isasyncB = true;
         }
-        var headers=null;
-        if(acceptType){
+        var headers = null;
+        if (acceptType) {
             headers = {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
-        }else{
-            headers='';
+        } else {
+            headers = '';
         }
 
         $.ajax({
@@ -102,7 +116,7 @@ var Common = {
             async: isasyncB,
             success: callback,
             error: callbackError,
-            headers:headers
+            headers: headers
         });
     },
     loginInfo: function () {
@@ -118,7 +132,7 @@ var Common = {
             window.location.href = '/login';
         });
     },
-    checkAll:function(){
+    checkAll: function () {
         // 全选
         $(document).on('click', '#checkAll', function () {
             if ($(this).is(':checked')) {
@@ -145,9 +159,9 @@ var Common = {
             }
         }
     },
-    getClassRoom:function(){  // 获取教室
+    getClassRoom: function () {  // 获取教室
         var classRoom = '';
-        Common.ajaxFun('/config/classRoom/get/'+ tnId +'.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/config/classRoom/get/' + tnId + '.do', 'GET', {}, function (res) {
             //console.log(res)
             if (res.rtnCode == "0000000") {
                 classRoom = res
@@ -157,7 +171,7 @@ var Common = {
         }, true);
         return classRoom;
     },
-    getGrade:function(){  // 获取年级
+    getGrade: function () {  // 获取年级
         var gradeV = '';
         Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
@@ -168,9 +182,9 @@ var Common = {
         }, true);
         return gradeV;
     },
-    initClass:function(){  // 获取年级
+    initClass: function () {  // 获取年级
         var gradeV = '';
-        Common.ajaxFun('/config/getInit/'+ tnId +'.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/config/getInit/' + tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 gradeV = res;
             }
@@ -179,7 +193,7 @@ var Common = {
         }, true);
         return gradeV;
     },
-    renderMenu:function(){
+    renderMenu: function () {
         var pathName = window.location.pathname;
         if (pathName == '/course-scheduling-step1' ||
             pathName == '/course-scheduling-step2' ||
@@ -191,7 +205,7 @@ var Common = {
             pathName == '/base-rule-settings') {
             pathName = '/course-scheduling';
         }
-        if(Common.cookie.getCookie('siderMenu')){
+        if (Common.cookie.getCookie('siderMenu')) {
             var siderMenu = $.parseJSON(Common.cookie.getCookie('siderMenu'));
             var menus = [];
             //menus.push('<li class="nav-li" style="display: block;">');
@@ -200,33 +214,34 @@ var Common = {
             //menus.push('<span class="menu-text">首页</span>');
             //menus.push('</a>');
             //menus.push('</li>');
-            var icons = ['icon-flag','icon-lightbulb','icon-globe','icon-book','icon-dashboard','icon-credit-card','icon-tasks','icon-cog']
-            $.each(siderMenu,function(i,v){
-
-                if(pathName==v.meunUrl){
+            // var icons = ['icon-flag','icon-lightbulb','icon-globe','icon-book','icon-dashboard','icon-credit-card','icon-tasks','icon-cog']
+            $.each(siderMenu, function (i, v) {
+                if (pathName == v.meunUrl) {
                     menus.push('<li class="nav-li active">');
-                }else{
+                } else {
                     menus.push('<li class="nav-li">');
                 }
-                if(v.sonMeuns.length==0){
-                    menus.push('<a href="'+ v.meunUrl +'" class="dropdown-toggle" id="'+ v.meunId +'">');
-                }else{
-                    menus.push('<a href="javascript:;" class="dropdown-toggle" id="'+ v.meunId +'">');
+                if (v.sonMeuns.length == 0) {
+                    menus.push('<a href="' + v.meunUrl + '" class="dropdown-toggle" id="' + v.meunId + '">');
+                } else {
+                    menus.push('<a href="javascript:;" class="dropdown-toggle" id="' + v.meunId + '">');
                 }
                 // menus.push('<i class="icon-desktop"></i>');
-                menus.push('<i class="'+icons[i]+'"></i>');
-                menus.push('<span class="menu-text">'+ v.meunName +'</span>');
+                // menus.push('<i class="'+icons[i]+'"></i>');
+                menus.push('<i class="' + v.iconUrl + '" name="toggle-icon-url"></i>');
+                // menus.push('<i class="'+v.iconUrl+'"></i>');
+                menus.push('<span class="menu-text">' + v.meunName + '</span>');
                 menus.push('</a>');
-                if(v.sonMeuns.length>0){
+                if (v.sonMeuns.length > 0) {
                     //console.log(v.sonMeuns)
                     menus.push('<ul class="submenu">');
-                    $.each(v.sonMeuns,function(k,m){
-                        if(pathName == m.meunUrl){
+                    $.each(v.sonMeuns, function (k, m) {
+                        if (pathName == m.meunUrl) {
                             menus.push('<li class="active">');
-                        }else{
+                        } else {
                             menus.push('<li>');
                         }
-                        menus.push('<a href="'+ m.meunUrl +'" id="'+ m.meunId +'"><i class="icon-double-angle-right"></i>'+ m.meunName +'</a>');
+                        menus.push('<a href="' + m.meunUrl + '" id="' + m.meunId + '"><i class="icon-double-angle-right"></i>' + m.meunName + '</a>');
                         menus.push('</li>');
                     });
                     menus.push('</ul>');
@@ -235,18 +250,37 @@ var Common = {
             });
             $('#nav-list').append(menus.join(''));
             $('body').find('.submenu li.active').parents('li.nav-li').addClass('open active');
+            var fooAtrr = $('body').find('.submenu li.active').parents('li.nav-li').find('[name="toggle-icon-url"]').attr('class');
+            $('body').find('.submenu li.active').parents('li.nav-li').find('[name="toggle-icon-url"]').attr('class', fooAtrr + '-act');
         }
     },
-    getFormatTime:function (timestamp,formatStr) {
+    getFormatTime: function (timestamp, formatStr) {
         var newDate = new Date();
         newDate.setTime(timestamp);
         return newDate.Format(formatStr || "yyyy-MM-dd hh:mm:ss");
     },
-    getPageName:function(urls){
+    getPageName: function (urls) {
         var strUrl = urls;
         var arrUrl = strUrl.split("/");
         var strPage = arrUrl[arrUrl.length - 1];
         return strPage;
+    },
+    checkInfoIsPerfect: function (taskId) {
+        var checkInfoIsPerfect = null;
+        Common.ajaxFun('/scheduleTask/checkInfoIsPerfect.do', 'GET', {
+            'taskId': taskId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                console.log("数据完成");
+                checkInfoIsPerfect = true;
+            } else if (res.rtnCode == "0000014") {
+                layer.msg(res.msg);
+                checkInfoIsPerfect = false;
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        }, true);
+        return checkInfoIsPerfect;
     }
 };
 Common.init();

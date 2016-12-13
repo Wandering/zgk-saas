@@ -43,7 +43,11 @@ TeacherInfo.prototype = {
         addTeacherContentHtml.push('<div class="add-teacher-box">');
         addTeacherContentHtml.push('<div class="teacher-box">');
         addTeacherContentHtml.push('<div class="box-row">');
-        addTeacherContentHtml.push('<span class="title"><i>*</i>教师姓名：</span><input type="text" id="teacher-keywords" /><span class="teach-subject">所授课程：<span class="subject-name"></span></span>');
+        if(teachername){
+            addTeacherContentHtml.push('<span class="title"><i>*</i>教师姓名：</span><input type="text" disabled="disabled" id="teacher-keywords" /><span class="teach-subject">所授课程：<span class="subject-name"></span></span>');
+        }else{
+            addTeacherContentHtml.push('<span class="title"><i>*</i>教师姓名：</span><input type="text" id="teacher-keywords" /><span class="teach-subject">所授课程：<span class="subject-name"></span></span>');
+        }
         addTeacherContentHtml.push('<ul class="like-teacher-list" id="search-list">');
         addTeacherContentHtml.push('</ul>');
         addTeacherContentHtml.push('</div>');
@@ -77,8 +81,22 @@ TeacherInfo.prototype = {
                     that.queryTeacherByKeyWord(taskId,teachername);
                 }else{
                     that.queryTeacherByKeyWord(taskId,"");
-                }
+                    //that.keywordsPropertychange();
 
+                    $('#teacher-keywords').bind('input propertychange', function() {
+                        console.log($(this).val().length)
+                        if($(this).val().length=='0'){
+                            $('.teach-subject,.class-box').hide();
+                            $('.subject-name').text('');
+                            $('#max-class-count option:gt(0)').remove();
+                            $('#teaching-class-list').html('');
+                            $('#save-course-btn').removeAttr('teacherid');
+                            $('#save-course-btn').removeAttr('coursename');
+                            $('#save-course-btn').removeAttr('classinfodata');
+                        }
+                    });
+
+                }
             }
         });
     },
@@ -91,7 +109,6 @@ TeacherInfo.prototype = {
             },
             function (res) {
                 if (res.rtnCode == "0000000") {
-
                     if(keyWord==""){
                         that.getWordList(res.bizData);
                     }else{
@@ -117,6 +134,8 @@ TeacherInfo.prototype = {
             width:159,
             data: wordArr,
             callback:function(data){
+                $('.teaching-class-list').html('');
+                $('#max-class-count option:gt(0)').remove();
                 $('.teach-subject').show().find('.subject-name').text(data.courseName);
                 $('.class-box').show();
                 var dataClassInfo = data.classInfo;
@@ -128,7 +147,6 @@ TeacherInfo.prototype = {
                 }
                 $('.teaching-class-list').append(teachingClassList);
                 $('#max-class-count').append(maxClassCount);
-
                 $('#save-course-btn').attr(
                     {
                         'teacherId': data.teacherId,
@@ -146,7 +164,6 @@ TeacherInfo.prototype = {
         $('#teacher-keywords').val(data.teacherName);
         $('.teach-subject').show().find('.subject-name').text(data.courseName);
         $('.class-box').show();
-
         var dataClassInfo = data.classInfo;
         var teachingClassList = [];
         var maxClassCount = [];
@@ -163,20 +180,18 @@ TeacherInfo.prototype = {
                 'classInfoData': JSON.stringify(dataClassInfo)
             }
         );
-
-
     },
     // 模糊匹配
-    //keywordsPropertychange: function () {
-    //    var that = this;
-    //    $('#teacher-keywords').unbind('input propertychange').bind('input propertychange', function () {
-    //        var keyWord = $.trim($(this).val());
-    //        if (keyWord == "") {
-    //            $('.teach-subject,.class-box').hide();
-    //        }
-    //        that.queryTeacherByKeyWord(taskId, keyWord);
-    //    });
-    //},
+    keywordsPropertychange: function () {
+        var that = this;
+        $('#teacher-keywords').unbind('input propertychange').bind('input propertychange', function () {
+            var keyWord = $.trim($(this).val());
+            if (keyWord == "") {
+                $('.teach-subject,.class-box').hide();
+            }
+            that.queryTeacherByKeyWord(taskId, keyWord);
+        });
+    },
     // 模糊下拉点击
     //listClick: function () {
     //    $(document).on('click', '#search-list li', function () {
@@ -320,18 +335,6 @@ $(function () {
             console.log(v);
             $('.teaching-class-list input[classid="'+ v +'"]').attr('checked','checked');
         });
-
-
-        //for (var j = 0; j < classInfoData.length; j++) {
-        //    teachingClassList.push('<li><input type="checkbox" classId="' + classInfoData[j].classId + '" className="' + classInfoData[j].className + '" id="classInfo' + j + '" /><label for="classInfo' + j + '">' + classInfoData[j].className + '</label></li>');
-        //}
-        //$('.teaching-class-list').append(teachingClassList);
-
-        //var maxClassCount = [];
-        //for (var i = 0; i < data.classNum; i++) {
-        //    maxClassCount.push('<option value="' + (i + 1) + '">' + (i + 1) + '</option>');
-        //}
-        //$('#max-class-count').append(maxClassCount);
     });
 
     // 删除详情列表
@@ -361,6 +364,13 @@ $(function () {
             layer.tips('请输入教师姓名', $('#teacher-keywords'));
             return false;
         }
+        var teacherid = $(this).attr('teacherid');
+        if (!teacherid) {
+            layer.tips('请至教师管理添加教师信息！', $('#teacher-keywords'));
+            return false;
+        }
+
+
         var maxClassCount = $('#max-class-count').val();
         if (maxClassCount == '00') {
             layer.tips('请选择最大带班数', $('#max-class-count'));
@@ -372,7 +382,6 @@ $(function () {
             layer.tips('最大带班数不能小于选中所带班级数', $('#max-class-count'));
             return false;
         }
-        var teacherid = $(this).attr('teacherid');
         var courseName = $(this).attr('courseName');
         var teachingClassArr = [];
         $('.teaching-class-list input:checked').each(function(i,v){

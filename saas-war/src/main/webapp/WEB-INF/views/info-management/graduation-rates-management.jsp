@@ -49,7 +49,7 @@
                                         <tr>
                                             <th class="center">
                                                 <label>
-                                                    <input type="checkbox" class="ace" />
+                                                    <input type="checkbox" id="checkAll" class="ace" />
                                                     <span class="lbl"></span>
                                                 </label>
                                             </th>
@@ -58,7 +58,7 @@
                                             <th class="center">高三考生数量</th>
                                             <th class="center">一本上线人数</th>
                                             <th class="center">二本上线人数</th>
-                                            <th class="center">三本上线人数</th>
+                                            <%--<th class="center">三本上线人数</th>--%>
                                             <th class="center">高职上线人数</th>
                                         </tr>
                                     </thead>

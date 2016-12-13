@@ -1,16 +1,24 @@
 @import "../common/common";
 
-.title-2{
-  .grade-list{
-      li{
-        float: left;
-        margin-right: 25px;
-        margin-left: 3px;
-        label{
-          position: relative;
-          top: 3px;
-        }
+//红色*符号
+.red-icon {
+  color: #EA4046;
+  position: relative;
+  top: 0;
+  left: -6px;
+}
+
+.title-2 {
+  .grade-list {
+    li {
+      float: left;
+      margin-right: 25px;
+      margin-left: 3px;
+      label {
+        position: relative;
+        top: 3px;
       }
+    }
   }
 }
 
@@ -39,25 +47,25 @@
     }
   }
   .subject-list {
-    label{
+    label {
       margin-right: 10px;
       margin-bottom: 15px;
-      .lbl{
-        &:before{
+      .lbl {
+        &:before {
           margin-right: 6px;
         }
       }
     }
   }
-  .input-common-w{
+  .input-common-w {
     width: 300px;
   }
-  .sex-type{
+  .sex-type {
     margin-bottom: 10px;
-    label{
+    label {
       margin-right: 20px;
-      .lbl{
-        &:before{
+      .lbl {
+        &:before {
           margin-right: 5px;
         }
       }
@@ -65,43 +73,40 @@
   }
 }
 
-
-.opt-btn-box{
-  .save-btn{
+.opt-btn-box {
+  .save-btn {
     margin-left: 106px;
     margin-right: 45px;
   }
 }
 
-
-
 //选择添加字段
-#sub-choose-field{
+#sub-choose-field {
   padding: 20px 30px;
-  label{
+  label {
     margin-right: 20px;
-    width: 132px;
+    width: 128px;
   }
-  .btn-info{
+  .btn-info {
     //margin-top: 15px;
     position: absolute;
     left: 50%;
     margin-left: -40px;
-    margin-top:18px;
+    margin-top: 18px;
   }
-  .lbl{
-    &:before{
+  .lbl {
+    &:before {
       margin-right: 8px;
     }
   }
 }
-
 
 //上传layer
 .upload-box {
   padding-top: 40px;
   padding-left: 50px;
 }
+
 a.download-link:link,
 a.download-link:visited,
 a.download-link:hover {
@@ -111,6 +116,7 @@ a.download-link:hover {
   text-decoration: underline;
   outline: 0;
 }
+
 #cancel-download-btn {
   margin-top: 50px;
   border: 1px solid #CB171D !important;
@@ -120,12 +126,11 @@ a.download-link:hover {
   background-color: #fff !important;
 }
 
-
 //初始化弹层
-.init-page-layer{
+.init-page-layer {
   padding: 30px;
   width: 360px;
-  #init-btn{
+  #init-btn {
     width: 120px;
     position: relative;
     margin-left: -60px;
@@ -163,7 +168,7 @@ a.download-link:hover {
       border-radius: 2px;
       text-decoration: none;
       outline: 0;
-      padding: 4px 15px 4px 15px!important;
+      padding: 4px 15px 4px 15px !important;
     }
     a.pageNum {
       cursor: auto;
@@ -181,7 +186,7 @@ a.download-link:hover {
       background: #EFF2F5;
     }
     span {
-      padding: 4px 15px 4px 15px!important;
+      padding: 4px 15px 4px 15px !important;
       margin-right: 10px !important;
     }
     .current {

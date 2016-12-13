@@ -32,6 +32,7 @@ ClassManagement.prototype = {
                     var columnHtml = [];
                     columnHtml.push('<tr>');
                     columnHtml.push('<th class="center"><label><input type="checkbox" id="checkAll" class="ace" /><span class="lbl"></span></label></th>');
+                    columnHtml.push('<th class="center">序号</th>');
                     $.each(data, function (i, k) {
                         columnHtml.push('<th class="center">' + k.name + '</th>');
                         that.columnArr.push({
@@ -47,6 +48,8 @@ ClassManagement.prototype = {
                     $("#class-manage-table thead").html(columnHtml.join(''));
                 }
                 that.getGrade();
+            } else {
+                layer.msg(res.bizData.result);
             }
         }, function (res) {
             layer.msg("出错了");
@@ -64,6 +67,7 @@ ClassManagement.prototype = {
                     var obj = data[m];
                     classDataHtml.push('<tr rowid="' + obj['id'] + '">');
                     classDataHtml.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
+                    classDataHtml.push('<th class="center">序号</th>');
                     $.each(that.columnArr, function (i, k) {
                         var tempObj = that.columnArr[i];
                         var tempColumnName = tempObj.enName;
@@ -76,6 +80,8 @@ ClassManagement.prototype = {
                     classDataHtml.push('</tr>');
                 });
                 $("#class-manage-table tbody").html(classDataHtml.join(''));
+            } else {
+                layer.msg(res.bizData.result);
             }
         }, function (res) {
             layer.msg("出错了");
@@ -93,6 +99,8 @@ ClassManagement.prototype = {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
                 that.showData(data);
+            } else {
+                layer.msg(res.bizData.result);
             }
         }, function (res) {
             layer.msg("出错了");
@@ -109,6 +117,7 @@ ClassManagement.prototype = {
             var obj = data[m];
             classDataHtml.push('<tr rowid="' + obj['id'] + '">');
             classDataHtml.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
+            classDataHtml.push('<th class="center">' + (m + 1)+ '</th>');
             $.each(that.columnArr, function (i, k) {
                 var tempObj = that.columnArr[i];
                 var tempColumnName = tempObj.enName;
@@ -163,6 +172,8 @@ ClassManagement.prototype = {
                         var classManagement = new ClassManagement();
                         classManagement.init();
                     }
+                } else {
+                    layer.msg(res.bizData.result);
                 }
             }, function (res) {
                 layer.msg("出错了", {time: 1000});
@@ -196,6 +207,8 @@ ClassManagement.prototype = {
                 var checkedGrade = $('input[name="high-school"]:checked').next().text();
                 that.gradeName = checkedGrade;
                 that.loadPage(0, that.classRows);
+            } else {
+                layer.msg(res.bizData.result);
             }
         }, function (res) {
             layer.msg("出错了");
@@ -231,6 +244,8 @@ AddClassManagement.prototype.getYear = function () {
     Common.ajaxFun('/config/get/school/year.do', 'GET', {}, function (res) {
         if (res.rtnCode == "0000000") {
             that.renderYearSelect(res);
+        } else {
+            layer.msg(res.bizData.result);
         }
     }, function (res) {
         layer.msg("出错了");
@@ -243,6 +258,8 @@ AddClassManagement.prototype.renderYearSelect = function (data) {
             yearHtml.push('<option value="' + k + '">' + k + '</option>');
         });
         $("#class_in_year").append(yearHtml.join(''));
+    } else {
+        layer.msg(data.bizData.result);
     }
 };
 AddClassManagement.prototype.getGrade = function () {
@@ -252,6 +269,8 @@ AddClassManagement.prototype.getGrade = function () {
     }, function (res) {
         if (res.rtnCode == "0000000") {
             that.renderGradeSelect(res);
+        } else {
+            layer.msg(res.bizData.result);
         }
     }, function (res) {
         layer.msg("出错了");
@@ -268,6 +287,8 @@ AddClassManagement.prototype.renderGradeSelect = function (data) {
         $("#class_grade").val(checkedGrade);
         $("#class_grade").css({'cursor':'not-allowed'});
         $("#class_grade").prop('disabled', true);
+    } else {
+        layer.msg(data.bizData.result);
     }
 };
 AddClassManagement.prototype.getType = function (type) {
@@ -367,6 +388,8 @@ UpdateClassManagement.prototype = {
         Common.ajaxFun('/config/get/school/year.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 that.renderYearSelect(res);
+            } else {
+                layer.msg(res.bizData.result);
             }
         }, function (res) {
             layer.msg("出错了");
@@ -379,6 +402,8 @@ UpdateClassManagement.prototype = {
                 yearHtml.push('<option value="' + k + '">' + k + '</option>');
             });
             $("#class_in_year").append(yearHtml.join(''));
+        } else {
+            layer.msg(data.bizData.result);
         }
     },
     getGrade: function () {
@@ -388,6 +413,8 @@ UpdateClassManagement.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 that.renderGradeSelect(res);
+            } else {
+                layer.msg(res.bizData.result);
             }
         }, function (res) {
             layer.msg("出错了");
@@ -404,6 +431,8 @@ UpdateClassManagement.prototype = {
             $("#class_grade").val(checkedGrade);
             $("#class_grade").css({'cursor':'not-allowed'});
             $("#class_grade").prop('disabled', true);
+        } else {
+            layer.msg(data.bizData.result);
         }
     },
     getType: function (type) {
@@ -581,6 +610,8 @@ $(document).on("click", "#update-btn", function () {
             var checkedGrade = $('input[name="high-school"]:checked').next().text();
             classManagement.gradeName = checkedGrade;
             classManagement.loadPage(0, classManagement.classRows);
+        } else {
+            layer.msg(res.bizData.result);
         }
     }, function (res) {
         layer.msg("出错了");
@@ -648,6 +679,8 @@ $(document).on("click", "#add-btn", function () {
             var checkedGrade = $('input[name="high-school"]:checked').next().text();
             classManagement.gradeName = checkedGrade;
             classManagement.loadPage(0, classManagement.classRows);
+        } else {
+            layer.msg(res.bizData.result);
         }
     }, function (res) {
         layer.msg("出错了");

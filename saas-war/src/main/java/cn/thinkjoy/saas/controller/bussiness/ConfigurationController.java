@@ -357,7 +357,7 @@ public class ConfigurationController {
                            @PathVariable String type,
                            @PathVariable Integer tnId,
                            @RequestParam("inputFile") MultipartFile myfile) throws IOException {
-        boolean result = false;
+        String result = "系统错误";
         LOGGER.info("==================excel上传 S==================");
         if (myfile.isEmpty()) {
             LOGGER.info("文件未上传");
@@ -369,12 +369,12 @@ public class ConfigurationController {
             String realPath = env.getProp("configuration.excel.upload.url");
             FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
             result = exiTenantConfigInstanceService.uploadExcel(type, tnId, realPath + myfile.getOriginalFilename());
-            if (result)
+            if (result.equals("SUCCESS"))
                 iexTenantService.stepSetting(tnId, (type.equals("teacher") ? true : false));
         }
         LOGGER.info("==================excel上传 E==================");
         Map resultMap = new HashMap();
-        resultMap.put("result", result ? "SUCCESS" : "FAIL");
+        resultMap.put("result", result);
         return resultMap;
     }
 

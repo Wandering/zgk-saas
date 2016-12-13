@@ -101,7 +101,8 @@
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
-                                        <option value="4" selected="selected">4</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
                                     </select>
                                 </div>
                                 <div class="item">
@@ -109,17 +110,19 @@
                                     <select id="afternoon-list">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
-                                        <option value="3" selected="selected">3</option>
+                                        <option value="3">3</option>
                                         <option value="4">4</option>
+                                        <option value="5">5</option>
                                     </select>
                                 </div>
                                 <div class="item">
                                     <span>晚上：</span>
                                     <select id="evening-list">
-                                        <option value="0" selected="selected">0</option>
+                                        <option value="0">0</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
+                                        <option value="4">4</option>
                                     </select>
                                 </div>
                             </div>

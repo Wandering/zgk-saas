@@ -1,6 +1,6 @@
 var tnId = Common.cookie.getCookie('tnId');
 
-Common.flowSteps();
+//Common.flowSteps();
 
 
 
@@ -58,7 +58,6 @@ SetingProcess2.prototype = {
         }
     },
     eventClick:function(){
-
         var nums=[];
         $('body').find('.classroom-item').each(function(i,v){
             var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
@@ -104,7 +103,6 @@ SetingProcess2.prototype = {
         }, function (res) {
             layer.msg(res.msg);
         });
-
     }
 };
 var SetingProcess2Obj = new SetingProcess2();
