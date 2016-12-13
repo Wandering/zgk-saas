@@ -1271,8 +1271,8 @@ public class ScoreAnalyseController
             }
             Exam e1 = (Exam)examService.findOne("id", examIds.get(0));
             Exam e2 = (Exam)examService.findOne("id", examIds.get(1));
-            params.put(e1.getExamName() , lastButTwoExamDetail.size());
-            params.put(e2.getExamName() , lastExamDetail.size());
+            params.put(e1.getExamName() , lastExamDetail.size());
+            params.put(e2.getExamName() , lastButTwoExamDetail.size());
             Set<String> stuNames = new HashSet<>();
             for (ExamDetail detail : lastExamDetail)
             {
@@ -1723,7 +1723,7 @@ public class ScoreAnalyseController
         @RequestParam(value = "rankStepEnd", required = false) Integer rankStepEnd
     )
     {
-        stepStart = null == stepStart ? 10 : stepStart;
+        stepStart = null == stepStart ? 1 : stepStart;
         stepEnd = null == stepEnd ? Integer.MAX_VALUE : stepEnd;
         rankStepStart = null == rankStepStart ? 1 : rankStepStart;
         rankStepEnd = null == rankStepEnd ? Integer.MAX_VALUE : rankStepEnd;
