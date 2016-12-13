@@ -95,7 +95,7 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
             rtnMap.put(1, "语文\n(李明伟)\n高一2班");
             rtnMap.put(2, "数学\n(张丽红)\n高一3班");
             rtnMap.put(3, "");
-            rtnMap.put(4, "化学\n(张红新)\n高一5班");
+            rtnMap.put(4, "物理\n(杨国荣)\n高一6班");
             rtnMap.put(5, "");
             rtnMap.put(6, "政治\n(李丽)\n高一7班");
             rtnMap.put(7, "");
