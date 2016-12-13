@@ -64,6 +64,20 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         courseResultView.setTeachTime(time);
         Map<Integer,String > rtnMap = Maps.newHashMap();
         if ("teacher".equals(type)) {
+
+            rtnMap.put(0, "");
+            rtnMap.put(1, "化学\n(张丽红)\n高一2班");
+            rtnMap.put(2, "化学\n(张丽红)\n高一3班");
+            rtnMap.put(3, "化学\n(张丽红)\n高一4班");
+            rtnMap.put(4, "化学\n(张丽红)\n高一5班");
+            rtnMap.put(5, "化学\n(张丽红)\n高一6班");
+            rtnMap.put(6, "");
+            rtnMap.put(7, "");
+            rtnMap.put(8, "");
+            rtnMap.put(10, "");
+            rtnMap.put(11, "");
+            rtnMap.put(12, "");
+        }else if ("student".equals(type)){
             rtnMap.put(0, "");
             rtnMap.put(1, "语文\n(李明伟)\n高一2班");
             rtnMap.put(2, "数学\n(张丽红)\n高一3班");
@@ -74,19 +88,6 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
             rtnMap.put(7, "生物\n(左浩)\n高一8班");
             rtnMap.put(8, "历史\n(田芙蓉)\n高一9班");
             rtnMap.put(10, "通用技术\n(魏彤彤)\n高一10班");
-            rtnMap.put(11, "");
-            rtnMap.put(12, "");
-        }else if ("student".equals(type)){
-            rtnMap.put(0, "");
-            rtnMap.put(1, "化学\n(李明伟)\n高一2班");
-            rtnMap.put(2, "化学\n(张丽红)\n高一3班");
-            rtnMap.put(3, "化学\n(刘晓文)\n高一4班");
-            rtnMap.put(4, "化学\n(张红新)\n高一5班");
-            rtnMap.put(5, "化学\n(杨国荣)\n高一6班");
-            rtnMap.put(6, "");
-            rtnMap.put(7, "");
-            rtnMap.put(8, "");
-            rtnMap.put(10, "");
             rtnMap.put(11, "");
             rtnMap.put(12, "");
         }else if ("room".equals(type)){
