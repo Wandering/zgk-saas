@@ -132,7 +132,7 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      * @param excelPath
      * @return
      */
-    boolean  uploadExcel(String type,Integer tnId,String excelPath);
+    String  uploadExcel(String type,Integer tnId,String excelPath);
 
 
     /**

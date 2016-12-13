@@ -44,7 +44,7 @@ var App = {
                     var tpl = [];
                     App.tableData = [] //制空
                     tpl.push('<tr>');
-                    tpl.push('<th class="center"><label><input type="checkbox" id="checkAll" class="ace" /><span class="lbl"></span></label></th>');
+                    tpl.push('<th class="center"><label><input type="checkbox" id="checkAll" class="ace" /><span class="lbl"></span></label></th><th>序号</th>');
                     $.each(data, function (i, k) {
                         tpl.push('<th class="center">' + k.name + '</th>');
                         App.tableData.push({
@@ -80,7 +80,7 @@ var App = {
                 $.each(dataJson, function (m, n) {
                     var obj = dataJson[m];
                     tpl.push('<tr>');
-                    tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
+                    tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td><td>'+parseInt(m+1)+'</td>');
                     $.each(App.tableData, function (i, k) {
                         var enName = App.tableData[i].enName;
                         var dType = App.tableData[i].dataType;
@@ -164,7 +164,7 @@ var App = {
                 $.each(dataJson, function (m, n) {
                     var obj = dataJson[m];
                     tpl.push('<tr>');
-                    tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
+                    tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td><th>'+parseInt(m+1)+'</th>');
                     $.each(App.tableData, function (i, k) {
                         var enName = App.tableData[i].enName;
                         var dType = App.tableData[i].dataType;
@@ -324,7 +324,7 @@ var CRUDStd = {
                 }
             }
             var foo = '';
-            v.isRetain == 1 ? foo = '<b style="color:#EA4046">*</b>' + v.name : foo = v.name
+            v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
             return '<li><span class="f20">' + foo + '</span>' +
                 '<div id="' + v.enName + '" class="sex-type f70">' + radioTpl +
                 '</label>' +
@@ -361,7 +361,7 @@ var CRUDStd = {
          */
         var renderSelect = function (v) {
             var foo = '';
-            v.isRetain == 1 ? foo = '<b style="color:#EA4046">*</b>' + v.name : foo = v.name
+            v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
             if (v.enName == "student_grade") {
                 return '<li><span>' + foo + '</span><select id="' + v.enName + '" readonly disabled style="cursor: not-allowed;background-color: #eee;"><option>' + App.checkGradeName + '</option></select></li>'
             } else {
@@ -380,7 +380,7 @@ var CRUDStd = {
          */
         var renderText = function (v) {
             var foo = '';
-            v.isRetain == 1 ? foo = '<b style="color:#EA4046">*</b>' + v.name : foo = v.name
+            v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
             return '<li><span>' + foo + '</span><input type="text" placeholder="请输入' + v.name + '" id="' + v.enName + '" checkRule="' + v.checkRule + '" class="input-common-w"/></li>'
         }
         $.each(CRUDStd.CRUDStdData.renderEleData, function (i, v) {
