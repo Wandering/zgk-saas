@@ -32,6 +32,7 @@ ClassManagement.prototype = {
                     var columnHtml = [];
                     columnHtml.push('<tr>');
                     columnHtml.push('<th class="center"><label><input type="checkbox" id="checkAll" class="ace" /><span class="lbl"></span></label></th>');
+                    columnHtml.push('<th class="center">序号</th>');
                     $.each(data, function (i, k) {
                         columnHtml.push('<th class="center">' + k.name + '</th>');
                         that.columnArr.push({
@@ -64,6 +65,7 @@ ClassManagement.prototype = {
                     var obj = data[m];
                     classDataHtml.push('<tr rowid="' + obj['id'] + '">');
                     classDataHtml.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
+                    classDataHtml.push('<th class="center">序号</th>');
                     $.each(that.columnArr, function (i, k) {
                         var tempObj = that.columnArr[i];
                         var tempColumnName = tempObj.enName;
@@ -109,6 +111,7 @@ ClassManagement.prototype = {
             var obj = data[m];
             classDataHtml.push('<tr rowid="' + obj['id'] + '">');
             classDataHtml.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
+            classDataHtml.push('<th class="center">' + (m + 1)+ '</th>');
             $.each(that.columnArr, function (i, k) {
                 var tempObj = that.columnArr[i];
                 var tempColumnName = tempObj.enName;

@@ -361,7 +361,7 @@ $(function () {
      */
     $(document).on('click', "#search-keywords", startSearchUniversity)
         .on('keyup', "#search-keywords", startSearchUniversity)
-        .on('keydown', "#search-keywords", startSearchUniversity)
+        //.on('keydown', "#search-keywords", startSearchUniversity)
         //.on('mouseover', "#search-keywords", startSearchUniversity)
         .on('focus', "#search-keywords", startSearchUniversity);
         //.on('blur', "#search-keywords", startSearchUniversity);
