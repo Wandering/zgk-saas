@@ -80,8 +80,8 @@ TeacherInfo.prototype = {
                 if(teachername){
                     that.queryTeacherByKeyWord(taskId,teachername);
                 }else{
-                    that.keywordsPropertychange();
                     that.queryTeacherByKeyWord(taskId,"");
+                    that.keywordsPropertychange();
                 }
 
             }
@@ -96,7 +96,6 @@ TeacherInfo.prototype = {
             },
             function (res) {
                 if (res.rtnCode == "0000000") {
-
                     if(keyWord==""){
                         that.getWordList(res.bizData);
                     }else{
