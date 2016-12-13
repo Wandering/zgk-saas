@@ -88,6 +88,10 @@ var MixedClass = {
         $('input[name="merge-class"]:checked').each(function(){
             classIds += $(this).val()+','
         });
+        if(classIds.split(',').length<3){
+            layer.msg('请至少选择两个班')
+            return false;
+        }
         Common.ajaxFun('/mergeClassController/addMergeInfo.do', 'get', {
             'tnId': GLOBAL_CONSTANT.tnId,
             'taskId': GLOBAL_CONSTANT.taskId,
@@ -95,13 +99,13 @@ var MixedClass = {
             'classIds': classIds.substr(0,classIds.length-1),//班级Id，多个班级有英文逗号分隔
         }, function (res) {
             if (res.rtnCode === '0000000') {
-                layer.msg('合班成功')
                 that.fetchResult();
                 var cName = $('#course-select option:selected').text(),
                     cId = $('#course-select option:selected').val();
                 that.fetchBelongClass(cName,cId);
+                layer.msg('合班成功')
             } else {
-                layer.msg(res.msg);
+                layer.msg(res.massge);
             }
         });
     },
