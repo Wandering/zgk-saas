@@ -1269,8 +1269,10 @@ public class ScoreAnalyseController
                     lastButTwoExamDetail.add(lastButTwoExam);
                 }
             }
-            params.put("最近第二次考试", lastButTwoExamDetail.size());
-            params.put("最近第一次考试", lastExamDetail.size());
+            Exam e1 = (Exam)examService.findOne("id", examIds.get(0));
+            Exam e2 = (Exam)examService.findOne("id", examIds.get(1));
+            params.put(e1.getExamName() , lastButTwoExamDetail.size());
+            params.put(e2.getExamName() , lastExamDetail.size());
             Set<String> stuNames = new HashSet<>();
             for (ExamDetail detail : lastExamDetail)
             {
