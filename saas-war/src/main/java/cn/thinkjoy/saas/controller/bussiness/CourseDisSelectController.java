@@ -159,13 +159,20 @@ public class CourseDisSelectController
         Map<String, String> resultMap = new HashMap<>();
         if (null == rule || StringUtils.isEmpty(rule.getRule()))
         {
-            resultMap.put("1-2节", "0");
-            resultMap.put("2-3节", "0");
-            resultMap.put("3-4节", "0");
-            resultMap.put("4-5节", "0");
-            resultMap.put("5-6节", "0");
-            resultMap.put("6-7节", "0");
-            resultMap.put("7-8节", "0");
+            List<JwTeachDate> list = jwTeachDateService.queryList(params, "tid", "asc");
+            if(list.size()>0)
+            {
+                JwTeachDate d = list.get(0);
+                String detail =d.getTeachDetail();
+                if(detail.contains("1"))
+                {
+                    int c = detail.length() - detail.replaceAll("1", "").length();
+                    for (int i = 1; i < c ; i++)
+                    {
+                        resultMap.put(i + "-" + (i + 1) + "节", "0");
+                    }
+                }
+            }
         }
         else
         {

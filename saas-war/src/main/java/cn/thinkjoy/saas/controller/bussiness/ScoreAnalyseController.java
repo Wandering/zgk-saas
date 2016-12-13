@@ -1269,8 +1269,10 @@ public class ScoreAnalyseController
                     lastButTwoExamDetail.add(lastButTwoExam);
                 }
             }
-            params.put("最近第二次考试", lastButTwoExamDetail.size());
-            params.put("最近第一次考试", lastExamDetail.size());
+            Exam e1 = (Exam)examService.findOne("id", examIds.get(0));
+            Exam e2 = (Exam)examService.findOne("id", examIds.get(1));
+            params.put(e1.getExamName() , lastExamDetail.size());
+            params.put(e2.getExamName() , lastButTwoExamDetail.size());
             Set<String> stuNames = new HashSet<>();
             for (ExamDetail detail : lastExamDetail)
             {
@@ -1464,17 +1466,40 @@ public class ScoreAnalyseController
     @ResponseBody
     public boolean saveExamLineProperties(
         @RequestParam(value = "tnId", required = true) String tnId,
-        @RequestParam(value = "value", required = true) String value)
+        @RequestParam(value = "value", required = true) String value,
+        @RequestParam(value = "grade", required = true) String grade)
     {
         if(!StringUtils.isNumeric(value))
         {
             throw new BizException("1100221", "请设置正确的关注位次线！");
         }
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("tnId", tnId);
+        paramMap.put("grade", grade);
+        paramMap.put("limitNumber", 1);
+        List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
+        if (null == examIds || examIds.size() == 0)
+        {
+            throw new BizException("1100081", "该年级没有成绩录入！！");
+        }
+        String lastExamId = examIds.get(0);
+        Map<String, Object> condition = Maps.newHashMap();
+        condition.put("groupOp", "and");
+        if (StringUtils.isEmpty(lastExamId))
+        {
+            throw new BizException("1110001", "examId不能为空！");
+        }
+        ConditionsUtil.setCondition(condition, "examId", "=", lastExamId);
+        int count = examDetailService.count(condition);
+        if(Integer.parseInt(value) > count)
+        {
+            throw new BizException("1100251", "请设置正确的关注位次线！");
+        }
         boolean flag = false;
         Map<String, String> map = new HashMap<>();
         map.put("tnId", tnId);
         map.put("name", "line");
-        ExamProperties e = (ExamProperties)examPropertiesService.queryOne(map);
+        ExamProperties e = (ExamProperties) examPropertiesService.queryOne(map);
         try
         {
             if (null != e)
@@ -1543,7 +1568,7 @@ public class ScoreAnalyseController
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
         if (null == examIds || examIds.size() == 0)
         {
-            throw new BizException("1100011", "该年级没有成绩录入！！");
+            throw new BizException("1100081", "该年级没有成绩录入！！");
         }
         List<Map<String, Object>> resultList1 = new ArrayList<>();
         float batchOneNumber = Float.parseFloat(line);
@@ -1588,7 +1613,7 @@ public class ScoreAnalyseController
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
         if (null == examIds || examIds.size() == 0)
         {
-            throw new BizException("1100011", "该年级没有成绩录入！！");
+            throw new BizException("1100081", "该年级没有成绩录入！！");
         }
         if (examIds.size() == 1)
         {
@@ -1698,7 +1723,7 @@ public class ScoreAnalyseController
         @RequestParam(value = "rankStepEnd", required = false) Integer rankStepEnd
     )
     {
-        stepStart = null == stepStart ? 10 : stepStart;
+        stepStart = null == stepStart ? 1 : stepStart;
         stepEnd = null == stepEnd ? Integer.MAX_VALUE : stepEnd;
         rankStepStart = null == rankStepStart ? 1 : rankStepStart;
         rankStepEnd = null == rankStepEnd ? Integer.MAX_VALUE : rankStepEnd;

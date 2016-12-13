@@ -7,17 +7,20 @@ var Common = {
         $('body').on('click', '.close-btn', function () {
             layer.closeAll();
         });
-        $(document).on('mouseover mouseout','.dropdown-toggle',function(){
-            var foo = $(this).find('[name="toggle-icon-url"]').attr('class');
-            if(event.type == "mouseover"){
-                if(foo.length!=14){
-                    return false;
-                }
-                $(this).find('[name="toggle-icon-url"]').attr('class',foo+'-act');
-            }else if(event.type == "mouseout"){
-                $(this).find('[name="toggle-icon-url"]').attr('class',foo.substr(0,foo.length-4));
-            }
-        })
+        // $('.nav-li').each(function(i,v){
+        //     console.info(v)
+        // });
+        // $(document).on('mouseover mouseout','.dropdown-toggle',function(){
+        //     var foo = $(this).find('[name="toggle-icon-url"]').attr('class');
+        //     if(event.type == "mouseover"){
+        //         if(foo.length!=14){
+        //             return false;
+        //         }
+        //         $(this).find('[name="toggle-icon-url"]').attr('class',foo+'-act');
+        //     }else if(event.type == "mouseout"){
+        //         $(this).find('[name="toggle-icon-url"]').attr('class',foo.substr(0,foo.length-4));
+        //     }
+        // })
     },
     getLinkey: function (name) {
         var reg = new RegExp("(^|\\?|&)" + name + "=([^&]*)(\\s|&|$)", "i");

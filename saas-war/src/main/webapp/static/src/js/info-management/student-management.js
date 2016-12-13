@@ -80,7 +80,7 @@ var App = {
                 $.each(dataJson, function (m, n) {
                     var obj = dataJson[m];
                     tpl.push('<tr>');
-                    tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td><td>'+parseInt(m+1)+'</td>');
+                    tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td><td>' + parseInt(m + 1) + '</td>');
                     $.each(App.tableData, function (i, k) {
                         var enName = App.tableData[i].enName;
                         var dType = App.tableData[i].dataType;
@@ -164,7 +164,7 @@ var App = {
                 $.each(dataJson, function (m, n) {
                     var obj = dataJson[m];
                     tpl.push('<tr>');
-                    tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td><th>'+parseInt(m+1)+'</th>');
+                    tpl.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td><th>' + parseInt(m + 1) + '</th>');
                     $.each(App.tableData, function (i, k) {
                         var enName = App.tableData[i].enName;
                         var dType = App.tableData[i].dataType;
@@ -201,6 +201,7 @@ var App = {
             App.checkGradeName = $('input[name="grade-li"]:checked').next().text();
             App.loadPage();
             App.pagination();
+            $('#checkAll').prop('checked', false);
         })
     }
 }
@@ -626,7 +627,7 @@ var CRUDStd = {
                 });
             }
         })
-        if (postData[3].value == postData[5].value ||  postData[5].value == postData[7].value ||  postData[7].value ==  postData[3].value) {
+        if (postData[3].value == postData[5].value || postData[5].value == postData[7].value || postData[7].value == postData[3].value) {
             layer.msg('选考科目1,2,3不能相同');
             return false;
         }
@@ -762,14 +763,22 @@ var TplHandler = {
                 $percent.css('width', percentage * 100 + '%');
             });
             // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-            uploader.on('uploadSuccess', function (file) {
+            uploader.on('uploadSuccess', function (file,response) {
+                if(!response.bizData.result){
+                    layer.msg(response.msg);
+                    return false;
+                }
+                if(response.bizData.result != 'SUCCESS'){
+                    layer.msg(response.bizData.result);
+                    return false;
+                }
                 layer.closeAll();
                 if (App != null) {
                     App.renderTableHeader();
                 }
             });
             // 文件上传失败，现实上传出错。
-            uploader.on('uploadError', function (file) {
+            uploader.on('uploadError', function (file, response) {
                 var $li = $('#' + file.id),
                     $error = $li.find('div.error');
                 // 避免重复创建
@@ -779,9 +788,14 @@ var TplHandler = {
                 $error.text('上传失败');
             });
             // 完成上传完了，成功或者失败，先删除进度条。
-            uploader.on('uploadComplete', function (file) {
+            uploader.on('uploadComplete', function (file, response) {
                 $('#' + file.id).find('.progress').remove();
             });
+
+            // uploader.on("uploadAccept", function (file, data) {
+            //     layer.msg(data.bizData.result)
+            // });
+
         }
     }
 }
