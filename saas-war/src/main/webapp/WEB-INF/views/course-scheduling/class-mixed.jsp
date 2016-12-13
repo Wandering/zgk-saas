@@ -117,7 +117,7 @@
                                             </li>
                                         {{else}}
                                             <li>
-                                                <input type="checkbox" name="merge-class" value="{{classId}}" id="class{{classId}}"/>
+                                                <input type="checkbox" name="merge-class" value="{{classId}}" id="class{{classId}}" isRight=false />
                                                 <label for="class{{classId}}">{{className}}</label>
                                             </li>
                                         {{/compare}}
