@@ -122,7 +122,9 @@ ClassResultsAnalysis.prototype = {
             if (res.rtnCode == "0000000") {
                 if(res.bizData.length==0){
                     layer.msg('您还没有设置班级');
+                    $('.class-main-content,#select-class').hide();
                 }else{
+                    $('.class-main-content,#select-class').show();
                     var classOption=[];
                     $.each(res.bizData,function(i,v){
                         classOption.push('<option class="opt-item" value="'+ v +'">'+ v +'</option>');
@@ -437,6 +439,7 @@ ClassResultsAnalysis.prototype = {
                     );
                 });
                 $('#student-change-tbody').html(myTemplate(res));
+                that.changeStudent();
             } else {
                 layer.msg('暂无数据');
             }
@@ -452,8 +455,7 @@ ClassResultsAnalysis.prototype = {
                 type: 1,
                 title: '变化人数详情',
                 offset: 'auto',
-                // area: ['362px', '350px'],
-                area: ['362px', 'auto'],
+                 area: ['362px', '350px'],
                 content: studentChangeTable
             });
         });
@@ -471,8 +473,6 @@ ClassResultsAnalysis.prototype = {
             if (res.rtnCode == "0000000") {
                 // 提交位次线记录
                 //that.updateExamProperties('line',ClassAnalysisIns.bacthLine);
-                that.saveExamLineProperties(line);
-                $('.student-num').text(line);
                 var myTemplate = Handlebars.compile($("#overLineDetail-template").html());
                 $('#overLineDetail-tbody').html(myTemplate(res));
                 that.student12Layer(grade,className);
@@ -805,15 +805,22 @@ ClassResultsAnalysis.prototype = {
         });
     },
     // 保存关注位次线
-    saveExamLineProperties:function(value){
+    saveExamLineProperties:function(grade,value){
+        var that = this;
         Common.ajaxFun('/scoreAnalyse/saveExamLineProperties', 'GET', {
+            'grade': grade,
             'tnId': tnId,
             'value': value
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                if(res.bizData=='true'){
+                if(res.bizData==true){
                     console.log('保存关注位次线成功!');
+                    that.getOverLineDetailForClassTwo(grade,that.className,value);
+                    that.getMostAttendDetailForClassTwo(grade,that.className,value);
+                    $('.student-num').text(value);
                 }
+            }else{
+                layer.msg(res.msg);
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -846,20 +853,20 @@ $(function () {
         ClassAnalysisIns.grade = $(this).val();
         // 通过年级获取班级
         ClassAnalysisIns.getClassesNameByGrade(ClassAnalysisIns.grade);
-        //// 提交选中年级记录
-        //ClassAnalysisIns.updateExamProperties('defaultClassGrade',ClassAnalysisIns.grade);
-        //// 人数分布变化
-        //ClassAnalysisIns.getStuNumberScoreChangeForClass(ClassAnalysisIns.grade,ClassAnalysisIns.className);
-        //// 选择高三年级
-        //ClassAnalysisIns.grade3ShowView(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.bacthLine);
-        //// 重点关注学生年级选择
-        //ClassAnalysisIns.getMostAttentionPage(ClassAnalysisIns.grade,ClassAnalysisIns.batchV,ClassAnalysisIns.className,'',0,3);
-        //// 进步较大学生下拉
-        //ClassAnalysisIns.getMostAdvancedDetailAdvancedStepList(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.progressStart,ClassAnalysisIns.progressLength);
-        //// 年级排名下拉列表
-        //ClassAnalysisIns.getMostAdvancedDetailGradeRankStepList(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.gradeRankStart,ClassAnalysisIns.gradeRankLength);
-        //// 进步较大学生列表
-        //ClassAnalysisIns.getMostAdvancedDetailForClass(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.stepStart,ClassAnalysisIns.stepEnd,ClassAnalysisIns.rankStepStart,ClassAnalysisIns.rankStepEnd);
+        // 提交选中年级记录
+        ClassAnalysisIns.updateExamProperties('defaultClassGrade',ClassAnalysisIns.grade);
+        // 人数分布变化
+        ClassAnalysisIns.getStuNumberScoreChangeForClass(ClassAnalysisIns.grade,ClassAnalysisIns.className);
+        // 选择高三年级
+        ClassAnalysisIns.grade3ShowView(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.bacthLine);
+        // 重点关注学生年级选择
+        ClassAnalysisIns.getMostAttentionPage(ClassAnalysisIns.grade,ClassAnalysisIns.batchV,ClassAnalysisIns.className,'',0,3);
+        // 进步较大学生下拉
+        ClassAnalysisIns.getMostAdvancedDetailAdvancedStepList(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.progressStart,ClassAnalysisIns.progressLength);
+        // 年级排名下拉列表
+        ClassAnalysisIns.getMostAdvancedDetailGradeRankStepList(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.gradeRankStart,ClassAnalysisIns.gradeRankLength);
+        // 进步较大学生列表
+        ClassAnalysisIns.getMostAdvancedDetailForClass(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.stepStart,ClassAnalysisIns.stepEnd,ClassAnalysisIns.rankStepStart,ClassAnalysisIns.rankStepEnd);
     });
     // 选择班级
     $('body').on('change','#select-class',function(){
@@ -891,8 +898,7 @@ $(function () {
             layer.msg('请输入位次线!');
             return false;
         }
-        ClassAnalysisIns.getOverLineDetailForClassTwo(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.bacthLine);
-        ClassAnalysisIns.getMostAttendDetailForClassTwo(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.bacthLine);
+        ClassAnalysisIns.saveExamLineProperties(ClassAnalysisIns.grade,ClassAnalysisIns.bacthLine);
     });
 
     // 重点关注学生批次选择
