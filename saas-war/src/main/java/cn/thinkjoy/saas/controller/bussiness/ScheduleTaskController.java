@@ -422,14 +422,18 @@ public class ScheduleTaskController {
                 paramsMap = Maps.newHashMap();
             }
         }
+        Map resultMap = new HashMap();
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        if ("all".equals(type)){
+            resultMap.put("result",iexJwScheduleTaskService.getAllCourseResult(taskId, tnId));
+            return resultMap;
+        }
         CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap);
 
-        Map resultMap = new HashMap();
+
         resultMap.put("result",courseResultView);
         return resultMap;
     }
-
     public static void main(String[] args) {
         String param = "{\"course\":\"外语\",\"teacherId\":\"\"}";
         Map<String,Object>  map = JSON.parseObject(param);
