@@ -53,4 +53,7 @@ public class Constant {
             "student_check_major3",
             "student_check_major_class3"
             };
+
+    public static final String DEFULT_TEACH_DATE= "星期一|星期二|星期三|星期四|星期五";
+    public static final String DEFULT_TEACH_TIME= "430";
 }
