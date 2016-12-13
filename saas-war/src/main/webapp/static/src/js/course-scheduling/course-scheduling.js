@@ -67,7 +67,7 @@ Schedule.prototype = {
         return grade.join('');
     },
     // 弹层
-    addOrUpdateSchedule: function (title) {
+    addOrUpdateSchedule: function (title, isUpdate) {
         var that = this;
         var addScheduleContentHtml = [];
         addScheduleContentHtml.push('<div class="add-schedule-box">');
@@ -104,6 +104,10 @@ Schedule.prototype = {
                 that.getYears();
             }
         });
+        if (isUpdate) {
+            $('#grade-list, #term-year, #term-list').prop('disabled', true);
+            $('#grade-list, #term-year, #term-list').css({'cursor': 'not-allowed'});
+        }
     },
     // 学期年份  当前年往前推5年
     getYears:function(){
@@ -209,7 +213,7 @@ $(function () {
 
     // 新建任务
     $(document).on('click', '#addTask-btn', function () {
-        schedule.addOrUpdateSchedule('新建排课任务');
+        schedule.addOrUpdateSchedule('新建排课任务', false);
     });
     // 新建任务保存
     $('body').on('click', '#save-schedule-btn', function () {
@@ -250,7 +254,7 @@ $(function () {
             layer.tips('修改只能选择一项', $(this));
             return false;
         }
-        schedule.addOrUpdateSchedule('更新排课任务');
+        schedule.addOrUpdateSchedule('更新排课任务', true);
         var id = scheduleV.attr('dataid');
         var schedulename = scheduleV.attr('schedulename');
         var gradename = scheduleV.attr('gradename');

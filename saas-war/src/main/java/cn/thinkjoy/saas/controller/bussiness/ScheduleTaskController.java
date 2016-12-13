@@ -387,6 +387,10 @@ public class ScheduleTaskController {
         for(JwCourse course : courses){
             JwCourseBaseInfo info = (JwCourseBaseInfo) jwCourseBaseInfoService.fetch(course.getCourseId());
 
+            if(info == null){
+                continue;
+            }
+
             boolean flag = false;
             for(JwTeacher teacher : teachers){
                 if(teacher.getCourse().equals(info.getCourseName())){

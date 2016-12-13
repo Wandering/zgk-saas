@@ -43,7 +43,11 @@ TeacherInfo.prototype = {
         addTeacherContentHtml.push('<div class="add-teacher-box">');
         addTeacherContentHtml.push('<div class="teacher-box">');
         addTeacherContentHtml.push('<div class="box-row">');
-        addTeacherContentHtml.push('<span class="title"><i>*</i>教师姓名：</span><input type="text" id="teacher-keywords" /><span class="teach-subject">所授课程：<span class="subject-name"></span></span>');
+        if(teachername){
+            addTeacherContentHtml.push('<span class="title"><i>*</i>教师姓名：</span><input type="text" disabled="disabled" id="teacher-keywords" /><span class="teach-subject">所授课程：<span class="subject-name"></span></span>');
+        }else{
+            addTeacherContentHtml.push('<span class="title"><i>*</i>教师姓名：</span><input type="text" id="teacher-keywords" /><span class="teach-subject">所授课程：<span class="subject-name"></span></span>');
+        }
         addTeacherContentHtml.push('<ul class="like-teacher-list" id="search-list">');
         addTeacherContentHtml.push('</ul>');
         addTeacherContentHtml.push('</div>');
@@ -76,6 +80,7 @@ TeacherInfo.prototype = {
                 if(teachername){
                     that.queryTeacherByKeyWord(taskId,teachername);
                 }else{
+                    that.keywordsPropertychange();
                     that.queryTeacherByKeyWord(taskId,"");
                 }
 
@@ -128,7 +133,6 @@ TeacherInfo.prototype = {
                 }
                 $('.teaching-class-list').append(teachingClassList);
                 $('#max-class-count').append(maxClassCount);
-
                 $('#save-course-btn').attr(
                     {
                         'teacherId': data.teacherId,
@@ -146,7 +150,6 @@ TeacherInfo.prototype = {
         $('#teacher-keywords').val(data.teacherName);
         $('.teach-subject').show().find('.subject-name').text(data.courseName);
         $('.class-box').show();
-
         var dataClassInfo = data.classInfo;
         var teachingClassList = [];
         var maxClassCount = [];
@@ -163,20 +166,18 @@ TeacherInfo.prototype = {
                 'classInfoData': JSON.stringify(dataClassInfo)
             }
         );
-
-
     },
     // 模糊匹配
-    //keywordsPropertychange: function () {
-    //    var that = this;
-    //    $('#teacher-keywords').unbind('input propertychange').bind('input propertychange', function () {
-    //        var keyWord = $.trim($(this).val());
-    //        if (keyWord == "") {
-    //            $('.teach-subject,.class-box').hide();
-    //        }
-    //        that.queryTeacherByKeyWord(taskId, keyWord);
-    //    });
-    //},
+    keywordsPropertychange: function () {
+        var that = this;
+        $('#teacher-keywords').unbind('input propertychange').bind('input propertychange', function () {
+            var keyWord = $.trim($(this).val());
+            if (keyWord == "") {
+                $('.teach-subject,.class-box').hide();
+            }
+            that.queryTeacherByKeyWord(taskId, keyWord);
+        });
+    },
     // 模糊下拉点击
     //listClick: function () {
     //    $(document).on('click', '#search-list li', function () {

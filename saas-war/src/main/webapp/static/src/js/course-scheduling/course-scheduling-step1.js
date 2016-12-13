@@ -1,5 +1,11 @@
 var taskId = Common.cookie.getCookie('taskId');
 
+
+
+console.log(Common.checkInfoIsPerfect(taskId))
+
+
+
 function TeachDate() {
     this.init();
     this.state = false;
@@ -21,7 +27,6 @@ TeachDate.prototype = {
                 if (res.rtnCode == "0000000") {
                     var teachDate = res.bizData.teachDate;
                     var teachTime = res.bizData.teachTime;
-
                     if (!teachDate && !teachTime) {
                         that.state = false;
                     } else {

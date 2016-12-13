@@ -211,7 +211,7 @@ var SchoolAds = {
             $('#admission-load-more').hide();
             $('#no-data').remove();
             $(this).addClass('active').siblings().removeClass('active');
-            that.params.property = $(this).text()
+            that.params.property = $(this).attr('dictid')
             that.params.page = "1";
             that.params.rows = "10";
             that.fetchSchoolEnroll(that.params);
