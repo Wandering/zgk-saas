@@ -36,10 +36,27 @@
          DELETE FROM ${tableName} where id=#{pri}
     </delete>
 
-    <select id="getTenantCustom" resultType="java.util.LinkedHashMap">
-         select * from ${tableName} order by id asc
+    <select id="getTenantCustom" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+         select * from ${tableName}
+        <where>
+            <if test="searchKey!=null and searchValue!=null">
+                ${searchKey}=#{searchValue}
+            </if>
+        </where>
+        order by id asc
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
     </select>
-
+    <select id="getTenantCustomCount" parameterType="java.util.Map" resultType="Integer">
+        select count(1) from ${tableName}
+        <where>
+            <if test="searchKey!=null and searchValue!=null">
+                ${searchKey}=#{searchValue}
+            </if>
+        </where>
+        order by id asc
+    </select>
     <delete id="removeTenantCustomList" >
 
         DELETE FROM ${tableName} where id in
@@ -49,4 +66,37 @@
         </foreach>
 
     </delete>
+    <!--判断表中列是否存在数据-->
+    <select id="existDataCount" resultType="java.util.Map">
+        SELECT
+        <foreach item="column" collection="columns" separator=",">
+            count(${column}) as ${column}
+        </foreach>
+        from ${tableName}
+        <where>
+            <if test="searchKey!=null and searchValue!=null">
+                ${searchKey}=#{searchValue}
+            </if>
+        </where>
+    </select>
+    <select id="selectCourseGroup" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.domain.bussiness.SyncCourse">
+        select major,grade from (select student_check_major1 as major,student_grade as grade from ${tableName} group by grade,major
+        union all
+        select student_check_major2 as major,student_grade as grade from ${tableName} group by grade,major
+        union all
+        select student_check_major3 as major,student_grade as grade from ${tableName} group by grade,major
+        )t group by major,grade
+    </select>
+    <select id="selectClassGroup" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.domain.bussiness.SyncClass">
+        select majorClass,grade from (
+        select student_check_major_class1 as majorClass ,student_grade as grade from ${tableName} group by grade,student_check_major_class1
+        union all
+        select student_check_major_class2 as majorClass ,student_grade as grade from ${tableName} group by grade,student_check_major_class2
+        union all
+        select student_check_major_class3 as majorClass ,student_grade as grade from ${tableName} group by grade,student_check_major_class3
+        )t group by majorClass,grade
+    </select>
+    <select id="selectExecutiveClassGroup" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.domain.bussiness.SyncClass">
+        select student_class as majorClass ,student_grade as grade from ${tableName} group by grade,student_class
+    </select>
 </mapper>

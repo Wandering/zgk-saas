@@ -1,7 +1,7 @@
 <!--
   ~ Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
   ~
-  ~ Project Name: samples
+  ~ Project Name: sass
   ~ $$Id: logback.xml 14-7-27 下午6:18 $$
   -->
 <!-- debug="true"会将log框架本身的调试信息打印出来   -->
@@ -70,17 +70,17 @@
         </encoder>
     </appender>
 
-    <logger name="SPECLOGGER" level="debug">
+    <logger name="SPECLOGGER" level="error">
         <appender-ref ref="SPECLOGGER-APPENDER" additivity="false"/>
     </logger>
 
     <!-- 这里平时的level为WARN，跟踪问题时才设置为DEBUG -->
-    <logger name="cn.thinkjoy" level="debug">
+    <logger name="cn.thinkjoy" level="error">
         <appender-ref ref="DEBUG-FILE-APPENDER"/>
         <appender-ref ref="WARN-FILE-APPENDER"/>
     </logger>
 
-    <root level="debug">
+    <root level="error">
         <appender-ref ref="STDOUT-APPENDER"/>
     </root>
 </configuration>

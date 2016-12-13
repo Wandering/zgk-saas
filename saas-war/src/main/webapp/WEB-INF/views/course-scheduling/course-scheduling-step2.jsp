@@ -66,180 +66,181 @@
                         </ul>
                         <div class="rule-content">
                             <select id="no-course-time">
-                                <option value="1">班级不排课时间</option>
-                                <option value="2">教师不排课时间</option>
-                                <option value="3">课程不排课时间</option>
+                                <option value="class">班级不排课时间</option>
+                                <option value="teacher">教师不排课时间</option>
+                                <option value="course">课程不排课时间</option>
                             </select>
                             <div class="no-course-time">
                                 <div class="class-no-course">
                                     <div class="class-items">
                                         <div id="class-no-array" class="class-no-array">
                                             <div class="title">高一</div>
-                                            <ul class="class-list">
-                                                <li>
-                                                    <a href="javascript: void(0);" class="active">全部班级</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">一班</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">二班</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">三班</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">四班</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">五班</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">六班</a>
-                                                </li>
+                                            <ul id="class-list" class="class-list">
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);" class="active">全部班级</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">一班</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">二班</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">三班</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">四班</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">五班</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">六班</a>--%>
+                                                <%--</li>--%>
                                             </ul>
                                         </div>
                                         <div id="teacher-no-array" class="teacher-no-array">
-                                            <select class="teaching-class">
-                                                <option value="00">选择所授课程</option>
-                                                <option value="1">语文</option>
-                                                <option value="2">数学</option>
-                                                <option value="3">英语</option>
-                                                <option value="4">物理</option>
-                                                <option value="5">政治</option>
-                                                <option value="6">历史</option>
-                                                <option value="7">地理</option>
+                                            <select id="teacher-course" class="teaching-class">
+                                                <%--<option value="00">选择所授课程</option>--%>
+                                                <%--<option value="语文">语文</option>--%>
+                                                <%--<option value="数学">数学</option>--%>
+                                                <%--<option value="英语">英语</option>--%>
+                                                <%--<option value="物理">物理</option>--%>
+                                                <%--<option value="政治">政治</option>--%>
+                                                <%--<option value="历史">历史</option>--%>
+                                                <%--<option value="地理">地理</option>--%>
                                             </select>
-                                            <ul class="teacher-list">
-                                                <li>
-                                                    <a href="javascript: void(0);" class="active">李华</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">李小龙</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">周杰伦</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">陈港生</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">成龙</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">周润发</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">鹿晗</a>
-                                                </li>
+                                            <ul id="teacher-list" class="teacher-list">
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);" class="active">李华</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">李小龙</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">周杰伦</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">陈港生</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">成龙</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">周润发</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">鹿晗</a>--%>
+                                                <%--</li>--%>
                                             </ul>
                                         </div>
                                         <div id="course-no-array" class="course-no-array">
-                                            <ul class="course-list">
-                                                <li>
-                                                    <a href="javascript: void(0);" class="active">语文</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">数学</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">英语</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">物理</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">化学</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">生物</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">政治</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">历史</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript: void(0);">地理</a>
-                                                </li>
+                                            <ul id="course-list" class="course-list">
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);" class="active">语文</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">数学</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">英语</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">物理</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">化学</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">生物</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">政治</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">历史</a>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<a href="javascript: void(0);">地理</a>--%>
+                                                <%--</li>--%>
                                             </ul>
                                         </div>
                                     </div>
                                     <div class="class-assign-time">
-                                        <table class="no-assign-table" cellpadding="0" cellspacing="0">
+                                        <table id="no-assign-table" class="no-assign-table" cellpadding="0" cellspacing="0">
                                             <thead>
-                                                <tr>
-                                                    <th width="135px"></th>
-                                                    <th>星期一</th>
-                                                    <th>星期二</th>
-                                                    <th>星期三</th>
-                                                    <th>星期四</th>
-                                                    <th>星期五</th>
-                                                </tr>
+                                                <%--<tr>--%>
+                                                    <%--<th width="135px"></th>--%>
+                                                    <%--<th>星期一</th>--%>
+                                                    <%--<th>星期二</th>--%>
+                                                    <%--<th>星期三</th>--%>
+                                                    <%--<th>星期四</th>--%>
+                                                    <%--<th>星期五</th>--%>
+                                                <%--</tr>--%>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>不排课</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>4</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>5</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>6</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>7</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
+                                                <%--<tr>--%>
+                                                    <%--<td>1</td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                <%--</tr>--%>
+                                                <%--<tr>--%>
+                                                    <%--<td>2</td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                <%--</tr>--%>
+                                                <%--<tr>--%>
+                                                    <%--<td>3</td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                <%--</tr>--%>
+                                                <%--<tr>--%>
+                                                    <%--<td>4</td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                    <%--<td></td>--%>
+                                                <%--</tr>--%>
+                                                <%--<tr>--%>
+                                                    <%--<td>5</td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td></td>--%>
+                                                <%--</tr>--%>
+                                                <%--<tr>--%>
+                                                    <%--<td>6</td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                <%--</tr>--%>
+                                                <%--<tr>--%>
+                                                    <%--<td>7</td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                    <%--<td></td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                    <%--<td>不排课</td>--%>
+                                                <%--</tr>--%>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                             </div>
+                            <button type="button" class="btn-save-rule hide" id="btn-save-assign">保存</button>
                         </div>
                     </div>
                 </div>

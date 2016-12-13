@@ -70,6 +70,7 @@ public class UserInfoDto implements Serializable {
 
     private String tnId;
 
+
     public String getTnId()
     {
         return tnId;

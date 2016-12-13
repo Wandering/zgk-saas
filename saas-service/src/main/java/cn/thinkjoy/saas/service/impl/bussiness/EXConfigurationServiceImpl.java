@@ -6,7 +6,9 @@ import cn.thinkjoy.saas.dao.bussiness.EXIConfigurationDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO;
 import cn.thinkjoy.saas.domain.Configuration;
 import cn.thinkjoy.saas.domain.TenantConfigInstance;
+import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.bussiness.EXIConfigurationService;
+import cn.thinkjoy.saas.service.common.ParamsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,6 @@ public class EXConfigurationServiceImpl extends AbstractPageService<IBaseDAO<Con
     private EXIConfigurationDAO exiConfigurationDAO;
     @Autowired
     private EXITenantConfigInstanceDAO exiTenantConfigInstanceDAO;
-
     @Override
     public IBaseDAO<Configuration> getDao() {
         return exiConfigurationDAO;
@@ -51,31 +52,62 @@ public class EXConfigurationServiceImpl extends AbstractPageService<IBaseDAO<Con
      */
     @Override
     public boolean selectListRetain(String type,Integer tnid) {
-        Map paramsMap = new HashMap();
-        paramsMap.put("domain", type);
-        paramsMap.put("orderBy", "config_order");
-        paramsMap.put("sortBy", "asc");
-        paramsMap.put("isRetain", 1);
-        List<Configuration> configurations = exiConfigurationDAO.selectListRetain(paramsMap);
 
-        List<TenantConfigInstance>  tenantConfigInstances=new ArrayList<>();
+        Map teanMap = new HashMap();
+        teanMap.put("domain", type);
+        teanMap.put("tnId", tnid);
+        teanMap.put("isRetain", 1);
+        List<TenantConfigInstanceView> teConfigViews = exiTenantConfigInstanceDAO.selectTeanConfigList(teanMap);
 
-        for(Configuration configuration:configurations) {
-            TenantConfigInstance tenantConfigInstance=new TenantConfigInstance();
-            tenantConfigInstance.setCheckRule(configuration.getCheckRule());
-            tenantConfigInstance.setIsRetain(configuration.getIsRetain());
-            tenantConfigInstance.setDataValue(configuration.getDataValue());
-            tenantConfigInstance.setConfigOrder(configuration.getConfigOrder());
-            tenantConfigInstance.setDomain(configuration.getDomain());
-            tenantConfigInstance.setDataUrl(configuration.getDataUrl());
-            tenantConfigInstance.setConfigKey(configuration.getId().toString());
-            tenantConfigInstance.setDataType(configuration.getDataType());
-            tenantConfigInstance.setCreateDate(System.currentTimeMillis());
-            tenantConfigInstance.setTnId(tnid);
+        boolean result = false;
 
-            tenantConfigInstances.add(tenantConfigInstance);
-        }
-        Integer result=exiTenantConfigInstanceDAO.addConfigs(tenantConfigInstances);
-        return result>0;
+        if (teConfigViews == null || teConfigViews.size() <= 0) {
+
+            Map paramsMap = new HashMap();
+            paramsMap.put("domain", type);
+            paramsMap.put("orderBy", "config_order");
+            paramsMap.put("sortBy", "asc");
+            paramsMap.put("isRetain", 1);
+
+            List<Configuration> configurations = exiConfigurationDAO.selectListRetain(paramsMap);
+
+            List<TenantConfigInstance> tenantConfigInstances = new ArrayList<>();
+
+            for (Configuration configuration : configurations) {
+                TenantConfigInstance tenantConfigInstance = new TenantConfigInstance();
+                tenantConfigInstance.setCheckRule(configuration.getCheckRule());
+                tenantConfigInstance.setIsRetain(configuration.getIsRetain());
+                tenantConfigInstance.setDataValue(configuration.getDataValue());
+                tenantConfigInstance.setConfigOrder(configuration.getConfigOrder());
+                tenantConfigInstance.setDomain(configuration.getDomain());
+                tenantConfigInstance.setDataUrl(configuration.getDataUrl());
+                tenantConfigInstance.setConfigKey(configuration.getId().toString());
+                tenantConfigInstance.setDataType(configuration.getDataType());
+                tenantConfigInstance.setCreateDate(System.currentTimeMillis());
+                tenantConfigInstance.setTnId(tnid);
+
+                tenantConfigInstances.add(tenantConfigInstance);
+            }
+            Integer r = exiTenantConfigInstanceDAO.addConfigs(tenantConfigInstances);
+
+            if (r > 0 && type.equals("student")) {
+                String tableName = ParamsUtils.combinationTableName(type, tnid);
+                r = exiTenantConfigInstanceDAO.createConfigTable(tableName, configurations);
+            }
+            result = r > 0;
+        } else
+            result = true;
+        return result;
+    }
+
+    /**
+     * 中英文列名互转
+     *
+     * @param map
+     * @return
+     */
+    @Override
+    public String selectColumnName(Map map) {
+        return exiConfigurationDAO.selectColumnName(map);
     }
 }

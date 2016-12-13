@@ -116,6 +116,9 @@
             <if test="domain!=null">
                 and tenantConfig.domain=#{domain}
             </if>
+            <if test="isRetain!=null">
+                and tenantConfig.is_retain=#{isRetain}
+            </if>
         </where>
         ORDER BY tenantConfig.config_order asc
     </select>

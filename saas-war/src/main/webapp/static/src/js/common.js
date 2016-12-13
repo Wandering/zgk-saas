@@ -200,7 +200,7 @@ var Common = {
             //menus.push('<span class="menu-text">首页</span>');
             //menus.push('</a>');
             //menus.push('</li>');
-            var icons = ['icon-desktop','icon-edit','icon-list-alt','icon-dashboard','icon-tag','icon-tag','icon-tasks','icon-group']
+            var icons = ['icon-flag','icon-lightbulb','icon-globe','icon-book','icon-dashboard','icon-credit-card','icon-tasks','icon-cog']
             $.each(siderMenu,function(i,v){
 
                 if(pathName==v.meunUrl){
@@ -268,3 +268,49 @@ Date.prototype.Format = function (fmt) {
             fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
 };
+
+
+//Handlebars tool
+Handlebars.registerHelper('compare', function (left, operator, right, options) {
+    if (arguments.length < 3) {
+        throw new Error('Handlerbars Helper "compare" needs 2 parameters');
+    }
+    var operators = {
+        '==': function (l, r) {
+            return l == r;
+        },
+        '===': function (l, r) {
+            return l === r;
+        },
+        '!=': function (l, r) {
+            return l != r;
+        },
+        '!==': function (l, r) {
+            return l !== r;
+        },
+        '<': function (l, r) {
+            return l < r;
+        },
+        '>': function (l, r) {
+            return l > r;
+        },
+        '<=': function (l, r) {
+            return l <= r;
+        },
+        '>=': function (l, r) {
+            return l >= r;
+        },
+        'typeof': function (l, r) {
+            return typeof l == r;
+        }
+    };
+    if (!operators[operator]) {
+        throw new Error('Handlerbars Helper "compare" doesn\'t know the operator ' + operator);
+    }
+    var result = operators[operator](left, right);
+    if (result) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+});

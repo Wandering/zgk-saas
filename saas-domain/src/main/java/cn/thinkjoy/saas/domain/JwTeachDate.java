@@ -22,7 +22,7 @@ public class JwTeachDate extends BaseDomain{
     private Integer tnId;
     private String teachDate;
     private String teachDetail;
-    private String createDate;
+    private Long createDate;
     private Integer taskId;
 
 	public JwTeachDate(){
@@ -55,13 +55,15 @@ public class JwTeachDate extends BaseDomain{
     public String getTeachDetail() {
         return this.teachDetail;
     }
-    public void setCreateDate(String value) {
-        this.createDate = value;
+
+    public Long getCreateDate() {
+        return createDate;
     }
 
-    public String getCreateDate() {
-        return this.createDate;
+    public void setCreateDate(Long createDate) {
+        this.createDate = createDate;
     }
+
     public void setTaskId(Integer value) {
         this.taskId = value;
     }
@@ -80,13 +82,13 @@ public class JwTeachDate extends BaseDomain{
 			.append("TaskId",getTaskId())
 			.toString();
 	}
-	
+
 	public int hashCode() {
 		return new HashCodeBuilder()
 			.append(getTid())
 			.toHashCode();
 	}
-	
+
 	public boolean equals(Object obj) {
 		if(obj instanceof JwTeachDate == false) return false;
 		if(this == obj) return true;

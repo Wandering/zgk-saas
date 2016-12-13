@@ -113,6 +113,12 @@ public class ConfigurationController {
         return resultMap;
     }
 
+    /**
+     * 默认表头初始化
+     * @param type
+     * @param tnId
+     * @return
+     */
     @RequestMapping(value = "/retain/{type}/{tnId}",method = RequestMethod.POST)
     @ResponseBody
     public Map retainConfig(@PathVariable String type,@PathVariable Integer tnId) {
@@ -316,26 +322,26 @@ public class ConfigurationController {
         return null;
     }
 
-//    /**
-//     * 导入租户设置Excel
-//     *
-//     * @param type
-//     * @param tnId
-//     * @return
-//     */
-//    @RequestMapping("/import/{type}/{tnId}")
-//    @ResponseBody
-//    public Map importConfig(@PathVariable String type,
-//                            @PathVariable Integer tnId,
-//                            HttpServletRequest request,
-//                            HttpServletResponse response) {
-//
-////        boolean result = exiTenantConfigInstanceService.createTenantCombinationTable(type, tnId);
-//
-//        Map resultMap = new HashMap();
-////        resultMap.put("result", result ? "SUCCESS" : "FAIL");
-//        return resultMap;
-//    }
+    /**
+     * 导入租户设置Excel
+     *
+     * @return
+     */
+    @RequestMapping("/testCourse")
+    @ResponseBody
+    public Map importConfig(
+                            HttpServletRequest request,
+                            HttpServletResponse response) {
+
+//        boolean result = exiTenantConfigInstanceService.createTenantCombinationTable(type, tnId);
+
+//        iexTenantCustomService
+
+        exiTenantConfigInstanceService.syncProcedureData("teacher",4);
+        Map resultMap = new HashMap();
+//        resultMap.put("result", result ? "SUCCESS" : "FAIL");
+        return resultMap;
+    }
 
     /**
      * excel模板上传

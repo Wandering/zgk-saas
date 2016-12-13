@@ -1,10 +1,13 @@
 package cn.thinkjoy.saas.dao.bussiness;
 
+import cn.thinkjoy.saas.domain.bussiness.SyncClass;
+import cn.thinkjoy.saas.domain.bussiness.SyncCourse;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by douzy on 16/10/25.
@@ -47,10 +50,12 @@ public interface IEXTeantCustomDAO {
     /**
      * 获取租户自定义表头数据
      *
-     * @param tableName
+     * @param map
      * @return
      */
-    List<LinkedHashMap<String, Object>> getTenantCustom(@Param("tableName") String tableName);
+    List<LinkedHashMap<String, Object>> getTenantCustom(Map map);
+
+    Integer getTenantCustomCount(Map map);
 
     /**
      * 批量删除
@@ -59,4 +64,40 @@ public interface IEXTeantCustomDAO {
      * @return
      */
     Integer removeTenantCustomList(@Param("tableName") String tableName,@Param("ids")List<String> ids);
+
+    /**
+     * 查询表中所有字段名
+     * @param tableName
+     * @return
+     */
+    List<String> getTableColumns(@Param("tableName") String tableName);
+
+    /**
+     * 判断表中列是否存在数据
+     * @return
+     */
+    Map<String,Object> existDataCount(Map map);
+
+
+    /**
+     * 课程
+     * @param map
+     * @return
+     */
+    List<SyncCourse> selectCourseGroup(Map map);
+
+    /**
+     * 同步班级基础信息
+     * @param map
+     * @return
+     */
+    List<SyncClass> selectClassGroup(Map map);
+
+    /**
+     * 同步行政班基础信息
+     * @param map
+     * @return
+     */
+    List<SyncClass> selectExecutiveClassGroup(Map map);
+
 }

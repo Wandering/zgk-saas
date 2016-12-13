@@ -61,4 +61,18 @@
             ORDER BY ${orderBy} ${sortBy}
         </if>
     </select>
+
+    <select id="selectColumnName" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT
+        ch_name
+        FROM saas_configuration
+        <where>
+            <if test="domain!=null">
+                and `domain`=#{domain}
+            </if>
+            <if test="enName!=null">
+                and en_name=#{enName}
+            </if>
+        </where>
+    </select>
 </mapper>

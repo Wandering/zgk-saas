@@ -4,7 +4,7 @@
 
     <insert id="insertMergeInfo" parameterType="java.util.Map">
         insert into saas_jw_merge_class_info
-        (tn_id,course_id,class_ids,task_id,crate_date)
+        (tn_id,course_id,class_ids,task_id,create_date)
         VALUES
         (
           #{tnId},
@@ -17,6 +17,7 @@
 
     <select id="selectMergeInfo" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.MergeClassInfoDto">
         select
+        ii.id as id,
         ii.tn_id as tnId,
         ii.course_id as courseId,
         cc.course_name as courseName,
@@ -27,10 +28,16 @@
         left join saas_jw_course_base_info cc on ii.course_id = cc.id
         where 1=1
         <if test="tnId!=null">
-          and tn_id=#{tnId}
+          and ii.tn_id=#{tnId}
         </if>
         <if test="taskId!=null">
-          and task_id=#{taskId}
+          and ii.task_id=#{taskId}
+        </if>
+        <if test="grade!=null">
+          and cc.grade=#{grade}
+        </if>
+        <if test="courseId!=null">
+          and cc.id=#{courseId}
         </if>
     </select>
 

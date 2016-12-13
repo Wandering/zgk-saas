@@ -23,7 +23,7 @@ public class JwBaseConRule extends BaseDomain{
     private Integer teacherId;
     private Integer importantType;
     private Integer dayConType;
-    private String createDate;
+    private long createDate;
     private Integer taskId;
 
 	public JwBaseConRule(){
@@ -63,11 +63,11 @@ public class JwBaseConRule extends BaseDomain{
     public Integer getDayConType() {
         return this.dayConType;
     }
-    public void setCreateDate(String value) {
+    public void setCreateDate(long value) {
         this.createDate = value;
     }
 
-    public String getCreateDate() {
+    public long getCreateDate() {
         return this.createDate;
     }
     public void setTaskId(Integer value) {

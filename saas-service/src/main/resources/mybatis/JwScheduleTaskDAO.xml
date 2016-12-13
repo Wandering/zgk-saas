@@ -30,6 +30,7 @@ selectList
         year as year,
         term as term,
         status as status,
+        del_status as delStatus,
         create_date as createDate,
         tn_id as tnId
     </sql>
@@ -40,6 +41,7 @@ selectList
         year,
         term,
         status,
+        del_status,
         create_date,
         tn_id
         ) VALUES (
@@ -48,6 +50,7 @@ selectList
         #{year},
         #{term},
         #{status},
+        #{delStatus},
         #{createDate},
         #{tnId}
         )
@@ -74,6 +77,9 @@ selectList
             </if>
             <if test="status!=null">
                 status = #{status},
+            </if>
+            <if test="delStatus!=null">
+                del_status = #{delStatus},
             </if>
             <if test="createDate!=null">
                 create_date = #{createDate},
@@ -104,6 +110,9 @@ selectList
             <if test="map.status!=null">
                 status = #{map.status},
             </if>
+            <if test="map.delStatus!=null">
+                del_status = #{map.delStatus},
+            </if>
             <if test="map.createDate!=null">
                 create_date = #{map.createDate},
             </if>
@@ -133,6 +142,9 @@ selectList
             <if test="update.status!=null">
                 status = #{update.status},
             </if>
+            <if test="update.delStatus!=null">
+                del_status = #{update.delStatus},
+            </if>
             <if test="update.createDate!=null">
                 create_date = #{update.createDate},
             </if>
@@ -160,6 +172,9 @@ selectList
             <if test="condition.status!=null">
                 AND status = #{condition.status}
             </if>
+            <if test="condition.delStatus!=null">
+                AND del_status = #{condition.delStatus}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -176,6 +191,7 @@ selectList
                 year,
                 term,
                 status,
+                del_status,
                 create_date,
                 tn_id
         ) VALUES (
@@ -184,6 +200,7 @@ selectList
                     #{map.year},
                     #{map.term},
                     #{map.status},
+                    #{map.delStatus},
                     #{map.createDate},
                     #{map.tnId}
         )
@@ -198,6 +215,7 @@ selectList
             year = #{year},
             term = #{term},
             status = #{status},
+            del_status = #{delStatus},
             create_date = #{createDate},
             tn_id = #{tnId},
         </trim>
@@ -235,6 +253,9 @@ selectList
             <if test="status!=null">
                 AND status = #{status}
             </if>
+            <if test="delStatus!=null">
+                AND del_status = #{delStatus}
+            </if>
             <if test="createDate!=null">
                 AND create_date = #{createDate}
             </if>
@@ -256,9 +277,6 @@ selectList
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND id = #{id}
         </trim>
-        <if test="orderBy!=null">
-        ORDER BY ${orderBy} ${sortBy}
-        </if>
     </select>
 
     <select id="findOne" parameterType="java.util.Map" resultType="JwScheduleTask">
@@ -316,6 +334,9 @@ selectList
             <if test="condition.status!=null">
                 ${condition.groupOp}   status  ${condition.status.op}  #{condition.status.data}
             </if>
+            <if test="condition.delStatus!=null">
+                ${condition.groupOp}   del_status  ${condition.delStatus.op}  #{condition.delStatus.data}
+            </if>
             <if test="condition.createDate!=null">
                 ${condition.groupOp}   create_date  ${condition.createDate.op}  #{condition.createDate.data}
             </if>
@@ -357,6 +378,9 @@ selectList
             <if test="status!=null">
                 AND status like CONCAT('%', #{status} , '%')
             </if>
+            <if test="delStatus!=null">
+                AND del_status like CONCAT('%', #{delStatus} , '%')
+            </if>
             <if test="createDate!=null">
                 AND create_date like CONCAT('%', #{createDate} , '%')
             </if>
@@ -393,6 +417,9 @@ selectList
             <if test="condition.status!=null">
                 AND status = #{condition.status}
             </if>
+            <if test="condition.delStatus!=null">
+                AND del_status = #{condition.delStatus}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -428,6 +455,9 @@ selectList
             <if test="condition.status!=null">
                 AND status = #{condition.status}
             </if>
+            <if test="condition.delStatus!=null">
+                AND del_status = #{condition.delStatus}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -458,6 +488,9 @@ selectList
            </if>
            <if test="status!=null">
                ${groupOp} status ${status.op}  #{status.data}
+           </if>
+           <if test="delStatus!=null">
+               ${groupOp} del_status ${delStatus.op}  #{delStatus.data}
            </if>
            <if test="createDate!=null">
                ${groupOp} create_date ${createDate.op}  #{createDate.data}

@@ -11,6 +11,17 @@ import cn.thinkjoy.common.domain.BaseDomain;
 import cn.thinkjoy.common.service.IBaseService;
 import cn.thinkjoy.common.service.IPageService;
 
-public interface IJwCourseGapRuleService<D extends IBaseDAO<T>, T extends BaseDomain> extends IBaseService<D, T>,IPageService<D, T>{
+import java.util.List;
+import java.util.Map;
 
+public interface IJwCourseGapRuleService<D extends IBaseDAO<T>, T extends BaseDomain> extends IBaseService<D, T>,IPageService<D, T>{
+    List<Map<String, Object>> queryLinkList(Map<String, String> map);
+
+    List<Map<String, Object>> queryClassList(Map<String, String> map);
+
+    List<Map<String, Object>> queryCourseList(Map<String, String> map);
+
+    List<Map<String, Object>> queryTeacherList(Map<String, String> map);
+
+    List<String> queryTeacherCourseList(Map<String, String> map);
 }
