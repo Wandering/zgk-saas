@@ -9,6 +9,10 @@
 <div class="main-title">
     <h3>排课任务</h3>
 </div>
+<div class="common-back-title">
+    <a href="/course-scheduling">&lt;返回</a>
+    <span class="title">高一排课</span>
+</div>
 <div class="course-scheduling-base">
     <div class="procedure">
         <a href="/course-scheduling-step1" class="disabled"><i>1</i>基本信息设置</a>

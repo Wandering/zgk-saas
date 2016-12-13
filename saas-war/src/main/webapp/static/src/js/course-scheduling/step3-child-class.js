@@ -119,7 +119,7 @@ ClassRoomTable.prototype = {
     // 拉取课表
     getClassRoomTable: function (urlType,param) {
         Common.ajaxFun('/scheduleTask/'+ urlType +'/course/result.do', 'GET', {
-            "taskId":"9",
+            "taskId":taskId,
             "param":JSON.stringify(param)
         }, function (result) {
             console.log(result)
