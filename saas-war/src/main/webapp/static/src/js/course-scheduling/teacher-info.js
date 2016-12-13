@@ -80,10 +80,23 @@ TeacherInfo.prototype = {
                 if(teachername){
                     that.queryTeacherByKeyWord(taskId,teachername);
                 }else{
-                    that.keywordsPropertychange();
                     that.queryTeacherByKeyWord(taskId,"");
-                }
+                    //that.keywordsPropertychange();
 
+                    $('#teacher-keywords').bind('input propertychange', function() {
+                        console.log($(this).val().length)
+                        if($(this).val().length=='0'){
+                            $('.teach-subject,.class-box').hide();
+                            $('.subject-name').text('');
+                            $('#max-class-count option:gt(0)').remove();
+                            $('#teaching-class-list').html('');
+                            $('#save-course-btn').removeAttr('teacherid');
+                            $('#save-course-btn').removeAttr('coursename');
+                            $('#save-course-btn').removeAttr('classinfodata');
+                        }
+                    });
+
+                }
             }
         });
     },
@@ -96,7 +109,6 @@ TeacherInfo.prototype = {
             },
             function (res) {
                 if (res.rtnCode == "0000000") {
-
                     if(keyWord==""){
                         that.getWordList(res.bizData);
                     }else{
@@ -122,6 +134,8 @@ TeacherInfo.prototype = {
             width:159,
             data: wordArr,
             callback:function(data){
+                $('.teaching-class-list').html('');
+                $('#max-class-count option:gt(0)').remove();
                 $('.teach-subject').show().find('.subject-name').text(data.courseName);
                 $('.class-box').show();
                 var dataClassInfo = data.classInfo;
@@ -362,6 +376,13 @@ $(function () {
             layer.tips('请输入教师姓名', $('#teacher-keywords'));
             return false;
         }
+        var teacherid = $(this).attr('teacherid');
+        if (!teacherid) {
+            layer.tips('请至教师管理添加教师信息！', $('#teacher-keywords'));
+            return false;
+        }
+
+
         var maxClassCount = $('#max-class-count').val();
         if (maxClassCount == '00') {
             layer.tips('请选择最大带班数', $('#max-class-count'));
@@ -373,7 +394,6 @@ $(function () {
             layer.tips('最大带班数不能小于选中所带班级数', $('#max-class-count'));
             return false;
         }
-        var teacherid = $(this).attr('teacherid');
         var courseName = $(this).attr('courseName');
         var teachingClassArr = [];
         $('.teaching-class-list input:checked').each(function(i,v){
