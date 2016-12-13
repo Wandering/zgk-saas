@@ -127,7 +127,11 @@ ClassResultsAnalysis.prototype = {
                     $.each(res.bizData,function(i,v){
                         classOption.push('<option class="opt-item" value="'+ v +'">'+ v +'</option>');
                     });
-                    $('.title-2 .class-sel').append(classOption).find('option[value="'+ that.className +'"]').attr('selected','selected');
+                    $('.title-2 .class-sel').append(classOption);
+
+                        //.find('option[value="'+ that.className +'"]').attr('selected','selected');
+
+                    that.className = $('#select-class').find('option:selected').val();
                     // 默认拉取班级排名趋势
                     that.getAvgScoresForClass(that.grade,that.className);
                     that.chartTab();
@@ -142,7 +146,7 @@ ClassResultsAnalysis.prototype = {
             }
         }, function (res) {
             layer.msg(res.msg);
-        });
+        },true);
     },
     // chartTab
     chartTab:function(){
@@ -842,20 +846,20 @@ $(function () {
         ClassAnalysisIns.grade = $(this).val();
         // 通过年级获取班级
         ClassAnalysisIns.getClassesNameByGrade(ClassAnalysisIns.grade);
-        // 提交选中年级记录
-        ClassAnalysisIns.updateExamProperties('defaultClassGrade',ClassAnalysisIns.grade);
-        // 人数分布变化
-        ClassAnalysisIns.getStuNumberScoreChangeForClass(ClassAnalysisIns.grade,ClassAnalysisIns.className);
-        // 选择高三年级
-        ClassAnalysisIns.grade3ShowView(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.bacthLine);
-        // 重点关注学生年级选择
-        ClassAnalysisIns.getMostAttentionPage(ClassAnalysisIns.grade,ClassAnalysisIns.batchV,ClassAnalysisIns.className,'',0,3);
-        // 进步较大学生下拉
-        ClassAnalysisIns.getMostAdvancedDetailAdvancedStepList(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.progressStart,ClassAnalysisIns.progressLength);
-        // 年级排名下拉列表
-        ClassAnalysisIns.getMostAdvancedDetailGradeRankStepList(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.gradeRankStart,ClassAnalysisIns.gradeRankLength);
-        // 进步较大学生列表
-        ClassAnalysisIns.getMostAdvancedDetailForClass(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.stepStart,ClassAnalysisIns.stepEnd,ClassAnalysisIns.rankStepStart,ClassAnalysisIns.rankStepEnd);
+        //// 提交选中年级记录
+        //ClassAnalysisIns.updateExamProperties('defaultClassGrade',ClassAnalysisIns.grade);
+        //// 人数分布变化
+        //ClassAnalysisIns.getStuNumberScoreChangeForClass(ClassAnalysisIns.grade,ClassAnalysisIns.className);
+        //// 选择高三年级
+        //ClassAnalysisIns.grade3ShowView(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.bacthLine);
+        //// 重点关注学生年级选择
+        //ClassAnalysisIns.getMostAttentionPage(ClassAnalysisIns.grade,ClassAnalysisIns.batchV,ClassAnalysisIns.className,'',0,3);
+        //// 进步较大学生下拉
+        //ClassAnalysisIns.getMostAdvancedDetailAdvancedStepList(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.progressStart,ClassAnalysisIns.progressLength);
+        //// 年级排名下拉列表
+        //ClassAnalysisIns.getMostAdvancedDetailGradeRankStepList(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.gradeRankStart,ClassAnalysisIns.gradeRankLength);
+        //// 进步较大学生列表
+        //ClassAnalysisIns.getMostAdvancedDetailForClass(ClassAnalysisIns.grade,ClassAnalysisIns.className,ClassAnalysisIns.stepStart,ClassAnalysisIns.stepEnd,ClassAnalysisIns.rankStepStart,ClassAnalysisIns.rankStepEnd);
     });
     // 选择班级
     $('body').on('change','#select-class',function(){
