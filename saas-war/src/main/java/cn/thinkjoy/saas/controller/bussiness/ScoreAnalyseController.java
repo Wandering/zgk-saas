@@ -122,6 +122,8 @@ public class ScoreAnalyseController
         CellRangeAddress classRange = new CellRangeAddress(0, 1, 1, 1);
         CellRangeAddress mainCourseRange = new CellRangeAddress(0, 0, 2, 4);
         CellRangeAddress selectCourseRange = new CellRangeAddress(0, 0, 5, 11);
+        CellRangeAddress gradeRankRange = new CellRangeAddress(0, 1, 12, 12);
+        CellRangeAddress classRankRange = new CellRangeAddress(0, 1, 13, 13);
         for (int i = 0; i < 14; i++)
         {
             sheet.setColumnWidth((short)i, (short)(35.7 * 80));
@@ -131,10 +133,14 @@ public class ScoreAnalyseController
         sheet.addMergedRegion(classRange);
         sheet.addMergedRegion(mainCourseRange);
         sheet.addMergedRegion(selectCourseRange);
+        sheet.addMergedRegion(gradeRankRange);
+        sheet.addMergedRegion(classRankRange);
         setRegionBorder(1, nameRange, sheet, wb);
         setRegionBorder(1, classRange, sheet, wb);
         setRegionBorder(1, mainCourseRange, sheet, wb);
         setRegionBorder(1, selectCourseRange, sheet, wb);
+        setRegionBorder(1, gradeRankRange, sheet, wb);
+        setRegionBorder(1, classRankRange, sheet, wb);
         CellRangeAddressList regions = new CellRangeAddressList(2,
             5000, 1, 1);
         DVConstraint constraint = DVConstraint
@@ -202,6 +208,8 @@ public class ScoreAnalyseController
         columnOneMap.put(1, "班级");
         columnOneMap.put(2, "主课");
         columnOneMap.put(5, "选课");
+        columnOneMap.put(12, "年级排名");
+        columnOneMap.put(13, "班级排名");
         Map<Integer, String> columnTwoMap = new HashMap<>();
         columnTwoMap.put(2, "语文");
         columnTwoMap.put(3, "数学");

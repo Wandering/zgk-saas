@@ -324,7 +324,7 @@ var CRUDStd = {
                 }
             }
             var foo = '';
-            v.isRetain == 1 ? foo = '<b style="color:#EA4046">*</b>' + v.name : foo = v.name
+            v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
             return '<li><span class="f20">' + foo + '</span>' +
                 '<div id="' + v.enName + '" class="sex-type f70">' + radioTpl +
                 '</label>' +
@@ -361,7 +361,7 @@ var CRUDStd = {
          */
         var renderSelect = function (v) {
             var foo = '';
-            v.isRetain == 1 ? foo = '<b style="color:#EA4046">*</b>' + v.name : foo = v.name
+            v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
             if (v.enName == "student_grade") {
                 return '<li><span>' + foo + '</span><select id="' + v.enName + '" readonly disabled style="cursor: not-allowed;background-color: #eee;"><option>' + App.checkGradeName + '</option></select></li>'
             } else {
@@ -380,7 +380,7 @@ var CRUDStd = {
          */
         var renderText = function (v) {
             var foo = '';
-            v.isRetain == 1 ? foo = '<b style="color:#EA4046">*</b>' + v.name : foo = v.name
+            v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
             return '<li><span>' + foo + '</span><input type="text" placeholder="请输入' + v.name + '" id="' + v.enName + '" checkRule="' + v.checkRule + '" class="input-common-w"/></li>'
         }
         $.each(CRUDStd.CRUDStdData.renderEleData, function (i, v) {
