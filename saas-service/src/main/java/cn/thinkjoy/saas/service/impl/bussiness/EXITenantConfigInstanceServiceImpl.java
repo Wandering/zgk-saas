@@ -480,37 +480,42 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * @return
      */
     @Override
-    public boolean  uploadExcel(String type,Integer tnId,String excelPath) {
+    public String  uploadExcel(String type,Integer tnId,String excelPath) {
         LOGGER.info("===========解析excel S===========");
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
         String tableName = this.createTenantCombinationTable(type, tnId);
         LOGGER.info("tableName:" + tableName);
         if (StringUtils.isBlank(tableName))
-            return false;
+            return "系统错误";
 
         ReadExcel readExcel = new ReadExcel();
         List<LinkedHashMap<String, String>> configTeantComList = readExcel.readExcelFile(excelPath);
         if (configTeantComList == null)
-            return false;
+            return "系统错误";
         LOGGER.info("excel序列化 总数:" + configTeantComList.size());
         List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
         if (tenantConfigInstanceViews == null)
-            return false;
+            return "系统错误";
 
-         boolean excelValid = ParamsUtils.excelValueValid(configTeantComList, tenantConfigInstanceViews);
+        String excelValid = ParamsUtils.excelValueValid(configTeantComList, tenantConfigInstanceViews);
+
+        if(type.equals("student"))
+            excelValid =ParamsUtils.repeatStudentNo(configTeantComList);
 
 
-        Integer reuslt = 0;
+        String reuslt = "系统错误";
 
-        if (excelValid)                {
-            reuslt = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
-            if(reuslt>0)
-                syncProcedureData(type,tnId);
-        }
-
+        if (excelValid.equals("SUCCESS")) {
+            Integer insertResult = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
+            if (insertResult > 0) {
+                reuslt = "SUCCESS";
+                syncProcedureData(type, tnId);
+            }
+        } else
+            reuslt = excelValid;
         LOGGER.info("===========解析excel E===========");
-        return (reuslt > 0 ? true : false);
+        return reuslt;
     }
 
     /**

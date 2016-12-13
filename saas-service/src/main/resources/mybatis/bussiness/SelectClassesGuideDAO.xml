@@ -189,7 +189,7 @@
     <!-- 根据年级查询学校内学生选课情况 -->
     <select id="getAnalysisGroup" parameterType="java.util.Map" resultType="java.util.Map">
         SELECT
-            student_major_type AS 'group',
+            CONCAT(student_major_type1,'-',student_major_type2,'-',student_major_type3) AS 'group',
             count(student_major_type) AS stuNumber
         FROM
             ${table}

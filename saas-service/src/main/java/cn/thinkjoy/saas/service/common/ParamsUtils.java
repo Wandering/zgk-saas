@@ -93,17 +93,17 @@ public  class ParamsUtils {
      * @param tenantConfigInstanceViews
      * @return
      */
-    public static boolean excelValueValid(List<LinkedHashMap<String, String>> excelValues,List<TenantConfigInstanceView> tenantConfigInstanceViews) {
+    public static String excelValueValid(List<LinkedHashMap<String, String>> excelValues,List<TenantConfigInstanceView> tenantConfigInstanceViews) {
 
         LOGGER.info("================excel数据格式校验 S================");
-        boolean result = false;
+        String result = "excel数据校验失败";
 
         if (excelValues == null || tenantConfigInstanceViews == null)
             return result;
-        Integer excelLen=excelValues.size();
+        Integer excelLen = excelValues.size();
 
-        LOGGER.info("excel集大小:"+excelLen);
-        LOGGER.info("表头集大小:"+tenantConfigInstanceViews.size());
+        LOGGER.info("excel集大小:" + excelLen);
+        LOGGER.info("表头集大小:" + tenantConfigInstanceViews.size());
 
         for (int x = 0; x < excelLen; x++) {
 
@@ -130,17 +130,38 @@ public  class ParamsUtils {
                 LOGGER.info(x + "行-" + key + "列 value:" + val + "");
                 boolean valid = (StringUtils.isBlank(regularStr) ? true : isRegValid(regularStr, val));
                 LOGGER.info("校验结果:" + valid);
-                if (!valid)
-                    return result;
+                if (!valid) {
+                    return x + "行-" + key + "列 数据[" + val + "]校验失败,请检查!";
+                }
                 y++;
             }
         }
-        result = true;
+        result = "SUCCESS";
         LOGGER.info("================excel数据格式校验 E================");
         return result;
-
     }
 
+    /**
+     * 查找是否存在重复学号
+     * @param excelValues
+     * @return
+     */
+    public static String repeatStudentNo(List<LinkedHashMap<String, String>> excelValues) {
+        String result = "SUCCESS";
+
+        String stuNo = "";
+        for (int i = 0; i < excelValues.size() - 1; i++) {
+            stuNo = excelValues.get(i).get("0");
+            for (int j = i + 1; j < excelValues.size(); j++) {
+                if (stuNo.equals(excelValues.get(j).get("0"))) {
+                    result = "第" + (i + 1) + "行学号信息与第" + (j + 1) + "行学号信息重复";
+                    return result;
+                }
+            }
+        }
+
+        return result;
+    }
     /**
      * 正则匹配结果
      * @param reg  正则
