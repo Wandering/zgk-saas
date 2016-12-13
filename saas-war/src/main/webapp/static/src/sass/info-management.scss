@@ -1,3 +1,5 @@
+@import "./common/common";
+
 .grade-layer{
   padding: 28px 0 0;
   overflow-x: hidden;
@@ -98,7 +100,7 @@ ul, li, span, div {
     display: inline-block;
     width: 250px;
     line-height: 2.0em;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     li {
         float: left;
         margin-right: 18px;

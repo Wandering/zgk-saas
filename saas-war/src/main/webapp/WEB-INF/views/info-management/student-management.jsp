@@ -82,7 +82,7 @@
                         <div id="student-table">
                                 <table class="table">
                                     <thead></thead>
-                                    <tbody></tbody>
+                                    <tbody class="check-template"></tbody>
                                 </table>
 
                                 <div class="pagination-bar">
@@ -216,7 +216,7 @@
                                                 <tr>
                                                     <th class="center">
                                                         <label>
-                                                            <input type="checkbox" class="ace"/>
+                                                            <%--<input type="checkbox" class="ace"/>--%>
                                                             <span class="lbl"></span>
                                                         </label>
                                                     </th>

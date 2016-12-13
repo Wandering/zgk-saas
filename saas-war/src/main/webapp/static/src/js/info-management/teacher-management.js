@@ -28,6 +28,7 @@ TeacherManagement.prototype = {
                     var columnHtml = [];
                     columnHtml.push('<tr>');
                     columnHtml.push('<th class="center"><label><input type="checkbox" id="checkAll" class="ace" /><span class="lbl"></span></label></th>');
+                    columnHtml.push('<th class="center">序号</th>');
                     $.each(data, function (i, k) {
                         columnHtml.push('<th class="center">' + k.name + '</th>');
                         that.columnArr.push({
@@ -40,9 +41,6 @@ TeacherManagement.prototype = {
                     columnHtml.push('</tr>');
                     $("#teacher-manage-table thead").html(columnHtml.join(''));
                     that.getTeacherData();
-
-
-
                 }
             }
         }, function (res) {
@@ -61,6 +59,7 @@ TeacherManagement.prototype = {
                     var obj = data[m];
                     teacherDataHtml.push('<tr rowid="' + obj['id'] + '">');
                     teacherDataHtml.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
+                    teacherDataHtml.push('<th class="center">' + (m + 1) + '</th>');
                     $.each(that.columnArr, function (i, k) {
                         var tempObj = that.columnArr[i];
                         var tempColumnName = tempObj.enName;
@@ -214,7 +213,18 @@ AddTeacherManagement.prototype.addTeacher = function (title) {
                 contentHtml.push('<li><span style="letter-spacing: 24.0px;">' + k.name + '</span><input type="text" style="position: relative;left: -23px;" id="' + k.enName + '" /></li>');
             }
         } else if (k.dataType == 'select') {
-            contentHtml.push('<li><span>' + k.name + '</span><select id="' + k.enName + '"><option value="00">' + k.name + '</option></select></li>');
+            contentHtml.push('<li>');
+            contentHtml.push('<span>' + k.name + '</span>');
+            contentHtml.push('<select id="' + k.enName + '">');
+            contentHtml.push('<option value="00">' + k.name + '</option>');
+            if (k.dataValue) {
+                var subjects = k.dataValue.split('-');
+                $.each(subjects, function (n, m) {
+                    contentHtml.push('<option value="' + m + '">' + m + '</option>');
+                });
+            }
+            contentHtml.push('</select>');
+            contentHtml.push('</li>');
         } else if (k.dataType == 'radio') {
             var values = (k.dataValue + '').split('-');
             var enName = k.enName;
@@ -351,7 +361,19 @@ UpdateTeacherManagement.prototype = {
                     contentHtml.push('<li><span style="letter-spacing: 24.0px;">' + k.name + '</span><input type="text" style="position: relative;left: -23px;" id="' + k.enName + '" /></li>');
                 }
             } else if (k.dataType == 'select') {
-                contentHtml.push('<li><span>' + k.name + '</span><select id="' + k.enName + '"><option value="00">' + k.name + '</option></select></li>');
+                //contentHtml.push('<li><span>' + k.name + '</span><select id="' + k.enName + '"><option value="00">' + k.name + '</option></select></li>');
+                contentHtml.push('<li>');
+                contentHtml.push('<span>' + k.name + '</span>');
+                contentHtml.push('<select id="' + k.enName + '">');
+                contentHtml.push('<option value="00">' + k.name + '</option>');
+                if (k.dataValue) {
+                    var subjects = k.dataValue.split('-');
+                    $.each(subjects, function (n, m) {
+                        contentHtml.push('<option value="' + m + '">' + m + '</option>');
+                    });
+                }
+                contentHtml.push('</select>');
+                contentHtml.push('</li>');
             } else if (k.dataType == 'radio') {
                 var values = (k.dataValue + '').split('-');
                 var enName = k.enName;
