@@ -25,6 +25,11 @@ public class EnumUtil {
     public static final String STUDENT_EDUCATION_MAJOYTYPE="选择科目";
     public static final String[] STUDENT_EDUCATION_MAJOYTYPE_ARR={"化学","生物","政治","历史","地理","通用技术"};
 
+    public static final String STUDENT_IN_GRADE="所在年级";
+    public static final String STUDENT_CLASS_NAME="班级名称";
+    public static final String STUDENT_CHECK_MAJOYTYPE1="选考科目一";
+    public static final String STUDENT_CHECK_MAJOYTYPE2="选考科目二";
+    public static final String STUDENT_CHECK_MAJOYTYPE3="选考科目三";
 
 
     /**
