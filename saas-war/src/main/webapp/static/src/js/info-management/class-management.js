@@ -584,6 +584,8 @@ $(document).on("click", "#update-btn", function () {
             var checkedGrade = $('input[name="high-school"]:checked').next().text();
             classManagement.gradeName = checkedGrade;
             classManagement.loadPage(0, classManagement.classRows);
+        } else {
+            layer.msg(res.bizData.result);
         }
     }, function (res) {
         layer.msg("出错了");
