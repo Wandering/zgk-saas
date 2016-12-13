@@ -4,7 +4,10 @@ import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.domain.JwBaseRule;
 import cn.thinkjoy.saas.domain.JwCourseGapRule;
 import cn.thinkjoy.saas.domain.JwTeachDate;
+import cn.thinkjoy.saas.dto.CourseBaseDto;
+import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.service.*;
+import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -34,6 +37,9 @@ public class CourseDisSelectController
 
     @Autowired
     private IJwTeachDateService jwTeachDateService;
+
+    @Autowired
+    private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
 
     @RequestMapping(value = "/getRule/{taskId}/{type}/{id}", method = RequestMethod.GET)
     public List<Map<String, String>> getRule(@PathVariable String taskId,
@@ -233,7 +239,7 @@ public class CourseDisSelectController
             int maxLinkPerDay = getCeilValue(maxLink, list.size());
             if(unCheckNum < maxLinkPerDay)
             {
-                throw new BizException("890929", "最大连课数为"+ maxLink + ", 每周最少有一天会有" + maxLinkPerDay+"次连课！");
+                throw new BizException("890929", "冲突提示：您设置的不连堂节次与已设连堂科目课时冲突！");
             }
         }
         String rules = "";
@@ -288,12 +294,12 @@ public class CourseDisSelectController
     }
 
     @RequestMapping(value = "/list/{type}/{taskId}", method = RequestMethod.GET)
-    public List<Map<String, String>> getList(@PathVariable String taskId, @PathVariable String type
+    public List<Map<String, String>> getList(@PathVariable Integer taskId, @PathVariable String type
         , @RequestParam(value = "teacherCourse", required = false) String teacherCourse)
     {
-        List<Map<String, String>> list;
+        List<Map<String, String>> list = new ArrayList<>();
         Map<String, String> params = new HashMap<>();
-        params.put("taskId", taskId);
+        params.put("taskId", taskId + "");
         if ("class".equals(type))
         {
             list = jwCourseGapRuleService.queryClassList(params);
@@ -305,25 +311,37 @@ public class CourseDisSelectController
         else if ("teacher".equals(type))
         {
             params.put("teacherCourse", teacherCourse);
-            list = jwCourseGapRuleService.queryTeacherList(params);
+            List<TeacherBaseDto> dtos = iexScheduleBaseInfoService.queryTeacherByTaskId(taskId);
+            if(null != dtos && dtos.size() >0)
+            {
+                for (TeacherBaseDto dto: dtos)
+                {
+                    if(teacherCourse.equals(dto.getCourseName()))
+                    {
+                        Map<String, String> map = new HashMap<>();
+                        map.put("name", dto.getTeacherName());
+                        map.put("teacherCourse", dto.getCourseName());
+                        list.add(map);
+                    }
+                }
+            }
         }
         else
         {
             throw new BizException("1100222", "type参数有误!");
         }
-        if (null == list)
-        {
-            throw new BizException("1122334", "请先导入列表信息！");
-        }
         return list;
     }
 
     @RequestMapping(value = "/teacherCourseList/{taskId}", method = RequestMethod.GET)
-    public List<Map<String, String>> getList(@PathVariable String taskId)
+    public List<String> getList(@PathVariable Integer taskId)
     {
-        Map<String, String> params = new HashMap<>();
-        params.put("taskId", taskId);
-        List<Map<String, String>> list = jwCourseGapRuleService.queryTeacherCourseList(params);
+        List<CourseBaseDto> dtos = iexScheduleBaseInfoService.queryCourseInfoByTaskId(taskId);
+        List<String> list = new ArrayList<>();
+        for (CourseBaseDto dto: dtos)
+        {
+            list.add(dto.getCourseName());
+        }
         return list;
     }
 
