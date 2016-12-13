@@ -15,10 +15,7 @@ import cn.thinkjoy.saas.enums.GradeEnum;
 import cn.thinkjoy.saas.enums.StatusEnum;
 import cn.thinkjoy.saas.enums.TermEnum;
 import cn.thinkjoy.saas.service.*;
-import cn.thinkjoy.saas.service.bussiness.EXIConfigurationService;
-import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
-import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
-import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
+import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.fastjson.JSON;
@@ -72,6 +69,8 @@ public class ScheduleTaskController {
     @Resource
     private IEXJwScheduleTaskService iexJwScheduleTaskService;
 
+    @Autowired
+    IExTeachTimeService teachTimeService;
     /**
      * 新建排课任务
      * @return
@@ -96,7 +95,10 @@ public class ScheduleTaskController {
         jwScheduleTask.setTnId(tnId);
         jwScheduleTask.setCreateDate(System.currentTimeMillis());
         jwScheduleTask.setStatus(Constant.SCHEDULE_TASK_INIT_STATUS);
-        return jwScheduleTaskService.add(jwScheduleTask)>0;
+        boolean flag = jwScheduleTaskService.add(jwScheduleTask)>0;
+        //初始化数据
+        teachTimeService.saveTeachTime(Integer.valueOf(jwScheduleTask.getId().toString()),Constant.DEFULT_TEACH_DATE,Constant.DEFULT_TEACH_TIME,tnId);
+        return flag;
     }
 
     /**
@@ -384,6 +386,10 @@ public class ScheduleTaskController {
         // 检测教师信息是否填写完整(给所有课程是否已经设置教师)
         for(JwCourse course : courses){
             JwCourseBaseInfo info = (JwCourseBaseInfo) jwCourseBaseInfoService.fetch(course.getCourseId());
+
+            if(info == null){
+                continue;
+            }
 
             boolean flag = false;
             for(JwTeacher teacher : teachers){
