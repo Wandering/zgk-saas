@@ -28,7 +28,7 @@ public interface SelectClassesGuideDAO {
      * 根据年级查询学校内学生选课情况
      *
      * @param grade 年级
-     * @param table 表明(动态生成)
+     * @param table 表名(动态生成)
      * @return
      */
     List<Map<String, Object>> getAnalysisGroup(
