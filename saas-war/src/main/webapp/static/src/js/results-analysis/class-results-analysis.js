@@ -14,6 +14,7 @@ function ClassResultsAnalysis() {
     this.progressLength = '20';
     this.gradeRankStart = '1';
     this.gradeRankLength = '99';
+    this.grade3OverLineBatch = 'batchAll';
 }
 ClassResultsAnalysis.prototype = {
     constructor: ClassResultsAnalysis,
@@ -521,7 +522,7 @@ ClassResultsAnalysis.prototype = {
             if (res.rtnCode == "0000000") {
                 var myTemplate = Handlebars.compile($("#overLineDetail-template").html());
                 $('#overLineDetail-tbody').html(myTemplate(res));
-                that.student12Layer();
+                that.student12Layer(grade,className);
             } else {
                 layer.msg(res.msg);
             }
@@ -698,13 +699,12 @@ ClassResultsAnalysis.prototype = {
     },
     selSortOnline: function (grade,className) {
         var that = this;
-        $('input[name="sort-radio"]').change(function () {
-            var orderBy = $(this).val();
-            that.getOverLineDetailForClass(grade,className,orderBy);
+        $('input[name="sort-radio"]').unbind('change').on('change',function () {
+            that.grade3OverLineBatch = $(this).val();
+            that.getOverLineDetailForClass(grade,className,that.grade3OverLineBatch);
         });
         $('input[name="sort-radio"]:first').attr('checked','checked');
-        var orderByFirst = $('input[name="sort-radio"]:first').val();
-        that.getOverLineDetailForClass(grade,className,orderByFirst);
+        that.getOverLineDetailForClass(grade,className,that.grade3OverLineBatch);
     },
     // 重点关注学生
     getMostAttentionPage: function (grade, batchName, className, courseName, offset, rows) {

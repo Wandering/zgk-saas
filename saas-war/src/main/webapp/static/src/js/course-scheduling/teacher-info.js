@@ -335,18 +335,6 @@ $(function () {
             console.log(v);
             $('.teaching-class-list input[classid="'+ v +'"]').attr('checked','checked');
         });
-
-
-        //for (var j = 0; j < classInfoData.length; j++) {
-        //    teachingClassList.push('<li><input type="checkbox" classId="' + classInfoData[j].classId + '" className="' + classInfoData[j].className + '" id="classInfo' + j + '" /><label for="classInfo' + j + '">' + classInfoData[j].className + '</label></li>');
-        //}
-        //$('.teaching-class-list').append(teachingClassList);
-
-        //var maxClassCount = [];
-        //for (var i = 0; i < data.classNum; i++) {
-        //    maxClassCount.push('<option value="' + (i + 1) + '">' + (i + 1) + '</option>');
-        //}
-        //$('#max-class-count').append(maxClassCount);
     });
 
     // 删除详情列表
