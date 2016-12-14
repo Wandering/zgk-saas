@@ -47,3 +47,11 @@ if(Common.cookie.getCookie('lockSubject') == 1){
     $('.btn-one-key').hide();
     $('#role-scheduling-tab,#step3-child-class').removeClass('dh');
 }
+
+$(function () {
+
+    var flag = Common.checkInfoIsPerfect(taskId);
+    if (!flag) {
+        window.location.href = '/course-scheduling-step1';
+    }
+});
