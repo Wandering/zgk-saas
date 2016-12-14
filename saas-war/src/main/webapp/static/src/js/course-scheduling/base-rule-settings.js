@@ -15,6 +15,37 @@ var JAPQModule = {
             'taskId': GLOBAL_CONSTANT.taskId,
             'courseId': courseId || ''
         }, function (res) {
+            // var res =
+            //     {
+            //         "bizData": {
+            //             "baseRuleList": [
+            //                 {
+            //                     "courseId": "1",
+            //                     "courseName": "语文",
+            //                     "createDate": "",
+            //                     "id": "1",
+            //                     "importantType": "2",
+            //                     "taskId": "1",
+            //                     "teacherId": "1",
+            //                     "teacherName": "左浩",
+            //                     "tnId": "1"
+            //                 },
+            //                 {
+            //                     "courseId": "1",
+            //                     "courseName": "语文",
+            //                     "createDate": "",
+            //                     "id": "2",
+            //                     "importantType": "3",
+            //                     "taskId": "1",
+            //                     "teacherId": "2",
+            //                     "teacherName": "左浩2",
+            //                     "tnId": "1"
+            //                 }
+            //             ]
+            //         },
+            //         "rtnCode": "0000000",
+            //         "ts": 1481080799397
+            //     }
             if (res.rtnCode == '0000000') {
                 if (res.bizData.baseRuleList.length != 0) {
                     $('#btn-teaching-plan').removeClass('dh');

@@ -97,33 +97,31 @@ $(document).ready(function () {
         },
         submitMixedClass: function () {
             var that = this, classIds = '', $target = $('input[name="merge-class"]');
-            $target.each(function (i, v) {
-                if ($target.eq(i).attr('isRight') == 1) {
-                    console.info($target.eq(i).val())
-                }
-            })
-
-
+            var checkArr = [],disCheckArr = [];
             $('input[name="merge-class"]:checked').each(function(){
-                if($(this).attr("disabled") != true){
-                    classIds += $(this).val()+','
-                }
+                    checkArr.push($(this).val());
             });
-            // for (var i = 0; i < $('input[name="merge-class"]').length; i++) {
-            //     if ($('input[name="merge-class"]').eq(i).attr("disabled") != 'disabled') {
-            //         // if($('input[name="merge-class"]:checked').eq(i).val() && $('input[name="merge-class"]').eq(i).attr("disabled") !='disabled'){
-            //         //     classIds += $('input[name="merge-class"]:checked').eq(i).val() + ','
-            //         // }
-            //     }
-            //     console.info($('input[name="merge-class"]').eq(i).attr("disabled"))
-            //     classIds += $('input[name="merge-class"]:checked').eq(i).val() + ','
-            //
-            // }
-            // console.info('classIds',classIds)
-            if (classIds.split(',').length < 3) {
+            $('input[name="merge-class"]:disabled').each(function(){
+                    disCheckArr.push($(this).val());
+            });
+            var removeByValue =function(arr, val) {
+                for(var i=0; i<arr.length; i++) {
+                    if(arr[i] == val) {
+                        arr.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            $.each(disCheckArr,function(i,v){
+                removeByValue(checkArr, v);
+            })
+            if (checkArr.length < 2) {
                 layer.msg('请至少选择两个班')
                 return false;
             }
+            $.each(checkArr,function(i,v){
+                classIds += v+',';
+            })
             Common.ajaxFun('/mergeClassController/addMergeInfo.do', 'get', {
                 'tnId': GLOBAL_CONSTANT.tnId,
                 'taskId': GLOBAL_CONSTANT.taskId,

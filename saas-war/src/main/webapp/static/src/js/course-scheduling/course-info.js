@@ -143,4 +143,12 @@ $(function () {
         var courseId = $(this).attr('dataid');
         CourseInfoIns.saveOrUpdateCourseTime(taskId, courseId, weekInput);
     });
+
+    $(document).on('click', '#rule-settings', function () {
+        if (Common.checkInfoIsPerfect(taskId)) {alert(0);
+            window.location.href = '/course-scheduling-step2';
+        } else {
+            alert(1);
+        }
+    });
 });
