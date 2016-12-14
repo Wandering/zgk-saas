@@ -466,7 +466,7 @@ function groupCourseAnalysis (groups, stuNumbers) {
             {
                 name: '选课人数',
                 type: 'bar',
-                barWidth: 44,
+                barWidth: 16,
                 data: stuNumbers, //[1466, 912, 1276, 1107],
                 label: {
                     normal: {
