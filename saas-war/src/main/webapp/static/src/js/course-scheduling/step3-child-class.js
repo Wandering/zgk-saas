@@ -58,6 +58,20 @@ ClassRoomTable.prototype = {
             layer.msg(result.msg);
         }, true);
     },
+    // 拉取所有课程 ====
+    getAllQueryCourse:function(){
+        Common.ajaxFun('/scheduleTask/all/course/result.do', 'GET', {
+            "taskId":taskId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                console.info(res)
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        }, true);
+    },
     // 拉取老师
     getQueryTeacher:function(){
         Common.ajaxFun('/baseResult/queryTeacher.do', 'GET', {
@@ -192,6 +206,12 @@ $(function () {
         $('.student-label').text(ClassRoomTableIns.studentName + "学生");
         ClassRoomTableIns.getClassRoomTable('student', {'classId': ClassRoomTableIns.classId,'studentId':ClassRoomTableIns.studentId});
     });
+
+    // 拉取所有课表
+    $("#role-scheduling-tab li").eq(3).click(function(){
+        ClassRoomTableIns.getAllQueryCourse();
+    });
 });
+
 
 

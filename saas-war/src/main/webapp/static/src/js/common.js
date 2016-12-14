@@ -266,16 +266,15 @@ var Common = {
         return strPage;
     },
     checkInfoIsPerfect: function (taskId) {
-        var checkInfoIsPerfect = null;
+        var checkInfoIsPerfect = false;
         Common.ajaxFun('/scheduleTask/checkInfoIsPerfect.do', 'GET', {
             'taskId': taskId
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                console.log("数据完成");
                 checkInfoIsPerfect = true;
-            } else if (res.rtnCode == "0000014") {
-                layer.msg(res.msg);
+            } else {
                 checkInfoIsPerfect = false;
+                layer.msg(res.msg);
             }
         }, function (res) {
             layer.msg(res.msg);

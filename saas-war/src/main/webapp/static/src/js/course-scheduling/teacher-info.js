@@ -74,7 +74,7 @@ TeacherInfo.prototype = {
             type: 1,
             title: '<span class="layer-title">' + title + "</span>",
             offset: 'auto',
-            area: ['471px', '350px'],
+            area: ['471px', '380px'],
             content: addTeacherContentHtml.join(''),
             success: function () {
                 if(teachername){
@@ -394,8 +394,17 @@ $(function () {
 
 
 
-
-
-
+    $(document).on('click', '#rule-settings', function () {
+        var flag = Common.checkInfoIsPerfect(taskId);
+        if (flag) {
+            window.location.href = '/course-scheduling-step2';
+        }
+    });
+    $(document).on('click', '#auto-assign-course', function () {
+        var flag = Common.checkInfoIsPerfect(taskId);
+        if (flag) {
+            window.location.href = '/course-scheduling-step3';
+        }
+    });
 
 });

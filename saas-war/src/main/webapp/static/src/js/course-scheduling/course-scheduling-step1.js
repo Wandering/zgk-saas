@@ -1,11 +1,5 @@
 var taskId = Common.cookie.getCookie('taskId');
 
-
-
-console.log(Common.checkInfoIsPerfect(taskId))
-
-
-
 function TeachDate() {
     this.init();
     this.state = false;
@@ -94,6 +88,20 @@ $(function () {
             });
         }else{
             TeachDateIns.saveTeachTime(taskId, teachDate.join('|'), teachTime);
+        }
+    });
+
+
+    $(document).on('click', '#rule-settings', function () {
+        var flag = Common.checkInfoIsPerfect(taskId);
+        if (flag) {
+            window.location.href = '/course-scheduling-step2';
+        }
+    });
+    $(document).on('click', '#auto-assign-course', function () {
+        var flag = Common.checkInfoIsPerfect(taskId);
+        if (flag) {
+            window.location.href = '/course-scheduling-step3';
         }
     });
 });
