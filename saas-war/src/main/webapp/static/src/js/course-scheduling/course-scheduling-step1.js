@@ -1,11 +1,5 @@
 var taskId = Common.cookie.getCookie('taskId');
 
-
-
-console.log(Common.checkInfoIsPerfect(taskId))
-
-
-
 function TeachDate() {
     this.init();
     this.state = false;
@@ -94,6 +88,15 @@ $(function () {
             });
         }else{
             TeachDateIns.saveTeachTime(taskId, teachDate.join('|'), teachTime);
+        }
+    });
+
+
+    $(document).on('click', '#rule-settings', function () {
+        if (Common.checkInfoIsPerfect(taskId)) {alert(0);
+            window.location.href = '/course-scheduling-step2';
+        } else {
+            alert(1);
         }
     });
 });

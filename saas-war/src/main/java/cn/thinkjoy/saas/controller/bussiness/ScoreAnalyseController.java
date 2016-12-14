@@ -1306,7 +1306,10 @@ public class ScoreAnalyseController
             }
             params.put("变化人数", list.size());
             params.put("data", list);
-            resultList.add(params);
+            if(list.size() > 0)
+            {
+                resultList.add(params);
+            }
         }
         return resultList;
     }

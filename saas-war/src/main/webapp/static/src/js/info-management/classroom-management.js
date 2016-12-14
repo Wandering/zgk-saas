@@ -287,9 +287,9 @@ $(document).on('click', '#update-classroom-btn', function () {
     });
 });
 
-$(document).on('click', '#deleteRole-Btn', function () {
-    classRoomManagement.deleteClassRoom();
-});
+//$(document).on('click', '#deleteRole-Btn', function () {
+//    classRoomManagement.deleteClassRoom();
+//});
 
 $(document).on('click','.close-btn',function(){
     layer.closeAll();

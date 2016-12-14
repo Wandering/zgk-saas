@@ -182,7 +182,8 @@ public class DataQueryController {
                                                                 @ApiParam(param="batch", desc="批次",required = false) @RequestParam(required = false) Integer batch,
                                                                 @ApiParam(param="type", desc="科类",required = false) @RequestParam(defaultValue = "1",required = false) Integer type,
                                                                 @ApiParam(param="page", desc="页数",required = false) @RequestParam(defaultValue = "1",required = false) Integer page,
-                                                                @ApiParam(param="rows", desc="每页条数",required = false) @RequestParam(defaultValue = "10",required = false) Integer rows){
+                                                                @ApiParam(param="rows", desc="每页条数",required = false) @RequestParam(defaultValue = "10",required = false) Integer rows,
+                                                                HttpServletRequest request,HttpServletResponse response) throws IOException {
 
         //默认参数设置
         Map<String,Object> map=new HashMap<>();
@@ -208,6 +209,11 @@ public class DataQueryController {
 //        批次
         if(batch!=null) {
             QueryUtil.setMapOp(map, "enrollingbatch", "=", batch);
+        }
+
+        Long area=getUserProvinceId(request,response);
+        if(area!=null) {
+            QueryUtil.setMapOp(map,"enrollingareaid","=",area);
         }
 //        文史/理工
         QueryUtil.setMapOp(map, "entype", "=", type);
