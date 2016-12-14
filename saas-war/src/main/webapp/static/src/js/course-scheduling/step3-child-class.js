@@ -76,9 +76,9 @@ ClassRoomTable.prototype = {
     },
     // 拉取所有课程(总课表) ====
     getAllQueryCourse: function () {
-        Common.ajaxFun('/scheduleTask/all/course/result.do', 'GET', {
-            "taskId": taskId
-        }, function (res) {
+        // Common.ajaxFun('/scheduleTask/all/course/result.do', 'GET', {
+        //     "taskId": taskId
+        // }, function (res) {
             res = {
                 "bizData": {
                     "result": {
@@ -90,17 +90,48 @@ ClassRoomTable.prototype = {
                 }, "rtnCode": "0000000", "ts": 1481699074431
             }
             if (res.rtnCode == "0000000") {
-                var dataJson = res.bizData.result
-                var tpl = Handlebars.compile($('#all-timetable-head-tpl').html());
-                $('#all-timetable-head').html(tpl((dataJson.teachDate).split('|')))
+                var tpl = Handlebars.compile($('#all-timetable-tpl').html());
+                $('#all-timetable').html(tpl(res.bizData.result))
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                // //渲染header
+                // console.info('dataJson',dataJson)
+                // var tpl = Handlebars.compile($('#all-timetable-head-tpl').html());
+                // $('#all-timetable-head').html(tpl((dataJson.teachDate).split('|')))
+                //
+                // //渲染body
+                // var tpl = Handlebars.compile($('#all-timetable-body-tpl').html());
+                // // $('#all-timetable-body').html(tpl())
             } else {
                 layer.msg(res.msg);
             }
-        }, function (res) {
-            layer.msg(res.msg);
-        }, true);
+        // }, function (res) {
+        //     layer.msg(res.msg);
+        // }, true);
     },
     // 拉取老师
     getQueryTeacher: function (teacherCourse) {

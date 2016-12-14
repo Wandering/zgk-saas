@@ -1831,7 +1831,7 @@ public class ScoreAnalyseController
                 }
             }
         }
-        return resultMap.get(className);
+        return resultMap.get(className) == null ? new ArrayList<Map<String, Object>>() : resultMap.get(className);
     }
 
     private void setScoreList(List<String> examIds, Map<String, List<Integer>> examScoreRatioMap)
