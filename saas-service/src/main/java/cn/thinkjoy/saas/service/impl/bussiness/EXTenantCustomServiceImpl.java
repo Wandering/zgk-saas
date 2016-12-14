@@ -48,6 +48,7 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 
         Integer result = iexTeantCustomDAO.insertTenantCustom(tableName, teantCustoms);
 
+
         return (result > 0 ? true : false);
     }
 
