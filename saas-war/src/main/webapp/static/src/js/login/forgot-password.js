@@ -50,8 +50,7 @@ var ForgotPassword = {
             if (paramData) {
                 Common.ajaxFun('/account/forgetPwd/' + paramData.account + '/' + paramData.phone + '/' + paramData.smsCode + '/' + $.md5(paramData.newPwd) + '.do', 'GET', {}, function (res) {
                     if (res.rtnCode == "0000000") {
-                        layer.closeAll();
-                        window.location.herf = '/';
+                        window.location.href = '/';
                     } else {
                         layer.msg(res.msg)
                     }
