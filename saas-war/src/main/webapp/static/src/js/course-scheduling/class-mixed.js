@@ -97,11 +97,6 @@ $(document).ready(function () {
         },
         submitMixedClass: function () {
             var that = this, classIds = '', $target = $('input[name="merge-class"]');
-            $target.each(function (i, v) {
-                if ($target.eq(i).attr('isRight') == 1) {
-                    console.info($target.eq(i).val())
-                }
-            })
             var checkArr = [],disCheckArr = [];
             $('input[name="merge-class"]:checked').each(function(){
                     checkArr.push($(this).val());

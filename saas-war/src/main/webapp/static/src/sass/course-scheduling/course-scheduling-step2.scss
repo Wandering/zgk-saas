@@ -588,7 +588,8 @@
     .base-rule-table {
         td {
             .rule-radio, .rule-radio1 {
-                margin-right: 100px;
+                float: left;
+                margin-right: 60px;
                 label {
                     font-size: 12px;
                     color: #4A4A4A;
@@ -625,3 +626,5 @@
         margin-left: 0!important;
     }
 }
+
+
