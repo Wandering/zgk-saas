@@ -65,12 +65,17 @@ ClassResultsAnalysis.prototype = {
                     }
                 });
                 $('#set-line').val(that.bacthLine);
+                console.log(that.grade)
+                console.log(that.className)
+                console.log(that.bacthLine)
+
                 that.grade3ShowView(that.grade, that.className, that.bacthLine);
                 that.getStuNumberScoreChangeForClass(that.grade, that.className);
                 // 进步较大学生下拉
                 that.getMostAdvancedDetailAdvancedStepList(that.grade, that.className, that.progressStart, that.progressLength);
                 // 年级排名下拉列表
                 that.getMostAdvancedDetailGradeRankStepList(that.grade, that.className, that.gradeRankStart, that.gradeRankLength);
+
             } else {
                 layer.msg(res.msg);
             }
@@ -101,15 +106,18 @@ ClassResultsAnalysis.prototype = {
         if (gradeV.indexOf('高三') >= 0 || gradeV.indexOf('高3') >= 0) {
             $('.grade-type').text('本科线成绩分析');
             $('.grade1-2-line,.grade-student-num').hide();
-            $('.batch-info,.grade3-main,.grade3-student-batch,#batch-sel').show();
+            $('.batch-info,.grade3-main,.grade3-student-batch,#batch-sel,.tcdPageCode').show();
             that.getOverLineNumberByDate(gradeV, className);
             that.selSortOnline(gradeV, className);
         } else {
             $('.grade-type').text('重点线成绩分析');
             $('.grade1-2-line,.grade-student-num').show();
-            $('.batch-info,.grade3-main,.grade3-student-batch,#batch-sel').hide();
-            //that.getOverLineDetailForClassTwo(gradeV, className, line);
-            //that.getMostAttendDetailForClassTwo(gradeV, className, line);
+            $('.batch-info,.grade3-main,.grade3-student-batch,#batch-sel,.tcdPageCode').hide();
+            // 班级上线人数统计
+            that.getOverLineDetailForClassTwo(gradeV, className, line);
+            // 重点关注学生
+            that.getMostAttendDetailForClassTwo(gradeV, className, line);
+
         }
     },
     // 根据年级获取班级
@@ -644,7 +652,7 @@ ClassResultsAnalysis.prototype = {
         var studentTotalScoreChart = echarts.init(document.getElementById('studentTotalScore-chart'));
         var studentTtotalScoreChartOption = {
             title: {
-                text: '班级平均分排名',
+                text: '个人总分',
                 left: 'left',
                 textStyle: {
                     fontSize: '14',
@@ -679,7 +687,7 @@ ClassResultsAnalysis.prototype = {
             },
             series: [
                 {
-                    name: '班级平均分排名',
+                    name: '个人总分',
                     type: 'line',
                     //data: [1, 3, 9, 27, 81, 247, 741, 2223, 6669]
                     data: totalScoreData
@@ -692,7 +700,7 @@ ClassResultsAnalysis.prototype = {
         var studentSubjectsChart = echarts.init(document.getElementById('studentSubjects-chart'));
         var studentSubjectsChartOption = {
             title: {
-                text: '班级平均分排名',
+                text: '各科成绩',
                 left: 'left',
                 textStyle: {
                     fontSize: '14',
@@ -755,7 +763,7 @@ ClassResultsAnalysis.prototype = {
             if (res.rtnCode == "0000000") {
                 that.count = parseInt(Math.ceil(res.bizData.total / rows));
                 var myTemplate = Handlebars.compile($("body #details-main-template").html());
-                $('body #details-main-tbody').html(myTemplate(res));
+                $('body #details-main-tbody').html(myTemplate(res.bizData.list));
             } else {
                 layer.msg(res.msg);
             }
@@ -864,8 +872,8 @@ ClassResultsAnalysis.prototype = {
             'line': line
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                var myTemplate = Handlebars.compile($("body #details-main-template").html());
-                $('body #details-main-tbody').html(myTemplate(res));
+                var myTemplate = Handlebars.compile($("#details-main-template").html());
+                $('#details-main-tbody').html(myTemplate(res.bizData));
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -922,9 +930,8 @@ $(function () {
         ClassAnalysisIns.getMostAdvancedDetailForClass(ClassAnalysisIns.grade, ClassAnalysisIns.className, ClassAnalysisIns.stepStart, ClassAnalysisIns.stepEnd, ClassAnalysisIns.rankStepStart, ClassAnalysisIns.rankStepEnd);
     });
 
-
     // 设置关注位次线  高一高二
-    $('body').on('click', '#set-line-btn', function () {
+    $('#set-line-btn').on('click', function () {
         ClassAnalysisIns.bacthLine = $.trim($('#set-line').val());
         if (ClassAnalysisIns.bacthLine == '') {
             layer.msg('请输入位次线!');

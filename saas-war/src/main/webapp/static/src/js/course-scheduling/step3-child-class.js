@@ -24,6 +24,7 @@ ClassRoomTable.prototype = {
     },
     // 拉取教室
     getClassRoom: function () {
+        var that = this;
         Common.ajaxFun('/baseResult/queryRoom.do', 'GET', {
             "taskId": taskId
         }, function (result) {
@@ -34,6 +35,13 @@ ClassRoomTable.prototype = {
                     classRoom.push('<option value="' + v.id + '">' + v.roomName + '</option>')
                 });
                 $('#select-class').append(classRoom);
+
+                $('#select-class option:eq(1)').attr('selected','selected');
+
+                var selectedV = $('#select-class option:eq(1):selected').val()
+                var selectedTxt = $('#select-class option:eq(1):selected').text();
+                $('.scheduling-name').show().text(selectedTxt);
+                that.getClassRoomTable('room', {'room': selectedV}, selectedV);
             } else {
                 layer.msg(result.msg);
             }
@@ -43,6 +51,7 @@ ClassRoomTable.prototype = {
     },
     // 拉取课程
     getQueryCourse: function () {
+        var that = this;
         Common.ajaxFun('/baseResult/queryCourse.do', 'GET', {
             "taskId": taskId
         }, function (result) {
@@ -53,6 +62,11 @@ ClassRoomTable.prototype = {
                     queryCourse.push('<option value="' + v.id + '">' + v.courseName + '</option>')
                 });
                 $('#select-queryCourse').append(queryCourse);
+                $('#select-queryCourse option:eq(1)').attr('selected','selected');
+                var selectedV = $('#select-queryCourse option:eq(1):selected').val()
+                var selectedTxt = $('#select-queryCourse option:eq(1):selected').text();
+                $('.scheduling-name').show().text(selectedTxt);
+                that.getQueryTeacher(selectedTxt)
             } else {
                 layer.msg(result.msg);
             }
@@ -89,9 +103,10 @@ ClassRoomTable.prototype = {
         }, true);
     },
     // 拉取老师
-    getQueryTeacher: function () {
+    getQueryTeacher: function (teacherCourse) {
         Common.ajaxFun('/baseResult/queryTeacher.do', 'GET', {
-            "taskId": taskId
+            "taskId": taskId,
+            "teacherCourse": teacherCourse
         }, function (result) {
             if (result.rtnCode == "0000000") {
                 $('#select-teacher option:gt(0)').remove();
@@ -191,15 +206,15 @@ $(function () {
         ClassRoomTableIns.getClassRoomTable('room', {'room': selectedV}, selectedV);
     });
 
+
+
+
     // 选择课程
     $("#select-queryCourse").change(function () {
         ClassRoomTableIns.courseTxt = $(this).children('option:selected').text();
         var selectedV = $(this).children('option:selected').val();
         $('.course-label').text(ClassRoomTableIns.courseTxt);
-        ClassRoomTableIns.getClassRoomTable('teacher', {
-            'course': ClassRoomTableIns.courseTxt,
-            'teacherId': ClassRoomTableIns.teacherId
-        });
+        ClassRoomTableIns.getQueryTeacher(ClassRoomTableIns.courseTxt);
     });
 
     // 选择老师
