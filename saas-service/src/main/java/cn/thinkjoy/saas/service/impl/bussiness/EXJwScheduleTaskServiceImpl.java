@@ -230,10 +230,15 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         return jwRoom.getRoomName();
 
     }
-//    private List<String> getClassCourseResult(Integer teachSize,String teachDetail) {
-//        for(int i=0;i<teachSize;i++) {
-//            List<String> weeks=new ArrayList<>();
-//            for(int j=0;j<)
-//        }
-//    }
+
+    public static void main(String[] args) {
+        java.util.Random random=new java.util.Random();//
+        List<Integer> a = new ArrayList();
+        a.add(1);
+        a.add(2);
+        a.add(3);
+        a.add(4);
+        for (int i =100;i>0;i--)
+        System.out.println(a.get(random.nextInt(a.size())));
+    }
 }
