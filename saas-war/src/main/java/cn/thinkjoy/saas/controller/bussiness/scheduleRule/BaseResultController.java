@@ -35,8 +35,7 @@ public class BaseResultController {
     private IJwCourseBaseInfoService jwCourseBaseInfoService;
     @Autowired
     private IJwClassBaseInfoService jwClassBaseInfoService;
-    @Autowired
-    private IEXTenantCustomService iexTenantCustomService;
+
     /**
      * 获取教室名称
      * @return
@@ -45,7 +44,12 @@ public class BaseResultController {
     @ResponseBody
     public List getCourseResult(@RequestParam Integer taskId) {
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        List list = jwRoomService.findAll();
+        JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
+        Map<String,Object>  map = Maps.newHashMap();
+        map.put("tnId",tnId);
+        map.put("taskId",taskId);
+        map.put("grade",jwScheduleTask.getGrade());
+        List list = jwRoomService.queryList(map,"id","desc");
         return list;
     }
 
@@ -74,7 +78,6 @@ public class BaseResultController {
     @ResponseBody
     public List queryCourse(@RequestParam Integer taskId) {
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
         Map<String,Object>  map = Maps.newHashMap();
         map.put("tnId",tnId);
         map.put("taskId",taskId);

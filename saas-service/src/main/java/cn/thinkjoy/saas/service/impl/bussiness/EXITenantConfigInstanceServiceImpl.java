@@ -620,7 +620,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         List<JwCourseBaseInfo> infos = Lists.newArrayList();
         infos.add(convertCourse(tnId,grade,"语文"));
         infos.add(convertCourse(tnId,grade,"数学"));
-        infos.add(convertCourse(tnId,grade,"外语"));
+        infos.add(convertCourse(tnId,grade,"英语"));
         return infos;
     }
 

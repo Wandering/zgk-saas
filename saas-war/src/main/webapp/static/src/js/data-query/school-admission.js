@@ -211,7 +211,12 @@ var SchoolAds = {
             $('#admission-load-more').hide();
             $('#no-data').remove();
             $(this).addClass('active').siblings().removeClass('active');
-            that.params.property = $(this).attr('dictid')
+            // that.params.property = $(this).attr('dictid')
+            var foo = $(this).text()
+            if($(this).text()=='全部'){
+                foo = '';
+            }
+            that.params.property = foo
             that.params.page = "1";
             that.params.rows = "10";
             that.fetchSchoolEnroll(that.params);

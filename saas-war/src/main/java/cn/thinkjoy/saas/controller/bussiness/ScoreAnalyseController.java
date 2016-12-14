@@ -1269,8 +1269,10 @@ public class ScoreAnalyseController
                     lastButTwoExamDetail.add(lastButTwoExam);
                 }
             }
-            params.put("最近第二次考试", lastButTwoExamDetail.size());
-            params.put("最近第一次考试", lastExamDetail.size());
+            Exam e1 = (Exam)examService.findOne("id", examIds.get(0));
+            Exam e2 = (Exam)examService.findOne("id", examIds.get(1));
+            params.put(e2.getExamName() , lastButTwoExamDetail.size());
+            params.put(e1.getExamName() , lastExamDetail.size());
             Set<String> stuNames = new HashSet<>();
             for (ExamDetail detail : lastExamDetail)
             {
@@ -1286,7 +1288,6 @@ public class ScoreAnalyseController
                 }
             }
             lastExamDetail.addAll(lastButTwoExamDetail);
-            params.put("变化人数", lastExamDetail.size());
             List<Map<String, Object>> list = new ArrayList<>();
             for (ExamDetail detail : lastExamDetail)
             {
@@ -1295,13 +1296,20 @@ public class ScoreAnalyseController
                 {
                     continue;
                 }
-                Map<String, Object> para = new HashMap<>();
-                para.put("学生姓名", detailList.get(0).getStudentName());
-                para.put("变化趋势", detailList.get(1).getGradeRank() + "名 - " + detailList.get(0).getGradeRank() + "名");
-                list.add(para);
+                if(!detailList.get(1).getGradeRank().equals(detailList.get(0).getGradeRank()))
+                {
+                    Map<String, Object> para = new HashMap<>();
+                    para.put("学生姓名", detailList.get(0).getStudentName());
+                    para.put("变化趋势", detailList.get(1).getGradeRank() + "名 - " + detailList.get(0).getGradeRank() + "名");
+                    list.add(para);
+                }
             }
+            params.put("变化人数", list.size());
             params.put("data", list);
-            resultList.add(params);
+            if(list.size() > 0)
+            {
+                resultList.add(params);
+            }
         }
         return resultList;
     }
@@ -1721,7 +1729,7 @@ public class ScoreAnalyseController
         @RequestParam(value = "rankStepEnd", required = false) Integer rankStepEnd
     )
     {
-        stepStart = null == stepStart ? 10 : stepStart;
+        stepStart = null == stepStart ? 1 : stepStart;
         stepEnd = null == stepEnd ? Integer.MAX_VALUE : stepEnd;
         rankStepStart = null == rankStepStart ? 1 : rankStepStart;
         rankStepEnd = null == rankStepEnd ? Integer.MAX_VALUE : rankStepEnd;

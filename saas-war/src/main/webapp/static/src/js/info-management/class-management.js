@@ -785,17 +785,22 @@ function upload () {
     });
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-    uploader.on('uploadSuccess', function (file) {
+    uploader.on('uploadSuccess', function (file, response) {console.info(response);
         layer.closeAll();
         if (classManagement != null) {
             var checkedGrade = $('input[name="high-school"]:checked').next().text();
             classManagement.gradeName = checkedGrade;
             classManagement.loadPage(0, classManagement.classRows);
         }
+        if (response.bizData.result) {
+            layer.msg(response.bizData.result);
+        } else {
+            layer.msg(response.msg);
+        }
     });
 
     // 文件上传失败，现实上传出错。
-    uploader.on('uploadError', function (file) {
+    uploader.on('uploadError', function (file, response) {
         var $li = $('#' + file.id),
             $error = $li.find('div.error');
 
@@ -805,6 +810,11 @@ function upload () {
         }
 
         $error.text('上传失败');
+        if (response.bizData.result) {
+            layer.msg(response.bizData.result);
+        } else {
+            layer.msg(response.msg);
+        }
     });
 
     // 完成上传完了，成功或者失败，先删除进度条。

@@ -7,9 +7,9 @@ var Common = {
         $('body').on('click', '.close-btn', function () {
             layer.closeAll();
         });
-        $('.nav-li').each(function(i,v){
-            console.info(v)
-        });
+        // $('.nav-li').each(function(i,v){
+        //     console.info(v)
+        // });
         // $(document).on('mouseover mouseout','.dropdown-toggle',function(){
         //     var foo = $(this).find('[name="toggle-icon-url"]').attr('class');
         //     if(event.type == "mouseover"){

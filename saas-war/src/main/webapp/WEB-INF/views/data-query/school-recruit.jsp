@@ -47,7 +47,7 @@
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
                         <div class="common-title">
-                            <h3 class="fl">院校录取数据</h3>
+                            <h3 class="fl">院校招生数据</h3>
                             <div class="search-box fr">
                                 <input type="text" placeholder="请输入院校名称" class="search-input">
                                 <button class="search-btn">搜索</button>
@@ -97,9 +97,9 @@
                                 <dd id="batch-list">
                                 </dd>
                                 <script type="text/x-handlebars-template" id="batch-list-tpl">
-                                    <span class="active">全部</span>
+                                    <span class="active" dictid="">全部</span>
                                     {{#each this}}
-                                    <span>{{name}}</span>
+                                    <span dictid="{{dictid}}">{{name}}</span>
                                     {{/each}}
                                 </script>
                             </dl>
