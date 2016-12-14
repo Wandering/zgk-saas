@@ -74,7 +74,7 @@ TeacherInfo.prototype = {
             type: 1,
             title: '<span class="layer-title">' + title + "</span>",
             offset: 'auto',
-            area: ['471px', '350px'],
+            area: ['471px', '380px'],
             content: addTeacherContentHtml.join(''),
             success: function () {
                 if(teachername){
@@ -394,7 +394,13 @@ $(function () {
 
 
 
-
+    $(document).on('click', '#rule-settings', function () {
+        if (Common.checkInfoIsPerfect(taskId)) {alert(0);
+            window.location.href = '/course-scheduling-step2';
+        } else {
+            alert(1);
+        }
+    });
 
 
 
