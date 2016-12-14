@@ -48,6 +48,18 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
     @Autowired
     private IEXClassBaseInfoDAO iexClassBaseInfoDAO;
 
+    @Autowired
+    private IJwBaseConRuleDAO iJwBaseConRuleDAO;
+
+    @Autowired
+    private IJwBaseDayRuleDAO iJwBaseDayRuleDAO;
+
+    @Autowired
+    private IJwBaseJaqpRuleDAO iJwBaseJaqpRuleDAO;
+
+    @Autowired
+    private IJwBaseWeekRuleDAO iJwBaseWeekRuleDAO;
+
     @Override
     public List<CourseBaseDto> queryCourseInfoByTaskId(int taskId) {
 
@@ -315,6 +327,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         conRule.setDayConType(1);
         conRule.setImportantType(2);
         conRule.setTaskId(taskId);
+        iJwBaseConRuleDAO.insert(conRule);
 
         // 日任课规则
         JwBaseDayRule dayRule = new JwBaseDayRule();
@@ -325,6 +338,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         dayRule.setDayType(1);
         dayRule.setTeacherId(teacherId);
         dayRule.setTnId(tnId);
+        iJwBaseDayRuleDAO.insert(dayRule);
 
         // 周任课规则
         JwBaseWeekRule weekRule = new JwBaseWeekRule();
@@ -335,6 +349,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         weekRule.setImportantType(2);
         weekRule.setTaskId(taskId);
         weekRule.setWeekType(1);
+        iJwBaseWeekRuleDAO.insert(weekRule);
 
         // 教案齐平规则
         JwBaseJaqpRule jaqpRule = new JwBaseJaqpRule();
@@ -344,5 +359,6 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         jaqpRule.setCourseId(courseId);
         jaqpRule.setTeacherId(teacherId);
         jaqpRule.setTnId(tnId);
+        iJwBaseJaqpRuleDAO.insert(jaqpRule);
     }
 }
