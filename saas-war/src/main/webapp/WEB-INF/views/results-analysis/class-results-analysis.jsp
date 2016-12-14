@@ -233,13 +233,11 @@
         <script id="student-change-template" type="text/x-handlebars-template">
             {{#each bizData}}
             <tr>
-                <td class="center">{{年级排名}}</td>
-
-                <td class="center">{{最近第一次考试}}</td>
-                <td class="center">{{最近第二次考试}}</td>
-
-                <td class="center"><a href="javascript:;" class="change-student-btn"
-                                      data="{{#each data}}{{agree_button}}{{/each}}">{{变化人数}}</a></td>
+                {{#each this}}
+                    {{#compare @key '!=' 'data'}}
+                    <td class="center">{{this}}</td>
+                    {{/compare}}
+                {{/each}}
             </tr>
             {{/each}}
         </script>
