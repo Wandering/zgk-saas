@@ -216,7 +216,7 @@
                                                 <tr>
                                                     <th class="center">
                                                         <label>
-                                                            <%--<input type="checkbox" class="ace"/>--%>
+                                                            <input type="checkbox" class="ace delCheckAll" id="checkAll"/>
                                                             <span class="lbl"></span>
                                                         </label>
                                                     </th>
@@ -239,7 +239,7 @@
                                     <tr id="configKey-{{configKey}}" class="isRetain{{isRetain}}">
                                         <td class="center">
                                             <label>
-                                                <input type="checkbox" disabled class="ace" id="configOrder-{{id}}"/>
+                                                <%--<input type="checkbox" disabled class="ace" id="configOrder-{{id}}"/>--%>
                                                 <span class="lbl"></span>
                                             </label>
                                         </td>
@@ -253,7 +253,7 @@
                                     <tr id="configKey-{{configKey}}">
                                         <td class="center">
                                             <label>
-                                                <input type="checkbox" class="ace" id="configOrder-{{id}}"/>
+                                                <input type="checkbox" class="ace" cid="{{id}}" id="configOrder-{{id}}"/>
                                                 <span class="lbl"></span>
                                             </label>
                                         </td>

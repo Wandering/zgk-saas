@@ -324,9 +324,9 @@ var CRUDStd = {
                         '<span class="lbl">' + radioLen[i] + '</span></label>'
                 }
             }
-            var foo = '';
-            v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
-            return '<li><span class="f20">' + foo + '</span>' +
+            // var foo = '';
+            // v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
+            return '<li><span class="f20">' + v.name + '</span>' +
                 '<div id="' + v.enName + '" class="sex-type f70">' + radioTpl +
                 '</label>' +
                 '</div></li>'
@@ -361,13 +361,24 @@ var CRUDStd = {
          * @returns {string}
          */
         var renderSelect = function (v) {
-            var foo = '';
-            v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
+            // var foo = '';
+            // v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
+
+
+            var foo = v.name;
+            if (v.enName == 'student_class') {
+                foo = '<b class="red-icon">*</b>' + v.name
+            }
             if (v.enName == "student_grade") {
                 return '<li><span>' + foo + '</span><select id="' + v.enName + '" readonly disabled style="cursor: not-allowed;background-color: #eee;"><option>' + App.checkGradeName + '</option></select></li>'
             } else {
                 var selectLen = (v.dataValue).split('-'),
                     selectTpl = '';
+                if (v.enName == 'student_check_major1'
+                    || v.enName == 'student_check_major2'
+                    || v.enName == 'student_check_major3') {
+                    selectTpl = '<option>请选择科目</option>'
+                }
                 for (var i = 0; i < selectLen.length; i++) {
                     selectTpl += '<option>' + selectLen[i] + '</option>'
                 }
@@ -380,8 +391,13 @@ var CRUDStd = {
          * @returns {string}
          */
         var renderText = function (v) {
-            var foo = '';
-            v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
+            // var foo = '';
+            // v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
+
+            var foo = v.name;
+            if (v.enName == 'student_no' || v.enName == 'student_name') {
+                foo = '<b class="red-icon">*</b>' + v.name
+            }
             return '<li><span>' + foo + '</span><input type="text" placeholder="请输入' + v.name + '" id="' + v.enName + '" checkRule="' + v.checkRule + '" class="input-common-w"/></li>'
         }
         $.each(CRUDStd.CRUDStdData.renderEleData, function (i, v) {
@@ -577,6 +593,11 @@ var CRUDStd = {
         var lock = 0;
         $.each(App.tableData, function (i, v) {
             if (v.dataType === "text") {
+                // if(v.enName != 'student_check_major_class1'
+                //     || v.enName != 'student_check_major_class2'
+                //     || v.enName != 'student_check_major_class3'){
+                //     return false;
+                // }
                 if ($('#' + v.enName).val() == '') {
                     layer.msg(v.name + '不能为空', {time: 1000});
                     $('#' + v.enName).focus();
@@ -627,9 +648,12 @@ var CRUDStd = {
                 });
             }
         })
-        if (postData[3].value == postData[5].value || postData[5].value == postData[7].value || postData[7].value == postData[3].value) {
-            layer.msg('选考科目1,2,3不能相同');
-            return false;
+        if($('#student_check_major1').val() != '请选择科目'){
+            console.info('postData[3]',postData[3])
+            if (postData[3].value == postData[5].value || postData[5].value == postData[7].value || postData[7].value == postData[3].value) {
+                layer.msg('选考科目1,2,3不能相同');
+                return false;
+            }
         }
         if (type == 'add') {
             return {
@@ -763,12 +787,12 @@ var TplHandler = {
                 $percent.css('width', percentage * 100 + '%');
             });
             // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-            uploader.on('uploadSuccess', function (file,response) {
-                if(!response.bizData.result){
+            uploader.on('uploadSuccess', function (file, response) {
+                if (!response.bizData.result) {
                     layer.msg(response.msg);
                     return false;
                 }
-                if(response.bizData.result != 'SUCCESS'){
+                if (response.bizData.result != 'SUCCESS') {
                     layer.msg(response.bizData.result);
                     return false;
                 }
@@ -947,8 +971,15 @@ var StdSet = {
             removeField(idsData)
         })
         $(document).on('click', '#sub-student-remove', function () {
-            idsData = $(this).attr('data-id');
-            removeField(idsData)
+            var selItem = [];
+            $('#sub-student-table').find('input[type="checkbox"]').each(function (i, v) {
+                if ($(this).is(':checked') == true) {
+                    selItem.push($(this).attr('cid'));
+                }
+            });
+            selItem = selItem.join('-');
+            removeField(selItem)
+            $('.delCheckAll').prop('checked', false);
         })
         var removeField = function (idsData) {
             Common.ajaxFun('/manage/tenant/remove/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/' + idsData + '.do', 'POST', {}, function (res) {

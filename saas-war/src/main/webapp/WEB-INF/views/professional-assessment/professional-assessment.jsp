@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>SAAS 专业测评</title>
+    <title>SAAS 测评服务</title>
     <%@ include file="./../common/meta.jsp" %>
     <link rel="stylesheet" href="<%=ctx%>/static/src/css/professional-assessment/professional-assessment.css">
 </head>

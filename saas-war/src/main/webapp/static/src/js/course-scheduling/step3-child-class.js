@@ -15,7 +15,7 @@ ClassRoomTable.prototype = {
     init: function () {
         this.getClassRoom();
         this.getQueryCourse();
-        this.getQueryTeacher();
+        // this.getQueryTeacher();
         this.getQueryClass();
         this.getQueryStudent();
         this.getAllQueryCourse();
@@ -76,6 +76,16 @@ ClassRoomTable.prototype = {
                 }, "rtnCode": "0000000", "ts": 1481699074431
             }
             if (res.rtnCode == "0000000") {
+
+                Handlebars.registerHelper('headerTh',function(data){
+                    var timeDate = data.split('|');
+                    var str = '';
+                    for(var i in timeDate){
+                        str += '<th></th>'
+                    }
+                    return
+                })
+
                 var tpl = Handlebars.compile($('#all-timetable-tpl').html());
                 $('#all-timetable').html(tpl(res.bizData.result))
 
@@ -135,7 +145,7 @@ ClassRoomTable.prototype = {
                 layer.msg(result.msg);
             }
         }, function (result) {
-            layer.msg(result.msg);
+            layer.msg(result);
         }, true);
     },
     // 拉取班级
