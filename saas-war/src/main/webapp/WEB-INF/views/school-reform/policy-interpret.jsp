@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>SAAS 选课分析</title>
+        <title>SAAS 政策解读</title>
         <%@ include file="./../common/meta.jsp"%>
         <link rel="stylesheet" href="<%=ctx%>/static/src/css/school-reform/policy-interpret.css" />
     </head>

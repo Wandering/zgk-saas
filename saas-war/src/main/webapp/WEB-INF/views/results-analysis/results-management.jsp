@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>SAAS 学校成绩管理</title>
+    <title>SAAS 学生成绩管理</title>
     <%@ include file="./../common/meta.jsp" %>
     <link rel="stylesheet" href="<%=ctx%>/static/src/css/results-analysis.css">
 </head>
@@ -34,7 +34,7 @@
                     <li>
                         <a href="#">首页</a>
                     </li>
-                    <li class="active">学校成绩管理</li>
+                    <li class="active">学生成绩管理</li>
                 </ul><!-- .breadcrumb -->
             </div>
 

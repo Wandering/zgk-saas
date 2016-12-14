@@ -16,13 +16,10 @@
 
     </table>
     <script type="text/x-handlebars-template" id="all-timetable-tpl">
-        {{#with this}}
         <thead>
             <tr>
                 <th></th>
-                {{#each this}}
-                <th class="center">{{this}}</th>
-                {{/each}}
+                {{#headerTh teachDate}}{{/headerTh}}
             </tr>
         </thead>
         <%--<tbody class="check-template ui-sortable">--%>
@@ -35,6 +32,5 @@
             <%--</tr>--%>
             <%--{{/each}}--%>
         <%--</tbody>--%>
-        {{/with}}
     </script>
 </div>

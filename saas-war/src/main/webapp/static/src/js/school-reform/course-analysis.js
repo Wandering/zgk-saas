@@ -5,10 +5,9 @@ var tnId = Common.cookie.getCookie('tnId');
 
 $(function () {
 
-    var chkLength = $("input[name='course-analysis']").length;
-    var courseAnalysis = new CourseAnalysis(chkLength, 'course-analysis', null);
-
-    //();
+    //var historyCourseAnalysisOption = null;
+    //var chkLength = $("input[name='course-analysis']").length;
+    //var courseAnalysis = new CourseAnalysis(chkLength, 'course-analysis', null);
 
     var gradeName = $('input[name="senior-analysis"]:checked').next().text();
     getAnalysisGroup(tnId, gradeName);
@@ -22,18 +21,209 @@ $(function () {
 
 });
 
-function CourseAnalysis (chkLength, chkName, courseFun) {
+function CourseAnalysis () {
     this.selectCount = 0; //当前选中的课程数目,初始化0
-    this.course = [];  //当前选中的课程
-    this.init(chkLength, chkName, courseFun);
+    this.course = ['物理', '化学', '生物', '地理', '历史', '政治', '通用技术'];  //当前选中的课程
+    this.status = {
+        '物理': true,
+        '化学': true,
+        '生物': true,
+        '地理': true,
+        '历史': true,
+        '政治': true,
+        '通用技术': true
+    };
+    this.historyCourseAnalysisChart = null;
+    this.historyCourseAnalysisOption = null;
 }
 CourseAnalysis.prototype = {
     constructor: CourseAnalysis,
-    init: function (chkLength, chkName, courseFun) {
-        $("input[name='course-analysis']").prop("checked", false);
-        this.selectCourse(chkLength, chkName, courseFun);
+    init: function () {
+
+    },
+    //往年选课分析
+    historyCourseAnalysis: function (years, subjects) {
+        var that = this;
+        this.historyCourseAnalysisChart = echarts.init(document.getElementById('historyCourseAnalysisChart'));
+        this.historyCourseAnalysisOption = {
+            title: {
+                show: false,
+                text: '往年选课分析'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                top: 'bottom',
+                itemGap: 20,
+                selectedMode: false,
+                selected: {
+                    '物理': true,
+                    '化学': true,
+                    '生物': true,
+                    '地理': true,
+                    '历史': true,
+                    '政治': true,
+                    '通用技术': true
+                },
+                data: ['物理', '化学', '生物', '地理', '历史', '政治', '通用技术'],
+                textStyle: {
+                    color: '#4A4A4A',
+                    fontSize: 14
+                }
+            },
+            grid: {
+                left: '2%',
+                right: '8%',
+                top: '13%',
+                containLabel: true,
+                borderWidth: 0,
+                backgroundColor: 'transparent'
+            },
+            xAxis: {
+                type: 'category',
+                name: '高考年份',
+                nameTextStyle: {
+                    color: '#4A4A4A',
+                    fontSize: 14
+                },
+                data: years, //['2016', '2017', '2018', '2019'],
+                boundaryGap: [0, 0.01],
+                axisTick: {
+                    show: true,
+                    inside: true
+                },
+                axisLabel: {
+                    show: true
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#D8D8D8'
+                    }
+                },
+                splitLine: {
+                    show: false
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: '选课人数',
+                nameTextStyle: {
+                    color: '#4A4A4A',
+                    fontSize: 14
+                },
+                axisTick: {
+                    show: false,
+                    inside: false
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#D8D8D8'
+                    }
+                }
+                //max: 934
+            },
+            series: [
+                {
+                    name: '物理',
+                    type:'line',
+                    symbolSize: [9, 9],
+                    itemStyle: {
+                        normal: {
+                            color: '#4A90E2',
+                            borderWidth: 2,
+                            borderType: 'solid'
+                        }
+                    },
+                    data:subjects['物理']
+                },
+                {
+                    name: '化学',
+                    type:'line',
+                    symbolSize: [9, 9],
+                    itemStyle: {
+                        normal: {
+                            color: '#77ACB2',
+                            borderWidth: 2,
+                            borderType: 'solid'
+                        }
+                    },
+                    data:subjects['化学']
+                },
+                {
+                    name: '生物',
+                    type:'line',
+                    symbolSize: [9, 9],
+                    itemStyle: {
+                        normal: {
+                            color: '#7ED321',
+                            borderWidth: 2,
+                            borderType: 'solid'
+                        }
+                    },
+                    data:subjects['生物']
+                },
+                {
+                    name: '政治',
+                    type:'line',
+                    symbolSize: [9, 9],
+                    itemStyle: {
+                        normal: {
+                            color: '#F5A623',
+                            borderWidth: 2,
+                            borderType: 'solid'
+                        }
+                    },
+                    data:subjects['政治']
+                },
+                {
+                    name: '历史',
+                    type:'line',
+                    symbolSize: [9, 9],
+                    itemStyle: {
+                        normal: {
+                            color: '#C0DD7D',
+                            borderWidth: 2,
+                            borderType: 'solid'
+                        }
+                    },
+                    data:subjects['历史']
+                },
+                {
+                    name: '地理',
+                    type:'line',
+                    symbolSize: [9, 9],
+                    itemStyle: {
+                        normal: {
+                            color: '#EA6264',
+                            borderWidth: 2,
+                            borderType: 'solid'
+                        }
+                    },
+                    data: subjects['地理']
+                },
+                {
+                    name: '通用技术',
+                    type:'line',
+                    symbolSize: [9, 9],
+                    itemStyle: {
+                        normal: {
+                            color: '#A98FCB',
+                            borderWidth: 2,
+                            borderType: 'solid'
+                        }
+                    },
+                    data: subjects['通用技术']
+                }
+            ]
+        };
+        that.historyCourseAnalysisChart.setOption(that.historyCourseAnalysisOption);
+        $("input[name='course-analysis']").prop("checked", true);
+        var chkLength = $("input[name='course-analysis']").length;
+        that.selectCourse(chkLength, 'course-analysis', null);
     },
     selectCourse: function (chkLength, chkName, courseFun) {
+        var that = this;
         var obj = this;
         for (var i = 0; i < chkLength; i++) {
             $("input[name=" + chkName + "]")
@@ -45,9 +235,9 @@ CourseAnalysis.prototype = {
                     var _child = $(this);
                     if (_child.prop("checked")) {
                         _this.selectCount++;
-                        if (_this.selectCount <= 3) {
+                        if (_this.selectCount <= 7) {
                             _this.course.push(_child.next().html());
-                            if (_this.selectCount == 3) {
+                            if (_this.selectCount == 7) {
                                 if (courseFun != null) {
                                     courseFun(_this.course);
                                 }
@@ -55,189 +245,26 @@ CourseAnalysis.prototype = {
                         } else {
                             _this.selectCount--;
                             _child.prop("checked", false);
-                            layer.tips('您最多能选3门课程哦!', _that, {
+                            layer.tips('您最多能选7门课程哦!', _that, {
                                 tips: '2'
                             });
                         }
+
+                        that.status[_child.next().html()] = true;
+                        that.historyCourseAnalysisOption.legend.selected = that.status;
+                        that.historyCourseAnalysisChart.setOption(that.historyCourseAnalysisOption);
                     } else {
                         _this.selectCount--;
                         _this.course.delete(_child.next().html());
+
+                        that.status[_child.next().html()] = false;
+                        that.historyCourseAnalysisOption.legend.selected = that.status;
+                        that.historyCourseAnalysisChart.setOption(that.historyCourseAnalysisOption);
                     }
                 });
         }
     }
 };
-
-//往年选课分析
-function historyCourseAnalysis (years, subjects) {
-    console.info('years: ' + years.length);
-    console.info(subjects);
-    var historyCourseAnalysisChart = echarts.init(document.getElementById('historyCourseAnalysisChart'));
-    var historyCourseAnalysisOption = {
-        title: {
-            show: false,
-            text: '往年选课分析'
-        },
-        tooltip: {
-            trigger: 'axis'
-        },
-        legend: {
-            top: 'bottom',
-            itemGap: 20,
-            selectedMode: true,
-            data: ['物理', '化学', '生物', '地理', '历史', '政治', '通用技术'],
-            textStyle: {
-                color: '#4A4A4A',
-                fontSize: 14
-            }
-        },
-        grid: {
-            left: '2%',
-            right: '8%',
-            top: '13%',
-            containLabel: true,
-            borderWidth: 0,
-            backgroundColor: 'transparent'
-        },
-        xAxis: {
-            type: 'category',
-            name: '高考年份',
-            nameTextStyle: {
-                color: '#4A4A4A',
-                fontSize: 14
-            },
-            data: years, //['2016', '2017', '2018', '2019'],
-            boundaryGap: [0, 0.01],
-            axisTick: {
-                show: true,
-                inside: true
-            },
-            axisLabel: {
-                show: true
-            },
-            axisLine: {
-                lineStyle: {
-                    color: '#D8D8D8'
-                }
-            },
-            splitLine: {
-                show: false
-            }
-        },
-        yAxis: {
-            type: 'value',
-            name: '选课人数',
-            nameTextStyle: {
-                color: '#4A4A4A',
-                fontSize: 14
-            },
-            axisTick: {
-                show: false,
-                inside: false
-            },
-            axisLine: {
-                lineStyle: {
-                    color: '#D8D8D8'
-                }
-            }
-            //max: 934
-        },
-        series: [
-            {
-                name: '物理',
-                type:'line',
-                symbolSize: [9, 9],
-                itemStyle: {
-                    normal: {
-                        color: '#4A90E2',
-                        borderWidth: 2,
-                        borderType: 'solid'
-                    }
-                },
-                data:subjects['物理']
-            },
-            {
-                name: '化学',
-                type:'line',
-                symbolSize: [9, 9],
-                itemStyle: {
-                    normal: {
-                        color: '#77ACB2',
-                        borderWidth: 2,
-                        borderType: 'solid'
-                    }
-                },
-                data:subjects['化学']
-            },
-            {
-                name: '生物',
-                type:'line',
-                symbolSize: [9, 9],
-                itemStyle: {
-                    normal: {
-                        color: '#7ED321',
-                        borderWidth: 2,
-                        borderType: 'solid'
-                    }
-                },
-                data:subjects['生物']
-            },
-            {
-                name: '政治',
-                type:'line',
-                symbolSize: [9, 9],
-                itemStyle: {
-                    normal: {
-                        color: '#F5A623',
-                        borderWidth: 2,
-                        borderType: 'solid'
-                    }
-                },
-                data:subjects['政治']
-            },
-            {
-                name: '历史',
-                type:'line',
-                symbolSize: [9, 9],
-                itemStyle: {
-                    normal: {
-                        color: '#C0DD7D',
-                        borderWidth: 2,
-                        borderType: 'solid'
-                    }
-                },
-                data:subjects['历史']
-            },
-            {
-                name: '地理',
-                type:'line',
-                symbolSize: [9, 9],
-                itemStyle: {
-                    normal: {
-                        color: '#EA6264',
-                        borderWidth: 2,
-                        borderType: 'solid'
-                    }
-                },
-                data: subjects['地理']
-            },
-            {
-                name: '通用技术',
-                type:'line',
-                symbolSize: [9, 9],
-                itemStyle: {
-                    normal: {
-                        color: '#A98FCB',
-                        borderWidth: 2,
-                        borderType: 'solid'
-                    }
-                },
-                data: subjects['通用技术'],
-            }
-        ]
-    };
-    historyCourseAnalysisChart.setOption(historyCourseAnalysisOption);
-}
 
 //往年选课分析
 function getNumberByYear (tnId) {
@@ -285,16 +312,15 @@ function getNumberByYear (tnId) {
             $.each(data.data, function (i, k) {
                 historyData.year.push(i);
                 $.each(k, function (m, n) {
-                    console.info('i: ' + i + ', m: ' + m + ', n: ' + n);
                     historyData.subjects[m].push(n);
                 });
             });
-            historyCourseAnalysis(historyData.year, historyData.subjects);
-            console.info(historyData.year);
+            var courseAnalysis = new CourseAnalysis();
+            courseAnalysis.historyCourseAnalysis(historyData.year, historyData.subjects);
         }
     }, function (res) {
         layer.msg("出错了");
-    }, false);
+    }, true);
 }
 
 //单科选课情况分析
