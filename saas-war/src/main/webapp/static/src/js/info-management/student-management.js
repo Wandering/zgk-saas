@@ -661,9 +661,11 @@ var CRUDStd = {
             }
         })
         //选考科目3个非必填|入填一个则所有都必填
-        if (postData[3].value == postData[5].value || postData[5].value == postData[7].value || postData[7].value == postData[3].value) {
-            layer.msg('选考科目1,2,3不能相同');
-            return false;
+        if (postData[3].value != '') {
+            if (postData[3].value == postData[5].value || postData[5].value == postData[7].value || postData[7].value == postData[3].value) {
+                layer.msg('选考科目1,2,3不能相同');
+                return false;
+            }
         }
         if (type == 'add') {
             return {
