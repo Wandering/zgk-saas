@@ -51,6 +51,10 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
     IEXCourseBaseInfoDAO iexCourseBaseInfoDAO;
     @Resource
     IJwCourseBaseInfoDAO iJwCourseBaseInfoDAO;
+    @Resource
+    IJwCourseDAO iJwCourseDAO;
+    @Resource
+    IJwTeacherDAO iJwTeacherDAO;
 
     @Resource
     IEXClassBaseInfoDAO iexClassBaseInfoDAO;
@@ -547,6 +551,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                         jwTeacherBaseInfos.add(jwTeacherBaseInfo);
                     }
                     iJwTeacherBaseInfoDAO.deleteByCondition(removeMap);
+                    iJwTeacherDAO.deleteByProperty("tn_id",tnId);
                     iexJwTeacherBaseInfoDAO.syncTeacherInfo(jwTeacherBaseInfos);
                 }
                 break;
@@ -565,6 +570,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                             jwCourseBaseInfos.add(jwCourseBaseInfo);
                         }
                         iJwCourseBaseInfoDAO.deleteByCondition(removeMap);
+                        iJwCourseDAO.deleteByProperty("tn_id",tnId);
                         jwCourseBaseInfos.addAll(convertCourseList(tnId,ConvertUtil.converGrade(syncCourses.get(0).getGrade()).toString()));
                         iexCourseBaseInfoDAO.syncCourseInfo(jwCourseBaseInfos);
                     }
