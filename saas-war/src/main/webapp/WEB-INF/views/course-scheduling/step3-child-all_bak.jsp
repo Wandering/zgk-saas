@@ -41,7 +41,13 @@
             {{#each room}}
             <tr>
                 <th>{{this}}</th>
-                {{#creatClass @index ../day}}{{/creatClass}}
+                {{#each ../day.[1]}}
+                    <th class="no-p-m">
+                        {{#each this}}
+                            <span class="create-class-number">{{this}}</span>
+                        {{/each}}
+                    </th>
+                {{/each}}
             </tr>
             {{/each}}
         </tbody>

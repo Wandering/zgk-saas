@@ -13,11 +13,11 @@ function ClassRoomTable() {
 ClassRoomTable.prototype = {
     constructor: ClassRoomTable,
     init: function () {
-        this.getClassRoom();
-        this.getQueryCourse();
+        // this.getClassRoom();
+        // this.getQueryCourse();
         // this.getQueryTeacher();
-        this.getQueryClass();
-        this.getQueryStudent();
+        // this.getQueryClass();
+        // this.getQueryStudent();
         this.getAllQueryCourse();
 
         //this.getClassRoomTable();
@@ -65,36 +65,51 @@ ClassRoomTable.prototype = {
         // Common.ajaxFun('/scheduleTask/all/course/result.do', 'GET', {
         //     "taskId": taskId
         // }, function (res) {
-            res = {
-                "bizData": {
-                    "result": {
-                        "day": [[["李洋20(通用技术)", "李洋20(通用技术)", "李洋13(英语)", "李洋11(语文)", "李洋16(生物)", "李洋14(物理)", "李洋17(政治)"], ["李洋14(物理)", "李洋19(地理)", "李洋11(语文)", "李洋11(语文)", "李洋11(语文)", "李洋14(物理)", "李洋19(地理)"], ["李洋13(英语)", "李洋20(通用技术)", "李洋19(地理)", "李洋15(化学)", "李洋14(物理)", "李洋11(语文)", "李洋14(物理)"]], [["李洋11(语文)", "李洋18(历史)", "李洋13(英语)", "李洋19(地理)", "李洋11(语文)", "李洋20(通用技术)", "李洋11(语文)"], ["李洋18(历史)", "李洋19(地理)", "李洋15(化学)", "李洋20(通用技术)", "李洋15(化学)", "李洋19(地理)", "李洋13(英语)"], ["李洋18(历史)", "李洋20(通用技术)", "李洋11(语文)", "李洋16(生物)", "李洋20(通用技术)", "李洋17(政治)", "李洋15(化学)"]]],
-                        "room": "教室2|教室1",
-                        "teachDate": "星期一|星期二|星期三",
-                        "teachTime": "430"
-                    }
-                }, "rtnCode": "0000000", "ts": 1481699074431
-            }
-            if (res.rtnCode == "0000000") {
+        res = {
+            "bizData": {
+                "result": {
+                    "day": [
 
-                Handlebars.registerHelper('headerTh',function(data){
-                    var timeDate = data.split('|');
-                    var str = '';
-                    for(var i in timeDate){
-                        str += '<th></th>'
+                            [["一号姓名(通用技术)", "李洋20(通用技术)", "李洋13(英语)", "李洋11(语文)", "李洋16(生物)", "李洋14(物理)", "李洋17(政治)"],
+                            ["一号姓名(物理)", "李洋19(地理)", "李洋11(语文)", "李洋11(语文)", "李洋11(语文)", "李洋14(物理)", "李洋19(地理)"],
+                            ["一号姓名(英语)", "李洋20(通用技术)", "李洋19(地理)", "李洋15(化学)", "李洋14(物理)", "李洋11(语文)", "李洋14(物理)"]],
+
+                            [["二号姓名(语文)", "李洋18(历史)", "李洋13(英语)", "李洋19(地理)", "李洋11(语文)", "李洋20(通用技术)", "李洋11(语文)"],
+                            ["二号姓名(历史)", "李洋19(地理)", "李洋15(化学)", "李洋20(通用技术)", "李洋15(化学)", "李洋19(地理)", "李洋13(英语)"],
+                            ["二号姓名(历史)", "李洋20(通用技术)", "李洋11(语文)", "李洋16(生物)", "李洋20(通用技术)", "李洋17(政治)", "李洋15(化学)"]],
+
+                    ],
+                    "room": "教室1|教室2",
+                    "teachDate": "星期一|星期二|星期三",
+                    "teachTime": "430"
+                }
+            }, "rtnCode": "0000000", "ts": 1481699074431
+        }
+        if (res.rtnCode == "0000000") {
+            res.bizData.result.room = (res.bizData.result.room).split('|')
+            res.bizData.result.teachDate = (res.bizData.result.teachDate).split('|')
+
+            Handlebars.registerHelper('addOne',function(data){
+                return data = parseInt(data) +1
+            })
+
+            Handlebars.registerHelper('creatClass',function(r1,r2){
+                var foo = [];
+                $.each(r2[r1],function(i,v){
+                    foo.push('<th class="no-p-m">');
+                    for(var j in v){
+                        foo.push('<span class="create-class-number">'+v[j]+'</span>');
                     }
-                    return
+                    foo.push('</th>');
                 })
+                return foo.join('');
+            })
 
-                var tpl = Handlebars.compile($('#all-timetable-tpl').html());
-                $('#all-timetable').html(tpl(res.bizData.result))
-
-
-
-
+            var tpl = Handlebars.compile($('#all-timetable-tpl').html());
+            $('#all-timetable').html(tpl(res.bizData.result))
 
 
-
+            console.info('res.bizData.result.day',res.bizData.result.day)
 
 
 
@@ -114,17 +129,31 @@ ClassRoomTable.prototype = {
 
 
 
-                // //渲染header
-                // console.info('dataJson',dataJson)
-                // var tpl = Handlebars.compile($('#all-timetable-head-tpl').html());
-                // $('#all-timetable-head').html(tpl((dataJson.teachDate).split('|')))
-                //
-                // //渲染body
-                // var tpl = Handlebars.compile($('#all-timetable-body-tpl').html());
-                // // $('#all-timetable-body').html(tpl())
-            } else {
-                layer.msg(res.msg);
-            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // //渲染header
+            // console.info('dataJson',dataJson)
+            // var tpl = Handlebars.compile($('#all-timetable-head-tpl').html());
+            // $('#all-timetable-head').html(tpl((dataJson.teachDate).split('|')))
+            //
+            // //渲染body
+            // var tpl = Handlebars.compile($('#all-timetable-body-tpl').html());
+            // // $('#all-timetable-body').html(tpl())
+        } else {
+            layer.msg(res.msg);
+        }
         // }, function (res) {
         //     layer.msg(res.msg);
         // }, true);

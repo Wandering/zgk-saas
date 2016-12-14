@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>院校录取数据</title>
+    <title>SAAS 院校录取数据</title>
     <%@ include file="./../common/meta.jsp" %>
     <link rel="stylesheet" href="<%=ctx%>/static/src/css/data-query/school-admission.css"/>
 </head>
