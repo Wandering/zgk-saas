@@ -5,12 +5,16 @@ import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
 import cn.thinkjoy.saas.domain.JwClassBaseInfo;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
+import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
+import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
+import cn.thinkjoy.zgk.common.StringUtil;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,13 +67,17 @@ public class BaseResultController {
      */
     @RequestMapping(value = "/queryTeacher",method = RequestMethod.GET)
     @ResponseBody
-    public List getTeacher(@RequestParam Integer taskId) {
+    public List getTeacher(@RequestParam Integer taskId,@RequestParam String teacherCourse) {
+        if (StringUtils.isEmpty(teacherCourse)){
+            ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
+        }
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
         Map<String,Object>  map = Maps.newHashMap();
         map.put("tnId",tnId);
         map.put("taskId",taskId);
         map.put("grade",jwScheduleTask.getGrade());
+        map.put("teacherCourse",teacherCourse);
         List list = jwTeacherBaseInfoService.queryList(map,"id","desc");
         return list;
     }
@@ -114,10 +122,23 @@ public class BaseResultController {
     @RequestMapping(value = "/queryStudent",method = RequestMethod.GET)
     @ResponseBody
     public List queryStudent(@RequestParam Integer taskId,@RequestParam Integer classId) {
+        if (classId==null)return new ArrayList();
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         JwClassBaseInfo jwClassBaseInfo = (JwClassBaseInfo)jwClassBaseInfoService.fetch(classId);
+        if (jwClassBaseInfo == null) return new ArrayList();
         List<LinkedHashMap<String,Object>> list = iexTenantCustomService.getTenantCustom("student",tnId,"student_class",jwClassBaseInfo.getClassName(),0,1000);
-        return list;
+        return listToMaps(list);
     }
 
+    private List<Map<String,Object>> listToMaps(List<LinkedHashMap<String,Object>> linkedHashMaps){
+        List<Map<String,Object>> maps = new ArrayList<>();
+            Map<String,Object> rtnMap;
+           for (Map<String,Object> map : linkedHashMaps){
+               rtnMap = Maps.newHashMap();
+               rtnMap.put("id",map.get("id"));
+               rtnMap.put("studentName",map.get("student_name"));
+               maps.add(rtnMap);
+           }
+           return maps;
+    }
 }
