@@ -130,6 +130,34 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 
         return tenantCustoms;
     }
+
+    /**
+     * 查询租户自定义表头数据
+     * @param type 模块分类
+     * @param tnId 租户ID
+     * @return
+     */
+    @Override
+    public List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId,String selectKey,String selectValue,Integer s,Integer r) {
+        if (tnId <= 0)
+            return null;
+
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+
+        if (StringUtils.isBlank(tableName))
+            return null;
+
+        Map map=new HashMap();
+        map.put("tableName",tableName);
+        map.put("searchKey",selectKey);
+        map.put("searchValue",selectValue);
+        map.put("offset",s);
+        map.put("rows",r);
+        List<LinkedHashMap<String, Object>> tenantCustoms = iexTeantCustomDAO.getTenantCustom(map);
+
+
+        return tenantCustoms;
+    }
     @Override
     public Integer getTenantCustomCount(String type,Integer tnId,String g) {
         if (tnId <= 0)

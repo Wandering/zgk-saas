@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <div id="step3-child-class" class="role-scheduling-content dh">
     <div class="select-condition">
         <select id="select-class">
@@ -7,9 +8,9 @@
     </div>
     <div class="scheduling-info">
         <div class="fl scheduling-name"></div>
-        <button class="fr btn btn-warning" id="output-tpl"><i class="icon-output-down"></i>导出所有教室课程表</button>
+        <button class="fr btn btn-warning .output-tpl" id="output-tpl"><i class="icon-output-down"></i>导出所有教室课程表</button>
     </div>
-    <table class="table">
+    <table class="table" id="test1">
         <thead id="room-thead-list">
             <%--<tr>--%>
             <%--<th></th>--%>
