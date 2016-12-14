@@ -42,7 +42,23 @@
                     <div class="col-xs-12">
                         <div id="page-container">
                             <%@ include file="../course-scheduling/step3-common.jsp"%>
+                            <script src="/static/src/lib/jquery.table2excel/jquery.table2excel.js"></script>
+                            <script>
+                                $(function() {
+                                    $(".output-tpl").click(function(){
+                                        $(".table").table2excel({
+                                            exclude: ".noExl",
+                                            name: "Excel Document Name",
+                                            filename: "课表",
+                                            exclude_img: true,
+                                            exclude_links: true,
+                                            exclude_inputs: true
+                                        });
+                                    });
+                                });
+                            </script>
                             <div id="control-jsp">
+
                                 <div class="bottom-page">
                                     <%@ include file="../course-scheduling/step3-child-class.jsp"%>
                                 </div>

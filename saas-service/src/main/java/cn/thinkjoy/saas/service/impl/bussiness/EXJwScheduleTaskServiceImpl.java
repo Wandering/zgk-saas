@@ -181,16 +181,21 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         teacherMap.put("tnId",tnId);
         teacherMap.put("grade",jwScheduleTask.getGrade());
         List<JwTeacherBaseInfo> teacherBaseInfos = teacherBaseInfoDAO.queryList(teacherMap,"id","desc");
-        List<List<String>> list1  = new ArrayList<>();
-        List<String> list2;
-        for (int i = list.size();i>0;i--){
+        List<List<List<String>>> list1  = new ArrayList<>();
+        List<List<String>> list2;
+        List<String> list3;
+        for (int j = roomList.size(); j > 0; j--){
             list2 = new ArrayList<>();
-            for (int j = roomList.size();j>0;j--){
-                list2.add(getTeacherCourse(teacherBaseInfos));
+            for (int i = list.size();i>0;i--) {
+                list3 = new ArrayList<>();
+                for (int m = count;m>0;m--) {
+                    list3.add(getTeacherCourse(teacherBaseInfos));
+                }
+                list2.add(list3);
             }
             list1.add(list2);
         }
-        resultMap.put("day",list1);
+        resultMap.put("room",list1);
         return resultMap;
     }
 

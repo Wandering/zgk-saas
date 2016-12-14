@@ -18,7 +18,7 @@
     </div>
     <div class="scheduling-info">
         <div class="fl teacher-name"><span class="teacher-label"></span><span class="course-label"></span></div>
-        <button class="fr btn btn-warning" id="output-tpl"><i class="icon-output-down"></i>导出所有教师课程表</button>
+        <button class="fr btn btn-warning output-tpl" id="output-tpl"><i class="icon-output-down"></i>导出所有教师课程表</button>
     </div>
     <table class="table">
         <thead id="teacher-thead-list">

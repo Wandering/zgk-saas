@@ -18,7 +18,7 @@ public class EnumUtil {
     //excel入校年份
     public static final String TEACHER_SCHOOL_ENROLL_YEAR="入校年份";
     public static final String TEACHER_EDUCATION_GRADE="所教年级";
-    public static final String TEACHER_EDUCATION_CLASS="所教班级";
+    public static final String TEACHER_EDUCATION_CLASS="所带班级";
     public static final String TEACHER_EDUCATION_MAJOYTYPE="所教科目";
     public static final String[] TEACHER_EDUCATION_MAJOYTYPE_ARR={"语文","数学","英语","物理","化学","生物","政治","历史","地理","通用技术"};
     //学生管理
