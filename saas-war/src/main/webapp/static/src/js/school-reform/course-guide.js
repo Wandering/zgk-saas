@@ -376,9 +376,11 @@ $(function () {
  */
 function startSearchUniversity () {
     var keywords = $("#search-keywords").val().trim();
+    var subject = $('input[name="subject-analysis"]:checked').next().text();
     if (keywords != "") {
         Common.ajaxFun('/selectClassesGuide/getUniversityName.do', 'GET', {
-            'universityName': keywords,
+            'subject': subject,
+            'universityName': keywords
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
