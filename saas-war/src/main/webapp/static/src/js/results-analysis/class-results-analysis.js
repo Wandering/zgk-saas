@@ -11,7 +11,7 @@ function ClassResultsAnalysis() {
     this.rankStepEnd = '';
     this.batchV = '';
     this.progressStart = '10';
-    this.progressLength = '20';
+    this.progressLength = '9';
     this.gradeRankStart = '1';
     this.gradeRankLength = '99';
     this.grade3OverLineBatch = 'batchAll';
@@ -121,18 +121,18 @@ ClassResultsAnalysis.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 if(res.bizData.length==0){
-                    layer.msg('您还没有设置班级');
+                    console.log('您还没有设置班级');
                     $('.class-main-content,#select-class').hide();
+                    $('.class-no-content').show();
                 }else{
                     $('.class-main-content,#select-class').show();
+                    $('.class-no-content').hide();
                     var classOption=[];
                     $.each(res.bizData,function(i,v){
                         classOption.push('<option class="opt-item" value="'+ v +'">'+ v +'</option>');
                     });
                     $('.title-2 .class-sel').append(classOption);
-
                         //.find('option[value="'+ that.className +'"]').attr('selected','selected');
-
                     that.className = $('#select-class').find('option:selected').val();
                     // 默认拉取班级排名趋势
                     that.getAvgScoresForClass(that.grade,that.className);
@@ -441,14 +441,14 @@ ClassResultsAnalysis.prototype = {
                 $('#student-change-tbody').html(myTemplate(res));
                 that.changeStudent();
             } else {
-                layer.msg('暂无数据');
+                console.log('暂无数据');
             }
         }, function (res) {
             layer.msg(res.msg);
         });
     },
     changeStudent:function(){
-        $('.change-student-btn').on('click',function(){
+        $('.change-student-btn').unbind('click').on('click',function(){
             var data = $(this).attr('data');
             var studentChangeTable = '<table class="student-change-table table table-hover"><thead><tr><th class="center">学生姓名</th><th class="center">变化趋势</th></tr></thead><tbody>'+ data +'</tbody></table>'
             layer.open({
@@ -485,7 +485,7 @@ ClassResultsAnalysis.prototype = {
     },
     student12Layer:function(grade,className){
         var that = this;
-        $('body').on('click','.student-btn',function(){
+        $('body').unbind('click').on('click','.student-btn',function(){
             var studentName = $(this).text();
             var studentChart = ''
                 +'<div class="chart-main2">'
@@ -749,7 +749,7 @@ ClassResultsAnalysis.prototype = {
                 var rankingSel = [];
                 rankingSel.push('<option stepStart="" stepEnd="">选择进步名次</option>');
                 $.each(res.bizData,function(i,v){
-                    rankingSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="'+ v.stepEnd +'" value="">'+ v.stepStart + "-" + v.stepEnd +'</option>');
+                    rankingSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="" value="">'+ v.stepStart + '名以上</option>');
                 });
                 $('#ranking-sel').append(rankingSel);
             } else {
