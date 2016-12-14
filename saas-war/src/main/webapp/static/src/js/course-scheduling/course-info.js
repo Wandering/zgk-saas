@@ -145,10 +145,15 @@ $(function () {
     });
 
     $(document).on('click', '#rule-settings', function () {
-        if (Common.checkInfoIsPerfect(taskId)) {alert(0);
+        var flag = Common.checkInfoIsPerfect(taskId);
+        if (flag) {
             window.location.href = '/course-scheduling-step2';
-        } else {
-            alert(1);
+        }
+    });
+    $(document).on('click', '#auto-assign-course', function () {
+        var flag = Common.checkInfoIsPerfect(taskId);
+        if (flag) {
+            window.location.href = '/course-scheduling-step3';
         }
     });
 });

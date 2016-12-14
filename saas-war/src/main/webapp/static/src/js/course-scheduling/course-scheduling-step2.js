@@ -390,6 +390,14 @@ ArrangeCourse.prototype = {
 
 $(function () {
 
+    $(function () {
+
+        var flag = Common.checkInfoIsPerfect(taskId);
+        if (!flag) {
+            window.location.href = '/course-scheduling-step1';
+        }
+    });
+
     var arrangeCourse = new ArrangeCourse();
 
     $(document).on('change', '#no-course-time', function () {
