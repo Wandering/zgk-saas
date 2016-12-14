@@ -80,13 +80,13 @@
                             </div>
                             <p class="txt1">人数分布变化:</p>
                             <table id="" class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th class="center">年级排名</th>
-                                    <th class="center">考试1</th>
-                                    <th class="center">考试2</th>
-                                    <th class="center">变化人数</th>
-                                </tr>
+                                <thead id="student-change-thead">
+                                <%--<tr>--%>
+                                    <%--<th class="center">年级排名</th>--%>
+                                    <%--<th class="center">考试1</th>--%>
+                                    <%--<th class="center">考试2</th>--%>
+                                    <%--<th class="center">变化人数</th>--%>
+                                <%--</tr>--%>
                                 </thead>
                                 <tbody id="student-change-tbody"></tbody>
                             </table>
@@ -221,14 +221,23 @@
             &nbsp;&nbsp;&nbsp;&nbsp;
             {{/each}}
         </script>
+        <script id="student-change-thead-template" type="text/x-handlebars-template">
+            <tr>
+                {{#each bizData.[0]}}
+                {{#compare @key '!=' 'data'}}
+                <th class="center">{{@key}}</th>
+                {{/compare}}
+                {{/each}}
+            </tr>
+        </script>
         <script id="student-change-template" type="text/x-handlebars-template">
             {{#each bizData}}
             <tr>
-                <td class="center">{{年级排名}}</td>
-                <td class="center">{{最近第一次考试}}</td>
-                <td class="center">{{最近第二次考试}}</td>
-                <td class="center"><a href="javascript:;" class="change-student-btn"
-                                      data="{{#each data}}{{agree_button}}{{/each}}">{{变化人数}}</a></td>
+                {{#each this}}
+                    {{#compare @key '!=' 'data'}}
+                    <td class="center">{{this}}</td>
+                    {{/compare}}
+                {{/each}}
             </tr>
             {{/each}}
         </script>

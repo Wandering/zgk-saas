@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>合班</title>
+    <title>SAAS 排课规则设置</title>
     <%@ include file="./../common/meta.jsp"%>
     <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step2.css" />
 </head>
