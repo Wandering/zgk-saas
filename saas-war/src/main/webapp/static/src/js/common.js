@@ -266,23 +266,19 @@ var Common = {
         return strPage;
     },
     checkInfoIsPerfect: function (taskId) {
-        var checkInfoIsPerfect = null;
+        var checkInfoIsPerfect = false;
         Common.ajaxFun('/scheduleTask/checkInfoIsPerfect.do', 'GET', {
             'taskId': taskId
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                console.log("数据完成");
                 checkInfoIsPerfect = true;
-            } else if (res.rtnCode == "0000014") {
-                layer.msg(res.msg);
+            } else {
                 checkInfoIsPerfect = false;
-            } else if (res.rtnCode == '0000017') {
                 layer.msg(res.msg);
-                checkInfoIsPerfect = false;
             }
         }, function (res) {
             layer.msg(res.msg);
-        }, false);
+        }, true);
         return checkInfoIsPerfect;
     }
 };

@@ -51,6 +51,13 @@ public interface IEXTenantCustomService {
      * @return
      */
     List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId,String g,Integer s,Integer r);
+    /**
+     * 查询租户自定义表头数据
+     * @param type 模块分类
+     * @param tnId 租户ID
+     * @return
+     */
+    List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId,String selectKey,String selectValue,Integer s,Integer r);
 
     public Integer getTenantCustomCount(String type,Integer tnId,String g);
     /**
