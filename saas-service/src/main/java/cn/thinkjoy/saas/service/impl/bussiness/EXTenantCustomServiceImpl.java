@@ -1,12 +1,15 @@
 package cn.thinkjoy.saas.service.impl.bussiness;
 
+import cn.thinkjoy.saas.dao.IJwTeacherBaseInfoDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO;
 import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
 import cn.thinkjoy.saas.domain.Grade;
+import cn.thinkjoy.saas.domain.JwTeacherBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.SyncClass;
 import cn.thinkjoy.saas.domain.bussiness.SyncCourse;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
+import cn.thinkjoy.saas.service.common.ConvertUtil;
 import cn.thinkjoy.saas.service.common.EnumUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
@@ -26,6 +29,9 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 
     @Resource
     EXIGradeDAO exiGradeDAO;
+
+    @Resource
+    IJwTeacherBaseInfoDAO iJwTeacherBaseInfoDAO;
 
 
     /**
@@ -47,6 +53,17 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
             return false;
 
         Integer result = iexTeantCustomDAO.insertTenantCustom(tableName, teantCustoms);
+
+        if("teacher".equals(type)){
+            Map<String,Object> map = (Map<String, Object>) teantCustoms;
+            JwTeacherBaseInfo info = new JwTeacherBaseInfo();
+            info.setTnId(tnId);
+            info.setGrade(ConvertUtil.converGrade(map.get("teacher_grade").toString()));
+            info.setTeacherName(map.get("teacher_name").toString());
+            info.setTeacherClass(map.get("teacher_class").toString());
+            info.setTeacherCourse(map.get("teacher_major_type").toString());
+            iJwTeacherBaseInfoDAO.insert(info);
+        }
 
         return (result > 0 ? true : false);
     }
