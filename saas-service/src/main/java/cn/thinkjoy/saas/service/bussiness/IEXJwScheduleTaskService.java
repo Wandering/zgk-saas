@@ -18,4 +18,12 @@ public interface IEXJwScheduleTaskService {
      * @return
      */
     public CourseResultView getCourseResult(String type,Integer taskId, Integer tnId, Map<String,Object> paramsMap);
+
+    /**
+     * 总课表
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    Map<String,Object> getAllCourseResult(Integer taskId, Integer tnId);
 }

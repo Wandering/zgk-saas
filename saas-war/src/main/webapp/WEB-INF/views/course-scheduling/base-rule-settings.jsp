@@ -90,6 +90,7 @@
                             <select id="course-list" tabIndex="0" class="cList">
                             </select>
                             <script type="text/x-handlebars-template" id="course-list-tpl">
+                                <option value="">全部课程</option>
                                 {{#each this}}
                                 <option value="{{courseId}}" cTime="{{time}}">{{courseName}}</option>
                                 {{/each}}
