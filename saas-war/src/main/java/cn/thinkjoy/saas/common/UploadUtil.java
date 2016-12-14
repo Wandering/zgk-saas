@@ -6,10 +6,7 @@ import cn.thinkjoy.saas.service.IExamService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.LinkedMultiValueMap;
@@ -24,7 +21,6 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.BindException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
@@ -209,16 +205,14 @@ public class UploadUtil
             for (Map.Entry<String, List<Map<String, String>>> classDataEntry : classDataMap.entrySet())
             {
                 List<Map<String, String>> classData = classDataEntry.getValue();
-                sortList(classData, "totleScore", "classRank");
+//                sortList(classData, "totleScore", "classRank");
                 sheetList.addAll(classData);
             }
-            sortList(sheetList, "totleScore", "gradeRank");
+//            sortList(sheetList, "totleScore", "gradeRank");
             List<String> columnList = new ArrayList<>();
             columnList.addAll(headerList);
             columnList.add("totleScore");
             columnList.add("selectCourses");
-            columnList.add("classRank");
-            columnList.add("gradeRank");
             examService.batchInsertData("saas_exam_detail", columnList, sheetList);
         }
     }
@@ -246,16 +240,15 @@ public class UploadUtil
     {
         Cell cell = row.getCell(k - 1);
         String key = headerList.get(k);
-        String value = null;
+        Object value = getCellData(cell);
         if (cell != null)
         {
-            value = cell.toString();
-            if (k >= 3)
+            if (k >= 3 && k <13)
             {
-                int intValue;
+                double intValue;
                 try
                 {
-                    intValue = Integer.parseInt(value);
+                    intValue = cell.getNumericCellValue();
                     if (k >= 6)
                     {
                         stringBuffer.append("@").append(courseMap.get(k - 5));
@@ -268,7 +261,27 @@ public class UploadUtil
                 totalScore += intValue;
             }
         }
-        rowMap.put(key, value);
+        rowMap.put(key, value == null ?"" : value + "");
         return totalScore;
+    }
+
+    private static Object getCellData(Cell cell) {
+        if(cell == null) {
+            return null;
+        }
+        switch (cell.getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+                return cell.getRichStringCellValue().getString();
+            case Cell.CELL_TYPE_NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getDateCellValue();
+                } else {
+                    return (int)cell.getNumericCellValue();
+                }
+            case Cell.CELL_TYPE_BOOLEAN:
+                return cell.getBooleanCellValue();
+            default:
+                return "";
+        }
     }
 }

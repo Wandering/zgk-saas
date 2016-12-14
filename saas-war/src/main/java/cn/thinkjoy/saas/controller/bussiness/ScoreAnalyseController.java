@@ -84,6 +84,8 @@ public class ScoreAnalyseController
         headerList.add("diLiScore");
         headerList.add("liShiScore");
         headerList.add("commonScore");
+        headerList.add("classRank");
+        headerList.add("gradeRank");
     }
 
     @RequestMapping(value = "/downloadModel", method = RequestMethod.GET)
@@ -853,7 +855,6 @@ public class ScoreAnalyseController
             }
             catch (Exception e)
             {
-                System.out.println("hah");
             }
         }
     }
@@ -1249,6 +1250,7 @@ public class ScoreAnalyseController
             params.put("年级排名", min + "-" + max);
             List<ExamDetail> lastExamDetail = new ArrayList<>();
             List<ExamDetail> lastButTwoExamDetail = new ArrayList<>();
+            List<String> changeNames = new ArrayList<>();
             for (Map.Entry<String, List<ExamDetail>> entry : detailMap.entrySet())
             {
                 List<ExamDetail> detailList = entry.getValue();
@@ -1268,30 +1270,19 @@ public class ScoreAnalyseController
                 {
                     lastButTwoExamDetail.add(lastButTwoExam);
                 }
+                if(lastGrandRank >= min && lastGrandRank <= max && (lastButTwoGrandRank < min || lastButTwoGrandRank > max))
+                {
+                    changeNames.add(entry.getKey());
+                }
             }
             Exam e1 = (Exam)examService.findOne("id", examIds.get(0));
             Exam e2 = (Exam)examService.findOne("id", examIds.get(1));
             params.put(e2.getExamName() , lastButTwoExamDetail.size());
             params.put(e1.getExamName() , lastExamDetail.size());
-            Set<String> stuNames = new HashSet<>();
-            for (ExamDetail detail : lastExamDetail)
-            {
-                stuNames.add(detail.getStudentName());
-            }
-            Iterator<ExamDetail> its = lastButTwoExamDetail.iterator();
-            while (its.hasNext())
-            {
-                ExamDetail d = its.next();
-                if (stuNames.contains(d.getStudentName()))
-                {
-                    its.remove();
-                }
-            }
-            lastExamDetail.addAll(lastButTwoExamDetail);
             List<Map<String, Object>> list = new ArrayList<>();
-            for (ExamDetail detail : lastExamDetail)
+            for (String change : changeNames)
             {
-                List<ExamDetail> detailList = detailMap.get(className + "@" + detail.getStudentName());
+                List<ExamDetail> detailList = detailMap.get(change);
                 if (detailList.size() < 2)
                 {
                     continue;
