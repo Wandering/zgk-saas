@@ -145,6 +145,7 @@ SchoolResultsAnalysis.prototype = {
                 var sortTheadTemplate = Handlebars.compile($("#sort-thead-template").html());
                 $('#sort-thead').html(sortTheadTemplate(res));
             } else {
+
                 $('#sort-table').hide();
                 $('.sort-txt').show().text(res.msg);
             }
