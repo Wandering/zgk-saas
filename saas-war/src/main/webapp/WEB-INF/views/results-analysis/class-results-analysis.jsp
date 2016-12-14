@@ -235,13 +235,13 @@
             <tr>
                 {{#each this}}
                     {{#compare @key '!=' 'data'}}
-                    <td class="center">{{this}}</td>
+                        {{#compare @key '!=' '变化人数'}}
+                        <td class="center">{{this}}</td>
+                        {{/compare}}
                     {{/compare}}
-
                 {{/each}}
                 <td class="center"><a href="javascript:;" class="change-student-btn"
                                       data="{{#each data}}{{agree_button}}{{/each}}">{{变化人数}}</a></td>
-
             </tr>
             {{/each}}
         </script>
