@@ -561,17 +561,26 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                     List<SyncCourse> syncCourses = iexTeantCustomDAO.selectCourseGroup(map);
                     if (syncCourses != null) {
                         List<JwCourseBaseInfo> jwCourseBaseInfos = new ArrayList<>();
+                        List<Integer> grades = Lists.newArrayList();
                         for (SyncCourse syncCourse : syncCourses) {
                             JwCourseBaseInfo jwCourseBaseInfo = new JwCourseBaseInfo();
                             jwCourseBaseInfo.setTnId(tnId);
                             jwCourseBaseInfo.setCourseName(syncCourse.getMajor());
-                            jwCourseBaseInfo.setGrade(ConvertUtil.converGrade(syncCourse.getGrade()).toString());
+                            Integer grade = ConvertUtil.converGrade(syncCourse.getGrade());
+                            jwCourseBaseInfo.setGrade(grade.toString());
                             jwCourseBaseInfo.setCourseType(2);
                             jwCourseBaseInfos.add(jwCourseBaseInfo);
+
+                            if(!grades.contains(grade)){
+                                grades.add(grade);
+                            }
+                            
                         }
                         iJwCourseBaseInfoDAO.deleteByCondition(removeMap);
                         iJwCourseDAO.deleteByProperty("tn_id",tnId);
-                        jwCourseBaseInfos.addAll(convertCourseList(tnId,ConvertUtil.converGrade(syncCourses.get(0).getGrade()).toString()));
+                        for(Integer grade : grades){
+                            jwCourseBaseInfos.addAll(convertCourseList(tnId,grade.toString()));
+                        }
                         iexCourseBaseInfoDAO.syncCourseInfo(jwCourseBaseInfos);
                     }
                     List<SyncClass> syncClasses = iexTeantCustomDAO.selectClassGroup(map);
