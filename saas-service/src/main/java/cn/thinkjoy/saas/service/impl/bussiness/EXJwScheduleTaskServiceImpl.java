@@ -74,16 +74,27 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         }
         courseResultView.setTeachDate(buffer.toString());
         courseResultView.setTeachTime(time);
+
+        Map<String,Object>  roomMap = Maps.newHashMap();
+        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
+        roomMap.put("tnId",tnId);
+        roomMap.put("taskId",taskId);
+        roomMap.put("grade",jwScheduleTask.getGrade());
+        List<JwRoom> roomList = roomDAO.queryList(roomMap,"id","desc");
         Map<Integer,String > rtnMap = Maps.newHashMap();
+        Map<String,Object> teacherMap = Maps.newHashMap();
+        teacherMap.put("tnId",tnId);
+        teacherMap.put("grade",jwScheduleTask.getGrade());
+        List<JwTeacherBaseInfo> teacherBaseInfos = teacherBaseInfoDAO.queryList(teacherMap,"id","desc");
         if ("teacher".equals(type)) {
             if (!StringUtil.isNulOrBlank(paramsMap.get("teacherId").toString())) {
                 JwTeacherBaseInfo jwTeacherBaseInfo = (JwTeacherBaseInfo) teacherBaseInfoDAO.fetch(paramsMap.get("teacherId"));
                 rtnMap.put(0, "");
-                rtnMap.put(1, paramsMap.get("course") + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n高一2班");
-                rtnMap.put(2, paramsMap.get("course") + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n高一3班");
-                rtnMap.put(3, paramsMap.get("course") + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n高一4班");
-                rtnMap.put(4, paramsMap.get("course") + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n高一5班");
-                rtnMap.put(5, paramsMap.get("course") + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n高一6班");
+                rtnMap.put(1, jwTeacherBaseInfo.getTeacherCourse() + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n"+getRoomRandom(roomList));
+                rtnMap.put(2,jwTeacherBaseInfo.getTeacherCourse() + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n"+getRoomRandom(roomList));
+                rtnMap.put(3, jwTeacherBaseInfo.getTeacherCourse() + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n"+getRoomRandom(roomList));
+                rtnMap.put(4, jwTeacherBaseInfo.getTeacherCourse() + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n"+getRoomRandom(roomList));
+                rtnMap.put(5, jwTeacherBaseInfo.getTeacherCourse() + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n"+getRoomRandom(roomList));
                 rtnMap.put(6, "");
                 rtnMap.put(7, "");
                 rtnMap.put(8, "");
@@ -93,28 +104,28 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
             }
         }else if ("student".equals(type)){
             rtnMap.put(0, "");
-            rtnMap.put(1, "语文\n(李明伟)\n高一2班");
-            rtnMap.put(2, "数学\n(张丽红)\n高一3班");
-            rtnMap.put(3, "英语\n(刘晓文)\n高一4班");
-            rtnMap.put(4, "化学\n(张红新)\n高一5班");
-            rtnMap.put(5, "物理\n(杨国荣)\n高一6班");
-            rtnMap.put(6, "政治\n(李丽)\n高一7班");
-            rtnMap.put(7, "生物\n(左浩)\n高一8班");
-            rtnMap.put(8, "历史\n(田芙蓉)\n高一9班");
-            rtnMap.put(10, "通用技术\n(魏彤彤)\n高一10班");
+            rtnMap.put(1, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
+            rtnMap.put(2, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
+            rtnMap.put(3, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
+            rtnMap.put(4, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
+            rtnMap.put(5, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
+            rtnMap.put(6, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
+            rtnMap.put(7, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
+            rtnMap.put(8, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
+            rtnMap.put(10,getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
             rtnMap.put(11, "");
             rtnMap.put(12, "");
         }else if ("room".equals(type)){
             rtnMap.put(0, "");
-            rtnMap.put(1, "语文\n(李明伟)\n高一2班");
-            rtnMap.put(2, "数学\n(张丽红)\n高一3班");
+            rtnMap.put(1, getTeacherCourse(teacherBaseInfos));
+            rtnMap.put(2, getTeacherCourse(teacherBaseInfos));
             rtnMap.put(3, "");
-            rtnMap.put(4, "物理\n(杨国荣)\n高一6班");
+            rtnMap.put(4, getTeacherCourse(teacherBaseInfos));
             rtnMap.put(5, "");
-            rtnMap.put(6, "政治\n(李丽)\n高一7班");
+            rtnMap.put(6, getTeacherCourse(teacherBaseInfos));
             rtnMap.put(7, "");
-            rtnMap.put(8, "历史\n(田芙蓉)\n高一9班");
-            rtnMap.put(10, "通用技术\n(魏彤彤)\n高一10班");
+            rtnMap.put(8, getTeacherCourse(teacherBaseInfos));
+            rtnMap.put(10, getTeacherCourse(teacherBaseInfos));
             rtnMap.put(11, "");
             rtnMap.put(12, "");
         }
@@ -209,7 +220,14 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         java.util.Random random=new java.util.Random();// 定义随机类
         if (teacherBaseInfos.size()==0)return "";
         JwTeacherBaseInfo jwTeacherBaseInfo = teacherBaseInfos.get(random.nextInt(teacherBaseInfos.size()));
-        return jwTeacherBaseInfo.getTeacherName()+"("+jwTeacherBaseInfo.getTeacherCourse()+")";
+        return jwTeacherBaseInfo.getTeacherName()+"\n("+jwTeacherBaseInfo.getTeacherCourse()+")";
+
+    }
+    private String getRoomRandom(List<JwRoom> rooms){
+        java.util.Random random=new java.util.Random();// 定义随机类
+        if (rooms.size()==0)return "";
+        JwRoom jwRoom = rooms.get(random.nextInt(rooms.size()));
+        return jwRoom.getRoomName();
 
     }
 //    private List<String> getClassCourseResult(Integer teachSize,String teachDetail) {
