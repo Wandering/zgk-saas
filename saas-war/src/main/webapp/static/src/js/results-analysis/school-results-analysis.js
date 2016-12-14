@@ -144,7 +144,11 @@ SchoolResultsAnalysis.prototype = {
                 $('#sort-tbody').html(myTemplate(res));
                 var sortTheadTemplate = Handlebars.compile($("#sort-thead-template").html());
                 $('#sort-thead').html(sortTheadTemplate(res));
+                //$('.class-main-content').show();
+                //$('.class-no-content').hide();
             } else {
+                //$('.class-main-content').hide();
+                //$('.class-no-content').show();
                 $('#sort-table').hide();
                 $('.sort-txt').show().text(res.msg);
             }
