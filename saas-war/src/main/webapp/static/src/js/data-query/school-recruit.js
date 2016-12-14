@@ -159,7 +159,7 @@ var SchoolRecruit = {
 
             $('#school-admission-plan').html('');
             $('#recruit-load-more').hide();
-            ('#no-data').remove();
+            $('#no-data').remove();
 
             that.params.year = $(this).attr('yearId');
             that.params.batch = '';
@@ -192,7 +192,11 @@ var SchoolRecruit = {
             $('#recruit-load-more').hide();
             $('#no-data').remove();
 
-            that.params.property = $(this).attr('dictid');
+            var foo = $(this).text()
+            if($(this).text()=='全部'){
+                foo = '';
+            }
+            that.params.property = foo;
             that.params.page = "1";
             that.params.rows = "10";
             that.fetchSchoolEnroll(that.params);
