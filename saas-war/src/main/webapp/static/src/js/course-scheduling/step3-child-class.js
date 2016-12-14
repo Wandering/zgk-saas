@@ -62,9 +62,9 @@ ClassRoomTable.prototype = {
     },
     // 拉取所有课程(总课表) ====
     getAllQueryCourse: function () {
-        Common.ajaxFun('/scheduleTask/all/course/result.do', 'GET', {
-            "taskId": taskId
-        }, function (res) {
+        // Common.ajaxFun('/scheduleTask/all/course/result.do', 'GET', {
+        //     "taskId": taskId
+        // }, function (res) {
             res = {
                 "bizData": {
                     "result": {
@@ -79,14 +79,12 @@ ClassRoomTable.prototype = {
                 var dataJson = res.bizData.result
                 var tpl = Handlebars.compile($('#all-timetable-head-tpl').html());
                 $('#all-timetable-head').html(tpl((dataJson.teachDate).split('|')))
-
-
             } else {
                 layer.msg(res.msg);
             }
-        }, function (res) {
-            layer.msg(res.msg);
-        }, true);
+        // }, function (res) {
+        //     layer.msg(res.msg);
+        // }, true);
     },
     // 拉取老师
     getQueryTeacher: function () {

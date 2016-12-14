@@ -34,13 +34,14 @@
         <%--</tr>--%>
         </tbody>
         <script id="all-timetable-body-tpl" type="text/x-handlebars-template">
-            <tr>
-                {{#each this}}
-
-                <td class="center">1</td>
-
-                {{/each}}
-            </tr>
+            {{#each this}}
+                <tr>
+                    {{this}}
+                    <%--{{#each this}}--%>
+                        <%--<td class="center">this</td>--%>
+                    <%--{{/each}}--%>
+                </tr>
+            {{/each}}
         </script>
     </table>
 </div>
