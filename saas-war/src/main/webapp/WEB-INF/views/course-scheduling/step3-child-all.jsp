@@ -12,35 +12,29 @@
         <div class="fl scheduling-name">总课表</div>
         <button class="fr btn btn-warning" id="output-tpl"><i class="icon-output-down"></i>导出总课表</button>
     </div>
-    <table class="table">
+    <table class="table" id="all-timetable">
+
+    </table>
+    <script type="text/x-handlebars-template" id="all-timetable-tpl">
+        {{#with this}}
         <thead>
-        <tr id="all-timetable-head">
-        </tr>
-        <script type="text/x-handlebars-template" id="all-timetable-head-tpl">
-            <th></th>
-            {{#each this}}
-            <th class="center">{{this}}</th>
-            {{/each}}
-        </script>
-        </thead>
-        <tbody id="all-timetable-body" class="check-template ui-sortable">
-        <%--<tr>--%>
-            <%--<td class="center">2</td>--%>
-            <%--<td class="center">语文（李嘉）行政5班</td>--%>
-            <%--<td class="center">历史</td>--%>
-            <%--<td class="center">生物</td>--%>
-            <%--<td class="center">化学</td>--%>
-            <%--<td class="center">通用技术</td>--%>
-        <%--</tr>--%>
-        </tbody>
-        <script id="all-timetable-body-tpl" type="text/x-handlebars-template">
             <tr>
+                <th></th>
                 {{#each this}}
-
-                <td class="center">1</td>
-
+                <th class="center">{{this}}</th>
                 {{/each}}
             </tr>
-        </script>
-    </table>
+        </thead>
+        <%--<tbody class="check-template ui-sortable">--%>
+            <%--{{#each this}}--%>
+            <%--<tr>--%>
+                <%--{{this}}--%>
+                <%--&lt;%&ndash;{{#each this}}&ndash;%&gt;--%>
+                <%--&lt;%&ndash;<td class="center">this</td>&ndash;%&gt;--%>
+                <%--&lt;%&ndash;{{/each}}&ndash;%&gt;--%>
+            <%--</tr>--%>
+            <%--{{/each}}--%>
+        <%--</tbody>--%>
+        {{/with}}
+    </script>
 </div>

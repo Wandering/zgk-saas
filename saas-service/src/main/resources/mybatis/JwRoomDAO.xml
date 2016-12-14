@@ -25,13 +25,22 @@ selectList
 -->
     <sql id="Base_Column_List">
         id as id,
-        room_name as roomName
+        tn_id as tnId,
+        room_name as roomName,
+        room_type as roomType,
+        grade as grade
     </sql>
     <insert id="insert" parameterType="JwRoom">
         INSERT INTO saas_jw_room (
-        room_name
+        tn_id,
+        room_name,
+        room_type,
+        grade
         ) VALUES (
-        #{roomName}
+        #{tnId},
+        #{roomName},
+        #{roomType},
+        #{grade}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
         SELECT LAST_INSERT_ID() AS ID
@@ -42,8 +51,17 @@ selectList
     <update id="update" parameterType="JwRoom">
         UPDATE saas_jw_room
         <trim prefix="SET" suffixOverrides=",">
+            <if test="tnId!=null">
+                tn_id = #{tnId},
+            </if>
             <if test="roomName!=null">
                 room_name = #{roomName},
+            </if>
+            <if test="roomType!=null">
+                room_type = #{roomType},
+            </if>
+            <if test="grade!=null">
+                grade = #{grade},
             </if>
         </trim>
         WHERE
@@ -53,8 +71,17 @@ selectList
     <update id="updateMap">
         UPDATE saas_jw_room
         <trim prefix="SET" suffixOverrides=",">
+            <if test="map.tnId!=null">
+                tn_id = #{map.tnId},
+            </if>
             <if test="map.roomName!=null">
                 room_name = #{map.roomName},
+            </if>
+            <if test="map.roomType!=null">
+                room_type = #{map.roomType},
+            </if>
+            <if test="map.grade!=null">
+                grade = #{map.grade},
             </if>
         </trim>
         WHERE
@@ -64,8 +91,17 @@ selectList
     <update id="updateByCondition">
         UPDATE saas_jw_room
         <trim prefix="SET" suffixOverrides=",">
+            <if test="update.tnId!=null">
+                tn_id = #{update.tnId},
+            </if>
             <if test="update.roomName!=null">
                 room_name = #{update.roomName},
+            </if>
+            <if test="update.roomType!=null">
+                room_type = #{update.roomType},
+            </if>
+            <if test="update.grade!=null">
+                grade = #{update.grade},
             </if>
         </trim>
 
@@ -73,17 +109,32 @@ selectList
             <if test="condition.id!=null">
                 AND id = #{condition.id}
             </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
             <if test="condition.roomName!=null">
                 AND room_name = #{condition.roomName}
+            </if>
+            <if test="condition.roomType!=null">
+                AND room_type = #{condition.roomType}
+            </if>
+            <if test="condition.grade!=null">
+                AND grade = #{condition.grade}
             </if>
         </trim>
     </update>
 
     <insert id="insertMap" >
         INSERT INTO saas_jw_room (
-                room_name
+                tn_id,
+                room_name,
+                room_type,
+                grade
         ) VALUES (
-                    #{map.roomName}
+                    #{map.tnId},
+                    #{map.roomName},
+                    #{map.roomType},
+                    #{map.grade}
         )
     </insert>
 
@@ -91,7 +142,10 @@ selectList
     <update id="updateNull" parameterType="JwRoom">
         UPDATE saas_jw_room
         <trim prefix="SET" suffixOverrides=",">
+            tn_id = #{tnId},
             room_name = #{roomName},
+            room_type = #{roomType},
+            grade = #{grade},
         </trim>
         WHERE
         id = #{id} 
@@ -112,8 +166,17 @@ selectList
             <if test="id!=null">
                 AND id = #{id}
             </if>
+            <if test="tnId!=null">
+                AND tn_id = #{tnId}
+            </if>
             <if test="roomName!=null">
                 AND room_name = #{roomName}
+            </if>
+            <if test="roomType!=null">
+                AND room_type = #{roomType}
+            </if>
+            <if test="grade!=null">
+                AND grade = #{grade}
             </if>
         </trim>
     </delete>
@@ -175,8 +238,17 @@ selectList
             <if test="condition.id!=null">
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   tn_id  ${condition.tnId.op}  #{condition.tnId.data}
+            </if>
             <if test="condition.roomName!=null">
                 ${condition.groupOp}   room_name  ${condition.roomName.op}  #{condition.roomName.data}
+            </if>
+            <if test="condition.roomType!=null">
+                ${condition.groupOp}   room_type  ${condition.roomType.op}  #{condition.roomType.data}
+            </if>
+            <if test="condition.grade!=null">
+                ${condition.groupOp}   grade  ${condition.grade.op}  #{condition.grade.data}
             </if>
 
 
@@ -198,8 +270,17 @@ selectList
             <if test="id!=null">
                 AND id like CONCAT('%', #{id} , '%')
             </if>
+            <if test="tnId!=null">
+                AND tn_id like CONCAT('%', #{tnId} , '%')
+            </if>
             <if test="roomName!=null">
                 AND room_name like CONCAT('%', #{roomName} , '%')
+            </if>
+            <if test="roomType!=null">
+                AND room_type like CONCAT('%', #{roomType} , '%')
+            </if>
+            <if test="grade!=null">
+                AND grade like CONCAT('%', #{grade} , '%')
             </if>
         </trim>
         <if test="orderBy!=null">
@@ -216,8 +297,17 @@ selectList
             <if test="condition.id!=null">
                 AND id = #{condition.id}
             </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
             <if test="condition.roomName!=null">
                 AND room_name = #{condition.roomName}
+            </if>
+            <if test="condition.roomType!=null">
+                AND room_type = #{condition.roomType}
+            </if>
+            <if test="condition.grade!=null">
+                AND grade = #{condition.grade}
             </if>
         </trim>
         <if test="orderBy!=null">
@@ -233,8 +323,17 @@ selectList
             <if test="condition.id!=null">
                 AND id = #{condition.id}
             </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
             <if test="condition.roomName!=null">
                 AND room_name = #{condition.roomName}
+            </if>
+            <if test="condition.roomType!=null">
+                AND room_type = #{condition.roomType}
+            </if>
+            <if test="condition.grade!=null">
+                AND grade = #{condition.grade}
             </if>
         </trim>
         limit 0,1
@@ -246,8 +345,17 @@ selectList
            <if test="id!=null">
                ${groupOp} id ${id.op}  #{id.data}
            </if>
+           <if test="tnId!=null">
+               ${groupOp} tn_id ${tnId.op}  #{tnId.data}
+           </if>
            <if test="roomName!=null">
                ${groupOp} room_name ${roomName.op}  #{roomName.data}
+           </if>
+           <if test="roomType!=null">
+               ${groupOp} room_type ${roomType.op}  #{roomType.data}
+           </if>
+           <if test="grade!=null">
+               ${groupOp} grade ${grade.op}  #{grade.data}
            </if>
 
        </where>

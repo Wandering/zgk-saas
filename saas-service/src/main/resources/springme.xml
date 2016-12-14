@@ -59,7 +59,7 @@
         <!-- 基本属性 url、user、password -->
 
 
-        <!--&lt;!&ndash; 开发环境 &ndash;&gt;-->
+        <!-- 开发环境 -->
         <property name="url" value="${jdbc_url}"/>
         <property name="username" value="${jdbc_user}"/>
         <property name="password" value="${jdbc_password}"/>
