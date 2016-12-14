@@ -212,28 +212,28 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
 
     private String getCourse(Map<Integer,String> map){
         java.util.Random random=new java.util.Random();// 定义随机类
-        return map.get(random.nextInt(12));
+        return map.get(random.nextInt(13));
 
     }
 
     private String getTeacherCourse(List<JwTeacherBaseInfo> teacherBaseInfos){
         java.util.Random random=new java.util.Random();// 定义随机类
         if (teacherBaseInfos.size()==0)return "";
-        JwTeacherBaseInfo jwTeacherBaseInfo = teacherBaseInfos.get(random.nextInt(teacherBaseInfos.size()));
+        JwTeacherBaseInfo jwTeacherBaseInfo = teacherBaseInfos.get(random.nextInt(teacherBaseInfos.size()+1));
         return jwTeacherBaseInfo.getTeacherName()+"\n("+jwTeacherBaseInfo.getTeacherCourse()+")";
 
     }
     private String getRoomRandom(List<JwRoom> rooms){
         java.util.Random random=new java.util.Random();// 定义随机类
         if (rooms.size()==0)return "";
-        JwRoom jwRoom = rooms.get(random.nextInt(rooms.size()));
+        JwRoom jwRoom = rooms.get(random.nextInt(rooms.size()+1));
         return jwRoom.getRoomName();
 
     }
-//    private List<String> getClassCourseResult(Integer teachSize,String teachDetail) {
-//        for(int i=0;i<teachSize;i++) {
-//            List<String> weeks=new ArrayList<>();
-//            for(int j=0;j<)
-//        }
-//    }
+
+    public static void main(String[] args) {
+        java.util.Random random=new java.util.Random();//
+        for (int i =100;i>0;i++)
+        System.out.println(random.nextInt(2));
+    }
 }
