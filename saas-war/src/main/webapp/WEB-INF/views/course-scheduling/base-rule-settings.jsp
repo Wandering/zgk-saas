@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>SAAS 角色管理</title>
+    <title>SAAS 排课规则设置</title>
     <%@ include file="./../common/meta.jsp" %>
     <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step2.css"/>
 </head>
@@ -164,7 +164,7 @@
                                         {{/each}}
                                     </script>
                                 </table>
-                                <button type="button" class="btn-teaching-plan" id="btn-teaching-plan">保存</button>
+                                <button type="button" class="btn-teaching-plan dh" id="btn-teaching-plan">保存</button>
                             </div>
                             <%--周任课--%>
                             <div class="base-rule-content base-rule-content-none">

@@ -16,8 +16,11 @@ var JAPQModule = {
             'courseId': courseId || ''
         }, function (res) {
             if (res.rtnCode == '0000000') {
-                var tpl = Handlebars.compile($('#japq-list-tpl').html());
-                $('#japq-list').html(tpl(res.bizData.baseRuleList));
+                if (res.bizData.baseRuleList.length != 0) {
+                    $('#btn-teaching-plan').removeClass('dh');
+                    var tpl = Handlebars.compile($('#japq-list-tpl').html());
+                    $('#japq-list').html(tpl(res.bizData.baseRuleList));
+                }
             } else {
                 layer.msg(res.msg);
             }
@@ -26,10 +29,10 @@ var JAPQModule = {
     set: function () {
         var paramsData = [];
         for (var i = 0; i < $('#japq-list tr').length; i++) {
-            var data = $('input[name="japq-'+ i +'"]:checked').val();
+            var data = $('input[name="japq-' + i + '"]:checked').val();
             paramsData.push({
-                "importantType":data.split('/')[0],
-                "id":data.split('/')[1],
+                "importantType": data.split('/')[0],
+                "id": data.split('/')[1],
             })
         }
         Common.ajaxFun('/baseRuleController/updateJaqpById.do', 'post', {baseRuleList: JSON.stringify(paramsData)}, function (res) {
@@ -61,11 +64,11 @@ var ZRKModule = {
     set: function () {
         var paramsData = [];
         for (var i = 0; i < $('#zrk-list tr').length; i++) {
-            var data = $('input[name="zrk-'+ i +'"]:checked').val();
+            var data = $('input[name="zrk-' + i + '"]:checked').val();
             paramsData.push({
-                "importantType":data.split('/')[0],
-                "id":data.split('/')[1],
-                "weekType":$('input[name="zrk-weekType-'+ i +'"]:checked').val()
+                "importantType": data.split('/')[0],
+                "id": data.split('/')[1],
+                "weekType": $('input[name="zrk-weekType-' + i + '"]:checked').val()
             })
         }
         Common.ajaxFun('/baseRuleController/updateWeekById.do', 'post', {'baseRuleList': JSON.stringify(paramsData)}, function (res) {
@@ -98,11 +101,11 @@ var RRKModule = {
     set: function () {
         var paramsData = [];
         for (var i = 0; i < $('#rrk-list tr').length; i++) {
-            var data = $('input[name="rrk-'+ i +'"]:checked').val();
+            var data = $('input[name="rrk-' + i + '"]:checked').val();
             paramsData.push({
-                "importantType":data.split('/')[0],
-                "id":data.split('/')[1],
-                "dayType":$('input[name="rrk-dayType-'+ i +'"]:checked').val()
+                "importantType": data.split('/')[0],
+                "id": data.split('/')[1],
+                "dayType": $('input[name="rrk-dayType-' + i + '"]:checked').val()
             })
         }
         Common.ajaxFun('/baseRuleController/updateDayById.do', 'post', {'baseRuleList': JSON.stringify(paramsData)}, function (res) {
@@ -135,11 +138,11 @@ var LSModule = {
     set: function () {
         var paramsData = [];
         for (var i = 0; i < $('#ls-list tr').length; i++) {
-            var data = $('input[name="ls-'+ i +'"]:checked').val();
+            var data = $('input[name="ls-' + i + '"]:checked').val();
             paramsData.push({
-                "importantType":data.split('/')[0],
-                "id":data.split('/')[1],
-                "dayConType":$('input[name="ls-dayConType-'+ i +'"]:checked').val()
+                "importantType": data.split('/')[0],
+                "id": data.split('/')[1],
+                "dayConType": $('input[name="ls-dayConType-' + i + '"]:checked').val()
             })
         }
         Common.ajaxFun('/baseRuleController/updateDayConById.do', 'post', {'baseRuleList': JSON.stringify(paramsData)}, function (res) {
