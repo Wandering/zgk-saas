@@ -100,7 +100,28 @@ public class ScheduleTaskController {
         teachTimeService.saveTeachTime(Integer.valueOf(jwScheduleTask.getId().toString()),Constant.DEFULT_TEACH_DATE,Constant.DEFULT_TEACH_TIME,tnId);
         return flag;
     }
-
+    /**
+     * 查询拍客任务状态
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/queryScheduleTaskStatus")
+    public Integer queryScheduleTaskStatus(@RequestParam Integer taskId){
+        JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
+        return jwScheduleTask.getStatus();
+    }
+    /**
+     * 修改拍客任务状态
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/updateScheduleTaskStatus")
+    public boolean updateScheduleTaskStatus(@RequestParam Integer taskId){
+        JwScheduleTask jwScheduleTask = new JwScheduleTask();
+        jwScheduleTask.setId(taskId);
+        jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
+        return jwScheduleTaskService.update(jwScheduleTask)>0;
+    }
     /**
      * 修改排课任务
      * @return
