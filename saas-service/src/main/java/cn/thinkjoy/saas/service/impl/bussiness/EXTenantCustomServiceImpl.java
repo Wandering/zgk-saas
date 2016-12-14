@@ -13,6 +13,8 @@ import cn.thinkjoy.saas.service.common.ConvertUtil;
 import cn.thinkjoy.saas.service.common.EnumUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
+import com.alibaba.fastjson.JSONArray;
+import com.google.common.collect.Maps;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -54,8 +56,15 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 
         Integer result = iexTeantCustomDAO.insertTenantCustom(tableName, teantCustoms);
 
-        if("teacher".equals(type)){
-            Map<String,Object> map = (Map<String, Object>) teantCustoms;
+        boolean flag = result > 0;
+
+        if("teacher".equals(type) && flag){
+            List<TeantCustom> customs = JSONArray.parseArray(teantCustoms.toString(),TeantCustom.class);
+            Map<String,Object> map = Maps.newHashMap();
+            for(TeantCustom custom : customs){
+                map.put(custom.getKey(),custom.getValue());
+            }
+
             JwTeacherBaseInfo info = new JwTeacherBaseInfo();
             info.setTnId(tnId);
             info.setGrade(ConvertUtil.converGrade(map.get("teacher_grade").toString()));
@@ -65,7 +74,7 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
             iJwTeacherBaseInfoDAO.insert(info);
         }
 
-        return (result > 0 ? true : false);
+        return flag;
     }
 
     /**
