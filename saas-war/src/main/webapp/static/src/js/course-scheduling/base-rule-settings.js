@@ -156,7 +156,7 @@ var LSModule = {
 var App = {
     init: function () {
         this.fetchAndRenderSubject();
-        JAPQModule.get(App.subjectListData[0].courseId);
+        JAPQModule.get();
         this.addEvent();
     },
     fetchAndRenderSubject: function () {
@@ -187,16 +187,16 @@ var App = {
             $('#course-list').html(tpl(App.subjectListData));   //节流操作
             switch (parseInt(index)) {
                 case 0:
-                    JAPQModule.get(App.subjectListData[0].courseId);
+                    JAPQModule.get();
                     break;
                 case 1:
-                    ZRKModule.get(App.subjectListData[0].courseId);
+                    ZRKModule.get();
                     break;
                 case 2:
-                    RRKModule.get(App.subjectListData[0].courseId);
+                    RRKModule.get();
                     break;
                 case 3:
-                    LSModule.get(App.subjectListData[0].courseId);
+                    LSModule.get();
                     break;
             }
         });
