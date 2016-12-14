@@ -561,35 +561,6 @@ var CRUDStd = {
     },
     CRUDStdVerify: function (type) {
         var postData = [];
-        // // (function () {
-        //     var lock = 0;
-        //     $.each(App.tableData, function (i, v) {
-        //         if (v.dataType === "text") {
-        //             if ($('#' + v.enName).val() == '') {
-        //                 layer.msg(v.name + '不能为空', {time: 1000});
-        //                 $('#' + v.enName).focus();
-        //                 lock = 1;
-        //                 return false
-        //             }
-        //             var reg = eval(v.checkRule);
-        //             var regV = $('#' + v.enName).val();
-        //             if (!reg.test(regV)) {
-        //                 layer.msg(v.name + '输入不合法', {time: 1000});
-        //                 $('#' + v.enName).focus();
-        //                 lock = 1;
-        //                 return false
-        //             }
-        //         }
-        //         if (v.dataType === "checkbox") {
-        //             if ($('#' + v.enName).find('[name="ck"]:checked').length == 0) {
-        //                 layer.msg('请至少选择一门所教科目');
-        //                 return false;
-        //             }
-        //         }
-        //     })
-        //     // return false
-        // // })()
-        // (function () {
         var lock = 0;
         $.each(App.tableData, function (i, v) {
             if (v.dataType === "text") {
@@ -598,19 +569,49 @@ var CRUDStd = {
                 //     || v.enName != 'student_check_major_class3'){
                 //     return false;
                 // }
+                // if (v.enName == 'student_check_major_class1') {
+                //     var a = $('#student_check_major1').val()
+                //     var b = $('#student_check_major_class1').val()
+                //     // alert(a);
+                //     // alert($.trim(b));
+                //     if (a == '请选择科目' && $.trim(b) != '' || a != '请选择科目' && $.trim(b) == '') {
+                //         layer.msg('选考科目不能填写不完整');
+                //         return false;
+                //     }
+                // }
+                // if (v.enName == 'student_check_major_class2') {
+                //     var a = $('#student_check_major2').val()
+                //     var b = $('#student_check_major_class2').val()
+                //     console.info('a', a);
+                // }
+                // if (v.enName == 'student_check_major_class3') {
+                //     var a = $('#student_check_major3').val()
+                //     var b = $('#student_check_major_class3').val()
+                //     console.info('a', a);
+                // }
+                // if (v.enName == 'student_check_major_class1' ||
+                //     v.enName == 'student_check_major_class2' ||
+                //     v.enName == 'student_check_major_class3') {
+                //
+                // }
                 if ($('#' + v.enName).val() == '') {
+                    if (v.enName == 'student_check_major_class1' ||
+                        v.enName == 'student_check_major_class2' ||
+                        v.enName == 'student_check_major_class3') {
+                        return false;
+                    }
                     layer.msg(v.name + '不能为空', {time: 1000});
                     $('#' + v.enName).focus();
                     lock = 1;
-                    return false
+                    return false;
                 }
-                var reg = eval(v.checkRule);
-                var regV = $('#' + v.enName).val();
+                var reg = eval(v.checkRule),
+                    regV = $('#' + v.enName).val();
                 if (!reg.test(regV)) {
                     layer.msg(v.name + '输入不合法', {time: 1000});
                     $('#' + v.enName).focus();
                     lock = 1;
-                    return false
+                    return false;
                 }
             }
             if (v.dataType === "checkbox") {
@@ -625,10 +626,21 @@ var CRUDStd = {
         }
         $.each(App.tableData, function (i, v) {
             if (v.dataType === "text" || v.dataType === "select") {
-                postData.push({
-                    "key": v.enName,
-                    "value": $.trim($('#' + v.enName).val())
-                });
+                if (v.enName == 'student_check_major1' ||
+                    v.enName == 'student_check_major2' ||
+                    v.enName == 'student_check_major3') {
+                    var foo = $.trim($('#' + v.enName).val());
+                    postData.push({
+                        "key": v.enName,
+                        "value": foo == '请选择科目' ? '' : foo
+                    });
+                } else {
+                    postData.push({
+                        "key": v.enName,
+                        "value": $.trim($('#' + v.enName).val())
+                    });
+                }
+
             } else if (v.dataType === "radio") {
                 postData.push({
                     "key": v.enName,
@@ -648,12 +660,10 @@ var CRUDStd = {
                 });
             }
         })
-        if($('#student_check_major1').val() != '请选择科目'){
-            console.info('postData[3]',postData[3])
-            if (postData[3].value == postData[5].value || postData[5].value == postData[7].value || postData[7].value == postData[3].value) {
-                layer.msg('选考科目1,2,3不能相同');
-                return false;
-            }
+        //选考科目3个非必填|入填一个则所有都必填
+        if (postData[3].value == postData[5].value || postData[5].value == postData[7].value || postData[7].value == postData[3].value) {
+            layer.msg('选考科目1,2,3不能相同');
+            return false;
         }
         if (type == 'add') {
             return {
