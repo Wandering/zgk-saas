@@ -38,22 +38,22 @@
                                 </div>
                                 <div class="title-2">
                                     <span class="txt-t"></span>
-                                    <div class="btns">
-                                        <button class="btn btn-pink" id="add-btn">添加年级</button>
-                                        <button class="btn btn-inverse" id="modify-btn">修改</button>
-                                        <button class="btn btn-success del-btn" id="del-btn">删除</button>
-                                    </div>
+                                    <%--<div class="btns">--%>
+                                        <%--<button class="btn btn-pink" id="add-btn">添加年级</button>--%>
+                                        <%--<button class="btn btn-inverse" id="modify-btn">修改</button>--%>
+                                        <%--<button class="btn btn-success del-btn" id="del-btn">删除</button>--%>
+                                    <%--</div>--%>
                                 </div>
                                 <div class="">
                                     <table id="" class="table">
                                         <thead>
                                         <tr>
-                                            <th class="center">
-                                                <label>
-                                                    <input type="checkbox" class="ace" id="checkAll" />
-                                                    <span class="lbl"></span>
-                                                </label>
-                                            </th>
+                                            <%--<th class="center">--%>
+                                                <%--<label>--%>
+                                                    <%--<input type="checkbox" class="ace" id="checkAll" />--%>
+                                                    <%--<span class="lbl"></span>--%>
+                                                <%--</label>--%>
+                                            <%--</th>--%>
                                             <th class="center">编号</th>
                                             <th class="center">年级名称</th>
                                         </tr>

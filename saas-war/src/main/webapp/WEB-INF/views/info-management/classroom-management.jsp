@@ -41,7 +41,7 @@
                                     <div class="btns">
                                         <button class="btn btn-pink" id="addRole-btn">添加教室</button>
                                         <button class="btn btn-inverse" id="updateRole-btn">修改</button>
-                                        <button class="btn btn-success" id="deleteRole-Btn">删除</button>
+                                        <%--<button class="btn btn-success" id="deleteRole-Btn">删除</button>--%>
                                     </div>
                                 </div>
                                 <div class="">

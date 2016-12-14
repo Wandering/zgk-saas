@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>SAAS 角色管理</title>
+    <title>教师信息</title>
     <%@ include file="./../common/meta.jsp"%>
     <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step1.css" />
 </head>
@@ -45,7 +45,7 @@
                             <div class="procedure">
                                 <a href="javascript: void(0);"><i>1</i>基本信息设置</a>
                                 <span class="gap"><i></i><i></i><i></i><i></i><i></i></span>
-                                <a href="/course-scheduling-step2" class="disabled"><i>2</i>排课规则设置</a>
+                                <a href="javascript: void(0);" id="rule-settings" class="disabled"><i>2</i>排课规则设置</a>
                                 <span class="gap"><i></i><i></i><i></i><i></i><i></i></span>
                                 <a href="javascript: void(0);" class="disabled"><i>3</i>自动排课</a>
                             </div>

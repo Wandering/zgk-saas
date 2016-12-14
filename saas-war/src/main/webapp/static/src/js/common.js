@@ -276,10 +276,13 @@ var Common = {
             } else if (res.rtnCode == "0000014") {
                 layer.msg(res.msg);
                 checkInfoIsPerfect = false;
+            } else if (res.rtnCode == '0000017') {
+                layer.msg(res.msg);
+                checkInfoIsPerfect = false;
             }
         }, function (res) {
             layer.msg(res.msg);
-        }, true);
+        }, false);
         return checkInfoIsPerfect;
     }
 };

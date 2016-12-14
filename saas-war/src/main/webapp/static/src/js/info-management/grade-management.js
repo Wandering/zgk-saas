@@ -26,12 +26,12 @@ GradeManagement.prototype = {
             var gradeArr = [];
             $.each(data.bizData.grades, function (i, v) {
                 gradeArr.push('<tr>');
-                gradeArr.push('<td class="center">');
-                gradeArr.push('<label>');
-                gradeArr.push('<input type="checkbox" gradename="'+ v.grade +'" gradeId = "'+ v.id +'" class="ace" />');
-                gradeArr.push('<span class="lbl"></span>');
-                gradeArr.push('</label>');
-                gradeArr.push('</td>');
+                //gradeArr.push('<td class="center">');
+                //gradeArr.push('<label>');
+                //gradeArr.push('<input type="checkbox" gradename="'+ v.grade +'" gradeId = "'+ v.id +'" class="ace" />');
+                //gradeArr.push('<span class="lbl"></span>');
+                //gradeArr.push('</label>');
+                //gradeArr.push('</td>');
                 gradeArr.push('<td class="center index" indexid="' + v.id + '">'+ (i+1) +'</td>');
                 gradeArr.push('<td class="center"><span class="gradeNameItem">'+ v.grade +'</span></td>');
                 gradeArr.push('</tr>');

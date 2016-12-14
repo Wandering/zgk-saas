@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>SAAS 角色管理</title>
+    <title>SAAS 排课规则设置</title>
     <%@ include file="./../common/meta.jsp"%>
     <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step2.css" />
 </head>
@@ -117,7 +117,7 @@
                                             </li>
                                         {{else}}
                                             <li>
-                                                <input type="checkbox" name="merge-class" value="{{classId}}" id="class{{classId}}"/>
+                                                <input type="checkbox" name="merge-class" value="{{classId}}" id="class{{classId}}" isRight=false />
                                                 <label for="class{{classId}}">{{className}}</label>
                                             </li>
                                         {{/compare}}
