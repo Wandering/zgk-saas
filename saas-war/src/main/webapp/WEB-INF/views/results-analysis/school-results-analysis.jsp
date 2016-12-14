@@ -132,6 +132,11 @@
                             </table>
                         </div>
                     </div>
+                    <div class="class-no-content">
+                        <img src="<%=ctx%>/static/src/img/nodata.png" alt="">
+                        <p>该年级还没有成绩录入，无法使用此功能！<br/>
+                            请至成绩分析>学生成绩管理页上传该年级成绩！</p>
+                    </div>
                 </div><!-- /.row -->
             </div><!-- /.page-content -->
         </div><!-- /.main-content -->

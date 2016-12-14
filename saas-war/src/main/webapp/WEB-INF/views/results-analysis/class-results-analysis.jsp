@@ -237,7 +237,11 @@
                     {{#compare @key '!=' 'data'}}
                     <td class="center">{{this}}</td>
                     {{/compare}}
+
                 {{/each}}
+                <td class="center"><a href="javascript:;" class="change-student-btn"
+                                      data="{{#each data}}{{agree_button}}{{/each}}">{{变化人数}}</a></td>
+
             </tr>
             {{/each}}
         </script>

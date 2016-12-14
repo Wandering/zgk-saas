@@ -440,15 +440,6 @@ ClassResultsAnalysis.prototype = {
                         '<tr><td>' + this.学生姓名 + '</td><td>' + this.变化趋势 + '</td></tr>'
                     );
                 });
-                Handlebars.registerHelper('thead', function (v) {
-                    for (var i in v) {
-                        delete v['data']
-                        delete v['年级排名']
-                        delete v['变化人数']
-                    }
-                    return v;
-                });
-
                 $('#student-change-tbody').html(myTemplate(res));
                 that.changeStudent();
             } else {
