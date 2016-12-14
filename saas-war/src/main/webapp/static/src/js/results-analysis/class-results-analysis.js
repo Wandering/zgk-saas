@@ -432,12 +432,29 @@ ClassResultsAnalysis.prototype = {
             'className':className
         }, function (res) {
             if (res.rtnCode == "0000000") {
+                var theadTemplate = Handlebars.compile($("#student-change-thead-template").html());
+                //Handlebars.registerHelper('thead', function(v) {
+                //    delete v['data'];
+                //    console.log(v)
+                //    return v;
+                //});
+                $('#student-change-thead').html(theadTemplate(res));
                 var myTemplate = Handlebars.compile($("#student-change-template").html());
                 Handlebars.registerHelper('agree_button', function() {
                     return new Handlebars.SafeString(
-                       '<tr><td>' + this.学生姓名 + '</td><td>' + this.变化趋势 + '</td></tr>'
+                        '<tr><td>' + this.学生姓名 + '</td><td>' + this.变化趋势 + '</td></tr>'
                     );
                 });
+                Handlebars.registerHelper('thead', function(v) {
+                    for(var i in v){
+                        delete v['data']
+                        delete v['年级排名']
+                        delete v['变化人数']
+                        console.log(v)
+                    }
+                    return v;
+                });
+
                 $('#student-change-tbody').html(myTemplate(res));
                 that.changeStudent();
             } else {
