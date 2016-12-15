@@ -50,6 +50,15 @@ public class TeachTimeController {
         return teachTimeService.queryTeachTime(taskId,tnId);
     }
 
-
+    /**
+     * 判断部分(涉及到学时信息)排课规则信息是否设置过
+     * @param taskId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/queryTeachTimeStatus",method = RequestMethod.GET)
+    public boolean queryTeachTimeStatus(@RequestParam Integer taskId){
+        return teachTimeService.queryTeachTimeStatus(taskId);
+    }
 
 }
