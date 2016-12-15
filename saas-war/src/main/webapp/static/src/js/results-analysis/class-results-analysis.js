@@ -280,6 +280,7 @@ ClassResultsAnalysis.prototype = {
     // 查看总分趋势
     totalScoreChart: function (dateData, totalScoreData) {
         var totalScoreChart = echarts.init(document.getElementById('totalScoreChart-chart'));
+        console.info('totalScoreData: ' + totalScoreData);
         var totalScoreChartOption = {
             title: {
                 text: '班级平均分排名',
@@ -312,11 +313,16 @@ ClassResultsAnalysis.prototype = {
                 containLabel: true
             },
             yAxis: {
-                scale: false,
+                scale: true,
                 type: 'value',
-                // min:Array.min(totalScoreData),
-                // max:Array.max(totalScoreData),
-                // minInterval:1
+                //min: Math.min(totalScoreData),
+                //max: Math.max(totalScoreData),
+                //splitNumber: Math.max(totalScoreData),
+                //minInterval: Math.max(totalScoreData)
+                //min: 'dataMin',
+                //max: 'dataMax',
+                minInterval: 1,
+                interval: 1
             },
             series: [
                 {
@@ -367,8 +373,10 @@ ClassResultsAnalysis.prototype = {
             yAxis: {
                 scale: false,
                 type: 'value',
-                min: Array.min(arrMaxMin),
-                max: Array.max(arrMaxMin)
+                //min: Array.min(arrMaxMin),
+                //max: Array.max(arrMaxMin)
+                minInterval: 1,
+                interval: 1
             },
             series: datas
         };
