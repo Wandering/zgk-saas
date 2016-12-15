@@ -71,7 +71,7 @@ public class BaseResultController {
      */
     @RequestMapping(value = "/queryTeacher",method = RequestMethod.GET)
     @ResponseBody
-    public List getTeacher(@RequestParam Integer taskId,@RequestParam String teacherCourse) {
+    public List<Map<String,Object>> getTeacher(@RequestParam Integer taskId,@RequestParam String teacherCourse) {
         if (StringUtils.isEmpty(teacherCourse)){
             ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
         }
@@ -81,9 +81,19 @@ public class BaseResultController {
         map.put("taskId",taskId);
         map.put("course",teacherCourse);
         List<TeacherBaseDto> list = iexScheduleBaseInfoService.queryTeacherByTaskId(map);
-        return list;
+        return teacherBaseDtotoMap(list);
     }
-
+    List<Map<String,Object>> teacherBaseDtotoMap(List<TeacherBaseDto> list){
+        Map<String,Object> map ;
+        List<Map<String,Object> >  maps = new ArrayList<>();
+        for (TeacherBaseDto teacherBaseDto:list){
+            map = Maps.newHashMap();
+            map.put("id",teacherBaseDto.getTeacherId());
+            map.put("teacherName",teacherBaseDto.getTeacherName());
+            maps.add(map);
+        }
+        return maps;
+    }
     /**
      * 获取课程信息
      * @return
