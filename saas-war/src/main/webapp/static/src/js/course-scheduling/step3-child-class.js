@@ -151,7 +151,7 @@ ClassRoomTable.prototype = {
             "teacherCourse": teacherCourse
         }, function (result) {
             if (result.rtnCode == "0000000") {
-                $('#select-teacher option:gt(0)').remove();
+                $('#select-teacher option').remove();
                 var queryCourse = [];
                 $.each(result.bizData, function (i, v) {
                     queryCourse.push('<option value="' + v.id + '">' + v.teacherName + '</option>')
@@ -205,7 +205,7 @@ ClassRoomTable.prototype = {
             "classId": classId,
         }, function (result) {
             if (result.rtnCode == "0000000") {
-                $('#select-student option:gt(0)').remove();
+                $('#select-student option').remove();
                 var queryCourse = [];
                 $.each(result.bizData, function (i, v) {
                     queryCourse.push('<option value="' + v.id + '">' + v.studentName + '</option>')
