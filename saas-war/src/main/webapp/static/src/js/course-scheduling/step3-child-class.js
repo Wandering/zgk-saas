@@ -15,17 +15,9 @@ function ClassRoomTable() {
 ClassRoomTable.prototype = {
     constructor: ClassRoomTable,
     init: function () {
-<<<<<<< HEAD
         this.getClassRoom();
         this.getQueryCourse();
         this.getQueryClass();
-=======
-        // this.getClassRoom();
-        // this.getQueryCourse();
-        // this.getQueryTeacher();
-        // this.getQueryClass();
-        // this.getQueryStudent();
->>>>>>> d702e99965b4695c60de1f3f13fe2f3919e3aac8
         this.getAllQueryCourse();
 
     },
@@ -226,6 +218,7 @@ ClassRoomTable.prototype = {
                 $('#select-classes option:eq(1)').attr('selected','selected');
                 var selectedV = $('#select-classes option:eq(1):selected').val()
                 var selectedTxt = $('#select-classes option:eq(1):selected').text();
+                $('.classes-label').text(selectedTxt);
                 that.getQueryStudent(selectedV)
             } else {
                 layer.msg(result.msg);
@@ -251,6 +244,7 @@ ClassRoomTable.prototype = {
                 $('#select-student option:eq(1)').attr('selected','selected');
                 var selectedV = $('#select-student option:eq(1):selected').val()
                 var selectedTxt = $('#select-student option:eq(1):selected').text();
+                $('.student-label').text(selectedTxt + " - ");
                 that.getClassRoomTable('student', {
                     'classId': classId,
                     'studentId': selectedV
