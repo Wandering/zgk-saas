@@ -226,7 +226,7 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         java.util.Random random=new java.util.Random();// 定义随机类
         if (teacherBaseInfos.size()==0)return "";
         TeacherBaseDto teacherBaseDto = teacherBaseInfos.get(random.nextInt(teacherBaseInfos.size()));
-        return teacherBaseDto.getTeacherName()+"\n("+teacherBaseDto.getCourseName()+")";
+        return teacherBaseDto.getCourseName()+"\n("+teacherBaseDto.getTeacherName()+")";
 
     }
     private String getRoomRandom(List<JwRoom> rooms){
