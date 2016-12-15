@@ -2,11 +2,14 @@ package cn.thinkjoy.saas.controller.bussiness.scheduleRule;
 
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
+import cn.thinkjoy.saas.dao.IJwTeacherDAO;
 import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
 import cn.thinkjoy.saas.domain.JwClassBaseInfo;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
+import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.service.*;
+import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
@@ -34,8 +37,6 @@ public class BaseResultController {
     @Autowired
     private IJwRoomService jwRoomService;
     @Autowired
-    private IJwTeacherBaseInfoService jwTeacherBaseInfoService;
-    @Autowired
     private IJwScheduleTaskService jwScheduleTaskService;
     @Autowired
     private IJwCourseBaseInfoService jwCourseBaseInfoService;
@@ -43,6 +44,9 @@ public class BaseResultController {
     private IJwClassBaseInfoService jwClassBaseInfoService;
     @Autowired
     private IEXTenantCustomService iexTenantCustomService;
+
+    @Autowired
+    private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
 
     /**
      * 获取教室名称
@@ -72,13 +76,11 @@ public class BaseResultController {
             ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
         }
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
         Map<String,Object>  map = Maps.newHashMap();
         map.put("tnId",tnId);
         map.put("taskId",taskId);
-        map.put("grade",jwScheduleTask.getGrade());
-        map.put("teacherCourse",teacherCourse);
-        List list = jwTeacherBaseInfoService.queryList(map,"id","desc");
+        map.put("course",teacherCourse);
+        List<TeacherBaseDto> list = iexScheduleBaseInfoService.queryTeacherByTaskId(map);
         return list;
     }
 

@@ -52,7 +52,8 @@
                                             filename: "课表",
                                             exclude_img: true,
                                             exclude_links: true,
-                                            exclude_inputs: true
+                                            exclude_inputs: true,
+                                            fileext: ".xls"
                                         });
                                     });
                                 });
