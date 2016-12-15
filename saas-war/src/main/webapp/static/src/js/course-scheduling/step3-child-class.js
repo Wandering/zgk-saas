@@ -18,8 +18,6 @@ ClassRoomTable.prototype = {
         this.getClassRoom();
         this.getQueryCourse();
         this.getQueryClass();
-        this.getAllQueryCourse();
-
     },
     // 拉取教室
     getClassRoom: function () {
@@ -127,17 +125,12 @@ ClassRoomTable.prototype = {
 
 
                 //动态控制生成总课表样式
-                //动态控制生成总课表样式
-                //动态控制生成总课表样式
                 var $warpTableWidth = '3000',
                     firstThWidth = '120',
                     $secondThWidth = ($warpTableWidth - firstThWidth) / res.bizData.result.teachDate.length;
                 $('.second-th-width').css('width', $secondThWidth + 'px');
                 $('#all-timetable').css('width', $warpTableWidth + 'px');
                 var $classTimes = res.bizData.result.roomData[0][0].length;
-                console.info('w',parseInt($('#all-timetable .second-th-width').eq(2).width()));
-                console.info('n',$classTimes);
-                console.info('s',parseInt($('#all-timetable .no-p-m').eq(2).width()) / $classTimes);
                 $('.common-span-w').css({
                     'width': parseInt($('#all-timetable .no-p-m').eq(2).width()) / $classTimes - 2 + 'px'
                 })
@@ -317,10 +310,13 @@ $(function () {
         });
     });
 
-    // // 拉取所有课表
-    // $("#role-scheduling-tab li").eq(3).click(function () {
-    //     ClassRoomTableIns.getAllQueryCourse();
-    // });
+    // 拉取所有课表
+    $("#role-scheduling-tab li").eq(3).click(function () {
+        ClassRoomTableIns.getAllQueryCourse();
+    });
+    if(window.location.hash == '#all'){
+        ClassRoomTableIns.getAllQueryCourse();
+    }
 });
 
 
