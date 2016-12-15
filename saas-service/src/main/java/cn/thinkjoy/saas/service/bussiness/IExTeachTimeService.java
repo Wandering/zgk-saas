@@ -16,4 +16,6 @@ public interface IExTeachTimeService {
                           Integer tnId);
 
     Map<String, Object> queryTeachTime(Integer taskId,Integer tnId);
+
+    boolean queryTeachTimeStatus(Integer taskId);
 }
