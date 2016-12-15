@@ -1,7 +1,8 @@
 /**
  * 地址Hash处理
  */
-
+var scheduleName = Common.cookie.getCookie('scheduleName');
+$('.scheduleName').text(scheduleName);
 var HashHandle = {
     init: function () {
         this.hashArr = ['#class', '#teacher', '#student', '#all'];

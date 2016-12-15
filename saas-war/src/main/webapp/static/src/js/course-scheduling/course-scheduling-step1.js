@@ -1,4 +1,6 @@
 var taskId = Common.cookie.getCookie('taskId');
+var scheduleName = Common.cookie.getCookie('scheduleName');
+$('.scheduleName').text(scheduleName);
 
 function TeachDate() {
     this.init();
@@ -9,6 +11,7 @@ TeachDate.prototype = {
     constructor: TeachDate,
     init: function () {
         this.queryTeachTime(taskId);
+        this.queryTeachTimeStatus(taskId);
     },
     // 查询学习时间
     queryTeachTime: function (taskId) {
@@ -45,6 +48,19 @@ TeachDate.prototype = {
                 'taskId': taskId,
                 'teachDate': teachDate,
                 'teachTime': teachTime
+            },
+            function (res) {
+                if (res.rtnCode == "0000000" && res.bizData == true) {
+                    layer.msg('保存成功!');
+                }
+            }, function (res) {
+                layer.msg(res.msg);
+            });
+    },
+    queryTeachTimeStatus:function(taskId){
+        var that = this;
+        Common.ajaxFun('/teachTime/queryTeachTimeStatus.do', 'GET', {
+                'taskId': taskId
             },
             function (res) {
                 if (res.rtnCode == "0000000" && res.bizData == true) {

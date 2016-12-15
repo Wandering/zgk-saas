@@ -1,5 +1,6 @@
 var taskId = Common.cookie.getCookie('taskId');
-
+var scheduleName = Common.cookie.getCookie('scheduleName');
+$('.scheduleName').text(scheduleName);
 
 //教师信息构造函数及其原型
 function TeacherInfo() {

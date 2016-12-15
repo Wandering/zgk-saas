@@ -1,5 +1,7 @@
 var tnId = Common.cookie.getCookie('tnId');
 var taskId = Common.cookie.getCookie('taskId');
+var scheduleName = Common.cookie.getCookie('scheduleName');
+$('.scheduleName').text(scheduleName);
 function ClassRoomTable() {
     this.init();
     this.courseTxt = '';
@@ -15,12 +17,9 @@ ClassRoomTable.prototype = {
     init: function () {
         this.getClassRoom();
         this.getQueryCourse();
-        this.getQueryTeacher();
         this.getQueryClass();
-        this.getQueryStudent();
         this.getAllQueryCourse();
 
-        //this.getClassRoomTable();
     },
     // 拉取教室
     getClassRoom: function () {
@@ -35,10 +34,8 @@ ClassRoomTable.prototype = {
                     classRoom.push('<option value="' + v.id + '">' + v.roomName + '</option>')
                 });
                 $('#select-class').append(classRoom);
-
                 $('#select-class option:eq(1)').attr('selected','selected');
-
-                var selectedV = $('#select-class option:eq(1):selected').val()
+                var selectedV = $('#select-class option:eq(1):selected').val();
                 var selectedTxt = $('#select-class option:eq(1):selected').text();
                 $('.scheduling-name').show().text(selectedTxt);
                 that.getClassRoomTable('room', {'room': selectedV}, selectedV);
@@ -65,7 +62,7 @@ ClassRoomTable.prototype = {
                 $('#select-queryCourse option:eq(1)').attr('selected','selected');
                 var selectedV = $('#select-queryCourse option:eq(1):selected').val()
                 var selectedTxt = $('#select-queryCourse option:eq(1):selected').text();
-                $('.scheduling-name').show().text(selectedTxt);
+                $('.course-label').text(selectedTxt);
                 that.getQueryTeacher(selectedTxt)
             } else {
                 layer.msg(result.msg);
@@ -135,6 +132,7 @@ ClassRoomTable.prototype = {
     },
     // 拉取老师
     getQueryTeacher: function (teacherCourse) {
+        var that = this;
         Common.ajaxFun('/baseResult/queryTeacher.do', 'GET', {
             "taskId": taskId,
             "teacherCourse": teacherCourse
@@ -146,6 +144,14 @@ ClassRoomTable.prototype = {
                     queryCourse.push('<option value="' + v.id + '">' + v.teacherName + '</option>')
                 });
                 $('#select-teacher').append(queryCourse);
+                $('#select-teacher option:eq(1)').attr('selected','selected');
+                var selectedV = $('#select-teacher option:eq(1):selected').val()
+                var selectedTxt = $('#select-teacher option:eq(1):selected').text()
+                that.getClassRoomTable('teacher', {
+                    'course': teacherCourse,
+                    'teacherId': selectedV
+                });
+                $('.teacher-label').text(selectedTxt + "老师");
             } else {
                 layer.msg(result.msg);
             }
@@ -155,6 +161,7 @@ ClassRoomTable.prototype = {
     },
     // 拉取班级
     getQueryClass: function () {
+        var that = this;
         Common.ajaxFun('/baseResult/queryClass.do', 'GET', {
             "taskId": taskId
         }, function (result) {
@@ -165,6 +172,10 @@ ClassRoomTable.prototype = {
                     queryCourse.push('<option value="' + v.id + '">' + v.className + '</option>')
                 });
                 $('#select-classes').append(queryCourse);
+                $('#select-classes option:eq(1)').attr('selected','selected');
+                var selectedV = $('#select-classes option:eq(1):selected').val()
+                var selectedTxt = $('#select-classes option:eq(1):selected').text();
+                that.getQueryStudent(selectedV)
             } else {
                 layer.msg(result.msg);
             }
@@ -173,10 +184,11 @@ ClassRoomTable.prototype = {
         }, true);
     },
     // 拉取班级
-    getQueryStudent: function () {
+    getQueryStudent: function (classId) {
+        var that = this;
         Common.ajaxFun('/baseResult/queryStudent.do', 'GET', {
             "taskId": taskId,
-            "classId": '1'
+            "classId": classId,
         }, function (result) {
             if (result.rtnCode == "0000000") {
                 $('#select-student option:gt(0)').remove();
@@ -185,6 +197,13 @@ ClassRoomTable.prototype = {
                     queryCourse.push('<option value="' + v.id + '">' + v.studentName + '</option>')
                 });
                 $('#select-student').append(queryCourse);
+                $('#select-student option:eq(1)').attr('selected','selected');
+                var selectedV = $('#select-student option:eq(1):selected').val()
+                var selectedTxt = $('#select-student option:eq(1):selected').text();
+                that.getClassRoomTable('student', {
+                    'classId': classId,
+                    'studentId': selectedV
+                });
             } else {
                 layer.msg(result.msg);
             }
@@ -264,10 +283,7 @@ $(function () {
         ClassRoomTableIns.className = $(this).children('option:selected').text();
         ClassRoomTableIns.classId = $(this).children('option:selected').val();
         $('.classes-label').text(ClassRoomTableIns.className);
-        ClassRoomTableIns.getClassRoomTable('student', {
-            'classId': ClassRoomTableIns.classId,
-            'studentId': ClassRoomTableIns.studentId
-        });
+        ClassRoomTableIns.getQueryStudent(ClassRoomTableIns.classId);
     });
 
     // 选择学生

@@ -17,7 +17,7 @@ SetingProcess2.prototype = {
         Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {
             'tnId': tnId
         }, function (res) {
-            //console.log(res)
+            console.log(res)
             if (res.rtnCode == "0000000") {
                 that.renderList(res);
             }else{
@@ -93,9 +93,8 @@ SetingProcess2.prototype = {
             if (res.rtnCode == "0000000") {
                 if (res.bizData.result == "SUCCESS") {
                     window.location.href = "/seting-process3";
-                }
-                if (res.bizData.result == "FAIL") {
-                    layer.msg("失败");
+                }else if (res.bizData.result == "FAIL") {
+                    console.log("失败");
                 }
             }else{
                 layer.msg(res.msg);
