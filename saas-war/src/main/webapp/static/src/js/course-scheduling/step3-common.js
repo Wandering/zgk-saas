@@ -89,9 +89,12 @@ $('.btn-one-key').click(function(){
 //    $('.btn-one-key').hide();
 //    $('#role-scheduling-tab, #step3-child-class').removeClass('dh');
 //}
-$(document).on('click', '.retry-scheduling, .look-origin-schedule', function () {
+$(document).on('click', '.look-origin-schedule', function () {
     $('#role-scheduling-tab, #step3-child-class').removeClass('dh');
     $('.info-modify').addClass('dh');
+});
+$(document).on('click', '.retry-scheduling', function () {
+    window.location.href = '/course-scheduling-step1';
 });
 
 //$(function () {
