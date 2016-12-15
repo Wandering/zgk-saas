@@ -520,6 +520,8 @@ public class ManageController {
                 bis.close();
             if (bos != null)
                 bos.close();
+            if (out !=null)
+                out.close();
             LOGGER.info("===============导出租户excel模板 E================");
         }
         return null;
