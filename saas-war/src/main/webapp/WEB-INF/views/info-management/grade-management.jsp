@@ -27,7 +27,7 @@
                             <li>
                                 <a href="#">首页</a>
                             </li>
-                            <li class="active">控制台</li>
+                            <li class="active">年级管理</li>
                         </ul>
                     </div>
                     <div class="page-content">

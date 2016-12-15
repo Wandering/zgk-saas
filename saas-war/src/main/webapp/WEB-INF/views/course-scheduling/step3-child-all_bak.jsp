@@ -12,7 +12,7 @@
         <div class="fl scheduling-name">总课表</div>
         <button class="fr btn btn-warning" id="output-tpl"><i class="icon-output-down"></i>导出总课表</button>
     </div>
-    <div class="all-time-date-container" style="width: 1050px;overflow-x: auto">
+    <div class="all-time-date-container" style="width: 1170px;overflow-x: auto">
         <table class="table table-bordered" id="all-timetable" style="width: 3000px">
 
         </table>
@@ -41,7 +41,13 @@
             {{#each room}}
             <tr>
                 <th>{{this}}</th>
-                {{#creatClass @index ../day}}{{/creatClass}}
+                {{#each ../day.[1]}}
+                    <th class="no-p-m">
+                        {{#each this}}
+                            <span class="create-class-number">{{this}}</span>
+                        {{/each}}
+                    </th>
+                {{/each}}
             </tr>
             {{/each}}
         </tbody>
