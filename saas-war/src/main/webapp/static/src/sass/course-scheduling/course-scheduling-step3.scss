@@ -243,14 +243,15 @@ p.tbody-item{
 总课表
 */
 .create-class-number{
-  width: 14.25%;
-  line-height: 34px;
+  line-height: 36px;
   text-align: center;
   display: block;
   float: left;
   border-right: 1px solid #ccc;
 }
-
+.common-span-w{
+  //min-width: 50px;
+}
 .no-p-m{
   padding: 0!important;
   margin: 0;

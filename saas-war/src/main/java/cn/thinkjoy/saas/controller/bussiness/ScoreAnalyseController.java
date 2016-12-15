@@ -44,7 +44,6 @@ import static cn.thinkjoy.saas.common.UploadUtil.saveExcelData;
  * Created by liusven on 2016/10/31.
  */
 @Controller
-@Scope("prototype")
 @RequestMapping("/scoreAnalyse")
 public class ScoreAnalyseController
 {
@@ -988,11 +987,11 @@ public class ScoreAnalyseController
             }
             if (scoreList.size() == 2)
             {
-                advancedScore = new BigDecimal(scoreList.get(0)).subtract(new BigDecimal(scoreList.get(1))).intValue();
+                advancedScore = new BigDecimal(scoreList.get(1)).subtract(new BigDecimal(scoreList.get(0))).intValue();
             }
             if (scoreList.size() == 3)
             {
-                advancedScore = new BigDecimal(scoreList.get(0)).subtract(new BigDecimal(scoreList.get(2))).
+                advancedScore = new BigDecimal(scoreList.get(2)).subtract(new BigDecimal(scoreList.get(0))).
                     divide(new BigDecimal(2), 0, RoundingMode.HALF_DOWN).intValue();
             }
             if (advancedScore >= stepStart && advancedScore <= stepEnd)

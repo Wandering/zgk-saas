@@ -12,8 +12,8 @@
         <div class="fl scheduling-name">总课表</div>
         <button class="fr btn btn-warning" id="output-tpl"><i class="icon-output-down"></i>导出总课表</button>
     </div>
-    <div class="all-time-date-container" style="width: 1050px;overflow-x: auto">
-        <table class="table table-bordered" id="all-timetable" style="width: 3000px">
+    <div class="all-time-date-container" style="width: 1100px;overflow-x: auto">
+        <table class="table table-bordered" id="all-timetable">
 
         </table>
     </div>
@@ -23,25 +23,25 @@
                 <tr>
                     <th></th>
                     {{#each teachDate}}
-                        <th class="center">{{this}}</th>
+                        <th class="center second-th-width">{{this}}</th>
                     {{/each}}
                 </tr>
             </thead>
         <tbody class="check-template ui-sortable">
             <tr>
                 <th></th>
-                {{#each day.[0]}}
+                {{#each roomData.[0]}}
                 <th class="no-p-m">
                     {{#each this}}
-                    <span class="create-class-number">{{addOne @index}}</span>
+                    <span class="create-class-number common-span-w">{{addOne @index}}</span>
                     {{/each}}
                 </th>
                 {{/each}}
             </tr>
             {{#each room}}
             <tr>
-                <th>{{this}}</th>
-                {{#creatClass @index ../day}}{{/creatClass}}
+                <th class="center">{{this}}</th>
+                {{#creatClass @index ../roomData}}{{/creatClass}}
             </tr>
             {{/each}}
         </tbody>
