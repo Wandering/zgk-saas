@@ -392,10 +392,17 @@ public class ScheduleTaskController {
             ExceptionUtil.throwException(ErrorCode.TEACH_DATE_ERROR);
         }
 
-        // 检测课程信息是否填写
+        // 检测课程课时信息是否填写
         List<JwCourse> courses = jwCourseService.findList("task_id",taskId);
         if(courses.size() == 0){
             ExceptionUtil.throwException(ErrorCode.COURSE_INFO_ERROR);
+        }
+
+        // 检测课程课时信息是否填写完整(给所有课程是否已设置课时)
+        for(JwCourse course : courses){
+            if(StringUtils.isEmpty(course.getCourseHour())){
+                ExceptionUtil.throwException(ErrorCode.COURSE_INFO_NOT_PERFECT);
+            }
         }
 
         // 检测教师信息是否填写
