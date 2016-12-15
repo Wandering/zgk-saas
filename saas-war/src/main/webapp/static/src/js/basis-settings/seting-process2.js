@@ -6,6 +6,7 @@ Common.flowSteps();
 
 function SetingProcess2() {
     this.init();
+    this.flag = null;
 }
 SetingProcess2.prototype = {
     constructor: SetingProcess2,
@@ -58,6 +59,7 @@ SetingProcess2.prototype = {
         }
     },
     eventClick:function(){
+        var that = this;
         var nums=[];
         $('body').find('.classroom-item').each(function(i,v){
             var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
@@ -66,42 +68,50 @@ SetingProcess2.prototype = {
             var classroomGoclassNum = $.trim($(this).find('.classroom-goclass').val())?$.trim($(this).find('.classroom-goclass').val()):0;
             if(classroomAdministrativeNum=='0'){
                 layer.tips("教室数量必须填写",$(this).find('.classroom-administrative'));
+                that.flag = false;
                 return false;
             }
             if (!re.test(classroomAdministrativeNum) || classroomAdministrativeNum > 100) {
                 layer.tips('请输入正确的数字!', $(this).find('.classroom-administrative'));
+                that.flag = false;
                 return false;
             }
             if(classroomGoclassNum=='0'){
                 layer.tips("教室数量必须填写",$(this).find('.classroom-goclass'));
+                that.flag = false;
                 return false;
             }
             if (!re.test(classroomGoclassNum) || classroomGoclassNum > 100) {
                 layer.tips('请输入正确的数字!', $(this).find('.classroom-goclass'));
+                that.flag = false;
                 return false;
             }
             nums.push("-"+gradeId+":"+classroomAdministrativeNum+"|"+classroomGoclassNum);
+            that.flag = true;
         });
         nums = nums.join('');
         nums = nums.substring(1, nums.length);
         console.log(nums);
-        Common.ajaxFun('/config/classRoom/setting/' + tnId + '/' + nums + '.do', 'POST', {
-            'tnId': tnId,
-            'nums': nums
-        }, function (res) {
-            console.log(res)
-            if (res.rtnCode == "0000000") {
-                if (res.bizData.result == "SUCCESS") {
-                    window.location.href = "/seting-process3";
-                }else if (res.bizData.result == "FAIL") {
-                    console.log("失败");
+        if(that.flag == true){
+            Common.ajaxFun('/config/classRoom/setting/' + tnId + '/' + nums + '.do', 'POST', {
+                'tnId': tnId,
+                'nums': nums
+            }, function (res) {
+                console.log(res)
+                if (res.rtnCode == "0000000") {
+                    if (res.bizData.result == "SUCCESS") {
+                        window.location.href = "/seting-process3";
+                    }else if (res.bizData.result == "FAIL") {
+                        console.log("失败");
+                    }
+                }else{
+                    layer.msg(res.msg);
                 }
-            }else{
+            }, function (res) {
                 layer.msg(res.msg);
-            }
-        }, function (res) {
-            layer.msg(res.msg);
-        });
+            });
+        }
+
     }
 };
 var SetingProcess2Obj = new SetingProcess2();
