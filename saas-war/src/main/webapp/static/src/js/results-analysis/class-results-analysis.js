@@ -797,8 +797,10 @@ ClassResultsAnalysis.prototype = {
                     rankingSel.push('<option stepStart="' + v.stepStart + '" stepEnd="" value="">' + v.stepStart + '名以上</option>');
                 });
                 $('#ranking-sel').append(rankingSel);
-            } else {
-                layer.msg(res.msg);
+                $('#MostAdvanced').show();
+            } else if(res.rtnCode == "1100012"){
+                console.log('该年级只有一次成绩录入!');
+                $('#MostAdvanced').hide();
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -817,8 +819,14 @@ ClassResultsAnalysis.prototype = {
             'rankStepEnd': rankStepEnd
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                var myTemplate = Handlebars.compile($("#progress-template").html());
-                $('#progress-tbody').html(myTemplate(res));
+                if(res.bizData.length==0){
+                    $('#MostAdvanced').hide();
+                }else{
+                    $('#MostAdvanced').show();
+                    var myTemplate = Handlebars.compile($("#progress-template").html());
+                    $('#progress-tbody').html(myTemplate(res));
+                }
+
                 //var sortTheadTemplate = Handlebars.compile($("#progress-thead-template").html());
                 //$('#progress-thead').html(sortTheadTemplate(res));
             }
@@ -950,18 +958,16 @@ $(function () {
 
     // 重点关注学生批次选择
     $('body').on('change', '#batch-sel', function () {
-        $(this).children('option[value=""]').remove();
+        //$(this).children('option[value=""]').remove();
         ClassAnalysisIns.batchV = $(this).children('option:checked').val();
-        if (ClassAnalysisIns.batchV !== "") {
-            ClassAnalysisIns.getMostAttentionPage(ClassAnalysisIns.grade, ClassAnalysisIns.batchV, ClassAnalysisIns.className, '', 0, 3);
-            $(".tcdPageCode").createPage({
-                pageCount: ClassAnalysisIns.count,
-                current: 1,
-                backFn: function (p) {
-                    ClassAnalysisIns.getMostAttentionPage(ClassAnalysisIns.grade, ClassAnalysisIns.batchV, ClassAnalysisIns.className, '', (p - 1) * 3, 3);
-                }
-            });
-        }
+        ClassAnalysisIns.getMostAttentionPage(ClassAnalysisIns.grade, ClassAnalysisIns.batchV, ClassAnalysisIns.className, '', 0, 3);
+        $(".tcdPageCode").createPage({
+            pageCount: ClassAnalysisIns.count,
+            current: 1,
+            backFn: function (p) {
+                ClassAnalysisIns.getMostAttentionPage(ClassAnalysisIns.grade, ClassAnalysisIns.batchV, ClassAnalysisIns.className, '', (p - 1) * 3, 3);
+            }
+        });
     });
 
 
