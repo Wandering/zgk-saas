@@ -1879,7 +1879,7 @@ public class ScoreAnalyseController
     )
     {
         getMostAdvancedDetailForClass(tnId, grade, className, null, null, null, null);
-        int maxStep = (maxAdvancedScore / 10 + 1) * 10;
+        int maxStep = (maxAdvancedScore / 10) * 10;
         List<Map<String, Integer>> stepList = new ArrayList<>();
         addStepList(stepStart, stepLength, maxStep, stepList);
         return stepList;
