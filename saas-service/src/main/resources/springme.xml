@@ -60,23 +60,15 @@
 
 
         <!-- 开发环境 -->
-
-
-        <!-- 开发环境 -->
-        <property name="url" value="${jdbc_url}"/>
-
-        <!-- 同步测试 -->
         <!--<property name="url" value="jdbc:mysql://10.136.53.129:33065/zgk_saas_tmp?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true"/>-->
-
-
-
+        <property name="url" value="${jdbc_url}"/>
         <property name="username" value="${jdbc_user}"/>
         <property name="password" value="${jdbc_password}"/>
 
 
 
 
-         <!--<!-测试环境 -->
+         <!--测试环境 -->
         <!--<property name="url" value="jdbc:mysql://10.136.13.233:33666/zgk_saas?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true"/>-->
         <!--<property name="username" value="admin"/>-->
         <!--<property name="password" value="Gk360@test"/>-->
