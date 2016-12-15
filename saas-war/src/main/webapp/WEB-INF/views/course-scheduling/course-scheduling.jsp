@@ -3,11 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-<<<<<<< HEAD
     <title>排课任务</title>
-=======
-    <title>SAAS 排课任务</title>
->>>>>>> d702e99965b4695c60de1f3f13fe2f3919e3aac8
     <%@ include file="./../common/meta.jsp"%>
     <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling.css" />
 </head>
