@@ -39,7 +39,7 @@
                         </div>
                         <div class="common-back-title">
                             <a href="/course-scheduling">&lt;返回</a>
-                            <span class="title">高一排课</span>
+                            <span class="title scheduleName"></span>
                         </div>
                         <div class="course-scheduling-base">
                             <div class="procedure">
@@ -74,7 +74,7 @@
                                 <div class="class-no-course">
                                     <div class="class-items">
                                         <div id="class-no-array" class="class-no-array">
-                                            <div class="title">高一</div>
+                                            <div class="title gradeName"></div>
                                             <ul id="class-list" class="class-list">
                                                 <%--<li>--%>
                                                     <%--<a href="javascript: void(0);" class="active">全部班级</a>--%>

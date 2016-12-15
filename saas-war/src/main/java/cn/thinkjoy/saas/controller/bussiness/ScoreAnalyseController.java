@@ -44,7 +44,6 @@ import static cn.thinkjoy.saas.common.UploadUtil.saveExcelData;
  * Created by liusven on 2016/10/31.
  */
 @Controller
-@Scope("prototype")
 @RequestMapping("/scoreAnalyse")
 public class ScoreAnalyseController
 {
@@ -635,12 +634,12 @@ public class ScoreAnalyseController
         Map<String, Object> numberMap = getNumberMap(tnId);
         int batchOneNumber = Integer.parseInt(numberMap.get("batchOne") + "");
         int batchTwoNumber = Integer.parseInt(numberMap.get("batchTwo") + "");
-        int batchThrNumber = Integer.parseInt(numberMap.get("batchThr") + "");
+//        int batchThrNumber = Integer.parseInt(numberMap.get("batchThr") + "");
         List<Map<String, Object>> resultList = new ArrayList<>();
         Map<String, Set<ExamDetail>> batchMap = new LinkedHashMap<>();
         batchMap.put("batchOne", new TreeSet<ExamDetail>());
         batchMap.put("batchTwo", new TreeSet<ExamDetail>());
-        batchMap.put("batchThr", new TreeSet<ExamDetail>());
+//        batchMap.put("batchThr", new TreeSet<ExamDetail>());
         Map<String, Object> selectCourseMap = new HashMap<>();
         Map<String, ExamDetail> lastExamDetailMap = new LinkedHashMap<>();
         Map<Long, Set<ExamScoreRatio>> examScoreRatioMap = new LinkedHashMap<>();
@@ -650,7 +649,7 @@ public class ScoreAnalyseController
             List<ExamDetail> detailList = examDetailService.findList("examId", examId);
             float batchOneLowScore = 0;
             float batchTwoLowScore = 0;
-            float batchThrLowScore = 0;
+//            float batchThrLowScore = 0;
             for (ExamDetail detail : detailList)
             {
                 if (i == 1)
@@ -667,10 +666,10 @@ public class ScoreAnalyseController
                 {
                     batchOneLowScore = Float.parseFloat(detail.getTotleScore());
                 }
-                if (gradeRank == batchThrNumber)
-                {
-                    batchThrLowScore = Float.parseFloat(detail.getTotleScore());
-                }
+//                if (gradeRank == batchThrNumber)
+//                {
+//                    batchThrLowScore = Float.parseFloat(detail.getTotleScore());
+//                }
             }
             Map<String, String> params = new HashMap<>();
             params.put("examId", examId);
@@ -690,11 +689,11 @@ public class ScoreAnalyseController
                     batchMap.get("batchTwo").add(lastDetail);
                     selectCourseMap.put(detail.getSelectCourses(), 0);
                 }
-                if (isBigger(batchThrLowScore, totalScore) && !isBigger((batchThrLowScore - 20),totalScore))
-                {
-                    batchMap.get("batchThr").add(lastDetail);
-                    selectCourseMap.put(detail.getSelectCourses(), 0);
-                }
+//                if (isBigger(batchThrLowScore, totalScore) && !isBigger((batchThrLowScore - 20),totalScore))
+//                {
+//                    batchMap.get("batchThr").add(lastDetail);
+//                    selectCourseMap.put(detail.getSelectCourses(), 0);
+//                }
                 setRatioMap(examScoreRatioMap, avgScoreMap, detail, lastDetail);
             }
         }
@@ -988,11 +987,11 @@ public class ScoreAnalyseController
             }
             if (scoreList.size() == 2)
             {
-                advancedScore = new BigDecimal(scoreList.get(0)).subtract(new BigDecimal(scoreList.get(1))).intValue();
+                advancedScore = new BigDecimal(scoreList.get(1)).subtract(new BigDecimal(scoreList.get(0))).intValue();
             }
             if (scoreList.size() == 3)
             {
-                advancedScore = new BigDecimal(scoreList.get(0)).subtract(new BigDecimal(scoreList.get(2))).
+                advancedScore = new BigDecimal(scoreList.get(2)).subtract(new BigDecimal(scoreList.get(0))).
                     divide(new BigDecimal(2), 0, RoundingMode.HALF_DOWN).intValue();
             }
             if (advancedScore >= stepStart && advancedScore <= stepEnd)

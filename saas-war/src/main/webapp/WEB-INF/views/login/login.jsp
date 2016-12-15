@@ -29,7 +29,7 @@
                         <div class="login-main">
                             <div class="">
                                 <form class="form-horizontal" role="form">
-                                    <strong class="t">登录SaaS</strong>
+                                    <strong class="t">登录</strong>
                                     <div class="form-group">
                                         <div class="col-sm-12">
                                             <input type="text" id="user-name" placeholder="登录账号"

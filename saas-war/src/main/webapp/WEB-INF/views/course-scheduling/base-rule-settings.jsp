@@ -45,7 +45,7 @@
                         </div>
                         <div class="common-back-title">
                             <a href="/course-scheduling">&lt;返回</a>
-                            <span class="title">高一排课</span>
+                            <span class="title scheduleName"></span>
                         </div>
                         <div class="course-scheduling-base">
                             <div class="procedure">
