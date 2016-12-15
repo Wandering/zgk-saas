@@ -288,7 +288,6 @@ $(function () {
                 if (res.rtnCode == "0000000") {
                     if (res.bizData.result == 5) {
                         layer.msg('请完成该流程再开始SAAS!');
-                        window.location.href='/course-guide'
                     }else if(res.bizData.result == 0){
                         window.location.href='/course-guide'
                     }
