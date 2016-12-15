@@ -91,7 +91,9 @@ public class BaseResultController {
     public List queryCourse(@RequestParam Integer taskId) {
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         Map<String,Object>  map = Maps.newHashMap();
+        JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
         map.put("tnId",tnId);
+        map.put("grade",jwScheduleTask.getGrade());
         map.put("taskId",taskId);
         List list = jwCourseBaseInfoService.queryList(map,"id","desc");
         return list;
