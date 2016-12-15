@@ -143,6 +143,7 @@
 
                                     </tbody>
                                 </table>
+
                                 <div><h5 class="h5">重点关注学生：</h5><span class="batch-info">根据去年上线比例：一本全校位次线<span
                                         class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名</span></div>
                                 <div class="txt-t">
@@ -174,7 +175,8 @@
                                     </table>
                                     <div class="tcdPageCode"></div>
                                 </div>
-                                <div id="MostAdvanced"><h5 class="h5 p-t"><span class="line"></span>进步较大学生：</h5>
+                                <div id="MostAdvanced">
+                                    <h5 class="h5 p-t"><span class="line"></span>进步较大学生：</h5>
                                     <form class="form-horizontal" role="form">
                                         <div class="form-group">
                                             <div class="col-sm-3">

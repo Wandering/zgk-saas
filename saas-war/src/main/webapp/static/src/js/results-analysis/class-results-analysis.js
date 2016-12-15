@@ -811,8 +811,14 @@ ClassResultsAnalysis.prototype = {
             'rankStepEnd': rankStepEnd
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                var myTemplate = Handlebars.compile($("#progress-template").html());
-                $('#progress-tbody').html(myTemplate(res));
+                if(res.bizData.length==0){
+                    $('#MostAdvanced').hide();
+                }else{
+                    $('#MostAdvanced').show();
+                    var myTemplate = Handlebars.compile($("#progress-template").html());
+                    $('#progress-tbody').html(myTemplate(res));
+                }
+
                 //var sortTheadTemplate = Handlebars.compile($("#progress-thead-template").html());
                 //$('#progress-thead').html(sortTheadTemplate(res));
             }
