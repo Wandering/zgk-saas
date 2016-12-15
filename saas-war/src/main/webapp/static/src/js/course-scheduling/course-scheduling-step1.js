@@ -60,7 +60,6 @@ TeachDate.prototype = {
             function (res) {
                 if (res.rtnCode == "0000000" && res.bizData == true) {
                     that.state = true;
-                    //layer.msg('第二次!');
                 }
             }, function (res) {
                 layer.msg(res.msg);
