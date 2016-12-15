@@ -13,7 +13,6 @@
             <option value="">请选择班级</option>
         </select>
         <select id="select-student">
-            <option value="">请选择学生</option>
         </select>
     </div>
     <div class="scheduling-info">
