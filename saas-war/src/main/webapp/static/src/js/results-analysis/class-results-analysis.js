@@ -313,7 +313,7 @@ ClassResultsAnalysis.prototype = {
                 containLabel: true
             },
             yAxis: {
-                scale: true,
+                scale: false,
                 type: 'value',
                 //min: Math.min(totalScoreData),
                 //max: Math.max(totalScoreData),
