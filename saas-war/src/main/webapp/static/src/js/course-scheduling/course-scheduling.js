@@ -287,7 +287,7 @@ $(function () {
         });
     });
     // 跳转进入流程设置,检测完整性
-    $('body').on('click', '.start-schedule-btn', function () {
+    $('body').on('click', '.start-schedule-btn, .timetable-btn, .again-schedule-btn', function () {
         var id = $(this).parent().attr('dataid');
         var gradeName = $(this).parent().attr('gradeName');
         var scheduleName = $(this).parent().attr('scheduleName');
