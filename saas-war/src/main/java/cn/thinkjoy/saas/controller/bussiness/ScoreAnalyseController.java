@@ -1735,6 +1735,8 @@ public class ScoreAnalyseController
         stepEnd = null == stepEnd ? Integer.MAX_VALUE : stepEnd;
         rankStepStart = null == rankStepStart ? 1 : rankStepStart;
         rankStepEnd = null == rankStepEnd ? Integer.MAX_VALUE : rankStepEnd;
+        maxAdvancedScore = 0;
+        maxGradeRank = 0;
         String lastExamId = getLastExamId(grade, tnId);
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("examId", lastExamId);
@@ -1775,59 +1777,62 @@ public class ScoreAnalyseController
             }
             String clazzName = values[0];
             String studentName = values[1];
-            int advancedScore = 0;
-            if (rankList.size() == 0 || rankList.size() == 1)
+            if(className.equals(clazzName))
             {
-                continue;
-            }
-            if (rankList.size() == 2)
-            {
-                if (rankList.get(0) >= rankList.get(1))
+                int advancedScore = 0;
+                if (rankList.size() == 0 || rankList.size() == 1)
                 {
                     continue;
                 }
-                advancedScore = new BigDecimal(rankList.get(1)).subtract(new BigDecimal(rankList.get(0))).intValue();
-            }
-            if (rankList.size() == 3)
-            {
-                if (rankList.get(0) >= rankList.get(1) || rankList.get(1) >= rankList.get(2))
+                if (rankList.size() == 2)
                 {
-                    continue;
-                }
-                advancedScore = new BigDecimal(rankList.get(2)).subtract(new BigDecimal(rankList.get(0))).
-                    divide(new BigDecimal(2), 0, RoundingMode.HALF_DOWN).intValue();
-            }
-            List<Map<String, Object>> dataList = resultMap.get(clazzName);
-            if (null == dataList)
-            {
-                dataList = new ArrayList<>();
-                resultMap.put(clazzName, dataList);
-            }
-            if (advancedScore >= stepStart && advancedScore <= stepEnd)
-            {
-                Map<String, Object> params = new LinkedHashMap<>();
-                params.put("className", clazzName);
-                params.put("studentName", studentName);
-                params.put("advancedScore", advancedScore);
-                Map<String, String> map = weakCourseMap.get(studentName);
-                if (null != map)
-                {
-                    int rank = Integer.parseInt(map.get("gradeRank") + "");
-                    if (rank >= rankStepStart && rank <= rankStepEnd)
+                    if (rankList.get(0) >= rankList.get(1))
                     {
-                        params.put("weakCourseOne", map.get("weakCourseOne"));
-                        params.put("weakCourseTwo", map.get("weakCourseTwo"));
-                        params.put("gradeRank", map.get("gradeRank"));
-                        params.put("classRank", map.get("classRank"));
-                        dataList.add(params);
-                        advancedScoreSet.add(advancedScore);
-                        if (advancedScore > maxAdvancedScore)
+                        continue;
+                    }
+                    advancedScore = new BigDecimal(rankList.get(1)).subtract(new BigDecimal(rankList.get(0))).intValue();
+                }
+                if (rankList.size() == 3)
+                {
+                    if (rankList.get(0) >= rankList.get(1) || rankList.get(1) >= rankList.get(2))
+                    {
+                        continue;
+                    }
+                    advancedScore = new BigDecimal(rankList.get(2)).subtract(new BigDecimal(rankList.get(0))).
+                        divide(new BigDecimal(2), 0, RoundingMode.HALF_DOWN).intValue();
+                }
+                List<Map<String, Object>> dataList = resultMap.get(clazzName);
+                if (null == dataList)
+                {
+                    dataList = new ArrayList<>();
+                    resultMap.put(clazzName, dataList);
+                }
+                if (advancedScore >= stepStart && advancedScore <= stepEnd)
+                {
+                    Map<String, Object> params = new LinkedHashMap<>();
+                    params.put("className", clazzName);
+                    params.put("studentName", studentName);
+                    params.put("advancedScore", advancedScore);
+                    Map<String, String> map = weakCourseMap.get(studentName);
+                    if (null != map)
+                    {
+                        int rank = Integer.parseInt(map.get("gradeRank") + "");
+                        if (rank >= rankStepStart && rank <= rankStepEnd)
                         {
-                            maxAdvancedScore = advancedScore;
-                        }
-                        if (rank > maxGradeRank)
-                        {
-                            maxGradeRank = rank;
+                            params.put("weakCourseOne", map.get("weakCourseOne"));
+                            params.put("weakCourseTwo", map.get("weakCourseTwo"));
+                            params.put("gradeRank", map.get("gradeRank"));
+                            params.put("classRank", map.get("classRank"));
+                            dataList.add(params);
+                            advancedScoreSet.add(advancedScore);
+                            if (advancedScore > maxAdvancedScore)
+                            {
+                                maxAdvancedScore = advancedScore;
+                            }
+                            if (rank > maxGradeRank)
+                            {
+                                maxGradeRank = rank;
+                            }
                         }
                     }
                 }
@@ -1879,7 +1884,7 @@ public class ScoreAnalyseController
         if (maxStep >= 10)
         {
             addStepList(stepList, maxStep, stepStart, stepLength);
-        }else {
+        }else if(maxStep > 0){
             Map<String, Integer> paramMap = new LinkedHashMap<>();
             paramMap.put("stepStart", 1);
             paramMap.put("stepEnd", maxStep);
@@ -1898,12 +1903,12 @@ public class ScoreAnalyseController
         @RequestParam(value = "stepLength", required = true) int stepLength)
     {
         getMostAdvancedDetailForClass(tnId, grade, className, null, null, null, null);
-        int maxStep = maxGradeRank % stepLength == 0 ? maxGradeRank : (maxGradeRank / 10 + 1) * 10;
+        int maxStep = maxGradeRank % (stepLength + 1) == 0 ? maxGradeRank : (maxGradeRank / 10 + 1) * 10;
         List<Map<String, Integer>> stepList = new ArrayList<>();
         if (maxStep >= 10)
         {
             addStepList(stepList, maxStep, stepStart, stepLength);
-        }else
+        }else if(maxStep > 0)
         {
             Map<String, Integer> paramMap = new LinkedHashMap<>();
             paramMap.put("stepStart", 1);
