@@ -2,6 +2,7 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 
 import cn.thinkjoy.saas.dao.IJwTeacherBaseInfoDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO;
+import cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO;
 import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
 import cn.thinkjoy.saas.domain.Grade;
 import cn.thinkjoy.saas.domain.JwTeacherBaseInfo;
@@ -35,6 +36,9 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
     @Resource
     IJwTeacherBaseInfoDAO iJwTeacherBaseInfoDAO;
 
+    @Resource
+    EXITenantConfigInstanceDAO exiTenantConfigInstanceDAO;
+
 
     /**
      * 租户自定义表头数据添加
@@ -58,21 +62,27 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 
         boolean flag = result > 0;
 
-        if("teacher".equals(type) && flag){
-            List<TeantCustom> customs = JSONArray.parseArray(teantCustoms.toString(),TeantCustom.class);
-            Map<String,Object> map = Maps.newHashMap();
-            for(TeantCustom custom : customs){
-                map.put(custom.getKey(),custom.getValue());
+        if(flag) {
+            switch (type) {
+                case "teacher":
+                    List<TeantCustom> customs = JSONArray.parseArray(teantCustoms.toString(), TeantCustom.class);
+                    Map<String, Object> map = Maps.newHashMap();
+                    for (TeantCustom custom : customs) {
+                        map.put(custom.getKey(), custom.getValue());
+                    }
+
+                    JwTeacherBaseInfo info = new JwTeacherBaseInfo();
+                    info.setTnId(tnId);
+                    info.setGrade(ConvertUtil.converGrade(map.get("teacher_grade").toString()));
+                    info.setTeacherName(map.get("teacher_name").toString());
+                    info.setTeacherClass(map.get("teacher_class").toString());
+                    info.setTeacherCourse(map.get("teacher_major_type").toString());
+                    iJwTeacherBaseInfoDAO.insert(info);
+                    break;
             }
 
-            JwTeacherBaseInfo info = new JwTeacherBaseInfo();
-            info.setTnId(tnId);
-            info.setGrade(ConvertUtil.converGrade(map.get("teacher_grade").toString()));
-            info.setTeacherName(map.get("teacher_name").toString());
-            info.setTeacherClass(map.get("teacher_class").toString());
-            info.setTeacherCourse(map.get("teacher_major_type").toString());
-            iJwTeacherBaseInfoDAO.insert(info);
         }
+
 
         return flag;
     }

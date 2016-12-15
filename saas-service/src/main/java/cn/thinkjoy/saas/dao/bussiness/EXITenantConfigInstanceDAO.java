@@ -112,4 +112,12 @@ public interface EXITenantConfigInstanceDAO extends IBaseDAO<TenantConfigInstanc
      */
     Integer insertTenantConfigCom(@Param("tableName") String tableName, @Param("configKeyList") List<TenantConfigInstanceView> configurations, @Param("configValueList") List<LinkedHashMap<String, String>> configValueList);
 
+
+    /**
+     * 查找学号是否重复
+     * @param map
+     * @return
+     */
+    Integer selectCountByStudentNo(Map map);
+
 }

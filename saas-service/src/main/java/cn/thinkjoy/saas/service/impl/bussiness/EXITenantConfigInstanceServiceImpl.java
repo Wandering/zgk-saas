@@ -761,6 +761,17 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         return diff;
 
     }
+    /**
+     * 查找学号是否重复
+     * @return
+     */
+    public Integer selectCountByStudentNo(String type,Integer tnId,String studentNo) {
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        map.put("studentNo", studentNo);
+        return exiTenantConfigInstanceDAO.selectCountByStudentNo(map);
+    }
     public static void main(String[] args) {
         Map<Object,String> map = new HashMap<Object, String>();
         map.put(1,"22");
