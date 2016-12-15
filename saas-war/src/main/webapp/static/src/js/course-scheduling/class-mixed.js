@@ -4,6 +4,8 @@
  * @type {{tnId: *, taskId: *, grade: GLOBAL_CONSTANT.grade}}
  * @by:pdeng
  */
+var scheduleName = Common.cookie.getCookie('scheduleName');
+$('.scheduleName').text(scheduleName);
 $(document).ready(function () {
     var GLOBAL_CONSTANT = {
         tnId: Common.cookie.getCookie('tnId'),

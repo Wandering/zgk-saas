@@ -2,7 +2,8 @@
  * Created by machengcheng on 16/12/6.
  */
 var taskId = Common.cookie.getCookie('taskId');
-
+var scheduleName = Common.cookie.getCookie('scheduleName');
+$('.scheduleName').text(scheduleName);
 function ArrangeCourse () {
     this.types = ['class', 'teacher', 'course'];
     this.classids = [];

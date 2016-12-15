@@ -379,11 +379,19 @@ jQuery(function () {
     });
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-    uploader.on('uploadSuccess', function (file) {
+    uploader.on('uploadSuccess', function (file,response) {
         $('#add-btn,#del-batch-btn').addClass('disabled');
         $('.del-btn').removeClass('del-btn').addClass('disabled');
         $('#' + file.id).addClass('upload-state-done');
         layer.msg('导入成功,请开始SAAS!');
+        if (!response.bizData.result) {
+            layer.msg(response.msg);
+            return false;
+        }
+        if (response.bizData.result != 'SUCCESS') {
+            layer.msg(response.bizData.result);
+            return false;
+        }
 
     });
 

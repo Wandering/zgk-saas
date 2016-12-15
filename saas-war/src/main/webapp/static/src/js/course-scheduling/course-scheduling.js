@@ -290,7 +290,9 @@ $(function () {
     $('body').on('click', '.start-schedule-btn', function () {
         var id = $(this).parent().attr('dataid');
         var gradeName = $(this).parent().attr('gradeName');
+        var scheduleName = $(this).parent().attr('scheduleName');
         Common.cookie.setCookie('gradeName', gradeName);
+        Common.cookie.setCookie('scheduleName', scheduleName);
         schedule.checkTaskBaseInfo(id);
 
     });

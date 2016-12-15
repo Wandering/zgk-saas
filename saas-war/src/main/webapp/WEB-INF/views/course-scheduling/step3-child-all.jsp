@@ -30,7 +30,7 @@
         <tbody class="check-template ui-sortable">
             <tr>
                 <th></th>
-                {{#each day.[0]}}
+                {{#each roomData.[0]}}
                 <th class="no-p-m">
                     {{#each this}}
                     <span class="create-class-number">{{addOne @index}}</span>
@@ -41,7 +41,7 @@
             {{#each room}}
             <tr>
                 <th>{{this}}</th>
-                {{#creatClass @index ../day}}{{/creatClass}}
+                {{#creatClass @index ../roomData}}{{/creatClass}}
             </tr>
             {{/each}}
         </tbody>

@@ -1489,7 +1489,7 @@ public class ScoreAnalyseController
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
         if (null == examIds || examIds.size() == 0)
         {
-            throw new BizException("1100081", "该年级没有成绩录入！！");
+            throw new BizException("1100011", "该年级没有成绩录入！！");
         }
         String lastExamId = examIds.get(0);
         Map<String, Object> condition = Maps.newHashMap();
@@ -1577,7 +1577,7 @@ public class ScoreAnalyseController
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
         if (null == examIds || examIds.size() == 0)
         {
-            throw new BizException("1100081", "该年级没有成绩录入！！");
+            throw new BizException("1100011", "该年级没有成绩录入！！");
         }
         List<Map<String, Object>> resultList1 = new ArrayList<>();
         float batchOneNumber = Float.parseFloat(line);
@@ -1622,7 +1622,7 @@ public class ScoreAnalyseController
         List<String> examIds = examDetailService.getLastExamIdByGrade(paramMap);
         if (null == examIds || examIds.size() == 0)
         {
-            throw new BizException("1100081", "该年级没有成绩录入！！");
+            throw new BizException("1100011", "该年级没有成绩录入！！");
         }
         if (examIds.size() == 1)
         {
@@ -1948,7 +1948,7 @@ public class ScoreAnalyseController
         }
         if (examIds.size() == 1)
         {
-            throw new BizException("1100011", "该年级只有一次成绩录入！！");
+            throw new BizException("1100012", "该年级只有一次成绩录入！！");
         }
         String lastExamId = examIds.get(0);
         Map<String, ExamDetail> lastExamDetailMap = new LinkedHashMap<>();

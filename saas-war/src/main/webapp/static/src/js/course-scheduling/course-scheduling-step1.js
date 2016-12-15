@@ -1,4 +1,6 @@
 var taskId = Common.cookie.getCookie('taskId');
+var scheduleName = Common.cookie.getCookie('scheduleName');
+$('.scheduleName').text(scheduleName);
 
 function TeachDate() {
     this.init();
@@ -9,6 +11,7 @@ TeachDate.prototype = {
     constructor: TeachDate,
     init: function () {
         this.queryTeachTime(taskId);
+        this.queryTeachTimeStatus(taskId);
     },
     // 查询学习时间
     queryTeachTime: function (taskId) {
@@ -21,17 +24,12 @@ TeachDate.prototype = {
                 if (res.rtnCode == "0000000") {
                     var teachDate = res.bizData.teachDate;
                     var teachTime = res.bizData.teachTime;
-                    if (!teachDate && !teachTime) {
-                        that.state = false;
-                    } else {
-                        for (var i in teachDate.split('|')) {
-                            $('.week-list input[data="' + teachDate.split('|')[i] + '"]').attr('checked', 'checked');
-                        }
-                        $('#morning-list option[value="' + teachTime.split("")[0] + '"]').attr('selected', 'selected');
-                        $('#afternoon-list option[value="' + teachTime.split("")[1] + '"]').attr('selected', 'selected');
-                        $('#evening-list option[value="' + teachTime.split("")[2] + '"]').attr('selected', 'selected');
-                        that.state = true;
+                    for (var i in teachDate.split('|')) {
+                        $('.week-list input[data="' + teachDate.split('|')[i] + '"]').attr('checked', 'checked');
                     }
+                    $('#morning-list option[value="' + teachTime.split("")[0] + '"]').attr('selected', 'selected');
+                    $('#afternoon-list option[value="' + teachTime.split("")[1] + '"]').attr('selected', 'selected');
+                    $('#evening-list option[value="' + teachTime.split("")[2] + '"]').attr('selected', 'selected');
                 }
 
             }, function (res) {
@@ -48,12 +46,25 @@ TeachDate.prototype = {
             },
             function (res) {
                 if (res.rtnCode == "0000000" && res.bizData == true) {
-                    that.state = true;
                     layer.msg('保存成功!');
                 }
             }, function (res) {
                 layer.msg(res.msg);
             });
+    },
+    queryTeachTimeStatus:function(taskId){
+        var that = this;
+        Common.ajaxFun('/teachTime/queryTeachTimeStatus.do', 'GET', {
+                'taskId': taskId
+            },
+            function (res) {
+                if (res.rtnCode == "0000000" && res.bizData == true) {
+                    that.state = true;
+                    layer.msg('第二次!');
+                }
+            }, function (res) {
+                layer.msg(res.msg);
+            },true);
     }
 };
 
@@ -79,7 +90,7 @@ $(function () {
         var teachTime = morningNum + afternoonNum + eveningNum;
         console.log(TeachDateIns.state)
         if(TeachDateIns.state==true){
-            layer.confirm('如果更改基本信息设置，已设置的排课条件有可能会被清除，请谨慎操作！', {
+            layer.confirm('如果更改基本信息设置，已设置的排课条件会被清除，请谨慎操作！', {
                 btn: ['确定', '关闭'] //按钮
             }, function () {
                 TeachDateIns.saveTeachTime(taskId, teachDate.join('|'), teachTime);
