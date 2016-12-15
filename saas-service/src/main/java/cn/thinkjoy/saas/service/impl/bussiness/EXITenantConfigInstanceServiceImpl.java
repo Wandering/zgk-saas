@@ -484,11 +484,6 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         LOGGER.info("===========解析excel S===========");
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
-        String tableName = this.createTenantCombinationTable(type, tnId);
-        LOGGER.info("tableName:" + tableName);
-        if (StringUtils.isBlank(tableName))
-            return "系统错误";
-
         ReadExcel readExcel = new ReadExcel();
         List<LinkedHashMap<String, String>> configTeantComList = readExcel.readExcelFile(excelPath);
         if (configTeantComList == null)
@@ -507,6 +502,13 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         String reuslt = "系统错误";
 
         if (excelValid.equals("SUCCESS")) {
+
+            String tableName = this.createTenantCombinationTable(type, tnId);
+            LOGGER.info("tableName:" + tableName);
+
+            if (StringUtils.isBlank(tableName))
+                return "系统错误";
+
             Integer insertResult = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
             if (insertResult > 0) {
                 reuslt = "SUCCESS";
