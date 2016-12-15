@@ -3,7 +3,6 @@ var tnId = Common.cookie.getCookie('tnId');
 Common.flowSteps();
 
 
-
 function SetingProcess2() {
     this.init();
     this.flag = null;
@@ -21,7 +20,7 @@ SetingProcess2.prototype = {
             console.log(res)
             if (res.rtnCode == "0000000") {
                 that.renderList(res);
-            }else{
+            } else {
                 layer.msg(res.msg);
             }
         }, function (res) {
@@ -33,9 +32,9 @@ SetingProcess2.prototype = {
         if (data.rtnCode == "0000000") {
             var gradeArr = [];
             $.each(data.bizData.grades, function (i, v) {
-                gradeArr.push('<div class="classroom-item" gradeId="'+ v.id +'">');
+                gradeArr.push('<div class="classroom-item" gradeId="' + v.id + '">');
                 gradeArr.push('<div class="form-group">');
-                gradeArr.push('<label class="col-sm-4 control-label no-padding-right">'+v.grade +'教室数量 </label>');
+                gradeArr.push('<label class="col-sm-4 control-label no-padding-right">' + v.grade + '教室数量 </label>');
                 gradeArr.push('<div class="col-sm-6">');
                 gradeArr.push('</div>');
                 gradeArr.push('</div>');
@@ -48,13 +47,13 @@ SetingProcess2.prototype = {
                 gradeArr.push('<div class="form-group">');
                 gradeArr.push('<label for="" class="col-sm-4 control-label no-padding-right">走班教室数量:</label>');
                 gradeArr.push('<div class="col-sm-6">');
-                gradeArr.push('<input type="text" class="form-control grade-item classroom-goclass" id="goclass-grade'+ (i+1) +'"  placeholder="0--100以内">');
+                gradeArr.push('<input type="text" class="form-control grade-item classroom-goclass" id="goclass-grade' + (i + 1) + '"  placeholder="0--100以内">');
                 gradeArr.push('</div>');
                 gradeArr.push('</div>');
                 gradeArr.push('</div>');
             });
             $('#grade-group').append(gradeArr.join(''));
-        }else{
+        } else {
             layer.msg(res.msg);
         }
     },
@@ -115,7 +114,7 @@ SetingProcess2.prototype = {
     }
 };
 var SetingProcess2Obj = new SetingProcess2();
-$(function(){
+$(function () {
     $('#seting-process2-btn').on('click', function () {
         SetingProcess2Obj.eventClick();
     });

@@ -65,6 +65,7 @@ var HashHandle = {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
                 $('#role-scheduling-tab, #step3-child-class').removeClass('dh');
+                $('.info-modify').addClass('dh');
             }
         }, function (res) {
             layer.msg("出错了");
@@ -90,6 +91,7 @@ $('.btn-one-key').click(function(){
 //}
 $(document).on('click', '.retry-scheduling, .look-origin-schedule', function () {
     $('#role-scheduling-tab, #step3-child-class').removeClass('dh');
+    $('.info-modify').addClass('dh');
 });
 
 //$(function () {
