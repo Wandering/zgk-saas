@@ -317,6 +317,8 @@ public class ConfigurationController {
                 bis.close();
             if (bos != null)
                 bos.close();
+            if (out !=null)
+                out.close();
             LOGGER.info("===============导出租户excel表头 E================");
         }
         return null;
