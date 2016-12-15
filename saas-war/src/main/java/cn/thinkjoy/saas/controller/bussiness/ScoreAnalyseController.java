@@ -21,6 +21,7 @@ import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,6 +44,7 @@ import static cn.thinkjoy.saas.common.UploadUtil.saveExcelData;
  * Created by liusven on 2016/10/31.
  */
 @Controller
+@Scope("prototype")
 @RequestMapping("/scoreAnalyse")
 public class ScoreAnalyseController
 {
@@ -1880,15 +1882,7 @@ public class ScoreAnalyseController
         getMostAdvancedDetailForClass(tnId, grade, className, null, null, null, null);
         int maxStep = (maxAdvancedScore / 10 + 1) * 10;
         List<Map<String, Integer>> stepList = new ArrayList<>();
-        if (maxStep >= 10)
-        {
-            addStepList(stepList, maxStep, stepStart, stepLength);
-        }else if(maxStep > 0){
-            Map<String, Integer> paramMap = new LinkedHashMap<>();
-            paramMap.put("stepStart", 1);
-            paramMap.put("stepEnd", maxStep);
-            stepList.add(paramMap);
-        }
+        addStepList(stepStart, stepLength, maxStep, stepList);
         return stepList;
     }
 
@@ -1904,6 +1898,12 @@ public class ScoreAnalyseController
         getMostAdvancedDetailForClass(tnId, grade, className, null, null, null, null);
         int maxStep = maxGradeRank % (stepLength + 1) == 0 ? maxGradeRank : (maxGradeRank / 10 + 1) * 10;
         List<Map<String, Integer>> stepList = new ArrayList<>();
+        addStepList(stepStart, stepLength, maxStep, stepList);
+        return stepList;
+    }
+
+    private void addStepList(int stepStart, int stepLength, int maxStep, List<Map<String, Integer>> stepList)
+    {
         if (maxStep >= 10)
         {
             addStepList(stepList, maxStep, stepStart, stepLength);
@@ -1914,7 +1914,6 @@ public class ScoreAnalyseController
             paramMap.put("stepEnd", maxStep);
             stepList.add(paramMap);
         }
-        return stepList;
     }
 
     /**
