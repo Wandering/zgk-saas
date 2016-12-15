@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>职业信息</title>
+    <title>SAAS 职业信息</title>
     <%@ include file="./../common/meta.jsp" %>
     <link rel="stylesheet" href="<%=ctx%>/static/src/css/data-query/professional-info.css"/>
 </head>

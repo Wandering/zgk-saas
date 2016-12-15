@@ -71,7 +71,7 @@
                                     <div id="historyCourseAnalysisChart" style="width: 90%;height: 385px;"></div>
                                 </div>
                             </div>
-                            <div class="col-xs-12">
+                            <div class="col-xs-12" style="margin-top: 40px;">
                                 <div class="main-title">
                                     <h3>单科选课情况分析</h3>
                                 </div>

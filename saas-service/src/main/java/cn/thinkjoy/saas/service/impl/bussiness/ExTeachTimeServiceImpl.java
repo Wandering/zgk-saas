@@ -1,5 +1,6 @@
 package cn.thinkjoy.saas.service.impl.bussiness;
 
+import cn.thinkjoy.common.domain.SearchField;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.JwTeachDate;
 import cn.thinkjoy.saas.service.*;
@@ -91,6 +92,20 @@ public class ExTeachTimeServiceImpl implements IExTeachTimeService {
         result.put("teachDate",buffer.toString());
         result.put("teachTime",time);
         return result;
+    }
+
+    @Override
+    public boolean queryTeachTimeStatus(Integer taskId) {
+        //删除原来的规则
+        Map<String,Object> map = Maps.newHashMap();
+        SearchField field = new SearchField("taskId","=",taskId);
+        map.put("taskId",field);
+        boolean flag = false;
+        if (jwClassRuleService.count(map)>0)flag=true;
+        if (!flag && jwCourseRuleService.count(map)>0)flag=true;
+        if (!flag && jwTeacherRuleService.count(map)>0)flag=true;
+        if (!flag && jwCourseGapRuleService.count(map)>0)flag=true;
+        return flag;
     }
 
     private static Integer getTimeString(char c){

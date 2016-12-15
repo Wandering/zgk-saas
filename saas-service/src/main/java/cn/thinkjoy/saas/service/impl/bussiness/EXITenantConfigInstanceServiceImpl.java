@@ -61,6 +61,18 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
     @Resource
     IJwClassBaseInfoDAO jwClassBaseInfoDAO;
 
+    @Resource
+    IJwBaseConRuleDAO iJwBaseConRuleDAO;
+
+    @Resource
+    IJwBaseDayRuleDAO iJwBaseDayRuleDAO;
+
+    @Resource
+    IJwBaseJaqpRuleDAO iJwBaseJaqpRuleDAO;
+
+    @Resource
+    IJwBaseWeekRuleDAO iJwBaseWeekRuleDAO;
+
 
     @Override
     public IBaseDAO<TenantConfigInstance> getDao() {
@@ -551,7 +563,17 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                         jwTeacherBaseInfos.add(jwTeacherBaseInfo);
                     }
                     iJwTeacherBaseInfoDAO.deleteByCondition(removeMap);
+                    // 清除教师排课信息
                     iJwTeacherDAO.deleteByProperty("tn_id",tnId);
+                    // 清除教案齐平规则信息
+                    iJwBaseJaqpRuleDAO.deleteByProperty("tn_id",tnId);
+                    // 清除周任课规则
+                    iJwBaseWeekRuleDAO.deleteByProperty("tn_id",tnId);
+                    // 清除日任课规则
+                    iJwBaseDayRuleDAO.deleteByProperty("tn_id",tnId);
+                    // 清除连上规则
+                    iJwBaseConRuleDAO.deleteByProperty("tn_id",tnId);
+
                     iexJwTeacherBaseInfoDAO.syncTeacherInfo(jwTeacherBaseInfos);
                 }
                 break;
@@ -574,7 +596,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                             if(!grades.contains(grade)){
                                 grades.add(grade);
                             }
-                            
+
                         }
                         iJwCourseBaseInfoDAO.deleteByCondition(removeMap);
                         iJwCourseDAO.deleteByProperty("tn_id",tnId);
