@@ -6,8 +6,8 @@
   <div class="navbar-container" id="navbar-container">
     <div class="navbar-header pull-left">
       <a href="javascript:;" class="navbar-brand">
-        <%--<h1 id="logo"><img class="" src="<%=ctx%>/static/src/lib/assets/images/logo.png"/></h1> <span class="school-name" id="header-school-name"></span>--%>
-        <h1 id="logo">智高考教务</h1> <span class="school-name" id="header-school-name"></span>
+        <h1 id="logo"><img class="" src="<%=ctx%>/static/src/lib/assets/images/logo.png"/></h1> <span class="school-name" id="header-school-name"></span>
+        <%--<h1 id="logo"></h1> <span class="school-name" id="header-school-name"></span>--%>
       </a><!-- /.brand -->
     </div><!-- /.navbar-header -->
 

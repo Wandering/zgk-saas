@@ -179,4 +179,10 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      * @param map
      */
     public void removeColumn(Map map);
+    /**
+     * 查找学号是否重复
+     * @param map
+     * @return
+     */
+    Integer selectCountByStudentNo(String type,Integer tnId,String studentNo);
 }

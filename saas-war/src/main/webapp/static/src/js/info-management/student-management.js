@@ -805,6 +805,12 @@ var TplHandler = {
             });
             // 文件上传成功，给item添加成功class, 用样式标记上传成功。
             uploader.on('uploadSuccess', function (file, response) {
+                console.info('file',file)
+                console.info('response',response)
+                if (response.msg) {
+                    layer.msg(response.msg);
+                    return false;
+                }
                 if (!response.bizData.result) {
                     layer.msg(response.msg);
                     return false;

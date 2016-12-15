@@ -356,6 +356,11 @@ public class ManageController {
         List<TeantCustom> teantCustoms=(List<TeantCustom>) params.get("teantCustomList");
         String type=params.get("type").toString();
         Integer tnId=request.getDataInteger("tnId");
+//        if("student".equals(type)) {
+//            for()
+//        }
+
+
         boolean result = iexTenantCustomService.addTeantCustom(type, tnId, teantCustoms);
         if(result)
             exiTenantConfigInstanceService.syncProcedureData(type,tnId);
@@ -520,6 +525,8 @@ public class ManageController {
                 bis.close();
             if (bos != null)
                 bos.close();
+            if (out !=null)
+                out.close();
             LOGGER.info("===============导出租户excel模板 E================");
         }
         return null;

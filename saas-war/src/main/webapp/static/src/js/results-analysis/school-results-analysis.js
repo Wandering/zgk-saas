@@ -41,6 +41,7 @@ SchoolResultsAnalysis.prototype = {
                         } else {
                             $('.grade3-main,.grade3-t').hide();
                         }
+
                     }
                 });
 
@@ -124,7 +125,7 @@ SchoolResultsAnalysis.prototype = {
     },
     selSortOnline: function (grade) {
         var that = this;
-        $('input[name="sort-radio"]').change(function () {
+        $('input[name="sort-radio"]').unbind('change').on('change', function () {
             var orderBy = $(this).val();
             that.getOverLineNumberDetail(grade,orderBy);
         });
@@ -163,6 +164,8 @@ SchoolResultsAnalysis.prototype = {
             'grade': grade
         }, function (res) {
             if (res.rtnCode == "0000000") {
+                $('.school-main-content').show();
+                $('.class-no-content').hide();
                 $('.core-txt').hide();
                 var data = res.bizData;
                 var headArr = '<tr>';
@@ -183,8 +186,11 @@ SchoolResultsAnalysis.prototype = {
                 $('#core-thead').append(headArr);
                 var tbodyArr = '';
                 $.each(data, function (i, v) {
+
                     tbodyArr += '<tr>';
                     $.each(v, function (n, k) {
+                        console.log(k)
+
                         switch (k) {
                             case "batchOne":
                                 tbodyArr += '<td class="center"><a href="javascript:;" class="batch-btn" data="batchOne">一本</a></td>';
@@ -247,8 +253,9 @@ SchoolResultsAnalysis.prototype = {
                         }
                     });
                 });
-            } else {
-                $('.core-txt').show().text(res.msg);
+            } else if(res.rtnCode = "1100011"){
+                $('.school-main-content').hide();
+                $('.class-no-content').show();
             }
         }, function (res) {
             //layer.msg(res.msg);
@@ -381,6 +388,7 @@ SchoolResultsAnalysis.prototype = {
             'stepLength': stepLength
         }, function (res) {
             if (res.rtnCode == "0000000") {
+                $('#ranking-sel').html('');
                 var rankingSel = [];
                 rankingSel.push('<option value="">选择进步名次</option>');
                 $.each(res.bizData,function(i,v){
@@ -388,8 +396,11 @@ SchoolResultsAnalysis.prototype = {
                 });
                 $('#ranking-sel').append(rankingSel);
                 that.selMostAdvanced(grade);
-            } else {
-                layer.msg(res.msg);
+                $('#MostAdvanced').show();
+                that.getMostAdvancedNumbers(grade,that.counselor,that.stepStart,that.stepEnd)
+            } else if(res.rtnCode == "1100012"){
+                console.log('该年级只有一次成绩录入!');
+                $('#MostAdvanced').hide();
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -415,13 +426,19 @@ SchoolResultsAnalysis.prototype = {
         }, function (res) {
             console.log(res)
             if (res.rtnCode == "0000000") {
-                $('#progress-table').show();
-                $('.progress-txt').text('');
-                var myTemplate = Handlebars.compile($("#progress-template").html());
-                $('#progress-tbody').html(myTemplate(res));
-                var progressTheadTemplate = Handlebars.compile($("#progress-thead-template").html());
-                $('#progress-thead').html(progressTheadTemplate(res));
-            } else {
+                if(res.bizData.length == 0){
+                    $('#MostAdvanced').hide();
+                }else{
+                    $('#MostAdvanced').show();
+                    $('#progress-table').show();
+                    $('.progress-txt').text('');
+                    var myTemplate = Handlebars.compile($("#progress-template").html());
+                    $('#progress-tbody').html(myTemplate(res));
+                    var progressTheadTemplate = Handlebars.compile($("#progress-thead-template").html());
+                    $('#progress-thead').html(progressTheadTemplate(res));
+                }
+
+            } else{
                 $('#progress-table').hide();
                 $('.progress-txt').show().text(res.msg);
             }
@@ -568,6 +585,7 @@ SchoolResultsAnalysis.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 if(res.bizData.length>0){
+                    $('#counselor-sel').html('');
                     var counselorSel = [];
                     counselorSel.push('<option value="">选择班主任</option>');
                     $.each(res.bizData,function(i,v){
@@ -600,8 +618,6 @@ SchoolResultsAnalysis.prototype = {
 var SchoolResultsAnalysisIns = new SchoolResultsAnalysis();
 
 $(function () {
-
-
 
 });
 

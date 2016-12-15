@@ -33,7 +33,7 @@ Schedule.prototype = {
                             result = '<a href="javascript: void(0);" class="fail-schedule-btn btn-split">排课失败</a><a href="javascript: void(0);" class="again-schedule-btn btn-split">重新排课</a>';
                             break;
                         case 3:
-                            result = '<a href="javascript: void(0);" class="timetable-btn btn-split">查看课表</a><a href="javascript: void(0);" class="again-schedule-btn btn-split">重新排课</a>';
+                            result = '<a href="/course-scheduling-step3" class="timetable-btn btn-split">查看课表</a><a href="/course-scheduling-step1" class="again-schedule-btn btn-split">重新排课</a>';
                             break;
                         default:
                             break;
@@ -290,7 +290,9 @@ $(function () {
     $('body').on('click', '.start-schedule-btn', function () {
         var id = $(this).parent().attr('dataid');
         var gradeName = $(this).parent().attr('gradeName');
+        var scheduleName = $(this).parent().attr('scheduleName');
         Common.cookie.setCookie('gradeName', gradeName);
+        Common.cookie.setCookie('scheduleName', scheduleName);
         schedule.checkTaskBaseInfo(id);
 
     });

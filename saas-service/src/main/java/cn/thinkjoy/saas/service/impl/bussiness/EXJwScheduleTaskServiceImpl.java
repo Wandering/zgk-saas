@@ -206,7 +206,7 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
             }
             list1.add(list2);
         }
-        resultMap.put("room",list1);
+        resultMap.put("roomData",list1);
         return resultMap;
     }
 

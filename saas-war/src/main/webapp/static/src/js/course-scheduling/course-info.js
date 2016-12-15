@@ -4,7 +4,8 @@
 //课程信息构造函数及其原型
 
 var taskId = Common.cookie.getCookie('taskId');
-
+var scheduleName = Common.cookie.getCookie('scheduleName');
+$('.scheduleName').text(scheduleName);
 function CourseInfo() {
     this.init();
 }

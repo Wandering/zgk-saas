@@ -15527,8 +15527,9 @@ h1#logo{
 }
 .school-name{
     float: left;
-    margin-left:65px;
+    margin-left:25px;
     font-size: 18px;
+    margin-top:4px;
 }
 
 .main-content.flow-main-content{

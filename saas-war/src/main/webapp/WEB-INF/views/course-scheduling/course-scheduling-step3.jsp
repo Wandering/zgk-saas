@@ -198,7 +198,6 @@
     </div>
 </div>
 <script src="<%=ctx%>/static/src/js/course-scheduling/step3-common.js"></script>
-<script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling-step3.js"></script>
 <script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>
 </body>
 </html>

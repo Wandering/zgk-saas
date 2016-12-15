@@ -12,7 +12,7 @@
 </div>
 <div class="common-back-title">
     <a href="/course-scheduling">&lt;返回</a>
-    <span class="title">高一排课</span>
+    <span class="title scheduleName"></span>
 </div>
 <div class="course-scheduling-base">
     <div class="procedure">
@@ -24,7 +24,7 @@
     </div>
 </div>
 <div id="one-key-page" class="">
-    <div class="btn-one-key">一键生成课表</div>
+    <div class="btn-one-key dh">一键生成课表</div>
     <div class="info-modify dh">
         <p>基础信息/排课规则已更改，是否重新排课</p>
         <div class="retry-scheduling">重新排课</div>

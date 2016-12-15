@@ -143,6 +143,7 @@
 
                                     </tbody>
                                 </table>
+
                                 <div><h5 class="h5">重点关注学生：</h5><span class="batch-info">根据去年上线比例：一本全校位次线<span
                                         class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名</span></div>
                                 <div class="txt-t">
@@ -151,9 +152,9 @@
                                             <div class="col-sm-3">
                                                 <select class="form-control" id="batch-sel">
                                                     <option value="">请选择批次</option>
-                                                    <option value="batchOne">一本</option>
+                                                    进步较大学生  <option value="batchOne">一本</option>
                                                     <option value="batchTwo">二本</option>
-                                                    <option value="batchThr">三本</option>
+                                                    <%--<option value="batchThr">三本</option>--%>
                                                 </select>
                                             </div>
                                         </div>
@@ -174,7 +175,8 @@
                                     </table>
                                     <div class="tcdPageCode"></div>
                                 </div>
-                                <div><h5 class="h5 p-t"><span class="line"></span>进步较大学生：</h5>
+                                <div id="MostAdvanced">
+                                    <h5 class="h5 p-t"><span class="line"></span>进步较大学生：</h5>
                                     <form class="form-horizontal" role="form">
                                         <div class="form-group">
                                             <div class="col-sm-3">
@@ -256,7 +258,7 @@
             {{/each}}
         </script>
         <script id="details-main-template" type="text/x-handlebars-template">
-            {{#each bizData.list}}
+            {{#each this}}
             <tr>
                 <td class="center">{{classRank}}</td>
                 <td class="center"><a href="javascript:;" class="student-btn">{{studentName}}</a></td>
