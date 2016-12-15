@@ -356,6 +356,11 @@ public class ManageController {
         List<TeantCustom> teantCustoms=(List<TeantCustom>) params.get("teantCustomList");
         String type=params.get("type").toString();
         Integer tnId=request.getDataInteger("tnId");
+//        if("student".equals(type)) {
+//            for()
+//        }
+
+
         boolean result = iexTenantCustomService.addTeantCustom(type, tnId, teantCustoms);
         if(result)
             exiTenantConfigInstanceService.syncProcedureData(type,tnId);

@@ -186,4 +186,13 @@
             </foreach>
     </insert>
 
+    <select id="selectCountByStudentNo" parameterType="java.util.Map" resultType="Integer">
+           select count(1) from ${tableName}
+           <where>
+               <if test="studentNo!=null">
+                   student_no=#{studentNo}
+               </if>
+           </where>
+    </select>
+
 </mapper>
