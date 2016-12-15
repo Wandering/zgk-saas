@@ -48,7 +48,8 @@ var HashHandle = {
                         break;
                     case 3:
                         $('.btn-one-key').addClass('dh');
-                        $('.info-modify').removeClass('dh');
+                        //$('.info-modify').removeClass('dh');
+                        $('#role-scheduling-tab, #step3-child-class').removeClass('dh');
                         break;
                     default:
                         break;
@@ -65,7 +66,7 @@ var HashHandle = {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
                 $('#role-scheduling-tab, #step3-child-class').removeClass('dh');
-                $('.info-modify').addClass('dh');
+                $('.info-modify, .btn-one-key').addClass('dh');
             }
         }, function (res) {
             layer.msg("出错了");
