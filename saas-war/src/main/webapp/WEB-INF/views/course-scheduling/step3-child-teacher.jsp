@@ -13,7 +13,6 @@
             <option value="">请选择科目</option>
         </select>
         <select id="select-teacher">
-            <option value="">请选择老师</option>
         </select>
     </div>
     <div class="scheduling-info">
