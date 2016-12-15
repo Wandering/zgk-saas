@@ -256,7 +256,7 @@
             {{/each}}
         </script>
         <script id="details-main-template" type="text/x-handlebars-template">
-            {{#each bizData.list}}
+            {{#each this}}
             <tr>
                 <td class="center">{{classRank}}</td>
                 <td class="center"><a href="javascript:;" class="student-btn">{{studentName}}</a></td>

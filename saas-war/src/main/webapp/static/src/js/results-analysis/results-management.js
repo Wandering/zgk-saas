@@ -92,18 +92,18 @@ ResultsManagementFun.prototype = {
         if (id) {
             layer.open({
                 type: 1,
-                title: '上传成绩',
+                title: '修改成绩',
                 offset: 'auto',
-                area: ['362px', '230px'],
+                area: ['380px', '250px'],
                 content: contentHtml.join('')
             });
 
         } else {
             layer.open({
                 type: 1,
-                title: '修改成绩',
+                title: '上传成绩',
                 offset: 'auto',
-                area: ['362px', '350px'],
+                area: ['380px', '350px'],
                 content: contentHtml.join('')
             });
             uploadFun();
@@ -853,6 +853,16 @@ function uploadFun() {
             $('#' + file.id).addClass('upload-state-done');
             $('.save-btn').attr('filePath', response.bizData.filePath);
             layer.msg('上传成功!');
+
+            if (!response.bizData.result) {
+                layer.msg(response.msg);
+                return false;
+            }
+            if (response.bizData.result != 'SUCCESS') {
+                layer.msg(response.bizData.result);
+                return false;
+            }
+
 
         });
 

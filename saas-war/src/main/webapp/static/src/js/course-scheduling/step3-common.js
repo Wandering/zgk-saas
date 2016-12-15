@@ -1,7 +1,8 @@
 /**
  * 地址Hash处理
  */
-
+var scheduleName = Common.cookie.getCookie('scheduleName');
+$('.scheduleName').text(scheduleName);
 var HashHandle = {
     init: function () {
         this.hashArr = ['#class', '#teacher', '#student', '#all'];
@@ -50,8 +51,8 @@ if(Common.cookie.getCookie('lockSubject') == 1){
 
 $(function () {
 
-    var flag = Common.checkInfoIsPerfect(taskId);
-    if (!flag) {
-        window.location.href = '/course-scheduling-step1';
-    }
+    //var flag = Common.checkInfoIsPerfect(taskId);
+    //if (!flag) {
+    //    window.location.href = '/course-scheduling-step1';
+    //}
 });
