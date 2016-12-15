@@ -12,6 +12,7 @@ import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.google.common.collect.Maps;
+import com.sun.tools.corba.se.idl.InterfaceGen;
 import org.apache.poi.hssf.usermodel.DVConstraint;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -1274,6 +1275,10 @@ public class ScoreAnalyseController
                 {
                     changeNames.add(entry.getKey());
                 }
+                if(lastButTwoGrandRank >= min && lastButTwoGrandRank <= max && (lastGrandRank < min || lastGrandRank > max))
+                {
+                    changeNames.add(entry.getKey());
+                }
             }
             Exam e1 = (Exam)examService.findOne("id", examIds.get(0));
             Exam e2 = (Exam)examService.findOne("id", examIds.get(1));
@@ -1292,15 +1297,21 @@ public class ScoreAnalyseController
                     Map<String, Object> para = new HashMap<>();
                     para.put("学生姓名", detailList.get(0).getStudentName());
                     para.put("变化趋势", detailList.get(1).getGradeRank() + "名 - " + detailList.get(0).getGradeRank() + "名");
+                    para.put("gap", Integer.parseInt(detailList.get(1).getGradeRank()) - Integer.parseInt(detailList.get(0).getGradeRank()));
                     list.add(para);
                 }
             }
+            Collections.sort(list, new Comparator<Map<String, Object>>()
+            {
+                @Override
+                public int compare(Map<String, Object> o1, Map<String, Object> o2)
+                {
+                    return (int)o1.get("gap") >= (int)o2.get("gap") ? -1 :1;
+                }
+            });
             params.put("变化人数", list.size());
             params.put("data", list);
-            if(list.size() > 0)
-            {
-                resultList.add(params);
-            }
+            resultList.add(params);
         }
         return resultList;
     }
@@ -1887,7 +1898,7 @@ public class ScoreAnalyseController
         @RequestParam(value = "stepLength", required = true) int stepLength)
     {
         getMostAdvancedDetailForClass(tnId, grade, className, null, null, null, null);
-        int maxStep = (maxGradeRank / 10 + 1) * 10;
+        int maxStep = maxGradeRank % stepLength == 0 ? maxGradeRank : (maxGradeRank / 10 + 1) * 10;
         List<Map<String, Integer>> stepList = new ArrayList<>();
         if (maxStep >= 10)
         {
