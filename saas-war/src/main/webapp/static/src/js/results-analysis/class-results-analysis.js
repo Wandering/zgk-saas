@@ -320,7 +320,7 @@ ClassResultsAnalysis.prototype = {
                 //splitNumber: Math.max(totalScoreData),
                 //minInterval: Math.max(totalScoreData)
                 //min: 'dataMin',
-                //max: 'dataMax',
+                //max: Math.max(totalScoreData),
                 minInterval: 1,
                 interval: 1
             },
@@ -339,7 +339,7 @@ ClassResultsAnalysis.prototype = {
         var subjectsChart = echarts.init(document.getElementById('subjectsChart-chart'));
         var subjectsChartOption = {
             title: {
-                text: '班级平均分排名',
+                text: '班级平均分排名b',
                 left: 'left',
                 textStyle: {
                     fontSize: '14',
@@ -444,12 +444,12 @@ ClassResultsAnalysis.prototype = {
             yAxis: [
                 {
                     name: '上线人数',
-
                     scale: false,
-                    type: 'value',
+                    type: 'value'
                     // min:Array.min(totalScoreData),
                     // max:Array.max(totalScoreData),
-                    // minInterval:1
+                    //minInterval:1,
+                    //interval: 1
                 }
             ],
             series: [
