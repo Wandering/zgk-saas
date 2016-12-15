@@ -155,6 +155,15 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         return task;
     }
 
+
+    @Override
+    public List<TeacherBaseDto> queryTeacherByTaskId(Map<String,Object> map) {
+
+        List<JwTeacher> teachers = jwTeacherDAO.queryList(map,"id","asc");
+
+        return convertTeachers2Dtos(teachers);
+    }
+
     @Override
     public List<TeacherBaseDto> queryTeacherByTaskId(int taskId) {
 
