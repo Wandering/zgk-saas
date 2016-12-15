@@ -151,9 +151,9 @@
                                             <div class="col-sm-3">
                                                 <select class="form-control" id="batch-sel">
                                                     <option value="">请选择批次</option>
-                                                    <option value="batchOne">一本</option>
+                                                    进步较大学生  <option value="batchOne">一本</option>
                                                     <option value="batchTwo">二本</option>
-                                                    <option value="batchThr">三本</option>
+                                                    <%--<option value="batchThr">三本</option>--%>
                                                 </select>
                                             </div>
                                         </div>
@@ -174,7 +174,7 @@
                                     </table>
                                     <div class="tcdPageCode"></div>
                                 </div>
-                                <div><h5 class="h5 p-t"><span class="line"></span>进步较大学生：</h5>
+                                <div id="MostAdvanced"><h5 class="h5 p-t"><span class="line"></span>进步较大学生：</h5>
                                     <form class="form-horizontal" role="form">
                                         <div class="form-group">
                                             <div class="col-sm-3">
