@@ -198,6 +198,11 @@ var App = {
     addEvent: function () {
         var targetDom = $('#grade-list input');
         $(document).on('click', '.grade-list input[name="grade-li"]', function () {
+            App.page = {
+                'offset': 0,
+                'rows': 30,
+                'count': ''
+            }
             App.checkGradeName = $('input[name="grade-li"]:checked').next().text();
             App.loadPage();
             App.pagination();
