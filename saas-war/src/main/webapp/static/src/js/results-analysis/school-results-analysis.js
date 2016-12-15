@@ -33,7 +33,7 @@ SchoolResultsAnalysis.prototype = {
                         $('#grade-body input[name="results-radio"][value="'+ v.value +'"]').attr('checked','checked');
                         that.selSortOnline(v.value);
                         that.coreStudent(v.value);
-                        that.getStepList(v.value, 10, 20);
+                        that.getStepList(v.value, 10, 9);
                         that.getSchoolBossForGrade(v.value);
                         if (v.value.indexOf('高三') >= 0 || v.value.indexOf('高3') >= 0) {
                             that.getOverLineNumberByDate(v.value);
@@ -392,7 +392,7 @@ SchoolResultsAnalysis.prototype = {
                 var rankingSel = [];
                 rankingSel.push('<option value="">选择进步名次</option>');
                 $.each(res.bizData,function(i,v){
-                    rankingSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="'+ v.stepEnd +'" value="">'+ v.stepStart + "-" + v.stepEnd +'</option>');
+                    rankingSel.push('<option stepStart="'+ v.stepStart +'" stepEnd="" value="">'+ v.stepStart +'名以上</option>');
                 });
                 $('#ranking-sel').append(rankingSel);
                 that.selMostAdvanced(grade);
@@ -427,9 +427,7 @@ SchoolResultsAnalysis.prototype = {
             console.log(res)
             if (res.rtnCode == "0000000") {
                 if(res.bizData.length == 0){
-                    $('#MostAdvanced').hide();
                 }else{
-                    $('#MostAdvanced').show();
                     $('#progress-table').show();
                     $('.progress-txt').text('');
                     var myTemplate = Handlebars.compile($("#progress-template").html());
