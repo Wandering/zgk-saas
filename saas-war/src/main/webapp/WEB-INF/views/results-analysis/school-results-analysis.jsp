@@ -44,7 +44,7 @@
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
                         <div class="main-title">
-                            <h3>学校成绩管理</h3>
+                            <h3>学校成绩分析</h3>
                         </div>
 
                         <div class="title-2">

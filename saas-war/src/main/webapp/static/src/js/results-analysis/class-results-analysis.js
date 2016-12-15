@@ -268,6 +268,10 @@ ClassResultsAnalysis.prototype = {
                         };
                         datas.push(seriesObj);
                     }
+                    console.log(dateData)
+                    console.log(totalScoreData)
+                    var maxArrData = [];
+                    dateData
                     that.totalScoreChart(dateData, totalScoreData);
                     that.subjectsChart(subjectData, dateData, datas, arrMaxMin);
                 } else {
@@ -324,7 +328,7 @@ ClassResultsAnalysis.prototype = {
                 //splitNumber: Math.max(totalScoreData),
                 //minInterval: Math.max(totalScoreData)
                 //min: 'dataMin',
-                //max: Math.max(totalScoreData),
+                //max: Math.max(dateData) + 5,
                 minInterval: 1,
                 interval: 1
             },
@@ -378,7 +382,7 @@ ClassResultsAnalysis.prototype = {
                 scale: false,
                 type: 'value',
                 //min: Array.min(arrMaxMin),
-                //max: Array.max(arrMaxMin)
+                //max: Math.max(dateData),
                 minInterval: 1,
                 interval: 1
             },
