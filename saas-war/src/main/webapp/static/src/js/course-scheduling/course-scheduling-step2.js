@@ -2,7 +2,10 @@
  * Created by machengcheng on 16/12/6.
  */
 var taskId = Common.cookie.getCookie('taskId');
-
+var scheduleName = Common.cookie.getCookie('scheduleName');
+var gradeName = Common.cookie.getCookie('gradeName');
+$('.scheduleName').text(scheduleName);
+$('.gradeName').text(gradeName);
 function ArrangeCourse () {
     this.types = ['class', 'teacher', 'course'];
     this.classids = [];
@@ -389,6 +392,14 @@ ArrangeCourse.prototype = {
 };
 
 $(function () {
+
+    $(function () {
+
+        var flag = Common.checkInfoIsPerfect(taskId);
+        if (!flag) {
+            window.location.href = '/course-scheduling-step1';
+        }
+    });
 
     var arrangeCourse = new ArrangeCourse();
 

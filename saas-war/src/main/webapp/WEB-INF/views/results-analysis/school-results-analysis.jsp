@@ -54,74 +54,88 @@
                         </div>
                         <!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
-                    <div class="col-xs-12">
-                        <div class="grade3-t"><h5 class="h5 p-t"><span class="line"></span>本科线成绩分析：</h5></div>
-                        <div class="grade3-main" style="display: none;">
-                            <div id="lineNumberByDate-chart" style="width: 100%;height: 250px;"></div>
-                        </div>
-                        <p><h5 class="h5 p-t"><span class="line"></span>各班上线人数统计：</h5><span class="p-t2">根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</span></p>
-                        <div class="txt-t">
-                            <div class="radio no-padding-left">
-                                <label>
-                                    <span class="lbl">排序规则:</span>
-                                </label>
-                                <label>
-                                    <input name="sort-radio" type="radio" value="batchAll" class="ace batchAllRadio"/>
-                                    <span class="lbl">本科上线人数</span>
-                                </label>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <label>
-                                    <input name="sort-radio" type="radio" value="batchOne" class="ace batchOneRadio"/>
-                                    <span class="lbl">一本上线人数</span>
-                                </label>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <label>
-                                    <input name="sort-radio" type="radio" value="batchTwo" class="ace batchTwoRadio"/>
-                                    <span class="lbl">二本上线人数</span>
-                                </label>
+                    <div class="school-main-content">
+                        <div class="col-xs-12">
+                            <div class="grade3-t"><h5 class="h5 p-t"><span class="line"></span>本科线成绩分析：</h5></div>
+                            <div class="grade3-main" style="display: none;">
+                                <div id="lineNumberByDate-chart" style="width: 100%;height: 250px;"></div>
                             </div>
-                        </div>
-                        <div class="sort-txt"></div>
-                        <table id="sort-table" class="table table-hover">
-                            <thead id="sort-thead">
-                            <tr>
-                            </tr>
-                            </thead>
-                            <tbody id="sort-tbody">
-
-                            </tbody>
-                        </table>
-
-                        <div><h5 class="h5 p-t"><span class="line"></span>重点关注学生：</h5><span class="p-t2">根据去年上线比例：一本全校位次线<span class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名，三本位次线<span class="batchThr"></span>名</span></div>
-                        <div class="core-txt"></div>
-                        <table class="table table-hover">
-                            <thead id="core-thead"></thead>
-                            <tbody id="core-tbody"></tbody>
-                        </table>
-
-                        <div><h5 class="h5 p-t"><span class="line"></span>进步较大学生：</h5></div>
-                        <form class="form-horizontal" role="form">
-                            <div class="form-group">
-                                <div class="col-sm-3">
-                                    <select class="form-control" id="ranking-sel">
-                                    </select>
-                                </div>
-                                <div class="col-sm-3 counselor-sel">
-                                    <select class="form-control" id="counselor-sel">
-                                    </select>
+                            <p><h5 class="h5 p-t"><span class="line"></span>各班上线人数统计：</h5><span class="p-t2">根据去年上线比例：一本全校位次线<span
+                                class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名</p>
+                            <div class="txt-t">
+                                <div class="radio no-padding-left">
+                                    <label>
+                                        <span class="lbl">排序规则:</span>
+                                    </label>
+                                    <label>
+                                        <input name="sort-radio" type="radio" value="batchAll"
+                                               class="ace batchAllRadio"/>
+                                        <span class="lbl">本科上线人数</span>
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label>
+                                        <input name="sort-radio" type="radio" value="batchOne"
+                                               class="ace batchOneRadio"/>
+                                        <span class="lbl">一本上线人数</span>
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label>
+                                        <input name="sort-radio" type="radio" value="batchTwo"
+                                               class="ace batchTwoRadio"/>
+                                        <span class="lbl">二本上线人数</span>
+                                    </label>
                                 </div>
                             </div>
-                        </form>
-                        <div class="progress-txt"></div>
-                        <table id="progress-table" class="table table-hover">
-                            <thead id="progress-thead">
-                            <tr>
-                            </tr>
-                            </thead>
-                            <tbody id="progress-tbody">
+                            <div class="sort-txt"></div>
+                            <table id="sort-table" class="table table-hover">
+                                <thead id="sort-thead">
+                                <tr>
+                                </tr>
+                                </thead>
+                                <tbody id="sort-tbody">
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+
+                            <div><h5 class="h5 p-t"><span class="line"></span>重点关注学生：</h5><span class="p-t2">根据去年上线比例：一本全校位次线<span
+                                    class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名</div>
+                            <div class="core-txt"></div>
+                            <table class="table table-hover">
+                                <thead id="core-thead"></thead>
+                                <tbody id="core-tbody"></tbody>
+                            </table>
+
+                            <div id="MostAdvanced">
+                                <div><h5 class="h5 p-t"><span class="line"></span>进步较大学生：</h5></div>
+                                <form class="form-horizontal" role="form">
+                                    <div class="form-group">
+                                        <div class="col-sm-3">
+                                            <select class="form-control" id="ranking-sel">
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-3 counselor-sel">
+                                            <select class="form-control" id="counselor-sel">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="progress-txt"></div>
+                                <table id="progress-table" class="table table-hover">
+                                    <thead id="progress-thead">
+                                    <tr>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="progress-tbody">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="class-no-content">
+                        <img src="<%=ctx%>/static/src/img/nodata.png" alt="">
+                        <p>该年级还没有成绩录入，无法使用此功能！<br/>
+                            请至成绩分析>学生成绩管理页上传该年级成绩！</p>
                     </div>
                 </div><!-- /.row -->
             </div><!-- /.page-content -->

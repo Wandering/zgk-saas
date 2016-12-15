@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>院校招生计划</title>
+    <title>SAAS 院校招生计划</title>
     <%@ include file="./../common/meta.jsp" %>
     <link rel="stylesheet" href="<%=ctx%>/static/src/css/data-query/school-recruit.css"/>
 </head>

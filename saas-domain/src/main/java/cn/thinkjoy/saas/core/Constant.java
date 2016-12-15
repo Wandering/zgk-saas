@@ -56,4 +56,6 @@ public class Constant {
 
     public static final String DEFULT_TEACH_DATE= "星期一|星期二|星期三|星期四|星期五";
     public static final String DEFULT_TEACH_TIME= "430";
+    public static final Integer DEFULT_CLASS_TYPE= 1;
+    public static final Integer TASK_SUCCESS = 3;
 }

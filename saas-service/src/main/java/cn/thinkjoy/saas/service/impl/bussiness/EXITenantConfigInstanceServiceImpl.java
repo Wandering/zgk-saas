@@ -51,11 +51,27 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
     IEXCourseBaseInfoDAO iexCourseBaseInfoDAO;
     @Resource
     IJwCourseBaseInfoDAO iJwCourseBaseInfoDAO;
+    @Resource
+    IJwCourseDAO iJwCourseDAO;
+    @Resource
+    IJwTeacherDAO iJwTeacherDAO;
 
     @Resource
     IEXClassBaseInfoDAO iexClassBaseInfoDAO;
     @Resource
     IJwClassBaseInfoDAO jwClassBaseInfoDAO;
+
+    @Resource
+    IJwBaseConRuleDAO iJwBaseConRuleDAO;
+
+    @Resource
+    IJwBaseDayRuleDAO iJwBaseDayRuleDAO;
+
+    @Resource
+    IJwBaseJaqpRuleDAO iJwBaseJaqpRuleDAO;
+
+    @Resource
+    IJwBaseWeekRuleDAO iJwBaseWeekRuleDAO;
 
 
     @Override
@@ -549,6 +565,17 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                         jwTeacherBaseInfos.add(jwTeacherBaseInfo);
                     }
                     iJwTeacherBaseInfoDAO.deleteByCondition(removeMap);
+                    // 清除教师排课信息
+                    iJwTeacherDAO.deleteByProperty("tn_id",tnId);
+                    // 清除教案齐平规则信息
+                    iJwBaseJaqpRuleDAO.deleteByProperty("tn_id",tnId);
+                    // 清除周任课规则
+                    iJwBaseWeekRuleDAO.deleteByProperty("tn_id",tnId);
+                    // 清除日任课规则
+                    iJwBaseDayRuleDAO.deleteByProperty("tn_id",tnId);
+                    // 清除连上规则
+                    iJwBaseConRuleDAO.deleteByProperty("tn_id",tnId);
+
                     iexJwTeacherBaseInfoDAO.syncTeacherInfo(jwTeacherBaseInfos);
                 }
                 break;
@@ -558,16 +585,26 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                     List<SyncCourse> syncCourses = iexTeantCustomDAO.selectCourseGroup(map);
                     if (syncCourses != null) {
                         List<JwCourseBaseInfo> jwCourseBaseInfos = new ArrayList<>();
+                        List<Integer> grades = Lists.newArrayList();
                         for (SyncCourse syncCourse : syncCourses) {
                             JwCourseBaseInfo jwCourseBaseInfo = new JwCourseBaseInfo();
                             jwCourseBaseInfo.setTnId(tnId);
                             jwCourseBaseInfo.setCourseName(syncCourse.getMajor());
-                            jwCourseBaseInfo.setGrade(ConvertUtil.converGrade(syncCourse.getGrade()).toString());
+                            Integer grade = ConvertUtil.converGrade(syncCourse.getGrade());
+                            jwCourseBaseInfo.setGrade(grade.toString());
                             jwCourseBaseInfo.setCourseType(2);
                             jwCourseBaseInfos.add(jwCourseBaseInfo);
+
+                            if(!grades.contains(grade)){
+                                grades.add(grade);
+                            }
+
                         }
                         iJwCourseBaseInfoDAO.deleteByCondition(removeMap);
-                        jwCourseBaseInfos.addAll(convertCourseList(tnId,ConvertUtil.converGrade(syncCourses.get(0).getGrade()).toString()));
+                        iJwCourseDAO.deleteByProperty("tn_id",tnId);
+                        for(Integer grade : grades){
+                            jwCourseBaseInfos.addAll(convertCourseList(tnId,grade.toString()));
+                        }
                         iexCourseBaseInfoDAO.syncCourseInfo(jwCourseBaseInfos);
                     }
                     List<SyncClass> syncClasses = iexTeantCustomDAO.selectClassGroup(map);

@@ -1091,21 +1091,19 @@ selectList
     </select>
 
     <select id="getMostAttentionCourseChart" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
-        select courseName,CAST(total1 as SIGNED) + CAST(total2 AS SIGNED) total
+        SELECT  courseName, sum(total) total
         FROM
-        (select *
-        from (select c.weakCourseOne courseName,count(1) total1
+        (select c.weakCourseOne courseName,count(1) total
         from saas_exam_stu_weak_course c
         where c.examId=#{examId} and c.batchName=#{batchName}
         group by courseName
-        order by total1 desc) t
-        inner join
-        (select c.weakCourseTwo courseName2,count(1) total2
+        UNION
+        select c.weakCourseTwo courseName,count(1) total
         from saas_exam_stu_weak_course c
         where c.examId=#{examId} and c.batchName=#{batchName}
-        group by courseName2
-        order by total2 desc) s on t.courseName=s.courseName2) tb
-        order by total desc
+        group by courseName) tb
+        group by tb.courseName
+        order by tb.total desc
     </select>
 
     <select id="getMostAttentionPage" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">

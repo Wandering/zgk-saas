@@ -47,7 +47,7 @@
                                 <span class="gap"><i></i><i></i><i></i><i></i><i></i></span>
                                 <a href="javascript: void(0);" id="rule-settings" class="disabled"><i>2</i>排课规则设置</a>
                                 <span class="gap"><i></i><i></i><i></i><i></i><i></i></span>
-                                <a href="javascript: void(0);" class="disabled"><i>3</i>自动排课</a>
+                                <a href="javascript: void(0);" id="auto-assign-course" class="disabled"><i>3</i>自动排课</a>
                             </div>
                         </div>
                         <ul class="base-item-tab">
@@ -75,7 +75,7 @@
                                     <tr>
                                         <th class="center" width="50px">
                                             <label>
-                                                <input type="checkbox" class="ace" />
+                                                <input type="checkbox" id="checkAll" class="ace" />
                                                 <span class="lbl"></span>
                                             </label>
                                         </th>

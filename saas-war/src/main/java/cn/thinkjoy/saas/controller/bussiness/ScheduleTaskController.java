@@ -100,7 +100,28 @@ public class ScheduleTaskController {
         teachTimeService.saveTeachTime(Integer.valueOf(jwScheduleTask.getId().toString()),Constant.DEFULT_TEACH_DATE,Constant.DEFULT_TEACH_TIME,tnId);
         return flag;
     }
-
+    /**
+     * 查询拍客任务状态
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/queryScheduleTaskStatus")
+    public Integer queryScheduleTaskStatus(@RequestParam Integer taskId){
+        JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
+        return jwScheduleTask.getStatus();
+    }
+    /**
+     * 修改拍客任务状态
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/updateScheduleTaskStatus")
+    public boolean updateScheduleTaskStatus(@RequestParam Integer taskId){
+        JwScheduleTask jwScheduleTask = new JwScheduleTask();
+        jwScheduleTask.setId(taskId);
+        jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
+        return jwScheduleTaskService.update(jwScheduleTask)>0;
+    }
     /**
      * 修改排课任务
      * @return
@@ -371,10 +392,17 @@ public class ScheduleTaskController {
             ExceptionUtil.throwException(ErrorCode.TEACH_DATE_ERROR);
         }
 
-        // 检测课程信息是否填写
+        // 检测课程课时信息是否填写
         List<JwCourse> courses = jwCourseService.findList("task_id",taskId);
         if(courses.size() == 0){
             ExceptionUtil.throwException(ErrorCode.COURSE_INFO_ERROR);
+        }
+
+        // 检测课程课时信息是否填写完整(给所有课程是否已设置课时)
+        for(JwCourse course : courses){
+            if(StringUtils.isEmpty(course.getCourseHour())){
+                ExceptionUtil.throwException(ErrorCode.COURSE_INFO_NOT_PERFECT);
+            }
         }
 
         // 检测教师信息是否填写

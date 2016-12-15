@@ -6,12 +6,13 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <div class="main-title">
     <h3>排课任务</h3>
 </div>
 <div class="common-back-title">
     <a href="/course-scheduling">&lt;返回</a>
-    <span class="title">高一排课</span>
+    <span class="title scheduleName"></span>
 </div>
 <div class="course-scheduling-base">
     <div class="procedure">
