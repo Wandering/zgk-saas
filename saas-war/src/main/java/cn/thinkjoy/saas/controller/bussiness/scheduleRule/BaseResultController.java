@@ -2,11 +2,14 @@ package cn.thinkjoy.saas.controller.bussiness.scheduleRule;
 
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
+import cn.thinkjoy.saas.dao.IJwTeacherDAO;
 import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
 import cn.thinkjoy.saas.domain.JwClassBaseInfo;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
+import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.service.*;
+import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
@@ -34,8 +37,6 @@ public class BaseResultController {
     @Autowired
     private IJwRoomService jwRoomService;
     @Autowired
-    private IJwTeacherBaseInfoService jwTeacherBaseInfoService;
-    @Autowired
     private IJwScheduleTaskService jwScheduleTaskService;
     @Autowired
     private IJwCourseBaseInfoService jwCourseBaseInfoService;
@@ -43,6 +44,9 @@ public class BaseResultController {
     private IJwClassBaseInfoService jwClassBaseInfoService;
     @Autowired
     private IEXTenantCustomService iexTenantCustomService;
+
+    @Autowired
+    private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
 
     /**
      * 获取教室名称
@@ -67,21 +71,29 @@ public class BaseResultController {
      */
     @RequestMapping(value = "/queryTeacher",method = RequestMethod.GET)
     @ResponseBody
-    public List getTeacher(@RequestParam Integer taskId,@RequestParam String teacherCourse) {
+    public List<Map<String,Object>> getTeacher(@RequestParam Integer taskId,@RequestParam String teacherCourse) {
         if (StringUtils.isEmpty(teacherCourse)){
             ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
         }
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
         Map<String,Object>  map = Maps.newHashMap();
         map.put("tnId",tnId);
         map.put("taskId",taskId);
-        map.put("grade",jwScheduleTask.getGrade());
-        map.put("teacherCourse",teacherCourse);
-        List list = jwTeacherBaseInfoService.queryList(map,"id","desc");
-        return list;
+        map.put("course",teacherCourse);
+        List<TeacherBaseDto> list = iexScheduleBaseInfoService.queryTeacherByTaskId(map);
+        return teacherBaseDtotoMap(list);
     }
-
+    List<Map<String,Object>> teacherBaseDtotoMap(List<TeacherBaseDto> list){
+        Map<String,Object> map ;
+        List<Map<String,Object> >  maps = new ArrayList<>();
+        for (TeacherBaseDto teacherBaseDto:list){
+            map = Maps.newHashMap();
+            map.put("id",teacherBaseDto.getTeacherId());
+            map.put("teacherName",teacherBaseDto.getTeacherName());
+            maps.add(map);
+        }
+        return maps;
+    }
     /**
      * 获取课程信息
      * @return

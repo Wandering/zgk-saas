@@ -328,6 +328,7 @@ public class CourseDisSelectController
                         Map<String, String> map = new HashMap<>();
                         map.put("name", dto.getTeacherName());
                         map.put("teacherCourse", dto.getCourseName());
+                        map.put("id", dto.getTeacherId() + "");
                         list.add(map);
                     }
                 }

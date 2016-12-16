@@ -109,14 +109,19 @@ ClassResultsAnalysis.prototype = {
             $('.batch-info,.grade3-main,.grade3-student-batch,#batch-sel,.tcdPageCode').show();
             that.getOverLineNumberByDate(gradeV, className);
             that.selSortOnline(gradeV, className);
+            // 重点关注学生年级选择
+            that.getMostAttentionPage(gradeV, that.batchV, className, '', 0, 3);
         } else {
             $('.grade-type').text('重点线成绩分析');
             $('.grade1-2-line,.grade-student-num').show();
             $('.batch-info,.grade3-main,.grade3-student-batch,#batch-sel,.tcdPageCode').hide();
-            // 班级上线人数统计
-            that.getOverLineDetailForClassTwo(gradeV, className, line);
-            // 重点关注学生
-            that.getMostAttendDetailForClassTwo(gradeV, className, line);
+            if(line!=""){
+                // 班级上线人数统计
+                that.getOverLineDetailForClassTwo(gradeV, className, line);
+                // 重点关注学生
+                that.getMostAttendDetailForClassTwo(gradeV, className, line);
+            }
+
 
         }
     },
@@ -162,8 +167,7 @@ ClassResultsAnalysis.prototype = {
                     that.getStuNumberScoreChangeForClass(that.grade, that.className);
                     // 选择高三年级
                     that.grade3ShowView(that.grade, that.className, that.bacthLine);
-                    // 重点关注学生年级选择
-                    that.getMostAttentionPage(that.grade, that.batchV, that.className, '', 0, 3);
+
                     $(".tcdPageCode").createPage({
                         pageCount: that.count,
                         current: 1,
@@ -264,7 +268,13 @@ ClassResultsAnalysis.prototype = {
                         };
                         datas.push(seriesObj);
                     }
-                    that.totalScoreChart(dateData, totalScoreData);
+                    //console.log(dateData)
+                    //console.log(totalScoreData)
+                    var maxArrData = [];
+                    maxArrData.concat(totalScoreData);
+                    maxArrData.push((Array.max(totalScoreData) + 5));
+                    console.log(dateData);
+                    that.totalScoreChart(dateData, totalScoreData,maxArrData);
                     that.subjectsChart(subjectData, dateData, datas, arrMaxMin);
                 } else {
                     $('.chart-main1').hide();
@@ -278,9 +288,9 @@ ClassResultsAnalysis.prototype = {
         },true);
     },
     // 查看总分趋势
-    totalScoreChart: function (dateData, totalScoreData) {
+    totalScoreChart: function (dateData, totalScoreData,maxArrData) {
         var totalScoreChart = echarts.init(document.getElementById('totalScoreChart-chart'));
-        console.info('totalScoreData: ' + totalScoreData);
+        //console.info('totalScoreData: ' + totalScoreData);
         var totalScoreChartOption = {
             title: {
                 text: '班级平均分排名',
@@ -320,7 +330,7 @@ ClassResultsAnalysis.prototype = {
                 //splitNumber: Math.max(totalScoreData),
                 //minInterval: Math.max(totalScoreData)
                 //min: 'dataMin',
-                //max: Math.max(totalScoreData),
+                max: Math.max(maxArrData),
                 minInterval: 1,
                 interval: 1
             },
@@ -339,7 +349,7 @@ ClassResultsAnalysis.prototype = {
         var subjectsChart = echarts.init(document.getElementById('subjectsChart-chart'));
         var subjectsChartOption = {
             title: {
-                text: '班级平均分排名b',
+                text: '班级平均分排名',
                 left: 'left',
                 textStyle: {
                     fontSize: '14',
@@ -374,7 +384,7 @@ ClassResultsAnalysis.prototype = {
                 scale: false,
                 type: 'value',
                 //min: Array.min(arrMaxMin),
-                //max: Array.max(arrMaxMin)
+                //max: Math.max(dateData),
                 minInterval: 1,
                 interval: 1
             },
@@ -407,8 +417,8 @@ ClassResultsAnalysis.prototype = {
         });
     },
     lineNumberByDateChart: function (dateData, popData) {
-        console.info('dateData', dateData);
-        console.info('popData', popData);
+        //console.info('dateData', dateData);
+        //console.info('popData', popData);
         var lineNumberByDateChart = echarts.init(document.getElementById('lineNumberByDate-chart'));
         var lineNumberByDateOption = {
             title: {
@@ -901,6 +911,7 @@ $(function () {
 
     // 选择年级
     $('body').on('change', 'input[name="results-radio"]', function () {
+        $('#overLineDetail-tbody,#details-main-tbody').html('');
         ClassAnalysisIns.grade = $(this).val();
         // 通过年级获取班级
         ClassAnalysisIns.getClassesNameByGrade(ClassAnalysisIns.grade);
@@ -923,6 +934,7 @@ $(function () {
     });
     // 选择班级
     $('body').on('change', '#select-class', function () {
+        $('#overLineDetail-tbody,#details-main-tbody').html('');
         ClassAnalysisIns.className = $(this).val();
         $('.sel-class-txt,.class-name').text(ClassAnalysisIns.className);
         // 提交选中年级记录

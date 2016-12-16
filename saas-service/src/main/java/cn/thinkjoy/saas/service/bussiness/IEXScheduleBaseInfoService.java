@@ -4,6 +4,7 @@ import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yangguorong on 16/12/7.
@@ -27,6 +28,13 @@ public interface IEXScheduleBaseInfoService {
      * @return
      */
     int getTnIdByTaskId(int taskId);
+
+    /**
+     * 根据任务和课程获取老师列表
+     * @param map
+     * @return
+     */
+    public List<TeacherBaseDto> queryTeacherByTaskId(Map<String,Object> map);
 
     /**
      * 根据任务ID获取教师信息
