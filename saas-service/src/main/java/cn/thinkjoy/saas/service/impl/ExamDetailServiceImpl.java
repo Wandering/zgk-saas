@@ -91,9 +91,9 @@ public class ExamDetailServiceImpl extends AbstractPageService<IBaseDAO<ExamDeta
     }
 
     @Override
-    public List<Map<String, Object>> getAvgScoresForClassStudent(Map<String, String> paramMap)
+    public List<Map<String, Object>> getScoresForClassStudent(Map<String, String> paramMap)
     {
-        return examDetailDAO.getAvgScoresForClassStudent(paramMap);
+        return examDetailDAO.getScoresForClassStudent(paramMap);
     }
 
     @Override
