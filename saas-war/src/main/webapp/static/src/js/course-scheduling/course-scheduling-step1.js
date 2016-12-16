@@ -64,7 +64,7 @@ TeachDate.prototype = {
                 }
             }, function (res) {
                 layer.msg(res.msg);
-            },true);
+            });
     }
 };
 

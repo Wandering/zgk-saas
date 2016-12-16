@@ -151,15 +151,15 @@ ClassRoomTable.prototype = {
             "teacherCourse": teacherCourse
         }, function (result) {
             if (result.rtnCode == "0000000") {
-                $('#select-teacher option:gt(0)').remove();
+                $('#select-teacher option').remove();
                 var queryCourse = [];
                 $.each(result.bizData, function (i, v) {
                     queryCourse.push('<option value="' + v.id + '">' + v.teacherName + '</option>')
                 });
                 $('#select-teacher').append(queryCourse);
-                $('#select-teacher option:eq(1)').attr('selected', 'selected');
-                var selectedV = $('#select-teacher option:eq(1):selected').val()
-                var selectedTxt = $('#select-teacher option:eq(1):selected').text()
+                $('#select-teacher option:eq(0)').attr('selected', 'selected');
+                var selectedV = $('#select-teacher option:eq(0):selected').val()
+                var selectedTxt = $('#select-teacher option:eq(0):selected').text()
                 that.getClassRoomTable('teacher', {
                     'course': teacherCourse,
                     'teacherId': selectedV
@@ -205,15 +205,15 @@ ClassRoomTable.prototype = {
             "classId": classId,
         }, function (result) {
             if (result.rtnCode == "0000000") {
-                $('#select-student option:gt(0)').remove();
+                $('#select-student option').remove();
                 var queryCourse = [];
                 $.each(result.bizData, function (i, v) {
                     queryCourse.push('<option value="' + v.id + '">' + v.studentName + '</option>')
                 });
                 $('#select-student').append(queryCourse);
-                $('#select-student option:eq(1)').attr('selected', 'selected');
-                var selectedV = $('#select-student option:eq(1):selected').val()
-                var selectedTxt = $('#select-student option:eq(1):selected').text();
+                $('#select-student option:eq(0)').attr('selected', 'selected');
+                var selectedV = $('#select-student option:eq(0):selected').val()
+                var selectedTxt = $('#select-student option:eq(0):selected').text();
                 $('.student-label').text(selectedTxt + " - ");
                 that.getClassRoomTable('student', {
                     'classId': classId,
