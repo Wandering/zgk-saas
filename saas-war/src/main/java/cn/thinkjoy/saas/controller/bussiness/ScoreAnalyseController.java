@@ -1125,17 +1125,17 @@ public class ScoreAnalyseController
             Map<String, Object> m = new LinkedHashMap<>();
             m.put("examTime" , examTime);
             m.put("className" , className);
-            m.put("语文" , sortList(list, "语文", className));
-            m.put("数学" , sortList(list, "数学", className));
-            m.put("英语" , sortList(list, "英语", className));
-            m.put("物理" , sortList(list, "物理", className));
-            m.put("化学" , sortList(list, "化学", className));
-            m.put("生物" , sortList(list, "生物", className));
-            m.put("政治" , sortList(list, "政治", className));
-            m.put("地理" , sortList(list, "地理", className));
-            m.put("历史" , sortList(list, "历史", className));
-            m.put("通用技术" , sortList(list, "通用技术", className));
-            m.put("总分" , sortList(list, "总分", className));
+            String[] courses = new String[]{"语文","数学","英语","物理","化学","生物","政治","地理","历史","通用技术","总分"};
+            for (String course :courses)
+            {
+                try
+                {
+                    m.put(course , sortList(list, course, className));
+                }
+                catch (Exception e)
+                {
+                }
+            }
             rList.add(m);
         }
     }
@@ -1170,6 +1170,7 @@ public class ScoreAnalyseController
 
     private int sortList(List<Map<String, Object>> list, final String orderBy, String className)
     {
+
         Collections.sort(list, new Comparator<Map<String, Object>>()
         {
             @Override
