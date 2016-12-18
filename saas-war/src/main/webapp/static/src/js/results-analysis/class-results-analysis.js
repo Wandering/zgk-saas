@@ -670,7 +670,7 @@ ClassResultsAnalysis.prototype = {
         var studentTotalScoreChart = echarts.init(document.getElementById('studentTotalScore-chart'));
         var studentTtotalScoreChartOption = {
             title: {
-                text: '个人总分',
+                text: '个人总分排名',
                 left: 'left',
                 textStyle: {
                     fontSize: '14',
@@ -718,7 +718,7 @@ ClassResultsAnalysis.prototype = {
         var studentSubjectsChart = echarts.init(document.getElementById('studentSubjects-chart'));
         var studentSubjectsChartOption = {
             title: {
-                text: '各科成绩',
+                text: '各科成绩排名',
                 left: 'left',
                 textStyle: {
                     fontSize: '14',

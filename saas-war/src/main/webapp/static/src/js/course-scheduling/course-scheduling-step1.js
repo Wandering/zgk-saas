@@ -88,8 +88,6 @@ $(function () {
         var afternoonNum = $('#afternoon-list').val();
         var eveningNum = $('#evening-list').val();
         var teachTime = morningNum + afternoonNum + eveningNum;
-        alert(TeachDateIns.state);
-        console.log(TeachDateIns.state)
         if(TeachDateIns.state==true){
             layer.confirm('如果更改基本信息设置，已设置的排课条件会被清除，请谨慎操作！', {
                 btn: ['确定', '关闭'] //按钮

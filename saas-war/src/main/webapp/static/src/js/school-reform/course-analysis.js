@@ -410,6 +410,9 @@ function partCourseAnalysisChart (subjects, numbers) {
 
 //组合招生计划
 function groupCourseAnalysis (groups, stuNumbers) {
+    console.info('===================================');
+    console.info(groups);
+    console.info('===================================');
     var groupCourseAnalysisBar = echarts.init(document.getElementById('groupCourseAnalysisBar'));
     var groupCourseAnalysisOption = {
         title: {
@@ -425,6 +428,14 @@ function groupCourseAnalysis (groups, stuNumbers) {
         },
         tooltip: {
             trigger: 'axis'
+        },
+        grid: {
+            left: '2%',
+            right: '8%',
+            top: '13%',
+            containLabel: true,
+            borderWidth: 0,
+            backgroundColor: 'transparent'
         },
         //legend: {
         //    selectedMode: false,
@@ -459,6 +470,12 @@ function groupCourseAnalysis (groups, stuNumbers) {
                 },
                 axisTick: {
                     show: false
+                },
+                axisLabel:{
+                    interval: 0 ,
+                    formatter:function(val){
+                        return val.split("").join("\n");
+                    }
                 }
             }
         ],
@@ -492,7 +509,7 @@ function groupCourseAnalysis (groups, stuNumbers) {
             {
                 name: '选课人数',
                 type: 'bar',
-                barWidth: 16,
+                barWidth: 20,
                 data: stuNumbers, //[1466, 912, 1276, 1107],
                 label: {
                     normal: {

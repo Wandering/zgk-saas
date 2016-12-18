@@ -436,7 +436,7 @@ $(function () {
     $(document).on('click', '.no-assign-table tr td:not(.order)', function () {
         var curText = $(this).text().trim();
         if (curText == '排课') {
-            $(this).text('不排课');
+            $(this).text('<span style="color: #CB171D;">不排课</span>');
         } else {
             $(this).text('排课');
         }
