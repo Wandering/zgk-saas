@@ -235,9 +235,6 @@ FROM saas_jw_teacher
 <trim prefix="WHERE" prefixOverrides="AND | OR">
     AND id = #{id}
 </trim>
-<if test="orderBy!=null">
-ORDER BY ${orderBy} ${sortBy}
-</if>
         </select>
 
 <select id="findOne" parameterType="java.util.Map" resultType="JwTeacher">
@@ -310,37 +307,37 @@ limit ${offset}, ${rows}
 </if>
         </select>
 
-<select id="like" parameterType="java.util.Map" resultType="JwTeacher">
-SELECT
-<include refid="Base_Column_List" />
-FROM saas_jw_teacher
-<trim prefix="WHERE" prefixOverrides="AND | OR">
-    <if test="id!=null">
-        AND id like CONCAT('%', #{id} , '%')
-    </if>
-    <if test="teachNum!=null">
-        AND teach_num like CONCAT('%', #{teachNum} , '%')
-    </if>
-    <if test="tnId!=null">
-        AND tn_id like CONCAT('%', #{tnId} , '%')
-    </if>
-    <if test="course!=null">
-        AND course like CONCAT('%', #{course} , '%')
-    </if>
-    <if test="teacherId!=null">
-        AND teacher_id like CONCAT('%', #{teacherId} , '%')
-    </if>
-    <if test="taskId!=null">
-        AND task_id like CONCAT('%', #{taskId} , '%')
-    </if>
-    <if test="classId!=null">
-        AND class_id like CONCAT('%', #{classId} , '%')
-    </if>
-</trim>
-<if test="orderBy!=null">
-ORDER BY ${orderBy} ${sortBy}
-</if>
-        </select>
+    <select id="like" parameterType="java.util.Map" resultType="JwTeacher">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teacher
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
+            </if>
+            <if test="condition.teachNum!=null">
+                AND teach_num like CONCAT('%', #{condition.teachNum} , '%')
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id like CONCAT('%', #{condition.tnId} , '%')
+            </if>
+            <if test="course!=null">
+                AND course like CONCAT('%', #{course} , '%')
+            </if>
+            <if test="condition.teacherId!=null">
+                AND teacher_id like CONCAT('%', #{condition.teacherId} , '%')
+            </if>
+            <if test="condition.taskId!=null">
+                AND task_id like CONCAT('%', #{condition.taskId} , '%')
+            </if>
+            <if test="condition.classId!=null">
+                AND class_id like CONCAT('%', #{condition.classId} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
 
 
 <select id="queryList" parameterType="java.util.Map" resultType="JwTeacher">

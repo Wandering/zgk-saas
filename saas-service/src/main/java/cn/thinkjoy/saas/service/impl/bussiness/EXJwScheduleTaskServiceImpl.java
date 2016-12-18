@@ -8,10 +8,7 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.*;
-import cn.thinkjoy.saas.domain.JwRoom;
-import cn.thinkjoy.saas.domain.JwScheduleTask;
-import cn.thinkjoy.saas.domain.JwTeachDate;
-import cn.thinkjoy.saas.domain.JwTeacherBaseInfo;
+import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
@@ -41,7 +38,8 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
     IJwRoomDAO roomDAO;
     @Autowired
     IJwScheduleTaskDAO scheduleTaskDAO;
-
+    @Autowired
+    IJwClassBaseInfoDAO jwClassBaseInfoDAO;
 
     @Autowired
     private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
@@ -95,12 +93,24 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         if ("teacher".equals(type)) {
             if (!StringUtil.isNulOrBlank(paramsMap.get("teacherId")!=null?paramsMap.get("teacherId").toString():null)) {
                 JwTeacherBaseInfo jwTeacherBaseInfo = (JwTeacherBaseInfo) teacherBaseInfoDAO.fetch(paramsMap.get("teacherId"));
+                Map<String,Object> classQueryMap = Maps.newHashMap();
+                classQueryMap.put("tnId",tnId);
+                classQueryMap.put("grade",jwScheduleTask.getGrade());
+                classQueryMap.put("className",jwTeacherBaseInfo.getTeacherCourse());
+                classQueryMap.put("classType",Constant.SUBJECT_CLASS_TYPE);
+                List<JwClassBaseInfo> classBaseInfos = jwClassBaseInfoDAO.like(classQueryMap,"id","asc");
+                if (classBaseInfos.size()==0){
+                    classQueryMap.put("className",null);
+                    classQueryMap.put("classType",Constant.DEFULT_CLASS_TYPE);
+                    classBaseInfos = jwClassBaseInfoDAO.queryList(classQueryMap,"id","asc");
+                }
+                classBaseInfos = classBaseInfos.size() >= Constant.DEFULT_CLASS_NUM ? classBaseInfos.subList(0,Constant.DEFULT_CLASS_NUM) : classBaseInfos;
                 rtnMap.put(0, "");
-                rtnMap.put(1, jwTeacherBaseInfo.getTeacherCourse() + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n"+getRoomRandom(roomList));
-                rtnMap.put(2,jwTeacherBaseInfo.getTeacherCourse() + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n"+getRoomRandom(roomList));
-                rtnMap.put(3, jwTeacherBaseInfo.getTeacherCourse() + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n"+getRoomRandom(roomList));
-                rtnMap.put(4, jwTeacherBaseInfo.getTeacherCourse() + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n"+getRoomRandom(roomList));
-                rtnMap.put(5, jwTeacherBaseInfo.getTeacherCourse() + "\n(" + jwTeacherBaseInfo.getTeacherName() + ")" + "\n"+getRoomRandom(roomList));
+                rtnMap.put(1, jwTeacherBaseInfo.getTeacherCourse() + "  " + getClassRandom(classBaseInfos) + "  " + "  "+getRoomRandom(roomList));
+                rtnMap.put(2,jwTeacherBaseInfo.getTeacherCourse() + "  " + getClassRandom(classBaseInfos) + "  " + "  "+getRoomRandom(roomList));
+                rtnMap.put(3, jwTeacherBaseInfo.getTeacherCourse() + "  " + getClassRandom(classBaseInfos) + "  " + "  "+getRoomRandom(roomList));
+                rtnMap.put(4, jwTeacherBaseInfo.getTeacherCourse() + "  " + getClassRandom(classBaseInfos) + "  " + "  "+getRoomRandom(roomList));
+                rtnMap.put(5, jwTeacherBaseInfo.getTeacherCourse() + "  " + getClassRandom(classBaseInfos) + "  " + "  "+getRoomRandom(roomList));
                 rtnMap.put(6, "");
                 rtnMap.put(7, "");
                 rtnMap.put(8, "");
@@ -123,15 +133,15 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
             rtnMap.put(12, "");
         }else if ("room".equals(type)){
             rtnMap.put(0, "");
-            rtnMap.put(1, getTeacherCourse(teacherBaseInfos));
-            rtnMap.put(2, getTeacherCourse(teacherBaseInfos));
+            rtnMap.put(1, getTeacherCourse(teacherBaseInfos,tnId,jwScheduleTask.getGrade()));
+            rtnMap.put(2, getTeacherCourse(teacherBaseInfos,tnId,jwScheduleTask.getGrade()));
             rtnMap.put(3, "");
-            rtnMap.put(4, getTeacherCourse(teacherBaseInfos));
+            rtnMap.put(4, getTeacherCourse(teacherBaseInfos,tnId,jwScheduleTask.getGrade()));
             rtnMap.put(5, "");
-            rtnMap.put(6, getTeacherCourse(teacherBaseInfos));
+            rtnMap.put(6, getTeacherCourse(teacherBaseInfos,tnId,jwScheduleTask.getGrade()));
             rtnMap.put(7, "");
-            rtnMap.put(8, getTeacherCourse(teacherBaseInfos));
-            rtnMap.put(10, getTeacherCourse(teacherBaseInfos));
+            rtnMap.put(8, getTeacherCourse(teacherBaseInfos,tnId,jwScheduleTask.getGrade()));
+            rtnMap.put(10, getTeacherCourse(teacherBaseInfos,tnId,jwScheduleTask.getGrade()));
             rtnMap.put(11, "");
             rtnMap.put(12, "");
         }
@@ -140,7 +150,12 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         for (int i = list.size();i>0;i--){
             list2 = new ArrayList<>();
             for (int j = count;j>0;j--){
-                list2.add(getCourse(rtnMap));
+                if (i==5 && j==1){
+                    //星期一第7节不排课
+                    list2.add("");
+                }else {
+                    list2.add(getCourse(rtnMap));
+                }
             }
             list1.add(list2);
         }
@@ -206,7 +221,17 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
             for (int i = list.size();i>0;i--) {
                 list3 = new ArrayList<>();
                 for (int m = count;m>0;m--) {
-                    list3.add(getTeacherCourse(teacherBaseInfos));
+                    java.util.Random random=new java.util.Random();// 定义随机类
+                    if (i==5 && m ==1){
+                        list3.add("");
+                    }else if (random.nextInt(10)>3){
+                        list3.add(getTeacherCourse(teacherBaseInfos,tnId,jwScheduleTask.getGrade())+ " ");
+                    }
+                    else {
+                        //控制比例三分之一是空白
+                        list3.add("");
+                    }
+
                 }
                 list2.add(list3);
             }
@@ -229,6 +254,25 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         return teacherBaseDto.getCourseName()+"\n("+teacherBaseDto.getTeacherName()+")";
 
     }
+
+    private String getTeacherCourse(List<TeacherBaseDto> teacherBaseInfos,Integer tnId,String grade){
+        if (teacherBaseInfos.size()==0)return "";
+        java.util.Random random=new java.util.Random();// 定义随机类
+        TeacherBaseDto teacherBaseDto = teacherBaseInfos.get(random.nextInt(teacherBaseInfos.size()));
+        Map<String,Object> classQueryMap = Maps.newHashMap();
+        classQueryMap.put("tnId",tnId);
+        classQueryMap.put("grade",grade);
+        classQueryMap.put("className",teacherBaseDto.getCourseName());
+        classQueryMap.put("classType",Constant.SUBJECT_CLASS_TYPE);
+        List<JwClassBaseInfo> classBaseInfos = jwClassBaseInfoDAO.like(classQueryMap,"id","asc");
+        if (classBaseInfos.size()==0){
+            classQueryMap.put("className",null);
+            classQueryMap.put("classType",Constant.DEFULT_CLASS_TYPE);
+            classBaseInfos = jwClassBaseInfoDAO.queryList(classQueryMap,"id","asc");
+        }
+        return teacherBaseDto.getCourseName()+"\n("+teacherBaseDto.getTeacherName()+")   "+getClassRandom(classBaseInfos);
+
+    }
     private String getRoomRandom(List<JwRoom> rooms){
         java.util.Random random=new java.util.Random();// 定义随机类
         if (rooms.size()==0)return "";
@@ -236,7 +280,13 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         return jwRoom.getRoomName();
 
     }
+    private String getClassRandom(List<JwClassBaseInfo> classBaseInfos){
+        java.util.Random random=new java.util.Random();// 定义随机类
+        if (classBaseInfos.size()==0)return "";
+        JwClassBaseInfo jwClassBaseInfo = classBaseInfos.get(random.nextInt(classBaseInfos.size()));
+        return jwClassBaseInfo.getClassName();
 
+    }
     public static void main(String[] args) {
         java.util.Random random=new java.util.Random();//
         List<Integer> a = new ArrayList();
