@@ -237,42 +237,88 @@ ClassRoomTable.prototype = {
             //     }, "rtnCode": "0000000", "ts": 1481699074431
             // }
             if (res.rtnCode == "0000000") {
-                res.bizData.result.room = (res.bizData.result.room).split('|')
-                res.bizData.result.teachDate = (res.bizData.result.teachDate).split('|')
+                //res.bizData.result.room = (res.bizData.result.room).split('|')
+                //res.bizData.result.teachDate = (res.bizData.result.teachDate).split('|')
+                //
+                //Handlebars.registerHelper('addOne', function (data) {
+                //    return data = parseInt(data) + 1
+                //})
+                //
+                //Handlebars.registerHelper('creatClass', function (r1, r2) {
+                //    var foo = [];
+                //    $.each(r2[r1], function (i, v) {
+                //        foo.push('<th class="no-p-m">');
+                //        for (var j in v) {
+                //            foo.push('<span class="create-class-number common-span-w">' + v[j] + '</span>');
+                //        }
+                //        foo.push('</th>');
+                //    })
+                //    return foo.join('');
+                //})
+                //
+                //
+                //var tpl = Handlebars.compile($('#all-timetable-tpl').html());
+                //$('#all-timetable').html(tpl(res.bizData.result))
+                //
+                //
+                ////动态控制生成总课表样式
+                //var $warpTableWidth = '3000',
+                //    firstThWidth = '120',
+                //    $secondThWidth = ($warpTableWidth - firstThWidth) / res.bizData.result.teachDate.length;
+                //$('.second-th-width').css('width', $secondThWidth + 'px');
+                //$('#all-timetable').css('width', $warpTableWidth + 'px');
+                //var $classTimes = res.bizData.result.roomData[0][0].length;
+                //$('.common-span-w').css({
+                //    'width': parseInt($('#all-timetable .no-p-m').eq(2).width()) / $classTimes - 2 + 'px'
+                //})
+                //$('#all-timetable thead th').eq(0).css('width', firstThWidth);
+                //$('.no-p-m').find('.create-class-number:last-of-type').css('border-right', 'none');
 
-                Handlebars.registerHelper('addOne', function (data) {
-                    return data = parseInt(data) + 1
-                })
+                $('.all-time-date-container').css({
+                    'width':$(window).width()-190-40,
+                    'overflow':'auto'
+                });
+                var theadTemplate = Handlebars.compile($("#all-thead-list-template").html());
+                Handlebars.registerHelper("thead", function (res) {
+                    var wkDate = res.teachTime;
+                    var Num1 = parseInt(wkDate.substr(0, 1));
+                    var Num2 = parseInt(wkDate.substr(1, 1));
+                    var Num3 = parseInt(wkDate.substr(2, 1));
+                    var itemCount = Num1 + Num2 + Num3;
+                    var resData = res.teachDate.split('|');
+                    var str = '<td></td>';
+                    for (var i = 0; i < resData.length; i++) {
+                        str += '<td class="center" colspan="' + itemCount + '">' + resData[i] + '</td>';
+                    }
+                    return str;
+                });
+                $("#all-thead-list").html(theadTemplate(res));
 
-                Handlebars.registerHelper('creatClass', function (r1, r2) {
-                    var foo = [];
-                    $.each(r2[r1], function (i, v) {
-                        foo.push('<th class="no-p-m">');
-                        for (var j in v) {
-                            foo.push('<span class="create-class-number common-span-w">' + v[j] + '</span>');
+
+                var tbodyTemplate = Handlebars.compile($("#all-tbody-list-template").html());
+                Handlebars.registerHelper("room", function (res) {
+                    var rmWk = res.roomData;
+                    console.log(rmWk.length)
+                    var rmList = res.room.split('|');
+                    var trHtml = '';
+                    for (var i = 0; i < rmList.length; i++) {
+                        trHtml += '<tr>';
+                        trHtml += '<td class="center" style="width:100px">' + rmList[i] + '</td>';
+                        console.log(rmWk[i])
+                        for (var j = 0; j < rmWk[i].length; j++) {
+                            for (var k = 0; k < rmWk[i][j].length; k++) {
+                                trHtml += '<td class="center">' + rmWk[i][j][k] + '</td>';
+                            }
                         }
-                        foo.push('</th>');
-                    })
-                    return foo.join('');
-                })
+                        trHtml += '</tr>';
+                    }
+                    return trHtml;
+                });
+                $("#all-tbody-list").html(tbodyTemplate(res));
 
 
-                var tpl = Handlebars.compile($('#all-timetable-tpl').html());
-                $('#all-timetable').html(tpl(res.bizData.result))
 
 
-                //动态控制生成总课表样式
-                var $warpTableWidth = '3000',
-                    firstThWidth = '120',
-                    $secondThWidth = ($warpTableWidth - firstThWidth) / res.bizData.result.teachDate.length;
-                $('.second-th-width').css('width', $secondThWidth + 'px');
-                $('#all-timetable').css('width', $warpTableWidth + 'px');
-                var $classTimes = res.bizData.result.roomData[0][0].length;
-                $('.common-span-w').css({
-                    'width': parseInt($('#all-timetable .no-p-m').eq(2).width()) / $classTimes - 2 + 'px'
-                })
-                $('#all-timetable thead th').eq(0).css('width', firstThWidth);
-                $('.no-p-m').find('.create-class-number:last-of-type').css('border-right', 'none');
             } else {
                 layer.msg(res.msg);
             }
@@ -335,12 +381,12 @@ $(function () {
     });
 
     // 拉取所有课表
-    //$("#role-scheduling-tab li").eq(3).click(function () {
-    //    ClassRoomTableIns.getAllQueryCourse();
-    //});
-    //if(window.location.hash == '#all'){
-    //    ClassRoomTableIns.getAllQueryCourse();
-    //}
+    $("#role-scheduling-tab li").eq(3).click(function () {
+        ClassRoomTableIns.getAllQueryCourse();
+    });
+    if(window.location.hash == '#all'){
+        ClassRoomTableIns.getAllQueryCourse();
+    }
 });
 
 
