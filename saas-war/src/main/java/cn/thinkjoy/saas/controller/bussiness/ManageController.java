@@ -486,7 +486,7 @@ public class ManageController {
         LOGGER.info("tnId:" + tnId);
         String[] columnNames = exiTenantConfigInstanceService.getTenantConfigListArrByTnIdAndType(type, tnId);
         List<LinkedHashMap<String, Object>> tenantCustoms=iexTenantCustomService.getTenantCustom(type, tnId,null,null,null);
-        List<Map<Integer,Object>> maps=iexTenantCustomService.isExcelAddSelect(tnId, columnNames);
+        List<Map<Integer,Object>> maps=iexTenantCustomService.isExcelAddSelect(type,tnId, columnNames);
 
 
 

@@ -65,7 +65,7 @@ public interface IEXTenantCustomService {
      * @param columnNames
      * @return
      */
-    List<Map<Integer,Object>> isExcelAddSelect(Integer tnId ,String[] columnNames);
+    List<Map<Integer,Object>> isExcelAddSelect(String type,Integer tnId ,String[] columnNames);
 
     /**
      * 判断表中列是否存在数据

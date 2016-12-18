@@ -44,7 +44,7 @@ var App = {
                     var tpl = [];
                     App.tableData = [] //制空
                     tpl.push('<tr>');
-                    tpl.push('<th class="center"><label><input type="checkbox" id="checkAll" class="ace" /><span class="lbl"></span></label></th><th>序号</th>');
+                    tpl.push('<th class="center"><label><input type="checkbox" id="stdCheckAll" class="ace" /><span class="lbl"></span></label></th><th>序号</th>');
                     $.each(data, function (i, k) {
                         tpl.push('<th class="center">' + k.name + '</th>');
                         App.tableData.push({
@@ -206,7 +206,7 @@ var App = {
             App.checkGradeName = $('input[name="grade-li"]:checked').next().text();
             App.loadPage();
             App.pagination();
-            $('#checkAll').prop('checked', false);
+            $('#student-table').find('#stdCheckAll').prop('checked', false);
         })
     }
 }
@@ -552,7 +552,7 @@ var CRUDStd = {
                 if (res.rtnCode == "0000000") {
                     if (res.bizData.result = "SUCCESS") {
                         $('#class-change-list').html('');
-                        $('#checkAll').prop('checked', false);
+                        $('#student-table').find('#stdCheckAll').prop('checked', false);
                         layer.msg('删除成功', {time: 1000});
                         App.renderTableHeader();
                     }
@@ -805,8 +805,8 @@ var TplHandler = {
             });
             // 文件上传成功，给item添加成功class, 用样式标记上传成功。
             uploader.on('uploadSuccess', function (file, response) {
-                console.info('file',file)
-                console.info('response',response)
+                console.info('file', file)
+                console.info('response', response)
                 if (response.msg) {
                     layer.msg(response.msg);
                     return false;
@@ -864,17 +864,19 @@ var StdSet = {
             that.fetchTableHeader();
             that.eventAdd();
             that.saveAddTableHeaderField();
-            layer.full(
-                layer.open({
-                    type: 1,
-                    content: $("#sub-student-setting"),
-                    area: ['100%', '100%'],
-                    maxmin: false,
-                    cancel: function () {
-                        window.location.reload();
-                    }
-                })
-            )
+            // layer.full(
+            layer.open({
+                type: 1,
+                content: $("#sub-student-setting"),
+                area: ['800px', '600px'],
+                // area: ['100%', '100%'],
+                maxmin: false,
+                scrollbar: false,
+                cancel: function () {
+                    window.location.reload();
+                }
+            })
+            // )
         });
     },
     eventAdd: function () {
@@ -965,18 +967,19 @@ var StdSet = {
                 if (res.rtnCode == "0000000") {
                     that.fetchTableHeader();
                     layer.closeAll();
-                    layer.full(
+                    // layer.full(
                         layer.open({
                             type: 1,
                             content: $("#sub-student-setting"),
-                            area: ['100%', '100%'],
+                            // area: ['100%', '100%'],
+                            area: ['800px', '600px'],
                             maxmin: false,
                             cancel: function () {
                                 $('#field').html(''); //清空
                                 window.location.reload();
                             }
                         })
-                    )
+                    // )
                 }
             }, function (res) {
                 layer.msg("出错了");
@@ -1002,7 +1005,7 @@ var StdSet = {
             });
             selItem = selItem.join('-');
             removeField(selItem)
-            $('.delCheckAll').prop('checked', false);
+            $('#setting-student-table').find('#stdCheckAll').prop('checked', false);
         })
         var removeField = function (idsData) {
             Common.ajaxFun('/manage/tenant/remove/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/' + idsData + '.do', 'POST', {}, function (res) {
@@ -1010,20 +1013,6 @@ var StdSet = {
                     that.fetchTableHeader();
                     that.eventAdd();
                     that.saveAddTableHeaderField();
-                    layer.closeAll();
-                    layer.full(
-                        layer.open({
-                            type: 1,
-                            content: $("#sub-student-setting"),
-                            area: ['100%', '100%'],
-                            maxmin: false,
-                            cancel: function () {
-                                // StudentManage.studentTable();
-                                layer.closeAll();
-                                window.location.reload();
-                            }
-                        })
-                    )
                 }
             }, function (res) {
                 layer.msg("出错了");
@@ -1073,4 +1062,32 @@ var StdSet = {
 StdSet.init();
 
 
+/*
+* 全选
+* */
+var checkAllFun = function(tableParent){
+    $(document).on('click', tableParent+' '+'#stdCheckAll', function () {
+        if ($(this).is(':checked')) {
+            $(tableParent).find('.check-template :checkbox').prop('checked', true);
+        } else {
+            $(tableParent).find('.check-template :checkbox').prop('checked', false);
+        }
+    });
+    $(tableParent+' '+".check-template").on('click', ':checkbox', function () {
+        var chknum = $(tableParent).find(".check-template :checkbox").size();//选项总个数
+        var chk = 0;
+        $(tableParent).find(".check-template :checkbox").each(function () {
+            if ($(this).prop("checked") == true) {
+                chk++;
+            }
+        });
+        if (chknum == chk) {//全选
+            $(tableParent+' '+'#stdCheckAll').prop("checked", true);
+        } else {//不全选
+            $(tableParent+' '+'#stdCheckAll').prop("checked", false);
+        }
+    });
+}
+checkAllFun('#student-table')
+checkAllFun('#setting-student-table')
 

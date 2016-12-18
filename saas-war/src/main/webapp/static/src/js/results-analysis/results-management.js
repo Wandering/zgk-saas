@@ -680,7 +680,7 @@ $(function () {
             //     return false;
             // }
             //alert(890);return;
-            if (!re.test(topClass) || topClass > 1000 || topClass < 0) {
+            if (!re.test(topClass) || topClass > 9999 || topClass < 0) {
                 layer.tips('请输入正确的数字!', $('.top-class'));
                 return false;
             }
@@ -693,7 +693,7 @@ $(function () {
             //     layer.tips('请输入正确的数字!', $('.top-grade'));
             //     return false;
             // }
-            if (!re.test(topGrade) || topGrade > 5000) {
+            if (!re.test(topGrade) || topGrade > 9999) {
                 layer.tips('请输入正确的数字!', $('.top-grade'));
                 return false;
             }
@@ -704,7 +704,6 @@ $(function () {
                 if ($.trim($(v).val()) == '') {
                     valArr.push($(v).val());
                 }
-                console.info('i: ' + i + ', $(v): ' + $(v));
             });
             var leng = (7-parseInt(valArr.length));
             if ( leng != 3) {

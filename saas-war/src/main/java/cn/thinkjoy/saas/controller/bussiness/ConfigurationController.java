@@ -281,7 +281,7 @@ public class ConfigurationController {
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
         String[] columnNames = exiTenantConfigInstanceService.getTenantConfigListArrByTnIdAndType(type, tnId);
-        List<Map<Integer, Object>> maps = iexTenantCustomService.isExcelAddSelect(tnId, columnNames);
+        List<Map<Integer, Object>> maps = iexTenantCustomService.isExcelAddSelect(type,tnId, columnNames);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             ExcelUtils.createWorkBook(columnNames, maps).write(os);
@@ -371,7 +371,7 @@ public class ConfigurationController {
             String realPath = env.getProp("configuration.excel.upload.url");
             FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
             result = exiTenantConfigInstanceService.uploadExcel(type, tnId, realPath + myfile.getOriginalFilename());
-            if (result.equals("SUCCESS"))
+            if (result.equals("SUCCESS") && iexTenantService.getStep(tnId) != 0)
                 iexTenantService.stepSetting(tnId, (type.equals("teacher") ? true : false));
         }
         LOGGER.info("==================excel上传 E==================");

@@ -28,23 +28,9 @@
 </div>
 <script id="teacher-thead-list-template" type="text/x-handlebars-template">
     <tr>
-        <th></th>
-        {{#each this}}
-        <th class="center">{{this}}</th>
-        {{/each}}
+        {{{thead bizData.result.teachDate}}}
     </tr>
 </script>
 <script id="teacher-tbody-list-template" type="text/x-handlebars-template">
-    {{#with this}}
-    <tr class="ui-sortable-handle">
-        <td class="pm0">
-            {{{createN this.[0].length}}}
-        </td>
-        {{#each this}}
-        <td class="pm0">
-            {{#each this}}<p class="tbody-item">{{this}}</p>{{/each}}
-        </td>
-        {{/each}}
-    </tr>
-    {{/with}}
+    {{{week bizData.result}}}
 </script>
