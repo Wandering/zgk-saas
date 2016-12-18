@@ -579,7 +579,8 @@ $(function () {
             subjectYuwen = $.trim($('.subject-yuwen').val());
 
         // var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
-        var re = /^[0-9]*$/;
+        //var re = /^[0-9]*$/;
+        var re = /^[0-9]+$/;
 
         if (name == '') {
             layer.tips('请输入姓名!', $('.name'));
@@ -678,10 +679,12 @@ $(function () {
             //     layer.tips('请输入正确的数字!', $('.top-class'));
             //     return false;
             // }
-            if (!re.test(topClass) || topClass > 1000) {
+            //alert(890);return;
+            if (!re.test(topClass) || topClass > 1000 || topClass < 0) {
                 layer.tips('请输入正确的数字!', $('.top-class'));
                 return false;
             }
+
             if (topGrade == '') {
                 layer.tips('请输入年级排名!', $('.top-grade'));
                 return false;
@@ -701,10 +704,37 @@ $(function () {
                 if ($.trim($(v).val()) == '') {
                     valArr.push($(v).val());
                 }
+                console.info('i: ' + i + ', $(v): ' + $(v));
             });
             var leng = (7-parseInt(valArr.length));
             if ( leng != 3) {
                 layer.tips('选课必须填三项!', that);
+                return false;
+            }
+            for (var i = 0; i < $('.sel-course').length; i++) {
+                var tempVal = $.trim($('.sel-course').eq(i).val());
+                if (tempVal != '') {
+                    if (!re.test(tempVal) || tempVal.length > 3) {
+                        layer.tips('请输入正确的数字!', $('.sel-course').eq(i));
+                        return false;
+                    }
+                }
+            }
+
+            if (topClass == '') {
+                layer.tips('请输入班级排名!', $('.top-class'));
+                return false;
+            }
+            if (!re.test(topClass) || topClass > 1000 || topClass < 0) {
+                layer.tips('请输入正确的数字!', $('.top-class'));
+                return false;
+            }
+            if (topGrade == '') {
+                layer.tips('请输入年级排名!', $('.top-grade'));
+                return false;
+            }
+            if (!re.test(topGrade) || topGrade > 5000 || topClass < 0) {
+                layer.tips('请输入正确的数字!', $('.top-grade'));
                 return false;
             }
         }
