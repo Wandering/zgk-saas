@@ -211,12 +211,12 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <table class="table">
+                                            <table class="table" id="setting-student-table">
                                                 <thead>
                                                 <tr>
                                                     <th class="center">
                                                         <label>
-                                                            <input type="checkbox" class="ace delCheckAll" id="checkAll"/>
+                                                            <input type="checkbox" class="ace delCheckAll" id="stdCheckAll"/>
                                                             <span class="lbl"></span>
                                                         </label>
                                                     </th>

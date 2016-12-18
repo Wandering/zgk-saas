@@ -1125,17 +1125,17 @@ public class ScoreAnalyseController
             Map<String, Object> m = new LinkedHashMap<>();
             m.put("examTime" , examTime);
             m.put("className" , className);
-            m.put("语文" , sortList(list, "语文", className));
-            m.put("数学" , sortList(list, "数学", className));
-            m.put("英语" , sortList(list, "英语", className));
-            m.put("物理" , sortList(list, "物理", className));
-            m.put("化学" , sortList(list, "化学", className));
-            m.put("生物" , sortList(list, "生物", className));
-            m.put("政治" , sortList(list, "政治", className));
-            m.put("地理" , sortList(list, "地理", className));
-            m.put("历史" , sortList(list, "历史", className));
-            m.put("通用技术" , sortList(list, "通用技术", className));
-            m.put("总分" , sortList(list, "总分", className));
+            String[] courses = new String[]{"语文","数学","英语","物理","化学","生物","政治","地理","历史","通用技术","总分"};
+            for (String course :courses)
+            {
+                try
+                {
+                    m.put(course , sortList(list, course, className));
+                }
+                catch (Exception e)
+                {
+                }
+            }
             rList.add(m);
         }
     }
@@ -1170,6 +1170,7 @@ public class ScoreAnalyseController
 
     private int sortList(List<Map<String, Object>> list, final String orderBy, String className)
     {
+
         Collections.sort(list, new Comparator<Map<String, Object>>()
         {
             @Override
@@ -1418,15 +1419,76 @@ public class ScoreAnalyseController
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("tnId", tnId);
         paramMap.put("grade", grade);
-        paramMap.put("className", className);
-        paramMap.put("studentName", studentName);
-        List<Map<String, Object>> resultList;
-        resultList = examDetailService.getAvgScoresForClassStudent(paramMap);
-        if (null == resultList)
+        List<Map<String, Object>> scoreList = examDetailService.getScoresForClassStudent(paramMap);
+        if (null == scoreList)
         {
-            resultList = new ArrayList<>();
+            scoreList = new ArrayList<>();
+        }
+        Map<String, List<Map<String, Object>>> map = new HashMap<>();
+        for (Map<String, Object> m: scoreList)
+        {
+           List<Map<String, Object>> list = map.get(m.get("examTime") + "") ;
+           if(null == list)
+           {
+               list = new ArrayList<>();
+               map.put(m.get("examTime") + "", list);
+           }
+           list.add(m);
+        }
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        for (Map.Entry<String, List<Map<String, Object>>> en: map.entrySet())
+        {
+            Map<String, Object> m = new HashMap<>();
+            m.put("examTime", en.getKey());
+            m.put("className", className);
+            m.put("studentName", studentName);
+            List<Map<String, Object>> examList = en.getValue();
+            m.put("语文", getRank(className, studentName, examList, "语文"));
+            m.put("数学", getRank(className, studentName, examList, "数学"));
+            m.put("英语", getRank(className, studentName, examList, "英语"));
+            m.put("物理", getRank(className, studentName, examList, "物理"));
+            m.put("化学", getRank(className, studentName, examList, "化学"));
+            m.put("生物", getRank(className, studentName, examList, "生物"));
+            m.put("政治", getRank(className, studentName, examList, "政治"));
+            m.put("地理", getRank(className, studentName, examList, "地理"));
+            m.put("历史", getRank(className, studentName, examList, "历史"));
+            m.put("通用技术", getRank(className, studentName, examList, "通用技术"));
+            m.put("总分", getRank(className, studentName, examList, "总分"));
+            resultList.add(m);
         }
         return resultList;
+    }
+
+    private String getRank(String className, String studentName, List<Map<String, Object>> examList,final String subjectName)
+    {
+        List<Map<String, Object>> subjectList = new ArrayList<>();
+        for (Map<String, Object> s :examList)
+        {
+           String score =  s.get(subjectName) + "";
+           if(StringUtils.isNotEmpty(score) && StringUtils.isNumeric(score))
+           {
+               subjectList.add(s);
+           }
+        }
+        Collections.sort(subjectList, new Comparator<Map<String, Object>>()
+        {
+            @Override
+            public int compare(Map<String, Object> o1, Map<String, Object> o2)
+            {
+                return Integer.parseInt(o2.get(subjectName) + "") >= Integer.parseInt(o1.get(subjectName) +"") ? 1: -1;
+            }
+        });
+        int rank = 0;
+        for (int i = 0; i < subjectList.size() ; i++)
+        {
+            if(className.equals(subjectList.get(i).get("className")) &&
+                studentName.equals(subjectList.get(i).get("studentName")))
+            {
+                rank = i + 1;
+                break;
+            }
+        }
+        return  rank > 0 ? rank + "" : null;
     }
 
     @RequestMapping("/getExamProperties")
@@ -1879,7 +1941,7 @@ public class ScoreAnalyseController
     )
     {
         getMostAdvancedDetailForClass(tnId, grade, className, null, null, null, null);
-        int maxStep = (maxAdvancedScore / 10 + 1) * 10;
+        int maxStep = (maxAdvancedScore / 10) * 10;
         List<Map<String, Integer>> stepList = new ArrayList<>();
         addStepList(stepStart, stepLength, maxStep, stepList);
         return stepList;

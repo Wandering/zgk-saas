@@ -13,7 +13,9 @@ import cn.thinkjoy.saas.domain.JwScheduleTask;
 import cn.thinkjoy.saas.domain.JwTeachDate;
 import cn.thinkjoy.saas.domain.JwTeacherBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
+import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
+import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.zgk.common.StringUtil;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,10 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
     IJwRoomDAO roomDAO;
     @Autowired
     IJwScheduleTaskDAO scheduleTaskDAO;
+
+
+    @Autowired
+    private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
 
 
 
@@ -85,7 +91,7 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         Map<String,Object> teacherMap = Maps.newHashMap();
         teacherMap.put("tnId",tnId);
         teacherMap.put("grade",jwScheduleTask.getGrade());
-        List<JwTeacherBaseInfo> teacherBaseInfos = teacherBaseInfoDAO.queryList(teacherMap,"id","desc");
+        List<TeacherBaseDto> teacherBaseInfos = iexScheduleBaseInfoService.queryTeacherByTaskId(teacherMap);
         if ("teacher".equals(type)) {
             if (!StringUtil.isNulOrBlank(paramsMap.get("teacherId")!=null?paramsMap.get("teacherId").toString():null)) {
                 JwTeacherBaseInfo jwTeacherBaseInfo = (JwTeacherBaseInfo) teacherBaseInfoDAO.fetch(paramsMap.get("teacherId"));
@@ -191,7 +197,7 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         Map<String,Object> teacherMap = Maps.newHashMap();
         teacherMap.put("tnId",tnId);
         teacherMap.put("grade",jwScheduleTask.getGrade());
-        List<JwTeacherBaseInfo> teacherBaseInfos = teacherBaseInfoDAO.queryList(teacherMap,"id","desc");
+        List<TeacherBaseDto> teacherBaseInfos = iexScheduleBaseInfoService.queryTeacherByTaskId(teacherMap);
         List<List<List<String>>> list1  = new ArrayList<>();
         List<List<String>> list2;
         List<String> list3;
@@ -216,11 +222,11 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
 
     }
 
-    private String getTeacherCourse(List<JwTeacherBaseInfo> teacherBaseInfos){
+    private String getTeacherCourse(List<TeacherBaseDto> teacherBaseInfos){
         java.util.Random random=new java.util.Random();// 定义随机类
         if (teacherBaseInfos.size()==0)return "";
-        JwTeacherBaseInfo jwTeacherBaseInfo = teacherBaseInfos.get(random.nextInt(teacherBaseInfos.size()));
-        return jwTeacherBaseInfo.getTeacherName()+"\n("+jwTeacherBaseInfo.getTeacherCourse()+")";
+        TeacherBaseDto teacherBaseDto = teacherBaseInfos.get(random.nextInt(teacherBaseInfos.size()));
+        return teacherBaseDto.getCourseName()+"\n("+teacherBaseDto.getTeacherName()+")";
 
     }
     private String getRoomRandom(List<JwRoom> rooms){

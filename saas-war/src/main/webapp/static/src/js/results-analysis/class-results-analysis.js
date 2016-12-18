@@ -268,7 +268,13 @@ ClassResultsAnalysis.prototype = {
                         };
                         datas.push(seriesObj);
                     }
-                    that.totalScoreChart(dateData, totalScoreData);
+                    //console.log(dateData)
+                    //console.log(totalScoreData)
+                    var maxArrData = [];
+                    maxArrData.concat(totalScoreData);
+                    maxArrData.push((Array.max(totalScoreData) + 5));
+                    console.log(dateData);
+                    that.totalScoreChart(dateData, totalScoreData,maxArrData);
                     that.subjectsChart(subjectData, dateData, datas, arrMaxMin);
                 } else {
                     $('.chart-main1').hide();
@@ -282,9 +288,9 @@ ClassResultsAnalysis.prototype = {
         },true);
     },
     // 查看总分趋势
-    totalScoreChart: function (dateData, totalScoreData) {
+    totalScoreChart: function (dateData, totalScoreData,maxArrData) {
         var totalScoreChart = echarts.init(document.getElementById('totalScoreChart-chart'));
-        console.info('totalScoreData: ' + totalScoreData);
+        //console.info('totalScoreData: ' + totalScoreData);
         var totalScoreChartOption = {
             title: {
                 text: '班级平均分排名',
@@ -324,7 +330,7 @@ ClassResultsAnalysis.prototype = {
                 //splitNumber: Math.max(totalScoreData),
                 //minInterval: Math.max(totalScoreData)
                 //min: 'dataMin',
-                //max: Math.max(totalScoreData),
+                max: Math.max(maxArrData),
                 minInterval: 1,
                 interval: 1
             },
@@ -343,7 +349,7 @@ ClassResultsAnalysis.prototype = {
         var subjectsChart = echarts.init(document.getElementById('subjectsChart-chart'));
         var subjectsChartOption = {
             title: {
-                text: '班级平均分排名b',
+                text: '班级平均分排名',
                 left: 'left',
                 textStyle: {
                     fontSize: '14',
@@ -378,7 +384,7 @@ ClassResultsAnalysis.prototype = {
                 scale: false,
                 type: 'value',
                 //min: Array.min(arrMaxMin),
-                //max: Array.max(arrMaxMin)
+                //max: Math.max(dateData),
                 minInterval: 1,
                 interval: 1
             },
@@ -411,8 +417,8 @@ ClassResultsAnalysis.prototype = {
         });
     },
     lineNumberByDateChart: function (dateData, popData) {
-        console.info('dateData', dateData);
-        console.info('popData', popData);
+        //console.info('dateData', dateData);
+        //console.info('popData', popData);
         var lineNumberByDateChart = echarts.init(document.getElementById('lineNumberByDate-chart'));
         var lineNumberByDateOption = {
             title: {

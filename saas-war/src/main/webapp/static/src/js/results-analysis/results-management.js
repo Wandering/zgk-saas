@@ -678,7 +678,7 @@ $(function () {
             //     layer.tips('请输入正确的数字!', $('.top-class'));
             //     return false;
             // }
-            if (!re.test(topClass) || topClass > 1000) {
+            if (!re.test(topClass) || topClass > 9999) {
                 layer.tips('请输入正确的数字!', $('.top-class'));
                 return false;
             }
@@ -690,7 +690,7 @@ $(function () {
             //     layer.tips('请输入正确的数字!', $('.top-grade'));
             //     return false;
             // }
-            if (!re.test(topGrade) || topGrade > 5000) {
+            if (!re.test(topGrade) || topGrade > 9999) {
                 layer.tips('请输入正确的数字!', $('.top-grade'));
                 return false;
             }
@@ -854,14 +854,14 @@ function uploadFun() {
             $('.save-btn').attr('filePath', response.bizData.filePath);
             layer.msg('上传成功!');
 
-            if (!response.bizData.result) {
-                layer.msg(response.msg);
-                return false;
-            }
-            if (response.bizData.result != 'SUCCESS') {
-                layer.msg(response.bizData.result);
-                return false;
-            }
+            //if (!response.bizData.result) {
+            //    layer.msg(response.msg);
+            //    return false;
+            //}
+            //if (response.bizData.result != 'SUCCESS') {
+            //    layer.msg(response.bizData.result);
+            //    return false;
+            //}
 
 
         });
