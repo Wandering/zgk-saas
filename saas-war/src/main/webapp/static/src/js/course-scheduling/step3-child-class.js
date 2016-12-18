@@ -303,11 +303,11 @@ ClassRoomTable.prototype = {
                     var trHtml = '';
                     for (var i = 0; i < rmList.length; i++) {
                         trHtml += '<tr>';
-                        trHtml += '<td class="center" style="width:100px">' + rmList[i] + '</td>';
+                        trHtml += '<td class="center"><div style="width:100px">' + rmList[i] + '</div></td>';
                         console.log(rmWk[i])
                         for (var j = 0; j < rmWk[i].length; j++) {
                             for (var k = 0; k < rmWk[i][j].length; k++) {
-                                trHtml += '<td class="center">' + rmWk[i][j][k] + '</td>';
+                                trHtml += '<td class="center" style="width:100px"><div style="width:100px">' + rmWk[i][j][k] + '</div></td>';
                             }
                         }
                         trHtml += '</tr>';
