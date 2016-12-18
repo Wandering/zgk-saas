@@ -426,6 +426,7 @@ SchoolResultsAnalysis.prototype = {
         }, function (res) {
             console.log(res)
             if (res.rtnCode == "0000000") {
+                $('#progress-tbody').html('');
                 if(res.bizData.length == 0){
                 }else{
                     $('#progress-table').show();
