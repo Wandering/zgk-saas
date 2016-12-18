@@ -91,7 +91,7 @@ SchoolResultsAnalysis.prototype = {
             var radioV = $('input[name="results-radio"]:checked').val();
             that.selSortOnline(radioV);
             that.coreStudent(radioV);
-            that.getStepList(radioV, 10, 20);
+            that.getStepList(radioV, 10, 9);
             that.getMostAdvancedNumbers(radioV,that.counselor,that.stepStart,that.stepEnd);
             that.updateExamProperties(radioV);
             that.getSchoolBossForGrade(radioV);
