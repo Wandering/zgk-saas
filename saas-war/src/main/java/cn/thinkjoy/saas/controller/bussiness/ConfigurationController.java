@@ -281,7 +281,7 @@ public class ConfigurationController {
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
         String[] columnNames = exiTenantConfigInstanceService.getTenantConfigListArrByTnIdAndType(type, tnId);
-        List<Map<Integer, Object>> maps = iexTenantCustomService.isExcelAddSelect(tnId, columnNames);
+        List<Map<Integer, Object>> maps = iexTenantCustomService.isExcelAddSelect(type,tnId, columnNames);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             ExcelUtils.createWorkBook(columnNames, maps).write(os);
