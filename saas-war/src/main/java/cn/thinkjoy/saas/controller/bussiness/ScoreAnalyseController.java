@@ -1432,7 +1432,8 @@ public class ScoreAnalyseController
         {
             scoreList = new ArrayList<>();
         }
-        Map<String, List<Map<String, Object>>> map = new HashMap<>();
+        Map<String, List<Map<String, Object>>> map = new LinkedHashMap<>();
+        sortByExamTime(scoreList);
         for (Map<String, Object> m: scoreList)
         {
            List<Map<String, Object>> list = map.get(m.get("examTime") + "") ;
@@ -1483,7 +1484,9 @@ public class ScoreAnalyseController
             @Override
             public int compare(Map<String, Object> o1, Map<String, Object> o2)
             {
-                return Integer.parseInt(o2.get(subjectName) + "") >= Integer.parseInt(o1.get(subjectName) +"") ? 1: -1;
+                if(Integer.parseInt(o2.get(subjectName) + "") == Integer.parseInt(o1.get(subjectName) +""))
+                    return 0;
+                return Integer.parseInt(o2.get(subjectName) + "") > Integer.parseInt(o1.get(subjectName) +"") ? 1: -1;
             }
         });
         int rank = 0;
