@@ -1171,7 +1171,15 @@ public class ScoreAnalyseController
     private int sortList(List<Map<String, Object>> list, final String orderBy, String className)
     {
 
-        Collections.sort(list, new Comparator<Map<String, Object>>()
+        List<Map<String, Object>> courseList = new ArrayList<>();
+        for (Map<String, Object> m: list)
+        {
+            if(null != m.get(orderBy) && ! "null".equals(m.get(orderBy)))
+            {
+                courseList.add(m);
+            }
+        }
+        Collections.sort(courseList, new Comparator<Map<String, Object>>()
         {
             @Override
             public int compare(Map<String, Object> o1, Map<String, Object> o2)
@@ -1179,10 +1187,10 @@ public class ScoreAnalyseController
                 return Float.parseFloat(o2.get(orderBy)+"") >= Float.parseFloat(o1.get(orderBy)+"") ? 1 : -1;
             }
         });
-        int rank = 0;
-        for (int i = 0; i < list.size() ; i++)
+        Integer rank = null;
+        for (int i = 0; i < courseList.size() ; i++)
         {
-            if(className.equals(list.get(i).get("className")))
+            if(className.equals(courseList.get(i).get("className")))
             {
                 rank = i + 1;
                 break;
