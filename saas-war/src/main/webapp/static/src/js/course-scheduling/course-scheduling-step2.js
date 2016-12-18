@@ -87,7 +87,11 @@ ArrangeCourse.prototype = {
                                     for (var j = 0; j < weeks.length; j++) {
                                         var curIndex = "week" + j;
                                         var tempCourse = weeksData[j].split('')[i] == 1 ? '排课' : '不排课';
-                                        classesHtml.push('<td week=' + curIndex + '>' + tempCourse + '</td>');
+                                        if (tempCourse === '不排课') {
+                                            classesHtml.push('<td week=' + curIndex + ' style="color: #CB171D;">' + tempCourse + '</td>');
+                                        } else {
+                                            classesHtml.push('<td week=' + curIndex + '>' + tempCourse + '</td>');
+                                        }
                                     }
                                 }
                             } else {
@@ -97,7 +101,11 @@ ArrangeCourse.prototype = {
                                     for (var j = 0; j < weeks.length; j++) {
                                         var curIndex = "week" + j;
                                         var tempCourse = weeksData[j].split('')[i] == 1 ? '排课' : '不排课';
-                                        classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + '>' + tempCourse + '</td>');
+                                        if (tempCourse === '不排课') {
+                                            classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + ' style="color: #CB171D;">' + tempCourse + '</td>');
+                                        } else {
+                                            classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + '>' + tempCourse + '</td>');
+                                        }
                                     }
                                 }
                             }
