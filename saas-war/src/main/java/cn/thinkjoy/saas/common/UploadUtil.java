@@ -168,7 +168,7 @@ public class UploadUtil
     {
         Sheet sheet = wb.getSheetAt(0);
         List<Map<String, String>> sheetList = new ArrayList<>();
-        Map<String, List<Map<String, String>>> classDataMap = new HashMap<>();
+        Map<String, List<Map<String, String>>> classDataMap = new LinkedHashMap<>();
         int rowSize = sheet.getLastRowNum() + 1;
         if (rowSize >= 3)
         {
@@ -205,10 +205,8 @@ public class UploadUtil
             for (Map.Entry<String, List<Map<String, String>>> classDataEntry : classDataMap.entrySet())
             {
                 List<Map<String, String>> classData = classDataEntry.getValue();
-//                sortList(classData, "totleScore", "classRank");
                 sheetList.addAll(classData);
             }
-//            sortList(sheetList, "totleScore", "gradeRank");
             List<String> columnList = new ArrayList<>();
             columnList.addAll(headerList);
             columnList.add("totleScore");
