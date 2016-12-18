@@ -85,8 +85,8 @@ public class ScoreAnalyseController
         headerList.add("diLiScore");
         headerList.add("liShiScore");
         headerList.add("commonScore");
-        headerList.add("classRank");
         headerList.add("gradeRank");
+        headerList.add("classRank");
     }
 
     @RequestMapping(value = "/downloadModel", method = RequestMethod.GET)
