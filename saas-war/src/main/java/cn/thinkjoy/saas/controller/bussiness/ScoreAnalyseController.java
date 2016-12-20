@@ -1329,6 +1329,13 @@ public class ScoreAnalyseController
         int stepLength)
     {
         int endStep = stepStart;
+        if(stepStart == maxStep)
+        {
+            Map<String, Integer> paramMap = new LinkedHashMap<>();
+            paramMap.put("stepStart", stepStart);
+            paramMap.put("stepEnd", stepStart);
+            stepList.add(paramMap);
+        }
         while (endStep < maxStep)
         {
             int start = stepStart;
