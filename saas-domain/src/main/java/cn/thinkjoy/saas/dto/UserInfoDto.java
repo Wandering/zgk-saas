@@ -59,6 +59,11 @@ public class UserInfoDto implements Serializable {
     private long countyId;
 
     /**
+     * 租户首页地址
+     */
+    private String indexUrl;
+
+    /**
      * 角色集合
      */
     private List<String> roles;
@@ -175,6 +180,14 @@ public class UserInfoDto implements Serializable {
 
     public void setCountyId(long countyId) {
         this.countyId = countyId;
+    }
+
+    public String getIndexUrl() {
+        return indexUrl;
+    }
+
+    public void setIndexUrl(String indexUrl) {
+        this.indexUrl = indexUrl;
     }
 
     @Override
