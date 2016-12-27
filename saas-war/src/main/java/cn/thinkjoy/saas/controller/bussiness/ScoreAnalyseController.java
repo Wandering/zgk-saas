@@ -1486,12 +1486,13 @@ public class ScoreAnalyseController
                subjectList.add(s);
            }
         }
-        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
         Collections.sort(subjectList, new Comparator<Map<String, Object>>()
         {
             @Override
             public int compare(Map<String, Object> o1, Map<String, Object> o2)
             {
+                if(Integer.parseInt(o2.get(subjectName) + "") == Integer.parseInt(o1.get(subjectName) +""))
+                    return 0;
                 return Integer.parseInt(o2.get(subjectName) + "") > Integer.parseInt(o1.get(subjectName) +"") ? 1: -1;
             }
         });
