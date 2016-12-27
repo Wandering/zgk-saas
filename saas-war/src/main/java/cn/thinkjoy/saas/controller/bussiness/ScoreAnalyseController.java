@@ -311,7 +311,7 @@ public class ScoreAnalyseController
         exam.setOriginFileName(RedisUtil.getInstance().get(exam.getUploadFilePath())+"");
         exam.setCreateDate(TimeUtil.getTimeStamp("yyyy-MM-dd HH:mm:ss"));
         examService.add(exam);
-        saveExcelData(exam, examService, headerList);
+        saveExcelData(exam, examService, headerList, getClassesNameByGrade(exam.getTnId(), exam.getGrade()));
         return exam;
     }
 
