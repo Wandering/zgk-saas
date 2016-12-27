@@ -88,7 +88,7 @@ ArrangeCourse.prototype = {
                                         var curIndex = "week" + j;
                                         var tempCourse = weeksData[j].split('')[i] == 1 ? '排课' : '不排课';
                                         if (tempCourse === '不排课') {
-                                            classesHtml.push('<td week=' + curIndex + ' style="color: #CB171D;">' + tempCourse + '</td>');
+                                            classesHtml.push('<td week=' + curIndex + ' class="no-assign-course">' + tempCourse + '</td>');
                                         } else {
                                             classesHtml.push('<td week=' + curIndex + '>' + tempCourse + '</td>');
                                         }
@@ -102,7 +102,7 @@ ArrangeCourse.prototype = {
                                         var curIndex = "week" + j;
                                         var tempCourse = weeksData[j].split('')[i] == 1 ? '排课' : '不排课';
                                         if (tempCourse === '不排课') {
-                                            classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + ' style="color: #CB171D;">' + tempCourse + '</td>');
+                                            classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + ' class="no-assign-course">' + tempCourse + '</td>');
                                         } else {
                                             classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + '>' + tempCourse + '</td>');
                                         }
@@ -444,9 +444,9 @@ $(function () {
     $(document).on('click', '.no-assign-table tr td:not(.order)', function () {
         var curText = $(this).text().trim();
         if (curText == '排课') {
-            $(this).html('<span style="color: #CB171D;">不排课</span>');
+            $(this).html('<span class="no-assign-course">不排课</span>');
         } else {
-            $(this).text('排课');
+            $(this).html('<span class="assign-course">排课</span>');
         }
         arrangeCourse.updateNoArrangeCourse();
     });
