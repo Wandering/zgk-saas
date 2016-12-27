@@ -18,6 +18,7 @@ $('#login-btn').on('click', function () {
         if (res.rtnCode == "0000000") {
             var data = res.bizData;
             var siderMenu = data.meuns;
+            var countyId = data.countyId;
             var siderMenuJson = {};
             var provinceId = (data.countyId+'').substr(0,2)+'0000';
             for(var i=0;i<siderMenu.length;i++){
@@ -31,7 +32,18 @@ $('#login-btn').on('click', function () {
             Common.cookie.setCookie('isInit', data.isInit);
             Common.cookie.setCookie('siderMenu', siderMenuJson);
             Common.cookie.setCookie('provinceId', provinceId);
+            Common.cookie.setCookie('countyId', countyId);
             if(data.isInit==0){
+                //switch (countyId){
+                //    case "330000": // 浙江
+                //        window.location.href = '/policy-interpret';
+                //        break;
+                //    case "360000":
+                //        window.location.href = '/jx-policy';
+                //        break;
+                //    default:
+                //        break;
+                //}
                 window.location.href = '/policy-interpret';
             }else{
                 window.location.href = '/seting-process'+data.isInit;
