@@ -140,6 +140,7 @@ SetingProcess3.prototype = {
                 layer.closeAll();
                 $('#class-template').html('');
                 that.getClassList();
+                $("#checkAll").prop("checked", false);
             } else {
                 layer.msg(res.msg);
             }
