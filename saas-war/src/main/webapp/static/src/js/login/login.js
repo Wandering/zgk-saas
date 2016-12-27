@@ -32,7 +32,7 @@ $('#login-btn').on('click', function () {
             Common.cookie.setCookie('siderMenu', siderMenuJson);
             Common.cookie.setCookie('provinceId', provinceId);
             if(data.isInit==0){
-                window.location.href = '/course-guide';
+                window.location.href = '/policy-interpret';
             }else{
                 window.location.href = '/seting-process'+data.isInit;
             }

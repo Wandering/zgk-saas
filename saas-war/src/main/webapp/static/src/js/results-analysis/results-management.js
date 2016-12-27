@@ -1,7 +1,4 @@
 var tnId = Common.cookie.getCookie('tnId');
-var globalParam = {
-    $oldExamName:''
-}
 function ResultsManagementFun() {
     this.init();
 }
@@ -10,6 +7,10 @@ ResultsManagementFun.prototype = {
     constructor: ResultsManagementFun,
     init: function () {
         this.getGrade();
+        this.examName ='';
+        this.currentPn = '';
+        this.currentRow = '10';
+        this.pageCount = '';
     },
     count: function () {
     },
@@ -121,7 +122,9 @@ ResultsManagementFun.prototype = {
             'rows': rows
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                $(".tcdPageCode").attr('count', parseInt(Math.ceil(res.bizData.count / rows)));
+                that.pageCount = Math.ceil(res.bizData.count / rows);
+                that.currentPn = Pn;
+                that.currentRow = rows;
                 var myTemplate = Handlebars.compile($("body #details-template").html());
                 layer.close();
                 $('body #details-tbody').html(myTemplate(res));
@@ -399,28 +402,26 @@ $(function () {
             layer.tips('请输入考试名称!', $('#examName'));
             return false;
         }
-        var flg = false;
-        Common.ajaxFun('/scoreAnalyse/checkExamName', 'GET', {
-            'grade': radioV,
-            'examName': examName
-        }, function (res) {
-            if (res.rtnCode == "0000000") {
-                if (res.bizData == true) {
-                    flg = true;
+        if(ResultsManagementIns.examName != examName){
+            var flg = false;
+            Common.ajaxFun('/scoreAnalyse/checkExamName', 'GET', {
+                'grade': radioV,
+                'examName': examName
+            }, function (res) {
+                if (res.rtnCode == "0000000") {
+                    if (res.bizData == true) {
+                        flg = true;
+                    }
+                }else{
+                    layer.msg(res.msg)
                 }
-            }else{
-                layer.msg(res.msg)
+            }, function (res) {
+                layer.msg(res.msg);
+            },true);
+            if(flg==true){
+                layer.tips('考试名称已经存在,请修改考试名称后再提交!', $('#examName'));
+                return false;
             }
-        }, function (res) {
-            layer.msg(res.msg);
-        },true);
-        if(globalParam.$oldExamName == $('#examName').val()){
-            layer.closeAll();
-            return false;
-        }
-        if(flg==true){
-            layer.tips('考试名称已经存在,请修改考试名称后再提交!', $('#examName'));
-            return false;
         }
         if (examDate == "") {
             layer.tips('请选择考试时间!', $('#exam-date'));
@@ -487,7 +488,7 @@ $(function () {
         var uploadFilePath = resultsChecked.attr('uploadFilePath');
         var radioV = $('input[name="results-radio"]:checked').val();
         ResultsManagementIns.uploadResults(radioV,id, examName, examTime, uploadFilePath);
-        globalParam.$oldExamName = $('#examName').val();
+        ResultsManagementIns.examName = examName;
     });
 
     // 删除
@@ -524,12 +525,15 @@ $(function () {
             area: ['100%', '100%'],
             maxmin: false,
             success: function (layero, index) {
-                ResultsManagementIns.detailsList(uploadfilepath, examId, grade, 0, 10);
+                ResultsManagementIns.detailsList(uploadfilepath, examId, grade, 0, ResultsManagementIns.currentRow);
                 $(".tcdPageCode").createPage({
-                    pageCount: $(".tcdPageCode").attr('count'),
-                    current: 1,
+                    pageCount: ResultsManagementIns.pageCount,
+                    current: Math.ceil(ResultsManagementIns.currentPn / ResultsManagementIns.currentRow) + 1,
                     backFn: function (p) {
-                        ResultsManagementIns.detailsList(uploadfilepath, examId, grade, (p - 1) * 10, 10);
+                        alert(p)
+                        alert((p - 1) * ResultsManagementIns.currentRow)
+                        //alert(ResultsManagementIns.pageCount + "==" + parseInt(Math.ceil(ResultsManagementIns.currentPn / ResultsManagementIns.currentRow) + 1) + "==" + p)
+                        ResultsManagementIns.detailsList(uploadfilepath, examId, grade, (p - 1) * ResultsManagementIns.currentRow, ResultsManagementIns.currentRow);
                     }
                 });
             }
@@ -757,12 +761,15 @@ $(function () {
         }, function (res) {
             console.log(res)
             if (res.rtnCode == "0000000") {
-                ResultsManagementIns.detailsList(uploadfilepath, examId, grade, 0, 10);
+                ResultsManagementIns.detailsList(uploadfilepath, examId, grade, 0, ResultsManagementIns.currentRow);
                 $(".tcdPageCode").createPage({
-                    pageCount: $(".tcdPageCode").attr('count'),
-                    current: 1,
+                    pageCount: ResultsManagementIns.pageCount,
+                    current: Math.ceil(ResultsManagementIns.currentPn / ResultsManagementIns.currentRow) + 1,
                     backFn: function (p) {
-                        ResultsManagementIns.detailsList(uploadfilepath, examId, grade, (p - 1) * 10, 10);
+                        alert(p)
+                        alert((p - 1) * ResultsManagementIns.currentRow)
+                        //alert(ResultsManagementIns.pageCount + "==" + parseInt(Math.ceil(ResultsManagementIns.currentPn / ResultsManagementIns.currentRow) + 1) + "==" + p)
+                        ResultsManagementIns.detailsList(uploadfilepath, examId, grade, (p - 1) * ResultsManagementIns.currentRow, ResultsManagementIns.currentRow);
                     }
                 });
                 layer.close(closeIndex);
@@ -883,14 +890,14 @@ function uploadFun() {
             $('.save-btn').attr('filePath', response.bizData.filePath);
             layer.msg('上传成功!');
 
-            if (!response.bizData.result) {
-                layer.msg(response.msg);
-                return false;
-            }
-            if (response.bizData.result != 'SUCCESS') {
-                layer.msg(response.bizData.result);
-                return false;
-            }
+            //if (!response.bizData.result) {
+            //    layer.msg(response.msg);
+            //    return false;
+            //}
+            //if (response.bizData.result != 'SUCCESS') {
+            //    layer.msg(response.bizData.result);
+            //    return false;
+            //}
 
 
         });
