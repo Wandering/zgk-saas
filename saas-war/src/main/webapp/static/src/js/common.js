@@ -42,7 +42,7 @@ var Common = {
             if (res.rtnCode == "0000000") {
                 if (pathNum != res.bizData.result) {
                     if (res.bizData.result == '0') {
-                        window.location.href = '/course-guide';
+                        window.location.href = '/policy-interpret';
                     } else {
                         window.location.href = '/seting-process' + res.bizData.result;
                     }
@@ -205,6 +205,8 @@ var Common = {
             pathName == '/base-rule-settings') {
             pathName = '/course-scheduling';
         }
+
+
         if (Common.cookie.getCookie('siderMenu')) {
             var siderMenu = $.parseJSON(Common.cookie.getCookie('siderMenu'));
             var menus = [];
@@ -252,6 +254,13 @@ var Common = {
             $('body').find('.submenu li.active').parents('li.nav-li').addClass('open active');
             var fooAtrr = $('body').find('.submenu li.active').parents('li.nav-li').find('[name="toggle-icon-url"]').attr('class');
             $('body').find('.submenu li.active').parents('li.nav-li').find('[name="toggle-icon-url"]').attr('class', fooAtrr + '-act');
+
+            var firstNavClass = $('.nav-li.active i').attr('class');
+
+            if(pathName == '/policy-interpret' || pathName =='/professional-assessment'){
+                $('.nav-li.active').find('i').attr('class', firstNavClass + '-act')
+            }
+
         }
     },
     getFormatTime: function (timestamp, formatStr) {

@@ -3,12 +3,12 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>SAAS 政策解读</title>
-        <%@ include file="./../common/meta.jsp"%>
+        <title>教务首页</title>
+        <%@ include file="../common/meta.jsp"%>
         <link rel="stylesheet" href="<%=ctx%>/static/src/css/school-reform/policy-interpret.css" />
     </head>
     <body>
-        <%@ include file="./../common/header.jsp"%>
+        <%@ include file="../common/header.jsp"%>
         <div class="main-container" id="main-container">
             <script type="text/javascript">
                 try{ace.settings.check('main-container' , 'fixed')}catch(e){}
@@ -17,7 +17,7 @@
                 <a class="menu-toggler" id="menu-toggler" href="#">
                     <span class="menu-text"></span>
                 </a>
-                <%@ include file="./../common/sidebar.jsp"%>
+                <%@ include file="../common/sidebar.jsp"%>
                 <div class="main-content">
                     <div class="breadcrumbs" id="breadcrumbs">
                         <script type="text/javascript">
@@ -27,7 +27,6 @@
                             <li>
                                 <a href="#">首页</a>
                             </li>
-                            <li class="active">政策解读</li>
                         </ul>
                     </div>
                     <div class="page-content">
@@ -309,7 +308,7 @@
                 </div>
             </div>
         </div>
-        <%@ include file="./../common/footer.jsp"%>
+        <%@ include file="../common/footer.jsp"%>
         <script src="<%=ctx%>/static/src/js/school-reform/policy-interpret.js"></script>
     </body>
 </html>
