@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>SAAS 政策解读</title>
+        <title>教务首页</title>
         <%@ include file="./../common/meta.jsp"%>
         <link rel="stylesheet" href="<%=ctx%>/static/src/css/school-reform/policy-interpret.css" />
     </head>
@@ -27,7 +27,6 @@
                             <li>
                                 <a href="#">首页</a>
                             </li>
-                            <li class="active">政策解读</li>
                         </ul>
                     </div>
                     <div class="page-content">
