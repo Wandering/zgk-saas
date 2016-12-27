@@ -52,6 +52,7 @@ CourseInfo.prototype = {
             },
             function (res) {
                 if (res.rtnCode == "0000000") {
+
                     var myTemplate = Handlebars.compile($("#schedule-template").html());
                     Handlebars.registerHelper("addOne", function (index, options) {
                         return parseInt(index) + 1;

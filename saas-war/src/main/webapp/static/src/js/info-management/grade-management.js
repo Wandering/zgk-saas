@@ -14,11 +14,15 @@ GradeManagement.prototype = {
         Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {
             'tnId': tnId
         }, function (res) {
+            layer.load(1, {shade: [0.3,'#000']});
             if (res.rtnCode == "0000000") {
                 that.renderList(res);
             }
+            setTimeout(function () {
+                layer.closeAll();
+            }, 500);
         }, function (res) {
-            alert("出错了");
+            layer.msg("出错了");
         }, true);
     },
     renderList: function (data) {

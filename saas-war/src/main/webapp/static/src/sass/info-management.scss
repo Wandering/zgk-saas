@@ -54,6 +54,9 @@ ul, li, span, div {
         width: 220px!important;
     }
 }
+.layui-layer-page {
+    overflow-y: hidden;
+}
 .add-class-box ul {
   list-style-type: none;
   width: 100%;
@@ -226,4 +229,7 @@ a.download-link:hover {
             margin-left: 10px !important;
         }
     }
+}
+.layui-layer-loading1 {
+    margin: 0 auto;
 }

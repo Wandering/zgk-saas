@@ -14,6 +14,14 @@ table {
         font-weight: bold;
         margin: 27px 0 12px 0;
     }
+    ul {
+        list-style: none;
+        margin-top: 19px;
+        font-size: 14px;
+        color: #4A4A4A;
+        line-height: 1.6em;
+        font-weight: normal;
+    }
     .score-component-table {
         border: 1px solid #E0E3E8;
         font-size: 14px;
@@ -206,6 +214,8 @@ table {
                     vertical-align: middle;
                     border-right: 1px solid #E0E3E8;
                     border-bottom: 1px solid #E0E3E8;
+                    padding: 20px;
+                    line-height: 1.6em;
                 }
             }
         }
