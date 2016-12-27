@@ -22,9 +22,9 @@ window.jQuery || document.write("<script src='<%=ctx%>/static/src/lib/assets/js/
 </script>
 <![endif]-->
 
-<script type="text/javascript">
-    if ("ontouchend" in document) document.write("<script src='<%=ctx%>/static/src/lib/assets/js/jquery.mobile.custom.min.js'>" + "<" + "script>");
-</script>
+<%--<script type="text/javascript">--%>
+    <%--if ("ontouchend" in document) document.write("<script src='<%=ctx%>/static/src/lib/assets/js/jquery.mobile.custom.min.js'>" + "<" + "script>");--%>
+<%--</script>--%>
 
 <%--layer弹层--%>
 <script src="<%=ctx%>/static/src/lib/layer/layer.js"></script>
