@@ -77,49 +77,51 @@
                     </div><!-- /.col -->
                 </div><!-- /.row -->
 
-                <div class="row" style="display: none;" id="details-main">
+                <div class="row" style="" id="details-main">
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
-                        <div class="main-title">
-                            <h3>成绩明细</h3>
-                        </div>
-                        <div class="title-2">
-                            <div class="btns">
-                                <button class="btn btn-inverse" id="details-modify-btn">修改</button>
-                                <button class="btn btn-success" id="details-close-btn">删除</button>
-                                <a target="_blank" href="javascript:;" class="btn btn-danger" id="details-download-btn">下载</a>
-                            </div>
-                        </div>
+                        <%--<div class="main-title">--%>
+                            <%--<h3>成绩明细</h3>--%>
+                        <%--</div>--%>
+                        <%--<div class="title-2">--%>
+                            <%--<div class="btns">--%>
+                                <%--<button class="btn btn-inverse" id="details-modify-btn">修改</button>--%>
+                                <%--<button class="btn btn-success" id="details-close-btn">删除</button>--%>
+                                <%--<a target="_blank" href="javascript:;" class="btn btn-danger" id="details-download-btn">下载</a>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
                         <div class="">
-                            <table id="" class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th class="center" rowspan="2"></th>
-                                    <th class="center" rowspan="2">姓名</th>
-                                    <th class="center" rowspan="2">班级</th>
-                                    <th class="center" colspan="3">主课</th>
-                                    <th class="center" colspan="7">选课</th>
-                                    <th class="center" rowspan="2">班级排名</th>
-                                    <th class="center" rowspan="2">年级排名</th>
-                                </tr>
-                                <tr>
-                                    <th class="center">语文</th>
-                                    <th class="center">数学</th>
-                                    <th class="center">英语</th>
-                                    <th class="center">物理</th>
-                                    <th class="center">化学</th>
-                                    <th class="center">生物</th>
-                                    <th class="center">政治</th>
-                                    <th class="center">地理</th>
-                                    <th class="center">历史</th>
-                                    <th class="center">通用技术</th>
-                                </tr>
-                                </thead>
-                                <tbody id="details-tbody">
+                            <%--<table id="" class="table table-hover">--%>
+                                <%--<thead>--%>
+                                <%--<tr>--%>
+                                    <%--<th class="center" rowspan="2"></th>--%>
+                                    <%--<th class="center" rowspan="2">姓名</th>--%>
+                                    <%--<th class="center" rowspan="2">班级</th>--%>
+                                    <%--<th class="center" colspan="3">主课</th>--%>
+                                    <%--<th class="center" colspan="7">选课</th>--%>
+                                    <%--<th class="center" rowspan="2">班级排名</th>--%>
+                                    <%--<th class="center" rowspan="2">年级排名</th>--%>
+                                <%--</tr>--%>
+                                <%--<tr>--%>
+                                    <%--<th class="center">语文</th>--%>
+                                    <%--<th class="center">数学</th>--%>
+                                    <%--<th class="center">英语</th>--%>
+                                    <%--<th class="center">物理</th>--%>
+                                    <%--<th class="center">化学</th>--%>
+                                    <%--<th class="center">生物</th>--%>
+                                    <%--<th class="center">政治</th>--%>
+                                    <%--<th class="center">地理</th>--%>
+                                    <%--<th class="center">历史</th>--%>
+                                    <%--<th class="center">通用技术</th>--%>
+                                <%--</tr>--%>
+                                <%--</thead>--%>
+                                <%--<tbody id="details-tbody">--%>
 
-                                </tbody>
-                            </table>
-                            <div class="tcdPageCode"></div>
+                                <%--</tbody>--%>
+
+                            <%--</table>--%>
+                            <%--<div class="tcdPageCode"></div>--%>
+
                         </div>
                         <!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
@@ -267,9 +269,6 @@
     var BASE_URL = '<%=ctx%>/static/src/lib/';
     var rootPath = '<%=ctx%>';
 </script>
-
-<script src="<%=ctx%>/static/src/lib/jquery.page/jquery.page.js"></script>
 <script src="<%=ctx%>/static/src/js/results-analysis/results-management.js"></script>
-
 </body>
 </html>

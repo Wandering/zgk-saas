@@ -42,7 +42,7 @@ var Common = {
             if (res.rtnCode == "0000000") {
                 if (pathNum != res.bizData.result) {
                     if (res.bizData.result == '0') {
-                        window.location.href = '/course-guide';
+                        window.location.href = '/policy-interpret';
                     } else {
                         window.location.href = '/seting-process' + res.bizData.result;
                     }

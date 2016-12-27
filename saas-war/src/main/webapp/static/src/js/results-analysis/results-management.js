@@ -3,12 +3,15 @@ function ResultsManagementFun() {
     this.init();
 }
 
+
+
+
 ResultsManagementFun.prototype = {
     constructor: ResultsManagementFun,
     init: function () {
         this.getGrade();
         this.examName ='';
-        this.currentPn = '';
+        this.currentOffset = 0;
         this.currentRow = '10';
         this.pageCount = '';
     },
@@ -113,17 +116,17 @@ ResultsManagementFun.prototype = {
             $(this).prev().focus();
         });
     },
-    detailsList: function (uploadfilepath, id, grade, Pn, rows) {
+    detailsList: function (uploadfilepath, id, grade, offset, rows) {
         var that = this;
         Common.ajaxFun('/scoreAnalyse/listExamDetail', 'GET', {
             'examId': id,
             'grade': grade,
-            'offset': Pn,
+            'offset': offset,
             'rows': rows
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 that.pageCount = Math.ceil(res.bizData.count / rows);
-                that.currentPn = Pn;
+                that.currentOffset = offset;
                 that.currentRow = rows;
                 var myTemplate = Handlebars.compile($("body #details-template").html());
                 layer.close();
@@ -518,27 +521,66 @@ $(function () {
         var examId = $(this).attr('urlId');
         var grade = $(this).attr('grade');
         var uploadfilepath = $(this).attr('uploadfilepath');
+        var detailsMain = [];
+        detailsMain.push('<div class="col-xs-12">');
+        detailsMain.push('<div class="main-title">');
+        detailsMain.push('<h3>成绩明细</h3>');
+        detailsMain.push('</div>');
+        detailsMain.push('<div class="title-2">');
+        detailsMain.push('<div class="btns">');
+        detailsMain.push('<button class="btn btn-inverse" id="details-modify-btn">修改</button>');
+        detailsMain.push('<button class="btn btn-success" id="details-close-btn">删除</button>');
+        detailsMain.push('<a target="_blank" href="javascript:;" class="btn btn-danger" id="details-download-btn">下载</a>');
+        detailsMain.push('</div>');
+        detailsMain.push('</div>');
+        detailsMain.push('<table id="" class="table table-hover">');
+        detailsMain.push('<thead>');
+        detailsMain.push('<tr>');
+        detailsMain.push('<th class="center" rowspan="2"></th>');
+        detailsMain.push('<th class="center" rowspan="2">姓名</th>');
+        detailsMain.push('<th class="center" rowspan="2">班级</th>');
+        detailsMain.push('<th class="center" colspan="3">主课</th>');
+        detailsMain.push('<th class="center" colspan="7">选课</th>');
+        detailsMain.push('<th class="center" rowspan="2">班级排名</th>');
+        detailsMain.push('<th class="center" rowspan="2">年级排名</th>');
+        detailsMain.push('</tr>');
+        detailsMain.push('<tr>');
+        detailsMain.push('<th class="center">语文</th>');
+        detailsMain.push('<th class="center">数学</th>');
+        detailsMain.push('<th class="center">英语</th>');
+        detailsMain.push('<th class="center">物理</th>');
+        detailsMain.push('<th class="center">化学</th>');
+        detailsMain.push('<th class="center">生物</th>');
+        detailsMain.push('<th class="center">政治</th>');
+        detailsMain.push('<th class="center">地理</th>');
+        detailsMain.push('<th class="center">历史</th>');
+        detailsMain.push('<th class="center">通用技术</th>');
+        detailsMain.push('</tr>');
+        detailsMain.push('</thead>');
+        detailsMain.push('<tbody id="details-tbody">');
+        detailsMain.push('</tbody>');
+        detailsMain.push('</table>');
+        detailsMain.push('<div class="tcdPageCode"></div>');
+        detailsMain.push('</div>');
         var index = layer.open({
             title: '成绩明细',
             type: 1,
-            content: $('#details-main').html(),
+            content: detailsMain.join(''),
             area: ['100%', '100%'],
             maxmin: false,
             success: function (layero, index) {
-                ResultsManagementIns.detailsList(uploadfilepath, examId, grade, 0, ResultsManagementIns.currentRow);
+                ResultsManagementIns.detailsList(uploadfilepath, examId, grade, ResultsManagementIns.currentOffset, ResultsManagementIns.currentRow);
                 $(".tcdPageCode").createPage({
                     pageCount: ResultsManagementIns.pageCount,
-                    current: Math.ceil(ResultsManagementIns.currentPn / ResultsManagementIns.currentRow) + 1,
+                    current: 1,
                     backFn: function (p) {
-                        alert(p)
-                        alert((p - 1) * ResultsManagementIns.currentRow)
-                        //alert(ResultsManagementIns.pageCount + "==" + parseInt(Math.ceil(ResultsManagementIns.currentPn / ResultsManagementIns.currentRow) + 1) + "==" + p)
                         ResultsManagementIns.detailsList(uploadfilepath, examId, grade, (p - 1) * ResultsManagementIns.currentRow, ResultsManagementIns.currentRow);
                     }
                 });
             }
         });
         layer.full(index);
+
     });
 
     // 详情修改
@@ -761,14 +803,11 @@ $(function () {
         }, function (res) {
             console.log(res)
             if (res.rtnCode == "0000000") {
-                ResultsManagementIns.detailsList(uploadfilepath, examId, grade, 0, ResultsManagementIns.currentRow);
+                ResultsManagementIns.detailsList(uploadfilepath, examId, grade, ResultsManagementIns.currentOffset, ResultsManagementIns.currentRow);
                 $(".tcdPageCode").createPage({
                     pageCount: ResultsManagementIns.pageCount,
-                    current: Math.ceil(ResultsManagementIns.currentPn / ResultsManagementIns.currentRow) + 1,
+                    current: 1,
                     backFn: function (p) {
-                        alert(p)
-                        alert((p - 1) * ResultsManagementIns.currentRow)
-                        //alert(ResultsManagementIns.pageCount + "==" + parseInt(Math.ceil(ResultsManagementIns.currentPn / ResultsManagementIns.currentRow) + 1) + "==" + p)
                         ResultsManagementIns.detailsList(uploadfilepath, examId, grade, (p - 1) * ResultsManagementIns.currentRow, ResultsManagementIns.currentRow);
                     }
                 });
