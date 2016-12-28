@@ -940,9 +940,13 @@ $(function () {
     });
     // 选择班级
     $('body').on('change', '#select-class', function () {
+        ClassAnalysisIns.stepStart = '';
+        ClassAnalysisIns.stepEnd = '';
+        ClassAnalysisIns.rankStepStart = '';
+        ClassAnalysisIns.rankStepEnd = '';
         $('#overLineDetail-tbody,#details-main-tbody').html('');
         ClassAnalysisIns.className = $(this).val();
-        $('.sel-class-txt,.class-name').text(ClassAnalysisIns.className);
+        $('.sel-class-txt,.class-name').text($(this).val());
         // 提交选中年级记录
         ClassAnalysisIns.updateExamProperties('defaultClass', ClassAnalysisIns.className);
         // 默认拉取班级排名趋势
