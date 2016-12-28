@@ -796,9 +796,9 @@ function upload () {
             classManagement.gradeName = checkedGrade;
             classManagement.loadPage(0, classManagement.classRows);
         }
-        if (response.bizData.result == 'SUCCESS') {
-            //layer.msg(response.bizData.result);
-            layer.msg('上传成功');
+        if (response.bizData.result) {
+            layer.msg(response.bizData.result);
+            //layer.msg('上传成功');
         } else {
             layer.msg(response.msg);
         }
@@ -830,7 +830,3 @@ function upload () {
         }, 500);
     });
 }
-
-$(function () {
-    layer.load(1, {shade: [0.3,'#000']});
-});
