@@ -513,8 +513,8 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         Integer columnLen=tenantConfigInstances.size();
 
         List<LinkedHashMap<String, String>> configTeantComList = readExcel.readExcelFile(excelPath,columnLen);
-        if (configTeantComList == null)
-            return "系统错误";
+        if (configTeantComList == null||configTeantComList.size()<=0)
+            return "输入的数据不完整，请完善数据后再上传";
         LOGGER.info("excel序列化 总数:" + configTeantComList.size());
         List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
         if (tenantConfigInstanceViews == null)
