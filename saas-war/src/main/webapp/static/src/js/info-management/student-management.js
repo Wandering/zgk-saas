@@ -157,6 +157,7 @@ var App = {
             'r': App.page.rows,
             'g': App.checkGradeName
         }, function (res) {
+            layer.load(1, {shade: [0.3,'#000']});
             if (res.rtnCode == "0000000") {
                 var tpl = [];
                 var dataJson = res.bizData.result;
@@ -179,6 +180,9 @@ var App = {
                 $("#student-table tbody").html(tpl.join(''));
                 that.pagination();
             }
+            setTimeout(function () {
+                layer.closeAll();
+            }, 500);
         }, function (res) {
             layer.msg("出错了");
         }, false);
