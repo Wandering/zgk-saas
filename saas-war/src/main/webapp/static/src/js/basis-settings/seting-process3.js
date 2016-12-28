@@ -140,6 +140,7 @@ SetingProcess3.prototype = {
                 layer.closeAll();
                 $('#class-template').html('');
                 that.getClassList();
+                $("#checkAll").prop("checked", false);
             } else {
                 layer.msg(res.msg);
             }
@@ -370,13 +371,12 @@ jQuery(function () {
         $('#add-btn,#del-batch-btn').addClass('disabled');
         $('.del-btn').removeClass('del-btn').addClass('disabled');
         $('#' + file.id).addClass('upload-state-done');
-        layer.msg('导入成功,请进行下一流程!');
-        if (!response.bizData.result) {
-            layer.msg(response.msg);
-            return false;
-        }
-        if (response.bizData.result != 'SUCCESS') {
+        //layer.msg('导入成功,请进行下一流程!');
+        if (response.bizData) {
             layer.msg(response.bizData.result);
+            return false;
+        } else {
+            layer.msg(response.msg);
             return false;
         }
     });
@@ -392,6 +392,13 @@ jQuery(function () {
         }
 
         $error.text('上传失败');
+        if (response.bizData) {
+            layer.msg(response.bizData.result);
+            return false;
+        } else {
+            layer.msg(response.msg);
+            return false;
+        }
     });
 
     // 完成上传完了，成功或者失败，先删除进度条。

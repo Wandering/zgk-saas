@@ -65,6 +65,7 @@ ClassResultsAnalysis.prototype = {
                     }
                 });
                 $('#set-line').val(that.bacthLine);
+                $('.student-num').text(that.bacthLine);
                 console.log(that.grade)
                 console.log(that.className)
                 console.log(that.bacthLine)
@@ -331,8 +332,8 @@ ClassResultsAnalysis.prototype = {
                 //minInterval: Math.max(totalScoreData)
                 //min: 'dataMin',
                 max: Math.max(maxArrData),
-                minInterval: 1,
-                interval: 1
+                minInterval: 1
+                //interval: 1
             },
             series: [
                 {
@@ -385,8 +386,8 @@ ClassResultsAnalysis.prototype = {
                 type: 'value',
                 //min: Array.min(arrMaxMin),
                 //max: Math.max(dateData),
-                minInterval: 1,
-                interval: 1
+                minInterval: 1
+                //interval: 1
             },
             series: datas
         };
@@ -557,7 +558,7 @@ ClassResultsAnalysis.prototype = {
                 + '</div>';
             layer.open({
                 type: 1,
-                title: '个人成绩变化趋势',
+                title: '个人成绩排名变化',
                 offset: 'auto',
                 area: ['800px', 'auto'],
                 // area: ['800px', '400'],
@@ -645,7 +646,10 @@ ClassResultsAnalysis.prototype = {
                         };
                         datas.push(seriesObj);
                     }
-                    that.studentTotalScoreChart(dateData, totalScoreData);
+                    var maxArrData = [];
+                    maxArrData.concat(totalScoreData);
+                    maxArrData.push((Array.max(totalScoreData) + 5));
+                    that.studentTotalScoreChart(dateData, totalScoreData,maxArrData);
                     that.studentSubjectsChart(subjectData, dateData, datas, arrMaxMin);
                 }
             } else {
@@ -666,7 +670,7 @@ ClassResultsAnalysis.prototype = {
         $('.student-chart-tab button:eq(0)').click();
     },
     // 查看总分趋势
-    studentTotalScoreChart: function (dateData, totalScoreData) {
+    studentTotalScoreChart: function (dateData, totalScoreData,maxArrData) {
         var studentTotalScoreChart = echarts.init(document.getElementById('studentTotalScore-chart'));
         var studentTtotalScoreChartOption = {
             title: {
@@ -699,9 +703,11 @@ ClassResultsAnalysis.prototype = {
                 containLabel: true
             },
             yAxis: {
+                scale: false,
                 type: 'value',
-                min: Array.min(totalScoreData),
-                max: Array.max(totalScoreData)
+                max: Math.max(maxArrData),
+                minInterval: 1
+                //interval: 1
             },
             series: [
                 {
@@ -934,9 +940,13 @@ $(function () {
     });
     // 选择班级
     $('body').on('change', '#select-class', function () {
+        ClassAnalysisIns.stepStart = '';
+        ClassAnalysisIns.stepEnd = '';
+        ClassAnalysisIns.rankStepStart = '';
+        ClassAnalysisIns.rankStepEnd = '';
         $('#overLineDetail-tbody,#details-main-tbody').html('');
         ClassAnalysisIns.className = $(this).val();
-        $('.sel-class-txt,.class-name').text(ClassAnalysisIns.className);
+        $('.sel-class-txt,.class-name').text($(this).val());
         // 提交选中年级记录
         ClassAnalysisIns.updateExamProperties('defaultClass', ClassAnalysisIns.className);
         // 默认拉取班级排名趋势

@@ -27,7 +27,7 @@ public class ReadExcel {
      * @param filePath
      * @return
      */
-    public List<LinkedHashMap<String,String>> readExcelFile(String filePath) {
+    public List<LinkedHashMap<String,String>> readExcelFile(String filePath,Integer columnLen) {
         LOGGER.info("=============poi 解析excel S=============");
         LOGGER.info("excel file path:"+filePath);
         try {
@@ -43,12 +43,14 @@ public class ReadExcel {
                     continue;
                 }
                 LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-                for (int j = 0; j <= row.getPhysicalNumberOfCells(); j++) {
+//                row.getPhysicalNumberOfCells()-1
+                for (int j = 0; j <= (columnLen-1); j++) {
                     if (row.getCell(j) != null) {
                         String str = getCellValue(row.getCell(j));
                         LOGGER.info(i + "行-" + j + "列:" + str);
                         map.put(j + "", str);
-                    }
+                    } else
+                        map.put(j + "", EnumUtil.EXCEL_VALUE_NOTHING);
                 }
                 if (map.size() > 0)
                     list.add(map);

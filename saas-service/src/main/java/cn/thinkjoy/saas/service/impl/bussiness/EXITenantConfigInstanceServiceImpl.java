@@ -35,6 +35,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
     @Autowired
     EXITenantConfigInstanceDAO exiTenantConfigInstanceDAO;
+
     @Resource
     ITenantConfigInstanceDAO iTenantConfigInstanceDAO;
     @Resource
@@ -501,9 +502,19 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
         ReadExcel readExcel = new ReadExcel();
-        List<LinkedHashMap<String, String>> configTeantComList = readExcel.readExcelFile(excelPath);
-        if (configTeantComList == null)
+        Map map = new HashMap();
+        map.put("domain", type);
+        map.put("tnId", tnId);
+        List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceDAO.selectTeanConfigList(map);
+
+        if(tenantConfigInstances==null||tenantConfigInstances.size()<=0)
             return "系统错误";
+
+        Integer columnLen=tenantConfigInstances.size();
+
+        List<LinkedHashMap<String, String>> configTeantComList = readExcel.readExcelFile(excelPath,columnLen);
+        if (configTeantComList == null||configTeantComList.size()<=0)
+            return "输入的数据不完整，请完善数据后再上传";
         LOGGER.info("excel序列化 总数:" + configTeantComList.size());
         List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
         if (tenantConfigInstanceViews == null)

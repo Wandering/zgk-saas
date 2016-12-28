@@ -16,6 +16,9 @@ ClassRoomManagement.prototype = {
             if (res.rtnCode == "0000000") {
                 that.renderList(res);
             }
+            setTimeout(function () {
+                layer.closeAll();
+            }, 500);
         }, function (res) {
             layer.msg("出错了");
         }, true);
@@ -32,7 +35,7 @@ ClassRoomManagement.prototype = {
                 classRoomHtml.push('</label>');
                 classRoomHtml.push('</td>');
                 classRoomHtml.push('<td class="center index" indexid="' + v.id + '">'+ (i+1) +'</td>');
-                classRoomHtml.push('<td class="center" gradeid="' + v.gradeId + '">'+ v.grade +'</td>');
+                classRoomHtml.push('<td class="center" name="grade" gradeid="' + v.gradeId + '">'+ v.grade +'</td>');
                 classRoomHtml.push('<td class="center">'+ v.executiveNumber +'</td>');
                 classRoomHtml.push('<td class="center">'+ v.dayNumber +'</td>');
                 classRoomHtml.push('</tr>');
@@ -211,7 +214,8 @@ $('#addRole-btn').on('click',function(){
 $(document).on('click','.save-btn',function () {
     var executiveNumber = $.trim($('#executiveNumber').val());
     var dayNumber = $.trim($('#dayNumber').val());
-    var gradeV = $('#grade-list').val();
+    var gradeV = $('#grade-list').val(),
+        gradeName = $('#grade-list option[value=' + gradeV + ']').text();
     if (executiveNumber == '') {
         layer.tips('请填写行政教室数量!', $('#executiveNumber'));
         return false;
@@ -223,6 +227,14 @@ $(document).on('click','.save-btn',function () {
     if (gradeV == '00') {
         layer.tips('请选择年级!', $('#grade-list'));
         return false;
+    }
+
+    for (var i = 0; i < $('td[name="grade"]').length; i++) {
+        var tempGrade = $('td[name="grade"]').eq(i).text().trim();
+        if (tempGrade == gradeName) {
+            layer.msg('该年级已经存在!');
+            return;
+        }
     }
 
     Common.ajaxFun('/manage/classRoom/add/'+ tnId +'/' + gradeV + '.do', 'POST',{
@@ -293,4 +305,8 @@ $(document).on('click', '#update-classroom-btn', function () {
 
 $(document).on('click','.close-btn',function(){
     layer.closeAll();
+});
+
+$(function () {
+    layer.load(1, {shade: [0.3,'#000']});
 });
