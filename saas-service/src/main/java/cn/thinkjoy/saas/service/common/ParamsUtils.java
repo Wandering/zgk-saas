@@ -129,7 +129,7 @@ public  class ParamsUtils {
 
                 LOGGER.info(x + "行-" + key + "列 value:" + val + "");
                 boolean isNoth = isNothing(val);
-                if (!isNoth)
+                if (isNoth)
                     return "输入的数据不完整，请完善数据后再上传";
 
                 boolean valid = (StringUtils.isBlank(regularStr) ? true : isRegValid(regularStr, val));
