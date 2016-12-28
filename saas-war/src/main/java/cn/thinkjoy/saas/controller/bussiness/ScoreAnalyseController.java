@@ -1491,9 +1491,7 @@ public class ScoreAnalyseController
             @Override
             public int compare(Map<String, Object> o1, Map<String, Object> o2)
             {
-                if(Integer.parseInt(o2.get(subjectName) + "") == Integer.parseInt(o1.get(subjectName) +""))
-                    return 0;
-                return Integer.parseInt(o2.get(subjectName) + "") > Integer.parseInt(o1.get(subjectName) +"") ? 1: -1;
+                return Integer.valueOf(o2.get(subjectName) + "").compareTo(Integer.valueOf(o1.get(subjectName) +""));
             }
         });
         int rank = 0;
