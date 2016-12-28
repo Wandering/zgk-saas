@@ -195,6 +195,7 @@ var Common = {
         return gradeV;
     },
     renderMenu: function () {
+        var that = this;
         var pathName = window.location.pathname;
         if (pathName == '/course-scheduling-step1' ||
             pathName == '/course-scheduling-step2' ||
@@ -210,14 +211,19 @@ var Common = {
 
         if (Common.cookie.getCookie('siderMenu')) {
             var siderMenu = $.parseJSON(Common.cookie.getCookie('siderMenu'));
+            console.log(siderMenu)
+            var indexUrl = that.cookie.getCookie('indexUrl');
             var menus = [];
-            //menus.push('<li class="nav-li" style="display: block;">');
-            //menus.push('<a href="index.html">');
-            //menus.push('<i class="icon-home"></i>');
-            //menus.push('<span class="menu-text">首页</span>');
-            //menus.push('</a>');
-            //menus.push('</li>');
-            // var icons = ['icon-flag','icon-lightbulb','icon-globe','icon-book','icon-dashboard','icon-credit-card','icon-tasks','icon-cog']
+            if(("/"+indexUrl)==pathName){
+                menus.push('<li class="nav-li active">');
+            }else{
+                menus.push('<li class="nav-li">');
+            }
+            menus.push('<a href="/'+ indexUrl +'">');
+            menus.push('<i class="icon-sidebar-0" name="toggle-icon-url"></i>');
+            menus.push('<span class="menu-text">首页</span>');
+            menus.push('</a>');
+            menus.push('</li>');
             $.each(siderMenu, function (i, v) {
                 if (pathName == v.meunUrl) {
                     menus.push('<li class="nav-li active">');
@@ -257,8 +263,7 @@ var Common = {
             $('body').find('.submenu li.active').parents('li.nav-li').find('[name="toggle-icon-url"]').attr('class', fooAtrr + '-act');
 
             var firstNavClass = $('.nav-li.active i').attr('class');
-
-            if(pathName == '/policy-interpret' || pathName =='/professional-assessment'){
+            if((pathName == '/' + indexUrl) || pathName =='/professional-assessment'){
                 $('.nav-li.active').find('i').attr('class', firstNavClass + '-act')
             }
 
