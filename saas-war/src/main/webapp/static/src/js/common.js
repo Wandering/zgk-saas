@@ -38,11 +38,12 @@ var Common = {
         var pathName = window.location.pathname;
         var pathNum = pathName.slice((pathName.length - 1), pathName.length);
         var tnId = this.cookie.getCookie('tnId');
+        var indexUrl = this.cookie.getCookie('indexUrl');
         Common.ajaxFun('/config/get/step/' + tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 if (pathNum != res.bizData.result) {
                     if (res.bizData.result == '0') {
-                        window.location.href = '/policy-interpret';
+                        window.location.href = '/' + indexUrl;
                     } else {
                         window.location.href = '/seting-process' + res.bizData.result;
                     }
