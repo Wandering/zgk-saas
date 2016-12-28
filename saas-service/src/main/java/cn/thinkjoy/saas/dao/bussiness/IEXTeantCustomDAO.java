@@ -100,4 +100,12 @@ public interface IEXTeantCustomDAO {
      */
     List<SyncClass> selectExecutiveClassGroup(Map map);
 
+
+    /**
+     *
+     * @param map
+     * @return
+     */
+    Integer selectExistByCloumn(Map map);
+
 }
