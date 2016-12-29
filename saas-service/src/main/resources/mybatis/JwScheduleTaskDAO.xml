@@ -360,32 +360,32 @@ selectList
         <include refid="Base_Column_List" />
         FROM saas_jw_schedule_task
         <trim prefix="WHERE" prefixOverrides="AND | OR">
-            <if test="id!=null">
-                AND id like CONCAT('%', #{id} , '%')
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
             </if>
-            <if test="scheduleName!=null">
-                AND schedule_name like CONCAT('%', #{scheduleName} , '%')
+            <if test="condition.scheduleName!=null">
+                AND schedule_name like CONCAT('%', #{condition.scheduleName} , '%')
             </if>
-            <if test="grade!=null">
-                AND grade like CONCAT('%', #{grade} , '%')
+            <if test="condition.grade!=null">
+                AND grade like CONCAT('%', #{condition.grade} , '%')
             </if>
-            <if test="year!=null">
-                AND year like CONCAT('%', #{year} , '%')
+            <if test="condition.year!=null">
+                AND year like CONCAT('%', #{condition.year} , '%')
             </if>
-            <if test="term!=null">
-                AND term like CONCAT('%', #{term} , '%')
+            <if test="condition.term!=null">
+                AND term like CONCAT('%', #{condition.term} , '%')
             </if>
-            <if test="status!=null">
-                AND status like CONCAT('%', #{status} , '%')
+            <if test="condition.status!=null">
+                AND status like CONCAT('%', #{condition.status} , '%')
             </if>
-            <if test="delStatus!=null">
-                AND del_status like CONCAT('%', #{delStatus} , '%')
+            <if test="condition.delStatus!=null">
+                AND del_status like CONCAT('%', #{condition.delStatus} , '%')
             </if>
-            <if test="createDate!=null">
-                AND create_date like CONCAT('%', #{createDate} , '%')
+            <if test="condition.createDate!=null">
+                AND create_date like CONCAT('%', #{condition.createDate} , '%')
             </if>
-            <if test="tnId!=null">
-                AND tn_id like CONCAT('%', #{tnId} , '%')
+            <if test="condition.tnId!=null">
+                AND tn_id like CONCAT('%', #{condition.tnId} , '%')
             </if>
         </trim>
         <if test="orderBy!=null">

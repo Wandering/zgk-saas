@@ -218,9 +218,6 @@ selectList
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND tid = #{id}
         </trim>
-        <if test="orderBy!=null">
-        ORDER BY ${orderBy} ${sortBy}
-        </if>
     </select>
 
     <select id="findOne" parameterType="java.util.Map" resultType="JwTeachDate">
@@ -295,23 +292,23 @@ selectList
         <include refid="Base_Column_List" />
         FROM saas_jw_teach_date
         <trim prefix="WHERE" prefixOverrides="AND | OR">
-            <if test="tid!=null">
-                AND tid like CONCAT('%', #{tid} , '%')
+            <if test="condition.tid!=null">
+                AND tid like CONCAT('%', #{condition.tid} , '%')
             </if>
-            <if test="tnId!=null">
-                AND tn_id like CONCAT('%', #{tnId} , '%')
+            <if test="condition.tnId!=null">
+                AND tn_id like CONCAT('%', #{condition.tnId} , '%')
             </if>
-            <if test="teachDate!=null">
-                AND teach_date like CONCAT('%', #{teachDate} , '%')
+            <if test="condition.teachDate!=null">
+                AND teach_date like CONCAT('%', #{condition.teachDate} , '%')
             </if>
-            <if test="teachDetail!=null">
-                AND teach_detail like CONCAT('%', #{teachDetail} , '%')
+            <if test="condition.teachDetail!=null">
+                AND teach_detail like CONCAT('%', #{condition.teachDetail} , '%')
             </if>
-            <if test="createDate!=null">
-                AND create_date like CONCAT('%', #{createDate} , '%')
+            <if test="condition.createDate!=null">
+                AND create_date like CONCAT('%', #{condition.createDate} , '%')
             </if>
-            <if test="taskId!=null">
-                AND task_id like CONCAT('%', #{taskId} , '%')
+            <if test="condition.taskId!=null">
+                AND task_id like CONCAT('%', #{condition.taskId} , '%')
             </if>
         </trim>
         <if test="orderBy!=null">

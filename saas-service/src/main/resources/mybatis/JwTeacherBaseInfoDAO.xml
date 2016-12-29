@@ -283,34 +283,34 @@ limit ${offset}, ${rows}
 </if>
         </select>
 
-<select id="like" parameterType="java.util.Map" resultType="JwTeacherBaseInfo">
-SELECT
-<include refid="Base_Column_List" />
-FROM saas_jw_teacher_base_info
-<trim prefix="WHERE" prefixOverrides="AND | OR">
-    <if test="id!=null">
-        AND id like CONCAT('%', #{id} , '%')
-    </if>
-    <if test="tnId!=null">
-        AND tn_id like CONCAT('%', #{tnId} , '%')
-    </if>
-    <if test="teacherName!=null">
-        AND teacher_name like CONCAT('%', #{teacherName} , '%')
-    </if>
-    <if test="teacherCourse!=null">
-        AND teacher_course like CONCAT('%', #{teacherCourse} , '%')
-    </if>
-    <if test="teacherClass!=null">
-        AND teacher_class like CONCAT('%', #{teacherClass} , '%')
-    </if>
-    <if test="grade!=null">
-        AND grade like CONCAT('%', #{grade} , '%')
-    </if>
-</trim>
-<if test="orderBy!=null">
-ORDER BY ${orderBy} ${sortBy}
-</if>
-        </select>
+    <select id="like" parameterType="java.util.Map" resultType="JwTeacherBaseInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teacher_base_info
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id like CONCAT('%', #{condition.tnId} , '%')
+            </if>
+            <if test="condition.teacherName!=null">
+                AND teacher_name like CONCAT('%', #{condition.teacherName} , '%')
+            </if>
+            <if test="condition.teacherCourse!=null">
+                AND teacher_course like CONCAT('%', #{condition.teacherCourse} , '%')
+            </if>
+            <if test="condition.teacherClass!=null">
+                AND teacher_class like CONCAT('%', #{condition.teacherClass} , '%')
+            </if>
+            <if test="condition.grade!=null">
+                AND grade like CONCAT('%', #{condition.grade} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
 
 
 <select id="queryList" parameterType="java.util.Map" resultType="JwTeacherBaseInfo">
@@ -403,5 +403,5 @@ MAX(id)
 FROM saas_jw_teacher_base_info
 </select>
 
-        </mapper>
+</mapper>
 

@@ -311,7 +311,7 @@ public class ScoreAnalyseController
         exam.setOriginFileName(RedisUtil.getInstance().get(exam.getUploadFilePath())+"");
         exam.setCreateDate(TimeUtil.getTimeStamp("yyyy-MM-dd HH:mm:ss"));
         examService.add(exam);
-        saveExcelData(exam, examService, headerList);
+        saveExcelData(exam, examService, headerList, getClassesNameByGrade(exam.getTnId(), exam.getGrade()));
         return exam;
     }
 
@@ -1171,7 +1171,15 @@ public class ScoreAnalyseController
     private int sortList(List<Map<String, Object>> list, final String orderBy, String className)
     {
 
-        Collections.sort(list, new Comparator<Map<String, Object>>()
+        List<Map<String, Object>> courseList = new ArrayList<>();
+        for (Map<String, Object> m: list)
+        {
+            if(null != m.get(orderBy) && ! "null".equals(m.get(orderBy)))
+            {
+                courseList.add(m);
+            }
+        }
+        Collections.sort(courseList, new Comparator<Map<String, Object>>()
         {
             @Override
             public int compare(Map<String, Object> o1, Map<String, Object> o2)
@@ -1179,10 +1187,10 @@ public class ScoreAnalyseController
                 return Float.parseFloat(o2.get(orderBy)+"") >= Float.parseFloat(o1.get(orderBy)+"") ? 1 : -1;
             }
         });
-        int rank = 0;
-        for (int i = 0; i < list.size() ; i++)
+        Integer rank = null;
+        for (int i = 0; i < courseList.size() ; i++)
         {
-            if(className.equals(list.get(i).get("className")))
+            if(className.equals(courseList.get(i).get("className")))
             {
                 rank = i + 1;
                 break;
@@ -1321,6 +1329,13 @@ public class ScoreAnalyseController
         int stepLength)
     {
         int endStep = stepStart;
+        if(stepStart == maxStep)
+        {
+            Map<String, Integer> paramMap = new LinkedHashMap<>();
+            paramMap.put("stepStart", stepStart);
+            paramMap.put("stepEnd", stepStart);
+            stepList.add(paramMap);
+        }
         while (endStep < maxStep)
         {
             int start = stepStart;
@@ -1424,7 +1439,8 @@ public class ScoreAnalyseController
         {
             scoreList = new ArrayList<>();
         }
-        Map<String, List<Map<String, Object>>> map = new HashMap<>();
+        Map<String, List<Map<String, Object>>> map = new LinkedHashMap<>();
+        sortByExamTime(scoreList);
         for (Map<String, Object> m: scoreList)
         {
            List<Map<String, Object>> list = map.get(m.get("examTime") + "") ;
@@ -1475,7 +1491,7 @@ public class ScoreAnalyseController
             @Override
             public int compare(Map<String, Object> o1, Map<String, Object> o2)
             {
-                return Integer.parseInt(o2.get(subjectName) + "") >= Integer.parseInt(o1.get(subjectName) +"") ? 1: -1;
+                return Integer.valueOf(o2.get(subjectName) + "").compareTo(Integer.valueOf(o1.get(subjectName) +""));
             }
         });
         int rank = 0;

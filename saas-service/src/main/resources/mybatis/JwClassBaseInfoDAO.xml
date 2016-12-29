@@ -193,7 +193,6 @@ selectList
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND id = #{id}
         </trim>
-
     </select>
 
     <select id="findOne" parameterType="java.util.Map" resultType="JwClassBaseInfo">
@@ -265,20 +264,20 @@ selectList
         <include refid="Base_Column_List" />
         FROM saas_jw_class_base_info
         <trim prefix="WHERE" prefixOverrides="AND | OR">
-            <if test="id!=null">
-                AND id like CONCAT('%', #{id} , '%')
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
             </if>
-            <if test="tnId!=null">
-                AND tn_id like CONCAT('%', #{tnId} , '%')
+            <if test="condition.tnId!=null">
+                AND tn_id like CONCAT('%', #{condition.tnId} , '%')
             </if>
-            <if test="className!=null">
-                AND class_name like CONCAT('%', #{className} , '%')
+            <if test="condition.className!=null">
+                AND class_name like CONCAT('%', #{condition.className} , '%')
             </if>
-            <if test="classType!=null">
-                AND class_type like CONCAT('%', #{classType} , '%')
+            <if test="condition.classType!=null">
+                AND class_type like CONCAT('%', #{condition.classType} , '%')
             </if>
-            <if test="grade!=null">
-                AND grade like CONCAT('%', #{grade} , '%')
+            <if test="condition.grade!=null">
+                AND grade like CONCAT('%', #{condition.grade} , '%')
             </if>
         </trim>
         <if test="orderBy!=null">
