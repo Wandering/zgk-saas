@@ -136,7 +136,7 @@ RoleManagementFun.prototype = {
         if (roleName) {
             contentHtml.push('<input type="text" id="role-name" value="' + roleName + '" placeholder="输入角色名称" class="col-xs-10 col-sm-5" />');
         } else {
-            contentHtml.push('<input type="text" id="role-name" placeholder="命名权限名称" class="col-xs-10 col-sm-5" />');
+            contentHtml.push('<input type="text" id="role-name" placeholder="输入角色名称" class="col-xs-10 col-sm-5" />');
         }
         contentHtml.push('</div>');
         contentHtml.push('</div>');
@@ -144,9 +144,9 @@ RoleManagementFun.prototype = {
         contentHtml.push('<label class="col-sm-3 control-label no-padding-right" for="role-content"> 角色内容 </label>');
         contentHtml.push('<div class="col-sm-9">');
         if (roleDesc) {
-            contentHtml.push('<input type="text" value="' + roleDesc + '" id="role-content" placeholder="输入角色名称" class="col-xs-10 col-sm-5" />');
+            contentHtml.push('<input type="text" value="' + roleDesc + '" id="role-content" placeholder="输入角色内容" class="col-xs-10 col-sm-5" />');
         } else {
-            contentHtml.push('<input type="text" id="role-content" placeholder="输入权限内容" class="col-xs-10 col-sm-5" />');
+            contentHtml.push('<input type="text" id="role-content" placeholder="输入角色内容" class="col-xs-10 col-sm-5" />');
         }
         contentHtml.push('</div>');
         contentHtml.push('</div>');
@@ -204,11 +204,11 @@ $('body').on('click', '.save-btn', function () {
     var roleContent = $.trim($('#role-content').val());
     var idData = $(this).attr('id-data');
     if (roleName == "") {
-        layer.tips('命名权限名称!', $('#role-name'));
+        layer.tips('输入角色名称!', $('#role-name'));
         return false;
     }
     if (roleContent == "") {
-        layer.tips('输入权限内容!', $('#role-content'));
+        layer.tips('输入角色内容!', $('#role-content'));
         return false;
     }
     if (idData == "" || !idData) {
