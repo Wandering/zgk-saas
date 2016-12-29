@@ -734,14 +734,15 @@ function upload () {
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
     uploader.on('uploadSuccess', function (file, response) {
-        layer.closeAll();
-        layer.msg('上传成功!');
         if (teacherManagement != null) {
             teacherManagement.getTeacherData();
         }
-        if (response.bizData.result == 'SUCCESS') {
-            //layer.msg(response.bizData.result);
-            layer.msg('上传成功');
+        if (response.bizData.result) {
+            if (response.bizData.result == 'SUCCESS') {
+                layer.msg('上传成功');
+            } else {
+                layer.msg(response.bizData.result);
+            }
         } else {
             layer.msg(response.msg);
         }
