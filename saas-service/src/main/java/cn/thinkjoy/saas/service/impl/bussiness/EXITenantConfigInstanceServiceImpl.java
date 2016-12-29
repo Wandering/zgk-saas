@@ -568,7 +568,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             Iterator iter = rowsMap.entrySet().iterator();
 
             int y = 0;
-
+            String key1=null,key2=null,value1=null,value2=null;
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
                 String key = entry.getKey().toString();
@@ -582,7 +582,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                 searchMap.put("id", configurationId);
                 Configuration configuration = iConfigurationDAO.queryOne(searchMap, "id", "asc");
 
-                String key1=null,key2=null,value1=null,value2=null;
+
                 switch (type) {
                     case "class":
                         if (configuration.getEnName().equals("class_grade")) {

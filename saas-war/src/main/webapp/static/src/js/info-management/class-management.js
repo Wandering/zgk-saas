@@ -826,7 +826,7 @@ function upload () {
     uploader.on('uploadComplete', function (file) {
         $('#' + file.id).find('.progress').remove();
         setTimeout(function () {
-            layer.closeAll();
+            layer.closeAll('loading');
         }, 500);
     });
 }
