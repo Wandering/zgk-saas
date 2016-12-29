@@ -20,17 +20,34 @@ var ProTest = {
             'acId': type
         }, function (res) {
             if (res.rtnCode === '0000000') {
-                layer.full(
-                    layer.open({
-                        type: 2,
-                        title: name,
-                        content: res.bizData.data,
-                        area: ['100%', '100%'],
-                        maxmin: false
-                    })
-                )
+                if (res.bizData.id) {
+                    ProTest.getTestUrl(res.bizData.id);
+                }
             }
-        });
+        }, function (res) {
+
+        }, true);
+    },
+    getTestUrl: function (id) {
+        Common.ajaxFun('/apesk/queryReportUrlById.do', 'get', {
+            'id': id
+        }, function (res) {
+            if (res.rtnCode === '0000000') {
+                if (res.bizData.data != false) {
+                    layer.full(
+                        layer.open({
+                            type: 2,
+                            title: name,
+                            content: res.bizData.data,
+                            area: ['100%', '100%'],
+                            maxmin: false
+                        })
+                    );
+                }
+            }
+        }, function (res) {
+
+        }, true);
     },
     renderProTestList: function (data) {
         var tpl = Handlebars.compile($('#assessment-main-tpl').html());
