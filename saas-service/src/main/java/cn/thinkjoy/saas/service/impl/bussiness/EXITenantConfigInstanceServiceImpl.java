@@ -539,6 +539,8 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             if (StringUtils.isBlank(tableName))
                 return "系统错误";
 
+//            configTeantComList=
+
             Integer insertResult = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
             if (insertResult > 0) {
                 reuslt = "SUCCESS";
