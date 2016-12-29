@@ -525,7 +525,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
 
 
-        if(type.equals("student"))
+        if(type.equals("student")&&excelValid.equals("SUCCESS"))
             excelValid =ParamsUtils.repeatStudentNo(configTeantComList);
 
 
@@ -539,7 +539,6 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             if (StringUtils.isBlank(tableName))
                 return "系统错误";
 
-//            configTeantComList=
 
             Integer insertResult = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
             if (insertResult > 0) {
