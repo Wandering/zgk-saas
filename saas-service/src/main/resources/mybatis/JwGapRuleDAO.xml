@@ -319,9 +319,6 @@ selectList
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND id = #{id}
         </trim>
-        <if test="orderBy!=null">
-        ORDER BY ${orderBy} ${sortBy}
-        </if>
     </select>
 
     <select id="findOne" parameterType="java.util.Map" resultType="JwGapRule">
@@ -411,38 +408,38 @@ selectList
         <include refid="Base_Column_List" />
         FROM saas_jw_gap_rule
         <trim prefix="WHERE" prefixOverrides="AND | OR">
-            <if test="id!=null">
-                AND id like CONCAT('%', #{id} , '%')
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
             </if>
-            <if test="seg12!=null">
-                AND seg1_2 like CONCAT('%', #{seg12} , '%')
+            <if test="condition.seg12!=null">
+                AND seg1_2 like CONCAT('%', #{condition.seg12} , '%')
             </if>
-            <if test="seg23!=null">
-                AND seg2_3 like CONCAT('%', #{seg23} , '%')
+            <if test="condition.seg23!=null">
+                AND seg2_3 like CONCAT('%', #{condition.seg23} , '%')
             </if>
-            <if test="seg34!=null">
-                AND seg3_4 like CONCAT('%', #{seg34} , '%')
+            <if test="condition.seg34!=null">
+                AND seg3_4 like CONCAT('%', #{condition.seg34} , '%')
             </if>
-            <if test="seg45!=null">
-                AND seg4_5 like CONCAT('%', #{seg45} , '%')
+            <if test="condition.seg45!=null">
+                AND seg4_5 like CONCAT('%', #{condition.seg45} , '%')
             </if>
-            <if test="seg56!=null">
-                AND seg5_6 like CONCAT('%', #{seg56} , '%')
+            <if test="condition.seg56!=null">
+                AND seg5_6 like CONCAT('%', #{condition.seg56} , '%')
             </if>
-            <if test="seg67!=null">
-                AND seg6_7 like CONCAT('%', #{seg67} , '%')
+            <if test="condition.seg67!=null">
+                AND seg6_7 like CONCAT('%', #{condition.seg67} , '%')
             </if>
-            <if test="seg78!=null">
-                AND seg7_8 like CONCAT('%', #{seg78} , '%')
+            <if test="condition.seg78!=null">
+                AND seg7_8 like CONCAT('%', #{condition.seg78} , '%')
             </if>
-            <if test="taskId!=null">
-                AND task_id like CONCAT('%', #{taskId} , '%')
+            <if test="condition.taskId!=null">
+                AND task_id like CONCAT('%', #{condition.taskId} , '%')
             </if>
-            <if test="classId!=null">
-                AND class_id like CONCAT('%', #{classId} , '%')
+            <if test="condition.classId!=null">
+                AND class_id like CONCAT('%', #{condition.classId} , '%')
             </if>
-            <if test="courseId!=null">
-                AND course_id like CONCAT('%', #{courseId} , '%')
+            <if test="condition.courseId!=null">
+                AND course_id like CONCAT('%', #{condition.courseId} , '%')
             </if>
         </trim>
         <if test="orderBy!=null">

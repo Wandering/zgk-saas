@@ -214,9 +214,6 @@ selectList
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND id = #{id}
         </trim>
-        <if test="orderBy!=null">
-        ORDER BY ${orderBy} ${sortBy}
-        </if>
     </select>
 
     <select id="findOne" parameterType="java.util.Map" resultType="JwRoomResult">
@@ -291,23 +288,23 @@ selectList
         <include refid="Base_Column_List" />
         FROM saas_jw_room_result
         <trim prefix="WHERE" prefixOverrides="AND | OR">
-            <if test="id!=null">
-                AND id like CONCAT('%', #{id} , '%')
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
             </if>
-            <if test="roomId!=null">
-                AND room_id like CONCAT('%', #{roomId} , '%')
+            <if test="condition.roomId!=null">
+                AND room_id like CONCAT('%', #{condition.roomId} , '%')
             </if>
-            <if test="result!=null">
-                AND result like CONCAT('%', #{result} , '%')
+            <if test="condition.result!=null">
+                AND result like CONCAT('%', #{condition.result} , '%')
             </if>
-            <if test="createDate!=null">
-                AND create_date like CONCAT('%', #{createDate} , '%')
+            <if test="condition.createDate!=null">
+                AND create_date like CONCAT('%', #{condition.createDate} , '%')
             </if>
-            <if test="tnId!=null">
-                AND tn_id like CONCAT('%', #{tnId} , '%')
+            <if test="condition.tnId!=null">
+                AND tn_id like CONCAT('%', #{condition.tnId} , '%')
             </if>
-            <if test="taskId!=null">
-                AND task_id like CONCAT('%', #{taskId} , '%')
+            <if test="condition.taskId!=null">
+                AND task_id like CONCAT('%', #{condition.taskId} , '%')
             </if>
         </trim>
         <if test="orderBy!=null">

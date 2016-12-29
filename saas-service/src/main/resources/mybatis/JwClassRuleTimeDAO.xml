@@ -172,9 +172,6 @@ selectList
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND id = #{id}
         </trim>
-        <if test="orderBy!=null">
-        ORDER BY ${orderBy} ${sortBy}
-        </if>
     </select>
 
     <select id="findOne" parameterType="java.util.Map" resultType="JwClassRuleTime">
@@ -243,17 +240,17 @@ selectList
         <include refid="Base_Column_List" />
         FROM saas_jw_class_rule_time
         <trim prefix="WHERE" prefixOverrides="AND | OR">
-            <if test="id!=null">
-                AND id like CONCAT('%', #{id} , '%')
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
             </if>
-            <if test="teachTime!=null">
-                AND teach_time like CONCAT('%', #{teachTime} , '%')
+            <if test="condition.teachTime!=null">
+                AND teach_time like CONCAT('%', #{condition.teachTime} , '%')
             </if>
-            <if test="createTime!=null">
-                AND create_time like CONCAT('%', #{createTime} , '%')
+            <if test="condition.createTime!=null">
+                AND create_time like CONCAT('%', #{condition.createTime} , '%')
             </if>
-            <if test="classRuleId!=null">
-                AND class_rule_id like CONCAT('%', #{classRuleId} , '%')
+            <if test="condition.classRuleId!=null">
+                AND class_rule_id like CONCAT('%', #{condition.classRuleId} , '%')
             </if>
         </trim>
         <if test="orderBy!=null">

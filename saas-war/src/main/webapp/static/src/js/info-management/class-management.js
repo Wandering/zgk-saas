@@ -797,8 +797,11 @@ function upload () {
             classManagement.loadPage(0, classManagement.classRows);
         }
         if (response.bizData.result) {
-            layer.msg(response.bizData.result);
-            //layer.msg('上传成功');
+            if (response.bizData.result == 'SUCCESS') {
+                layer.msg('上传成功');
+            } else {
+                layer.msg(response.bizData.result);
+            }
         } else {
             layer.msg(response.msg);
         }
@@ -826,7 +829,7 @@ function upload () {
     uploader.on('uploadComplete', function (file) {
         $('#' + file.id).find('.progress').remove();
         setTimeout(function () {
-            layer.closeAll();
+            layer.closeAll('loading');
         }, 500);
     });
 }
