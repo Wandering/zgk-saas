@@ -91,12 +91,12 @@ ClassManagement.prototype = {
         var that = this;
         this.classOffset = offset;
         this.classRows = rows;
+        layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
             's': that.classOffset,
             'r': that.classRows,
             'g': that.gradeName
         }, function (res) {
-            layer.load(1, {shade: [0.3,'#000']});
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
                 that.showData(data);
@@ -104,7 +104,7 @@ ClassManagement.prototype = {
                 layer.msg(res.bizData.result);
             }
             setTimeout(function () {
-                layer.closeAll();
+                layer.closeAll('loading');
             }, 500);
         }, function (res) {
             layer.msg("出错了");
@@ -797,8 +797,11 @@ function upload () {
             classManagement.loadPage(0, classManagement.classRows);
         }
         if (response.bizData.result) {
-            layer.msg(response.bizData.result);
-            //layer.msg('上传成功');
+            if (response.bizData.result == 'SUCCESS') {
+                layer.msg('上传成功');
+            } else {
+                layer.msg(response.bizData.result);
+            }
         } else {
             layer.msg(response.msg);
         }
@@ -826,7 +829,7 @@ function upload () {
     uploader.on('uploadComplete', function (file) {
         $('#' + file.id).find('.progress').remove();
         setTimeout(function () {
-            layer.closeAll();
+            layer.closeAll('loading');
         }, 500);
     });
 }
