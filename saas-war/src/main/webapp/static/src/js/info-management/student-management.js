@@ -4,7 +4,7 @@
  * @time:2016-11-9
  * @api:http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=44436387
  * */
-
+layer.load(1, {shade: [0.3,'#000']});
 /**
  * 全局常量
  * @type {{tnId: *, typ: string}}
@@ -146,18 +146,21 @@ var App = {
                     App.checkGradeName = dataJson[0].grade;
                 }
             }
+            setTimeout(function () {
+                layer.closeAll('loading');
+            }, 500);
         }, function (res) {
             layer.msg("出错了");
         }, true);
     },
     loadPage: function () {
         var that = this;
+        layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {
             's': App.page.offset,
             'r': App.page.rows,
             'g': App.checkGradeName
         }, function (res) {
-            layer.load(1, {shade: [0.3,'#000']});
             if (res.rtnCode == "0000000") {
                 var tpl = [];
                 var dataJson = res.bizData.result;
@@ -181,7 +184,7 @@ var App = {
                 that.pagination();
             }
             setTimeout(function () {
-                layer.closeAll();
+                layer.closeAll('loading');
             }, 500);
         }, function (res) {
             layer.msg("出错了");

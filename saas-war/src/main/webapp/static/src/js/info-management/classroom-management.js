@@ -12,12 +12,13 @@ ClassRoomManagement.prototype = {
     },
     getClassRoom:function () {
         var that = this;
+        layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/config/classRoom/get/'+ tnId +'.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 that.renderList(res);
             }
             setTimeout(function () {
-                layer.closeAll();
+                layer.closeAll('loading');
             }, 500);
         }, function (res) {
             layer.msg("出错了");
@@ -305,8 +306,4 @@ $(document).on('click', '#update-classroom-btn', function () {
 
 $(document).on('click','.close-btn',function(){
     layer.closeAll();
-});
-
-$(function () {
-    layer.load(1, {shade: [0.3,'#000']});
 });
