@@ -177,7 +177,8 @@ $(document).on('click', '#add-btn', function () {//新增升学率
     var year = $('#rate-year').val(),
         yearName = $('#rate-year option[value=' + year + ']').text();
     if (year == '00') {
-        layer.msg('请选择年份!', {time: 1000});
+        //layer.msg('请选择年份!', {time: 1000});
+        layer.tips('请选择年份!',$('#rate-year'));
         $('#rate-year').focus();
         return;
     }
@@ -185,7 +186,7 @@ $(document).on('click', '#add-btn', function () {//新增升学率
     for (var i = 0; i < $('td[name="year"]').length; i++) {
         var tempYear = $('td[name="year"]').eq(i).text().trim();
         if (tempYear == yearName) {
-            layer.msg('该年份已经存在!');
+            layer.tips('该年份已经存在!',$('#rate-year'));
             return;
         }
     }
@@ -193,9 +194,15 @@ $(document).on('click', '#add-btn', function () {//新增升学率
     for (var i = 0; i < $('.add-year-box input[type="text"]').length; i++) {
         var node = $('.add-year-box input[type="text"]').eq(i);
         if (node.val().trim() == '') {
-            layer.msg(node.prev().text() + '不能为空!', {time: 1000});
+            //layer.msg(node.prev().text() + '不能为空!', {time: 1000});
+            layer.tips(node.prev().text() + '不能为空!',node);
             node.focus();
             return;
+        }
+        var re = /^[0-9]+$/;
+        if (!re.test($.trim(node.val()))) {
+            layer.tips('请输入正确的数字!',node);
+            return false;
         }
     }
 
@@ -244,18 +251,27 @@ $(document).on('click', '#updateRole-btn', function () {
 $(document).on('click', '#update-btn', function () {
     var year = $('#rate-year').val();
     if (year == '00') {
-        layer.msg('请选择年份!', {time: 1000});
+        //layer.msg('请选择年份!', {time: 1000});
+        layer.tips('请选择年份!',$('#rate-year'));
         $('#rate-year').focus();
         return;
     }
+
     for (var i = 0; i < $('.add-year-box input[type="text"]').length; i++) {
         var node = $('.add-year-box input[type="text"]').eq(i);
         if (node.val().trim() == '') {
-            layer.msg(node.prev().text() + '不能为空!', {time: 1000});
+            //layer.msg(node.prev().text() + '不能为空!', {time: 1000});
+            layer.tips(node.prev().text() + '不能为空!',node);
             node.focus();
             return;
         }
+        var re = /^[0-9]+$/;
+        if (!re.test($.trim(node.val()))) {
+            layer.tips('请输入正确的数字!',node);
+            return false;
+        }
     }
+
     var rowid = $(".check-template :checkbox:checked").attr('rid');
     var stu3numbers = parseInt($('#senior-three').val().trim());
     var batch1enrolls = parseInt($('#batch-first').val().trim());
