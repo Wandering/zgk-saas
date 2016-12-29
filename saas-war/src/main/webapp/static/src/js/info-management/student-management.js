@@ -1098,3 +1098,7 @@ var checkAllFun = function(tableParent){
 checkAllFun('#student-table')
 checkAllFun('#setting-student-table')
 
+$(document).on('click', '#cancel-download-btn', function () {
+    layer.closeAll();
+});
+
