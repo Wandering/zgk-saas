@@ -375,4 +375,33 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         return iexTeantCustomDAO.selectExecutiveClassGroup(map);
     }
 
+    @Override
+    public boolean selectExistByCloumn(String tableName,String type,String value1,String value2) {
+
+        String key1=null,key2=null;
+
+        switch (type){
+            case "class":
+                key1="class_grade";
+                key2="class_name";
+                break;
+            case "teacher":
+                key1="teacher_name";
+                key2="teacher_major_type";
+                break;
+            case "student":
+                key1="student_no";
+                key2="student_name";
+                break;
+        }
+
+        Map map=new HashMap();
+        map.put("tableName",tableName);
+        map.put("key1",key1);
+        map.put("key2",key2);
+        map.put("value1",value1);
+        map.put("value2",value2);
+
+        return iexTeantCustomDAO.selectExistByCloumn(map)>0;
+    }
 }

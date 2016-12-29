@@ -128,6 +128,10 @@ public  class ParamsUtils {
                 LOGGER.info("转换正则:" + regularStr);
 
                 LOGGER.info(x + "行-" + key + "列 value:" + val + "");
+                boolean isNoth = isNothing(val);
+                if (isNoth)
+                    return "输入的数据不完整，请完善数据后再上传";
+
                 boolean valid = (StringUtils.isBlank(regularStr) ? true : isRegValid(regularStr, val));
                 LOGGER.info("校验结果:" + valid);
                 if (!valid) {
@@ -140,6 +144,16 @@ public  class ParamsUtils {
         LOGGER.info("================excel数据格式校验 E================");
         return result;
     }
+
+
+    /**
+     * 空值校验
+     * @return
+     */
+    public static Boolean isNothing(String str) {
+        return str.equals(EnumUtil.EXCEL_VALUE_NOTHING);
+    }
+
 
     /**
      * 查找是否存在重复学号

@@ -49,6 +49,7 @@ TeacherManagement.prototype = {
     },
     getTeacherData: function () {//获取全部用户自定义教师数据
         var that = this;
+        layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
             'tnId': tnId
         }, function (res) {
@@ -78,6 +79,9 @@ TeacherManagement.prototype = {
                 });
                 $("#teacher-manage-table tbody").html(teacherDataHtml.join(''));
             }
+            setTimeout(function () {
+                layer.closeAll('loading');
+            }, 500);
         }, function (res) {
             layer.msg("出错了");
         }, true);
@@ -254,7 +258,7 @@ AddTeacherManagement.prototype.addTeacher = function (title) {
         type: 1,
         title: '<span style="color: #CB171D;font-size: 14px;">' + title + "</span>",
         offset: 'auto',
-        area: ['362px', 'auto'],
+        area: ['362px', '80%'],
         content: contentHtml.join('')
     });
     this.getGrade();
@@ -403,7 +407,7 @@ UpdateTeacherManagement.prototype = {
             type: 1,
             title: '<span style="color: #CB171D;font-size: 14px;">' + title + "</span>",
             offset: 'auto',
-            area: ['362px', 'auto'],
+            area: ['362px', '80%'],
             content: contentHtml.join('')
         });
         this.getGrade();
@@ -725,17 +729,20 @@ function upload () {
         }
 
         $percent.css('width', percentage * 100 + '%');
+        layer.load(1, {shade: [0.3,'#000']});
     });
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
     uploader.on('uploadSuccess', function (file, response) {
-        layer.closeAll();
-        layer.msg('上传成功!');
         if (teacherManagement != null) {
             teacherManagement.getTeacherData();
         }
         if (response.bizData.result) {
-            layer.msg(response.bizData.result);
+            if (response.bizData.result == 'SUCCESS') {
+                layer.msg('上传成功');
+            } else {
+                layer.msg(response.bizData.result);
+            }
         } else {
             layer.msg(response.msg);
         }
@@ -762,5 +769,8 @@ function upload () {
     // 完成上传完了，成功或者失败，先删除进度条。
     uploader.on('uploadComplete', function (file) {
         $('#' + file.id).find('.progress').remove();
+        setTimeout(function () {
+            layer.closeAll('loading');
+        }, 500);
     });
 }

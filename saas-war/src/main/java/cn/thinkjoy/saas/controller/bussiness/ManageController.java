@@ -362,8 +362,8 @@ public class ManageController {
 
 
         boolean result = iexTenantCustomService.addTeantCustom(type, tnId, teantCustoms);
-        if(result)
-            exiTenantConfigInstanceService.syncProcedureData(type,tnId);
+//        if(result)
+//            exiTenantConfigInstanceService.syncProcedureData(type,tnId);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;

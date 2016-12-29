@@ -140,6 +140,7 @@ SetingProcess5.prototype = {
                 layer.closeAll();
                 $('#teacher-template').html('');
                 that.getTeacherList();
+                $("#checkAll").prop("checked", false);
             }else{
                 layer.msg(res.msg);
             }

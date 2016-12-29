@@ -15,6 +15,7 @@
             t0.user_name AS userName,
             t0.user_account AS userAccount,
             t0.is_super_manager AS isSuperManager,
+            t1.tn_extro_info AS indexUrl,
             t0.status as status
         FROM
             saas_user_instance t0,

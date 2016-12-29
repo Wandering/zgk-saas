@@ -15,6 +15,7 @@ NumberManagement.prototype = {
     },
     getNumber: function () {
         var that = this;
+        layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/manage/get/enrollingRatio/' + tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var ratioHtml = [];
@@ -24,9 +25,9 @@ NumberManagement.prototype = {
                     ratioHtml.push('<td class="center"><label><input type="checkbox" rid="' + k.id + '" class="ace" /><span class="lbl"></span></label></td>');
                     ratioHtml.push('<td class="center index" indexid="' + k.id + '">' + (i + 1) + '</td>');
                     if (k.year) {
-                        ratioHtml.push('<td class="center">' + k.year + '</td>');
+                        ratioHtml.push('<td class="center" name="year">' + k.year + '</td>');
                     } else {
-                        ratioHtml.push('<td class="center">-</td>');
+                        ratioHtml.push('<td class="center" name="year">-</td>');
                     }
                     ratioHtml.push('<td class="center">' + k.stu3numbers + '</td>');
                     ratioHtml.push('<td class="center">' + k.batch1enrolls + '</td>');
@@ -36,6 +37,9 @@ NumberManagement.prototype = {
                 });
                 $('#ratio-manage-list').html(ratioHtml.join(''));
             }
+            setTimeout(function () {
+                layer.closeAll('loading');
+            }, 500);
         }, function (res) {
             layer.msg("出错了");
         }, true);
@@ -170,12 +174,22 @@ $(document).on('click', '#addRole-btn', function () {
 });
 
 $(document).on('click', '#add-btn', function () {//新增升学率
-    var year = $('#rate-year').val();
+    var year = $('#rate-year').val(),
+        yearName = $('#rate-year option[value=' + year + ']').text();
     if (year == '00') {
         layer.msg('请选择年份!', {time: 1000});
         $('#rate-year').focus();
         return;
     }
+
+    for (var i = 0; i < $('td[name="year"]').length; i++) {
+        var tempYear = $('td[name="year"]').eq(i).text().trim();
+        if (tempYear == yearName) {
+            layer.msg('该年份已经存在!');
+            return;
+        }
+    }
+
     for (var i = 0; i < $('.add-year-box input[type="text"]').length; i++) {
         var node = $('.add-year-box input[type="text"]').eq(i);
         if (node.val().trim() == '') {
@@ -184,6 +198,7 @@ $(document).on('click', '#add-btn', function () {//新增升学率
             return;
         }
     }
+
     var stu3numbers = parseInt($('#senior-three').val().trim());
     var batch1enrolls = parseInt($('#batch-first').val().trim());
     var batch2enrolls = parseInt($('#batch-second').val().trim());

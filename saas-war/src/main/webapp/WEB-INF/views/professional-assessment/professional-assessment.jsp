@@ -41,7 +41,7 @@
                 <div class="row">
                     <div class="col-xs-12 ">
                         <div class="main-title">
-                            <h3>班级成绩分析</h3>
+                            <h3>测评服务</h3>
                         </div>
                         <div class="assessment-main" id="assessment-main"></div>
                         <script type="text/x-handlebars-template" id="assessment-main-tpl">

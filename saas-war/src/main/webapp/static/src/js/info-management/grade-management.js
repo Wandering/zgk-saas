@@ -11,14 +11,18 @@ GradeManagement.prototype = {
     },
     getGrade: function () {
         var that = this;
+        layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {
             'tnId': tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 that.renderList(res);
             }
+            setTimeout(function () {
+                layer.closeAll('loading');
+            }, 500);
         }, function (res) {
-            alert("出错了");
+            layer.msg("出错了");
         }, true);
     },
     renderList: function (data) {

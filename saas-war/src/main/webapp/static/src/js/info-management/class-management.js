@@ -91,6 +91,7 @@ ClassManagement.prototype = {
         var that = this;
         this.classOffset = offset;
         this.classRows = rows;
+        layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
             's': that.classOffset,
             'r': that.classRows,
@@ -102,6 +103,9 @@ ClassManagement.prototype = {
             } else {
                 layer.msg(res.bizData.result);
             }
+            setTimeout(function () {
+                layer.closeAll('loading');
+            }, 500);
         }, function (res) {
             layer.msg("出错了");
         }, false);
@@ -727,7 +731,6 @@ $(document).on('click', '#class-settings-btn', function () {
 function upload () {
     var $ = jQuery,
         $list = $('#fileList'),
-
     // Web Uploader实例
         uploader;
     // 初始化Web Uploader
@@ -759,6 +762,7 @@ function upload () {
 
     // 当有文件添加进来的时候
     uploader.on('fileQueued', function (file) {
+        //return;
         var $li = $(
             '<div id="' + file.id + '" class="file-item thumbnail">' +
                 //'<img>' +
@@ -782,18 +786,22 @@ function upload () {
         }
 
         $percent.css('width', percentage * 100 + '%');
+        layer.load(1, {shade: [0.3,'#000']});
     });
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
     uploader.on('uploadSuccess', function (file, response) {console.info(response);
-        layer.closeAll();
         if (classManagement != null) {
             var checkedGrade = $('input[name="high-school"]:checked').next().text();
             classManagement.gradeName = checkedGrade;
             classManagement.loadPage(0, classManagement.classRows);
         }
         if (response.bizData.result) {
-            layer.msg(response.bizData.result);
+            if (response.bizData.result == 'SUCCESS') {
+                layer.msg('上传成功');
+            } else {
+                layer.msg(response.bizData.result);
+            }
         } else {
             layer.msg(response.msg);
         }
@@ -820,5 +828,8 @@ function upload () {
     // 完成上传完了，成功或者失败，先删除进度条。
     uploader.on('uploadComplete', function (file) {
         $('#' + file.id).find('.progress').remove();
+        setTimeout(function () {
+            layer.closeAll('loading');
+        }, 500);
     });
 }

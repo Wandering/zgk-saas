@@ -32,6 +32,9 @@ public class EnumUtil {
     public static final String STUDENT_CHECK_MAJOYTYPE3="选考科目三";
 
 
+
+    public static final String EXCEL_VALUE_NOTHING="@NULL@";
+
     /**
      * 错误编码   规则: 【业务块描述-错误描述】
      */

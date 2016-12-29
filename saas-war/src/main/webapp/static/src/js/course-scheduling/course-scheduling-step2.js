@@ -87,7 +87,11 @@ ArrangeCourse.prototype = {
                                     for (var j = 0; j < weeks.length; j++) {
                                         var curIndex = "week" + j;
                                         var tempCourse = weeksData[j].split('')[i] == 1 ? '排课' : '不排课';
-                                        classesHtml.push('<td week=' + curIndex + '>' + tempCourse + '</td>');
+                                        if (tempCourse === '不排课') {
+                                            classesHtml.push('<td week=' + curIndex + ' class="no-assign-course">' + tempCourse + '</td>');
+                                        } else {
+                                            classesHtml.push('<td week=' + curIndex + '>' + tempCourse + '</td>');
+                                        }
                                     }
                                 }
                             } else {
@@ -97,7 +101,11 @@ ArrangeCourse.prototype = {
                                     for (var j = 0; j < weeks.length; j++) {
                                         var curIndex = "week" + j;
                                         var tempCourse = weeksData[j].split('')[i] == 1 ? '排课' : '不排课';
-                                        classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + '>' + tempCourse + '</td>');
+                                        if (tempCourse === '不排课') {
+                                            classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + ' class="no-assign-course">' + tempCourse + '</td>');
+                                        } else {
+                                            classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + '>' + tempCourse + '</td>');
+                                        }
                                     }
                                 }
                             }
@@ -436,9 +444,9 @@ $(function () {
     $(document).on('click', '.no-assign-table tr td:not(.order)', function () {
         var curText = $(this).text().trim();
         if (curText == '排课') {
-            $(this).text('不排课');
+            $(this).html('<span class="no-assign-course">不排课</span>');
         } else {
-            $(this).text('排课');
+            $(this).html('<span class="assign-course">排课</span>');
         }
         arrangeCourse.updateNoArrangeCourse();
     });

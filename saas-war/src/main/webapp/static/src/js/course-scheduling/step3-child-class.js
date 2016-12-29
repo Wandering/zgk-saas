@@ -212,68 +212,7 @@ ClassRoomTable.prototype = {
         Common.ajaxFun('/scheduleTask/all/course/result.do', 'GET', {
             "taskId": taskId
         }, function (res) {
-            // res = {
-            //     "bizData": {
-            //         "result": {
-            //             "roomData": [
-            //
-            //                     [["一号姓名(通用技术)", "李洋20(通用技术)", "李洋13(英语)", "李洋11(语文)", "李洋16(生物)", "李洋14(物理)", "李洋17(政治)"],
-            //                     ["一号姓名(物理)", "李洋19(地理)", "李洋11(语文)", "李洋11(语文)", "李洋11(语文)", "李洋14(物理)", "李洋19(地理)"],
-            //                     ["一号姓名(英语)", "李洋20(通用技术)", "李洋19(地理)", "李洋15(化学)", "李洋14(物理)", "李洋11(语文)", "李洋14(物理)"]],
-            //
-            //                     [["二号姓名(语文)", "李洋18(历史)", "李洋13(英语)", "李洋19(地理)", "李洋11(语文)", "李洋20(通用技术)", "李洋11(语文)"],
-            //                     ["二号姓名(历史)", "李洋19(地理)", "李洋15(化学)", "李洋20(通用技术)", "李洋15(化学)", "李洋19(地理)", "李洋13(英语)"],
-            //                     ["二号姓名(历史)", "李洋20(通用技术)", "李洋11(语文)", "李洋16(生物)", "李洋20(通用技术)", "李洋17(政治)", "李洋15(化学)"]],
-            //
-            //                     [["san号姓名(语文)", "李洋18(历史)", "李洋13(英语)", "李洋19(地理)", "李洋11(语文)", "李洋20(通用技术)", "李洋11(语文)"],
-            //                     ["二san号姓名号姓名(历史)", "李洋19(地理)", "李洋15(化学)", "李洋20(通用技术)", "李洋15(化学)", "李洋19(地理)", "李洋13(英语)"],
-            //                     ["san号姓名(历史)", "李洋20(通用技术)", "李洋11(语文)", "李洋16(生物)", "李洋20(通用技术)", "李洋17(政治)", "李洋15(化学)"]],
-            //
-            //             ],
-            //             "room": "教室1|教室2|教室3",
-            //             "teachDate": "星期一|星期二|星期三",
-            //             "teachTime": "430"
-            //         }
-            //     }, "rtnCode": "0000000", "ts": 1481699074431
-            // }
             if (res.rtnCode == "0000000") {
-                //res.bizData.result.room = (res.bizData.result.room).split('|')
-                //res.bizData.result.teachDate = (res.bizData.result.teachDate).split('|')
-                //
-                //Handlebars.registerHelper('addOne', function (data) {
-                //    return data = parseInt(data) + 1
-                //})
-                //
-                //Handlebars.registerHelper('creatClass', function (r1, r2) {
-                //    var foo = [];
-                //    $.each(r2[r1], function (i, v) {
-                //        foo.push('<th class="no-p-m">');
-                //        for (var j in v) {
-                //            foo.push('<span class="create-class-number common-span-w">' + v[j] + '</span>');
-                //        }
-                //        foo.push('</th>');
-                //    })
-                //    return foo.join('');
-                //})
-                //
-                //
-                //var tpl = Handlebars.compile($('#all-timetable-tpl').html());
-                //$('#all-timetable').html(tpl(res.bizData.result))
-                //
-                //
-                ////动态控制生成总课表样式
-                //var $warpTableWidth = '3000',
-                //    firstThWidth = '120',
-                //    $secondThWidth = ($warpTableWidth - firstThWidth) / res.bizData.result.teachDate.length;
-                //$('.second-th-width').css('width', $secondThWidth + 'px');
-                //$('#all-timetable').css('width', $warpTableWidth + 'px');
-                //var $classTimes = res.bizData.result.roomData[0][0].length;
-                //$('.common-span-w').css({
-                //    'width': parseInt($('#all-timetable .no-p-m').eq(2).width()) / $classTimes - 2 + 'px'
-                //})
-                //$('#all-timetable thead th').eq(0).css('width', firstThWidth);
-                //$('.no-p-m').find('.create-class-number:last-of-type').css('border-right', 'none');
-
                 $('.all-time-date-container').css({
                     'width':$(window).width()-190-40,
                     'overflow':'auto'

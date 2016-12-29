@@ -435,5 +435,3 @@ var ResultEvaluation = {
     }
 }
 
-
-

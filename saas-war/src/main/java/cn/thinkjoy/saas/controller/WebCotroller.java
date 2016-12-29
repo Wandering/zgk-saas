@@ -240,11 +240,19 @@ public class WebCotroller {
 
     /**
      * policy-interpret
-     * 政策解读
+     * 政策解读 浙江
      */
     @RequestMapping("/policy-interpret")
     public ModelAndView policyInterpret() {
-        return new ModelAndView("/school-reform/policy-interpret");
+        return new ModelAndView("/policy/policy-interpret");
+    }
+    /**
+     * jx-policy
+     * 政策解读 江西
+     */
+    @RequestMapping("/jx-policy")
+    public ModelAndView jxPolicy() {
+        return new ModelAndView("/policy/jx-policy");
     }
     /**
      * school-admission
