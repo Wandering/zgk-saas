@@ -222,7 +222,7 @@
                                                     </th>
                                                     <th class="center">排序</th>
                                                     <th class="center">字段名称</th>
-                                                    <th class="center"></th>
+                                                    <th class="center">操作</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody id="sub-student-table"  class="check-template">
@@ -246,7 +246,7 @@
                                         <td class="center index" indexid="{{id}}">{{configKey}}</td>
                                         <td class="center">{{name}}</td>
                                         <td class="center">
-                                            <a href="javascript:void(0)" class="active student-setting-remove-head" disabled>-</a>
+                                            <span>-</span>
                                         </td>
                                     </tr>
                                 {{else}}
