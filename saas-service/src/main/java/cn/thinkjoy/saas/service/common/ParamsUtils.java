@@ -165,7 +165,7 @@ public  class ParamsUtils {
 
         String stuNo = "";
         for (int i = 0; i < excelValues.size() - 1; i++) {
-            stuNo = excelValues.get(i).get("0");
+            stuNo = excelValues.get(i).get("1");
             for (int j = i + 1; j < excelValues.size(); j++) {
                 if (stuNo.equals(excelValues.get(j).get("1"))) {
                     result = "第" + (i + 1) + "行学号信息与第" + (j + 1) + "行学号信息重复";
