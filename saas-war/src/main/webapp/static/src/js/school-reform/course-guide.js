@@ -285,7 +285,6 @@ UniversityDetail.prototype = {
         var subject = this.subject;
         var universityName = this.universityName;
         var batch = this.batch;
-        layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/selectClassesGuide/getMajorByUniversityNameAndBatch.do', 'GET', {
             'subject': subject,
             'universityName': universityName,
@@ -296,9 +295,6 @@ UniversityDetail.prototype = {
                 var data = res.bizData;
                 that.showData(data);
             }
-            setTimeout(function () {
-                layer.closeAll('loading');
-            }, 500);
         }, function (res) {
             layer.msg("出错了");
         }, false, null);

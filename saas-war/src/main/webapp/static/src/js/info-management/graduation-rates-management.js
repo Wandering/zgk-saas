@@ -15,7 +15,7 @@ NumberManagement.prototype = {
     },
     getNumber: function () {
         var that = this;
-        layer.load(1, {shade: [0.3,'#000']});
+        //layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/manage/get/enrollingRatio/' + tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var ratioHtml = [];
@@ -37,9 +37,7 @@ NumberManagement.prototype = {
                 });
                 $('#ratio-manage-list').html(ratioHtml.join(''));
             }
-            setTimeout(function () {
-                layer.closeAll('loading');
-            }, 500);
+            //layer.closeAll('loading');
         }, function (res) {
             layer.msg("出错了");
         }, true);

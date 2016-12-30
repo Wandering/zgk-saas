@@ -49,7 +49,7 @@ TeacherManagement.prototype = {
     },
     getTeacherData: function () {//获取全部用户自定义教师数据
         var that = this;
-        layer.load(1, {shade: [0.3,'#000']});
+        //layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
             'tnId': tnId
         }, function (res) {
@@ -79,9 +79,7 @@ TeacherManagement.prototype = {
                 });
                 $("#teacher-manage-table tbody").html(teacherDataHtml.join(''));
             }
-            setTimeout(function () {
-                layer.closeAll('loading');
-            }, 500);
+            //layer.closeAll('loading');
         }, function (res) {
             layer.msg("出错了");
         }, true);
@@ -729,7 +727,7 @@ function upload () {
         }
 
         $percent.css('width', percentage * 100 + '%');
-        layer.load(1, {shade: [0.3,'#000']});
+        //layer.load(1, {shade: [0.3,'#000']});
     });
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
@@ -769,8 +767,6 @@ function upload () {
     // 完成上传完了，成功或者失败，先删除进度条。
     uploader.on('uploadComplete', function (file) {
         $('#' + file.id).find('.progress').remove();
-        setTimeout(function () {
-            layer.closeAll('loading');
-        }, 500);
+        //layer.closeAll('loading');
     });
 }

@@ -11,16 +11,14 @@ GradeManagement.prototype = {
     },
     getGrade: function () {
         var that = this;
-        layer.load(1, {shade: [0.3,'#000']});
+        //layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {
             'tnId': tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 that.renderList(res);
             }
-            setTimeout(function () {
-                layer.closeAll('loading');
-            }, 500);
+            //layer.closeAll('loading');
         }, function (res) {
             layer.msg("出错了");
         }, true);

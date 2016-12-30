@@ -91,21 +91,19 @@ ClassManagement.prototype = {
         var that = this;
         this.classOffset = offset;
         this.classRows = rows;
-        layer.load(1, {shade: [0.3,'#000']});
+        //var index = layer.load(2);
         Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
             's': that.classOffset,
             'r': that.classRows,
             'g': that.gradeName
         }, function (res) {
+            //layer.close(index);
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
                 that.showData(data);
             } else {
                 layer.msg(res.bizData.result);
             }
-            setTimeout(function () {
-                layer.closeAll('loading');
-            }, 500);
         }, function (res) {
             layer.msg("出错了");
         }, false);
@@ -814,7 +812,6 @@ function upload () {
         }
 
         $percent.css('width', percentage * 100 + '%');
-        layer.load(1, {shade: [0.3,'#000']});
     });
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
@@ -856,8 +853,6 @@ function upload () {
     // 完成上传完了，成功或者失败，先删除进度条。
     uploader.on('uploadComplete', function (file) {
         $('#' + file.id).find('.progress').remove();
-        setTimeout(function () {
-            layer.closeAll('loading');
-        }, 500);
+        //layer.closeAll('loading');
     });
 }

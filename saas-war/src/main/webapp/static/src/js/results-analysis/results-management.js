@@ -30,12 +30,10 @@ ResultsManagementFun.prototype = {
         }, true);
     },
     getResultsList: function (grade) {
-        layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/scoreAnalyse/listExam', 'GET', {
             'tnId': tnId,
             'grade': grade
         }, function (res) {
-            console.log(res)
             if (res.rtnCode == "0000000") {
                 var myTemplate = Handlebars.compile($("#results-template").html());
                 Handlebars.registerHelper('excel', function (url) {
@@ -45,12 +43,16 @@ ResultsManagementFun.prototype = {
             }else{
                 layer.msg(res.msg)
             }
-            setTimeout(function () {
-                layer.closeAll('loading');
-            }, 500);
+            //layer.closeAll('loading');
         }, function (res) {
             layer.msg("出错了");
         });
+
+
+        //layer.load(1, {shade: [0.3,'#000']});
+        //setTimeout(function () {
+        //
+        //}, 500);
     },
     uploadResults: function (grade,id, examName, examTime, uploadFilePath) {
         var contentHtml = [];
@@ -122,7 +124,7 @@ ResultsManagementFun.prototype = {
     },
     detailsList: function (uploadfilepath, id, grade, offset, rows) {
         var that = this;
-        layer.load(1, {shade: [0.3,'#000']});
+        //layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/scoreAnalyse/listExamDetail', 'GET', {
             'examId': id,
             'grade': grade,
@@ -145,9 +147,7 @@ ResultsManagementFun.prototype = {
             }else{
                 layer.msg(res.msg)
             }
-            setTimeout(function () {
-                layer.closeAll('loading');
-            }, 500);
+            //layer.closeAll('loading');
         }, function (res) {
             layer.msg("出错了");
         }, 'true');
