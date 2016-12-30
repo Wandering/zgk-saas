@@ -34,17 +34,19 @@ var ProTest = {
                         success: function(layero, index){
                             var id = res.bizData.id;
                             itimer = setInterval(function(){
-                                clearInterval(itimer);
-                                layer.close(index);
-                                resultUrl = ProTest.getTestUrl(id);
-                                layer.open({
-                                    type: 2,
-                                    title: "测评结果",
-                                    content: resultUrl,
-                                    area: ['100%', '100%'],
-                                    maxmin: false
-                                })
-                            },1000);
+                                if(ProTest.getTestUrl(id)){
+                                    clearInterval(itimer);
+                                    layer.close(index);
+                                    var resultUrl2 = ProTest.getTestUrl(id);
+                                    layer.open({
+                                        type: 2,
+                                        title: "测评结果",
+                                        content: resultUrl2,
+                                        area: ['100%', '100%'],
+                                        maxmin: false
+                                    })
+                                }
+                            },2000);
                         }
                     })
                 );
