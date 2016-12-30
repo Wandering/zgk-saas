@@ -332,12 +332,12 @@ AddClassManagement.prototype.addClass = function (title) {
     $.each(that.columnArr, function (i, k) {
         if (k.dataType != 'select') {
             if (k.enName != 'class_boss') {
-                contentHtml.push('<li><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
+                contentHtml.push('<li><i>*</i><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
             } else {
-                contentHtml.push('<li><span style="letter-spacing: 6px;">' + k.name + '</span><input type="text" style="position: relative;left: -6px;" id="' + k.enName + '" /></li>');
+                contentHtml.push('<li><i>*</i><span style="letter-spacing: 6px;">' + k.name + '</span><input type="text" style="position: relative;left: -6px;" id="' + k.enName + '" /></li>');
             }
         } else {
-            contentHtml.push('<li><span>' + k.name + '</span><select id="' + k.enName + '"><option value="00">' + k.name + '</option></select></li>');
+            contentHtml.push('<li><i>*</i><span>' + k.name + '</span><select id="' + k.enName + '"><option value="00">' + k.name + '</option></select></li>');
         }
     });
     contentHtml.push('<li><div class="opt-btn-box"><button class="btn btn-red" id="add-btn">确认添加</button><button class="btn btn-cancel cancel-btn">取消</button></div></li>');
@@ -463,12 +463,12 @@ UpdateClassManagement.prototype = {
         $.each(that.columnArr, function (i, k) {
             if (k.dataType != 'select') {
                 if (k.enName != 'class_boss') {
-                    contentHtml.push('<li><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
+                    contentHtml.push('<li><i>*</i><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
                 } else {
-                    contentHtml.push('<li><span style="letter-spacing: 6px;">' + k.name + '</span><input type="text" style="position: relative;left: -6px;" id="' + k.enName + '" /></li>');
+                    contentHtml.push('<li><i>*</i><span style="letter-spacing: 6px;">' + k.name + '</span><input type="text" style="position: relative;left: -6px;" id="' + k.enName + '" /></li>');
                 }
             } else {
-                contentHtml.push('<li><span>' + k.name + '</span><select id="' + k.enName + '"><option value="00">' + k.name + '</option></select></li>');
+                contentHtml.push('<li><i>*</i><span>' + k.name + '</span><select id="' + k.enName + '"><option value="00">' + k.name + '</option></select></li>');
             }
         });
         contentHtml.push('<li><div class="opt-btn-box"><button class="btn btn-red" id="update-btn">确认修改</button><button class="btn btn-cancel cancel-btn">取消</button></div></li>');
@@ -572,17 +572,45 @@ $(document).on("click", "#update-btn", function () {
     var postData = [];
     for (var i = 0; i < updateClassManagement.columnArr.length; i++) {
         var tempObj = addClassManagement.columnArr[i];
+        //if (tempObj.dataType == 'text') {
+        //    if ($('#' + tempObj.enName).val() == '') {
+        //        layer.msg(tempObj.name + '不能为空!', {time: 1000});
+        //        $('#' + tempObj.enName).focus();
+        //        return;
+        //    } else {
+        //        postData.push({
+        //            "key": tempObj.enName,
+        //            "value": $('#' + tempObj.enName).val()
+        //        });
+        //    }
+        //}
         if (tempObj.dataType == 'text') {
-            if ($('#' + tempObj.enName).val() == '') {
-                layer.msg(tempObj.name + '不能为空!', {time: 1000});
-                $('#' + tempObj.enName).focus();
-                return;
-            } else {
-                postData.push({
-                    "key": tempObj.enName,
-                    "value": $('#' + tempObj.enName).val()
-                });
+            //alert('text: ' + eval(tempObj.checkRule) + ', ' + $('#' + tempObj.enName).val());
+            if (tempObj.checkRule) {
+                var tempType = eval(tempObj.checkRule);
+                var typeResult = tempType.test($('#' + tempObj.enName).val());
+                if (typeResult === false) {
+                    layer.msg(tempObj.name + '长度为1~12个字符!', {time: 1000});
+                    $('#' + tempObj.enName).focus();
+                    return;
+                }
             }
+
+            postData.push({
+                "key": tempObj.enName,
+                "value": $('#' + tempObj.enName).val()
+            });
+
+            //if ($('#' + tempObj.enName).val() == '') {
+            //    layer.msg(tempObj.name + '不能为空!', {time: 1000});
+            //    $('#' + tempObj.enName).focus();
+            //    return;
+            //} else {
+            //    postData.push({
+            //        "key": tempObj.enName,
+            //        "value": $('#' + tempObj.enName).val()
+            //    });
+            //}
         }
         if (tempObj.dataType == 'select') {
             if ($('#' + tempObj.enName).val() == '00') {
@@ -629,7 +657,7 @@ $(document).on("click", "#add-btn", function () {
         var tempObj = addClassManagement.columnArr[i];
         if (tempObj.dataType == 'text') {
             //alert('text: ' + eval(tempObj.checkRule) + ', ' + $('#' + tempObj.enName).val());
-            if (tempObj.dataType) {
+            if (tempObj.checkRule) {
                 var tempType = eval(tempObj.checkRule);
                 var typeResult = tempType.test($('#' + tempObj.enName).val());
                 if (typeResult === false) {

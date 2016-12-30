@@ -2,6 +2,8 @@
  *  专业测评模块
  *  @wiki:http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=44452571
  **/
+
+    var itimer = null;
 var ProTest = {
     init: function () {
         this.provinceId = Common.cookie.getCookie('provinceId');
@@ -15,39 +17,59 @@ var ProTest = {
             }
         });
     },
+    // 请求题目
     fetchProTestUrl: function (type, name) {
         Common.ajaxFun('/apesk/queryApeskUrl.do', 'get', {
             'acId': type
         }, function (res) {
             if (res.rtnCode === '0000000') {
-                if (res.bizData.id) {
-                    ProTest.getTestUrl(res.bizData.id);
-                }
+                var resultUrl = res.bizData.data;
+                layer.full(
+                    layer.open({
+                        type: 2,
+                        title: name,
+                        content: resultUrl,
+                        area: ['100%', '100%'],
+                        maxmin: false,
+                        success: function(layero, index){
+                            var id = res.bizData.id;
+                            itimer = setInterval(function(){
+                                clearInterval(itimer);
+                                layer.close(index);
+                                resultUrl = ProTest.getTestUrl(id);
+                                layer.open({
+                                    type: 2,
+                                    title: "测评结果",
+                                    content: resultUrl,
+                                    area: ['100%', '100%'],
+                                    maxmin: false
+                                })
+                            },1000);
+                        }
+                    })
+                );
+
+
             }
         }, function (res) {
 
         }, true);
     },
     getTestUrl: function (id) {
+        var resUrl = '';
         Common.ajaxFun('/apesk/queryReportUrlById.do', 'get', {
             'id': id
         }, function (res) {
             if (res.rtnCode === '0000000') {
                 if (res.bizData.data != false) {
-                    layer.full(
-                        layer.open({
-                            type: 2,
-                            title: name,
-                            content: res.bizData.data,
-                            area: ['100%', '100%'],
-                            maxmin: false
-                        })
-                    );
+                    resUrl = res.bizData.data;
+                    clearInterval(itimer);
                 }
             }
         }, function (res) {
 
         }, true);
+        return resUrl;
     },
     renderProTestList: function (data) {
         var tpl = Handlebars.compile($('#assessment-main-tpl').html());

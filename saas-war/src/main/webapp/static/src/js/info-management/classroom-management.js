@@ -216,12 +216,13 @@ $(document).on('click','.save-btn',function () {
     var executiveNumber = $.trim($('#executiveNumber').val());
     var dayNumber = $.trim($('#dayNumber').val());
     var gradeV = $('#grade-list').val(),
-        gradeName = $('#grade-list option[value=' + gradeV + ']').text();
-    if (executiveNumber == '') {
+        gradeName = $('#grade-list option[value=' + gradeV + ']').text(),
+        classRoomReg = /^[0-9]*[1-9][0-9]*$/;
+    if (executiveNumber == '' || !classRoomReg.test(executiveNumber)) {
         layer.tips('请填写行政教室数量!', $('#executiveNumber'));
         return false;
     }
-    if (dayNumber == '') {
+    if (dayNumber == '' || !classRoomReg.test(dayNumber)) {
         layer.tips('请填写走班教室数量!', $('#dayNumber'));
         return false;
     }
@@ -268,12 +269,13 @@ $('#updateRole-btn').on('click',function () {
 $(document).on('click', '#update-classroom-btn', function () {
     var executiveNumber = $.trim($('#executiveNumber').val());
     var dayNumber = $.trim($('#dayNumber').val());
-    var gradeV = $('#grade-list').val();
-    if (executiveNumber == '') {
+    var gradeV = $('#grade-list').val(),
+        classRoomReg = /^[0-9]*[1-9][0-9]*$/;
+    if (executiveNumber == '' || !classRoomReg.test(executiveNumber)) {
         layer.tips('请填写行政教室数量!', $('#executiveNumber'));
         return false;
     }
-    if (dayNumber == '') {
+    if (dayNumber == '' || !classRoomReg.test(dayNumber)) {
         layer.tips('请填写走班教室数量!', $('#dayNumber'));
         return false;
     }
