@@ -92,7 +92,7 @@ public class EXConfigurationServiceImpl extends AbstractPageService<IBaseDAO<Con
 
             if (r > 0 && type.equals("student")) {
                 String tableName = ParamsUtils.combinationTableName(type, tnid);
-                r = exiTenantConfigInstanceDAO.createConfigTable(tableName, configurations);
+                 exiTenantConfigInstanceDAO.createConfigTable(tableName, configurations);
             }
             result = r > 0;
         } else
