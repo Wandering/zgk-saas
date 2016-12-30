@@ -135,7 +135,7 @@ public  class ParamsUtils {
                 boolean valid = (StringUtils.isBlank(regularStr) ? true : isRegValid(regularStr, val));
                 LOGGER.info("校验结果:" + valid);
                 if (!valid) {
-                    return x + "行-" + key + "列 数据[" + val + "]校验失败,请检查!";
+                    return (x+1)+ "行-" + key + "列,数据校验失败,请检查!";
                 }
                 y++;
             }
