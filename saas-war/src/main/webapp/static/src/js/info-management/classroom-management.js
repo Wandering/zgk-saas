@@ -111,7 +111,7 @@ ClassRoomManagement.prototype = {
         contentHtml.push('<div class="form-group">');
         contentHtml.push('<label class="col-sm-4 control-label no-padding-right" for="grade-name">选择年级: </label>');
         contentHtml.push('<div class="col-sm-8">');
-        contentHtml.push('<select id="grade-list"></select>');
+        contentHtml.push('<select id="grade-list" class="disabled" disabled="disabled"></select>');
         contentHtml.push('</div>');
         contentHtml.push('</div>');
         contentHtml.push('<div class="btn-box"><button class="btn btn-info" id="update-classroom-btn">确认修改</button><button class="btn btn-primary close-btn">取消</button></div>');

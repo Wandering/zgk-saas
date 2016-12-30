@@ -236,3 +236,8 @@ a.download-link:hover {
         }
     }
 }
+
+.disabled {
+    cursor: not-allowed;
+    background: #F2F4F6!important;
+}

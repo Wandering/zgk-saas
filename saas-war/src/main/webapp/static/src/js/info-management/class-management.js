@@ -92,12 +92,14 @@ ClassManagement.prototype = {
         this.classOffset = offset;
         this.classRows = rows;
         //var index = layer.load(2);
+        //layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
             's': that.classOffset,
             'r': that.classRows,
             'g': that.gradeName
         }, function (res) {
             //layer.close(index);
+            //layer.closeAll('loading');
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
                 that.showData(data);
