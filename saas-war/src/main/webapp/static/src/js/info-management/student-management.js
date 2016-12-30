@@ -500,7 +500,7 @@ var CRUDStd = {
         }
         //赋值
         var parent = $('#student-table td input[type="checkbox"]:checked').parent().parent().parent();
-        CRUDStd.pid = $('#student-table td input[type="checkbox"]:checked').parent().parent().next().attr('pid');
+        CRUDStd.pid = $('#student-table td input[type="checkbox"]:checked').parents('tr').find('td').eq(2).attr('pid');
         var rowData = JSON.parse(parent.attr('rowdata'));
         $('.save-btn').html('确认修改').attr('id', 'update-btn');
         layer.open({
@@ -688,7 +688,7 @@ var CRUDStd = {
                 }
             };
         } else {
-            return {
+            return  {
                 "clientInfo": {},
                 "style": "",
                 "data": {
