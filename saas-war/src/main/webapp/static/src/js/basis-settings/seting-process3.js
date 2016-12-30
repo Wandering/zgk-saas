@@ -367,22 +367,24 @@ jQuery(function () {
     });
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-    uploader.on('uploadSuccess', function (file,response) {
+    uploader.on('uploadSuccess', function (file, response) {
         $('#add-btn,#del-batch-btn').addClass('disabled');
         $('.del-btn').removeClass('del-btn').addClass('disabled');
         $('#' + file.id).addClass('upload-state-done');
         //layer.msg('导入成功,请进行下一流程!');
-        if (response.bizData) {
-            layer.msg(response.bizData.result);
-            return false;
+        if (response.bizData.result) {
+            if (response.bizData.result == 'SUCCESS') {
+                layer.msg('上传成功');
+            } else {
+                layer.msg(response.bizData.result);
+            }
         } else {
             layer.msg(response.msg);
-            return false;
         }
     });
 
     // 文件上传失败，现实上传出错。
-    uploader.on('uploadError', function (file) {
+    uploader.on('uploadError', function (file, response) {
         var $li = $('#' + file.id),
             $error = $li.find('div.error');
 
