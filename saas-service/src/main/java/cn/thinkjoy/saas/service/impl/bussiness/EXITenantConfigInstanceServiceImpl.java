@@ -539,14 +539,13 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             if (StringUtils.isBlank(tableName))
                 return "系统错误";
 
+            boolean repeat=isRepeat(tableName,type,configTeantComList, tenantConfigInstanceViews);
 
             Integer insertResult = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
             if (insertResult > 0) {
-                reuslt = "SUCCESS";
+                reuslt =repeat?"存在重复数据，已经覆盖更新": "SUCCESS";
                 syncProcedureData(type, tnId);
-                boolean repeat=isRepeat(tableName,type,configTeantComList, tenantConfigInstanceViews);
-                if(repeat)
-                    return "存在重复数据，已经覆盖更新";
+
             }
         } else
             reuslt = excelValid;
