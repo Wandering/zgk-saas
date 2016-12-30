@@ -210,12 +210,12 @@ AddTeacherManagement.prototype.addTeacher = function (title) {
     $.each(that.columnArr, function (i, k) {
         if (k.dataType == 'text') {
             if (k.enName != 'teacher_sex' && k.enName != 'teacher_age' && k.enName != 'teacher_position' && k.enName != 'teacher_title' && k.enName != 'teacher_experience') {
-                contentHtml.push('<li><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
+                contentHtml.push('<li><i>*</i><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
             } else {
-                contentHtml.push('<li><span style="letter-spacing: 24.0px;">' + k.name + '</span><input type="text" style="position: relative;left: -23px;" id="' + k.enName + '" /></li>');
+                contentHtml.push('<li><i>*</i><span style="letter-spacing: 20.0px;">' + k.name + '</span><input type="text" style="position: relative;left: -17px;" id="' + k.enName + '" /></li>');
             }
         } else if (k.dataType == 'select') {
-            contentHtml.push('<li>');
+            contentHtml.push('<li><i>*</i>');
             contentHtml.push('<span>' + k.name + '</span>');
             contentHtml.push('<select id="' + k.enName + '">');
             contentHtml.push('<option value="00">' + k.name + '</option>');
@@ -230,7 +230,7 @@ AddTeacherManagement.prototype.addTeacher = function (title) {
         } else if (k.dataType == 'radio') {
             var values = (k.dataValue + '').split('-');
             var enName = k.enName;
-            contentHtml.push('<li><span style="letter-spacing: 24.0px;">' + k.name + '</span>');
+            contentHtml.push('<li><i>*</i><span style="letter-spacing: 24.0px;">' + k.name + '</span>');
             $.each(values, function (i, k) {
                 if (i == 0) {
                     contentHtml.push('<input type="radio" name="' + enName + '" id="' + enName + i + '" checked="checked" value="' + k + '" /><label for="' + enName + i + '">' + k + '</label>');
@@ -242,7 +242,7 @@ AddTeacherManagement.prototype.addTeacher = function (title) {
         } else if (k.dataType == 'checkbox') {
             var values = (k.dataValue + '').split('-');
             var enName = k.enName;
-            contentHtml.push('<li style="margin-bottom: 56px;"><span>' + k.name + '</span><ul id="teacher_major_type">');
+            contentHtml.push('<li style="margin-bottom: 56px;"><i>*</i><span>' + k.name + '</span><ul id="teacher_major_type">');
             $.each(values, function (i, k) {
                 contentHtml.push('<li><input type="checkbox" name="' + enName + '" id="' + enName + i + '" value="' + k + '" /><label for="' + enName + i + '">' + k + '</label></li>');
             });
@@ -358,13 +358,13 @@ UpdateTeacherManagement.prototype = {
         $.each(that.columnArr, function (i, k) {
             if (k.dataType == 'text') {
                 if (k.enName != 'teacher_sex' && k.enName != 'teacher_age' && k.enName != 'teacher_position' && k.enName != 'teacher_title' && k.enName != 'teacher_experience') {
-                    contentHtml.push('<li><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
+                    contentHtml.push('<li><i>*</i><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
                 } else {
-                    contentHtml.push('<li><span style="letter-spacing: 24.0px;">' + k.name + '</span><input type="text" style="position: relative;left: -23px;" id="' + k.enName + '" /></li>');
+                    contentHtml.push('<li><i>*</i><span style="letter-spacing: 20.0px;">' + k.name + '</span><input type="text" style="position: relative;left: -17px;" id="' + k.enName + '" /></li>');
                 }
             } else if (k.dataType == 'select') {
                 //contentHtml.push('<li><span>' + k.name + '</span><select id="' + k.enName + '"><option value="00">' + k.name + '</option></select></li>');
-                contentHtml.push('<li>');
+                contentHtml.push('<li><i>*</i>');
                 contentHtml.push('<span>' + k.name + '</span>');
                 contentHtml.push('<select id="' + k.enName + '">');
                 contentHtml.push('<option value="00">' + k.name + '</option>');
@@ -379,7 +379,7 @@ UpdateTeacherManagement.prototype = {
             } else if (k.dataType == 'radio') {
                 var values = (k.dataValue + '').split('-');
                 var enName = k.enName;
-                contentHtml.push('<li><span style="letter-spacing: 24.0px;">' + k.name + '</span>');
+                contentHtml.push('<li><i>*</i><span style="letter-spacing: 24.0px;">' + k.name + '</span>');
                 $.each(values, function (i, k) {
                     if (i == 0) {
                         contentHtml.push('<input type="radio" name="' + enName + '" id="' + enName + i + '" checked="checked" value="' + k + '" /><label for="' + enName + i + '">' + k + '</label>');
@@ -391,7 +391,7 @@ UpdateTeacherManagement.prototype = {
             } else if (k.dataType == 'checkbox') {
                 var values = (k.dataValue + '').split('-');
                 var enName = k.enName;
-                contentHtml.push('<li style="margin-bottom: 56px;"><span>' + k.name + '</span><ul id="teacher_major_type">');
+                contentHtml.push('<li style="margin-bottom: 56px;"><i>*</i><span>' + k.name + '</span><ul id="teacher_major_type">');
                 $.each(values, function (i, k) {
                     contentHtml.push('<li><input type="checkbox" name="' + enName + '" id="' + enName + i + '" value="' + k + '" /><label for="' + enName + i + '">' + k + '</label></li>');
                 });
