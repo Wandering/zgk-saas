@@ -39,7 +39,7 @@ public interface SelectClassesGuideDAO {
     int selectEnName(Map map);
     List<Map<String, String>> selectStudentExcel(Map map);
 
-    String getEnrollingPercent();
+    String getEnrollingPercent(Map map);
     String selectExamId(Map map);
     int selectStudentNumber(Map map);
     List<String> selectLimitStudent(Map map);
