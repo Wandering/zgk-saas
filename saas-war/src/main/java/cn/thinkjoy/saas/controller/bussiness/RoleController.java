@@ -88,8 +88,12 @@ public class RoleController {
         String roleDesc = request.getDataString("roleDesc");
         String meunIds = request.getDataString("meunIds");
 
-        Roles tmpRole = (Roles) iRolesService.findOne("role_name",roleName);
-        if(tmpRole != null && tmpRole.getTnId() != tnId){
+        Map<String,Object> paramMap = Maps.newHashMap();
+        paramMap.put("roleName",roleName);
+        paramMap.put("tnId",tnId);
+        Roles tmpRole = (Roles) iRolesService.queryOne(paramMap);
+
+        if(tmpRole != null && Integer.valueOf(tmpRole.getId().toString()) != roleId){
             ExceptionUtil.throwException(ErrorCode.ROLE_HAS_EXIST);
         }
 
