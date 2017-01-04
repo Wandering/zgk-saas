@@ -106,6 +106,6 @@ public interface IEXTeantCustomDAO {
      * @param map
      * @return
      */
-    Integer selectExistByCloumn(Map map);
+    List<LinkedHashMap<String, Object>> selectExistByCloumn(Map map);
 
 }

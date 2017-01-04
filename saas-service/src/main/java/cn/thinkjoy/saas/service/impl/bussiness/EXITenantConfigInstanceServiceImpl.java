@@ -461,8 +461,8 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             return null;
         boolean isValid = this.tableNameValid(tableName);
         LOGGER.info("isValid:" + isValid);
-        if (!isValid)
-            return null;
+        if (isValid)
+            return tableName;
 
         try {
             List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
@@ -523,8 +523,6 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         String excelValid = ParamsUtils.excelValueValid(configTeantComList, tenantConfigInstanceViews);
 
 
-
-
         if(type.equals("student")&&excelValid.equals("SUCCESS"))
             excelValid =ParamsUtils.repeatStudentNo(configTeantComList);
 
@@ -539,25 +537,126 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             if (StringUtils.isBlank(tableName))
                 return "系统错误";
 
-            boolean repeat=isRepeat(tableName,type,configTeantComList, tenantConfigInstanceViews);
+            Map repeat=isRepeat(tableName,type,configTeantComList, tenantConfigInstanceViews);
+
+
+            List<String> removeIds =(List<String>)repeat.get("repeat");
+
+            if(removeIds!=null&&removeIds.size()>0)
+                iexTeantCustomDAO.removeTenantCustomList(tableName,removeIds);
+
 
             Integer insertResult = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
-            if (insertResult > 0) {
-                reuslt =repeat?"存在重复数据，已经覆盖更新": "SUCCESS";
-                syncProcedureData(type, tnId);
 
+            if (insertResult > 0) {
+                reuslt =(removeIds!=null&&removeIds.size()>0)?"存在重复数据，已经覆盖更新": "SUCCESS";
+                syncProcedureData(type, tnId);
             }
         } else
             reuslt = excelValid;
         LOGGER.info("===========解析excel E===========");
         return reuslt;
     }
+    @Override
+    public Integer removeTenantCustomList(String tableName,List<String> removeIds) {
+        return iexTeantCustomDAO.removeTenantCustomList(tableName, removeIds);
+    }
 
-    public boolean isRepeat(String tableName,String type,List<LinkedHashMap<String, String>> excelValues,List<TenantConfigInstanceView> tenantConfigInstanceViews) {
-        boolean result = false;
+//    public boolean isRepeat(String tableName,String type,List<LinkedHashMap<String, String>> excelValues,List<TenantConfigInstanceView> tenantConfigInstanceViews) {
+//        boolean result = false;
+//
+//        if (excelValues == null)
+//            return result;
+//
+//        Integer excelLen = excelValues.size();
+//
+//        for (int x = 0; x < excelLen; x++) {
+//
+//            LinkedHashMap<String, String> rowsMap = excelValues.get(x);
+//
+//            Iterator iter = rowsMap.entrySet().iterator();
+//
+//            int y = 0;
+//            String key1=null,key2=null,value1=null,value2=null;
+//            while (iter.hasNext()) {
+//                Map.Entry entry = (Map.Entry) iter.next();
+//                String key = entry.getKey().toString();
+//                String val = entry.getValue().toString();
+//
+//                TenantConfigInstanceView tenantConfigInstanceView = tenantConfigInstanceViews.get(y);
+//                String configurationId = tenantConfigInstanceView.getConfigKey();
+//
+//
+//                Map searchMap = new HashMap();
+//                searchMap.put("id", configurationId);
+//                Configuration configuration = iConfigurationDAO.queryOne(searchMap, "id", "asc");
+//
+//
+//                switch (type) {
+//                    case "class":
+//                        if (configuration.getEnName().equals("class_grade")) {
+//                            key1 = "class_grade";
+//                            value1=val;
+//                        }
+//                        if (configuration.getEnName().equals("class_name")) {
+//                            key2 = "class_name";
+//                            value2=val;
+//                        }
+//                        break;
+//                    case "teacher":
+//                        if (configuration.getEnName().equals("teacher_name")) {
+//                            key1 = "teacher_name";
+//                            value1=val;
+//                        }
+//                        if (configuration.getEnName().equals("teacher_major_type")) {
+//                            key2 = "teacher_major_type";
+//                            value2=val;
+//                        }
+//                        break;
+//                    case "student":
+//                        if (configuration.getEnName().equals("student_no")) {
+//                            key1 = "student_no";
+//                            value1=val;
+//                        }
+//                        if (configuration.getEnName().equals("student_name")) {
+//                            key2 = "student_name";
+//                            value2=val;
+//                        }
+//                        break;
+//                }
+//
+//                if(!StringUtils.isBlank(value1)&&!StringUtils.isBlank(value2)) {
+//                    Map map = new HashMap();
+//                    map.put("tableName",tableName);
+//                    map.put("key1",key1);
+//                    map.put("key2",key2);
+//                    map.put("value1",value1);
+//                    map.put("value2",value2);
+//                    Integer count = iexTeantCustomDAO.selectExistByCloumn(map);
+//                    if (count > 0)
+//                        return true;
+//                }
+//
+//
+//                y++;
+//            }
+//        }
+//
+//        return result;
+//    }
+
+
+    public Map isRepeat(String tableName,String type,List<LinkedHashMap<String, String>> excelValues,List<TenantConfigInstanceView> tenantConfigInstanceViews) {
+
+        Map resultMap = new HashMap();
+
+
+        List<String> ids = new ArrayList<>();
+//        List<LinkedHashMap<String, String>> updateResult = new ArrayList<>();
+//        List<LinkedHashMap<String, String>> addResult = new ArrayList<>();
 
         if (excelValues == null)
-            return result;
+            return null;
 
         Integer excelLen = excelValues.size();
 
@@ -568,7 +667,8 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             Iterator iter = rowsMap.entrySet().iterator();
 
             int y = 0;
-            String key1=null,key2=null,value1=null,value2=null;
+            String key1 = null, key2 = null, value1 = null, value2 = null,id=null;
+            boolean repeat = false;
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
                 String key = entry.getKey().toString();
@@ -587,53 +687,57 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                     case "class":
                         if (configuration.getEnName().equals("class_grade")) {
                             key1 = "class_grade";
-                            value1=val;
+                            value1 = val;
                         }
                         if (configuration.getEnName().equals("class_name")) {
                             key2 = "class_name";
-                            value2=val;
+                            value2 = val;
                         }
                         break;
                     case "teacher":
                         if (configuration.getEnName().equals("teacher_name")) {
                             key1 = "teacher_name";
-                            value1=val;
+                            value1 = val;
                         }
                         if (configuration.getEnName().equals("teacher_major_type")) {
                             key2 = "teacher_major_type";
-                            value2=val;
+                            value2 = val;
                         }
                         break;
                     case "student":
                         if (configuration.getEnName().equals("student_no")) {
                             key1 = "student_no";
-                            value1=val;
+                            value1 = val;
                         }
                         if (configuration.getEnName().equals("student_name")) {
                             key2 = "student_name";
-                            value2=val;
+                            value2 = val;
                         }
                         break;
                 }
 
-                if(!StringUtils.isBlank(value1)&&!StringUtils.isBlank(value2)) {
+                if (!StringUtils.isBlank(value1) && !StringUtils.isBlank(value2)) {
                     Map map = new HashMap();
-                    map.put("tableName",tableName);
-                    map.put("key1",key1);
-                    map.put("key2",key2);
-                    map.put("value1",value1);
-                    map.put("value2",value2);
-                    Integer count = iexTeantCustomDAO.selectExistByCloumn(map);
-                    if (count > 0)
-                        return true;
+                    map.put("tableName", tableName);
+                    map.put("key1", key1);
+                    map.put("key2", key2);
+                    map.put("value1", value1);
+                    map.put("value2", value2);
+                    List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.selectExistByCloumn(map);
+                    if (linkedHashMaps != null && linkedHashMaps.size() > 0) {
+                        repeat = true;
+                        id = linkedHashMaps.get(0).get("id").toString();
+                        break;
+                    }
                 }
-
-
                 y++;
             }
+            if (repeat)
+                ids.add(id);
         }
 
-        return result;
+        resultMap.put("repeat", ids);
+        return resultMap;
     }
     /**
      * 流程数据同步
@@ -791,8 +895,9 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         Integer tableCount = exiTenantConfigInstanceDAO.existTable(tableName);
 
         if (tableCount > 0)
-             exiTenantConfigInstanceDAO.dropTable(tableName);
-        isValid = true;
+            isValid = true;
+//             exiTenantConfigInstanceDAO.dropTable(tableName);
+//        isValid = true;
 
 
         return isValid;
@@ -918,33 +1023,33 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         System.out.print(map.get(1));
 
     }
-    public boolean selectExistByCloumn(String tableName,String type,String value1,String value2) {
-
-        String key1=null,key2=null;
-
-        switch (type){
-            case "class":
-                key1="class_grade";
-                key2="class_name";
-                break;
-            case "teacher":
-                key1="teacher_name";
-                key2="teacher_major_type";
-                break;
-            case "student":
-                key1="student_no";
-                key2="student_name";
-                break;
-        }
-
-        Map map=new HashMap();
-        map.put("tableName",tableName);
-        map.put("key1",key1);
-        map.put("key2",key2);
-        map.put("value1",value1);
-        map.put("value2",value2);
-
-        return iexTeantCustomDAO.selectExistByCloumn(map)>0;
-    }
+//    public boolean selectExistByCloumn(String tableName,String type,String value1,String value2) {
+//
+//        String key1=null,key2=null;
+//
+//        switch (type){
+//            case "class":
+//                key1="class_grade";
+//                key2="class_name";
+//                break;
+//            case "teacher":
+//                key1="teacher_name";
+//                key2="teacher_major_type";
+//                break;
+//            case "student":
+//                key1="student_no";
+//                key2="student_name";
+//                break;
+//        }
+//
+//        Map map=new HashMap();
+//        map.put("tableName",tableName);
+//        map.put("key1",key1);
+//        map.put("key2",key2);
+//        map.put("value1",value1);
+//        map.put("value2",value2);
+//
+//        return iexTeantCustomDAO.selectExistByCloumn(map)>0;
+//    }
 
 }

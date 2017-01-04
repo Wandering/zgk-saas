@@ -79,8 +79,8 @@
             </if>
         </where>
     </select>
-    <select id="selectExistByCloumn" parameterType="java.util.Map"  resultType="Integer">
-        SELECT count(1) from  ${tableName}
+    <select id="selectExistByCloumn" parameterType="java.util.Map"  resultType="java.util.LinkedHashMap">
+        SELECT * from  ${tableName}
         <where>
             <if test="key1!=null and value1!=null">
                 and ${key1}=#{value1}

@@ -376,32 +376,40 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
     }
 
     @Override
-    public boolean selectExistByCloumn(String tableName,String type,String value1,String value2) {
+    public Map selectExistByCloumn(String tableName,String type,String value1,String value2) {
 
-        String key1=null,key2=null;
+        Map repeatMap = new HashMap();
 
-        switch (type){
+        String key1 = null, key2 = null;
+
+        switch (type) {
             case "class":
-                key1="class_grade";
-                key2="class_name";
+                key1 = "class_grade";
+                key2 = "class_name";
                 break;
             case "teacher":
-                key1="teacher_name";
-                key2="teacher_major_type";
+                key1 = "teacher_name";
+                key2 = "teacher_major_type";
                 break;
             case "student":
-                key1="student_no";
-                key2="student_name";
+                key1 = "student_no";
+                key2 = "student_name";
                 break;
         }
 
-        Map map=new HashMap();
-        map.put("tableName",tableName);
-        map.put("key1",key1);
-        map.put("key2",key2);
-        map.put("value1",value1);
-        map.put("value2",value2);
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        map.put("key1", key1);
+        map.put("key2", key2);
+        map.put("value1", value1);
+        map.put("value2", value2);
 
-        return iexTeantCustomDAO.selectExistByCloumn(map)>0;
+        List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.selectExistByCloumn(map);
+        if (linkedHashMaps != null && linkedHashMaps.size() > 0) {
+            List<String> list = new ArrayList<>();
+            list.add(linkedHashMaps.get(0).get("id").toString());
+            repeatMap.put("repeat", list);
+        }
+        return repeatMap;
     }
 }

@@ -91,5 +91,5 @@ public interface IEXTenantCustomService {
      */
     List<SyncClass> selectExecutiveClassGroup(Map map);
 
-    boolean selectExistByCloumn(String tableName,String type,String value1,String value2);
+    Map selectExistByCloumn(String tableName,String type,String value1,String value2);
 }
