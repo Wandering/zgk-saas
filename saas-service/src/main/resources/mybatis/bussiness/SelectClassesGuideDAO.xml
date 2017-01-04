@@ -221,11 +221,13 @@
         <if test="classTableName!=null">
         INNER JOIN ${classTableName} t2 on t1.student_grade=t2.class_grade and t1.student_class=t2.class_name
         </if>
+        where t1.student_grade LIKE CONCAT('%',#{grade},'%')
     </select>
 
     <!-- 最近一年录取百分比 -->
     <select id="getEnrollingPercent" parameterType="java.util.Map" resultType="java.lang.String">
         select (batch_1_enrolls+batch_2_enrolls+batch_3_enrolls)/stu_3_numbers as percent from saas_enrolling_ratio rr
+        where tn_id=#{tnId}
         ORDER BY year desc
         limit 1
     </select>
@@ -246,7 +248,9 @@
     <select id="selectLimitStudent" parameterType="java.util.Map" resultType="java.lang.String">
         select dd.selectCourses from saas_exam_detail dd where dd.examId=#{examId}
         ORDER BY totleScore DESC
-        limit ${top};
+        <if test="top!=null">
+          limit ${top};
+        </if>
     </select>
 
 </mapper>
