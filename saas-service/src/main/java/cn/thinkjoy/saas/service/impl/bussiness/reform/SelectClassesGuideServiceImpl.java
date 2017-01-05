@@ -177,10 +177,14 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         String tableName = "saas_"+tnId+"_student_excel";
         map.put("tableName",tableName);
         List<Map<String,String>> mapList = Lists.newArrayList();
-        mapList = selectClassesGuideDAO.selectStudentExcel(map);
+        map.put("grade",studentGrade);
+        //从saas_enrolling_ratio中获取上线率
+        String t=selectClassesGuideDAO.getEnrollingPercent(map);
+        map.put("examId",selectClassesGuideDAO.selectExamId(map));
+        List<String> selectCoursesAll=selectClassesGuideDAO.selectLimitStudent(map);
         Map<String, Integer> typeMap=new HashMap<>();
-        for(Map<String,String> map1:mapList){
-            String[] types=map1.get("student_major_type").split("-");
+        for(String selectCourses:selectCoursesAll){
+            String[] types=selectCourses.split("@");
             for(String type:types){
                 if(!typeMap.containsKey(type)){
                     typeMap.put(type, 0);
@@ -189,11 +193,6 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
             }
         }
 
-
-        //从saas_enrolling_ratio中获取上线率
-        String t=selectClassesGuideDAO.getEnrollingPercent();
-        map.put("grade",studentGrade);
-        map.put("examId",selectClassesGuideDAO.selectExamId(map));
         int count=selectClassesGuideDAO.selectStudentNumber(map);
         Long top=Math.round(count * Double.valueOf(t));
         map.put("top",top.intValue());

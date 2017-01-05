@@ -134,6 +134,7 @@ Schedule.prototype = {
                     that.queryScheduleTask();
                     layer.closeAll();
                     layer.msg("保存成功");
+                    history.go(0);
                 } else {
                     layer.msg(res.msg);
                 }
@@ -151,6 +152,7 @@ Schedule.prototype = {
                     that.queryScheduleTask();
                     layer.closeAll();
                     layer.msg("保存成功");
+                    history.go(0);
                 } else {
                     layer.msg(res.msg);
                 }
