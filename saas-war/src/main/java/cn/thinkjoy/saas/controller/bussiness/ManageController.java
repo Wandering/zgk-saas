@@ -359,14 +359,14 @@ public class ManageController {
         String type = params.get("type").toString();
         Integer tnId = request.getDataInteger("tnId");
 
-        Map map = ParamsUtils.getTeantCustomDataValue(teantCustoms, type);
-
+//        Map map = ParamsUtils.getTeantCustomDataValue(teantCustoms, type);
+//
         String tableName = ParamsUtils.combinationTableName(type, tnId);
-
-        Map repeat = iexTenantCustomService.selectExistByCloumn(tableName, type, map.get("value1").toString(), map.get("value2").toString());
-
-        List<String> removeIds = (List<String>) repeat.get("repeat");
-
+//
+//        Map repeat = iexTenantCustomService.selectExistByCloumn(tableName, type, map.get("value1").toString(), map.get("value2").toString());
+//
+//        List<String> removeIds = (List<String>) repeat.get("repeat");
+        List<String> removeIds=reantCustomRepeat(type,tableName,teantCustoms);
         if (removeIds != null && removeIds.size() > 0)
             exiTenantConfigInstanceService.removeTenantCustomList(tableName, removeIds);
 
@@ -383,14 +383,20 @@ public class ManageController {
     @RequestMapping(value = "/teant/custom/data/modify",method = RequestMethod.POST)
     @ResponseBody
     public Map modifyTeantCustom(@RequestBody Request request) {
+        Map resultMap = new HashMap();
         Map params=request.getData();
         List<TeantCustom> teantCustoms=(List<TeantCustom>) params.get("teantCustomList");
         String type=params.get("type").toString();
         Integer tnId=request.getDataInteger("tnId"),
          pri=request.getDataInteger("pri");
-        boolean result = iexTenantCustomService.modifyTeantCustom(type, tnId, pri, teantCustoms);
-        Map resultMap = new HashMap();
-        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+        List<String> removeIds=reantCustomRepeat(type, tableName, teantCustoms);
+        if (removeIds != null && removeIds.size() > 0) {
+            resultMap.put("result", "存在重复数据,请修正!");
+        }else {
+            boolean result = iexTenantCustomService.modifyTeantCustom(type, tnId, pri, teantCustoms);
+            resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        }
         return resultMap;
     }
 
@@ -537,6 +543,19 @@ public class ManageController {
                 out.close();
             LOGGER.info("===============导出租户excel模板 E================");
         }
+        return null;
+    }
+
+
+    private List<String> reantCustomRepeat(String type,String tableName,List<TeantCustom> teantCustoms) {
+        Map map = ParamsUtils.getTeantCustomDataValue(teantCustoms, type);
+
+        Map repeat = iexTenantCustomService.selectExistByCloumn(tableName, type, map.get("value1").toString(), map.get("value2").toString());
+
+        List<String> removeIds = (List<String>) repeat.get("repeat");
+
+        if (removeIds != null && removeIds.size() > 0)
+            return removeIds;
         return null;
     }
 }
