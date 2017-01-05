@@ -1,6 +1,8 @@
 package cn.thinkjoy.saas.service.common;
 
+import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
+import com.alibaba.fastjson.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -145,6 +147,38 @@ public  class ParamsUtils {
         return result;
     }
 
+    public static Map getTeantCustomDataValue(List<TeantCustom> teantCustoms,String type) {
+
+        Map map = new HashMap();
+
+        String key1 = null, key2 = null;
+
+        switch (type) {
+            case "class":
+                key1 = "class_grade";
+                key2 = "class_name";
+                break;
+            case "teacher":
+                key1 = "teacher_name";
+                key2 = "teacher_major_type";
+                break;
+            case "student":
+                key1 = "student_no";
+                key2 = "student_name";
+                break;
+        }
+
+        List<TeantCustom> customs = JSONArray.parseArray(teantCustoms.toString(), TeantCustom.class);
+        for (TeantCustom teantCustom:customs) {
+            if (teantCustom.getKey().equals(key1)) {
+                map.put("value1", teantCustom.getValue());
+            }
+            if (teantCustom.getKey().equals(key2)) {
+                map.put("value2", teantCustom.getValue());
+            }
+        }
+        return map;
+    }
 
     /**
      * 空值校验

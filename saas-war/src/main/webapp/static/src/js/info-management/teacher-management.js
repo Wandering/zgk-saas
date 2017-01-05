@@ -626,6 +626,7 @@ $(document).on('click', '#teacher-settings-btn', function () {
         area: ['60%', '70%'],
         content: '/teacher-settings',
         cancel: function () {
+            history.go(0);
             var teacherManagement = new TeacherManagement();
             teacherManagement.init();
         }

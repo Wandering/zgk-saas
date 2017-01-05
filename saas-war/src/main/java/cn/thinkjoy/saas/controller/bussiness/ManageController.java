@@ -7,6 +7,7 @@ import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 import cn.thinkjoy.saas.service.IEnrollingRatioService;
 import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExcelUtils;
+import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
@@ -352,20 +353,26 @@ public class ManageController {
     @RequestMapping(value = "/teant/custom/data/add",method = RequestMethod.POST)
     @ResponseBody
     public Map addTeantCustom(@RequestBody Request request) {
-        Map params=request.getData();
-        List<TeantCustom> teantCustoms=(List<TeantCustom>) params.get("teantCustomList");
-        String type=params.get("type").toString();
-        Integer tnId=request.getDataInteger("tnId");
-//        if("student".equals(type)) {
-//            for()
-//        }
+        Map resultMap = new HashMap();
+        Map params = request.getData();
+        List<TeantCustom> teantCustoms = (List<TeantCustom>) params.get("teantCustomList");
+        String type = params.get("type").toString();
+        Integer tnId = request.getDataInteger("tnId");
 
+//        Map map = ParamsUtils.getTeantCustomDataValue(teantCustoms, type);
+//
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+//
+//        Map repeat = iexTenantCustomService.selectExistByCloumn(tableName, type, map.get("value1").toString(), map.get("value2").toString());
+//
+//        List<String> removeIds = (List<String>) repeat.get("repeat");
+        List<String> removeIds=reantCustomRepeat(type,tableName,teantCustoms);
+        if (removeIds != null && removeIds.size() > 0)
+            exiTenantConfigInstanceService.removeTenantCustomList(tableName, removeIds);
 
         boolean result = iexTenantCustomService.addTeantCustom(type, tnId, teantCustoms);
-//        if(result)
-//            exiTenantConfigInstanceService.syncProcedureData(type,tnId);
-        Map resultMap = new HashMap();
-        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+
+        resultMap.put("result", (result ? (removeIds != null && removeIds.size() > 0) ? "存在重复数据，已经覆盖更新" : "SUCCESS" : "FAIL"));
         return resultMap;
     }
 
@@ -376,14 +383,20 @@ public class ManageController {
     @RequestMapping(value = "/teant/custom/data/modify",method = RequestMethod.POST)
     @ResponseBody
     public Map modifyTeantCustom(@RequestBody Request request) {
+        Map resultMap = new HashMap();
         Map params=request.getData();
         List<TeantCustom> teantCustoms=(List<TeantCustom>) params.get("teantCustomList");
         String type=params.get("type").toString();
         Integer tnId=request.getDataInteger("tnId"),
          pri=request.getDataInteger("pri");
-        boolean result = iexTenantCustomService.modifyTeantCustom(type, tnId, pri, teantCustoms);
-        Map resultMap = new HashMap();
-        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+        List<String> removeIds=reantCustomRepeat(type, tableName, teantCustoms);
+        if (removeIds != null && removeIds.size() > 0) {
+            resultMap.put("result", "存在重复数据,请修正!");
+        }else {
+            boolean result = iexTenantCustomService.modifyTeantCustom(type, tnId, pri, teantCustoms);
+            resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        }
         return resultMap;
     }
 
@@ -485,14 +498,15 @@ public class ManageController {
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
         String[] columnNames = exiTenantConfigInstanceService.getTenantConfigListArrByTnIdAndType(type, tnId);
-        List<LinkedHashMap<String, Object>> tenantCustoms=iexTenantCustomService.getTenantCustom(type, tnId,null,null,null);
+//        List<LinkedHashMap<String, Object>> tenantCustoms=iexTenantCustomService.getTenantCustom(type, tnId,null,null,null);
         List<Map<Integer,Object>> maps=iexTenantCustomService.isExcelAddSelect(type,tnId, columnNames);
 
 
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
-            ExcelUtils.createWorkBook(columnNames,tenantCustoms,maps).write(os);
+//            ExcelUtils.createWorkBook(columnNames,tenantCustoms,maps).write(os);
+            ExcelUtils.createWorkBook(columnNames, maps).write(os);
             LOGGER.info("Excel创建完成!");
         } catch (IOException e) {
             e.printStackTrace();
@@ -529,6 +543,19 @@ public class ManageController {
                 out.close();
             LOGGER.info("===============导出租户excel模板 E================");
         }
+        return null;
+    }
+
+
+    private List<String> reantCustomRepeat(String type,String tableName,List<TeantCustom> teantCustoms) {
+        Map map = ParamsUtils.getTeantCustomDataValue(teantCustoms, type);
+
+        Map repeat = iexTenantCustomService.selectExistByCloumn(tableName, type, map.get("value1").toString(), map.get("value2").toString());
+
+        List<String> removeIds = (List<String>) repeat.get("repeat");
+
+        if (removeIds != null && removeIds.size() > 0)
+            return removeIds;
         return null;
     }
 }

@@ -567,13 +567,13 @@ function selectTypeAnalysis (tnId, studentGrade) {
                 subjects: [],
                 numbers: []
             };
-            $.each(data.oneTypeMap, function (i, k) {
+            $.each(data.limitTypeMap, function (i, k) {
                 datas.subjects.push(i);
                 datas.numbers.push(k);
             });
             var subjectHtml = [];
-            if (!isEmptyObject(data.limitTypeMap)) {
-                $.each(data.limitTypeMap, function (i, k) {
+            if (!isEmptyObject(data.oneTypeMap)) {
+                $.each(data.oneTypeMap, function (i, k) {
                     subjectHtml.push('<span class="item">' + i + '（' + k + '人）</span>');
                 });
             } else {
