@@ -738,7 +738,9 @@ function selectTypeAnalysis (tnId, studentGrade) {
                 subjectHtml.push('<span class="item">政治（0人）</span>');
                 subjectHtml.push('<span class="item">地理（0人）</span>');
                 subjectHtml.push('<span class="item">历史（0人）</span>');
-                subjectHtml.push('<span class="item subject-tyjs-item" style="display: none;">通用技术（0人）</span>');
+                if(countyId.substring(0,2)=='33'){
+                    subjectHtml.push('<span class="item">通用技术（0人）</span>');
+                }
             }
             $('.single-course-info').html(subjectHtml.join(''));
             partCourseAnalysisChart(datas.subjects, datas.numbers);
