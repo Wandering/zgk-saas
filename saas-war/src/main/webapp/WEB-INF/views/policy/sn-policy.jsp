@@ -37,9 +37,9 @@
                                 </div>
                                 <div class="score-component">
                                     <ul>
-                                        <li>1.2020年起，统一高考科目为语文、数学、外语（分为英语、日语、俄语、德语、法语、西班牙语）</li>
+                                        <li>1.2022年起，统一高考科目为语文、数学、外语</li>
                                         <li>2.高考不分文理</li>
-                                        <li>3.外语考试包括笔试和听力测试，引导外语教学注重应用能力的培养。最多参加两次外语考试，可选择其中较好的一次成绩计入高考总分。</li>
+                                        <li>3.外语考试包括笔试和听力测试，引导外语教学注重应用能力的培养。外语科目提供两次考试机会，选择较好的一次成绩计入总分</li>
                                     </ul>
                                 </div>
                             </div>
@@ -65,8 +65,8 @@
                                                 <td rowspan="2">750分</td>
                                             </tr>
                                             <tr>
-                                                <td>等机性考试</td>
-                                                <td>物理、化学、生物、历史、地理、政治，6选3</td>
+                                                <td>等级性考试</td>
+                                                <td>思想政治、历史、地理、物理、化学、生物，6个科目中自主选择3科参加考试（每科可报考1次）</td>
                                                 <td>每科满分100分</td>
                                             </tr>
                                         </tbody>
@@ -75,25 +75,125 @@
                             </div>
                             <div class="col-xs-12">
                                 <div class="main-title">
-                                    <h3>高校招生录取的选考科目要求</h3>
+                                    <h3>考试安排</h3>
                                 </div>
+                                <div class="item-title">考试科目、类别、时间及卷面满分、考试日期：</div>
                                 <div class="exam-time">
                                     <table class="exam-time-table" cellpadding="0" cellspacing="0">
                                         <thead>
                                             <tr>
-                                                <th width="20%"></th>
-                                                <th>条件</th>
+                                                <th>考试科目</th>
+                                                <th>考试类别</th>
+                                                <th>考试时间及卷面满分</th>
+                                                <th>考试日期</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>选考科目要求</td>
-                                                <td>分专业大类（或专业）自主提出选考科目范围0-3科，学生满足其中任何1科，既符合报考条件对于未提出选考科目要求的普通高校，
-                                                    考生在报考该校时无科目限制</td>
+                                                <td>物理、化学、政治、历史、地理、生物</td>
+                                                <td>合格性考试</td>
+                                                <td>90分钟/100分</td>
+                                                <td>高二第二学期4月</td>
                                             </tr>
                                             <tr>
-                                                <td>公布选考范围</td>
-                                                <td>高校要提前2年向社会公布选考科目要求</td>
+                                                <td>物理、化学、政治、历史、地理、生物</td>
+                                                <td rowspan="2">合格性考试</td>
+                                                <td>90分钟/100分</td>
+                                                <td rowspan="2">高三第二学期4月</td>
+                                            </tr>
+                                            <tr>
+                                                <td>语文、数学、外语</td>
+                                                <td>100分钟/120分</td>
+                                            </tr>
+                                            <tr>
+                                                <td>物理、化学、政治、历史、地理、生物</td>
+                                                <td rowspan="2">等级性考试</td>
+                                                <td>90分钟/100分</td>
+                                                <td>高考后</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="item-title">合格性考试日程安排：</div>
+                                <div class="exam-time">
+                                    <table class="exam-time-table" cellpadding="0" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>日期</th>
+                                                <th colspan="2">上午</th>
+                                                <th colspan="2">下午</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td rowspan="2">周五</td>
+                                                <td rowspan="2" colspan="2">语文  8:30-10:10</td>
+                                                <td>外语</td>
+                                                <td>14:30-16:10（含听力20分钟）</td>
+                                            </tr>
+                                            <tr>
+                                                <td>数学</td>
+                                                <td>17:00-18:30</td>
+                                            </tr>
+                                            <tr>
+                                                <td rowspan="2">周六</td>
+                                                <td>物理</td>
+                                                <td>8:00-9:30</td>
+                                                <td>生物</td>
+                                                <td>14:30-16:00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>政治</td>
+                                                <td>10:30-12:00</td>
+                                                <td>历史</td>
+                                                <td>17:00-18:30</td>
+                                            </tr>
+                                            <tr>
+                                                <td rowspan="2">周日</td>
+                                                <td>化学</td>
+                                                <td>8:00-9:30</td>
+                                                <td rowspan="2" colspan="2"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>地理</td>
+                                                <td>10:30-12:00</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="item-title">等级性考试日程安排：</div>
+                                <div class="exam-time">
+                                    <table class="exam-time-table" cellpadding="0" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>日期</th>
+                                                <th colspan="2">上午</th>
+                                                <th colspan="2">下午</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td rowspan="2">6月8日</td>
+                                                <td colspan="2" rowspan="2">全国统一高考</td>
+                                                <td>物理</td>
+                                                <td>14:30-16:00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>政治</td>
+                                                <td>17:00-18:30</td>
+                                            </tr>
+                                            <tr>
+                                                <td rowspan="2">6月9日</td>
+                                                <td>生物</td>
+                                                <td>8:00-9:30</td>
+                                                <td>化学</td>
+                                                <td>14:30-16:00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>历史</td>
+                                                <td>10:30-12:00</td>
+                                                <td>地理</td>
+                                                <td>17:00-18:30</td>
                                             </tr>
                                         </tbody>
                                     </table>
