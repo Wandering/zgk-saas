@@ -1940,6 +1940,9 @@ public class ScoreAnalyseController
                 {
                     List<Integer> rankList =
                         examScoreRatioMap.get(detail.getClassName() + "@" + detail.getStudentName());
+                    if(rankList == null){
+                        continue;
+                    }
                     rankList.add(Integer.parseInt(detail.getGradeRank()));
                 }
             }
