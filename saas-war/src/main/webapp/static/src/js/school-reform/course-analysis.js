@@ -5,6 +5,8 @@ var tnId = Common.cookie.getCookie('tnId');
 var countyId = Common.cookie.getCookie('countyId');
 if(countyId.substring(0,2)=='33'){
     $('.subject-tyjs-item').show();
+}else{
+    $('.subject-tyjs-item').hide();
 }
 
 $(function () {
@@ -722,13 +724,24 @@ function selectTypeAnalysis (tnId, studentGrade) {
                 subjects: [],
                 numbers: []
             };
+
+            if(countyId.substring(0,2)!='33'){
+                delete data.limitTypeMap['通用技术'];
+            }
+
             $.each(data.limitTypeMap, function (i, k) {
                 datas.subjects.push(i);
                 datas.numbers.push(k);
+
             });
+
             var subjectHtml = [];
             if (!isEmptyObject(data.oneTypeMap)) {
                 $.each(data.oneTypeMap, function (i, k) {
+
+                    if(i=="通用技术" || countyId.substring(0,2)=='33'){
+                        subjectHtml.push('<span class="item subject-tyjs-item" style="display: none;>' + i + '（' + k + '人）</span>');
+                    }
                     subjectHtml.push('<span class="item">' + i + '（' + k + '人）</span>');
                 });
             } else {
@@ -739,10 +752,12 @@ function selectTypeAnalysis (tnId, studentGrade) {
                 subjectHtml.push('<span class="item">地理（0人）</span>');
                 subjectHtml.push('<span class="item">历史（0人）</span>');
                 if(countyId.substring(0,2)=='33'){
-                    subjectHtml.push('<span class="item">通用技术（0人）</span>');
+                    subjectHtml.push('<span class="item subject-tyjs-item" style="display: none;">通用技术（0人）</span>');
                 }
             }
             $('.single-course-info').html(subjectHtml.join(''));
+
+
             partCourseAnalysisChart(datas.subjects, datas.numbers);
         }
     }, function (res) {

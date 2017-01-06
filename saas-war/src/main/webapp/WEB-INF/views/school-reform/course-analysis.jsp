@@ -86,15 +86,7 @@
                                             <label for="senior-three">高三</label>
                                         </li>
                                     </ul>
-                                    <div class="single-course-info">
-                                        <span class="item">物理（0人）</span>
-                                        <span class="item">化学（0人）</span>
-                                        <span class="item">生物（0人）</span>
-                                        <span class="item">政治（0人）</span>
-                                        <span class="item">地理（0人）</span>
-                                        <span class="item">历史（0人）</span>
-                                        <span class="item subject-tyjs-item" style="display: none;">通用技术（0人）</span>
-                                    </div>
+                                    <div class="single-course-info"></div>
                                 </div>
                             </div>
                             <div class="col-xs-12">
