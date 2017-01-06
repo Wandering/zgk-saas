@@ -250,14 +250,14 @@ var Common = {
 
 
                         if (pathName == m.meunUrl) {
-                            if(m.meunName=="三位一体"){
+                            if(m.meunName=="三位一体招生"){
                                 menus.push('<li class="active trinity">');
                             }else{
                                 menus.push('<li class="active">');
                             }
 
                         } else {
-                            if(m.meunName=="三位一体"){
+                            if(m.meunName=="三位一体招生"){
                                 menus.push('<li class="trinity">');
                             }else{
                                 menus.push('<li>');
