@@ -63,7 +63,7 @@
                                         <input type="radio" name="subject-analysis" id="subject-politics" />
                                         <label for="subject-politics">政治</label>
                                     </li>
-                                    <li>
+                                    <li class="subject-tyjs-item" style="display: none;">
                                         <input type="radio" name="subject-analysis" id="subject-technology" />
                                         <label for="subject-technology">通用技术</label>
                                     </li>

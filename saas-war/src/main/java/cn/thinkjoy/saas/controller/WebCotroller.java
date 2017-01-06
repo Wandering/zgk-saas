@@ -255,6 +255,14 @@ public class WebCotroller {
         return new ModelAndView("/policy/jx-policy");
     }
     /**
+     * sn-policy
+     * 政策解读 陕西
+     */
+    @RequestMapping("/sn-policy")
+    public ModelAndView snPolicy() {
+        return new ModelAndView("/policy/sn-policy");
+    }
+    /**
      * school-admission
      * 院校录取数据
      */
