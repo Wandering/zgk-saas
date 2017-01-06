@@ -727,8 +727,8 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                     if (linkedHashMaps != null && linkedHashMaps.size() > 0) {
                         repeat = true;
                         id = linkedHashMaps.get(0).get("id").toString();
-                        break;
                     }
+                    break;
                 }
                 y++;
             }
