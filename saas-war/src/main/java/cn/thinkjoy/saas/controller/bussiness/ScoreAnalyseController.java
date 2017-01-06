@@ -679,6 +679,9 @@ public class ScoreAnalyseController
                 fixSelectCourse(detail, lastExamId);
                 float totalScore = Float.parseFloat(detail.getTotleScore());
                 ExamDetail lastDetail = lastExamDetailMap.get(detail.getClassName() + "@" + detail.getStudentName());
+                if(lastDetail == null){
+                    continue;
+                }
                 if (isBigger(batchOneLowScore, totalScore) && !isBigger((batchOneLowScore - 20),totalScore))
                 {
                     batchMap.get("batchOne").add(lastDetail);
@@ -1242,6 +1245,9 @@ public class ScoreAnalyseController
             if (className.equals(detail.getClassName()))
             {
                 List<ExamDetail> detailList = detailMap.get(className + "@" + detail.getStudentName());
+                if(detailList == null){
+                    continue;
+                }
                 detailList.add(detail);
             }
         }
