@@ -247,8 +247,6 @@ var Common = {
 
                     $.each(v.sonMeuns, function (k, m) {
                         console.log(m.meunName);
-
-
                         if (pathName == m.meunUrl) {
                             if(m.meunName=="三位一体招生"){
                                 menus.push('<li class="active trinity">');
