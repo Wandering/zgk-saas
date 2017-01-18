@@ -138,9 +138,13 @@ public class ConfigurationController {
      */
     @RequestMapping(value = "/classRoom/setting/{tnId}/{nums}", method = RequestMethod.POST)
     @ResponseBody
-    public Map classRoomSetting(@PathVariable Integer tnId, @PathVariable String nums) {
+    public Map classRoomSetting(HttpServletRequest request,@PathVariable Integer tnId, @PathVariable String nums) {
 
-        boolean result = exiClassRoomService.addClassRoom(tnId, nums);
+        String maxNumber=request.getParameter("maxNum");
+
+        Integer maxNum=Integer.valueOf(maxNumber);
+
+        boolean result = exiClassRoomService.addClassRoom(tnId, nums,maxNum);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
