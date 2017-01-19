@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkjoy.saas.dao.bussiness.reform.SelectClassesGuideDAO">
+    <sql id="enrolling_plan_zj">
 
+        from zgk2.zgk_zj_3in7 zz
+        INNER join zgk2.zgk_university uu on uu.id=zz.universityId
+    </sql>
+    <sql id="enrolling_plan_zj_groupby">
+        group by zz.eduLevel,zz.universityId,zz.major
+    </sql>
+    <!--<sql id="enrolling_plan_zj_groupby_bak">-->
+    <!--group by tmp.majorType,zz.eduLevel,tmp.universityId,zz.major-->
+    <!--</sql>-->
+    <!--<sql id="enrolling_plan_zj_bak">-->
+    <!--select zz.id as majorCode,uu.id as universityId-->
+    <!--from zgk2.zgk_university_major_enrolling_plan_zj tmp-->
+    <!--INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId-->
+    <!--INNER join zgk2.zgk_university uu on uu.id=tmp.universityId-->
+    <!--</sql>-->
     <!-- 科目分析 -->
     <select id="selectUniversityAndMajorNumber" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.UniversityAndMajorNumberDto">
         select count(tt.majorCode) as majorNumber , count(DISTINCT tt.universityId) as universityNumber
-        from (select zz.id as majorCode,uu.id as universityId
-          from zgk2.zgk_university_major_enrolling_plan_zj tmp
-            INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
-            INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
-            where 1=1
-            and tmp.areaId=#{areaId} and tmp.year=#{year}
-            <if test="subject!=null">
-                and zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
-            </if>
-            <if test="subject==null">
-                and zz.selectCount=0
-            </if>
-          group by tmp.majorType,zz.eduLevel,tmp.universityId,zz.major
+        from (
+        select zz.id as majorCode,uu.id as universityId
+        <include refid="enrolling_plan_zj" />
+        where 1=1
+        <if test="subject!=null">
+            and zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
+        </if>
+        <if test="subject==null">
+            and zz.selectCount=0
+        </if>
+        <include refid="enrolling_plan_zj_groupby" />
         ) tt
     </select>
 
@@ -28,14 +42,11 @@
             DISTINCT uu.id as universityId,uu.name as universityName
         </if>
         <if test="flag==1">
-            zz.majorCode as majorCode,zz.major as majorName,uu.id as universityId,uu.name as universityName,uu.rank as rank,dd.name as batchName,tmp.planEnrolling as planNumber,uu.property as property, zz.selectSubject as selSubject
+            zz.majorCode as majorCode,zz.major as majorName,uu.id as universityId,uu.name as universityName,uu.rank as rank,dd.name as batchName,zz.planEnrolling as planNumber,uu.property as property, zz.selectSubject as selSubject
         </if>
-        from zgk2.zgk_university_major_enrolling_plan_zj tmp
-        INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
-        INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
-        left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=tmp.batch
+        <include refid="enrolling_plan_zj" />
+        left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=zz.batch
         where 1=1
-        and tmp.areaId=#{areaId} and tmp.year=#{year}
         <if test="subject!=null">
             and zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
         </if>
@@ -48,20 +59,17 @@
         <if test="universityId!=null">
             and uu.id = #{universityId}
         </if>
-        group by tmp.majorType,zz.eduLevel,tmp.universityId,zz.major
+        <include refid="enrolling_plan_zj_groupby" />
         order by uu.educationLevel,if(isnull(uu.rank),10000,uu.rank) asc
         limit ${offset}, ${rows}
     </select>
 
     <select id="selectMajorByUniversityNameAndBatchCount" parameterType="java.util.Map" resultType="java.lang.Integer">
         select count(*) from (select
-            count(zz.majorCode)
-        from zgk2.zgk_university_major_enrolling_plan_zj tmp
-        INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
-        INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
-        left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=tmp.batch
+        count(zz.majorCode)
+        <include refid="enrolling_plan_zj" />
+        left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=zz.batch
         where 1=1
-        and tmp.areaId=#{areaId} and tmp.year=#{year}
         <if test="subject!=null">
             and zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
         </if>
@@ -74,17 +82,14 @@
         <if test="universityId!=null">
             and uu.id = #{universityId}
         </if>
-        group by tmp.majorType,zz.eduLevel,tmp.universityId,zz.major) tmp2
+        <include refid="enrolling_plan_zj_groupby" />) tmp2
     </select>
 
     <!-- 211,包含了985 -->
     <select id="selectPlanEnrollingByProperty" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.PlanEnrollingDto">
-        select   uu.property as property,tmp.planEnrolling as planEnrolling
-        from zgk2.zgk_university_major_enrolling_plan_zj tmp
-        INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
-        INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+        select   uu.property as property,zz.planEnrolling as planEnrolling
+        <include refid="enrolling_plan_zj" />
         where 1=1
-        and tmp.areaId=#{areaId} and tmp.year=#{year}
         <if test="subject!=null">
             and zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
         </if>
@@ -95,11 +100,8 @@
     </select>
     <select id="selectPlanEnrollingByPropertyCount" parameterType="java.util.Map" resultType="java.lang.Integer">
         select   count(uu.property)
-        from zgk2.zgk_university_major_enrolling_plan_zj tmp
-        INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
-        INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+        <include refid="enrolling_plan_zj" />
         where 1=1
-        and tmp.areaId=#{areaId} and tmp.year=#{year}
         <if test="subject!=null">
             and zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
         </if>
@@ -111,28 +113,22 @@
 
     <!-- 按批次分析 -->
     <select id="selectAnalysisBatch" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.AnalysisDto">
-        select dd.name as batchName,sum(tmp.planEnrolling) as number
-        from zgk2.zgk_university_major_enrolling_plan_zj tmp
-        INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
-        INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
-        left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=tmp.batch
+        select dd.name as batchName,sum(zz.planEnrolling) as number
+        <include refid="enrolling_plan_zj" />
+        left join zgk2.zgk_data_dict dd on dd.type='BATCHTYPE' and dd.dictId=zz.batch
         where 1=1
-        and tmp.areaId=#{areaId} and tmp.year=#{year}
         <if test="subject!=null">
             and zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
         </if>
         <if test="subject==null">
             and zz.selectCount=0
         </if>
-        group by tmp.batch
+        group by zz.batch
     </select>
     <select id="selectAnalysisBatchCount" parameterType="java.util.Map" resultType="java.lang.Integer">
-        select count(DISTINCT tmp.batch)
-        from zgk2.zgk_university_major_enrolling_plan_zj tmp
-        INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
-        INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
+        select count(DISTINCT zz.batch)
+        <include refid="enrolling_plan_zj" />
         where 1=1
-        and tmp.areaId=#{areaId} and tmp.year=#{year}
         <if test="subject!=null">
             and zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
         </if>
@@ -143,13 +139,10 @@
 
     <!-- 按专业类别分析 -->
     <select id="selectAnalysisDiscipline" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.AnalysisDto">
-        select bb.discipline_name as disciplineName,sum(tmp.planEnrolling) as number
-        from zgk2.zgk_university_major_enrolling_plan_zj tmp
-        INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
-        INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
-        INNER join zgk2.zgk_major_base bb on bb.major_type=1 and bb.major_code=tmp.majorCode
+        select bb.discipline_name as disciplineName,sum(zz.planEnrolling) as number
+        <include refid="enrolling_plan_zj" />
+        INNER join zgk2.zgk_major_base bb on bb.major_type=1 and bb.major_code=zz.majorCode
         where 1=1
-        and tmp.areaId=#{areaId} and tmp.year=#{year}
         <if test="subject!=null">
             and zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
         </if>
@@ -160,12 +153,9 @@
     </select>
     <select id="selectAnalysisDisciplineCount" parameterType="java.util.Map" resultType="java.lang.Integer">
         select count(DISTINCT bb.discipline_code)
-        from zgk2.zgk_university_major_enrolling_plan_zj tmp
-        INNER join zgk2.zgk_zj_3in7 zz on tmp.majorCode=zz.majorCode and tmp.universityId=zz.universityId
-        INNER join zgk2.zgk_university uu on uu.id=tmp.universityId
-        INNER join zgk2.zgk_major_base bb on bb.major_type=1 and bb.major_code=tmp.majorCode
+        <include refid="enrolling_plan_zj" />
+        INNER join zgk2.zgk_major_base bb on bb.major_type=1 and bb.major_code=zz.majorCode
         where 1=1
-        and tmp.areaId=#{areaId} and tmp.year=#{year}
         <if test="subject!=null">
             and zz.selectCount!=0 and zz.selectSubject like CONCAT('%',#{subject},'%')
         </if>
@@ -198,14 +188,14 @@
     <!-- 根据年级查询学校内学生选课情况 -->
     <select id="getAnalysisGroup" parameterType="java.util.Map" resultType="java.util.Map">
         SELECT
-            CONCAT(student_check_major1,'-',student_check_major2,'-',student_check_major3) AS 'group',
-            count(CONCAT(student_check_major1,'-',student_check_major2,'-',student_check_major3)) AS stuNumber
+        CONCAT(student_check_major1,'-',student_check_major2,'-',student_check_major3) AS 'group',
+        count(CONCAT(student_check_major1,'-',student_check_major2,'-',student_check_major3)) AS stuNumber
         FROM
-            ${table}
+        ${table}
         WHERE
-            student_grade LIKE CONCAT('%',#{grade},'%')
+        student_grade LIKE CONCAT('%',#{grade},'%')
         GROUP BY
-            student_check_major1,student_check_major2,student_check_major3
+        student_check_major1,student_check_major2,student_check_major3
     </select>
 
     <!-- 查询对租户的的应项目里有没有对应属性 -->
@@ -219,9 +209,9 @@
     <select id="selectStudentExcel" parameterType="java.util.Map" resultType="java.util.Map">
         select *,CONCAT(t1.student_check_major1,'-',t1.student_check_major2,'-',t1.student_check_major3) as student_major_type  from ${tableName} t1
         <if test="classTableName!=null">
-        INNER JOIN ${classTableName} t2 on t1.student_grade=t2.class_grade and t1.student_class=t2.class_name
+            INNER JOIN ${classTableName} t2 on t1.student_grade=t2.class_grade and t1.student_class=t2.class_name
         </if>
-
+        where t1.student_grade LIKE CONCAT('%',#{grade},'%')
     </select>
 
     <!-- 最近一年录取百分比 -->
@@ -249,7 +239,7 @@
         select dd.selectCourses from saas_exam_detail dd where dd.examId=#{examId}
         ORDER BY totleScore DESC
         <if test="top!=null">
-          limit ${top};
+            limit ${top};
         </if>
     </select>
 

@@ -150,6 +150,23 @@ public class ManageController {
     }
 
 
+    @RequestMapping(value = "/classRoomStting/modify/{tnId}/{cid}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map modifyClassRoomSetting(@PathVariable Integer tnId,@PathVariable Integer cid,HttpServletRequest request) {
+        String maxNum = request.getParameter("maxNum");
+
+        boolean result = false;
+
+        if (!StringUtils.isBlank(maxNum)) {
+            Integer mn = Integer.valueOf(maxNum);
+            result = exiClassRoomService.updateClassRoomSetting(mn, cid, tnId);
+        }
+
+        Map resultMap = new HashMap();
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
+
     /**
      * 更新教室
      * @param cid 教室标识
