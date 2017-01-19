@@ -65,4 +65,7 @@ public interface SelectClassesGuideDAO {
     Integer queryClassRoomByTnId(
             @Param("tnId") int tnId
     );
+
+    List<Map<String,Integer>> selectUndergraduateEnrollingNumber(Map map);
+
 }

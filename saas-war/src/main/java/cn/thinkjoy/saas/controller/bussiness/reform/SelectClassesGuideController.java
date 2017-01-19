@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zuohao on 16/11/2.
@@ -221,7 +219,7 @@ public class SelectClassesGuideController {
     @ResponseBody
     public Map<String,Object> getNumberByYear(@RequestParam("tnId")int tnId){
         Map<String,Object> returnMap=new HashMap<>();
-        returnMap.put("data", iSelectClassesGuideService.selectNumberByYear(tnId));
+        returnMap.put("data", (Map<String,Map<String, Integer>>)iSelectClassesGuideService.selectNumberByYear(tnId).get("yearMap"));
         return returnMap;
     }
 
@@ -232,5 +230,30 @@ public class SelectClassesGuideController {
         return iSelectClassesGuideService.selectTypeAnalysis(tnId, studentGrade);
     }
 
+    @RequestMapping("getUndergraduateEnrollingNumber")
+    @ResponseBody
+    public Object getUndergraduateEnrollingNumber(@RequestParam("tnId")int tnId){
+        Map<String,Object> numberMap=iSelectClassesGuideService.selectNumberByYear(tnId);
+        Map<String,Map<String, Integer>> data=(Map<String,Map<String, Integer>>)numberMap.get("yearMap");
+        List<String> yearList = new ArrayList<String>(((Map<String,Integer>)numberMap.get("yearCountMap")).keySet());
+        Map<String,Object> map=iSelectClassesGuideService.getUndergraduateEnrollingNumber(tnId,yearList);
+        String maxYear=map.get("maxYear").toString();
+        Map<String,Object> returnMap=new HashMap<>();
+        if (!data.containsKey(maxYear)){
+            returnMap.put("error","选课数据或录取情况不匹配");
+            return returnMap;
+        }
+        Map<String, Integer> maxYearData=data.get(maxYear);
+        Integer count=Integer.valueOf(((Map<String,Integer>)numberMap.get("yearCountMap")).get(maxYear));
+        Map<String,Object> coursePercent=new HashMap<>();
+        for (String course:maxYearData.keySet()){
+            double percent=(double)(Math.round(maxYearData.get(course)*100/count)/100.0);
+            coursePercent.put(course,percent);
+        }
+        returnMap.put("data",data);
+        returnMap.put("maxYear",maxYear);
+        returnMap.put("coursePercent",coursePercent);
+        return returnMap;
+    }
 
 }
