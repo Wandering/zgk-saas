@@ -1,7 +1,9 @@
 package cn.thinkjoy.saas.service.impl.bussiness;
 
+import cn.thinkjoy.saas.dao.IClassRoomSettingDAO;
 import cn.thinkjoy.saas.dao.IClassRoomsDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIClassRoomDAO;
+import cn.thinkjoy.saas.domain.ClassRoomSetting;
 import cn.thinkjoy.saas.domain.ClassRooms;
 import cn.thinkjoy.saas.domain.bussiness.ClassRoomView;
 import cn.thinkjoy.saas.service.bussiness.EXIClassRoomService;
@@ -33,6 +35,9 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
     @Resource
     IEXTenantService iexTenantService;
 
+    @Resource
+    IClassRoomSettingDAO iClassRoomSettingDAO;
+
     /**
      * 根据字段查找一个教室对象
      *
@@ -63,11 +68,11 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
      * @return
      */
     @Override
-    public boolean addClassRoom(Integer tnId, String nums) {
+    public boolean addClassRoom(Integer tnId, String nums,Integer maxNum) {
 
         boolean result = false;
 
-        if (tnId > 0 && !StringUtils.isBlank(nums)) {
+        if (tnId > 0 && !StringUtils.isBlank(nums)&&maxNum>0) {
 
             List<String> idsList = ParamsUtils.idsSplit(nums);
 
@@ -93,6 +98,11 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
             Integer addResu = exiClassRoomDAO.addClassRoom(classRoomsList);
             result = addResu > 0 ? true : false;
 
+            ClassRoomSetting classRoomSetting=new ClassRoomSetting();
+            classRoomSetting.setCreateDate(System.currentTimeMillis());
+            classRoomSetting.setMaxNumber(maxNum);
+            classRoomSetting.setTnId(tnId);
+            iClassRoomSettingDAO.insert(classRoomSetting);
         }
         if (result)
             iexTenantService.stepSetting(tnId,false);
@@ -115,6 +125,16 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
         classRooms.setDayNumber(dNum);
         classRooms.setId(cid);
         return (iClassRoomsDAO.update(classRooms) > 0 ? true : false);
+    }
+
+    @Override
+    public boolean updateClassRoomSetting(Integer maxNum,Integer cid,Integer tnId) {
+
+        ClassRoomSetting classRoomSetting=new ClassRoomSetting();
+        classRoomSetting.setMaxNumber(maxNum);
+        classRoomSetting.setTnId(tnId);
+        classRoomSetting.setId(cid);
+        return (iClassRoomSettingDAO.update(classRoomSetting) > 0 ? true : false);
     }
 
     /**
