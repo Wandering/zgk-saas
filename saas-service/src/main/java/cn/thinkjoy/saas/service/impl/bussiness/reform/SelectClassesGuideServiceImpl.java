@@ -120,7 +120,7 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
     }
 
     @Override
-    public Map<String,Map<String, Integer>> selectNumberByYear(int tnId){
+    public Map<String,Object> selectNumberByYear(int tnId){
         Map<String, Object> map=new HashMap<>();
         map.put("tnId",tnId);
         map.put("domain","student");
@@ -140,6 +140,7 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         }
 //        Map<String, Integer> map2=new HashMap<>();
         Map<String, Map<String, Integer>> yearMap=new HashMap<>();
+        Map<String,Integer> yearCountMap=new HashMap<>();
         for (Map<String,String> map1:mapList){
             String year=String.valueOf(Integer.valueOf(String.valueOf(map1.get("class_in_year")))+3);
             if(!yearMap.containsKey(year)){
@@ -160,9 +161,16 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
                 }
                 yearMap.get(year).put(type, yearMap.get(year).get(type)+1);
             }
-
+            if(!yearCountMap.containsKey(year)) {
+                yearCountMap.put(year, 0);
+            }
+            int number=yearCountMap.get(year).intValue()+1;
+            yearCountMap.put(year,number);
         }
-        return yearMap;
+        Map<String,Object> returnMap=new HashMap<>();
+        returnMap.put("yearMap",yearMap);
+        returnMap.put("yearCountMap",yearCountMap);
+        return returnMap;
     }
 
     @Override
@@ -176,7 +184,6 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         }
         String tableName = "saas_"+tnId+"_student_excel";
         map.put("tableName",tableName);
-        List<Map<String,String>> mapList = Lists.newArrayList();
         map.put("grade",studentGrade);
         //从saas_enrolling_ratio中获取上线率
         String t=selectClassesGuideDAO.getEnrollingPercent(map);
@@ -216,4 +223,25 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         return returnMap;
     }
 
+    @Override
+    public Map<String,Object> getUndergraduateEnrollingNumber(int tnId,List<String> yearList){
+        Map<String,Object> map=new HashMap<>();
+        map.put("tnId",tnId);
+        List<Map<String,Integer>> undergraduateEnrollingNumberList=selectClassesGuideDAO.selectUndergraduateEnrollingNumber(map);
+        int maxNumber=0;
+        String maxYear="";
+        for(Map<String,Integer> undergraduateEnrollingNumber:undergraduateEnrollingNumberList){
+            String year = ((Number)undergraduateEnrollingNumber.get("year")).toString();
+            if(yearList.contains(year)) {
+                int tmp = ((Number) undergraduateEnrollingNumber.get("number")).intValue();
+                if (maxNumber < tmp) {
+                    maxNumber = tmp;
+                    maxYear = year;
+                }
+            }
+        }
+        map.put("undergraduateEnrollingNumberList",undergraduateEnrollingNumberList);
+        map.put("maxYear",maxYear);
+        return map;
+    }
 }

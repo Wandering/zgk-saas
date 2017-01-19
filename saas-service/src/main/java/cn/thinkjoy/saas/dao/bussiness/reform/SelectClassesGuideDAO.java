@@ -44,4 +44,6 @@ public interface SelectClassesGuideDAO {
     int selectStudentNumber(Map map);
     List<String> selectLimitStudent(Map map);
 
+    List<Map<String,Integer>> selectUndergraduateEnrollingNumber(Map map);
+
 }
