@@ -243,4 +243,12 @@
         </if>
     </select>
 
+    <!-- 查询所有年份的本科录取人数 -->
+    <select id="selectUndergraduateEnrollingNumber" parameterType="java.util.Map" resultType="java.util.Map">
+        select year as year,batch_1_enrolls+batch_2_enrolls+batch_3_enrolls as number
+        from saas_enrolling_ratio where tn_id=#{tnId}
+        group by year
+        order by year desc
+    </select>
+
 </mapper>
