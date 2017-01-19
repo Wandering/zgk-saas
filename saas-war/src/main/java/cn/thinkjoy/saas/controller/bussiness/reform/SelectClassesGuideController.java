@@ -1,14 +1,14 @@
 package cn.thinkjoy.saas.controller.bussiness.reform;
 
-import cn.thinkjoy.saas.dto.AnalysisDto;
-import cn.thinkjoy.saas.dto.MajorDto;
-import cn.thinkjoy.saas.dto.PlanEnrollingDto;
-import cn.thinkjoy.saas.dto.UniversityAndMajorNumberDto;
+import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
+import cn.thinkjoy.gk.api.IMajoredApi;
+import cn.thinkjoy.saas.dto.*;
 import cn.thinkjoy.saas.service.bussiness.reform.ISelectClassesGuideService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -23,6 +23,33 @@ public class SelectClassesGuideController {
 
     @Autowired
     private ISelectClassesGuideService iSelectClassesGuideService;
+
+    @Autowired
+    private IMajoredApi iMajoredApi;
+
+    @Autowired
+    private ISelectClassesGuideService selectClassesGuideService;
+
+    @ResponseBody
+    @ApiDesc(value = "查询有招生计划的年份")
+    @RequestMapping(value = "getEnrollingYear",method = RequestMethod.GET)
+    public List<String> getEnrollingYear(){
+        return iMajoredApi.getEnrollingYear();
+    }
+
+    @ResponseBody
+    @ApiDesc(value = "根据年份查询个种选课组合的招生院校")
+    @RequestMapping(value = "selectMajorTopCount",method = RequestMethod.GET)
+    public Object selectMajorTopCount(@RequestParam String year){
+        return iMajoredApi.selectMajorTopCount(35,year);
+    }
+
+    @ResponseBody
+    @ApiDesc(value = "根据年份查询个种选课组合的招生院校")
+    @RequestMapping(value = "queryTeacherBytnIdAndGrade",method = RequestMethod.GET)
+    public List<CourseAndTeacherDto> queryTeacherBytnIdAndGrade(@RequestParam String grade, @RequestParam String tnId){
+        return selectClassesGuideService.queryTeachersByGrade(grade,tnId);
+    }
 
     /**
      * 科目分析

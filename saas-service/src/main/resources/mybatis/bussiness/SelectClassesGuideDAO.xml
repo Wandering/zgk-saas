@@ -188,13 +188,8 @@
     <!-- 根据年级查询学校内学生选课情况 -->
     <select id="getAnalysisGroup" parameterType="java.util.Map" resultType="java.util.Map">
         SELECT
-<<<<<<< HEAD
             CONCAT(student_check_major1,'-',student_check_major2,'-',student_check_major3) AS 'group',
             count(*) AS stuNumber
-=======
-        CONCAT(student_check_major1,'-',student_check_major2,'-',student_check_major3) AS 'group',
-        count(CONCAT(student_check_major1,'-',student_check_major2,'-',student_check_major3)) AS stuNumber
->>>>>>> 430ea5969cd4cd0e8b8e9501743a5238faef97db
         FROM
         ${table}
         WHERE
@@ -248,7 +243,6 @@
         </if>
     </select>
 
-<<<<<<< HEAD
     <!-- 根据年级动态获取教师集合 -->
     <select id="queryTeachersByGrade" parameterType="map" resultType="TeacherAndClassDto">
         SELECT
@@ -275,8 +269,6 @@
             limit 1
     </select>
 
-</mapper>
-=======
     <!-- 查询所有年份的本科录取人数 -->
     <select id="selectUndergraduateEnrollingNumber" parameterType="java.util.Map" resultType="java.util.Map">
         select year as year,batch_1_enrolls+batch_2_enrolls+batch_3_enrolls as number
@@ -286,4 +278,3 @@
     </select>
 
 </mapper>
->>>>>>> 430ea5969cd4cd0e8b8e9501743a5238faef97db
