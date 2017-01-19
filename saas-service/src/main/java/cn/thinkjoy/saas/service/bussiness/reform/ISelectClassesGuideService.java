@@ -34,4 +34,13 @@ public interface ISelectClassesGuideService {
     Map<String,Map<String, Integer>> selectNumberByYear(int tnId);
 
     public Map<String,Object> selectTypeAnalysis(int tnId,String studentGrade);
+
+    /**
+     * 根据年级查询学校内教师集合
+     *
+     * @param grade 年级
+     * @param tnId 租户ID
+     * @return
+     */
+    List<CourseAndTeacherDto> queryTeachersByGrade(String grade,String tnId);
 }
