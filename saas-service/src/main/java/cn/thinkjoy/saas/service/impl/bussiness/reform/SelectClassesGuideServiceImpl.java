@@ -10,6 +10,7 @@ import cn.thinkjoy.saas.dto.UniversityAndMajorNumberDto;
 import cn.thinkjoy.saas.service.bussiness.reform.ISelectClassesGuideService;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -120,7 +121,7 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
     }
 
     @Override
-    public Map<String,Map<String, Integer>> selectNumberByYear(int tnId){
+    public Map<String,Object> selectNumberByYear(int tnId){
         Map<String, Object> map=new HashMap<>();
         map.put("tnId",tnId);
         map.put("domain","student");
@@ -140,6 +141,7 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         }
 //        Map<String, Integer> map2=new HashMap<>();
         Map<String, Map<String, Integer>> yearMap=new HashMap<>();
+        Map<String,Integer> yearCountMap=new HashMap<>();
         for (Map<String,String> map1:mapList){
             String year=String.valueOf(Integer.valueOf(String.valueOf(map1.get("class_in_year")))+3);
             if(!yearMap.containsKey(year)){
@@ -160,9 +162,16 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
                 }
                 yearMap.get(year).put(type, yearMap.get(year).get(type)+1);
             }
-
+            if(!yearCountMap.containsKey(year)) {
+                yearCountMap.put(year, 0);
+            }
+            int number=yearCountMap.get(year).intValue()+1;
+            yearCountMap.put(year,number);
         }
-        return yearMap;
+        Map<String,Object> returnMap=new HashMap<>();
+        returnMap.put("yearMap",yearMap);
+        returnMap.put("yearCountMap",yearCountMap);
+        return returnMap;
     }
 
     @Override
@@ -176,7 +185,6 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         }
         String tableName = "saas_"+tnId+"_student_excel";
         map.put("tableName",tableName);
-        List<Map<String,String>> mapList = Lists.newArrayList();
         map.put("grade",studentGrade);
         //从saas_enrolling_ratio中获取上线率
         String t=selectClassesGuideDAO.getEnrollingPercent(map);
@@ -216,4 +224,79 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         return returnMap;
     }
 
+    @Override
+    public List<CourseAndTeacherDto> queryTeachersByGrade(String grade, String tnId) {
+
+        String table = "saas_"+tnId+"_teacher_excel";
+        List<CourseAndTeacherDto> ctDtos = Lists.newArrayList();
+
+        // [1] 检测数据完整性
+        List<TeacherAndClassDto> tcDtos = Lists.newArrayList();
+        try{
+            tcDtos = selectClassesGuideDAO.queryTeachersByGrade(grade,table);
+        }catch (Exception e){
+            logger.error(table+"不存在,或者字段不存在",e);
+            ExceptionUtil.throwException(ErrorCode.TABLE_NOT_EXIST);
+        }
+
+        if(tcDtos.size() == 0){
+            return ctDtos;
+        }
+
+        Integer maxNum = selectClassesGuideDAO.queryClassRoomByTnId(Integer.valueOf(tnId));
+        if(maxNum == null){
+            // 教室容量默认50人
+            maxNum = 50;
+        }
+
+        // [2] 按科目重新组装教师带班信息
+        Map<String,CourseAndTeacherDto> ctMap = Maps.newHashMap();
+        for(TeacherAndClassDto tcDto : tcDtos){
+
+            CourseAndTeacherDto ctDtoTmp = ctMap.get(tcDto.getCourseName());
+            if(ctDtoTmp != null){
+                ctDtoTmp.setClassMaxNum(ctDtoTmp.getClassMaxNum()+tcDto.getMaxClass());
+                ctDtoTmp.setStuMaxNum(ctDtoTmp.getStuMaxNum()+tcDto.getMaxClass()*maxNum);
+                ctDtoTmp.getTeachers().add(tcDto);
+                continue;
+            }
+
+            CourseAndTeacherDto ctDto = new CourseAndTeacherDto();
+            ctDto.setClassMaxNum(tcDto.getMaxClass());
+            ctDto.setCourseName(tcDto.getCourseName());
+            ctDto.setStuMaxNum(tcDto.getMaxClass()*maxNum);
+            ctDto.getTeachers().add(tcDto);
+
+            ctMap.put(tcDto.getCourseName(),ctDto);
+        }
+
+        // [3] 组装科目与教师信息（按科目分类）
+        for(CourseAndTeacherDto dto : ctMap.values()){
+            dto.setTeacherNum(dto.getTeachers().size());
+            ctDtos.add(dto);
+        }
+
+        return ctDtos;
+    }
+
+    public Map<String,Object> getUndergraduateEnrollingNumber(int tnId,List<String> yearList){
+        Map<String,Object> map=new HashMap<>();
+        map.put("tnId",tnId);
+        List<Map<String,Integer>> undergraduateEnrollingNumberList=selectClassesGuideDAO.selectUndergraduateEnrollingNumber(map);
+        int maxNumber=0;
+        String maxYear="";
+        for(Map<String,Integer> undergraduateEnrollingNumber:undergraduateEnrollingNumberList){
+            String year = ((Number)undergraduateEnrollingNumber.get("year")).toString();
+            if(yearList.contains(year)) {
+                int tmp = ((Number) undergraduateEnrollingNumber.get("number")).intValue();
+                if (maxNumber < tmp) {
+                    maxNumber = tmp;
+                    maxYear = year;
+                }
+            }
+        }
+        map.put("undergraduateEnrollingNumberList",undergraduateEnrollingNumberList);
+        map.put("maxYear",maxYear);
+        return map;
+    }
 }
