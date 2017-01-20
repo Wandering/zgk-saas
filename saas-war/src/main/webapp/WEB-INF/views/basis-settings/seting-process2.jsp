@@ -42,14 +42,7 @@
                         </div>
                         <div class="setting-grade">
                             <form class="form-horizontal" id="grade-group" role="form">
-                                <%--<div class="form-group">--%>
-                                    <%--<label class="col-sm-3 control-label no-padding-right" for="form-grade1">--%>
-                                        <%--高一年级教室数量 </label>--%>
-                                    <%--<div class="col-sm-9">--%>
-                                        <%--<input type="text" id="form-grade1" placeholder="0--100以内"--%>
-                                               <%--class="col-xs-10 col-xs-10 col-sm-10"/>--%>
-                                    <%--</div>--%>
-                                <%--</div>--%>
+
                             </form>
                         </div>
                         <div class="btn-box">
