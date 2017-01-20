@@ -188,8 +188,8 @@
     <!-- 根据年级查询学校内学生选课情况 -->
     <select id="getAnalysisGroup" parameterType="java.util.Map" resultType="java.util.Map">
         SELECT
-        CONCAT(student_check_major1,'-',student_check_major2,'-',student_check_major3) AS 'group',
-        count(CONCAT(student_check_major1,'-',student_check_major2,'-',student_check_major3)) AS stuNumber
+            CONCAT(student_check_major1,'-',student_check_major2,'-',student_check_major3) AS 'group',
+            count(*) AS stuNumber
         FROM
         ${table}
         WHERE
@@ -211,7 +211,9 @@
         <if test="classTableName!=null">
             INNER JOIN ${classTableName} t2 on t1.student_grade=t2.class_grade and t1.student_class=t2.class_name
         </if>
-        where t1.student_grade LIKE CONCAT('%',#{grade},'%')
+        <if test="grade!=null">
+          where t1.student_grade LIKE CONCAT('%',#{grade},'%')
+        </if>
     </select>
 
     <!-- 最近一年录取百分比 -->
@@ -241,6 +243,40 @@
         <if test="top!=null">
             limit ${top};
         </if>
+    </select>
+
+    <!-- 根据年级动态获取教师集合 -->
+    <select id="queryTeachersByGrade" parameterType="map" resultType="TeacherAndClassDto">
+        SELECT
+            id AS teacherId,
+            teacher_name AS teacherName,
+            teacher_grade AS grade,
+            teacher_class AS className,
+            teacher_max_take_class AS maxClass,
+            teacher_major_type as courseName
+        FROM
+            ${table}
+        WHERE
+            teacher_grade LIKE CONCAT('%',#{grade},'%')
+    </select>
+
+    <!-- 根据租户ID查询教室容量 -->
+    <select id="queryClassRoomByTnId" parameterType="int" resultType="java.lang.Integer">
+        SELECT
+            max_number
+        FROM
+            saas_class_room_setting
+        WHERE
+            tn_id = #{tnId}
+            limit 1
+    </select>
+
+    <!-- 查询所有年份的本科录取人数 -->
+    <select id="selectUndergraduateEnrollingNumber" parameterType="java.util.Map" resultType="java.util.Map">
+        select year as year,batch_1_enrolls+batch_2_enrolls+batch_3_enrolls as number
+        from saas_enrolling_ratio where tn_id=#{tnId}
+        group by year
+        order by year desc
     </select>
 
 </mapper>
