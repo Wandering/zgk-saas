@@ -1,4 +1,4 @@
-var countyId = Common.cookie.getCookie('countyId');
+var tnId = Common.cookie.getCookie('tnId');
 
 function CoursePlan () {
     this.init();
@@ -10,16 +10,56 @@ CoursePlan.prototype = {
         this.getSinbleCourse();
     },
     getSinbleCourse: function () {
-        Common.ajaxFun('/selectClassesGuide/getUndergraduateEnrollingNumber.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/selectClassesGuide/getUndergraduateEnrollingNumber.do', 'GET', {
+            'tnId': tnId
+        }, function (res) {
             if (res.rtnCode == "0000000") {
+                var data = res.bizData;
+                var datas = [];
+                //datas.push({
+                //    name: '通用技术',
+                //    type: 'bar',
+                //    barWidth: 44,
+                //    stack: '科目',
+                //    data: [89, 92, 40, 175, 36]
+                //});
+                $.each(data.data, function (i, k) {
 
+                    //alert(i + ', ' + k['通用技术']);
+                    $.each(k, function (n, m) {
+                        switch(n) {
+                            case '化学':
+
+                                break;
+                            case '历史':
+
+                                break;
+                            case '地理':
+
+                                break;
+                            case '政治':
+
+                                break;
+                            case '物理':
+
+                                break;
+                            case '生物':
+
+                                break;
+                            case '通用技术':
+
+                                break;
+                        }
+                        alert(n + ', ' + m);
+                    });
+                });
             }
         }, function (res) {
             layer.msg("出错了");
         }, false);
-        this.renderSinbleCourseChart();
+        this.renderSinbleCourseChart(datas);
     },
-    renderSinbleCourseChart: function () {
+    renderSinbleCourseChart: function (datas) {
         var subjectCourseBar = echarts.init(document.getElementById('subjectCourseBar'));
         var subjectCourseOption = {
             title: {
@@ -85,51 +125,52 @@ CoursePlan.prototype = {
                 }
             ],
             color: ['#A25E51', '#F5A623', '#FFB789', '#A2D96A', '#87B3E8', '#91D8E4', '#64A3AD'],
-            series : [
-                {
-                    name:'通用技术',
-                    type:'bar',
-                    barWidth: 44,
-                    stack: '科目',
-                    data:[89, 92, 40, 175, 36]
-                },
-                {
-                    name:'政治',
-                    type:'bar',
-                    stack: '科目',
-                    data:[89, 92, 93, 34, 36]
-                },
-                {
-                    name:'历史',
-                    type:'bar',
-                    stack: '科目',
-                    data:[26, 27, 28, 29, 80]
-                },
-                {
-                    name:'地理',
-                    type:'bar',
-                    stack: '科目',
-                    data:[40, 41, 42, 43, 44]
-                },
-                {
-                    name:'生物',
-                    type:'bar',
-                    stack: '科目',
-                    data:[39, 39, 39, 40, 39]
-                },
-                {
-                    name:'化学',
-                    type:'bar',
-                    stack: '科目',
-                    data:[20, 20, 20, 20, 20]
-                },
-                {
-                    name:'物理',
-                    type:'bar',
-                    stack: '科目',
-                    data:[50, 23, 20, 25, 30]
-                }
-            ]
+            series: datas
+            //series : [
+            //    {
+            //        name:'通用技术',
+            //        type:'bar',
+            //        barWidth: 44,
+            //        stack: '科目',
+            //        data:[89, 92, 40, 175, 36]
+            //    },
+            //    {
+            //        name:'政治',
+            //        type:'bar',
+            //        stack: '科目',
+            //        data:[89, 92, 93, 34, 36]
+            //    },
+            //    {
+            //        name:'历史',
+            //        type:'bar',
+            //        stack: '科目',
+            //        data:[26, 27, 28, 29, 80]
+            //    },
+            //    {
+            //        name:'地理',
+            //        type:'bar',
+            //        stack: '科目',
+            //        data:[40, 41, 42, 43, 44]
+            //    },
+            //    {
+            //        name:'生物',
+            //        type:'bar',
+            //        stack: '科目',
+            //        data:[39, 39, 39, 40, 39]
+            //    },
+            //    {
+            //        name:'化学',
+            //        type:'bar',
+            //        stack: '科目',
+            //        data:[20, 20, 20, 20, 20]
+            //    },
+            //    {
+            //        name:'物理',
+            //        type:'bar',
+            //        stack: '科目',
+            //        data:[50, 23, 20, 25, 30]
+            //    }
+            //]
         };
         subjectCourseBar.setOption(subjectCourseOption);
     }
