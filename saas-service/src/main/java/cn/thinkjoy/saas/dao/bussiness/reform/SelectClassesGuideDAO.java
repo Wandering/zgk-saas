@@ -44,6 +44,28 @@ public interface SelectClassesGuideDAO {
     int selectStudentNumber(Map map);
     List<String> selectLimitStudent(Map map);
 
+    /**
+     * 根据年级查询学校内教师集合
+     *
+     * @param grade 年级
+     * @param table 表名(动态生成)
+     * @return
+     */
+    List<TeacherAndClassDto> queryTeachersByGrade(
+            @Param("grade") String grade,
+            @Param("table") String table
+    );
+
+    /**
+     * 根据租户ID查询教室容量
+     *
+     * @param tnId
+     * @return
+     */
+    Integer queryClassRoomByTnId(
+            @Param("tnId") int tnId
+    );
+
     List<Map<String,Integer>> selectUndergraduateEnrollingNumber(Map map);
 
 }
