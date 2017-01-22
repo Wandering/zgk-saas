@@ -1,6 +1,6 @@
 var tnId = Common.cookie.getCookie('tnId');
 
-Common.flowSteps();
+//Common.flowSteps();
 
 
 function SetingProcess2() {
@@ -31,6 +31,15 @@ SetingProcess2.prototype = {
         console.log(data);
         if (data.rtnCode == "0000000") {
             var gradeArr = [];
+            gradeArr.push('<div class="classroom-item">');
+            gradeArr.push('<div class="form-group">');
+            gradeArr.push('<label for="classroom-student-num" class="col-sm-4 control-label no-padding-right">教师最大容量:</label>');
+            gradeArr.push('<div class="col-sm-5">');
+            gradeArr.push('<input type="text" id="classroom-student-num" class="form-control grade-item classroom-student-num"  placeholder="0--100以内">');
+            gradeArr.push('</div>');
+            gradeArr.push('<div class="col-sm-1"><span class="student-num">人</span></div>');
+            gradeArr.push('</div>');
+            gradeArr.push('</div>');
             $.each(data.bizData.grades, function (i, v) {
                 gradeArr.push('<div class="classroom-item" gradeId="' + v.id + '">');
                 gradeArr.push('<div class="form-group">');
@@ -60,11 +69,27 @@ SetingProcess2.prototype = {
     eventClick:function(){
         var that = this;
         var nums=[];
+        var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
+
+        var classroomStudentNum = $.trim($('.classroom-student-num').val())?$.trim($('.classroom-student-num').val()):0;
+
+        console.log(classroomStudentNum);
+
+        if(classroomStudentNum=='0'){
+            layer.tips("教室最大容量必须填写",$('.classroom-student-num'));
+            return false;
+        }
+        if (!re.test(classroomStudentNum) || classroomStudentNum > 100) {
+            layer.tips('请输入正确的数字!', $('.classroom-student-num'));
+            return false;
+        }
         $('body').find('.classroom-item').each(function(i,v){
-            var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
+            console.log($(this))
             var gradeId = $(this).attr('gradeId');
             var classroomAdministrativeNum = $.trim($(this).find('.classroom-administrative').val())?$.trim($(this).find('.classroom-administrative').val()):0;
             var classroomGoclassNum = $.trim($(this).find('.classroom-goclass').val())?$.trim($(this).find('.classroom-goclass').val()):0;
+
+
             if(classroomAdministrativeNum=='0'){
                 layer.tips("教室数量必须填写",$(this).find('.classroom-administrative'));
                 that.flag = false;
