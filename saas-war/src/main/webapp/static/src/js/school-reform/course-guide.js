@@ -273,9 +273,7 @@ CoursePlan.prototype = {
     },
     getEnrollingPlanYears: function () {
         var that = this;
-        Common.ajaxFun('/selectClassesGuide/getEnrollingYear.do', 'GET', {
-            'tnId': tnId
-        }, function (res) {
+        Common.ajaxFun('/selectClassesGuide/getEnrollingYear.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
 
