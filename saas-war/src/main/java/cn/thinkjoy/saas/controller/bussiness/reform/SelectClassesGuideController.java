@@ -266,20 +266,21 @@ public class SelectClassesGuideController {
         Map<String,Object> map=iSelectClassesGuideService.getUndergraduateEnrollingNumber(tnId,yearList);
         String maxYear=map.get("maxYear").toString();
         Map<String,Object> returnMap=new HashMap<>();
-        if (!data.containsKey(maxYear)){
-            returnMap.put("error","选课数据或录取情况不匹配");
-            return returnMap;
-        }
-        Map<String, Integer> maxYearData=data.get(maxYear);
-        Integer count=Integer.valueOf(((Map<String,Integer>)numberMap.get("yearCountMap")).get(maxYear));
-        Map<String,Object> coursePercent=new HashMap<>();
-        for (String course:maxYearData.keySet()){
-            double percent=(double)(Math.round(maxYearData.get(course)*100/count)/100.0);
-            coursePercent.put(course,percent);
+        returnMap.put("undergraduateEnrollingNumberList",map.get("undergraduateEnrollingNumberList"));
+        if (data.containsKey(maxYear)){
+            Map<String, Integer> maxYearData=data.get(maxYear);
+            Integer count=Integer.valueOf(((Map<String,Integer>)numberMap.get("yearCountMap")).get(maxYear));
+            Map<String,Object> coursePercent=new HashMap<>();
+            for (String course:maxYearData.keySet()){
+                double percent=(double)(Math.round(maxYearData.get(course)*100/count)/100.0);
+                coursePercent.put(course,percent);
+            }
+            returnMap.put("maxYear",maxYear);
+            returnMap.put("coursePercent",coursePercent);
+        }else {
+            returnMap.put("msg","选课数据或录取情况不匹配，无法获取录取数人数最多比例数据");
         }
         returnMap.put("data",data);
-        returnMap.put("maxYear",maxYear);
-        returnMap.put("coursePercent",coursePercent);
         return returnMap;
     }
 

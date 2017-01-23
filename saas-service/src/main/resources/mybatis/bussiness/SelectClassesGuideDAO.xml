@@ -211,7 +211,9 @@
         <if test="classTableName!=null">
             INNER JOIN ${classTableName} t2 on t1.student_grade=t2.class_grade and t1.student_class=t2.class_name
         </if>
-        where t1.student_grade LIKE CONCAT('%',#{grade},'%')
+        <if test="grade!=null">
+          where t1.student_grade LIKE CONCAT('%',#{grade},'%')
+        </if>
     </select>
 
     <!-- 最近一年录取百分比 -->
