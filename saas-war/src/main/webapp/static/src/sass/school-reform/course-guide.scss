@@ -605,6 +605,23 @@ a.red-link:hover {
                     text-decoration: underline;
                     outline: 0;
                 }
+                .rank-top1, .rank-top2, .rank-top3 {
+                    display: inline-block;
+                    width: 16px;
+                    height: 16px;
+                    margin-right: 9px;
+                    position: relative;
+                    top: 3px;
+                }
+                .rank-top1 {
+                    background: url('../../img/icon_top1.png') no-repeat;
+                }
+                .rank-top2 {
+                    background: url('../../img/icon_top2.png') no-repeat;
+                }
+                .rank-top3 {
+                    background: url('../../img/icon_top3.png') no-repeat;
+                }
             }
             td:last-of-type {
                 border-right: 0;
@@ -612,6 +629,72 @@ a.red-link:hover {
         }
         tr:last-of-type td {
             border-bottom: 0;
+        }
+    }
+}
+
+.no-data-tips {
+    display: none;
+    margin-top: 100px;
+    text-align: center;
+    i {
+        display: inline-block;
+        width: 195px;
+        height: 142px;
+        background: url('../../img/icon_no_data.png') no-repeat;
+    }
+    p {
+        width: 380px;
+        height: 66px;
+        text-align: center;
+        margin: 0 auto;
+        font-size: 16px;
+        color: #4A4A4A;
+        letter-spacing: 0.1px;
+        line-height: 32px;
+    }
+}
+
+.row-last {
+    margin-bottom: 100px;
+}
+
+.teacher-config-box {
+    padding: 14px 15px 21px 20px;
+    table {
+        width: 100%;
+        border: 1px solid #E0E3E8;
+        thead {
+            background: #F2F4F6;
+            tr {
+                th {
+                    height: 38px;
+                    text-align: center;
+                    vertical-align: middle;
+                    border-right: 1px solid #E0E3E8;
+                    border-bottom: 1px solid #E0E3E8;
+                }
+                th:last-of-type {
+                    border-right: 0;
+                }
+            }
+        }
+        tbody {
+            tr {
+                td {
+                    height: 38px;
+                    text-align: center;
+                    vertical-align: middle;
+                    border-right: 1px solid #E0E3E8;
+                    border-bottom: 1px solid #E0E3E8;
+                }
+                td:last-of-type {
+                    border-right: 0;
+                }
+            }
+            tr:last-of-type td {
+                border-bottom: 0;
+            }
         }
     }
 }

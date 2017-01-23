@@ -26,6 +26,9 @@ CoursePlan.prototype = {
         $("input[name='single-course'], input[name='single-course-all']").prop("checked", true);
         this.selectCourse();
         this.getEnrollingPlanYears();
+        $('#senior1').prop('checked', true);
+        var grade = $('input[name="senior-radio"]:checked').next().text();
+        this.getTeacherConfiguration(tnId, grade);
     },
     selectCourse: function () {
         var that = this;
@@ -177,7 +180,7 @@ CoursePlan.prototype = {
                 $('#maxYear').html(data.maxYear);
                 var coursePercent = data.coursePercent;
                 $('#percent-wuli').html(coursePercent['物理'] * 100 + '%');
-                $('#percent-huaxue').html(coursePercent['化学'] * 100 + '%');
+                $('#percent-huaxue').html(Number(coursePercent['化学'] * 100).toFixed(0) + '%');
                 $('#percent-shengwu').html(coursePercent['生物'] * 100 + '%');
                 $('#percent-zhengzhi').html(coursePercent['政治'] * 100 + '%');
                 $('#percent-lishi').html(coursePercent['历史'] * 100 + '%');
@@ -276,11 +279,128 @@ CoursePlan.prototype = {
         Common.ajaxFun('/selectClassesGuide/getEnrollingYear.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
+                var template = Handlebars.compile($("#enrolling-plan-radio-group-data-template").html());
+                $('#enrolling-plan-radio-group').html(template(data));
+                $('#enrolling-plan-radio-group li').eq(0).find('input[type="radio"]').prop('checked', true);
 
+                var year = $('input[name="plan-radio"]:checked').attr('data-year');
+                that.getEnrollingPlanData(year);
             }
         }, function (res) {
             layer.msg("出错了");
         }, false);
+    },
+    getEnrollingPlanData: function (year) {
+        var that = this;
+        Common.ajaxFun('/selectClassesGuide/selectMajorTopCount.do', 'GET', {
+            year: year
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData;
+                var dataHtml = [];
+                $.each(data, function (i, k) {
+                    var tempName = k.name.split(' ').join('+');
+                    dataHtml.push('<tr>');
+                    if (i != 0 && i != 1 && i != 2) {
+                        dataHtml.push('<td>' + (i+1) + '</td>');
+                    } else if (i == 0) {
+                        dataHtml.push('<td><i class="rank-top1"></i>Top' + (i+1) + '</td>');
+                    } else if (i == 1) {
+                        dataHtml.push('<td><i class="rank-top2"></i>Top' + (i+1) + '</td>');
+                    } else if (i == 2) {
+                        dataHtml.push('<td><i class="rank-top3"></i>Top' + (i+1) + '</td>');
+                    }
+                    dataHtml.push('<td>' + tempName + '</td>');
+                    dataHtml.push('<td>' + k.schoolNumber + '个学校' + k.majorNumber + '个专业可选</td>');
+                    dataHtml.push('</tr>');
+                });
+                $('#select-course-enrolling-plan-list').html(dataHtml.join(''));
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
+    },
+    getTeacherConfiguration: function (tnId, grade) {
+        var that = this;
+        Common.ajaxFun('/selectClassesGuide/queryTeacherBytnIdAndGrade.do', 'GET', {
+            tnId: tnId,
+            grade: grade
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData;
+                var tempTeachers = {};
+                if (data.length === 0) {
+                    var grade = $('input[name="senior-radio"]:checked').next().text();
+                    $('.no-data-tips .current-grade').html(grade);
+                    $('.teacher-config-table').hide();
+                    $('.no-data-tips').show();
+                    return;
+                }
+
+                $('.no-data-tips').hide();
+                $('.teacher-config-table').show();
+
+                var template = Handlebars.compile($("#teacher-config-list-data-template").html());
+                $.each(data, function (i, k) {
+                    k.index = i +1;
+                    var tempIndex = k.index;
+                    tempTeachers[tempIndex] = new Array();
+                    $.each(k.teachers, function (n, m) {
+                        tempTeachers[tempIndex].push({
+                            "className": m.className,
+                            "courseName": m.courseName,
+                            "grade": m.grade,
+                            "maxClass": m.maxClass,
+                            "teacherId": m.teacherId,
+                            "teacherName": m.teacherName
+                        });
+                    });
+                });
+                $('#teacher-config-list').html(template(data));
+
+                $('.config-btn').unbind('click').bind('click', function () {
+                    var dataId = $(this).attr('data-id');
+                    var datas = tempTeachers[dataId];
+                    that.showTeacherConfigBox(datas);
+                });
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, false);
+    },
+    showTeacherConfigBox: function (datas) {
+        console.info(datas);
+        var teacherSubjectHtml = [];
+        teacherSubjectHtml.push('<div class="teacher-config-box">');
+        teacherSubjectHtml.push('<table>');
+        teacherSubjectHtml.push('<thead>');
+        teacherSubjectHtml.push('<tr>');
+        teacherSubjectHtml.push('<th>排名</th>');
+        teacherSubjectHtml.push('<th>组合</th>');
+        teacherSubjectHtml.push('<th>组合</th>');
+        teacherSubjectHtml.push('<th>组合</th>');
+        teacherSubjectHtml.push('</tr>');
+        teacherSubjectHtml.push('</thead>');
+        teacherSubjectHtml.push('<tbody>');
+        $.each(datas, function (i, k) {
+            teacherSubjectHtml.push('<tr>');
+            teacherSubjectHtml.push('<td>' + k.teacherName + '</td>');
+            teacherSubjectHtml.push('<td>' + k.courseName + '</td>');
+            teacherSubjectHtml.push('<td>' + k.grade + '</td>');
+            teacherSubjectHtml.push('<td>' + k.className + '</td>');
+            teacherSubjectHtml.push('</tr>');
+        });
+        teacherSubjectHtml.push('</tbody>');
+        teacherSubjectHtml.push('</table>');
+        teacherSubjectHtml.push('</div>');
+        layer.open({
+            type: 1,
+            title: '<span style="color: #CB171D;font-size: 14px;">师资科目</span>',
+            offset: 'auto',
+            scrollbar: false,
+            area: ['512px', '259px'],
+            content: teacherSubjectHtml.join('')
+        });
     }
 };
 
@@ -288,6 +408,11 @@ CoursePlan.prototype = {
 $(function () {
 
     var coursePlan = new CoursePlan();
+
+    $('input[name="senior-radio"]').on('change', function () {
+        var grade = $('input[name="senior-radio"]:checked').next().text();
+        coursePlan.getTeacherConfiguration(tnId, grade);
+    });
 
     var weakSubjectChart1 = echarts.init(document.getElementById('weakSubjectChart1'));
     var weakSubjectChart2 = echarts.init(document.getElementById('weakSubjectChart2'));

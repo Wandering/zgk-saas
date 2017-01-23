@@ -168,20 +168,17 @@
                             <div class="main-title">
                                 <h3>招生计划分析</h3>
                             </div>
-                            <ul class="enrolling-plan-radio-group">
-                                <li>
-                                    <input type="radio" name="plan-radio" id="year1" />
-                                    <label for="year1">2017</label>
-                                </li>
-                                <li>
-                                    <input type="radio" name="plan-radio" id="year2" />
-                                    <label for="year2">2018</label>
-                                </li>
-                                <li>
-                                    <input type="radio" name="plan-radio" id="year3" />
-                                    <label for="year3">2019</label>
-                                </li>
+                            <ul id="enrolling-plan-radio-group" class="enrolling-plan-radio-group">
+
                             </ul>
+                            <script id="enrolling-plan-radio-group-data-template" type="text/x-handlebars-template">
+                                {{#each this}}
+                                <li>
+                                    <input type="radio" name="plan-radio" data-year="{{this}}" id="year{{this}}" />
+                                    <label for="year{{this}}">{{this}}</label>
+                                </li>
+                                {{/each}}
+                            </script>
                             <div class="plan-table-title">选课组合招生计划情况</div>
                             <table class="plan-table">
                                 <thead>
@@ -191,48 +188,24 @@
                                         <th>专业选择</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Top1</td>
-                                        <td>物理+化学+生物</td>
-                                        <td>1039个学校10563个专业可选</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Top2</td>
-                                        <td>物理+化学+生物</td>
-                                        <td>12336个学校    173个专业可选</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Top3</td>
-                                        <td>物理+化学+生物</td>
-                                        <td>12336个学校    173个专业可选</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>物理+化学+生物</td>
-                                        <td>12336个学校    173个专业可选</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>物理+化学+生物</td>
-                                        <td>12336个学校    173个专业可选</td>
-                                    </tr>
+                                <tbody id="select-course-enrolling-plan-list">
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row row-last">
                         <div class="col-xs-12">
                             <div class="main-title">
                                 <h3>师资配置</h3>
                             </div>
                             <ul class="teacher-configuration-radio-group">
                                 <li>
-                                    <input type="radio" name="plan-radio" id="senior1" />
+                                    <input type="radio" name="senior-radio" id="senior1" />
                                     <label for="senior1">高一</label>
                                 </li>
                                 <li>
-                                    <input type="radio" name="plan-radio" id="senior2" />
+                                    <input type="radio" name="senior-radio" id="senior2" />
                                     <label for="senior2">高二</label>
                                 </li>
                             </ul>
@@ -245,15 +218,26 @@
                                         <th>最大选课人数</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><a href="javascript: void(0);" class="config-btn">物理</a></td>
-                                        <td>5</td>
-                                        <td>15</td>
-                                        <td>1039个学校10563个专业可选</td>
-                                    </tr>
+                                <tbody id="teacher-config-list">
+
                                 </tbody>
                             </table>
+                            <script id="teacher-config-list-data-template" type="text/x-handlebars-template">
+                                {{#each this}}
+                                <tr>
+                                    <td><a href="javascript: void(0);" data-id="{{index}}" class="config-btn">{{courseName}}</a></td>
+                                    <td>{{teacherNum}}</td>
+                                    <td>{{classMaxNum}}</td>
+                                    <td>{{stuMaxNum}}</td>
+                                </tr>
+                                {{/each}}
+                            </script>
+                            <div class="no-data-tips">
+                                <i></i>
+                                <p>还未上传<span class="current-grade">**</span>年级的教师信息，，无法使用此功能！
+                                    请至基础信息管理 &gt; 教师管理页上传！
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
