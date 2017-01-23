@@ -266,6 +266,7 @@ public class SelectClassesGuideController {
         Map<String,Object> map=iSelectClassesGuideService.getUndergraduateEnrollingNumber(tnId,yearList);
         String maxYear=map.get("maxYear").toString();
         Map<String,Object> returnMap=new HashMap<>();
+        returnMap.put("undergraduateEnrollingNumberList",map.get("undergraduateEnrollingNumberList"));
         if (data.containsKey(maxYear)){
             Map<String, Integer> maxYearData=data.get(maxYear);
             Integer count=Integer.valueOf(((Map<String,Integer>)numberMap.get("yearCountMap")).get(maxYear));

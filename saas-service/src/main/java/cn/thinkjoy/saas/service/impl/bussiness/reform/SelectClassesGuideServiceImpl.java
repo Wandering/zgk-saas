@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -285,6 +286,7 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         List<Map<String,Integer>> undergraduateEnrollingNumberList=selectClassesGuideDAO.selectUndergraduateEnrollingNumber(map);
         int maxNumber=0;
         String maxYear="";
+        List<Map<String,Integer>> returnUndergraduateEnrollingNumberList=new ArrayList<>();
         for(Map<String,Integer> undergraduateEnrollingNumber:undergraduateEnrollingNumberList){
             String year = ((Number)undergraduateEnrollingNumber.get("year")).toString();
             if(yearList.contains(year)) {
@@ -293,9 +295,10 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
                     maxNumber = tmp;
                     maxYear = year;
                 }
+                returnUndergraduateEnrollingNumberList.add(undergraduateEnrollingNumber);
             }
         }
-        map.put("undergraduateEnrollingNumberList",undergraduateEnrollingNumberList);
+        map.put("undergraduateEnrollingNumberList",returnUndergraduateEnrollingNumberList);
         map.put("maxYear",maxYear);
         return map;
     }
