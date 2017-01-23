@@ -253,7 +253,7 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         Map<String,CourseAndTeacherDto> ctMap = Maps.newHashMap();
         for(TeacherAndClassDto tcDto : tcDtos){
 
-            CourseAndTeacherDto ctDtoTmp = ctMap.get(tcDto.getCourseName());
+            CourseAndTeacherDto ctDtoTmp = ctMap.get(tcDto.getCourseName().trim());
             if(ctDtoTmp != null){
                 ctDtoTmp.setClassMaxNum(ctDtoTmp.getClassMaxNum()+tcDto.getMaxClass());
                 ctDtoTmp.setStuMaxNum(ctDtoTmp.getStuMaxNum()+tcDto.getMaxClass()*maxNum);
@@ -267,7 +267,7 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
             ctDto.setStuMaxNum(tcDto.getMaxClass()*maxNum);
             ctDto.getTeachers().add(tcDto);
 
-            ctMap.put(tcDto.getCourseName(),ctDto);
+            ctMap.put(tcDto.getCourseName().trim(),ctDto);
         }
 
         // [3] 组装科目与教师信息（按科目分类）
