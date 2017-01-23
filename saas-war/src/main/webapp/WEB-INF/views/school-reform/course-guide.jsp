@@ -41,62 +41,62 @@
                                 <div id="subjectCourseBar" style="width: 80%;height: 300px;"></div>
                                 <ul class="subject-chk">
                                     <li>
-                                        <input type="checkbox" id="all-subject-show" />
+                                        <input type="checkbox" name="single-course-all" id="all-subject-show" />
                                         <label for="all-subject-show">全部</label>
                                     </li>
                                     <li>
-                                        <input type="checkbox" id="jishu-show" />
-                                        <label for="jishu-show"><i class="jishu"></i>通用技术</label>
+                                        <input type="checkbox" name="single-course" id="jishu-show" />
+                                        <label for="jishu-show"><i class="jishu"></i><span>通用技术</span></label>
                                     </li>
                                     <li>
-                                        <input type="checkbox" id="zhengzhi-show" />
-                                        <label for="zhengzhi-show"><i class="zhengzhi"></i>政治</label>
+                                        <input type="checkbox" name="single-course" id="zhengzhi-show" />
+                                        <label for="zhengzhi-show"><i class="zhengzhi"></i><span>政治</span></label>
                                     </li>
                                     <li>
-                                        <input type="checkbox" id="lishi-show" />
-                                        <label for="lishi-show"><i class="lishi"></i>历史</label>
+                                        <input type="checkbox" name="single-course" id="lishi-show" />
+                                        <label for="lishi-show"><i class="lishi"></i><span>历史</span></label>
                                     </li>
                                     <li>
-                                        <input type="checkbox" id="dili-show" />
-                                        <label for="dili-show"><i class="dili"></i>地理</label>
+                                        <input type="checkbox" name="single-course" id="dili-show" />
+                                        <label for="dili-show"><i class="dili"></i><span>地理</span></label>
                                     </li>
                                     <li>
-                                        <input type="checkbox" id="shengwu-show" />
-                                        <label for="shengwu-show"><i class="shengwu"></i>生物</label>
+                                        <input type="checkbox" name="single-course" id="shengwu-show" />
+                                        <label for="shengwu-show"><i class="shengwu"></i><span>生物</span></label>
                                     </li>
                                     <li>
-                                        <input type="checkbox" id="huaxue-show" />
-                                        <label for="huaxue-show"><i class="huaxue"></i>化学</label>
+                                        <input type="checkbox" name="single-course" id="huaxue-show" />
+                                        <label for="huaxue-show"><i class="huaxue"></i><span>化学</span></label>
                                     </li>
                                     <li>
-                                        <input type="checkbox" id="wuli-show" />
-                                        <label for="wuli-show"><i class="wuli"></i>物理</label>
+                                        <input type="checkbox" name="single-course" id="wuli-show" />
+                                        <label for="wuli-show"><i class="wuli"></i><span>物理</span></label>
                                     </li>
                                 </ul>
                             </div>
                             <div class="course-bar-tips">注：2017届学生表示2017年参加高考的学生，入学年份为：2014年</div>
-                            <div class="course-bar-analyse">根据图表显示，2018届录取数人数最多，选课情况为：</div>
+                            <div class="course-bar-analyse">根据图表显示，<span id="maxYear">****</span>届录取数人数最多，选课情况为：</div>
                             <ul class="course-bar-analyse-results">
                                 <li>
-                                    <span class="span-wuli">45%</span>的学生选择<span class="span-wuli">物理</span>
+                                    <span class="span-wuli" id="percent-wuli">0%</span>的学生选择<span class="span-wuli">物理</span>
                                 </li>
                                 <li>
-                                    <span class="span-huaxue">34%</span>的学生选择<span class="span-huaxue">化学</span>
+                                    <span class="span-huaxue" id="percent-huaxue">0%</span>的学生选择<span class="span-huaxue">化学</span>
                                 </li>
                                 <li>
-                                    <span class="span-shengwu">21%</span>的学生选择<span class="span-shengwu">生物</span>
+                                    <span class="span-shengwu" id="percent-shengwu">0%</span>的学生选择<span class="span-shengwu">生物</span>
                                 </li>
                                 <li>
-                                    <span class="span-zhengzhi">23%</span>的学生选择<span class="span-zhengzhi">政治</span>
+                                    <span class="span-zhengzhi" id="percent-zhengzhi">0%</span>的学生选择<span class="span-zhengzhi">政治</span>
                                 </li>
                                 <li>
-                                    <span class="span-lishi">23%</span>的学生选择<span class="span-lishi">历史</span>
+                                    <span class="span-lishi" id="percent-lishi">0%</span>的学生选择<span class="span-lishi">历史</span>
                                 </li>
                                 <li>
-                                    <span class="span-dili">67%</span>的学生选择<span class="span-dili">地理</span>
+                                    <span class="span-dili" id="percent-dili">0%</span>的学生选择<span class="span-dili">地理</span>
                                 </li>
                                 <li>
-                                    <span class="span-jishu">2%</span>的学生选择<span class="span-jishu">通用技术</span>
+                                    <span class="span-jishu" id="percent-jishu">0%</span>的学生选择<span class="span-jishu">通用技术</span>
                                 </li>
                             </ul>
                         </div>
