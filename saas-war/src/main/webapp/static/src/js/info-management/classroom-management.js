@@ -7,8 +7,19 @@ function ClassRoomManagement() {
 ClassRoomManagement.prototype = {
     constructor: ClassRoomManagement,
     init: function () {
+        this.getClassRoomCapacity();
         this.getClassRoom();
         this.tableDrag();
+    },
+    getClassRoomCapacity: function () {
+        var that = this;
+        Common.ajaxFun('/manage/classRoomStting/' + tnId + '.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
+
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, false);
     },
     getClassRoom:function () {
         var that = this;
