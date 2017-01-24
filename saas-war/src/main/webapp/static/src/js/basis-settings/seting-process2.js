@@ -115,13 +115,11 @@ SetingProcess2.prototype = {
         });
         nums = nums.join('');
         nums = nums.substring(1, nums.length);
-        console.log(nums);
         if(that.flag == true){
             Common.ajaxFun('/config/classRoom/setting/' + tnId + '/' + nums + '.do', 'POST', {
                 'tnId': tnId,
                 'nums': nums
             }, function (res) {
-                console.log(res)
                 if (res.rtnCode == "0000000") {
                     if (res.bizData.result == "SUCCESS") {
                         window.location.href = "/seting-process3";
