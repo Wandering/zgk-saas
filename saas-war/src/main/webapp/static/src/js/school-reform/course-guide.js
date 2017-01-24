@@ -16,6 +16,7 @@ function CoursePlan () {
         '物理': true
     };
     this.selectedCount = 7;
+    this.rankData = [];
     this.init();
 }
 
@@ -186,11 +187,15 @@ CoursePlan.prototype = {
                 $('#percent-lishi').html(coursePercent['历史'] * 100 + '%');
                 $('#percent-dili').html(coursePercent['地理'] * 100 + '%');
                 $('#percent-jishu').html(coursePercent['通用技术'] * 100 + '%');
+
+                that.renderSingleCourseChart(that.years, that.datas);
+            } else {
+                $('#history-single-course').hide();
+                $('.no-data-tips-single').show();
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
-        this.renderSingleCourseChart(that.years, that.datas);
+        }, false);   //备注
     },
     renderSingleCourseChart: function (years, datas) {
         var that = this;
@@ -285,6 +290,11 @@ CoursePlan.prototype = {
 
                 var year = $('input[name="plan-radio"]:checked').attr('data-year');
                 that.getEnrollingPlanData(year);
+
+                $('input[name="plan-radio"]').on('change', function () {
+                    var year = $('input[name="plan-radio"]:checked').next().text();
+                    that.getEnrollingPlanData(year);
+                });
             }
         }, function (res) {
             layer.msg("出错了");
@@ -297,28 +307,81 @@ CoursePlan.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
-                var dataHtml = [];
-                $.each(data, function (i, k) {
-                    var tempName = k.name.split(' ').join('+');
-                    dataHtml.push('<tr>');
-                    if (i != 0 && i != 1 && i != 2) {
-                        dataHtml.push('<td>' + (i+1) + '</td>');
-                    } else if (i == 0) {
-                        dataHtml.push('<td><i class="rank-top1"></i>Top' + (i+1) + '</td>');
-                    } else if (i == 1) {
-                        dataHtml.push('<td><i class="rank-top2"></i>Top' + (i+1) + '</td>');
-                    } else if (i == 2) {
-                        dataHtml.push('<td><i class="rank-top3"></i>Top' + (i+1) + '</td>');
-                    }
-                    dataHtml.push('<td>' + tempName + '</td>');
-                    dataHtml.push('<td>' + k.schoolNumber + '个学校' + k.majorNumber + '个专业可选</td>');
-                    dataHtml.push('</tr>');
-                });
-                $('#select-course-enrolling-plan-list').html(dataHtml.join(''));
+                if (data.length != 0) {
+                    that.rankData.splice(0, that.rankData.length);
+                    var dataHtml = [];
+                    var tempYear = year;
+                    that.rankData[tempYear] = new Array();
+                    $.each(data, function (i, k) {
+                        if (i <= 4) {
+                            var tempName = k.name.split(' ').join('+');
+                            dataHtml.push('<tr>');
+                            if (i != 0 && i != 1 && i != 2) {
+                                dataHtml.push('<td>' + (i + 1) + '</td>');
+                            } else if (i == 0) {
+                                dataHtml.push('<td><i class="rank-top1"></i>Top' + (i + 1) + '</td>');
+                            } else if (i == 1) {
+                                dataHtml.push('<td><i class="rank-top2"></i>Top' + (i + 1) + '</td>');
+                            } else if (i == 2) {
+                                dataHtml.push('<td><i class="rank-top3"></i>Top' + (i + 1) + '</td>');
+                            }
+                            dataHtml.push('<td>' + tempName + '</td>');
+                            dataHtml.push('<td>' + k.schoolNumber + '个学校' + k.majorNumber + '个专业可选</td>');
+                            dataHtml.push('</tr>');
+                        }
+
+                        that.rankData[tempYear].push({
+                            "majorNumber": k.majorNumber,
+                            "name": k.name,
+                            "schoolNumber": k.schoolNumber
+                        });
+                    });
+                    $('#select-course-enrolling-plan-list').html(dataHtml.join(''));
+                }
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, false);  //备注
+    },
+    showRankBox: function (datas) {
+        console.info(datas);
+        var moreRankHtml = [];
+        moreRankHtml.push('<div class="teacher-config-box">');
+        moreRankHtml.push('<table>');
+        moreRankHtml.push('<thead>');
+        moreRankHtml.push('<tr>');
+        moreRankHtml.push('<th>排名</th>');
+        moreRankHtml.push('<th>组合</th>');
+        moreRankHtml.push('<th>专业选择</th>');
+        moreRankHtml.push('</tr>');
+        moreRankHtml.push('</thead>');
+        moreRankHtml.push('<tbody>');
+        $.each(datas, function (i, k) {
+            moreRankHtml.push('<tr>');
+            if (i != 0 && i != 1 && i != 2) {
+                moreRankHtml.push('<td>' + (i + 1) + '</td>');
+            } else if (i == 0) {
+                moreRankHtml.push('<td><i class="rank-top1"></i>Top' + (i + 1) + '</td>');
+            } else if (i == 1) {
+                moreRankHtml.push('<td><i class="rank-top2"></i>Top' + (i + 1) + '</td>');
+            } else if (i == 2) {
+                moreRankHtml.push('<td><i class="rank-top3"></i>Top' + (i + 1) + '</td>');
+            }
+            moreRankHtml.push('<td>' + k.name + '</td>');
+            moreRankHtml.push('<td>' + k.schoolNumber + '个学校' + k.majorNumber + '个专业可选</td>');
+            moreRankHtml.push('</tr>');
+        });
+        moreRankHtml.push('</tbody>');
+        moreRankHtml.push('</table>');
+        moreRankHtml.push('</div>');
+        layer.open({
+            type: 1,
+            title: '<span style="color: #CB171D;font-size: 14px;">更多排名</span>',
+            offset: 'auto',
+            scrollbar: false,
+            area: ['639.8px', '553px'],
+            content: moreRankHtml.join('')
+        });
     },
     getTeacherConfiguration: function (tnId, grade) {
         var that = this;
@@ -363,6 +426,12 @@ CoursePlan.prototype = {
                     var datas = tempTeachers[dataId];
                     that.showTeacherConfigBox(datas);
                 });
+            } else {
+                var grade = $('input[name="senior-radio"]:checked').next().text();
+                $('.no-data-tips .current-grade').html(grade);
+                $('.teacher-config-table').hide();
+                $('.no-data-tips').show();
+                return;
             }
         }, function (res) {
             layer.msg("出错了");
@@ -408,6 +477,11 @@ CoursePlan.prototype = {
 $(function () {
 
     var coursePlan = new CoursePlan();
+
+    $('.more-rank-btn').on('click', function () {
+        var year = $('input[name="plan-radio"]:checked').next().text();
+        coursePlan.showRankBox(coursePlan.rankData[year]);
+    });
 
     $('input[name="senior-radio"]').on('change', function () {
         var grade = $('input[name="senior-radio"]:checked').next().text();
