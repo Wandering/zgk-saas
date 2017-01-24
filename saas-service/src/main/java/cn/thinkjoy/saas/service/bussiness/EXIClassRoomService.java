@@ -1,5 +1,6 @@
 package cn.thinkjoy.saas.service.bussiness;
 
+import cn.thinkjoy.saas.domain.ClassRoomSetting;
 import cn.thinkjoy.saas.domain.ClassRooms;
 import cn.thinkjoy.saas.domain.bussiness.ClassRoomView;
 
@@ -46,6 +47,8 @@ public interface EXIClassRoomService {
     boolean updateClassRoom(Integer num, Integer d ,Integer gid,Integer cid);
 
     public boolean updateClassRoomSetting(Integer maxNum,Integer cid,Integer tnId);
+
+    public ClassRoomSetting getClassRoomSetting(Integer tnId);
     /**
      * 删除教室
      * @param ids 教室标识

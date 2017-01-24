@@ -136,6 +136,10 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
         classRoomSetting.setId(cid);
         return (iClassRoomSettingDAO.update(classRoomSetting) > 0 ? true : false);
     }
+    @Override
+    public ClassRoomSetting getClassRoomSetting(Integer tnId){
+        return  iClassRoomSettingDAO.findOne("tn_Id",tnId,"id","asc");
+    }
 
     /**
      * 删除教室
