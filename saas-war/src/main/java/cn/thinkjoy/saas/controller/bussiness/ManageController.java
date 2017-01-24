@@ -1,6 +1,7 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.common.protocol.Request;
+import cn.thinkjoy.saas.domain.ClassRoomSetting;
 import cn.thinkjoy.saas.domain.EnrollingRatio;
 import cn.thinkjoy.saas.domain.bussiness.ClassView;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
@@ -166,6 +167,17 @@ public class ManageController {
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
     }
+    @RequestMapping(value = "/classRoomStting/{tnId}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map getClassRoomSetting(@PathVariable Integer tnId) {
+
+
+        Map resultMap = new HashMap();
+        ClassRoomSetting classRoomSetting=exiClassRoomService.getClassRoomSetting(tnId);
+        resultMap.put("result",classRoomSetting);
+        return resultMap;
+    }
+
 
     /**
      * 更新教室
