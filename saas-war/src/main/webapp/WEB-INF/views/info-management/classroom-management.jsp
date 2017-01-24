@@ -37,7 +37,7 @@
                                     <h3>教室容量</h3>
                                 </div>
                                 <div class="title-2">
-                                    <span class="txt-t">教室最大容量：345人</span>
+                                    <span class="txt-t">教室最大容量：<span id="maxNumber">0</span>人</span>
                                     <div class="btns">
                                         <button class="btn btn-inverse" id="updateCapacity-btn">修改</button>
                                     </div>
