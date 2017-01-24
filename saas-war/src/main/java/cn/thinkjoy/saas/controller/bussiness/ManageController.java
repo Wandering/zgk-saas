@@ -167,7 +167,7 @@ public class ManageController {
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
     }
-    @RequestMapping(value = "/classRoomStting/{tnId}",method = RequestMethod.POST)
+    @RequestMapping(value = "/classRoomStting/{tnId}",method = RequestMethod.GET)
     @ResponseBody
     public Map getClassRoomSetting(@PathVariable Integer tnId) {
 
