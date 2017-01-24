@@ -255,6 +255,14 @@ public class WebCotroller {
         return new ModelAndView("/policy/jx-policy");
     }
     /**
+     * js-policy
+     * 政策解读 江苏
+     */
+    @RequestMapping("/js-policy")
+    public ModelAndView jsPolicy() {
+        return new ModelAndView("/policy/js-policy");
+    }
+    /**
      * sn-policy
      * 政策解读 陕西
      */

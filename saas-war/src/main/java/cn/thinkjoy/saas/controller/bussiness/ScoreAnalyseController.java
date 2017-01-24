@@ -294,6 +294,7 @@ public class ScoreAnalyseController
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("examName", exam.getExamName());
         paramMap.put("grade", exam.getGrade());
+        paramMap.put("tnId", exam.getTnId());
         Exam existExam = (Exam)examService.queryOne(paramMap);
         return existExam == null ? false : true;
     }
