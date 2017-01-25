@@ -181,13 +181,17 @@ CoursePlan.prototype = {
                 });
                 $('#maxYear').html(data.maxYear);
                 var coursePercent = data.coursePercent;
-                $('#percent-wuli').html(coursePercent['物理'] * 100 + '%');
-                $('#percent-huaxue').html(Number(coursePercent['化学'] * 100).toFixed(0) + '%');
-                $('#percent-shengwu').html(coursePercent['生物'] * 100 + '%');
-                $('#percent-zhengzhi').html(coursePercent['政治'] * 100 + '%');
-                $('#percent-lishi').html(coursePercent['历史'] * 100 + '%');
-                $('#percent-dili').html(coursePercent['地理'] * 100 + '%');
-                $('#percent-jishu').html(coursePercent['通用技术'] * 100 + '%');
+                if (coursePercent) {
+                    $('#percent-wuli').html(coursePercent['物理'] * 100 + '%');
+                    $('#percent-huaxue').html(Number(coursePercent['化学'] * 100).toFixed(0) + '%');
+                    $('#percent-shengwu').html(coursePercent['生物'] * 100 + '%');
+                    $('#percent-zhengzhi').html(coursePercent['政治'] * 100 + '%');
+                    $('#percent-lishi').html(coursePercent['历史'] * 100 + '%');
+                    $('#percent-dili').html(coursePercent['地理'] * 100 + '%');
+                    $('#percent-jishu').html(coursePercent['通用技术'] * 100 + '%');
+                } else {
+                    $('.course-bar-analyse, .course-bar-analyse-results').hide();
+                }
 
                 that.renderSingleCourseChart(that.years, that.datas);
 
