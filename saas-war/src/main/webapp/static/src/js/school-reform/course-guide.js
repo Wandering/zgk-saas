@@ -195,6 +195,8 @@ CoursePlan.prototype = {
 
                 that.renderSingleCourseChart(that.years, that.datas);
 
+                $('.subject-chk').css({'display': 'inline-block'});
+
                 if (provinceId != '330000') {
                     that.course.delete('通用技术');
                     console.info(that.course);
