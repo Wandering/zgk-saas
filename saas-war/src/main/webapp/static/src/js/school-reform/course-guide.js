@@ -1,4 +1,5 @@
 var tnId = Common.cookie.getCookie('tnId');
+var provinceId = Common.cookie.getCookie('provinceId');
 
 function CoursePlan () {
     this.years = [];
@@ -189,6 +190,27 @@ CoursePlan.prototype = {
                 $('#percent-jishu').html(coursePercent['通用技术'] * 100 + '%');
 
                 that.renderSingleCourseChart(that.years, that.datas);
+
+                if (provinceId != '330000') {
+                    that.course.delete('通用技术');
+                    console.info(that.course);
+                    that.selectedCount = 6;
+                    that.status = {
+                        '通用技术': false,
+                        '政治': true,
+                        '历史': true,
+                        '地理': true,
+                        '生物': true,
+                        '化学': true,
+                        '物理': true
+                    };
+                    that.subjectCourseOption.legend.selected = that.status;
+                    that.subjectCourseBar.setOption(that.subjectCourseOption);
+                    $('#jishu-show').attr('name', 'single-course-none');
+                    $('#jishu-show').parent().hide();
+                    $('#percent-jishu').parent().hide();
+                }
+
             } else {
                 $('#history-single-course').hide();
                 $('.no-data-tips-single').show();
