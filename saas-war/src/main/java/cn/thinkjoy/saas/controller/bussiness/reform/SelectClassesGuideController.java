@@ -269,7 +269,7 @@ public class SelectClassesGuideController {
         returnMap.put("undergraduateEnrollingNumberList",map.get("undergraduateEnrollingNumberList"));
         if (data.containsKey(maxYear)){
             Map<String, Integer> maxYearData=data.get(maxYear);
-            Integer count=Integer.valueOf(((Map<String,Integer>)numberMap.get("yearCountMap")).get(maxYear));
+            Double count=Double.valueOf(((Map<String,Integer>)numberMap.get("yearCountMap")).get(maxYear));
             Map<String,Object> coursePercent=new HashMap<>();
             for (String course:maxYearData.keySet()){
                 double percent=(double)(Math.round(maxYearData.get(course)*100/count)/100.0);
