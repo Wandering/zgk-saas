@@ -1,6 +1,6 @@
 var tnId = Common.cookie.getCookie('tnId');
 
-//Common.flowSteps();
+Common.flowSteps();
 
 
 function SetingProcess2() {
@@ -31,9 +31,9 @@ SetingProcess2.prototype = {
         console.log(data);
         if (data.rtnCode == "0000000") {
             var gradeArr = [];
-            gradeArr.push('<div class="classroom-item">');
+            gradeArr.push('<div class="classroom-item1">');
             gradeArr.push('<div class="form-group">');
-            gradeArr.push('<label for="classroom-student-num" class="col-sm-4 control-label no-padding-right">教师最大容量:</label>');
+            gradeArr.push('<label for="classroom-student-num" class="col-sm-4 control-label no-padding-right">教室最大容量:</label>');
             gradeArr.push('<div class="col-sm-5">');
             gradeArr.push('<input type="text" id="classroom-student-num" class="form-control grade-item classroom-student-num"  placeholder="0--100以内">');
             gradeArr.push('</div>');
@@ -84,44 +84,48 @@ SetingProcess2.prototype = {
             return false;
         }
         $('body').find('.classroom-item').each(function(i,v){
-            console.log($(this))
             var gradeId = $(this).attr('gradeId');
             var classroomAdministrativeNum = $.trim($(this).find('.classroom-administrative').val())?$.trim($(this).find('.classroom-administrative').val()):0;
             var classroomGoclassNum = $.trim($(this).find('.classroom-goclass').val())?$.trim($(this).find('.classroom-goclass').val()):0;
-
 
             if(classroomAdministrativeNum=='0'){
                 layer.tips("教室数量必须填写",$(this).find('.classroom-administrative'));
                 that.flag = false;
                 return false;
             }
+
             if (!re.test(classroomAdministrativeNum) || classroomAdministrativeNum > 100) {
                 layer.tips('请输入正确的数字!', $(this).find('.classroom-administrative'));
                 that.flag = false;
                 return false;
             }
+
             if(classroomGoclassNum=='0'){
                 layer.tips("教室数量必须填写",$(this).find('.classroom-goclass'));
                 that.flag = false;
                 return false;
             }
+
             if (!re.test(classroomGoclassNum) || classroomGoclassNum > 100) {
                 layer.tips('请输入正确的数字!', $(this).find('.classroom-goclass'));
                 that.flag = false;
                 return false;
             }
+
             nums.push("-"+gradeId+":"+classroomAdministrativeNum+"|"+classroomGoclassNum);
+
             that.flag = true;
+
         });
         nums = nums.join('');
         nums = nums.substring(1, nums.length);
-        console.log(nums);
+
         if(that.flag == true){
             Common.ajaxFun('/config/classRoom/setting/' + tnId + '/' + nums + '.do', 'POST', {
                 'tnId': tnId,
-                'nums': nums
+                'nums': nums,
+                'maxNum': classroomStudentNum
             }, function (res) {
-                console.log(res)
                 if (res.rtnCode == "0000000") {
                     if (res.bizData.result == "SUCCESS") {
                         window.location.href = "/seting-process3";
