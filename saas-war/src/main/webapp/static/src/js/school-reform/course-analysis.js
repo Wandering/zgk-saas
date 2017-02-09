@@ -29,28 +29,39 @@ $(function () {
 
 function CourseAnalysis () {
     this.selectCount = 0; //当前选中的课程数目,初始化0
-    if(countyId.substring(0,2)=='33'){
-        this.course = ['物理', '化学', '生物', '地理', '历史', '政治', '通用技术'];  //当前选中的课程
-        this.status = {
-            '物理': true,
-            '化学': true,
-            '生物': true,
-            '地理': true,
-            '历史': true,
-            '政治': true,
-            '通用技术': true
-        };
-    }else{
-        this.course = ['物理', '化学', '生物', '地理', '历史', '政治'];  //当前选中的课程
-        this.status = {
-            '物理': true,
-            '化学': true,
-            '生物': true,
-            '地理': true,
-            '历史': true,
-            '政治': true
-        };
-    }
+    //if(countyId.substring(0,2)=='33'){
+    //    this.course = ['物理', '化学', '生物', '地理', '历史', '政治', '通用技术'];  //当前选中的课程
+    //    this.status = {
+    //        '物理': true,
+    //        '化学': true,
+    //        '生物': true,
+    //        '地理': true,
+    //        '历史': true,
+    //        '政治': true,
+    //        '通用技术': true
+    //    };
+    //}else{
+    //    this.course = ['物理', '化学', '生物', '地理', '历史', '政治'];  //当前选中的课程
+    //    this.status = {
+    //        '物理': true,
+    //        '化学': true,
+    //        '生物': true,
+    //        '地理': true,
+    //        '历史': true,
+    //        '政治': true
+    //    };
+    //}
+
+
+    this.course = ['物理', '化学', '生物', '地理', '历史', '政治'];  //当前选中的课程
+    this.status = {
+        '物理': true,
+        '化学': true,
+        '生物': true,
+        '地理': true,
+        '历史': true,
+        '政治': true
+    };
 
     this.historyCourseAnalysisChart = null;
     this.historyCourseAnalysisOption = null;
@@ -383,6 +394,7 @@ CourseAnalysis.prototype = {
             };
         }
 
+
         that.historyCourseAnalysisChart.setOption(that.historyCourseAnalysisOption);
         $("input[name='course-analysis']").prop("checked", true);
         var chkLength = $("input[name='course-analysis']").length;
@@ -439,41 +451,34 @@ function getNumberByYear (tnId) {
     }, function (res) {
         if (res.rtnCode == "0000000") {
             var data = res.bizData;
-            if(countyId.substring(0,2)=='33'){
-                var historyData = {
-                    year: [],
-                    subjects: {
-                        '物理': [],
-                        '化学': [],
-                        '生物': [],
-                        '政治': [],
-                        '历史': [],
-                        '地理': [],
-                        '通用技术': []
-                    }
-                };
-            }else{
-                var historyData = {
-                    year: [],
-                    subjects: {
-                        '物理': [],
-                        '化学': [],
-                        '生物': [],
-                        '政治': [],
-                        '历史': [],
-                        '地理': []
-                    }
-                };
-            }
+            var historyData = {
+                year: [],
+                subjects: {
+                    '物理': [],
+                    '化学': [],
+                    '生物': [],
+                    '政治': [],
+                    '历史': [],
+                    '地理': [],
+                    '通用技术': []
+                }
+            };
 
             $.each(data.data, function (i, k) {
                 historyData.year.push(i);
+                console.log(historyData.subjects)
                 $.each(k, function (m, n) {
                     historyData.subjects[m].push(n);
                 });
             });
             var courseAnalysis = new CourseAnalysis();
             courseAnalysis.historyCourseAnalysis(historyData.year, historyData.subjects);
+            console.log(historyData.subjects)
+
+            if(countyId.substring(0,2)!='33'){
+                delete historyData.subjects['通用技术'];
+            }
+            console.log(historyData.subjects)
         }
     }, function (res) {
         layer.msg("出错了");

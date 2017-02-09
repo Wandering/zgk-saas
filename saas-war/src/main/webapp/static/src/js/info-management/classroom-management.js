@@ -7,8 +7,56 @@ function ClassRoomManagement() {
 ClassRoomManagement.prototype = {
     constructor: ClassRoomManagement,
     init: function () {
+        this.getClassRoomCapacity();
         this.getClassRoom();
         this.tableDrag();
+    },
+    getClassRoomCapacity: function () {
+        Common.ajaxFun('/manage/classRoomStting/' + tnId + '.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData;
+                $('#maxNumber').html(data.result.maxNumber);
+                $('#updateCapacity-btn').attr('data-cid', data.result.id);
+                layer.closeAll();
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, false);
+    },
+    showUpdateClassRoomCapacity: function (title) {
+        var capacityHtml = [];
+        capacityHtml.push('<div class="form-horizontal grade-layer">');
+        capacityHtml.push('<div class="form-group">');
+        capacityHtml.push('<label class="col-sm-4 control-label no-padding-right" for="classroom-num">教室最大容量: </label>');
+        capacityHtml.push('<div class="col-sm-8">');
+        capacityHtml.push('<input type="text" id="maxNum" placeholder="输入教室最大容量" class="col-xs-10 col-sm-10" />');
+        capacityHtml.push('</div>');
+        capacityHtml.push('</div>');
+        capacityHtml.push('<div class="btn-box"><button class="btn btn-info save-btn" id="save-classroom-num-btn">保存</button><button class="btn btn-primary close-btn">取消</button></div>');
+        capacityHtml.push('</div>');
+        layer.open({
+            type: 1,
+            title: title,
+            offset: 'auto',
+            area: ['362px', '200px'],
+            content: capacityHtml.join('')
+        });
+    },
+    updateClassRoomCapacity: function (cid, maxNum) {
+        var that = this;
+        Common.ajaxFun('/manage/classRoomStting/modify/' + tnId + '/' + cid + '.do', 'POST', {
+            'maxNum': maxNum
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData;
+                if (data.result == 'SUCCESS') {
+                    layer.msg('更新成功');
+                    that.getClassRoomCapacity();
+                }
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, false);
     },
     getClassRoom:function () {
         var that = this;
@@ -306,4 +354,19 @@ $(document).on('click', '#update-classroom-btn', function () {
 
 $(document).on('click','.close-btn',function(){
     layer.closeAll();
+});
+
+$('#updateCapacity-btn').on('click', function () {
+    classRoomManagement.showUpdateClassRoomCapacity('更新教室最大容量');
+});
+$(document).on('click', '#save-classroom-num-btn', function () {
+    var maxNum = $.trim($('#maxNum').val()),
+        classRoomNumReg = /^(\+?[1-9]\d{0,2}|\+?1000)$/;
+    if (maxNum == '' || !classRoomNumReg.test(maxNum)) {
+        layer.tips('请填写最大教室容量!', $('#maxNum'));
+        return false;
+    }
+
+    var cid = $('#updateCapacity-btn').attr('data-cid');
+    classRoomManagement.updateClassRoomCapacity(cid, maxNum);
 });

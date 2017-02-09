@@ -1,20 +1,18 @@
 package cn.thinkjoy.saas.controller.bussiness.reform;
 
-import cn.thinkjoy.saas.dto.AnalysisDto;
-import cn.thinkjoy.saas.dto.MajorDto;
-import cn.thinkjoy.saas.dto.PlanEnrollingDto;
-import cn.thinkjoy.saas.dto.UniversityAndMajorNumberDto;
+import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
+import cn.thinkjoy.gk.api.IMajoredApi;
+import cn.thinkjoy.saas.dto.*;
 import cn.thinkjoy.saas.service.bussiness.reform.ISelectClassesGuideService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zuohao on 16/11/2.
@@ -25,6 +23,33 @@ public class SelectClassesGuideController {
 
     @Autowired
     private ISelectClassesGuideService iSelectClassesGuideService;
+
+    @Autowired
+    private IMajoredApi iMajoredApi;
+
+    @Autowired
+    private ISelectClassesGuideService selectClassesGuideService;
+
+    @ResponseBody
+    @ApiDesc(value = "查询有招生计划的年份")
+    @RequestMapping(value = "getEnrollingYear",method = RequestMethod.GET)
+    public List<String> getEnrollingYear(){
+        return iMajoredApi.getEnrollingYear();
+    }
+
+    @ResponseBody
+    @ApiDesc(value = "根据年份查询个种选课组合的招生院校")
+    @RequestMapping(value = "selectMajorTopCount",method = RequestMethod.GET)
+    public Object selectMajorTopCount(@RequestParam String year){
+        return iMajoredApi.selectMajorTopCount(35,year);
+    }
+
+    @ResponseBody
+    @ApiDesc(value = "根据年份查询个种选课组合的招生院校")
+    @RequestMapping(value = "queryTeacherBytnIdAndGrade",method = RequestMethod.GET)
+    public List<CourseAndTeacherDto> queryTeacherBytnIdAndGrade(@RequestParam String grade, @RequestParam String tnId){
+        return selectClassesGuideService.queryTeachersByGrade(grade,tnId);
+    }
 
     /**
      * 科目分析
@@ -221,7 +246,7 @@ public class SelectClassesGuideController {
     @ResponseBody
     public Map<String,Object> getNumberByYear(@RequestParam("tnId")int tnId){
         Map<String,Object> returnMap=new HashMap<>();
-        returnMap.put("data", iSelectClassesGuideService.selectNumberByYear(tnId));
+        returnMap.put("data", (Map<String,Map<String, Integer>>)iSelectClassesGuideService.selectNumberByYear(tnId).get("yearMap"));
         return returnMap;
     }
 
@@ -232,5 +257,31 @@ public class SelectClassesGuideController {
         return iSelectClassesGuideService.selectTypeAnalysis(tnId, studentGrade);
     }
 
+    @RequestMapping("getUndergraduateEnrollingNumber")
+    @ResponseBody
+    public Object getUndergraduateEnrollingNumber(@RequestParam("tnId")int tnId){
+        Map<String,Object> numberMap=iSelectClassesGuideService.selectNumberByYear(tnId);
+        Map<String,Map<String, Integer>> data=(Map<String,Map<String, Integer>>)numberMap.get("yearMap");
+        List<String> yearList = new ArrayList<String>(((Map<String,Integer>)numberMap.get("yearCountMap")).keySet());
+        Map<String,Object> map=iSelectClassesGuideService.getUndergraduateEnrollingNumber(tnId,yearList);
+        String maxYear=map.get("maxYear").toString();
+        Map<String,Object> returnMap=new HashMap<>();
+        returnMap.put("undergraduateEnrollingNumberList",map.get("undergraduateEnrollingNumberList"));
+        if (data.containsKey(maxYear)){
+            Map<String, Integer> maxYearData=data.get(maxYear);
+            Double count=Double.valueOf(((Map<String,Integer>)numberMap.get("yearCountMap")).get(maxYear));
+            Map<String,Object> coursePercent=new HashMap<>();
+            for (String course:maxYearData.keySet()){
+                double percent=(double)(Math.round(maxYearData.get(course)*100/count)/100.0);
+                coursePercent.put(course,percent);
+            }
+            returnMap.put("maxYear",maxYear);
+            returnMap.put("coursePercent",coursePercent);
+        }else {
+            returnMap.put("msg","选课数据或录取情况不匹配，无法获取录取数人数最多比例数据");
+        }
+        returnMap.put("data",data);
+        return returnMap;
+    }
 
 }

@@ -1,3 +1,4 @@
+
 var Common = {
     init: function () {
         this.loginInfo();
@@ -242,13 +243,24 @@ var Common = {
                 menus.push('<span class="menu-text">' + v.meunName + '</span>');
                 menus.push('</a>');
                 if (v.sonMeuns.length > 0) {
-                    //console.log(v.sonMeuns)
                     menus.push('<ul class="submenu">');
+
                     $.each(v.sonMeuns, function (k, m) {
+                        console.log(m.meunName);
                         if (pathName == m.meunUrl) {
-                            menus.push('<li class="active">');
+                            if(m.meunName=="三位一体招生"){
+                                menus.push('<li class="active trinity">');
+                            }else{
+                                menus.push('<li class="active">');
+                            }
+
                         } else {
-                            menus.push('<li>');
+                            if(m.meunName=="三位一体招生"){
+                                menus.push('<li class="trinity">');
+                            }else{
+                                menus.push('<li>');
+                            }
+
                         }
                         menus.push('<a href="' + m.meunUrl + '" id="' + m.meunId + '"><i class="icon-double-angle-right"></i>' + m.meunName + '</a>');
                         menus.push('</li>');
@@ -266,6 +278,14 @@ var Common = {
             if((pathName == '/' + indexUrl) || pathName =='/professional-assessment'){
                 $('.nav-li.active').find('i').attr('class', firstNavClass + '-act')
             }
+
+
+            var countyId = Common.cookie.getCookie('countyId');
+            if(countyId.substring(0,2)!='33'){
+                $('li.trinity').remove();
+            }
+
+
 
         }
     },

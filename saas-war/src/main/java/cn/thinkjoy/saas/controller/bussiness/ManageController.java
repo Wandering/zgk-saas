@@ -1,6 +1,7 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.common.protocol.Request;
+import cn.thinkjoy.saas.domain.ClassRoomSetting;
 import cn.thinkjoy.saas.domain.EnrollingRatio;
 import cn.thinkjoy.saas.domain.bussiness.ClassView;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
@@ -146,6 +147,34 @@ public class ManageController {
         }
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
+
+
+    @RequestMapping(value = "/classRoomStting/modify/{tnId}/{cid}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map modifyClassRoomSetting(@PathVariable Integer tnId,@PathVariable Integer cid,HttpServletRequest request) {
+        String maxNum = request.getParameter("maxNum");
+
+        boolean result = false;
+
+        if (!StringUtils.isBlank(maxNum)) {
+            Integer mn = Integer.valueOf(maxNum);
+            result = exiClassRoomService.updateClassRoomSetting(mn, cid, tnId);
+        }
+
+        Map resultMap = new HashMap();
+        resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        return resultMap;
+    }
+    @RequestMapping(value = "/classRoomStting/{tnId}",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getClassRoomSetting(@PathVariable Integer tnId) {
+
+
+        Map resultMap = new HashMap();
+        ClassRoomSetting classRoomSetting=exiClassRoomService.getClassRoomSetting(tnId);
+        resultMap.put("result",classRoomSetting);
         return resultMap;
     }
 

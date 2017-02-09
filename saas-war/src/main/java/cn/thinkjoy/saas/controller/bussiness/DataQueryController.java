@@ -519,4 +519,5 @@ public class DataQueryController {
         //专业Id、专业名称、就业率、薪资、专业代码、授予学位、修学年限、开设课程、专业解读、
         return iMajoredApi.getMajoredInfoByCode(majoredCode);
     }
+
 }
