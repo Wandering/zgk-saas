@@ -7,20 +7,24 @@
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="tnId" property="tnId" jdbcType="INTEGER" />
         <result column="grade" property="grade" jdbcType="VARCHAR" />
-        <result column="g_order" property="gOrder" jdbcType="INTEGER" />
+        <result column="g_order" property="gorder" jdbcType="INTEGER" />
+        <result column="year" property="year" jdbcType="INTEGER" />
+        <result column="classType" property="classType" jdbcType="INTEGER" />
     </resultMap>
     <sql id="Base_Column_List">
         id,
         tnId,
         grade,
-        g_order as gOrder
+        g_order as gorder,,
+        year,
+        classType
     </sql>
     <update id="gradeSortUpdate"  parameterType="java.util.List">
 
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
             update saas_grade
             <set>
-                g_order=${item.gOrder}
+                g_order=${item.gorder}
             </set>
             where id = ${item.id}
         </foreach>
@@ -34,11 +38,13 @@
         insert into saas_grade(
             tnId,
             grade,
-            g_order
+            g_order,
+            year,
+            classType
         )
         values
         <foreach collection="grads" item="item" index="index" separator="," >
-            (#{item.tnId},#{item.grade},#{item.gOrder})
+            (#{item.tnId},#{item.grade},#{item.gorder},#{item.year},#{item.classType})
         </foreach>
     </insert>
     <select id="selectGradeByTnId" parameterType="java.util.Map" resultMap="Base_Result_Mapper">
@@ -52,14 +58,20 @@
             <if test="grade!=null">
                 AND grade = #{grade}
             </if>
-            <if test="gOrder!=null">
-                AND g_order = #{gOrder}
+            <if test="gorder!=null">
+                AND g_order = #{gorder}
+            </if>
+            <if test="year!=null">
+                AND year=#{year}
+            </if>
+            <if test="classType!=null">
+                AND classType=#{classType}
             </if>
             <if test="tnId!=null">
                 AND tnId=#{tnId}
             </if>
         </trim>
-        ORDER by gOrder asc
+        ORDER by gorder asc
     </select>
 
     <delete id="deleteByMap" parameterType="java.util.Map">
@@ -74,8 +86,14 @@
             <if test="grade!=null">
                 AND grade = #{grade}
             </if>
-            <if test="gOrder!=null">
-                AND g_order = #{gOrder}
+            <if test="gorder!=null">
+                AND g_order = #{gorder}
+            </if>
+            <if test="year!=null">
+                AND year=#{year}
+            </if>
+            <if test="classType!=null">
+                AND classType=#{classType}
             </if>
         </trim>
     </delete>

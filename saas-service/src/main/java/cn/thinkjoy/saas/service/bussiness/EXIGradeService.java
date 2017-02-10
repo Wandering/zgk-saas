@@ -64,4 +64,13 @@ public interface EXIGradeService {
      * @return
      */
     boolean updateGrade(Integer tnId,String gradeName,Integer gid);
+
+    void updateGrade(List<Grade> grades);
+
+    /**
+     * 初始化年级信息
+     * @param tnId
+     * @return
+     */
+    List<Grade> init(int tnId);
 }
