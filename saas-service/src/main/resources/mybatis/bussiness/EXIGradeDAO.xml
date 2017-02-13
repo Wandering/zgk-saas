@@ -15,7 +15,7 @@
         id,
         tnId,
         grade,
-        g_order as gorder,,
+        g_order as gorder,
         year,
         classType
     </sql>
