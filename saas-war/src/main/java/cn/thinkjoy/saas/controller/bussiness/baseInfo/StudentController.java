@@ -1,4 +1,4 @@
-package cn.thinkjoy.saas.controller.bussiness;
+package cn.thinkjoy.saas.controller.bussiness.baseInfo;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
