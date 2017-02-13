@@ -1,7 +1,7 @@
 var tnId = Common.cookie.getCookie('tnId');
 var provinceId = Common.cookie.getCookie('provinceId');
 
-function CoursePlan () {
+function CoursePlan() {
     this.years = [];
     this.datas = [];
     this.subjectCourseBar = null;
@@ -102,59 +102,60 @@ CoursePlan.prototype = {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
                 that.datas[0] = {
-                    name:'通用技术',
-                    type:'bar',
+                    name: '通用技术',
+                    type: 'bar',
                     barWidth: 44,
                     stack: '科目',
-                    data:[]
+                    data: []
                 };
                 that.datas[1] = {
-                    name:'政治',
-                    type:'bar',
+                    name: '政治',
+                    type: 'bar',
                     barWidth: 44,
                     stack: '科目',
-                    data:[]
+                    data: []
                 };
                 that.datas[2] = {
-                    name:'历史',
-                    type:'bar',
+                    name: '历史',
+                    type: 'bar',
                     barWidth: 44,
                     stack: '科目',
-                    data:[]
+                    data: []
                 };
                 that.datas[3] = {
-                    name:'地理',
-                    type:'bar',
+                    name: '地理',
+                    type: 'bar',
                     barWidth: 44,
                     stack: '科目',
-                    data:[]
+                    data: []
                 };
                 that.datas[4] = {
-                    name:'生物',
-                    type:'bar',
+                    name: '生物',
+                    type: 'bar',
                     barWidth: 44,
                     stack: '科目',
-                    data:[]
+                    data: []
                 };
                 that.datas[5] = {
-                    name:'化学',
-                    type:'bar',
+                    name: '化学',
+                    type: 'bar',
                     barWidth: 44,
                     stack: '科目',
-                    data:[]
+                    data: []
                 };
                 that.datas[6] = {
-                    name:'物理',
-                    type:'bar',
+                    name: '物理',
+                    type: 'bar',
                     barWidth: 44,
                     stack: '科目',
-                    data:[]
+                    data: []
                 };
+                var yearsFoo = [];
                 $.each(data.data, function (i, k) {
-                    //alert(i + ', ' + k['通用技术']);
-                    that.years.push(i + '届');
+                    // that.years.push(i + '届');
+                    yearsFoo.push(Number(i));
                     $.each(k, function (n, m) {
-                        switch(n) {
+                        switch (n) {
                             case '通用技术':
                                 that.datas[0].data.push(m);
                                 break;
@@ -179,16 +180,30 @@ CoursePlan.prototype = {
                         }
                     });
                 });
+                //横轴添加人数统计
+                for (var j = 0; j < yearsFoo.length; j++) {
+                    if (data.undergraduateEnrollingNumberList[j]) {
+                        var foo = $.inArray(Number(data.undergraduateEnrollingNumberList[j].year),yearsFoo);
+                        var fo = yearsFoo[foo]+'届(录取人数：'+data.undergraduateEnrollingNumberList[j].number+')';
+                        that.years.push(fo);
+                    }else{
+                        if(yearsFoo[foo]!=yearsFoo[j]){
+                            that.years.push(yearsFoo[j]);
+                        }else{
+                            that.years.push(yearsFoo[j-1]);
+                        }
+                    }
+                }
                 $('#maxYear').html(data.maxYear);
                 var coursePercent = data.coursePercent;
                 if (coursePercent) {
-                    $('#percent-wuli').html(coursePercent['物理'] * 100 + '%');
+                    $('#percent-wuli').html(Number(coursePercent['物理'] * 100).toFixed(0) + '%');
                     $('#percent-huaxue').html(Number(coursePercent['化学'] * 100).toFixed(0) + '%');
-                    $('#percent-shengwu').html(coursePercent['生物'] * 100 + '%');
-                    $('#percent-zhengzhi').html(coursePercent['政治'] * 100 + '%');
-                    $('#percent-lishi').html(coursePercent['历史'] * 100 + '%');
-                    $('#percent-dili').html(coursePercent['地理'] * 100 + '%');
-                    $('#percent-jishu').html(coursePercent['通用技术'] * 100 + '%');
+                    $('#percent-shengwu').html(Number(coursePercent['生物'] * 100).toFixed(0) + '%');
+                    $('#percent-zhengzhi').html(Number(coursePercent['政治'] * 100).toFixed(0) + '%');
+                    $('#percent-lishi').html(Number(coursePercent['历史'] * 100).toFixed(0) + '%');
+                    $('#percent-dili').html(Number(coursePercent['地理'] * 100).toFixed(0) + '%');
+                    $('#percent-jishu').html(Number(coursePercent['通用技术'] * 100).toFixed(0) + '%');
                 } else {
                     $('.course-bar-analyse, .course-bar-analyse-results').hide();
                 }
@@ -199,7 +214,6 @@ CoursePlan.prototype = {
 
                 if (provinceId != '330000') {
                     that.course.delete('通用技术');
-                    console.info(that.course);
                     that.selectedCount = 6;
                     that.status = {
                         '通用技术': false,
@@ -237,11 +251,11 @@ CoursePlan.prototype = {
                     fontWeight: 'normal'
                 }
             },
-            tooltip : {
+            tooltip: {
                 trigger: 'axis',
                 showContent: true,
-                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                 }
             },
             legend: {
@@ -261,10 +275,10 @@ CoursePlan.prototype = {
                 bottom: '3%',
                 containLabel: true
             },
-            xAxis : [
+            xAxis: [
                 {
-                    type : 'category',
-                    data : years, //['2017届','2018届','2019届','2020届','2021届'],
+                    type: 'category',
+                    data: years, //['2017届','2018届','2019届','2020届','2021届'],
                     boundaryGap: [0, 0.01],
                     axisTick: {
                         show: false
@@ -282,9 +296,9 @@ CoursePlan.prototype = {
                     }
                 }
             ],
-            yAxis : [
+            yAxis: [
                 {
-                    type : 'value',
+                    type: 'value',
                     boundaryGap: [0, 0.01],
                     axisTick: {
                         show: false
@@ -433,7 +447,7 @@ CoursePlan.prototype = {
 
                 var template = Handlebars.compile($("#teacher-config-list-data-template").html());
                 $.each(data, function (i, k) {
-                    k.index = i +1;
+                    k.index = i + 1;
                     var tempIndex = k.index;
                     tempTeachers[tempIndex] = new Array();
                     $.each(k.teachers, function (n, m) {
@@ -472,10 +486,10 @@ CoursePlan.prototype = {
         teacherSubjectHtml.push('<table>');
         teacherSubjectHtml.push('<thead>');
         teacherSubjectHtml.push('<tr>');
-        teacherSubjectHtml.push('<th>排名</th>');
-        teacherSubjectHtml.push('<th>组合</th>');
-        teacherSubjectHtml.push('<th>组合</th>');
-        teacherSubjectHtml.push('<th>组合</th>');
+        teacherSubjectHtml.push('<th>老师名称</th>');
+        teacherSubjectHtml.push('<th>所教科目</th>');
+        teacherSubjectHtml.push('<th>所教年级</th>');
+        teacherSubjectHtml.push('<th>所带班级</th>');
         teacherSubjectHtml.push('</tr>');
         teacherSubjectHtml.push('</thead>');
         teacherSubjectHtml.push('<tbody>');
@@ -531,7 +545,7 @@ $(function () {
             },
             padding: [20, 60, 20, 60]
         },
-        tooltip : {
+        tooltip: {
             trigger: 'item',
             formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
@@ -543,7 +557,7 @@ $(function () {
                 selectedOffset: 0,
                 legendHoverLink: false,
                 hoverAnimation: false,
-                radius : [0, '70%'],
+                radius: [0, '70%'],
                 center: ['50%', '55%'],
                 avoidLabelOverlap: false,
                 color: ['#64A3AD', '#91D8E4', '#87B3E7', '#A2D86A', '#FFB789', '#F5A623', '#A25E51'],
@@ -560,7 +574,7 @@ $(function () {
                     }
                 },
                 //data: batchs
-                data:[
+                data: [
                     {value: 253, name: '通用技术'},
                     {value: 357, name: '政治'},
                     {value: 321, name: '历史'},
