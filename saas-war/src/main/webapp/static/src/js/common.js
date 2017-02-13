@@ -212,7 +212,6 @@ var Common = {
 
         if (Common.cookie.getCookie('siderMenu')) {
             var siderMenu = $.parseJSON(Common.cookie.getCookie('siderMenu'));
-            console.log(siderMenu)
             var indexUrl = that.cookie.getCookie('indexUrl');
             var menus = [];
             if(("/"+indexUrl)==pathName){
@@ -246,7 +245,6 @@ var Common = {
                     menus.push('<ul class="submenu">');
 
                     $.each(v.sonMeuns, function (k, m) {
-                        console.log(m.meunName);
                         if (pathName == m.meunUrl) {
                             if(m.meunName=="三位一体招生"){
                                 menus.push('<li class="active trinity">');

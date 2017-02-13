@@ -47,6 +47,12 @@
 
                         <div class="main-title">
                             <h3>学生管理</h3>
+                            <div class="top-handle">
+                                <button class="btn-top">行政班&理科班模板下载</button>
+                                <button class="btn-top">教学班模板下载</button>
+                                <button class="btn-top">批量上传</button>
+                                <button class="btn-top">添加字段</button>
+                            </div>
                         </div>
 
                         <div class="title-2">
@@ -72,12 +78,17 @@
                                 <button class="btn btn-pink" id="student-add" type="add">添加学生</button>
                                 <button class="btn btn-inverse" id="student-modify" type="update">修改</button>
                                 <button class="btn btn-success" id="student-remove">删除</button>
-                                <button class="btn btn-warning" id="student-template-download">模板下载</button>
-                                <button class="btn btn-warning" id="student-upload">批量上传</button>
-                                <button class="btn btn-warning" id="student-setting">学生设置</button>
+                                <%--<button class="btn btn-warning" id="student-template-download">模板下载</button>--%>
+                                <%--<button class="btn btn-warning" id="student-upload">批量上传</button>--%>
+                                <%--<button class="btn btn-warning" id="student-setting">学生设置</button>--%>
                             </div>
                         </div>
 
+                        <%--行政办管理|教学班管理--%>
+                        <div class="toggle-tab">
+                            <button class="tab nbr active">行政班管理</button>
+                            <button class="tab">教学班管理</button>
+                        </div>
 
                         <div id="student-table">
                                 <table class="table">
