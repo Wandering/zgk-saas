@@ -152,7 +152,7 @@ CoursePlan.prototype = {
                 };
                 var yearsFoo = [];
                 $.each(data.data, function (i, k) {
-                    // that.years.push(i + '届');
+                    that.years.push(i + '届');
                     yearsFoo.push(Number(i));
                     $.each(k, function (n, m) {
                         switch (n) {
@@ -180,18 +180,16 @@ CoursePlan.prototype = {
                         }
                     });
                 });
-                //横轴添加人数统计
-                for (var j = 0; j < yearsFoo.length; j++) {
-                    if (data.undergraduateEnrollingNumberList[j]) {
-                        var foo = $.inArray(Number(data.undergraduateEnrollingNumberList[j].year),yearsFoo);
-                        var fo = yearsFoo[foo]+'届(录取人数：'+data.undergraduateEnrollingNumberList[j].number+')';
-                        that.years.push(fo);
-                    }else{
-                        if(yearsFoo[foo]!=yearsFoo[j]){
-                            that.years.push(yearsFoo[j]);
-                        }else{
-                            that.years.push(yearsFoo[j-1]);
-                        }
+                for (var i = 0; i < that.years.length; i++) {
+                    var tempYear = that.years[i].substr(0, 4);
+                    if (data.undergraduateEnrollingNumberList.length != 0) {
+                        $.each(data.undergraduateEnrollingNumberList, function (n, m) {
+                            var tempInnerYear = m.year;
+                            var tempNumber = m.number;
+                            if (tempInnerYear == tempYear) {
+                                that.years[i] = tempInnerYear + "届(录取人数" +  tempNumber + ')';
+                            }
+                        });
                     }
                 }
                 $('#maxYear').html(data.maxYear);
