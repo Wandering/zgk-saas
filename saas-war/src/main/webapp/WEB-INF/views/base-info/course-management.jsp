@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <title>基础信息设置-课程管理</title>
     <%@ include file="./../common/meta.jsp"%>
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/results-analysis.css">
 </head>
 <body>
 <%@ include file="./../common/header.jsp"%>
@@ -52,12 +53,7 @@
                             <table id="" class="table">
                                 <thead>
                                     <tr>
-                                        <th class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </th>
+                                        <th class="center"></th>
                                         <th class="center">序号</th>
                                         <th class="center">课程名称</th>
                                         <th class="center">开课年级</th>
@@ -85,6 +81,11 @@
         </div><!-- /.main-content -->
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
+<script id="course-thead-template" type="text/x-handlebars-template">
+    <tr>
+
+    </tr>
+</script>
 <%@ include file="./../common/footer.jsp"%>
 <script src="<%=ctx%>/static/src/js/base-info/course-management.js"></script>
 </body>
