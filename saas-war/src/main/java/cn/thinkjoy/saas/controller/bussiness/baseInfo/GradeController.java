@@ -1,4 +1,4 @@
-package cn.thinkjoy.saas.controller.bussiness;
+package cn.thinkjoy.saas.controller.bussiness.baseInfo;
 
 import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.common.UserContext;
@@ -8,6 +8,8 @@ import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.core.GradeConstant;
+import com.alibaba.dubbo.common.json.JSON;
+import com.alibaba.dubbo.common.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -36,7 +38,7 @@ public class GradeController {
 
     /**
      *  添加年级信息
-     * @param grades
+     * @param gradesStr
      *      grades
      *      [grade|id|gradeType|year,grade|id|gradeType|year,grade|id|gradeType|year]
      *      eg:[1|1|1|2016,2|2|3|2015,3|3|3|2014]
@@ -44,7 +46,14 @@ public class GradeController {
      */
     @RequestMapping(value = "insertGrade",method = RequestMethod.POST)
     @ResponseBody
-    public boolean insertGrade(@RequestParam String[] grades){
+    public boolean insertGrade(@RequestParam String gradesStr){
+
+        String[] grades = new String[0];
+        try {
+            grades = JSON.parse(gradesStr,String[].class);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         /**
          * 数据校验
@@ -85,14 +94,21 @@ public class GradeController {
 
     /**
      * 更新年级信息
-     * @param grades
+     * @param gradesStr
+     * grades
+     *      [grade|id|gradeType|year,grade|id|gradeType|year,grade|id|gradeType|year]
+     *      eg:[1|1|1|2016,2|2|3|2015,3|3|3|2014]
      * @return
      */
     @RequestMapping(value = "updateGrade",method = RequestMethod.POST)
     @ResponseBody
-    public boolean updateGrade(@RequestParam String[] grades){
-//        [1|2016|1,2|2015|3,3|2014|3]
-//        grades = new String[]{"1|1|1","2|2|3","3|3|3"};
+    public boolean updateGrade(@RequestParam String gradesStr){
+        String[] grades = new String[0];
+        try {
+            grades = JSON.parse(gradesStr,String[].class);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         /**
          * 数据校验
