@@ -155,10 +155,10 @@ public class StudentController {
             return tempArr;
         }
 
-        String [] columns = {};
+        String[] columns = new String[tempArr.length];
         int i = 0;
         for(String column : tempArr){
-            if(Constant.ZDBJ_COLUMNS.indexOf(column) == -1){
+            if(Constant.ZDBJ_COLUMNS_VALUE.indexOf(column) == -1){
                 columns[i] = column;
                 i++;
             }
@@ -177,8 +177,7 @@ public class StudentController {
     @RequestMapping(value = "/getStuExcelHeader", method = RequestMethod.GET)
     @ResponseBody
     public List<TenantConfigInstanceView> getStuExcelHeader(@RequestParam Integer type,
-                                 @RequestParam Integer tnId,
-                                 @RequestParam Integer isRetain) {
+                                 @RequestParam Integer tnId) {
 
         List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceService.getTenantConfigListByTnIdAndType(Constant.STUDENT, tnId);
 
@@ -200,7 +199,7 @@ public class StudentController {
 
         List<TenantConfigInstanceView> list = Lists.newArrayList();
         for(TenantConfigInstanceView view : tenantConfigInstances){
-            if(Constant.ZDBJ_COLUMNS.indexOf(view.getEnName()) == -1){
+            if(Constant.ZDBJ_COLUMNS_KEY.indexOf(view.getEnName()) == -1){
                 list.add(view);
             }
         }

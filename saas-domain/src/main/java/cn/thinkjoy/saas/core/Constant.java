@@ -57,7 +57,9 @@ public class Constant {
             };
 
     // 走读班级学生特有属性
-    public static final String ZDBJ_COLUMNS = "student_check_major1,student_check_major_class1,student_check_major2,student_check_major_class2,student_check_major3,student_check_major_class3";
+    public static final String ZDBJ_COLUMNS_KEY = "student_check_major1,student_check_major_class1,student_check_major2,student_check_major_class2,student_check_major3,student_check_major_class3";
+    public static final String ZDBJ_COLUMNS_VALUE = "选考科目一,科目一所在班级,选考科目二,科目二所在班级,选考科目三,科目三所在班级";
+
     public static final String DEFULT_TEACH_DATE= "星期一|星期二|星期三|星期四|星期五";
     public static final String DEFULT_TEACH_TIME= "430";
     public static final Integer DEFULT_CLASS_TYPE= 1;
