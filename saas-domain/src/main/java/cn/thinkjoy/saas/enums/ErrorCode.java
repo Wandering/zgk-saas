@@ -49,7 +49,9 @@ public enum ErrorCode {
 
     COURSE_INFO_NOT_PERFECT("0000018","课程课时信息未填写完善"),
 
-    DATA_FORMAT_ERROR("0000019","数据格式不正确");
+    DATA_FORMAT_ERROR("0000019","数据格式不正确"),
+
+    GRADE_FORMAT_ERROR("2000001","年级数据不完整");
 
     private final String code;
 
