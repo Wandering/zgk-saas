@@ -153,6 +153,14 @@ public class WebCotroller {
     public ModelAndView studentManagement() {
         return new ModelAndView("/info-management/student-management");
     }
+    /**
+     * course-management
+     * 课程管理
+     */
+    @RequestMapping("/course-management")
+    public ModelAndView courseManagement() {
+        return new ModelAndView("/base-info/course-management");
+    }
 
     /**
      * student-management

@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.ICourseManageDAO">
+    <!--
+    insert
+    update
+    updateNull
+    deleteById
+    deleteByCondition
+    deleteByProperty
+    fetch
+    findOne
+    findList
+    findAll
+    queryPage
+    like
+    queryList
+    queryOne
+    count
+    selectMaxId
+    updateOrSave
+    selectOne
+    selectList
+    -->
+    <sql id="Base_Column_List">
+        id,
+        course_base_id as courseBaseId,
+        custom as custom,
+        course_type1 as courseType1,
+        course_type2 as courseType2,
+        course_type3 as courseType3,
+        create_time as createTime
+    </sql>
+    <insert id="insert" parameterType="CourseBaseInfo">
+        INSERT INTO saas_course_manage (
+            course_base_id,
+            custom,
+            course_type1,
+            course_type2,
+            course_type3,
+            create_time
+        ) VALUES (
+            #{courseBaseId},
+            #{custom},
+            #{courseType1},
+            #{courseType2},
+            #{courseType3},
+            #{createTime}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="CourseBaseInfo">
+        UPDATE saas_course_manage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseBaseId!=null">
+                course_base_id = #{courseBaseId},
+            </if>
+            <if test="custom!=null">
+                custom = #{custom},
+            </if>
+            <if test="courseType1!=null">
+                course_type1 = #{courseType1},
+            </if>
+            <if test="courseType2!=null">
+                course_type2 = #{courseType2},
+            </if>
+            <if test="courseType3!=null">
+                course_type3 = #{courseType3},
+            </if>
+            <if test="createTime!=null">
+                create_time=#{createTime}
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_course_manage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.courseBaseId!=null">
+                course_base_id = #{map.courseBaseId},
+            </if>
+            <if test="map.custom!=null">
+                custom = #{map.custom},
+            </if>
+            <if test="map.courseType1!=null">
+                course_type1 = #{map.courseType1},
+            </if>
+            <if test="map.courseType2!=null">
+                course_type2 = #{map.courseType2},
+            </if>
+            <if test="map.courseType3!=null">
+                course_type3 = #{map.courseType3},
+            </if>
+            <if test="map.createTime!=null">
+                create_time=#{map.createTime}
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_course_manage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.courseBaseId!=null">
+                course_base_id = #{update.courseBaseId},
+            </if>
+            <if test="update.custom!=null">
+                custom = #{update.custom},
+            </if>
+            <if test="update.courseType1!=null">
+                course_type1 = #{update.courseType1},
+            </if>
+            <if test="update.courseType2!=null">
+                course_type2 = #{update.courseType2},
+            </if>
+            <if test="update.courseType3!=null">
+                course_type3 = #{update.courseType3},
+            </if>
+            <if test="update.createTime!=null">
+                create_time=#{update.createTime}
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.courseBaseId!=null">
+                AND course_base_id = #{condition.courseBaseId}
+            </if>
+            <if test="condition.custom!=null">
+                AND custom = #{condition.custom}
+            </if>
+            <if test="condition.courseType1!=null">
+                AND course_type1 = #{condition.courseType1}
+            </if>
+            <if test="condition.courseType2!=null">
+                AND course_type2 = #{condition.courseType2}
+            </if>
+            <if test="condition.courseType3!=null">
+                AND course_type3 = #{condition.courseType3}
+            </if>
+            <if test="condition.createTime!=null">
+                AND create_time=#{condition.createTime}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_course_manage (
+            course_base_id,
+            custom,
+            course_type1,
+            course_type2,
+            course_type3,
+            create_time
+        ) VALUES (
+            #{map.courseBaseId},
+            #{map.custom},
+            #{map.courseType1},
+            #{map.courseType2},
+            #{map.courseType3},
+            #{map.createTime}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="CourseBaseInfo">
+        UPDATE saas_course_manage
+        <trim prefix="SET" suffixOverrides=",">
+            course_base_id=#{courseBaseId},
+            custom=#{custom},
+            course_type1=#{courseType1},
+            course_type2=#{courseType2},
+            course_type3=#{courseType3}
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_course_manage
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_course_manage
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="courseBaseId!=null">
+                AND course_base_id = #{courseBaseId},
+            </if>
+            <if test="custom!=null">
+                AND custom = #{custom},
+            </if>
+            <if test="courseType1!=null">
+                AND course_type1 = #{courseType1},
+            </if>
+            <if test="courseType2!=null">
+                AND course_type2 = #{courseType2},
+            </if>
+            <if test="courseType3!=null">
+                AND course_type3 = #{courseType3},
+            </if>
+            <if test="createTime!=null">
+                AND create_time=#{createTime}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_course_manage WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="CourseBaseInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_course_manage
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="CourseBaseInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_course_manage WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="CourseBaseInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_course_manage WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="CourseBaseInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_course_manage
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="CourseBaseInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_course_manage
+        <where>
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+            <if test="condition.courseBaseId!=null">
+                ${condition.groupOp}   course_base_id  ${condition.courseBaseId.op}  #{condition.courseBaseId.data}
+            </if>
+            <if test="condition.custom!=null">
+                ${condition.groupOp}   custom  ${condition.custom.op}  #{condition.custom.data}
+            </if>
+            <if test="condition.courseType1!=null">
+                ${condition.groupOp}   course_type1  ${condition.courseType1.op}  #{condition.courseType1.data}
+            </if>
+            <if test="condition.courseType2!=null">
+                ${condition.groupOp}   course_type2  ${condition.courseType2.op}  #{condition.courseType2.data}
+            </if>
+            <if test="condition.courseType3!=null">
+                ${condition.groupOp}   course_type3  ${condition.courseType3.op}  #{condition.courseType3.data}
+            </if>
+            <if test="condition.createTime!=null">
+                ${condition.groupOp}   createTime  ${condition.createTime.op}  #{condition.createTime.data}
+            </if>
+        </where>
+
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="CourseBaseInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_course_manage
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="courseBaseId!=null">
+                AND course_base_id like CONCAT('%', #{courseBaseId} , '%')
+            </if>
+            <if test="custom!=null">
+                AND custom like CONCAT('%', #{custom} , '%')
+            </if>
+            <if test="courseType1!=null">
+                AND course_type1 like CONCAT('%', #{courseType1} , '%')
+            </if>
+            <if test="courseType2!=null">
+                AND course_type2 like CONCAT('%', #{courseType2} , '%')
+            </if>
+            <if test="courseType3!=null">
+                AND course_type3 like CONCAT('%', #{courseType3} , '%')
+            </if>
+            <if test="createTime!=null">
+                AND createTime like CONCAT('%', #{createTime} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="CourseBaseInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_course_manage
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.courseBaseId!=null">
+                AND course_base_id = #{condition.courseBaseId}
+            </if>
+            <if test="condition.custom!=null">
+                AND custom = #{condition.custom}
+            </if>
+            <if test="condition.courseType1!=null">
+                AND course_type1 = #{condition.courseType1}
+            </if>
+            <if test="condition.courseType2!=null">
+                AND course_type2 = #{condition.courseType2}
+            </if>
+            <if test="condition.courseType3!=null">
+                AND course_type3 = #{condition.courseType3}
+            </if>
+            <if test="condition.createTime!=null">
+                AND createTime = #{condition.createTime}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="CourseBaseInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_course_manage
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.courseBaseId!=null">
+                AND course_base_id = #{condition.courseBaseId}
+            </if>
+            <if test="condition.custom!=null">
+                AND custom = #{condition.custom}
+            </if>
+            <if test="condition.courseType1!=null">
+                AND course_type1 = #{condition.courseType1}
+            </if>
+            <if test="condition.courseType2!=null">
+                AND course_type2 = #{condition.courseType2}
+            </if>
+            <if test="condition.courseType3!=null">
+                AND course_type3 = #{condition.courseType3}
+            </if>
+            <if test="condition.createTime!=null">
+                AND createTime = #{condition.createTime}
+            </if>
+
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_course_manage
+        <where>
+            <if test="courseBaseId!=null">
+                ${groupOp} course_base_id ${courseBaseId.op}  #{courseBaseId.data}
+            </if>
+            <if test="custom!=null">
+                ${groupOp} custom ${custom.op}  #{custom.data}
+            </if>
+            <if test="courseType1!=null">
+                ${groupOp} course_type1 ${courseType1.op}  #{courseType1.data}
+            </if>
+            <if test="courseType2!=null">
+                ${groupOp} course_type2 ${courseType2.op}  #{courseType2.data}
+            </if>
+            <if test="courseType3!=null">
+                ${groupOp} course_type3 ${courseType3.op}  #{courseType3.data}
+            </if>
+            <if test="createTime!=null">
+                ${groupOp} createTime ${createTime.op}  #{createTime.data}
+            </if>
+        </where>
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_course_manage
+    </select>
+
+</mapper>
+

@@ -41,6 +41,8 @@ public class Constant {
 
     public static final String STUDENT = "student";
 
+    public static final String TABLE_TYPE_TEACHER = "teacher";
+
     public static final String STUDENT_GRADE = "student_grade";
 
     public static final String[] CHECK_TABLE_STUDENT_COLUMNS = {
@@ -62,4 +64,6 @@ public class Constant {
     public static final Integer SUBJECT_CLASS_TYPE= 2;
     public static final Integer DEFULT_CLASS_NUM= 2;
     public static final Integer TASK_SUCCESS = 3;
+    public static final String CLASS_ADM = "class_adm";
+    public static final String CLASS_EDU = "class_edu";
 }
