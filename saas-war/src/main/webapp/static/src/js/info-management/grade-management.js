@@ -152,7 +152,7 @@ GradeManagement.prototype = {
         });
     },
     saveGradeManage: function (data) {
-        Common.ajaxFun('/grade/insertGrade.do', 'POST', {'grades': JSON.stringify(data)}, function (res) {
+        Common.ajaxFun('/grade/insertGrade.do', 'POST', {'gradesStr': JSON.stringify(data)}, function (res) {
             if (res.rtnCode == "0000000") {
                 res.bizData == 'true';
                 $('#grade-manage-btn').attr('disabled', 'disabled');
