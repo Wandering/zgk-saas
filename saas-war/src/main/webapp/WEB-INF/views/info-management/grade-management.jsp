@@ -54,8 +54,10 @@
                                                     <%--<span class="lbl"></span>--%>
                                                 <%--</label>--%>
                                             <%--</th>--%>
-                                            <th class="center">编号</th>
-                                            <th class="center">年级名称</th>
+                                            <th class="center">序号</th>
+                                            <th class="center">年级简称</th>
+                                            <th class="center">入学年份</th>
+                                            <th class="center">存在的班级类型</th>
                                         </tr>
                                         </thead>
                                         <tbody id="grade-list" class="check-template">
@@ -71,6 +73,8 @@
                                         <%--</tr>--%>
                                         </tbody>
                                     </table>
+                                    <div id="warm-tip"></div>
+                                    <button class="btn btn-warning manage-btn" id="grade-manage-btn">保存</button>
                                 </div>
                             </div>
                         </div>

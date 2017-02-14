@@ -25,6 +25,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -410,15 +411,14 @@ public class ConfigurationController {
     @ResponseBody
     public Map getInSchoolYear() {
 
-        Integer end = 2020, start = 2012;
+        Integer start = Calendar.getInstance().get(Calendar.YEAR);
 
-        Integer size = end - start;
 
-        String[] arr = new String[size + 1];
+        String[] arr = new String[10];
 
-        for (int i = 0; i <= size; i++) {
+        for (int i = 0; i <= 9; i++) {
             arr[i] = start + "";
-            start++;
+            start--;
         }
 
         Map resultMap = new HashMap();

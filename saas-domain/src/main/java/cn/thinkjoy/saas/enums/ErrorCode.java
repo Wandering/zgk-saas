@@ -47,7 +47,9 @@ public enum ErrorCode {
 
     TEACHER_INFO_NOT_PERFECT("0000017","教师信息未填写完善"),
 
-    COURSE_INFO_NOT_PERFECT("0000018","课程课时信息未填写完善");
+    COURSE_INFO_NOT_PERFECT("0000018","课程课时信息未填写完善"),
+
+    DATA_FORMAT_ERROR("0000019","数据格式不正确");
 
     private final String code;
 
