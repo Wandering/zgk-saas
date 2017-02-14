@@ -11,39 +11,6 @@ GradeManagement.prototype = {
     getGrade: function () {
         var that = this;
         Common.ajaxFun('/grade/getGrade.do', 'GET', {}, function (res1) {
-            // res1 = {
-            //     "bizData": [
-            //         {
-            //             "classType": 1,
-            //             "gorder": 1,
-            //             "grade": "高一年级",
-            //             "gradeCode": 1,
-            //             "id": 428,
-            //             "tnId": 12,
-            //             "year": 2016
-            //         },
-            //         {
-            //             "classType": 3,
-            //             "gorder": 2,
-            //             "grade": "高二年级",
-            //             "gradeCode": 2,
-            //             "id": 429,
-            //             "tnId": 12,
-            //             "year": 2015
-            //         },
-            //         {
-            //             "classType": 3,
-            //             "gorder": 3,
-            //             "grade": "高三年级",
-            //             "gradeCode": 3,
-            //             "id": 430,
-            //             "tnId": 12,
-            //             "year": 2014
-            //         }
-            //     ],
-            //     "rtnCode": "0000000",
-            //     "ts": 1486716305774
-            // };
             if (res1.rtnCode == "0000000") {
                 //获取班级类型
                 Common.ajaxFun('/grade/getGradeTypeDict.do', 'GET', {
@@ -63,7 +30,7 @@ GradeManagement.prototype = {
     renderList: function (data1, data2) {
         if (data1.rtnCode == "0000000") {
             var gradeArr = [], yearsTpl = [], gradeTypeDict;
-            yearsTpl.push('<select>')
+            yearsTpl.push('<select><option value="00">请选择入学年份</option>')
             for (var i = (new Date()).getFullYear(); i > (new Date()).getFullYear() - 4; i--) {
                 yearsTpl.push('<option value="' + i + '">' + i + '年</option>');
             }
@@ -171,14 +138,18 @@ $('#add-btn').on('click', function () {
 //保存年级管理
 $('#grade-manage-btn').click(function () {
     var data = [], gradeCode, gradeId, dictId, yearVal;
+    var gradeArr = ['高一年','高二年级','高三年级'];
     // gradeCode | 年级id | dictId | 年份val
     for (var i = 0; i < $('#grade-list tr').length; i++) {
         gradeCode = $("#grade-col-" + i).find('td').eq(1).find('.gradeNameItem').attr('gradecode');  //gradeCode
         gradeId = $("#grade-col-" + i).find('td').eq(1).find('.gradeNameItem').attr('gradeId');  //年级id
         dictId = $("#grade-col-" + i).find('td').eq(3).find('.gradeNameItem').find('input[name="typeDict' + i + '"]:checked').val();  //dictId
         yearVal = $("#grade-col-" + i).find('td').eq(2).find('select').val();  //年份val
+        if(yearVal == 00){
+            layer.msg(gradeArr[i]+'入学年份没有选择');
+            return false;
+        }
         if(!dictId){
-            var gradeArr = ['高一年','高二年级','高三年级'];
             layer.msg(gradeArr[i]+'存在的班级类型没有选择');
             return false;
         }else{

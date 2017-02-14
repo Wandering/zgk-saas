@@ -78,9 +78,10 @@
                                 <button class="btn btn-pink" id="student-add" type="add">添加学生</button>
                                 <button class="btn btn-inverse" id="student-modify" type="update">修改</button>
                                 <button class="btn btn-success" id="student-remove">删除</button>
-                                <%--<button class="btn btn-warning" id="student-template-download">模板下载</button>--%>
-                                <%--<button class="btn btn-warning" id="student-upload">批量上传</button>--%>
-                                <%--<button class="btn btn-warning" id="student-setting">学生设置</button>--%>
+
+                                <button class="btn btn-warning" id="student-template-download">模板下载</button>
+                                <button class="btn btn-warning" id="student-upload">批量上传</button>
+                                <button class="btn btn-warning" id="student-setting">学生设置</button>
                             </div>
                         </div>
 

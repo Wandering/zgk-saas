@@ -32,7 +32,7 @@ NumberManagement.prototype = {
                     ratioHtml.push('<td class="center">' + k.stu3numbers + '</td>');
                     ratioHtml.push('<td class="center">' + k.batch1enrolls + '</td>');
                     ratioHtml.push('<td class="center">' + k.batch2enrolls + '</td>');
-                    //ratioHtml.push('<td class="center">' + k.batch3enrolls + '</td>');
+                    ratioHtml.push('<td class="center">' + k.batch3enrolls + '</td>');
                     ratioHtml.push('<td class="center">' + k.batch4enrolls + '</td>');
                 });
                 $('#ratio-manage-list').html(ratioHtml.join(''));
@@ -66,11 +66,11 @@ NumberManagement.prototype = {
         var yearContentHtml = [];
         yearContentHtml.push('<div class="add-class-box add-year-box">');
         yearContentHtml.push('<ul>');
-        yearContentHtml.push('<li><span class="year-title">选择年份</span><select id="rate-year"><option value="00">选择年份</option></select></li>');
+        yearContentHtml.push('<li><span class="year-title">选择年份</span><select id="rate-year"><option value="00">选择高考年份</option></select></li>');
         yearContentHtml.push('<li><span>高三考生数量</span><input type="text" class="rate-input" id="senior-three" /></li>');
         yearContentHtml.push('<li><span>一本上线人数</span><input type="text" class="rate-input" id="batch-first" /></li>');
         yearContentHtml.push('<li><span>二本上线人数</span><input type="text" class="rate-input" id="batch-second" /></li>');
-        //yearContentHtml.push('<li><span>三本上线人数</span><input type="text" class="rate-input" id="batch-third" /></li>');
+        yearContentHtml.push('<li><span>三本上线人数</span><input type="text" class="rate-input" id="batch-third" /></li>');
         yearContentHtml.push('<li><span>高职上线人数</span><input type="text" class="rate-input" id="batch-fourth" /></li>');
         yearContentHtml.push('<li><div class="opt-btn-box"><button class="btn btn-red" id="add-btn">确认添加</button><button class="btn btn-cancel cancel-btn">取消</button></div></li>');
         yearContentHtml.push('</ul>');
@@ -79,7 +79,7 @@ NumberManagement.prototype = {
             type: 1,
             title: '<span style="color: #CB171D;font-size: 14px;">' + title + "</span>",
             offset: 'auto',
-            area: ['362px', '390px'],
+            area: ['362px', '440px'],
             content: yearContentHtml.join('')
         });
         that.getYear();
@@ -93,7 +93,7 @@ NumberManagement.prototype = {
         yearContentHtml.push('<li><span>高三考生数量</span><input type="text" class="rate-input" id="senior-three" /></li>');
         yearContentHtml.push('<li><span>一本上线人数</span><input type="text" class="rate-input" id="batch-first" /></li>');
         yearContentHtml.push('<li><span>二本上线人数</span><input type="text" class="rate-input" id="batch-second" /></li>');
-        //yearContentHtml.push('<li><span>三本上线人数</span><input type="text" class="rate-input" id="batch-third" /></li>');
+        yearContentHtml.push('<li><span>三本上线人数</span><input type="text" class="rate-input" id="batch-third" /></li>');
         yearContentHtml.push('<li><span>高职上线人数</span><input type="text" class="rate-input" id="batch-fourth" /></li>');
         yearContentHtml.push('<li><div class="opt-btn-box"><button class="btn btn-red" id="update-btn">确认修改</button><button class="btn btn-cancel cancel-btn">取消</button></div></li>');
         yearContentHtml.push('</ul>');
@@ -102,7 +102,7 @@ NumberManagement.prototype = {
             type: 1,
             title: '<span style="color: #CB171D;font-size: 14px;">' + title + "</span>",
             offset: 'auto',
-            area: ['362px', '390px'],
+            area: ['362px', '440px'],
             content: yearContentHtml.join('')
         });
         that.getYear();
@@ -207,7 +207,7 @@ $(document).on('click', '#add-btn', function () {//新增升学率
     var stu3numbers = parseInt($('#senior-three').val().trim());
     var batch1enrolls = parseInt($('#batch-first').val().trim());
     var batch2enrolls = parseInt($('#batch-second').val().trim());
-    //var batch3enrolls = parseInt($('#batch-third').val().trim());
+    var batch3enrolls = parseInt($('#batch-third').val().trim());
     var batch4enrolls = parseInt($('#batch-fourth').val().trim());
     var rowCount = $('#ratio-manage-list').find('tr').length;
     var datas = {
@@ -221,7 +221,7 @@ $(document).on('click', '#add-btn', function () {//新增升学率
                 "stu3numbers": stu3numbers,
                 "batch1enrolls": batch1enrolls,
                 "batch2enrolls": batch2enrolls,
-                "batch3enrolls": 0,
+                "batch3enrolls": batch3enrolls,
                 "batch4enrolls": batch4enrolls
             }
         }
@@ -274,7 +274,7 @@ $(document).on('click', '#update-btn', function () {
     var stu3numbers = parseInt($('#senior-three').val().trim());
     var batch1enrolls = parseInt($('#batch-first').val().trim());
     var batch2enrolls = parseInt($('#batch-second').val().trim());
-    //var batch3enrolls = parseInt($('#batch-third').val().trim());
+    var batch3enrolls = parseInt($('#batch-third').val().trim());
     var batch4enrolls = parseInt($('#batch-fourth').val().trim());
     var datas = {
         "clientInfo": {},

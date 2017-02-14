@@ -54,11 +54,11 @@
                                                 </label>
                                             </th>
                                             <th class="center">序号</th>
-                                            <th class="center">年份</th>
+                                            <th class="center">高考年份</th>
                                             <th class="center">高三考生数量</th>
                                             <th class="center">一本上线人数</th>
                                             <th class="center">二本上线人数</th>
-                                            <%--<th class="center">三本上线人数</th>--%>
+                                            <th class="center">三本上线人数</th>
                                             <th class="center">高职上线人数</th>
                                         </tr>
                                     </thead>
