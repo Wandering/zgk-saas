@@ -45,6 +45,16 @@ public class EXConfigurationServiceImpl extends AbstractPageService<IBaseDAO<Con
         return exiConfigurationDAO.selectListBydomain(paramsMap);
     }
 
+    @Override
+    public List<Configuration> selectNotAddHeaderByTnId(Integer tnId,String type) {
+        Map paramsMap = new HashMap();
+        paramsMap.put("tnId", tnId);
+        paramsMap.put("type", type);
+        paramsMap.put("orderBy", "config_order");
+        paramsMap.put("sortBy", "asc");
+        return exiConfigurationDAO.selectNotAddHeaderByTnId(paramsMap);
+    }
+
     /**
      * 获取初始化字段
      * @param type

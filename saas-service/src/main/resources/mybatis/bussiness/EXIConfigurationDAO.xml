@@ -75,4 +75,24 @@
             </if>
         </where>
     </select>
+
+    <!-- 根据租户ID查询未添加的表头字段 -->
+    <select id="selectNotAddHeaderByTnId" parameterType="java.util.Map" resultMap="Base_Result_Mapper">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            saas_configuration t0
+        LEFT JOIN (
+            SELECT
+                config_key
+            FROM
+                saas_tenant_config_instance
+            WHERE
+                domain = #{type}
+            AND tn_id = #{tnId}
+        ) t1 ON t0.id = t1.config_key
+        WHERE
+            t0.domain = #{type}
+        AND t1.config_key IS NULL;
+    </select>
 </mapper>
