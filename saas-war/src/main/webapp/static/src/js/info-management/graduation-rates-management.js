@@ -4,7 +4,7 @@
 
 var tnId = Common.cookie.getCookie('tnId');
 
-function NumberManagement () {
+function NumberManagement() {
 
 }
 NumberManagement.prototype = {
@@ -116,7 +116,7 @@ NumberManagement.prototype = {
 
         for (var i = 0; i < rowItem.length - 3; i++) {
             (function (k) {
-                var tempVal = rowItem.eq(k+3).html();
+                var tempVal = rowItem.eq(k + 3).html();
                 if (tempVal != '-') {
                     $('#update-ratio-list input[type="text"]').eq(k).val(tempVal);
                 } else {
@@ -144,11 +144,11 @@ NumberManagement.prototype = {
                     console.info($(this));
                 });
                 ids = ids.join('-');///manage/sort/enrollingRatio/{tnId}/{ids}.do
-                Common.ajaxFun('/manage/sort/enrollingRatio/' + tnId + '/'+ ids +'.do', 'POST', {}, function (res) {
+                Common.ajaxFun('/manage/sort/enrollingRatio/' + tnId + '/' + ids + '.do', 'POST', {}, function (res) {
                     if (res.rtnCode == "0000000") {
                         if (res.bizData.result) {
                             layer.msg('排序成功', {time: 1000});
-                        }else{
+                        } else {
                             layer.msg(res.bizData.result);
                         }
                     }
@@ -172,11 +172,16 @@ $(document).on('click', '#addRole-btn', function () {
 });
 
 $(document).on('click', '#add-btn', function () {//新增升学率
+    var stu3numbers = parseInt($('#senior-three').val().trim());
+    var batch1enrolls = parseInt($('#batch-first').val().trim());
+    var batch2enrolls = parseInt($('#batch-second').val().trim());
+    var batch3enrolls = parseInt($('#batch-third').val().trim());
+    var batch4enrolls = parseInt($('#batch-fourth').val().trim());
     var year = $('#rate-year').val(),
         yearName = $('#rate-year option[value=' + year + ']').text();
     if (year == '00') {
         //layer.msg('请选择年份!', {time: 1000});
-        layer.tips('请选择年份!',$('#rate-year'));
+        layer.tips('请选择年份!', $('#rate-year'));
         $('#rate-year').focus();
         return;
     }
@@ -184,31 +189,52 @@ $(document).on('click', '#add-btn', function () {//新增升学率
     for (var i = 0; i < $('td[name="year"]').length; i++) {
         var tempYear = $('td[name="year"]').eq(i).text().trim();
         if (tempYear == yearName) {
-            layer.tips('该年份已经存在!',$('#rate-year'));
+            layer.tips('该年份已经存在!', $('#rate-year'));
             return;
         }
     }
-
     for (var i = 0; i < $('.add-year-box input[type="text"]').length; i++) {
         var node = $('.add-year-box input[type="text"]').eq(i);
         if (node.val().trim() == '') {
             //layer.msg(node.prev().text() + '不能为空!', {time: 1000});
-            layer.tips(node.prev().text() + '不能为空!',node);
+            layer.tips(node.prev().text() + '不能为空!', node);
             node.focus();
             return;
         }
         var re = /^[0-9]+$/;
         if (!re.test($.trim(node.val()))) {
-            layer.tips('请输入正确的数字!',node);
+            layer.tips('请输入正确的数字!', node);
+            return false;
+        }
+        if ($.trim(parseInt($('#senior-three').val())) > 50000) {
+            layer.tips('高三考生数量小于50000人!', node);
+            return false;
+        }
+
+        var tagTips = ['','一本上线人数','二本上线人数','三本上线人数','高职上线人数'];
+        if(batch1enrolls > 10000){
+            layer.tips('一本上线人数小于10000人!', $('#batch-first'));
+            return false;
+        }
+        if(batch2enrolls > 10000){
+            layer.tips('二本上线人数小于10000人!', $('#batch-second'));
+            return false;
+        }
+        if(batch3enrolls > 10000){
+            layer.tips('三本上线人数小于10000人!', $('#batch-third'));
+            return false;
+        }
+        if(batch4enrolls > 10000){
+            layer.tips('高职上线人数小于10000人!', $('#batch-fourth'));
             return false;
         }
     }
 
-    var stu3numbers = parseInt($('#senior-three').val().trim());
-    var batch1enrolls = parseInt($('#batch-first').val().trim());
-    var batch2enrolls = parseInt($('#batch-second').val().trim());
-    var batch3enrolls = parseInt($('#batch-third').val().trim());
-    var batch4enrolls = parseInt($('#batch-fourth').val().trim());
+    if(stu3numbers<batch1enrolls+batch2enrolls+batch3enrolls+batch4enrolls){
+        layer.tips('请输入正确的考生数量及各批次上线人数', $('#senior-three'));
+        return false;
+    }
+
     var rowCount = $('#ratio-manage-list').find('tr').length;
     var datas = {
         "clientInfo": {},
@@ -233,13 +259,13 @@ $(document).on('click', '#add-btn', function () {//新增升学率
         }
     }, function (res) {
         layer.msg("出错了");
-    }, null,true);
+    }, null, true);
 });
 
 $(document).on('click', '#updateRole-btn', function () {
     var that = $(this);
     var chknum = $(".check-template :checkbox:checked").size();
-    if(chknum!='1'){
+    if (chknum != '1') {
         layer.tips('修改只能选择一项!', that, {time: 1000});
         return false;
     }
@@ -250,7 +276,7 @@ $(document).on('click', '#update-btn', function () {
     var year = $('#rate-year').val();
     if (year == '00') {
         //layer.msg('请选择年份!', {time: 1000});
-        layer.tips('请选择年份!',$('#rate-year'));
+        layer.tips('请选择年份!', $('#rate-year'));
         $('#rate-year').focus();
         return;
     }
@@ -259,13 +285,13 @@ $(document).on('click', '#update-btn', function () {
         var node = $('.add-year-box input[type="text"]').eq(i);
         if (node.val().trim() == '') {
             //layer.msg(node.prev().text() + '不能为空!', {time: 1000});
-            layer.tips(node.prev().text() + '不能为空!',node);
+            layer.tips(node.prev().text() + '不能为空!', node);
             node.focus();
             return;
         }
         var re = /^[0-9]+$/;
         if (!re.test($.trim(node.val()))) {
-            layer.tips('请输入正确的数字!',node);
+            layer.tips('请输入正确的数字!', node);
             return false;
         }
     }
@@ -299,7 +325,7 @@ $(document).on('click', '#update-btn', function () {
         }
     }, function (res) {
         layer.msg("出错了");
-    }, null,true);
+    }, null, true);
 });
 
 $(document).on('click', '.cancel-btn', function () {

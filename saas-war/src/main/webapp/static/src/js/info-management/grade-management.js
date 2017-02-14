@@ -29,7 +29,7 @@ GradeManagement.prototype = {
     },
     renderList: function (data1, data2) {
         if (data1.rtnCode == "0000000") {
-            var gradeArr = [], yearsTpl = [], gradeTypeDict;
+            var gradeArr = [], yearsTpl = [], gradeTypeDict =[];
             yearsTpl.push('<select><option value="00">请选择入学年份</option>')
             for (var i = (new Date()).getFullYear(); i > (new Date()).getFullYear() - 4; i--) {
                 yearsTpl.push('<option value="' + i + '">' + i + '年</option>');
@@ -40,14 +40,14 @@ GradeManagement.prototype = {
                 //存在的班级类型
                 gradeTypeDict = [];
                 $.each(data2.bizData, function (j, k) {
-                    gradeTypeDict.push('<input type="radio" id="xzb-' + i + '-' + j + '" name="typeDict' + i + '" value="' + k.dictId + '"><label for="xzb-' + i + '-' + j + '" >' + k.name + '</label>');
+                    gradeTypeDict.push('<input type="radio" id="xzb-' + i + '-' + j + '" name="typeDict' + i + '" value="' + k.dictId + '">');
+                    gradeTypeDict.push('<label for="xzb-' + i + '-' + j + '" >' + k.name + '</label>');
                 });
-                gradeTypeDict.join("");
                 gradeArr.push('<tr id="grade-col-' + i + '">');
                 gradeArr.push('<td class="center index" indexid="' + v.id + '">' + (i + 1) + '</td>');
                 gradeArr.push('<td class="center"><span class="gradeNameItem" gradeId="' + v.id + '" gradeCode="' + v.gradeCode + '">' + v.grade + '</span></td>');
                 gradeArr.push('<td class="center"><span class="gradeNameItem">' + yearsTpl + '</span></td>');
-                gradeArr.push('<td class="center"><span class="gradeNameItem type-dict">' + gradeTypeDict + '</span></td>');
+                gradeArr.push('<td class="center"><span class="gradeNameItem type-dict">' + gradeTypeDict.join("") + '</span></td>');
                 gradeArr.push('</tr>');
             });
             $('#grade-list').append(gradeArr.join(''));
