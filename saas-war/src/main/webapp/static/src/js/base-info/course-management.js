@@ -8,7 +8,7 @@ function CourseManagement() {
 CourseManagement.prototype = {
     constructor: CourseManagement,
     init: function () {
-        this.getDefaultInfo();
+        this.queryCourseList();
         this.getCourse();
         this.addCourse();
         this.updateCourse();
@@ -17,13 +17,48 @@ CourseManagement.prototype = {
     // 语文、数学、英语、物理、化学、生物、政治、历史、地理  默认课程不可编辑\不可修改\不可删除
     // 通用技术 不可编辑\不可修改\不可删除
     // 查询课程基础信息
-    getDefaultInfo:function(){
-        var courseArr = ['语文','数学','英语','物理','化学','生物','地理','历史','生物'];
-        var courseTemplate = Handlebars.compile($("#course-tbody-template").html());
-        Handlebars.registerHelper("addOne", function (index, options) {
-            return parseInt(index) + 1;
-        });
-        $('#course-tbody').html(courseTemplate(courseArr));
+    getDefaultInfo:function(data){
+        //var courseArr = ['语文','数学','英语','物理','化学','生物','地理','历史','生物'];
+        //var courseTemplate = Handlebars.compile($("#course-tbody-template").html());
+        //Handlebars.registerHelper("addOne", function (index, options) {
+        //    return parseInt(index) + 1;
+        //});
+        //$('#course-tbody').html(courseTemplate(courseArr));
+
+        console.log(data);
+
+        var dataObj = data.bizData.courses;
+        var courseHtml = '';
+        for(var i=0;i<dataObj.length;i++){
+            if(
+                dataObj[i].courseName == '语文' ||
+                dataObj[i].courseName == '数学' ||
+                dataObj[i].courseName == '英语' ||
+                dataObj[i].courseName == '物理' ||
+                dataObj[i].courseName == '化学' ||
+                dataObj[i].courseName == '生物' ||
+                dataObj[i].courseName == '地理' ||
+                dataObj[i].courseName == '历史' ||
+                dataObj[i].courseName == '生物'
+
+            ){
+                courseHtml  += '<tr>'
+                    +'<th class="center">'
+                    +'<label>'
+                    +'<input type="checkbox" dataId="'+ dataObj[i].id +'" courseName="'+ dataObj[i].courseName +'" class="ace" />'
+                    +'<span class="lbl"></span>'
+                    +'</label>'
+                    +'</th>'
+                    +'<td class="center">'+ (i+1) +'</td>'
+                    +'<td class="center">'+ dataObj[i].courseName +'</td>'
+                    +'<td class="center"></td>'
+                    +'<td class="center"></td>'
+                    +'<td class="center"></td>'
+                    +'<td class="center"></td>'
+                    +'</tr>';
+            }
+        }
+        $('#course-tbody').append(courseHtml);
     },
     // 获取租户下的课程设置信息
     getCourse:function(){
@@ -43,9 +78,11 @@ CourseManagement.prototype = {
 
     },
     queryCourseList: function () {
+        var that = this;
         var courseArr = [];
         courseArr.push('<option value="00">请选择课程名称</option>');
         Common.ajaxFun('/course/get/baseInfo.do', 'GET', {}, function (res) {
+            that.getDefaultInfo(res);
             if (res.rtnCode == "0000000") {
                 var resData = res.bizData.courses;
                 $.each(resData, function (i, v) {
@@ -76,17 +113,17 @@ CourseManagement.prototype = {
         addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo"  type="checkbox" class="ace" /><span class="lbl">高二年级</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
         addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeThree"  type="checkbox" class="ace" /><span class="lbl">高三年级</span></label>');
         addCourseContentHtml.push('</div>');
-        addCourseContentHtml.push('<div class="box-row">');
+        addCourseContentHtml.push('<div class="box-row hides">');
         addCourseContentHtml.push('<span><i>*</i>高一年级课程类型：</span>');
         addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo-wen" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
         addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo-li"  type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
         addCourseContentHtml.push('</div>');
-        addCourseContentHtml.push('<div class="box-row">');
+        addCourseContentHtml.push('<div class="box-row hides">');
         addCourseContentHtml.push('<span><i>*</i>高二年级课程类型：</span>');
         addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo-wen" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
         addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo-li"  type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
         addCourseContentHtml.push('</div>');
-        addCourseContentHtml.push('<div class="box-row">');
+        addCourseContentHtml.push('<div class="box-row hides">');
         addCourseContentHtml.push('<span><i>*</i>高三年级课程类型：</span>');
         addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeThree-wen" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
         addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeThree-li"  type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
@@ -115,8 +152,20 @@ CourseManagement.prototype = {
 
     },
     // 删除课程管理信息
-    delCourse:function(){
+    delCourse:function(id){
+        var that = this;
+        Common.ajaxFun('/course/del/manager/' + id, 'POST', {
+            'courseId':id
+        }, function (res) {
+            console.log()
+            if (res.rtnCode == "0000000") {
 
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
     }
 };
 
@@ -126,15 +175,17 @@ $(function () {
 
     // 新增
     $('#addCourse-btn').on('click',function(){
-        CourseManagementIns.addCourseLayer('添加课程', false);
+        CourseManagementIns.addCourseLayer('添加课程');
     });
     // 修改
     $('#updateCourse-btn').on('click',function(){
-        CourseManagementIns.addCourseLayer('修改课程', true);
+
+        CourseManagementIns.addCourseLayer('修改课程');
     });
 
     // 删除
     $('#deleteCourse-btn').on('click', function () {
+        var id = $('#course-tbody input:checked').attr('dataid');
         var checkboxLen = $('#course-tbody input:checked').length;
         if (checkboxLen == 0) {
             layer.tips('至少选择一项', $(this));
@@ -144,10 +195,34 @@ $(function () {
             layer.tips('删除只能选择一项', $(this));
             return false;
         }
+
+        var courseName = $('#course-tbody input:checked').attr('courseName');
+
+
+        if(
+            courseName == '语文' ||
+            courseName == '数学' ||
+            courseName == '英语' ||
+            courseName == '物理' ||
+            courseName == '化学' ||
+            courseName == '生物' ||
+            courseName == '地理' ||
+            courseName == '历史' ||
+            courseName == '生物'
+        ){
+            layer.tips('不可删除'+ courseName +'课程', $('#course-tbody input:checked'));
+            return false;
+        }
+
+
+
+
+
+
         layer.confirm('确定删除?', {
             btn: ['确定', '关闭'] //按钮
         }, function () {
-            var id = $('#course-tbody input:checked').attr('dataid');
+
             CourseManagementIns.delCourse(id);
         }, function () {
             layer.closeAll();
