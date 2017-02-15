@@ -12,4 +12,6 @@ import java.util.Map;
  */
 public interface ICourseManageDAO extends IBaseDAO<CourseManage> {
     List<CourseManageVo> selectCourseManageInfo(Map map);
+
+    Integer addCourses(List<CourseManage> courseManages);
 }
