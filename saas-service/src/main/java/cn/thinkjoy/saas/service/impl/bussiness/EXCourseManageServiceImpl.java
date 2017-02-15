@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 /**
  * Created by douzy on 17/2/14.
  */
-@Service("EXCourseBaseInfoServiceImpl")
+@Service("EXCourseManageServiceImpl")
 public class EXCourseManageServiceImpl implements IEXCourseManageService {
     @Resource
     ICourseManageDAO iCourseManageDAO;
