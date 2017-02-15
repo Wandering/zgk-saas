@@ -44,7 +44,7 @@
                                     <button class="btn btn-success" id="deleteTeacherBtn">删除</button>
                                     <button class="btn btn-warning" id="downloadBtn">模板下载</button>
                                     <button class="btn btn-warning" id="uploadBtn">批量上传</button>
-                                    <button class="btn btn-warning" id="teacher-settings-btn">教师设置</button>
+                                    <%--<button class="btn btn-warning" id="teacher-settings-btn">教师设置</button>--%>
                                 </div>
                             </div>
                             <div class="">
