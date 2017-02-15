@@ -283,3 +283,68 @@ a.download-link:hover {
   margin-right: 20px;
   margin-left: 5px;
 }
+
+
+
+// 课程管理
+.add-course-box {
+  width: 100%;
+  height: 100%;
+  padding: 29px 43px 29px 44px;
+  .course-box {
+    height: inherit;
+    font-size: 14px;
+    color: #000000;
+    .box-row {
+      overflow: hidden;
+      margin-bottom:12px;
+      i {
+        font-size: 14px;
+        color: #CB171D;
+        position: relative;
+        top: 2px;
+        left: -2px;
+      }
+
+      input[type='text'], #grade-list, #term-list {
+        width: 225px;
+        background: #FFFFFF;
+        border: 1px solid #D5D9DF;
+        border-radius: 2px!important;
+      }
+      #term-year {
+        width: 107px;
+        margin-right: 5px;
+      }
+      #term-list {
+        width: 96px;
+        margin-left: 3px;
+      }
+      button, button:focus {
+        display: block;
+        width: 84px;
+        height: 26px;
+        margin: 0 auto;
+        background: #CB171D;
+        border: 1px solid #CB171D;
+        border-radius: 2px;
+        font-size: 14px;
+        color: #FFFFFF;
+        outline: 0;
+      }
+      button:hover {
+        -moz-opacity: 0.6;
+        -ms-opacity: 0.6;
+        opacity: 0.6;
+        filter: alpha(opacify=60);
+      }
+    }
+    //.box-row + .box-row + .box-row + .box-row {
+    //  margin-bottom: 0;
+    //}
+  }
+}
+.save-course-btn{
+
+}
+
