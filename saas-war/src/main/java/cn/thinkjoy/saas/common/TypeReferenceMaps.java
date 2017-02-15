@@ -30,6 +30,7 @@ public class TypeReferenceMaps implements ITypeReference {
         typeReferenceMaps.put("/manage/enrollingRatio/modify.do",new TypeReference<Request>() {});
         typeReferenceMaps.put("/student/addStuInfo.do",new TypeReference<Request>() {});
         typeReferenceMaps.put("/student/updateStuInfo.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/course/add/manager.do",new TypeReference<Request>() {});
     }
 
     @Override
