@@ -181,7 +181,7 @@ CourseManagement.prototype = {
             addCourseContentHtml.push('<select id="course-name-list">' + that.queryCourseList() + '</select>');
         }
         addCourseContentHtml.push('</div>');
-        addCourseContentHtml.push('<div class="box-row">');
+        addCourseContentHtml.push('<div class="box-row box-start-course">');
         addCourseContentHtml.push('<span><i>*</i>开课年级：</span>');
         addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne" data-id="1"  type="checkbox" class="ace form-input-checkbox" /><span class="lbl">高一年级</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
         addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo" data-id="2"  type="checkbox" class="ace form-input-checkbox" /><span class="lbl">高二年级</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
@@ -350,6 +350,30 @@ $(function () {
 
     // 保存添加
     $('body').on('click', '#save-course-btn', function () {
+        var courseNameVal = $('#course-name-list').val();
+        var courseNameText = $('#course-name-list').children('option:selected').text();
+        if(courseNameVal=='00'){
+            layer.tips('请选择课程', $('#course-name-list'));
+            return false;
+        }
+
+        for(var i=0;i<$('#course-tbody input[type="checkbox"]').length;i++){
+            var coursename = $('#course-tbody input[type="checkbox"]').eq(i).attr('coursename');
+            if(coursename == courseNameText){
+                layer.tips('不能重复添加同一门课程', $('#course-name-list'));
+                return false;
+            }
+        }
+
+
+
+        //if($('.form-input-checkbox[type="checkbox"]:selected').length==0){
+        //    layer.tips('请选择开课年级', $('.box-start-course'));
+        //    return false;
+        //}
+
+
+
         var courseId = $(this).attr('courseid');
         var datasArr = [];
         $('.form-input-checkbox[type="checkbox"]').each(function (i, v) {
@@ -363,7 +387,7 @@ $(function () {
                     switch (checkedLen) {
                         case 0:
                             layer.tips('请选择高' + gradeId + '年级课程类型', $('.box-row-' + gradeId));
-                            break;
+                            return ;
                         case 2:
                             gradeSubType = 3;
                             break;
