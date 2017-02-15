@@ -10,6 +10,7 @@ import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.core.GradeConstant;
 import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.dubbo.common.json.ParseException;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yangyongping on 2016/12/10.
@@ -172,4 +174,25 @@ public class GradeController {
         return dictList;
     }
 
+    /**
+     * 检测租户是否存在教学班
+     * @return
+     */
+    @RequestMapping(value = "getTnClassType",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getTnClassType(){
+
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        List<Grade> gradeList = gradeService.findList("tnId",tnId);
+        Map<String,Boolean> map = Maps.newHashMap();
+        boolean flag = false;
+        for(Grade grade : gradeList){
+            if(grade.getClassType() == 2){
+                flag = true;
+            }
+        }
+        map.put("result",flag);
+
+        return map;
+    }
 }
