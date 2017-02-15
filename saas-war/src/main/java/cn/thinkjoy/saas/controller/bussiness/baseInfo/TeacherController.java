@@ -4,11 +4,14 @@ import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.Grade;
+import cn.thinkjoy.saas.dto.CourseManageDto;
 import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.enums.GradeTypeEnum;
 import cn.thinkjoy.saas.enums.SubjectEnum;
 import cn.thinkjoy.saas.service.IGradeService;
+import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
+import cn.thinkjoy.saas.service.bussiness.IEXCourseManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +30,34 @@ public class TeacherController {
     @Autowired
     private IGradeService gradeService;
     @Autowired
+    private EXIGradeService exGradeService;
+    @Autowired
     private EXITenantConfigInstanceService exiTenantConfigInstanceService;
+    @Autowired
+    private IEXCourseManageService iexCourseManageService;
 
+    /**
+     * 查询科目
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "querySubject")
+    public Map<String, Object> querySubject() {
+        Map<String, Object> rtnMap = new HashMap();
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        List<CourseManageDto> courseManageDtos = iexCourseManageService.getCourseByTnId(tnId);
+        if (courseManageDtos.size() == 0) {
+            throw new BizException(ErrorCode.SUBJECT_NULL.getCode(),ErrorCode.SUBJECT_NULL.getMessage());
+        }
+        Set<String> subjects = new HashSet<>();
+        Map<String,Object> map;
+        for (CourseManageDto courseManageDto : courseManageDtos) {
+            subjects.add(courseManageDto.getCourseBaseName());
+        }
+        rtnMap.put("subject", subjects);
+        return rtnMap;
+    }
 
     /**
      * 通过科目查询年级
@@ -44,10 +73,31 @@ public class TeacherController {
     @RequestMapping(value = "queryGradeBySubject")
     public Map<String, Object> getGradeBySubject(@RequestParam String subject) {
         Map<String, Object> rtnMap = new HashMap();
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        List<CourseManageDto> courseManageDtos = iexCourseManageService.getCourseGradeByTnIdAndSubject(tnId,subject);
+        if (courseManageDtos.size() == 0) {
+            throw new BizException(ErrorCode.SUBJECT_NULL.getCode(),ErrorCode.SUBJECT_NULL.getMessage());
+        }
+        Set<Integer> gradeCodes = new HashSet<>(3);
+        for (CourseManageDto courseManageDto : courseManageDtos) {
+            gradeCodes.add(courseManageDto.getGradeId());
+        }
+        List<Grade> grades = exGradeService.getGradeByTnIdAndGradeCode(tnId,gradeCodes);
+        if (grades.size() == 0) {
+            throw new BizException(ErrorCode.GRADE_FORMAT_ERROR.getCode(),ErrorCode.GRADE_FORMAT_ERROR.getMessage());
+        }
+        for (Grade grade : grades){
+            grade.setGorder(null);
+            grade.setTnId(null);
+            grade.setYear(null);
+            grade.setId(null);
+            grade.setClassType(null);
+        }
+        rtnMap.put("grade", grades);
 
-        rtnMap.put("grade", "");
         return rtnMap;
     }
+
 
     /**
      * 通过年级查询最大带班数

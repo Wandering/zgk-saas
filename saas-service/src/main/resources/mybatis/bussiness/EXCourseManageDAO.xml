@@ -40,25 +40,25 @@
         LEFT JOIN  saas_course_base_info baseinfo on manage.course_base_id = baseinfo.id
         <where>
             <if test="tnId!=null">
-                manage.tn_id=#{tnId},
+                AND manage.tn_id=#{tnId}
             </if>
             <if test="courseBaseId!=null">
-                manage.course_base_id = #{courseBaseId},
+                AND manage.course_base_id = #{courseBaseId}
             </if>
             <if test="custom!=null">
-                manage.custom = #{custom},
+                AND manage.custom = #{custom}
             </if>
             <if test="gradeId!=null">
-                manage.grade_id = #{gradeId},
+                AND manage.grade_id = #{gradeId}
             </if>
             <if test="courseType!=null">
-                manage.course_type = #{courseType},
+                AND manage.course_type = #{courseType}
             </if>
             <if test="createTime!=null">
                 manage.create_time=#{createTime}
             </if>
-            <if test="createTime!=null">
-                baseinfo.course_name=#{courseBaseName}
+            <if test="courseBaseName!=null">
+                AND baseinfo.course_name=#{courseBaseName}
             </if>
         </where>
 
