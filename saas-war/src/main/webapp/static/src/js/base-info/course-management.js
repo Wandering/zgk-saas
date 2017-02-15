@@ -26,8 +26,17 @@ CourseManagement.prototype = {
         $('#course-tbody').html(courseTemplate(courseArr));
     },
     // 获取租户下的课程设置信息
-    getCourse:function(data){
+    getCourse:function(){
+        Common.ajaxFun('/course/get/manager/'+ tnId +'.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
+                console.log(res)
 
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
     },
     // 新增课程管理信息
     addCourse:function(){
