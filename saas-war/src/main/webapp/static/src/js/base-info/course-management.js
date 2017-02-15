@@ -186,7 +186,7 @@ CourseManagement.prototype = {
         // 选择开课年级
         $('body').on('click', '.form-input-checkbox', function () {
             var id = $(this).attr('data-id');
-            var data = '';
+            var data = [];
             for (var l = 0; l < data.bizData.length; l++) {
                 if (data.bizData[l].gradeCode == id) {
                     var classType = data.bizData[l].classType;
