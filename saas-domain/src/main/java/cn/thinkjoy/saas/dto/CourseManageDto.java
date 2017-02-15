@@ -9,13 +9,13 @@ import java.io.Serializable;
  * Created by douzy on 17/2/13.
  */
 public class CourseManageDto extends CourseManage{
-    private Integer courseBaseName;
+    private String courseBaseName;
 
-    public Integer getCourseBaseName() {
+    public String getCourseBaseName() {
         return courseBaseName;
     }
 
-    public void setCourseBaseName(Integer courseBaseName) {
+    public void setCourseBaseName(String courseBaseName) {
         this.courseBaseName = courseBaseName;
     }
 }

@@ -51,7 +51,9 @@ public enum ErrorCode {
 
     DATA_FORMAT_ERROR("0000019","数据格式不正确"),
 
-    GRADE_FORMAT_ERROR("2000001","年级数据不完整");
+    SUBJECT_NULL("2000001","科目数据未设置"),
+
+    GRADE_FORMAT_ERROR("2000002","年级数据不完整");
 
     private final String code;
 

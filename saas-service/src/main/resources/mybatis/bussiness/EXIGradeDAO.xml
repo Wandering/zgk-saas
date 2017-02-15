@@ -107,4 +107,28 @@
         </foreach>
 
     </delete>
+
+    <select id="getGradeByTnIdAndGradeCode" resultType="Grade">
+        SELECT
+        id as id,
+        tnId as tnId,
+        gradeCode as gradeCode,
+        grade as grade,
+        g_order as gorder,
+        year as year,
+        classType as classType
+        FROM saas_grade
+        <where>
+
+            <if test="tnId!=null">
+                AND tnId  =   #{tnId}
+            </if>
+            <if test="gradeCodes!=null">
+                AND gradeCode IN
+                <foreach collection="gradeCodes" item="domain" open="(" close=")" separator=",">
+                    #{domain}
+                </foreach>
+            </if>
+        </where>
+    </select>
 </mapper>
