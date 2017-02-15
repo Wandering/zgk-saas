@@ -68,4 +68,5 @@ public class Constant {
     public static final Integer TASK_SUCCESS = 3;
     public static final String CLASS_ADM = "class_adm";
     public static final String CLASS_EDU = "class_edu";
+    public static final String CREATE_TABLE_TYPE_TEACHER_IDS = "9-26-28-42-59";
 }
