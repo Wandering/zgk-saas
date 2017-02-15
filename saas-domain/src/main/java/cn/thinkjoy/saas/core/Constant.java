@@ -39,7 +39,9 @@ public class Constant {
 
     public static final String TIME_INTERVAL = "_";
 
-    public static final String TABLE_TYPE_STUDENT = "student";
+    public static final String STUDENT = "student";
+
+    public static final String TABLE_TYPE_TEACHER = "teacher";
 
     public static final String STUDENT_GRADE = "student_grade";
 
@@ -54,10 +56,16 @@ public class Constant {
             "student_check_major_class3"
             };
 
+    // 走读班级学生特有属性
+    public static final String ZDBJ_COLUMNS_KEY = "student_check_major1,student_check_major_class1,student_check_major2,student_check_major_class2,student_check_major3,student_check_major_class3";
+    public static final String ZDBJ_COLUMNS_VALUE = "选考科目一,科目一所在班级,选考科目二,科目二所在班级,选考科目三,科目三所在班级";
+
     public static final String DEFULT_TEACH_DATE= "星期一|星期二|星期三|星期四|星期五";
     public static final String DEFULT_TEACH_TIME= "430";
     public static final Integer DEFULT_CLASS_TYPE= 1;
     public static final Integer SUBJECT_CLASS_TYPE= 2;
     public static final Integer DEFULT_CLASS_NUM= 2;
     public static final Integer TASK_SUCCESS = 3;
+    public static final String CLASS_ADM = "class_adm";
+    public static final String CLASS_EDU = "class_edu";
 }

@@ -210,13 +210,14 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         map.put("searchValue", g);
         return iexTeantCustomDAO.getTenantCustomCount(map);
     }
+
     /**
      * excel内添加select
      * @param columnNames
      * @return
      */
     @Override
-    public List<Map<Integer, Object>>   isExcelAddSelect(String type,Integer tnId ,String[] columnNames) {
+    public List<Map<Integer, Object>> isExcelAddSelect(String type,Integer tnId ,String[] columnNames) {
         List<Map<Integer,Object>> lockSelectList = new ArrayList<>();
         if (columnNames.length > 0) {
             int i = 0;

@@ -252,7 +252,7 @@ public class ScheduleTaskController {
             buffer.append("您还未填写");
             for (String s : emptyColumns) {
                 Map<String, Object> queryMap = Maps.newHashMap();
-                queryMap.put("domain", Constant.TABLE_TYPE_STUDENT);
+                queryMap.put("domain", Constant.STUDENT);
                 queryMap.put("enName", s);
                 String cnName = exiConfigurationService.selectColumnName(queryMap);
                 buffer.append(cnName).append("、");

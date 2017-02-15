@@ -56,6 +56,7 @@ public interface IEXTeantCustomDAO {
     List<LinkedHashMap<String, Object>> getTenantCustom(Map map);
 
     Integer getTenantCustomCount(Map map);
+    Integer getTenantCustomColsCount(Map map);
 
     /**
      * 批量删除

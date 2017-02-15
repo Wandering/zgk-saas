@@ -57,6 +57,16 @@
         </where>
         order by id asc
     </select>
+
+    <select id="getTenantCustomColsCount" parameterType="java.util.Map" resultType="Integer">
+        select count(1) from ${tableName}
+        <where>
+            <foreach collection="searchKeys" item="item" index="index" separator="," >
+                ${item.key} = #{item.value}
+            </foreach>
+        </where>
+    </select>
+
     <delete id="removeTenantCustomList" >
 
         DELETE FROM ${tableName} where id in
