@@ -48,10 +48,11 @@
                         <div class="main-title">
                             <h3>学生管理</h3>
                             <div class="top-handle">
-                                <button class="btn-top" type="1" id="xz-template-download">行政班&理科班模板下载</button>
-                                <button class="btn-top" type="2" id="jx-template-download">教学班模板下载</button>
+                                <button class="btn-top"
+                                        id="xz-template-download">行政班&理科班模板下载</button>
+                                <button class="btn-top" id="jx-template-download">教学班模板下载</button>
                                 <button class="btn-top">批量上传</button>
-                                <button class="btn-top" id="student-setting">添加字段</button>
+                                <%--<button class="btn-top" id="student-setting">添加字段</button>--%>
                             </div>
                         </div>
 
@@ -87,8 +88,8 @@
 
                         <%--行政办管理|教学班管理--%>
                         <div class="toggle-tab" id="class-type-toggle">
-                            <button class="tab hide" classType="!2">行政班管理</button>
-                            <button class="tab hide" classType="2">教学班管理</button>
+                            <button class="tab" type="1">行政班管理</button>
+                            <button class="tab" type="0">教学班管理</button>
                         </div>
 
                         <div id="student-table">
@@ -101,112 +102,15 @@
                                     <div class="pagination"></div>
                                 </div>
                         </div>
-                        <%--<script type="text/x-handlebars-template" id="student-table-tpl">--%>
-                            <%--<table class="table">--%>
-                                <%--<thead>--%>
-                                <%--<tr>--%>
-                                    <%--<th class="center">--%>
-                                        <%--<label>--%>
-                                            <%--<input type="checkbox" class="ace" cid="{{#each this.tableHeader}}{{id}}{{/each}}"/>--%>
-                                            <%--<span class="lbl"></span>--%>
-                                        <%--</label>--%>
-                                    <%--</th>--%>
-                                    <%--<th class="center">编号</th>--%>
-                                    <%--{{#each this.tableHeader}}--%>
-                                    <%--<th class="center">{{name}}</th>--%>
-                                    <%--{{/each}}--%>
-                                <%--</tr>--%>
-                                <%--</thead>--%>
-                                <%--<tbody>--%>
-                                <%--{{#each this.tableBody}}--%>
-                                <%--<tr>--%>
-                                    <%--<td class="center">--%>
-                                        <%--<label>--%>
-                                            <%--<input type="checkbox" class="ace"/>--%>
-                                            <%--<span class="lbl"></span>--%>
-                                        <%--</label>--%>
-                                    <%--</td>--%>
-                                    <%--{{#each this}}--%>
-                                    <%--<td class="center">{{this}}</td>--%>
-                                    <%--{{/each }}--%>
-                                <%--</tr>--%>
-                                <%--{{/each}}--%>
-                                <%--</tbody>--%>
-                            <%--</table>--%>
-                        <%--</script>--%>
 
-                        <%--////////////////////////////////////////////--%>
                         <%--添加学生--%>
                         <div id="student-add-layer" class="dh">
                             <ul class="student-add-box" id="student-add-box">
-                                <%--<li>--%>
-                                <%--<span>选择年级</span>--%>
-                                <%--<select id="select-grade"></select>--%>
-                                <%--</li>--%>
-                                <%--<li>--%>
-                                <%--<span>入校年份</span>--%>
-                                <%--<select id="select-year"></select>--%>
-                                <%--</li>--%>
-                                <%--<li>--%>
-                                <%--<span>班级类型</span>--%>
-                                <%--<select id="select-class-type">--%>
-                                <%--<option value="00">选择班级类型</option>--%>
-                                <%--<option>重点班</option>--%>
-                                <%--<option>普通班</option>--%>
-                                <%--</select>--%>
-                                <%--</li>--%>
-                                <%--<li><span>所在班级</span>--%>
-                                <%--<select id="now-class"></select>--%>
-                                <%--</li>--%>
-                                <%--<li>--%>
-                                <%--<span class="f20">选择科目</span>--%>
-                                <%--<div id="subject-list" class="f70">--%>
-                                <%--<label>--%>
-                                <%--<input type="checkbox" class="ace">--%>
-                                <%--<span class="lbl">物理</span>--%>
-                                <%--</label>--%>
-                                <%--<label>--%>
-                                <%--<input type="checkbox" class="ace">--%>
-                                <%--<span class="lbl">化学</span>--%>
-                                <%--</label>--%>
-                                <%--</div>--%>
-                                <%--</li>--%>
-                                <%--<li><span>学生名称</span><input type="text" id="student-name" class="input-common-w"/>--%>
-                                <%--</li>--%>
-                                <%--<li><span>联系电话</span><input type="text" id="student-tel" class="input-common-w"/>--%>
-                                <%--</li>--%>
-                                <%--<li><span>联&nbsp;&nbsp;系&nbsp;人</span><input type="text" id="link-name"--%>
-                                <%--class="input-common-w"/></li>--%>
-                                <%--<li>--%>
-                                <%--<span class="f20">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别</span>--%>
-                                <%--<div id="sex-type" class="f70">--%>
-                                <%--<label>--%>
-                                <%--<input name="form-field-radio" type="radio" class="ace">--%>
-                                <%--<span class="lbl">男</span>--%>
-                                <%--</label>--%>
-                                <%--<label>--%>
-                                <%--<input name="form-field-radio" type="radio" class="ace">--%>
-                                <%--<span class="lbl">女</span>--%>
-                                <%--</label>--%>
-                                <%--</div>--%>
-                                <%--</li>--%>
-                                <%--<li><span>年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄</span><input type="text"--%>
-                                <%--id="student-age"--%>
-                                <%--class="input-common-w"/>--%>
-                                <%--</li>--%>
-                                <%--<li><span>家庭住址</span><input type="text" id="student-address"--%>
-                                <%--class="input-common-w"/></li>--%>
-                                    <%--<div class="opt-btn-box">--%>
-                                        <%--<button class="btn btn-info save-btn" id="add-btn">确认添加</button>--%>
-                                        <%--<button class="btn btn-primary close-btn">取消</button>--%>
-                                    <%--</div>--%>
+
                             </ul>
 
                         </div>
-                        <%--////////////////////////////////////////////--%>
 
-
-                        <%--////////////////////////////////////////////--%>
                         <%--学生设置--%>
                         <div id="sub-student-setting" class="dh">
                             <div class="page-content">
@@ -282,32 +186,12 @@
                             {{/each}}
                         </script>
 
-                        <%--////////////////////////////////////////////--%>
-
-                        <%--选择添加字段--%>
-                        <%--////////////////////////////////////////////--%>
-                        <%--<div id="sub-choose-field" class="dh"></div>--%>
-
-                        <%--<script type="text/x-handlebars-template" id="sub-choose-field-tpl">--%>
-                        <%--<div>--%>
-                        <%--{{#each this}}--%>
-                        <%--<label>--%>
-                        <%--<input type="checkbox" class="ace" id="{{id}}">--%>
-                        <%--<span class="lbl">{{chName}}</span>--%>
-                        <%--</label>--%>
-                        <%--{{/each}}--%>
-                        <%--</div>--%>
-                        <%--<div class="btn btn-info" id="btn-choose">确认选择</div>--%>
-                        <%--</script>--%>
-
-
                         <div id="sub-choose-field" class="dh">
                             <div id="field"></div>
                             <div class="btn btn-info" id="btn-choose">确认选择</div>
                         </div>
 
 
-                        <%--////////////////////////////////////////////--%>
                     </div>
                     <!-- PAGE CONTENT ENDS -->
                 </div><!-- /.col -->

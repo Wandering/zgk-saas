@@ -92,14 +92,12 @@ ClassRoomManagement.prototype = {
     },
     getGrade: function () {
         var that = this;
-        Common.ajaxFun('/config/grade/get/' + tnId + '.do', 'GET', {
-            'tnId': tnId
-        }, function (res) {
+        Common.ajaxFun('/grade/getGrade.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var grade = [];
                 grade.push('<option value="00">请选择年级</option>')
-                $.each(res.bizData.grades,function(i,v){
-                    grade.push('<option value="'+ v.id +'">'+ v.grade +'</option>');
+                $.each(res.bizData,function(i,v){
+                    grade.push('<option value="'+ v.gradeCode +'">'+ v.grade +'</option>');
                 });
                 $('#grade-list').append(grade.join(''));
             }
@@ -258,7 +256,7 @@ $('#addRole-btn').on('click',function(){
     classRoomManagement.addClassRoom('添加教室');
 });
 
-$(document).on('click','.save-btn',function () {
+$(document).on('click','#save-classroom-btn',function () {
     var executiveNumber = $.trim($('#executiveNumber').val());
     var dayNumber = $.trim($('#dayNumber').val());
     var gradeV = $('#grade-list').val(),
@@ -284,7 +282,6 @@ $(document).on('click','.save-btn',function () {
             return;
         }
     }
-
     Common.ajaxFun('/manage/classRoom/add/'+ tnId +'/' + gradeV + '.do', 'POST',{
         crNum: executiveNumber,
         dayNum: dayNumber
