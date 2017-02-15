@@ -1,0 +1,165 @@
+package cn.thinkjoy.saas.service.common;
+
+import java.io.*;
+
+/**
+ * Created by douzy on 17/2/15.
+ */
+public class FileOperation {
+
+    //行政班不排课 --班级粒度
+    public static final String ADMIN_CLASS_NON_DISPACHING="admin_class_non_dispaching";
+    //班级不排课 --课程粒度
+    public static final String CLASS_NON_DISPACHING="class_non_dispaching";
+    //课程不排课
+    public static final String COURSE_NON_DISPACHING="course_non_dispaching";
+    //班级信息
+    public static final String CLASS_INFO="class_info";
+    //课程信息
+    public static final String COURSE_INFORMATION="course_information";
+    //课程时间轴
+    public static final String COURSE_TIMESLOTS="course_timeslots";
+    //年级不排课
+    public static final String GRAD_NON_DISPACHING="grad_non_dispaching";
+    //教师设置
+    public static final String TEACHERS_SETTING="teachers_setting";
+
+
+    private static String path = "/Users/douzy/"; //文件保存路径设置
+
+    private static String filenameTemp;
+
+    public static boolean creatTxtFile(String name) throws IOException {
+
+        boolean flag = false;
+
+        filenameTemp = path + name + ".txt";
+
+        File filename = new File(filenameTemp);
+
+        if (!filename.exists()) {
+
+            filename.createNewFile();
+
+            flag = true;
+
+        }
+
+        return flag;
+
+    }
+
+    public static boolean writeTxtFile(String newStr) throws IOException {
+
+// 先读取原有文件内容，然后进行写入操作
+
+        boolean flag = false;
+
+        String filein = newStr ;//+ "\r\n";
+
+        String temp = "";
+
+        FileInputStream fis = null;
+
+//        InputStreamReader isr = null;
+
+//        BufferedReader br = null;
+
+        FileOutputStream fos = null;
+
+        PrintWriter pw = null;
+
+        try {
+
+// 文件路径
+
+            File file = new File(filenameTemp);
+
+// 将文件读入输入流
+
+            fis = new FileInputStream(file);
+
+//            isr = new InputStreamReader(fis);
+
+//            br = new BufferedReader(isr);
+
+            StringBuffer buf = new StringBuffer();
+
+// 保存该文件原有的内容
+//
+//            for (int j = 1; (temp = br.readLine()) != null; j++) {
+//
+//                buf = buf.append(temp);
+//
+//// System.getProperty("line.separator")
+//
+//// 行与行之间的分隔符 相当于“\n”
+//
+//                buf = buf.append(System.getProperty("line.separator"));
+//
+//            }
+
+            buf.append(filein);
+
+            fos = new FileOutputStream(file);
+
+            pw = new PrintWriter(fos);
+
+            pw.write(buf.toString().toCharArray());
+
+            pw.flush();
+
+            flag = true;
+
+        } catch (IOException e1) {
+
+// TODO 自动生成 catch 块
+
+            throw e1;
+
+        } finally {
+
+            if (pw != null) {
+
+                pw.close();
+
+            }
+
+            if (fos != null) {
+
+                fos.close();
+
+            }
+
+//            if (br != null) {
+//
+//                br.close();
+//
+//            }
+//
+//            if (isr != null) {
+//
+//                isr.close();
+//
+//            }
+
+            if (fis != null) {
+
+                fis.close();
+
+            }
+
+        }
+
+        return flag;
+
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        creatTxtFile("20160725测试文件");
+
+        writeTxtFile("0,0,0,0,0,0\r\n0,2,1,3,4,2\r1,2,3,1,1,2\n1,2,3,4 1,2,3,22");
+
+    }
+}
