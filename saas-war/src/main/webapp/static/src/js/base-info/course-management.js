@@ -50,7 +50,7 @@ CourseManagement.prototype = {
     },
     // 新增课程管理信息
     addCourse: function () {
-
+              alert(1);
         var datas={
             "clientInfo": {},
             "style": "",
