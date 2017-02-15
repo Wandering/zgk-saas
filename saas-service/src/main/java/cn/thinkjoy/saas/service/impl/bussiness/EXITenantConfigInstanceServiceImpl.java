@@ -2,6 +2,7 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 
 import cn.thinkjoy.common.dao.IBaseDAO;
 import cn.thinkjoy.common.service.impl.AbstractPageService;
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.*;
 import cn.thinkjoy.saas.dao.bussiness.*;
 import cn.thinkjoy.saas.domain.*;
@@ -264,7 +265,8 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_TEANTCUSTOM_EXCEL);
         }
 
-        if (isExistConfigDataByTnId(type, tnId)) {
+        // 学生模板直接添加，不需要删除以前的字段
+        if (isExistConfigDataByTnId(type, tnId) && !type.equals(Constant.STUDENT)) {
             LOGGER.info("tnId:" + tnId + "=[该租户存在历史表头数据.]");
             boolean removeResult = removeConfigDataByTnId(type, tnId);
             LOGGER.info("removeResult:" + removeResult);

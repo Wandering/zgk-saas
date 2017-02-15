@@ -39,6 +39,7 @@ public class TeacherController {
     @Autowired
     private EXITenantConfigInstanceService exiTenantConfigInstanceService;
 
+
     /**
      * 通过科目查询年级
      * <p>
@@ -139,7 +140,7 @@ public class TeacherController {
         }
 
 
-        rtnMap.put("class", "");
+        rtnMap.put("class", classes);
         return rtnMap;
     }
 
