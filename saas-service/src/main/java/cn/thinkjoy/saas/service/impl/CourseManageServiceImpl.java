@@ -102,4 +102,16 @@ public class CourseManageServiceImpl extends AbstractPageService<IBaseDAO<Course
 
         return result;
     }
+
+    @Override
+    public boolean deleteCourseManage(Integer tnId,Integer courseId) {
+        Map map = new HashMap();
+        map.put("tnId", tnId);
+        map.put("courseBaseId", courseId);
+        Integer resu = iCourseManageDAO.deleteByCondition(map);
+
+        return resu > 0;
+    }
+
+
 }
