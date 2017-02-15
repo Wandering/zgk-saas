@@ -465,19 +465,7 @@ public class ManageController {
         Integer s = (star == null) ? null : Integer.valueOf(star),
                 r=(row==null)?null:Integer.valueOf(row);
         Map resultMap = new HashMap();
-        List<LinkedHashMap<String, Object>> tenantCustom = new ArrayList<>();
-        try {
-            tenantCustom = iexTenantCustomService.getTenantCustom(type, tnId, grade, s,r);
-
-        }catch (BadSqlGrammarException e){
-            switch (type) {
-                case Constant.TABLE_TYPE_TEACHER:
-                    exiTenantConfigInstanceService.createTenantCombinationTable(Constant.TABLE_TYPE_TEACHER,tnId);
-                    break;
-                default:
-                    break;
-            }
-        }
+        List<LinkedHashMap<String, Object>> tenantCustom = iexTenantCustomService.getTenantCustom(type, tnId, grade, s,r);
 
         resultMap.put("result", tenantCustom);
         Integer count = iexTenantCustomService.getTenantCustomCount(type, tnId, grade);
