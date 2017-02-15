@@ -1,6 +1,5 @@
 package cn.thinkjoy.saas.controller.bussiness.baseInfo;
 
-import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.dto.BaseDto;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Controller;
@@ -9,9 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by yangguorong on 17/2/15.
@@ -26,34 +23,34 @@ public class ClassController {
         List<BaseDto> dtos = Lists.newArrayList();
         BaseDto dto1 = new BaseDto();
         dto1.setId(1);
-        dto1.setName("1班");
+        dto1.setName("物理1班");
         dtos.add(dto1);
         BaseDto dto2 = new BaseDto();
-        dto1.setId(2);
-        dto1.setName("2班");
+        dto2.setId(2);
+        dto2.setName("物理2班");
         dtos.add(dto2);
         BaseDto dto3 = new BaseDto();
-        dto1.setId(3);
-        dto1.setName("3班");
+        dto3.setId(3);
+        dto3.setName("物理3班");
         dtos.add(dto3);
         return dtos;
     }
 
-    @RequestMapping(value = "/getClassByTnIdAndGrade",method = RequestMethod.GET)
+    @RequestMapping(value = "/getClassByGrade",method = RequestMethod.GET)
     @ResponseBody
-    public List<BaseDto> getClassByTnIdAndGrade(@RequestParam Integer tnId, @RequestParam String grade) {
+    public List<BaseDto> getClassByGrade(@RequestParam Integer tnId, @RequestParam String grade) {
         List<BaseDto> dtos = Lists.newArrayList();
         BaseDto dto1 = new BaseDto();
         dto1.setId(1);
-        dto1.setName("物理1班");
+        dto1.setName("1班");
         dtos.add(dto1);
         BaseDto dto2 = new BaseDto();
-        dto1.setId(2);
-        dto1.setName("物理2班");
+        dto2.setId(2);
+        dto2.setName("2班");
         dtos.add(dto2);
         BaseDto dto3 = new BaseDto();
-        dto1.setId(3);
-        dto1.setName("物理3班");
+        dto3.setId(3);
+        dto3.setName("3班");
         dtos.add(dto3);
         return dtos;
     }
