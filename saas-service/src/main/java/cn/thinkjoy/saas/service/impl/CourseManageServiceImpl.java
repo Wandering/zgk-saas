@@ -4,9 +4,13 @@ import cn.thinkjoy.common.dao.IBaseDAO;
 import cn.thinkjoy.common.service.impl.AbstractPageService;
 import cn.thinkjoy.saas.dao.bussiness.ICourseManageDAO;
 import cn.thinkjoy.saas.domain.bussiness.CourseManage;
+import cn.thinkjoy.saas.domain.bussiness.CourseManageVo;
 import cn.thinkjoy.saas.service.ICourseManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by douzy on 17/2/14.
@@ -21,4 +25,12 @@ public class CourseManageServiceImpl extends AbstractPageService<IBaseDAO<Course
         return iCourseManageDAO;
     }
 
+    /**
+     *
+     * @param map
+     * @return
+     */
+    public List<CourseManageVo> selectCourseManageInfo(Map map) {
+        return iCourseManageDAO.selectCourseManageInfo(map);
+    }
 }
