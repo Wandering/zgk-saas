@@ -257,3 +257,14 @@ a.download-link:hover {
     border-color: $mainColor;
   }
 }
+
+#uploader-demo{
+  .btn-import{
+    width: 238px!important;
+    margin-bottom: 10px!important;
+  }
+}
+
+#cancel-download-btn{
+  margin-top:15px!important;
+}
