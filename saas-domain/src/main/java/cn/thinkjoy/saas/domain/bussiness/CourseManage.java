@@ -8,12 +8,20 @@ import java.io.Serializable;
  * Created by douzy on 17/2/13.
  */
 public class CourseManage extends BaseDomain implements Serializable {
+    private Integer tnId;
     private Integer courseBaseId;
     private byte custom;
-    private String courseType1;
-    private String courseType2;
-    private String courseType3;
+    private Integer gradeId;
+    private String courseType;
     private long createTime;
+
+    public Integer getTnId() {
+        return tnId;
+    }
+
+    public void setTnId(Integer tnId) {
+        this.tnId = tnId;
+    }
 
     public Integer getCourseBaseId() {
         return courseBaseId;
@@ -31,28 +39,20 @@ public class CourseManage extends BaseDomain implements Serializable {
         this.custom = custom;
     }
 
-    public String getCourseType1() {
-        return courseType1;
+    public Integer getGradeId() {
+        return gradeId;
     }
 
-    public void setCourseType1(String courseType1) {
-        this.courseType1 = courseType1;
+    public void setGradeId(Integer gradeId) {
+        this.gradeId = gradeId;
     }
 
-    public String getCourseType2() {
-        return courseType2;
+    public String getCourseType() {
+        return courseType;
     }
 
-    public void setCourseType2(String courseType2) {
-        this.courseType2 = courseType2;
-    }
-
-    public String getCourseType3() {
-        return courseType3;
-    }
-
-    public void setCourseType3(String courseType3) {
-        this.courseType3 = courseType3;
+    public void setCourseType(String courseType) {
+        this.courseType = courseType;
     }
 
     public long getCreateTime() {

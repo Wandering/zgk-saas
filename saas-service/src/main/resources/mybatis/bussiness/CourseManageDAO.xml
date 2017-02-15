@@ -25,27 +25,27 @@
     -->
     <sql id="Base_Column_List">
         id,
+        tn_id as tnId,
         course_base_id as courseBaseId,
         custom as custom,
-        course_type1 as courseType1,
-        course_type2 as courseType2,
-        course_type3 as courseType3,
+        grade_id as gradeId,
+        course_type as courseType,
         create_time as createTime
     </sql>
     <insert id="insert" parameterType="CourseBaseInfo">
         INSERT INTO saas_course_manage (
+            tn_id,
             course_base_id,
             custom,
-            course_type1,
-            course_type2,
-            course_type3,
+            grade_id,
+            course_type,
             create_time
         ) VALUES (
+            #{tnId},
             #{courseBaseId},
             #{custom},
-            #{courseType1},
-            #{courseType2},
-            #{courseType3},
+            #{gradeId},
+            #{courseType},
             #{createTime}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
@@ -57,20 +57,20 @@
     <update id="update" parameterType="CourseBaseInfo">
         UPDATE saas_course_manage
         <trim prefix="SET" suffixOverrides=",">
+            <if test="tnId!=null">
+                tn_id=#{tnId},
+            </if>
             <if test="courseBaseId!=null">
                 course_base_id = #{courseBaseId},
             </if>
             <if test="custom!=null">
                 custom = #{custom},
             </if>
-            <if test="courseType1!=null">
-                course_type1 = #{courseType1},
+            <if test="gradeId!=null">
+                grade_id = #{gradeId},
             </if>
-            <if test="courseType2!=null">
-                course_type2 = #{courseType2},
-            </if>
-            <if test="courseType3!=null">
-                course_type3 = #{courseType3},
+            <if test="courseType!=null">
+                course_type = #{courseType},
             </if>
             <if test="createTime!=null">
                 create_time=#{createTime}
@@ -83,20 +83,20 @@
     <update id="updateMap">
         UPDATE saas_course_manage
         <trim prefix="SET" suffixOverrides=",">
+            <if test="map.tnId!=null">
+                tn_id=#{map.tnId},
+            </if>
             <if test="map.courseBaseId!=null">
                 course_base_id = #{map.courseBaseId},
             </if>
             <if test="map.custom!=null">
                 custom = #{map.custom},
             </if>
-            <if test="map.courseType1!=null">
-                course_type1 = #{map.courseType1},
+            <if test="map.gradeId!=null">
+                grade_id = #{map.gradeId},
             </if>
-            <if test="map.courseType2!=null">
-                course_type2 = #{map.courseType2},
-            </if>
-            <if test="map.courseType3!=null">
-                course_type3 = #{map.courseType3},
+            <if test="map.courseType!=null">
+                course_type = #{map.courseType},
             </if>
             <if test="map.createTime!=null">
                 create_time=#{map.createTime}
@@ -109,20 +109,20 @@
     <update id="updateByCondition">
         UPDATE saas_course_manage
         <trim prefix="SET" suffixOverrides=",">
+            <if test="update.tnId!=null">
+                tn_id = #{update.tnId},
+            </if>
             <if test="update.courseBaseId!=null">
                 course_base_id = #{update.courseBaseId},
             </if>
             <if test="update.custom!=null">
                 custom = #{update.custom},
             </if>
-            <if test="update.courseType1!=null">
-                course_type1 = #{update.courseType1},
+            <if test="update.gradeId!=null">
+                grade_id = #{update.gradeId},
             </if>
-            <if test="update.courseType2!=null">
-                course_type2 = #{update.courseType2},
-            </if>
-            <if test="update.courseType3!=null">
-                course_type3 = #{update.courseType3},
+            <if test="update.courseType!=null">
+                course_type = #{update.courseType},
             </if>
             <if test="update.createTime!=null">
                 create_time=#{update.createTime}
@@ -130,20 +130,20 @@
         </trim>
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
             <if test="condition.courseBaseId!=null">
                 AND course_base_id = #{condition.courseBaseId}
             </if>
             <if test="condition.custom!=null">
                 AND custom = #{condition.custom}
             </if>
-            <if test="condition.courseType1!=null">
-                AND course_type1 = #{condition.courseType1}
+            <if test="condition.gradeId!=null">
+                AND grade_id = #{condition.gradeId}
             </if>
-            <if test="condition.courseType2!=null">
-                AND course_type2 = #{condition.courseType2}
-            </if>
-            <if test="condition.courseType3!=null">
-                AND course_type3 = #{condition.courseType3}
+            <if test="condition.courseType!=null">
+                AND course_type = #{condition.courseType}
             </if>
             <if test="condition.createTime!=null">
                 AND create_time=#{condition.createTime}
@@ -153,18 +153,18 @@
 
     <insert id="insertMap" >
         INSERT INTO saas_course_manage (
+            tn_id,
             course_base_id,
             custom,
-            course_type1,
-            course_type2,
-            course_type3,
+            grade_id,
+            course_type,
             create_time
         ) VALUES (
+            #{map.tnId},
             #{map.courseBaseId},
             #{map.custom},
-            #{map.courseType1},
-            #{map.courseType2},
-            #{map.courseType3},
+            #{map.gradeId},
+            #{map.courseType},
             #{map.createTime}
         )
     </insert>
@@ -173,11 +173,11 @@
     <update id="updateNull" parameterType="CourseBaseInfo">
         UPDATE saas_course_manage
         <trim prefix="SET" suffixOverrides=",">
+            tn_id=#{tnId},
             course_base_id=#{courseBaseId},
             custom=#{custom},
-            course_type1=#{courseType1},
-            course_type2=#{courseType2},
-            course_type3=#{courseType3}
+            grade_id=#{gradeId},
+            course_type=#{courseType}
         </trim>
         WHERE
         id = #{id}
@@ -195,20 +195,20 @@
     <delete id="deleteByCondition" parameterType="java.util.Map">
         DELETE FROM saas_course_manage
         <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="tnId!=null">
+                AND tn_id=#{tnId},
+            </if>
             <if test="courseBaseId!=null">
                 AND course_base_id = #{courseBaseId},
             </if>
             <if test="custom!=null">
                 AND custom = #{custom},
             </if>
-            <if test="courseType1!=null">
-                AND course_type1 = #{courseType1},
+            <if test="gradeId!=null">
+                AND grade_id = #{gradeId},
             </if>
-            <if test="courseType2!=null">
-                AND course_type2 = #{courseType2},
-            </if>
-            <if test="courseType3!=null">
-                AND course_type3 = #{courseType3},
+            <if test="courseType!=null">
+                AND course_type = #{courseType},
             </if>
             <if test="createTime!=null">
                 AND create_time=#{createTime}
@@ -268,20 +268,20 @@
             <if test="condition.whereSql != null">
                 and id in (#{condition.whereSql})
             </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   tn_id  ${condition.tnId.op}  #{condition.tnId.data}
+            </if>
             <if test="condition.courseBaseId!=null">
                 ${condition.groupOp}   course_base_id  ${condition.courseBaseId.op}  #{condition.courseBaseId.data}
             </if>
             <if test="condition.custom!=null">
                 ${condition.groupOp}   custom  ${condition.custom.op}  #{condition.custom.data}
             </if>
-            <if test="condition.courseType1!=null">
-                ${condition.groupOp}   course_type1  ${condition.courseType1.op}  #{condition.courseType1.data}
+            <if test="condition.gradeId!=null">
+                ${condition.groupOp}   grade_id  ${condition.gradeId.op}  #{condition.gradeId.data}
             </if>
-            <if test="condition.courseType2!=null">
-                ${condition.groupOp}   course_type2  ${condition.courseType2.op}  #{condition.courseType2.data}
-            </if>
-            <if test="condition.courseType3!=null">
-                ${condition.groupOp}   course_type3  ${condition.courseType3.op}  #{condition.courseType3.data}
+            <if test="condition.courseType!=null">
+                ${condition.groupOp}   course_type  ${condition.courseType.op}  #{condition.courseType.data}
             </if>
             <if test="condition.createTime!=null">
                 ${condition.groupOp}   createTime  ${condition.createTime.op}  #{condition.createTime.data}
@@ -301,20 +301,20 @@
         <include refid="Base_Column_List" />
         FROM saas_course_manage
         <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="tnId!=null">
+                AND tn_id like CONCAT('%', #{tnId} , '%')
+            </if>
             <if test="courseBaseId!=null">
                 AND course_base_id like CONCAT('%', #{courseBaseId} , '%')
             </if>
             <if test="custom!=null">
                 AND custom like CONCAT('%', #{custom} , '%')
             </if>
-            <if test="courseType1!=null">
-                AND course_type1 like CONCAT('%', #{courseType1} , '%')
+            <if test="gradeId!=null">
+                AND grade_id like CONCAT('%', #{gradeId} , '%')
             </if>
-            <if test="courseType2!=null">
-                AND course_type2 like CONCAT('%', #{courseType2} , '%')
-            </if>
-            <if test="courseType3!=null">
-                AND course_type3 like CONCAT('%', #{courseType3} , '%')
+            <if test="courseType!=null">
+                AND course_type like CONCAT('%', #{courseType} , '%')
             </if>
             <if test="createTime!=null">
                 AND createTime like CONCAT('%', #{createTime} , '%')
@@ -332,20 +332,20 @@
         <include refid="Base_Column_List" />
         FROM saas_course_manage
         <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
             <if test="condition.courseBaseId!=null">
                 AND course_base_id = #{condition.courseBaseId}
             </if>
             <if test="condition.custom!=null">
                 AND custom = #{condition.custom}
             </if>
-            <if test="condition.courseType1!=null">
-                AND course_type1 = #{condition.courseType1}
+            <if test="condition.gradeId!=null">
+                AND grade_id = #{condition.gradeId}
             </if>
-            <if test="condition.courseType2!=null">
-                AND course_type2 = #{condition.courseType2}
-            </if>
-            <if test="condition.courseType3!=null">
-                AND course_type3 = #{condition.courseType3}
+            <if test="condition.courseType!=null">
+                AND course_type = #{condition.courseType}
             </if>
             <if test="condition.createTime!=null">
                 AND createTime = #{condition.createTime}
@@ -361,20 +361,20 @@
         <include refid="Base_Column_List" />
         FROM saas_course_manage
         <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
             <if test="condition.courseBaseId!=null">
                 AND course_base_id = #{condition.courseBaseId}
             </if>
             <if test="condition.custom!=null">
                 AND custom = #{condition.custom}
             </if>
-            <if test="condition.courseType1!=null">
-                AND course_type1 = #{condition.courseType1}
+            <if test="condition.gradeId!=null">
+                AND grade_id = #{condition.gradeId}
             </if>
-            <if test="condition.courseType2!=null">
-                AND course_type2 = #{condition.courseType2}
-            </if>
-            <if test="condition.courseType3!=null">
-                AND course_type3 = #{condition.courseType3}
+            <if test="condition.courseType!=null">
+                AND course_type = #{condition.courseType}
             </if>
             <if test="condition.createTime!=null">
                 AND createTime = #{condition.createTime}
@@ -387,20 +387,20 @@
     <select id="count" resultType="java.lang.Integer">
         SELECT count(id) FROM saas_course_manage
         <where>
+            <if test="tnId!=null">
+                ${groupOp} tn_id ${tnId.op}  #{tnId.data}
+            </if>
             <if test="courseBaseId!=null">
                 ${groupOp} course_base_id ${courseBaseId.op}  #{courseBaseId.data}
             </if>
             <if test="custom!=null">
                 ${groupOp} custom ${custom.op}  #{custom.data}
             </if>
-            <if test="courseType1!=null">
-                ${groupOp} course_type1 ${courseType1.op}  #{courseType1.data}
+            <if test="gradeId!=null">
+                ${groupOp} grade_id ${gradeId.op}  #{gradeId.data}
             </if>
-            <if test="courseType2!=null">
-                ${groupOp} course_type2 ${courseType2.op}  #{courseType2.data}
-            </if>
-            <if test="courseType3!=null">
-                ${groupOp} course_type3 ${courseType3.op}  #{courseType3.data}
+            <if test="courseType!=null">
+                ${groupOp} course_type ${courseType.op}  #{courseType.data}
             </if>
             <if test="createTime!=null">
                 ${groupOp} createTime ${createTime.op}  #{createTime.data}

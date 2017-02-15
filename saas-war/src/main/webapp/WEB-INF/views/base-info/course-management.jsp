@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>基础信息设置-课程管理</title>
     <%@ include file="./../common/meta.jsp"%>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/results-analysis.css">
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/info-management.css">
 </head>
 <body>
 <%@ include file="./../common/header.jsp"%>
@@ -45,8 +45,8 @@
                             <span class="txt-t"></span>
                             <div class="btns">
                                 <button class="btn btn-pink" id="addCourse-btn">+&nbsp;添加课程</button>
-                                <button class="btn btn-inverse">修改</button>
-                                <button class="btn btn-success">x&nbsp;删除</button>
+                                <button class="btn btn-inverse" id="updateCourse-btn">修改</button>
+                                <button class="btn btn-success" id="deleteCourse-btn">x&nbsp;删除</button>
                             </div>
                         </div>
                         <div class="">
@@ -57,20 +57,13 @@
                                         <th class="center">序号</th>
                                         <th class="center">课程名称</th>
                                         <th class="center">开课年级</th>
+                                        <th class="center">高一年级课程类型</th>
+                                        <th class="center">高二年级课程类型</th>
+                                        <th class="center">高三年级课程类型</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <th class="center">
-                                            <label>
-                                                <input type="checkbox" class="ace" />
-                                                <span class="lbl"></span>
-                                            </label>
-                                        </th>
-                                        <td class="center">1</td>
-                                        <td class="center">语文</td>
-                                        <td class="center"></td>
-                                    </tr>
+                                <tbody id="course-tbody">
+
                                 </tbody>
                             </table>
                         </div>
@@ -81,10 +74,23 @@
         </div><!-- /.main-content -->
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
-<script id="course-thead-template" type="text/x-handlebars-template">
+<script id="course-tbody-template" type="text/x-handlebars-template">
+    {{#each this}}
     <tr>
-
+        <th class="center">
+            <label>
+                <input type="checkbox" dataId="{{id}}" class="ace" />
+                <span class="lbl"></span>
+            </label>
+        </th>
+        <td class="center">{{addOne @index}}</td>
+        <td class="center">{{this}}</td>
+        <td class="center"></td>
+        <td class="center"></td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
+    {{/each}}
 </script>
 <%@ include file="./../common/footer.jsp"%>
 <script src="<%=ctx%>/static/src/js/base-info/course-management.js"></script>
