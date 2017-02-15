@@ -3,21 +3,15 @@ package cn.thinkjoy.saas.controller.bussiness.baseInfo;
 import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
-import cn.thinkjoy.saas.core.GradeConstant;
-import cn.thinkjoy.saas.dao.bussiness.ICourseManageDAO;
-import cn.thinkjoy.saas.domain.DataDict;
 import cn.thinkjoy.saas.domain.Grade;
 import cn.thinkjoy.saas.enums.ErrorCode;
-import cn.thinkjoy.saas.enums.GradeEnum;
 import cn.thinkjoy.saas.enums.GradeTypeEnum;
-import cn.thinkjoy.saas.service.IDataDictService;
+import cn.thinkjoy.saas.enums.SubjectEnum;
 import cn.thinkjoy.saas.service.IGradeService;
-import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -85,7 +79,8 @@ public class TeacherController {
         Grade gradeServiceOne = getGradeByGradeCodeAndTnId(tnId, gradeCode);
         //判定是否存在教学班
         Integer gradeType = gradeServiceOne.getClassType();
-        if (gradeType == null) throw new BizException(ErrorCode.GRADE_FORMAT_ERROR.getCode(),ErrorCode.GRADE_FORMAT_ERROR.getMessage());
+        if (gradeType == null)
+            throw new BizException(ErrorCode.GRADE_FORMAT_ERROR.getCode(), ErrorCode.GRADE_FORMAT_ERROR.getMessage());
         String grade = gradeServiceOne.getGrade();
         boolean isExistTeaching = GradeTypeEnum.Teaching.getCode().equals(gradeType);
         boolean isMove = isEduSubject(subject);
@@ -117,7 +112,7 @@ public class TeacherController {
     @ResponseBody
     @RequestMapping(value = "queryClassByGradeCodeAndSubject")
     public Map<String, Object> getClassByGradeCodeAndSubject(@RequestParam String gradeCode,
-                                                  @RequestParam String subject) {
+                                                             @RequestParam String subject) {
         Map<String, Object> rtnMap = new HashMap();
         int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         Grade gradeServiceOne = getGradeByGradeCodeAndTnId(tnId, gradeCode);
@@ -126,7 +121,7 @@ public class TeacherController {
         String grade = gradeServiceOne.getGrade();
         boolean isExistTeaching = GradeTypeEnum.Teaching.getCode().equals(gradeType);
         boolean isMove = isEduSubject(subject);
-        List<LinkedHashMap<String,Object>> classes = new ArrayList();
+        List<LinkedHashMap<String, Object>> classes = new ArrayList();
         if (isExistTeaching && isMove) {
             //是教学班+是走班课程
             classes = exiTenantConfigInstanceService.getBySubjectAndGrade(tnId, grade, subject, Constant.CLASS_EDU);
@@ -135,11 +130,11 @@ public class TeacherController {
             classes = exiTenantConfigInstanceService.getBySubjectAndGrade(tnId, grade, subject, Constant.CLASS_ADM);
             //不教学班+是走班课程
         }
-        List<Map<String,Object>> rtnList = new ArrayList<>();
-        Map<String,Object> map;
-        for (Map<String,Object> link : classes){
+        List<Map<String, Object>> rtnList = new ArrayList<>();
+        Map<String, Object> map;
+        for (Map<String, Object> link : classes) {
             map = new HashMap<>();
-            map.put("className",link.get("class_name"));
+            map.put("className", link.get("class_name"));
             rtnList.add(map);
         }
 
@@ -157,7 +152,13 @@ public class TeacherController {
         return gradeServiceOne;
     }
 
-    private boolean isEduSubject(String subject){
-        return false;
+    private boolean isEduSubject(String subject) {
+        return SubjectEnum.dl.equals(subject) ||
+                SubjectEnum.hx.equals(subject) ||
+                SubjectEnum.sw.equals(subject) ||
+                SubjectEnum.wl.equals(subject) ||
+                SubjectEnum.zz.equals(subject) ||
+                SubjectEnum.ty.equals(subject) ||
+                SubjectEnum.ls.equals(subject);
     }
 }
