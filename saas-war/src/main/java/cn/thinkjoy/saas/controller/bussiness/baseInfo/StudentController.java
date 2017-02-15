@@ -380,15 +380,15 @@ public class StudentController {
 
     /**
      * 删除学生数据
-     * @param tnId 租户ID
-     * @param ids  主键
      * @return
      */
     @RequestMapping(value = "/removeStuInfo",method = RequestMethod.POST)
     @ResponseBody
-    public Map removeStuInfo(@PathVariable Integer tnId,
-                                  @PathVariable String ids) {
-        boolean result = iexTenantCustomService.removeTenantCustom(Constant.STUDENT, tnId, ids);
+    public Map removeStuInfo(HttpServletRequest request) {
+        String tnId = request.getParameter("tnId");
+        String ids = request.getParameter("ids");
+
+        boolean result = iexTenantCustomService.removeTenantCustom(Constant.STUDENT, Integer.valueOf(tnId), ids);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;
