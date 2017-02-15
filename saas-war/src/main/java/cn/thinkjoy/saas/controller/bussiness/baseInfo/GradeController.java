@@ -178,9 +178,9 @@ public class GradeController {
      * 检测租户是否存在教学班
      * @return
      */
-    @RequestMapping(value = "getTnClassType",method = RequestMethod.GET)
+    @RequestMapping(value = "checkClass",method = RequestMethod.GET)
     @ResponseBody
-    public Map getTnClassType(){
+    public Map checkClass(){
 
         int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         List<Grade> gradeList = gradeService.findList("tnId",tnId);
