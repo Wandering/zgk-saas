@@ -11,7 +11,5 @@ import javax.annotation.Resource;
  */
 @Service("EXCourseManageServiceImpl")
 public class EXCourseManageServiceImpl implements IEXCourseManageService {
-    @Resource
-    ICourseManageDAO iCourseManageDAO;
 
 }
