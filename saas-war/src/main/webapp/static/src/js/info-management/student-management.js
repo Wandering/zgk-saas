@@ -127,7 +127,7 @@ var App = {
                 });
         })
     },
-    //所属年级
+    //动态渲染所属年级
     fetchGrade: function () {
         Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
@@ -143,6 +143,14 @@ var App = {
                 // tpl = tpl.substr(0, tpl.length - 1);
                 // CRUDStd.CRUDStdData.gradeData = tpl;
                 if (dataJson[0].grade) {
+                    // 行政班|教学班说明：classType 1或3都为行政班  2为行政班和教学班
+                    if(dataJson[0].classType == 1 || dataJson[0].classType == 3){
+                        $('#class-type-toggle').find('.tab').eq(0).removeClass('hide');
+                        $('#class-type-toggle').find('.tab').eq(1).addClass('active');
+                    }else{
+                        $('#class-type-toggle').find('.tab').eq(0).removeClass('hide').addClass('active');
+                        $('#class-type-toggle').find('.tab').eq(1).removeClass('hide');
+                    }
                     App.checkGradeName = dataJson[0].grade;
                 }
             }
@@ -153,13 +161,14 @@ var App = {
             layer.msg("出错了");
         }, true);
     },
-    loadPage: function () {
+    loadPage: function (cType) {
         var that = this;
         //layer.load(1, {shade: [0.3,'#000']});
         Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {
             's': App.page.offset,
             'r': App.page.rows,
-            'g': App.checkGradeName
+            'g': App.checkGradeName,
+            'type':cType || '',
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var tpl = [];
@@ -208,11 +217,26 @@ var App = {
                 'rows': 30,
                 'count': ''
             }
-            App.checkGradeName = $('input[name="grade-li"]:checked').next().text();
+            var $checkedInputDom = $('input[name="grade-li"]:checked');
+            App.checkGradeName = $checkedInputDom.next().text();
+            // 行政班|教学班说明：classType 1或3都为行政班  2为行政班和教学班
+            if($checkedInputDom.attr('classType') == 1 || $checkedInputDom.attr('classType') == 3){
+                $('#class-type-toggle').find('.tab').eq(0).hide();
+                $('#class-type-toggle').find('.tab').eq(1).show().addClass('active');
+            }else{
+                $('#class-type-toggle').find('.tab').eq(0).show().addClass('active');
+                $('#class-type-toggle').find('.tab').eq(1).show().removeClass('active');
+            }
             App.loadPage();
             App.pagination();
             $('#student-table').find('#stdCheckAll').prop('checked', false);
         })
+        //新增行政班和教学班切换
+        $(document).on('click','#class-type-toggle .tab',function(){
+            App.loadPage(cType = 2);
+            App.pagination();
+           $(this).addClass('active').siblings().removeClass('active');
+        });
     }
 }
 App.init();
@@ -727,6 +751,7 @@ CRUDStd.init();
 
 /**
  * 模板上传|下载
+ * 模板下载细分：行政班模块下载和教学班模板下载
  * @type {{init: TplHandler.init, tplDownload: TplHandler.tplDownload, tplUpload: TplHandler.tplUpload}}
  */
 var TplHandler = {

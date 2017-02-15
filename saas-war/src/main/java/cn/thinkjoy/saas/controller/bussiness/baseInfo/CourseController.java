@@ -1,9 +1,9 @@
 package cn.thinkjoy.saas.controller.bussiness.baseInfo;
 
 import cn.thinkjoy.common.protocol.Request;
-import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseManage;
+import cn.thinkjoy.saas.domain.bussiness.CourseManageVo;
 import cn.thinkjoy.saas.service.ICourseManageService;
 import cn.thinkjoy.saas.service.bussiness.IEXCourseBaseInfoService;
 import com.alibaba.fastjson.JSON;
@@ -53,7 +53,9 @@ public class CourseController {
     @ResponseBody
     public Map getCourseManager(@PathVariable Integer tnId) {
         Map map = new HashMap();
-        List<CourseManage> courseManages = iCourseManageService.findList("tn_id", tnId, "id", SqlOrderEnum.ASC);
+        Map parMap=new HashMap();
+        parMap.put("tnId",tnId);
+        List<CourseManageVo> courseManages = iCourseManageService.selectCourseManageInfo(parMap);
         map.put("courses", courseManages);
         return map;
     }
