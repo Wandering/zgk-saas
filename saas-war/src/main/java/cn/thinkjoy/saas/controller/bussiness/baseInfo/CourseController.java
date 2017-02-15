@@ -3,7 +3,7 @@ package cn.thinkjoy.saas.controller.bussiness.baseInfo;
 import cn.thinkjoy.common.protocol.Request;
 import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseManage;
-import cn.thinkjoy.saas.domain.bussiness.CourseManageVo;
+import cn.thinkjoy.saas.domain.bussiness.CourseManageMapperVo;
 import cn.thinkjoy.saas.service.ICourseManageService;
 import cn.thinkjoy.saas.service.bussiness.IEXCourseBaseInfoService;
 import com.alibaba.fastjson.JSON;
@@ -56,7 +56,7 @@ public class CourseController {
         Map map = new HashMap();
         Map parMap=new HashMap();
         parMap.put("tnId",tnId);
-        List<CourseManageVo> courseManages = iCourseManageService.selectCourseManageInfo(parMap);
+        List<CourseManageMapperVo> courseManages = iCourseManageService.selectCourseManageInfo(parMap);
         map.put("courses", courseManages);
         return map;
     }

@@ -3,8 +3,7 @@ package cn.thinkjoy.saas.service.impl;
 import cn.thinkjoy.common.dao.IBaseDAO;
 import cn.thinkjoy.common.service.impl.AbstractPageService;
 import cn.thinkjoy.saas.dao.bussiness.ICourseManageDAO;
-import cn.thinkjoy.saas.domain.bussiness.CourseManage;
-import cn.thinkjoy.saas.domain.bussiness.CourseManageVo;
+import cn.thinkjoy.saas.domain.bussiness.*;
 import cn.thinkjoy.saas.service.ICourseManageService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +32,40 @@ public class CourseManageServiceImpl extends AbstractPageService<IBaseDAO<Course
      * @param map
      * @return
      */
-    public List<CourseManageVo> selectCourseManageInfo(Map map) {
-        return iCourseManageDAO.selectCourseManageInfo(map);
+    @Override
+    public List<CourseManageMapperVo> selectCourseManageInfo(Map map) {
+
+        List<CourseManageMapperVo> courseManageMapperVos=new ArrayList<>();
+
+        List<CourseManageVo> courseManageVos= iCourseManageDAO.selectCourseManageGroup(map);
+
+
+        for(CourseManageVo courseManageVo:courseManageVos) {
+
+            CourseManageMapperVo courseManageMapperVo=new CourseManageMapperVo();
+
+            courseManageMapperVo.setCourseBaseId(courseManageVo.getCourseId());
+            courseManageMapperVo.setCourseName(courseManageVo.getCourseName());
+
+            List<GradeCourseMap> gradeCourseMaps=new ArrayList<>();
+
+            Map courseInfo=new HashMap();
+            courseInfo.put("courseBaseId",courseManageVo.getCourseId());
+            courseInfo.put("tnId",map.get("tnId"));
+
+            List<CourseManageVo> courseVos=iCourseManageDAO.selectCourseManageInfo(courseInfo);
+
+            for(CourseManageVo courseVo:courseVos){
+                GradeCourseMap gradeCourseMap=new GradeCourseMap();
+                gradeCourseMap.setGradeId(courseVo.getGradeId());
+                gradeCourseMap.setCourseType(courseVo.getCourseType());
+                gradeCourseMaps.add(gradeCourseMap);
+            }
+            courseManageMapperVo.setCourseMapList(gradeCourseMaps);
+            courseManageMapperVos.add(courseManageMapperVo);
+        }
+
+        return courseManageMapperVos;
     }
 
     @Override
