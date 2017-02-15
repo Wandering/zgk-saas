@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,5 +56,19 @@ public class CourseManageServiceImpl extends AbstractPageService<IBaseDAO<Course
         Integer result = iCourseManageDAO.addCourses(courseManages);
 
         return result > 0;
+    }
+
+    @Override
+    public boolean updateCourseManage(CourseManage courseManage,String ids) {
+        boolean result = false;
+        Map map = new HashMap();
+        map.put("tnId", courseManage.getTnId());
+        map.put("courseBaseId", courseManage.getCourseBaseId());
+        Integer resu = iCourseManageDAO.deleteByCondition(map);
+
+        if (resu > 0)
+            result = insertCourseManage(courseManage, ids);
+
+        return result;
     }
 }

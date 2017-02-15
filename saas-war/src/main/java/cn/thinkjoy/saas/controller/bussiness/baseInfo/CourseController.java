@@ -87,13 +87,14 @@ public class CourseController {
      */
     @RequestMapping(value = "/upd/manager",method = RequestMethod.POST)
     @ResponseBody
-    public Map updCourseManager(@RequestBody Request req) {
+    public Map updCourseManager(@RequestBody Request req,HttpServletRequest request) {
+        String ids = request.getParameter("ids");
         Map map = new HashMap();
         CourseManage courseManage = JSON.parseObject(req.getData().get("courseManage").toString(), CourseManage.class);
 
-        Integer result = iCourseManageService.update(courseManage);
+        boolean result = iCourseManageService.updateCourseManage(courseManage,ids);
 
-        map.put("result", result > 0);
+        map.put("result", result );
 
         return map;
     }
