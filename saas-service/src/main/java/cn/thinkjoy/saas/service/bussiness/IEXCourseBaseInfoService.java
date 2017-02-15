@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by douzy on 17/2/14.
  */
-public interface ICourseBaseInfoService {
+public interface IEXCourseBaseInfoService {
     /**
      * 获取课程基础信息集
      * @return

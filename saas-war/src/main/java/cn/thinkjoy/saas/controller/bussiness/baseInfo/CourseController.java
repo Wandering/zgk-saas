@@ -1,10 +1,14 @@
 package cn.thinkjoy.saas.controller.bussiness.baseInfo;
 
+import cn.thinkjoy.common.protocol.Request;
+import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
-import cn.thinkjoy.saas.service.bussiness.ICourseBaseInfoService;
+import cn.thinkjoy.saas.domain.bussiness.CourseManage;
+import cn.thinkjoy.saas.service.ICourseManageService;
+import cn.thinkjoy.saas.service.bussiness.IEXCourseBaseInfoService;
+import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -19,21 +23,91 @@ import java.util.Map;
 public class CourseController {
 
     @Resource
-    ICourseBaseInfoService iCourseBaseInfoService;
+    IEXCourseBaseInfoService IEXCourseBaseInfoService;
+    @Resource
+    ICourseManageService iCourseManageService;
 
 
     /**
      * 课程基础信息集
+     *
      * @return
      */
-    @RequestMapping("/get/baseInfo")
+    @RequestMapping(value = "/get/baseInfo",method = RequestMethod.GET)
     @ResponseBody
     public Map getCourse() {
         Map map = new HashMap();
-        List<CourseBaseInfo> courseBaseInfoList = iCourseBaseInfoService.getCourseBaseInfoList();
+        List<CourseBaseInfo> courseBaseInfoList = IEXCourseBaseInfoService.getCourseBaseInfoList();
 
         map.put("courses", courseBaseInfoList);
         return map;
     }
+
+    /**
+     * 获取租户下的课程设置信息
+     *
+     * @param tnId
+     * @return
+     */
+    @RequestMapping(value = "/get/manager/{tnId}",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getCourseManager(@PathVariable Integer tnId) {
+        Map map = new HashMap();
+        List<CourseManage> courseManages = iCourseManageService.findList("tn_id", tnId, "id", SqlOrderEnum.ASC);
+        map.put("courses", courseManages);
+        return map;
+    }
+
+    /**
+     * 新增课程管理信息
+     *
+     * @return
+     */
+    @RequestMapping(value = "/add/manager",method = RequestMethod.POST)
+    @ResponseBody
+    public Map addCourseManager(@RequestBody Request req) {
+        Map map = new HashMap();
+        CourseManage courseManage = JSON.parseObject(req.getData().get("courseManage").toString(), CourseManage.class);
+
+        Integer result = iCourseManageService.insert(courseManage);
+
+        map.put("result", result > 0);
+
+        return map;
+    }
+
+    /**
+     * 修改课程管理信息
+     *
+     * @return
+     */
+    @RequestMapping(value = "/upd/manager",method = RequestMethod.POST)
+    @ResponseBody
+    public Map updCourseManager(@RequestBody Request req) {
+        Map map = new HashMap();
+        CourseManage courseManage = JSON.parseObject(req.getData().get("courseManage").toString(), CourseManage.class);
+
+        Integer result = iCourseManageService.update(courseManage);
+
+        map.put("result", result > 0);
+
+        return map;
+    }
+
+    /**
+     * 删除课程管理信息
+     *
+     * @param courseId
+     * @return
+     */
+    @RequestMapping(value = "/del/manager/{courseId}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map delCourseManager(@PathVariable Integer courseId) {
+        Map map = new HashMap();
+        Integer result = iCourseManageService.delete(courseId);
+        map.put("result", result > 0);
+        return map;
+    }
+
 
 }
