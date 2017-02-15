@@ -20,4 +20,6 @@ public interface ICourseManageService<D extends IBaseDAO<T>, T extends BaseDomai
     public boolean insertCourseManage(CourseManage courseManage,String ids);
 
     public boolean updateCourseManage(CourseManage courseManage,String ids);
+
+    boolean deleteCourseManage(Integer tnId,Integer courseId);
 }

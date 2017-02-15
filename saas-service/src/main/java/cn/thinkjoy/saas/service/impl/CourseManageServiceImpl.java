@@ -75,13 +75,17 @@ public class CourseManageServiceImpl extends AbstractPageService<IBaseDAO<Course
 
         List<CourseManage> courseManages = new ArrayList<>();
         for (int i = 0; i < idsList.size(); i++) {
+            CourseManage courseObj=new CourseManage();
+
             String row = idsList.get(i);
             String[] rowArr = row.split(ParamsUtils.CLASSROOM_GRADE_COMBIN_CHAR);
-
-            courseManage.setGradeId(Integer.valueOf(rowArr[0]));
-
-            courseManage.setCourseType(Integer.valueOf(rowArr[1]) + "");
-            courseManages.add(courseManage);
+            courseObj.setCourseBaseId(courseManage.getCourseBaseId());
+            courseObj.setCustom(courseManage.getCustom());
+            courseObj.setTnId(courseManage.getTnId());
+            courseObj.setCreateTime(courseManage.getCreateTime());
+            courseObj.setGradeId(Integer.valueOf(rowArr[0]));
+            courseObj.setCourseType(Integer.valueOf(rowArr[1]) + "");
+            courseManages.add(courseObj);
         }
 
         Integer result = iCourseManageDAO.addCourses(courseManages);
@@ -102,4 +106,16 @@ public class CourseManageServiceImpl extends AbstractPageService<IBaseDAO<Course
 
         return result;
     }
+
+    @Override
+    public boolean deleteCourseManage(Integer tnId,Integer courseId) {
+        Map map = new HashMap();
+        map.put("tnId", tnId);
+        map.put("courseBaseId", courseId);
+        Integer resu = iCourseManageDAO.deleteByCondition(map);
+
+        return resu > 0;
+    }
+
+
 }

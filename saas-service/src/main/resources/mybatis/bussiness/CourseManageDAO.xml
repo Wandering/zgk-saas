@@ -196,19 +196,19 @@
         DELETE FROM saas_course_manage
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="tnId!=null">
-                AND tn_id=#{tnId},
+                AND tn_id=#{tnId}
             </if>
             <if test="courseBaseId!=null">
-                AND course_base_id = #{courseBaseId},
+                AND course_base_id = #{courseBaseId}
             </if>
             <if test="custom!=null">
-                AND custom = #{custom},
+                AND custom = #{custom}
             </if>
             <if test="gradeId!=null">
-                AND grade_id = #{gradeId},
+                AND grade_id = #{gradeId}
             </if>
             <if test="courseType!=null">
-                AND course_type = #{courseType},
+                AND course_type = #{courseType}
             </if>
             <if test="createTime!=null">
                 AND create_time=#{createTime}

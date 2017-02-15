@@ -105,12 +105,12 @@ public class CourseController {
      * @param courseId
      * @return
      */
-    @RequestMapping(value = "/del/manager/{courseId}",method = RequestMethod.POST)
+    @RequestMapping(value = "/del/manager/{tnId}/{courseId}",method = RequestMethod.POST)
     @ResponseBody
-    public Map delCourseManager(@PathVariable Integer courseId) {
+    public Map delCourseManager(@PathVariable Integer tnId,@PathVariable Integer courseId) {
         Map map = new HashMap();
-        Integer result = iCourseManageService.delete(courseId);
-        map.put("result", result > 0);
+        boolean result = iCourseManageService.deleteCourseManage(tnId, courseId);
+        map.put("result", result);
         return map;
     }
 
