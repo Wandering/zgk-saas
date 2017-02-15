@@ -417,5 +417,31 @@
         FROM saas_course_manage
     </select>
 
+    <select id="selectCourseManageInfo" parameterType="java.util.Map" resultType="CourseManageVo">
+        select courseManage.id as id,courseManage.course_base_id as courseId,courseBase.course_name as courseName,courseManage.grade_id as gradeId,courseManage.course_type as courseType  from saas_course_manage as courseManage inner join saas_course_base_info as courseBase on courseManage.course_base_id=courseBase.id
+        <where>
+             <if test="tnId!=null">
+                tn_id=#{tnId}
+             </if>
+        </where>
+    </select>
+
+    <insert id="addCourses" useGeneratedKeys="true" parameterType="java.util.List">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO saas_course_manage (
+        tn_id,
+        course_base_id,
+        custom,
+        grade_id,
+        course_type,
+        create_time
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.tnId},#{item.courseBaseId},#{item.custom},#{item.gradeId},#{item.courseType},#{item.createTime})
+        </foreach>
+    </insert>
 </mapper>
 

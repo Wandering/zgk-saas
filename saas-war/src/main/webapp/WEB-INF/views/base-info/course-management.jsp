@@ -74,24 +74,24 @@
         </div><!-- /.main-content -->
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
-<script id="course-tbody-template" type="text/x-handlebars-template">
-    {{#each this}}
-    <tr>
-        <th class="center">
-            <label>
-                <input type="checkbox" dataId="{{id}}" class="ace" />
-                <span class="lbl"></span>
-            </label>
-        </th>
-        <td class="center">{{addOne @index}}</td>
-        <td class="center">{{this}}</td>
-        <td class="center"></td>
-        <td class="center"></td>
-        <td class="center"></td>
-        <td class="center"></td>
-    </tr>
-    {{/each}}
-</script>
+<%--<script id="course-tbody-template" type="text/x-handlebars-template">--%>
+    <%--{{#each this}}--%>
+    <%--<tr>--%>
+        <%--<th class="center">--%>
+            <%--<label>--%>
+                <%--<input type="checkbox" dataId="{{addOne @index}}" class="ace" />--%>
+                <%--<span class="lbl"></span>--%>
+            <%--</label>--%>
+        <%--</th>--%>
+        <%--<td class="center">{{addOne @index}}</td>--%>
+        <%--<td class="center">{{this}}</td>--%>
+        <%--<td class="center"></td>--%>
+        <%--<td class="center"></td>--%>
+        <%--<td class="center"></td>--%>
+        <%--<td class="center"></td>--%>
+    <%--</tr>--%>
+    <%--{{/each}}--%>
+<%--</script>--%>
 <%@ include file="./../common/footer.jsp"%>
 <script src="<%=ctx%>/static/src/js/base-info/course-management.js"></script>
 </body>

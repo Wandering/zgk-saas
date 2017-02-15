@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by douzy on 16/10/24.
@@ -212,6 +209,16 @@ public class EXGradeServiceImpl implements EXIGradeService {
         return gradeList;
     }
 
-
+    /**
+     * 根据tnId和年级code查询年级
+     *
+     * @param tnId
+     * @param gradeCodes
+     * @return
+     */
+    @Override
+    public List<Grade> getGradeByTnIdAndGradeCode(int tnId, Set<Integer> gradeCodes) {
+        return exiGradeDAO.getGradeByTnIdAndGradeCode(tnId,gradeCodes);
+    }
 
 }

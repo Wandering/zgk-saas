@@ -1,9 +1,9 @@
 package cn.thinkjoy.saas.controller.bussiness.baseInfo;
 
 import cn.thinkjoy.common.protocol.Request;
-import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseManage;
+import cn.thinkjoy.saas.domain.bussiness.CourseManageVo;
 import cn.thinkjoy.saas.service.ICourseManageService;
 import cn.thinkjoy.saas.service.bussiness.IEXCourseBaseInfoService;
 import com.alibaba.fastjson.JSON;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,9 @@ public class CourseController {
     @ResponseBody
     public Map getCourseManager(@PathVariable Integer tnId) {
         Map map = new HashMap();
-        List<CourseManage> courseManages = iCourseManageService.findList("tn_id", tnId, "id", SqlOrderEnum.ASC);
+        Map parMap=new HashMap();
+        parMap.put("tnId",tnId);
+        List<CourseManageVo> courseManages = iCourseManageService.selectCourseManageInfo(parMap);
         map.put("courses", courseManages);
         return map;
     }
@@ -65,13 +68,14 @@ public class CourseController {
      */
     @RequestMapping(value = "/add/manager",method = RequestMethod.POST)
     @ResponseBody
-    public Map addCourseManager(@RequestBody Request req) {
+    public Map addCourseManager(@RequestBody Request req,HttpServletRequest request) {
+        String ids = request.getParameter("ids");
         Map map = new HashMap();
         CourseManage courseManage = JSON.parseObject(req.getData().get("courseManage").toString(), CourseManage.class);
 
-        Integer result = iCourseManageService.insert(courseManage);
+        boolean result = iCourseManageService.insertCourseManage(courseManage,ids);
 
-        map.put("result", result > 0);
+        map.put("result", result );
 
         return map;
     }
@@ -83,13 +87,14 @@ public class CourseController {
      */
     @RequestMapping(value = "/upd/manager",method = RequestMethod.POST)
     @ResponseBody
-    public Map updCourseManager(@RequestBody Request req) {
+    public Map updCourseManager(@RequestBody Request req,HttpServletRequest request) {
+        String ids = request.getParameter("ids");
         Map map = new HashMap();
         CourseManage courseManage = JSON.parseObject(req.getData().get("courseManage").toString(), CourseManage.class);
 
-        Integer result = iCourseManageService.update(courseManage);
+        boolean result = iCourseManageService.updateCourseManage(courseManage,ids);
 
-        map.put("result", result > 0);
+        map.put("result", result );
 
         return map;
     }

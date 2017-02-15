@@ -1,6 +1,7 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.saas.common.Env;
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.Configuration;
 import cn.thinkjoy.saas.domain.EnrollingRatio;
 import cn.thinkjoy.saas.domain.Grade;
@@ -16,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -213,6 +215,10 @@ public class ConfigurationController {
         List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceService.getTenantConfigListByTnIdAndType(type, tnId);
 
         Map resultMap = new HashMap();
+        if (tenantConfigInstances.size() == 0){
+            this.initTable(type,tnId);
+            tenantConfigInstances = exiTenantConfigInstanceService.getTenantConfigListByTnIdAndType(type, tnId);
+        }
 
         resultMap.put("configList", tenantConfigInstances);
 
@@ -426,5 +432,17 @@ public class ConfigurationController {
         return resultMap;
     }
 
+
+    private void initTable(String type,int tnId){
+        switch (type) {
+            case Constant.TABLE_TYPE_TEACHER:
+
+                exiTenantConfigInstanceService.createConfig(Constant.TABLE_TYPE_TEACHER,Constant.CREATE_TABLE_TYPE_TEACHER_IDS,tnId);
+                exiTenantConfigInstanceService.createTenantCombinationTable(Constant.TABLE_TYPE_TEACHER,tnId);
+                break;
+            default:
+                break;
+        }
+    }
 }
 
