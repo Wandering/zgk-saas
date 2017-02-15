@@ -8,7 +8,6 @@ function CourseManagement() {
 CourseManagement.prototype = {
     constructor: CourseManagement,
     init: function () {
-        this.queryCourseList();
         this.getCourse();
         this.updateCourse();
         this.getGrade();
@@ -26,16 +25,86 @@ CourseManagement.prototype = {
                     courseHtml += '<tr>'
                         + '<th class="center">'
                         + '<label>'
-                        + '<input type="checkbox" dataId="' + dataObj[i].id + '" courseName="' + dataObj[i].courseName + '" class="ace" />'
+                        + '<input type="checkbox" courseBaseId = "'+ dataObj[i].courseBaseId +'" courseName="' + dataObj[i].courseName + '" class="ace" />'
                         + '<span class="lbl"></span>'
                         + '</label>'
                         + '</th>'
                         + '<td class="center">' + (i + 1) + '</td>'
-                        + '<td class="center">' + dataObj[i].courseName + '</td>'
-                        + '<td class="center"></td>'
-                        + '<td class="center"></td>'
-                        + '<td class="center"></td>'
-                        + '<td class="center"></td>'
+                    courseHtml+= '<td class="center">' + dataObj[i].courseName + '</td>';
+
+                    var gradeName = [];
+                    var grade1CourseTypeName = '-';
+                    var grade2CourseTypeName = '-';
+                    var grade3CourseTypeName = '-';
+                    for(var k=0;k<dataObj[i].courseMapList.length;k++){
+                        var gradeId = dataObj[i].courseMapList[k].gradeId;
+                        var courseType = dataObj[i].courseMapList[k].courseType;
+                        switch (gradeId){
+                            case 1:
+                                gradeName.push('高一年级');
+                                switch (courseType){
+                                    case "0":
+                                        grade1CourseTypeName = '-';
+                                        break;
+                                    case "1":
+                                        grade1CourseTypeName = '文科班开设课程';
+                                        break;
+                                    case "2":
+                                        grade1CourseTypeName = '理科班开设课程';
+                                        break;
+                                    case "3":
+                                        grade1CourseTypeName = '文科班开设课程,理科班开设课程';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case 2:
+                                gradeName.push('高二年级');
+                                switch (courseType){
+                                    case "0":
+                                        grade2CourseTypeName = '-';
+                                        break;
+                                    case "1":
+                                        grade2CourseTypeName = '文科班开设课程';
+                                        break;
+                                    case "2":
+                                        grade2CourseTypeName = '理科班开设课程';
+                                        break;
+                                    case "3":
+                                        grade2CourseTypeName = '文科班开设课程,理科班开设课程';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case 3:
+                                gradeName.push('高三年级');
+                                switch (courseType){
+                                    case "0":
+                                        grade3CourseTypeName = '-';
+                                        break;
+                                    case "1":
+                                        grade3CourseTypeName = '文科班开设课程';
+                                        break;
+                                    case "2":
+                                        grade3CourseTypeName = '理科班开设课程';
+                                        break;
+                                    case "3":
+                                        grade3CourseTypeName = '文科班开设课程,理科班开设课程';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    courseHtml+= '<td class="center">'+ gradeName.join(',') +'</td>'
+                        + '<td class="center">'+ grade1CourseTypeName +'</td>'
+                        + '<td class="center">'+ grade2CourseTypeName +'</td>'
+                        + '<td class="center">'+ grade3CourseTypeName +'</td>'
                         + '</tr>';
                 }
                 $('#course-tbody').append(courseHtml);
@@ -154,12 +223,9 @@ CourseManagement.prototype = {
 
     },
     // 删除课程管理信息
-    delCourse: function (id) {
-        console.log(id)
+    delCourse: function (courseId) {
         var that = this;
-        Common.ajaxFun('/course/del/manager/' + id, 'POST', {
-            'courseId': id
-        }, function (res) {
+        Common.ajaxFun('/course/del/manager/'+ tnId +'/'+courseId, 'POST', {}, function (res) {
             console.log(res)
             if (res.rtnCode == "0000000") {
                 layer.msg('删除成功');
@@ -225,7 +291,7 @@ $(function () {
     });
     // 修改
     $('#updateCourse-btn').on('click', function () {
-        var id = $('#course-tbody input:checked').attr('dataid'),
+        var id = $('#course-tbody input:checked').attr('courseId'),
             courseName = $('#course-tbody input:checked').attr('courseName'),
             checkboxLen = $('#course-tbody input:checked').length;
         if (checkboxLen == 0) {
@@ -242,7 +308,7 @@ $(function () {
 
     // 删除
     $('#deleteCourse-btn').on('click', function () {
-        var id = $('#course-tbody input:checked').attr('dataid');
+        var courseBaseId = $('#course-tbody input:checked').attr('courseBaseId');
         var checkboxLen = $('#course-tbody input:checked').length;
         if (checkboxLen == 0) {
             layer.tips('至少选择一项', $(this));
@@ -275,7 +341,8 @@ $(function () {
         layer.confirm('确定删除?', {
             btn: ['确定', '关闭'] //按钮
         }, function () {
-            CourseManagementIns.delCourse(id);
+            alert(3)
+            CourseManagementIns.delCourse(courseBaseId);
         }, function () {
             layer.closeAll();
         });
