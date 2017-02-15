@@ -32,7 +32,7 @@
         course_type as courseType,
         create_time as createTime
     </sql>
-    <insert id="insert" parameterType="CourseBaseInfo">
+    <insert id="insert" parameterType="CourseManage">
         INSERT INTO saas_course_manage (
             tn_id,
             course_base_id,
@@ -54,7 +54,7 @@
     </insert>
 
     <!-- 更新 -->
-    <update id="update" parameterType="CourseBaseInfo">
+    <update id="update" parameterType="CourseManage">
         UPDATE saas_course_manage
         <trim prefix="SET" suffixOverrides=",">
             <if test="tnId!=null">
@@ -170,7 +170,7 @@
     </insert>
 
 
-    <update id="updateNull" parameterType="CourseBaseInfo">
+    <update id="updateNull" parameterType="CourseManage">
         UPDATE saas_course_manage
         <trim prefix="SET" suffixOverrides=",">
             tn_id=#{tnId},
@@ -221,7 +221,7 @@
         ${property} = #{value}
     </delete>
 
-    <select id="fetch" parameterType="java.lang.Integer" resultType="CourseBaseInfo">
+    <select id="fetch" parameterType="java.lang.Integer" resultType="CourseManage">
         SELECT
         <include refid="Base_Column_List" />
         FROM saas_course_manage
@@ -233,7 +233,7 @@
         </if>
     </select>
 
-    <select id="findOne" parameterType="java.util.Map" resultType="CourseBaseInfo">
+    <select id="findOne" parameterType="java.util.Map" resultType="CourseManage">
         SELECT
         <include refid="Base_Column_List" />
         FROM saas_course_manage WHERE
@@ -241,7 +241,7 @@
         LIMIT 0,1
     </select>
 
-    <select id="findList" parameterType="java.util.Map" resultType="CourseBaseInfo">
+    <select id="findList" parameterType="java.util.Map" resultType="CourseManage">
         SELECT
         <include refid="Base_Column_List" />
         FROM saas_course_manage WHERE
@@ -251,7 +251,7 @@
         </if>
     </select>
 
-    <select id="findAll" resultType="CourseBaseInfo">
+    <select id="findAll" resultType="CourseManage">
         SELECT
         <include refid="Base_Column_List" />
         FROM saas_course_manage
@@ -260,7 +260,7 @@
         </if>
     </select>
 
-    <select id="queryPage" resultType="CourseBaseInfo">
+    <select id="queryPage" resultType="CourseManage">
         SELECT
         <include refid="Base_Column_List" />
         FROM saas_course_manage
@@ -296,7 +296,7 @@
         </if>
     </select>
 
-    <select id="like" parameterType="java.util.Map" resultType="CourseBaseInfo">
+    <select id="like" parameterType="java.util.Map" resultType="CourseManage">
         SELECT
         <include refid="Base_Column_List" />
         FROM saas_course_manage
@@ -327,7 +327,7 @@
 
 
 
-    <select id="queryList" parameterType="java.util.Map" resultType="CourseBaseInfo">
+    <select id="queryList" parameterType="java.util.Map" resultType="CourseManage">
         SELECT
         <include refid="Base_Column_List" />
         FROM saas_course_manage
@@ -356,7 +356,7 @@
         </if>
     </select>
 
-    <select id="queryOne" parameterType="java.util.Map" resultType="CourseBaseInfo">
+    <select id="queryOne" parameterType="java.util.Map" resultType="CourseManage">
         SELECT
         <include refid="Base_Column_List" />
         FROM saas_course_manage
@@ -417,12 +417,26 @@
         FROM saas_course_manage
     </select>
 
+    <select id="selectCourseManageGroup" parameterType="java.util.Map" resultType="CourseManageVo">
+
+        select courseManage.id as id,courseManage.course_base_id as courseId,courseBase.course_name as courseName,courseManage.grade_id as gradeId,courseManage.course_type as courseType  from saas_course_manage as courseManage inner join saas_course_base_info as courseBase on courseManage.course_base_id=courseBase.id
+        <where>
+            <if test="tnId!=null">
+                tn_id=#{tnId}
+            </if>
+        </where>
+        group by courseManage.course_base_id
+    </select>
+
     <select id="selectCourseManageInfo" parameterType="java.util.Map" resultType="CourseManageVo">
         select courseManage.id as id,courseManage.course_base_id as courseId,courseBase.course_name as courseName,courseManage.grade_id as gradeId,courseManage.course_type as courseType  from saas_course_manage as courseManage inner join saas_course_base_info as courseBase on courseManage.course_base_id=courseBase.id
         <where>
              <if test="tnId!=null">
-                tn_id=#{tnId}
+                AND tn_id=#{tnId}
              </if>
+            <if test="courseBaseId!=null">
+                AND course_base_id=#{courseBaseId}
+            </if>
         </where>
     </select>
 
