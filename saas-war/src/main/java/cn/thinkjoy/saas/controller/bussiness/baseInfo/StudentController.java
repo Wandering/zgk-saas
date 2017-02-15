@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -143,7 +144,7 @@ public class StudentController {
     }
 
     /**
-     * 根据班级类型组合字段属性
+     * 根据班级类型组合属性
      *
      * @param type 0：教学班  1：行政班
      * @param tempArr
@@ -155,7 +156,7 @@ public class StudentController {
             return tempArr;
         }
 
-        String[] columns = new String[tempArr.length];
+        String[] columns = new String[tempArr.length - Constant.ZDBJ_COLUMNS_VALUE.split(",").length];
         int i = 0;
         for(String column : tempArr){
             if(Constant.ZDBJ_COLUMNS_VALUE.indexOf(column) == -1){
@@ -275,6 +276,34 @@ public class StudentController {
         LOGGER.info("==================student excel上传 E==================");
         Map resultMap = new HashMap();
         resultMap.put("result", result);
+        return resultMap;
+    }
+
+    /**
+     * 根据班级类型查询学生数据
+     *
+     * @param type 0：教学班  1：行政班
+     * @param tnId
+     * @param grade 年级
+     * @param star
+     * @param row
+     * @return
+     */
+    @RequestMapping(value = "/getStuInfo",method = RequestMethod.GET)
+    @ResponseBody
+    public Map  getTenantCustomData(@RequestParam Integer type,
+                                    @RequestParam Integer tnId,
+                                    @RequestParam String grade,
+                                    @RequestParam Integer star,
+                                    @RequestParam Integer row) {
+
+        Integer s = (star == null) ? null : Integer.valueOf(star),
+                r=(row==null)?null:Integer.valueOf(row);
+        Map resultMap = new HashMap();
+        List<LinkedHashMap<String, Object>> tenantCustom = iexTenantCustomService.getStuInfo(type, tnId, grade, s,r);
+        resultMap.put("result", tenantCustom);
+        Integer count = iexTenantCustomService.getStuInfoCount(type, tnId, grade);
+        resultMap.put("count", count);
         return resultMap;
     }
 

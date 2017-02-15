@@ -1,5 +1,6 @@
 package cn.thinkjoy.saas.service.impl.bussiness;
 
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.IJwTeacherBaseInfoDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO;
@@ -165,6 +166,46 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 
 
         return tenantCustoms;
+    }
+
+    @Override
+    public List<LinkedHashMap<String, Object>> getStuInfo(Integer type, Integer tnId, String g, Integer s, Integer r) {
+        if (tnId <= 0) {
+            return null;
+        }
+        String tableName = ParamsUtils.combinationTableName(Constant.STUDENT, tnId);
+
+        if (StringUtils.isBlank(tableName)) {
+            return null;
+        }
+        Map map=new HashMap();
+        map.put("tableName",tableName);
+        map.put("type",type);
+        map.put("grade",g);
+        map.put("offset",s);
+        map.put("rows",r);
+        List<LinkedHashMap<String, Object>> tenantCustoms = iexTeantCustomDAO.getStuInfo(map);
+
+        return tenantCustoms;
+    }
+
+    @Override
+    public Integer getStuInfoCount(Integer type, Integer tnId, String g) {
+        if (tnId <= 0) {
+            return null;
+        }
+        String tableName = ParamsUtils.combinationTableName(Constant.STUDENT, tnId);
+
+        if (StringUtils.isBlank(tableName)) {
+            return null;
+        }
+        Map map=new HashMap();
+        map.put("tableName",tableName);
+        map.put("type",type);
+        map.put("grade",g);
+        Integer count = iexTeantCustomDAO.getStuInfoCount(map);
+
+        return count;
     }
 
     /**
