@@ -50,20 +50,22 @@ CourseManagement.prototype = {
     },
     // 新增课程管理信息
     addCourse: function () {
-        var that = this;
-        Common.ajaxFun('/course/add/manager.do', 'POST', {
+
+        var datas={
             "clientInfo": {},
             "style": "",
             "data": {
                 "courseManage": {
-                    "tnId": "",
-                    "courseBaseId": "",
-                    "gradeId": "",
-                    "courseType": "",
-                    "createTime": ""
+                    "tnId": "10",
+                    "courseBaseId": 1,
+                    "gradeId": 1,
+                    "courseType": "1",
+                    "createTime": "1"
                 }
             }
-        }, function (res) {
+        };
+        var that = this;
+        Common.ajaxFun('/course/add/manager.do?ids=1:2-2:1-3:3', 'POST', JSON.stringify(datas), function (res) {
             if (res.rtnCode == "0000000") {
 
             } else {
@@ -71,7 +73,7 @@ CourseManagement.prototype = {
             }
         }, function (res) {
             layer.msg(res.msg);
-        });
+        }, null, true);
 
 
     },
