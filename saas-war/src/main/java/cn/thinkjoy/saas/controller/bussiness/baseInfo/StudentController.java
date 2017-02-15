@@ -58,14 +58,13 @@ public class StudentController {
     /**
      * 默认表头初始化
      *
-     * @param tnId
      * @return
      */
     @RequestMapping(value = "/initStudent",method = RequestMethod.POST)
     @ResponseBody
-    public Map initStudent(@RequestParam Integer tnId) {
-
-        boolean result = exiConfigurationService.selectListRetain(Constant.STUDENT, tnId);
+    public Map initStudent(HttpServletRequest request) {
+        String tnId = request.getParameter("tnId");
+        boolean result = exiConfigurationService.selectListRetain(Constant.STUDENT, Integer.valueOf(tnId));
         Map resultMap = new HashMap();
         resultMap.put("result", result);
         return resultMap;
@@ -211,16 +210,16 @@ public class StudentController {
     /**
      * 添加学生表头字段
      *
-     * @param tnId
-     * @param ids
      * @return
      */
     @RequestMapping(value = "/addStuExcelHeader", method = RequestMethod.POST)
     @ResponseBody
-    public Map addStuExcelHeader(@RequestParam Integer tnId,
-                            @RequestParam String ids) {
+    public Map addStuExcelHeader(HttpServletRequest request) {
 
-        String exMsg = exiTenantConfigInstanceService.createConfig(Constant.STUDENT, ids, tnId);
+        String tnId = request.getParameter("tnId");
+        String ids = request.getParameter("ids");
+
+        String exMsg = exiTenantConfigInstanceService.createConfig(Constant.STUDENT, ids, Integer.valueOf(tnId));
 
         Map resultMap = new HashMap();
         resultMap.put("result", exMsg);
@@ -380,15 +379,16 @@ public class StudentController {
 
     /**
      * 删除学生数据
-     * @param tnId 租户ID
-     * @param ids  主键
      * @return
      */
     @RequestMapping(value = "/removeStuInfo",method = RequestMethod.POST)
     @ResponseBody
-    public Map removeStuInfo(@PathVariable Integer tnId,
-                                  @PathVariable String ids) {
-        boolean result = iexTenantCustomService.removeTenantCustom(Constant.STUDENT, tnId, ids);
+    public Map removeStuInfo(HttpServletRequest request) {
+
+        String tnId = request.getParameter("tnId");
+        String ids = request.getParameter("ids");
+
+        boolean result = iexTenantCustomService.removeTenantCustom(Constant.STUDENT, Integer.valueOf(tnId), ids);
         Map resultMap = new HashMap();
         resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         return resultMap;

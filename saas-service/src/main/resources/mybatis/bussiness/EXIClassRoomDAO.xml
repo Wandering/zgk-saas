@@ -29,7 +29,7 @@
 
         inner join saas_grade as grade
 
-        on classRoom.grade_id=grade.id
+        on classRoom.grade_id=grade.gradeCode AND classRoom.tn_id = grade.tnId
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="id!=null">
