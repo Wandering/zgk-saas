@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,13 +68,14 @@ public class CourseController {
      */
     @RequestMapping(value = "/add/manager",method = RequestMethod.POST)
     @ResponseBody
-    public Map addCourseManager(@RequestBody Request req) {
+    public Map addCourseManager(@RequestBody Request req,HttpServletRequest request) {
+        String ids = request.getParameter("ids");
         Map map = new HashMap();
         CourseManage courseManage = JSON.parseObject(req.getData().get("courseManage").toString(), CourseManage.class);
 
-        Integer result = iCourseManageService.insert(courseManage);
+        boolean result = iCourseManageService.insertCourseManage(courseManage,ids);
 
-        map.put("result", result > 0);
+        map.put("result", result );
 
         return map;
     }
