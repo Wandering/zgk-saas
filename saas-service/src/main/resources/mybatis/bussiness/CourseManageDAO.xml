@@ -425,5 +425,23 @@
              </if>
         </where>
     </select>
+
+    <insert id="addCourses" useGeneratedKeys="true" parameterType="java.util.List">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO saas_course_manage (
+        tn_id,
+        course_base_id,
+        custom,
+        grade_id,
+        course_type,
+        create_time
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.tnId},#{item.courseBaseId},#{item.custom},#{item.gradeId},#{item.courseType},#{item.createTime})
+        </foreach>
+    </insert>
 </mapper>
 
