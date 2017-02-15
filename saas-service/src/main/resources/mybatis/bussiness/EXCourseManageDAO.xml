@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.IEXCourseManageDAO">
+    <!--
+    insert
+    update
+    updateNull
+    deleteById
+    deleteByCondition
+    deleteByProperty
+    fetch
+    findOne
+    findList
+    findAll
+    queryPage
+    like
+    queryList
+    queryOne
+    count
+    selectMaxId
+    updateOrSave
+    selectOne
+    selectList
+    -->
+    <sql id="Base_Column_List">
+        manage.id,
+        manage.tn_id as tnId,
+        manage.course_base_id as courseBaseId,
+        manage.custom as custom,
+        manage.grade_id as gradeId,
+        manage.course_type as courseType,
+        manage.create_time as createTime,
+        baseinfo.course_name as courseBaseName
+    </sql>
+    <select id="getCourseByParams" resultType="cn.thinkjoy.saas.dto.CourseManageDto">
+          SELECT
+        <include refid="Base_Column_List"/>
+        from saas_course_manage manage
+        LEFT JOIN  saas_course_base_info baseinfo on manage.course_base_id = baseinfo.id
+        <where>
+            <if test="tnId!=null">
+                manage.tn_id=#{tnId},
+            </if>
+            <if test="courseBaseId!=null">
+                manage.course_base_id = #{courseBaseId},
+            </if>
+            <if test="custom!=null">
+                manage.custom = #{custom},
+            </if>
+            <if test="gradeId!=null">
+                manage.grade_id = #{gradeId},
+            </if>
+            <if test="courseType!=null">
+                manage.course_type = #{courseType},
+            </if>
+            <if test="createTime!=null">
+                manage.create_time=#{createTime}
+            </if>
+            <if test="createTime!=null">
+                baseinfo.course_name=#{courseBaseName}
+            </if>
+        </where>
+
+    </select>
+</mapper>
+
