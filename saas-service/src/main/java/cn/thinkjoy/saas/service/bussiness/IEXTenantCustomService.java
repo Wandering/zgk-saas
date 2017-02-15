@@ -51,6 +51,29 @@ public interface IEXTenantCustomService {
      * @return
      */
     List<LinkedHashMap<String,Object>> getTenantCustom(String type,Integer tnId,String g,Integer s,Integer r);
+
+    /**
+     * 根据类型不同查询学生基础信息
+     *
+     * @param type 班级类型 0：教学班  1：行政班
+     * @param tnId
+     * @param g 年级
+     * @param s
+     * @param r
+     * @return
+     */
+    List<LinkedHashMap<String,Object>> getStuInfo(Integer type,Integer tnId,String g,Integer s,Integer r);
+
+    /**
+     * 根据类型不同查询学生总数
+     *
+     * @param type 班级类型 0：教学班  1：行政班
+     * @param tnId
+     * @param g
+     * @return
+     */
+    Integer getStuInfoCount(Integer type,Integer tnId,String g);
+
     /**
      * 查询租户自定义表头数据
      * @param type 模块分类
