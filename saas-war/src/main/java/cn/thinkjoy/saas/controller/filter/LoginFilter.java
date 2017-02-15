@@ -3,8 +3,6 @@ package cn.thinkjoy.saas.controller.filter;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dto.UserInfoDto;
-import cn.thinkjoy.saas.enums.ErrorCode;
-import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import com.alibaba.fastjson.JSON;
 import org.apache.log4j.Logger;
 
