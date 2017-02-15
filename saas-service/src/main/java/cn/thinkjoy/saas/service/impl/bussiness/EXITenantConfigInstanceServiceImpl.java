@@ -1090,12 +1090,12 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             case "class_adm":
                 params = new HashMap<>();
                 paramsList = new ArrayList<>();
-                params.put("key", "teacher_grade");
+                params.put("key", "class_grade");
                 params.put("value", grade);
                 paramsList.add(params);
                 params = new HashMap<>();
                 paramsList = new ArrayList<>();
-                params.put("key", "teacher_major_type");
+                params.put("key", "class_major_type");
                 params.put("value", subject);
                 paramsList.add(params);
                 map.put("searchKeys", paramsList);
@@ -1104,7 +1104,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             case "class_edu":
                 params = new HashMap<>();
                 paramsList = new ArrayList<>();
-                params.put("key", "teacher_grade");
+                params.put("key", "class_grade");
                 params.put("value", grade);
                 paramsList.add(params);
                 map.put("searchKeys", paramsList);
@@ -1124,14 +1124,14 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         List list = new ArrayList();
         switch (classType) {
             case "class_adm":
-                map.put("key1", "teacher_grade");
+                map.put("key1", "class_grade");
                 map.put("value1", grade);
-                map.put("key2", "teacher_major_type");
+                map.put("key2", "class_major_type");
                 map.put("value2", subject);
                 list = iexTeantCustomDAO.getTenantCustom(map);
                 break;
             case "class_edu":
-                map.put("key1", "teacher_grade");
+                map.put("key1", "class_grade");
                 map.put("value1", grade);
                 list = iexTeantCustomDAO.getTenantCustom(map);
                 break;

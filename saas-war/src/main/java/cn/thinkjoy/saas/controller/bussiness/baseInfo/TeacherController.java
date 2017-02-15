@@ -22,10 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by yangyongping on 2016/12/10.
@@ -88,10 +85,11 @@ public class TeacherController {
         int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         Grade gradeServiceOne = getGradeByGradeCodeAndTnId(tnId, gradeCode);
         //判定是否存在教学班
-        int gradeType = gradeServiceOne.getClassType();
+        Integer gradeType = gradeServiceOne.getClassType();
+        if (gradeType == null) throw new BizException(ErrorCode.GRADE_FORMAT_ERROR.getCode(),ErrorCode.GRADE_FORMAT_ERROR.getMessage());
         String grade = gradeServiceOne.getGrade();
         boolean isExistTeaching = GradeTypeEnum.Teaching.getCode().equals(gradeType);
-        boolean isMove = false;
+        boolean isMove = isEduSubject(subject);
         int classCount = 0;
         if (isExistTeaching && isMove) {
             //是教学班+是走班课程
@@ -128,8 +126,8 @@ public class TeacherController {
         int gradeType = gradeServiceOne.getClassType();
         String grade = gradeServiceOne.getGrade();
         boolean isExistTeaching = GradeTypeEnum.Teaching.getCode().equals(gradeType);
-        boolean isMove = false;
-        List classes = new ArrayList();
+        boolean isMove = isEduSubject(subject);
+        List<LinkedHashMap<String,Object>> classes = new ArrayList();
         if (isExistTeaching && isMove) {
             //是教学班+是走班课程
             classes = exiTenantConfigInstanceService.getBySubjectAndGrade(tnId, grade, subject, Constant.CLASS_EDU);
@@ -138,9 +136,15 @@ public class TeacherController {
             classes = exiTenantConfigInstanceService.getBySubjectAndGrade(tnId, grade, subject, Constant.CLASS_ADM);
             //不教学班+是走班课程
         }
+        List<Map<String,Object>> rtnList = new ArrayList<>();
+        Map<String,Object> map;
+        for (Map<String,Object> link : classes){
+            map = new HashMap<>();
+            map.put("className",link.get("class_name"));
+            rtnList.add(map);
+        }
 
-
-        rtnMap.put("class", classes);
+        rtnMap.put("class", rtnList);
         return rtnMap;
     }
 
@@ -149,8 +153,12 @@ public class TeacherController {
         param.put("gradeCode", gradeCode);
         param.put("tnId", tnId);
         Grade gradeServiceOne = (Grade) gradeService.queryOne(param);
-        if (gradeServiceOne != null)
+        if (gradeServiceOne == null)
             throw new BizException(ErrorCode.GRADE_FORMAT_ERROR.getCode(), ErrorCode.GRADE_FORMAT_ERROR.getMessage());
         return gradeServiceOne;
+    }
+
+    private boolean isEduSubject(String subject){
+        return false;
     }
 }
