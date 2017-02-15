@@ -39,12 +39,12 @@
                             <div class="title-2">
                                 <span class="txt-t"></span>
                                 <div class="btns">
-                                    <button class="btn btn-pink" id="addRole-btn">添加教师</button>
-                                    <button class="btn btn-inverse" id="updateRole-btn">修改</button>
-                                    <button class="btn btn-success" id="deleteTeacherBtn">删除</button>
+                                    <button class="btn btn-pink" id="addTeacher-btn">添加教师</button>
+                                    <button class="btn btn-inverse" id="updateTeacher-btn">修改</button>
+                                    <button class="btn btn-success" id="delTeacher-btn">删除</button>
                                     <button class="btn btn-warning" id="downloadBtn">模板下载</button>
                                     <button class="btn btn-warning" id="uploadBtn">批量上传</button>
-                                    <button class="btn btn-warning" id="teacher-settings-btn">教师设置</button>
+                                    <%--<button class="btn btn-warning" id="teacher-settings-btn">教师设置</button>--%>
                                 </div>
                             </div>
                             <div class="">

@@ -8,9 +8,7 @@ function CourseManagement() {
 CourseManagement.prototype = {
     constructor: CourseManagement,
     init: function () {
-        this.queryCourseList();
         this.getCourse();
-        this.addCourse();
         this.updateCourse();
         this.getGrade();
     },
@@ -20,23 +18,93 @@ CourseManagement.prototype = {
     getCourse: function () {
         Common.ajaxFun('/course/get/manager/' + tnId + '.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
-                console.log(res)
+                $('#course-tbody').html('');
                 var dataObj = res.bizData.courses;
                 var courseHtml = '';
                 for (var i = 0; i < dataObj.length; i++) {
                     courseHtml += '<tr>'
                         + '<th class="center">'
                         + '<label>'
-                        + '<input type="checkbox" dataId="' + dataObj[i].id + '" courseName="' + dataObj[i].courseName + '" class="ace" />'
+                        + '<input type="checkbox" courseBaseId = "'+ dataObj[i].courseBaseId +'" courseName="' + dataObj[i].courseName + '" class="ace" />'
                         + '<span class="lbl"></span>'
                         + '</label>'
                         + '</th>'
                         + '<td class="center">' + (i + 1) + '</td>'
-                        + '<td class="center">' + dataObj[i].courseName + '</td>'
-                        + '<td class="center"></td>'
-                        + '<td class="center"></td>'
-                        + '<td class="center"></td>'
-                        + '<td class="center"></td>'
+                    courseHtml+= '<td class="center">' + dataObj[i].courseName + '</td>';
+
+                    var gradeName = [];
+                    var grade1CourseTypeName = '-';
+                    var grade2CourseTypeName = '-';
+                    var grade3CourseTypeName = '-';
+                    for(var k=0;k<dataObj[i].courseMapList.length;k++){
+                        var gradeId = dataObj[i].courseMapList[k].gradeId;
+                        var courseType = dataObj[i].courseMapList[k].courseType;
+                        switch (gradeId){
+                            case 1:
+                                gradeName.push('高一年级');
+                                switch (courseType){
+                                    case "0":
+                                        grade1CourseTypeName = '-';
+                                        break;
+                                    case "1":
+                                        grade1CourseTypeName = '文科班开设课程';
+                                        break;
+                                    case "2":
+                                        grade1CourseTypeName = '理科班开设课程';
+                                        break;
+                                    case "3":
+                                        grade1CourseTypeName = '文科班开设课程,理科班开设课程';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case 2:
+                                gradeName.push('高二年级');
+                                switch (courseType){
+                                    case "0":
+                                        grade2CourseTypeName = '-';
+                                        break;
+                                    case "1":
+                                        grade2CourseTypeName = '文科班开设课程';
+                                        break;
+                                    case "2":
+                                        grade2CourseTypeName = '理科班开设课程';
+                                        break;
+                                    case "3":
+                                        grade2CourseTypeName = '文科班开设课程,理科班开设课程';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case 3:
+                                gradeName.push('高三年级');
+                                switch (courseType){
+                                    case "0":
+                                        grade3CourseTypeName = '-';
+                                        break;
+                                    case "1":
+                                        grade3CourseTypeName = '文科班开设课程';
+                                        break;
+                                    case "2":
+                                        grade3CourseTypeName = '理科班开设课程';
+                                        break;
+                                    case "3":
+                                        grade3CourseTypeName = '文科班开设课程,理科班开设课程';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    courseHtml+= '<td class="center">'+ gradeName.join(',') +'</td>'
+                        + '<td class="center">'+ grade1CourseTypeName +'</td>'
+                        + '<td class="center">'+ grade2CourseTypeName +'</td>'
+                        + '<td class="center">'+ grade3CourseTypeName +'</td>'
                         + '</tr>';
                 }
                 $('#course-tbody').append(courseHtml);
@@ -49,25 +117,28 @@ CourseManagement.prototype = {
         });
     },
     // 新增课程管理信息
-    addCourse: function () {
-              alert(1);
-        var datas={
+    addCourse: function (ids,courseBaseId) {
+        var that = this;
+        var datas = {
             "clientInfo": {},
             "style": "",
             "data": {
                 "courseManage": {
-                    "tnId": "10",
-                    "courseBaseId": 1,
-                    "gradeId": 1,
-                    "courseType": "1",
-                    "createTime": "1"
+                    "tnId": tnId,
+                    "courseBaseId": courseBaseId,
+                    "gradeId": "",
+                    "courseType": "",
+                    "createTime": ""
                 }
             }
         };
-        var that = this;
-        Common.ajaxFun('/course/add/manager.do?ids=1:2-2:1-3:3', 'POST', JSON.stringify(datas), function (res) {
+        Common.ajaxFun('/course/add/manager.do?ids='+ids, 'POST', JSON.stringify(datas), function (res) {
             if (res.rtnCode == "0000000") {
-
+                if(res.bizData.result==true){
+                    layer.msg('课程添加成功');
+                    layer.closeAll();
+                    that.getCourse();
+                }
             } else {
                 layer.msg(res.msg);
             }
@@ -110,7 +181,7 @@ CourseManagement.prototype = {
             addCourseContentHtml.push('<select id="course-name-list">' + that.queryCourseList() + '</select>');
         }
         addCourseContentHtml.push('</div>');
-        addCourseContentHtml.push('<div class="box-row">');
+        addCourseContentHtml.push('<div class="box-row box-start-course">');
         addCourseContentHtml.push('<span><i>*</i>开课年级：</span>');
         addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne" data-id="1"  type="checkbox" class="ace form-input-checkbox" /><span class="lbl">高一年级</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
         addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo" data-id="2"  type="checkbox" class="ace form-input-checkbox" /><span class="lbl">高二年级</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
@@ -152,15 +223,14 @@ CourseManagement.prototype = {
 
     },
     // 删除课程管理信息
-    delCourse: function (id) {
-        console.log(id)
+    delCourse: function (courseId) {
         var that = this;
-        Common.ajaxFun('/course/del/manager/' + id, 'POST', {
-            'courseId': id
-        }, function (res) {
-            console.log()
+        Common.ajaxFun('/course/del/manager/'+ tnId +'/'+courseId, 'POST', {}, function (res) {
+            console.log(res)
             if (res.rtnCode == "0000000") {
-
+                layer.msg('删除成功');
+                layer.closeAll();
+                that.getCourse();
             } else {
                 layer.msg(res.msg);
             }
@@ -187,13 +257,10 @@ CourseManagement.prototype = {
         var dataObj = data.bizData;
         // 选择开课年级
         $('body').on('click', '.form-input-checkbox', function () {
-
             var id = $(this).attr('data-id');
-
             for (var l = 0; l < dataObj.length; l++) {
                 if (dataObj[l].gradeCode == id) {
                     var classType = dataObj[l].classType;
-                    var datasArr = [];
                     $('.form-input-checkbox[type="checkbox"]').each(function (i, v) {
                         var _this = $(this);
                         if (_this.is(':checked')) {
@@ -201,33 +268,15 @@ CourseManagement.prototype = {
                             if (classType == 3) {
                                 $('.box-row-' + classType).removeClass('hides');
                             }
-                            datasArr.push('-' + (_this.attr('data-id')));
-                            $('.box-row-'+ id).find('input[type="checkbox"]').on('click',function(k,j){
-                                var __this = $(this);
-                                if (__this.is(':checked')) {
-                                    __this.prop('checked', true);
-                                    console.log(__this.attr('dataId'))
-
-
-                                }else{
-                                    console.log(2)
-                                }
-                            });
-
-                        }else{
+                        } else {
                             _this.prop('checked', false);
                             if (classType == 3) {
                                 $('.box-row-' + classType).addClass('hides').find('input[type="checkbox"]').prop('checked', false);
                             }
                         }
                     });
-                    datasArr = datasArr.join('');
-                    datasArr = datasArr.substring(1, datasArr.length);
-                    console.log(datasArr);
                 }
             }
-
-
         });
     }
 };
@@ -242,7 +291,7 @@ $(function () {
     });
     // 修改
     $('#updateCourse-btn').on('click', function () {
-        var id = $('#course-tbody input:checked').attr('dataid'),
+        var id = $('#course-tbody input:checked').attr('courseId'),
             courseName = $('#course-tbody input:checked').attr('courseName'),
             checkboxLen = $('#course-tbody input:checked').length;
         if (checkboxLen == 0) {
@@ -253,14 +302,13 @@ $(function () {
             layer.tips('修改只能选择一项', $(this));
             return false;
         }
-
         CourseManagementIns.addCourseLayer('修改课程', id, courseName);
     });
 
 
     // 删除
     $('#deleteCourse-btn').on('click', function () {
-        var id = $('#course-tbody input:checked').attr('dataid');
+        var courseBaseId = $('#course-tbody input:checked').attr('courseBaseId');
         var checkboxLen = $('#course-tbody input:checked').length;
         if (checkboxLen == 0) {
             layer.tips('至少选择一项', $(this));
@@ -293,21 +341,83 @@ $(function () {
         layer.confirm('确定删除?', {
             btn: ['确定', '关闭'] //按钮
         }, function () {
-            //CourseManagementIns.delCourse(id);
+            alert(3)
+            CourseManagementIns.delCourse(courseBaseId);
         }, function () {
             layer.closeAll();
         });
     });
 
     // 保存添加
-    $('boay').on('click', '#save-course-btn', function () {
+    $('body').on('click', '#save-course-btn', function () {
+        var courseNameVal = $('#course-name-list').val();
+        var courseNameText = $('#course-name-list').children('option:selected').text();
+        if(courseNameVal=='00'){
+            layer.tips('请选择课程', $('#course-name-list'));
+            return false;
+        }
 
+        for(var i=0;i<$('#course-tbody input[type="checkbox"]').length;i++){
+            var coursename = $('#course-tbody input[type="checkbox"]').eq(i).attr('coursename');
+            if(coursename == courseNameText){
+                layer.tips('不能重复添加同一门课程', $('#course-name-list'));
+                return false;
+            }
+        }
+
+
+
+        //if($('.form-input-checkbox[type="checkbox"]:selected').length==0){
+        //    layer.tips('请选择开课年级', $('.box-start-course'));
+        //    return false;
+        //}
+
+
+
+        var courseId = $(this).attr('courseid');
+        var datasArr = [];
+        $('.form-input-checkbox[type="checkbox"]').each(function (i, v) {
+            var _this = $(this);
+            var gradeId = _this.attr('data-id');
+            if (_this.is(':checked')) {
+                _this.prop('checked', true);
+                if ($('.box-row-' + gradeId).is(":visible")) {
+                    var gradeSubType = '';
+                    var checkedLen = $('.box-row-' + gradeId).find('input[type="checkbox"]:checked').length;
+                    switch (checkedLen) {
+                        case 0:
+                            layer.tips('请选择高' + gradeId + '年级课程类型', $('.box-row-' + gradeId));
+                            return ;
+                        case 2:
+                            gradeSubType = 3;
+                            break;
+                        default:
+                            gradeSubType = $('.box-row-' + gradeId).find('input[type="checkbox"]:checked').attr('dataid');
+                            break;
+                    }
+                    datasArr.push('-' + gradeId + ':' + gradeSubType);
+                } else {
+                    datasArr.push('-' + gradeId + ':' + 0);
+                }
+
+            } else {
+                _this.prop('checked', false);
+            }
+        });
+        datasArr = datasArr.join('');
+        datasArr = datasArr.substring(1, datasArr.length);
+        console.log(datasArr);
+        CourseManagementIns.addCourse(datasArr,courseId);
     });
 
     //
-    $('body').on('change','#course-name-list',function(){
-        var selVal = $(this).val();
-        $('#save-course-btn').attr('courseId',selVal);
+    $('body').on('change', '#course-name-list', function () {
+        var selVal = $(this).children('option:selected').val(),
+            selText = $(this).children('option:selected').text();
+        $('#save-course-btn').attr({
+            'courseId': selVal,
+            'courseName': selText
+        });
     });
 
 
