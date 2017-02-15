@@ -180,9 +180,8 @@ public class GradeController {
      */
     @RequestMapping(value = "checkClass",method = RequestMethod.GET)
     @ResponseBody
-    public Map checkClass(){
+    public Map checkClass(@RequestParam Integer tnId){
 
-        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         List<Grade> gradeList = gradeService.findList("tnId",tnId);
         Map<String,Boolean> map = Maps.newHashMap();
         boolean flag = false;
