@@ -48,10 +48,10 @@
                         <div class="main-title">
                             <h3>学生管理</h3>
                             <div class="top-handle">
-                                <button class="btn-top">行政班&理科班模板下载</button>
-                                <button class="btn-top">教学班模板下载</button>
+                                <button class="btn-top" type="1" id="xz-template-download">行政班&理科班模板下载</button>
+                                <button class="btn-top" type="2" id="jx-template-download">教学班模板下载</button>
                                 <button class="btn-top">批量上传</button>
-                                <button class="btn-top">添加字段</button>
+                                <button class="btn-top" id="student-setting">添加字段</button>
                             </div>
                         </div>
 
@@ -62,12 +62,12 @@
                                     {{#each this}}
                                         {{#if @index}}
                                         <li>
-                                            <input type="radio" name="grade-li" id="grade-{{@index}}" keyId="{{id}}">
+                                            <input type="radio" name="grade-li" id="grade-{{@index}}" keyId="{{id}}" classType="{{classType}}">
                                             <label for="grade-{{@index}}">{{grade}}</label>
                                         </li>
                                         {{else}}
                                         <li>
-                                            <input type="radio" name="grade-li" id="grade-{{@index}}" keyId="{{id}}" checked>
+                                            <input type="radio" name="grade-li" id="grade-{{@index}}" keyId="{{id}}" classType="{{classType}}" checked>
                                             <label for="grade-{{@index}}">{{grade}}</label>
                                         </li>
                                         {{/if}}
@@ -79,16 +79,16 @@
                                 <button class="btn btn-inverse" id="student-modify" type="update">修改</button>
                                 <button class="btn btn-success" id="student-remove">删除</button>
 
-                                <button class="btn btn-warning" id="student-template-download">模板下载</button>
-                                <button class="btn btn-warning" id="student-upload">批量上传</button>
-                                <button class="btn btn-warning" id="student-setting">学生设置</button>
+                                <%--<button class="btn btn-warning" id="student-template-download">模板下载</button>--%>
+                                <%--<button class="btn btn-warning" id="student-upload">批量上传</button>--%>
+                                <%--<button class="btn btn-warning" id="student-setting">学生设置</button>--%>
                             </div>
                         </div>
 
                         <%--行政办管理|教学班管理--%>
-                        <div class="toggle-tab">
-                            <button class="tab nbr active">行政班管理</button>
-                            <button class="tab">教学班管理</button>
+                        <div class="toggle-tab" id="class-type-toggle">
+                            <button class="tab hide" classType="!2">行政班管理</button>
+                            <button class="tab hide" classType="2">教学班管理</button>
                         </div>
 
                         <div id="student-table">
@@ -213,7 +213,7 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <div class="main-title">
-                                            <h3>学生设置</h3>
+                                            <h3>添加学生字段</h3>
                                         </div>
                                         <div class="title-2">
                                             <span class="txt-t"></span>
