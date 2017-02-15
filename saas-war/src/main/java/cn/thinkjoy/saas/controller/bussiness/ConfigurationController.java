@@ -26,7 +26,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by douzy on 16/10/12.
@@ -207,24 +210,13 @@ public class ConfigurationController {
     @RequestMapping(value = "/get/{type}/{tnId}", method = RequestMethod.GET)
     @ResponseBody
     public Map getTeantConfigList(@PathVariable String type, @PathVariable Integer tnId) {
+
+        List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceService.getTenantConfigListByTnIdAndType(type, tnId);
+
         Map resultMap = new HashMap();
-        List<TenantConfigInstanceView> tenantConfigInstances = new ArrayList<>();
-        try {
-            tenantConfigInstances = exiTenantConfigInstanceService.getTenantConfigListByTnIdAndType(type, tnId);
-
-
-        }catch (Exception e){
-            switch (type) {
-                case Constant.TABLE_TYPE_TEACHER:
-                    exiTenantConfigInstanceService.createTenantCombinationTable(Constant.TABLE_TYPE_TEACHER,tnId);
-                    break;
-                default:
-                    break;
-            }
-        }
         resultMap.put("configList", tenantConfigInstances);
-        return resultMap;
 
+        return resultMap;
     }
 
     /**
