@@ -95,6 +95,7 @@ public class EXConfigurationServiceImpl extends AbstractPageService<IBaseDAO<Con
                 tenantConfigInstance.setDataType(configuration.getDataType());
                 tenantConfigInstance.setCreateDate(System.currentTimeMillis());
                 tenantConfigInstance.setTnId(tnid);
+                tenantConfigInstance.setIsShow(configuration.getIsShow());
 
                 tenantConfigInstances.add(tenantConfigInstance);
             }

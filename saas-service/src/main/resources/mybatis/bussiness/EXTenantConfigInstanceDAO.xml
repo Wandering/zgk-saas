@@ -81,10 +81,11 @@
         data_type,
         data_url,
         data_value,
-        is_retain)
+        is_retain,
+        is_show)
         values
         <foreach collection="list" item="item" index="index" separator="," >
-            (#{item.tnId},#{item.configKey},#{item.configOrder},#{item.checkRule},#{item.domain},#{item.createDate},#{item.modifyDate},#{item.dataType},#{item.dataUrl},#{item.dataValue},#{item.isRetain})
+            (#{item.tnId},#{item.configKey},#{item.configOrder},#{item.checkRule},#{item.domain},#{item.createDate},#{item.modifyDate},#{item.dataType},#{item.dataUrl},#{item.dataValue},#{item.isRetain},#{item.isShow})
         </foreach>
     </insert>
 
@@ -118,6 +119,9 @@
             </if>
             <if test="isRetain!=null">
                 and tenantConfig.is_retain=#{isRetain}
+            </if>
+            <if test="isShow!=null">
+                and tenantConfig.is_show=#{isShow}
             </if>
         </where>
         ORDER BY tenantConfig.config_order asc
