@@ -2,6 +2,7 @@ package cn.thinkjoy.saas.service.impl;
 
 import cn.thinkjoy.common.dao.IBaseDAO;
 import cn.thinkjoy.common.service.impl.AbstractPageService;
+import cn.thinkjoy.saas.dao.bussiness.ICourseBaseInfoDAO;
 import cn.thinkjoy.saas.dao.bussiness.ICourseManageDAO;
 import cn.thinkjoy.saas.domain.bussiness.*;
 import cn.thinkjoy.saas.service.ICourseManageService;
@@ -9,6 +10,7 @@ import cn.thinkjoy.saas.service.common.ParamsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.Map;
 public class CourseManageServiceImpl extends AbstractPageService<IBaseDAO<CourseManage>, CourseManage> implements ICourseManageService<IBaseDAO<CourseManage>,CourseManage> {
     @Autowired
     private ICourseManageDAO iCourseManageDAO;
+    @Resource
+    private ICourseBaseInfoDAO iCourseBaseInfoDAO;
 
     @Override
     public IBaseDAO<CourseManage> getDao() {
@@ -38,7 +42,9 @@ public class CourseManageServiceImpl extends AbstractPageService<IBaseDAO<Course
         List<CourseManageMapperVo> courseManageMapperVos=new ArrayList<>();
 
         List<CourseManageVo> courseManageVos= iCourseManageDAO.selectCourseManageGroup(map);
-
+        if(courseManageVos.size() == 0){
+            courseManageVos = initCourseManage(map);
+        }
 
         for(CourseManageVo courseManageVo:courseManageVos) {
 
@@ -67,6 +73,37 @@ public class CourseManageServiceImpl extends AbstractPageService<IBaseDAO<Course
 
         return courseManageMapperVos;
     }
+
+    /**
+     * 初始化租户课程数据
+     *
+     * @param map
+     * @return
+     */
+    private List<CourseManageVo> initCourseManage(Map map){
+
+        List<CourseBaseInfo> infos = iCourseBaseInfoDAO.findAll("id", "asc");;
+        for(CourseBaseInfo info : infos){
+            if(info.getStatus() == 1){
+                CourseManage courseManage = new CourseManage();
+                courseManage.setTnId(Integer.valueOf(map.get("tnId").toString()));
+                courseManage.setCourseBaseId(Integer.valueOf(info.getId().toString()));
+                courseManage.setCourseType("3");
+                courseManage.setCustom((byte) 0);
+                courseManage.setCreateTime(System.currentTimeMillis());
+                insertCourseManage(courseManage);
+            }
+        }
+        return iCourseManageDAO.selectCourseManageGroup(map);
+    }
+
+    private void insertCourseManage(CourseManage courseManage){
+        for(int i=1;i<4;i++){
+            courseManage.setGradeId(i);
+            iCourseManageDAO.insert(courseManage);
+        }
+    }
+
 
     @Override
     public boolean insertCourseManage(CourseManage courseManage,String ids) {
