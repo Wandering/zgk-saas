@@ -164,7 +164,8 @@ var App = {
                         $classTypeToggle.eq(0).addClass('hide');
                         $classTypeToggle.eq(1).addClass('hide');
                     } else {
-                        $classTypeToggle.eq(0).addClass('active');
+                        // $classTypeToggle.eq(0).addClass('active');
+                        $classTypeToggle.eq(0).addClass('hide');
                         $classTypeToggle.eq(1).addClass('hide');
                     }
                     App.checkGradeName = dataJson[0].grade;
@@ -241,7 +242,7 @@ var App = {
 
 
             // 行政班|教学班说明：classType 1或3都为行政班  2教学班
-            var $classTypeToggle = $('#class-type-toggle').find('.tab')
+            var $classTypeToggle = $('#class-type-toggle').find('.tab');
             if ($checkedInputDom.attr('classType') == 2) {
                 $classTypeToggle.eq(0).removeClass('hide').addClass('active');
                 $classTypeToggle.eq(1).removeClass('hide');
@@ -249,7 +250,8 @@ var App = {
                 $classTypeToggle.eq(0).addClass('hide');
                 $classTypeToggle.eq(1).addClass('hide');
             } else {
-                $classTypeToggle.eq(0).addClass('active');
+                $classTypeToggle.eq(0).addClass('hide');
+                // $classTypeToggle.eq(0).addClass('active');
                 $classTypeToggle.eq(1).addClass('hide');
             }
 
@@ -933,15 +935,9 @@ var TplHandler = {
                 content: tpl.join('')
             });
             //初始化下载
-            upload(0);
+            // "type":"0：教学班模板  1：行政班模板",
+            // upload(0);
             upload(1);
-        });
-        // "type":"0：教学班模板  1：行政班模板",
-        $(document).on('click', '#xz-btn-import', function () {
-            upload(1);
-        });
-        $(document).on('click', '#jx-btn-import', function () {
-            upload(0);
         });
         var upload = function (whichBtn) {
             var $ = jQuery,
@@ -949,6 +945,7 @@ var TplHandler = {
                 // Web Uploader实例
                 uploader;
             // 初始化Web Uploader
+            alert(rootPath + ' /student/uploadStuExcel.do?tnId=' + GLOBAL_CONSTANT.tnId + '&type=' + whichBtn);
             uploader = WebUploader.create({
                 // 自动上传。
                 auto: true,
@@ -956,10 +953,11 @@ var TplHandler = {
                 swf: BASE_URL + '/webuploader-0.1.5 2/Uploader.swf',
                 // 文件接收服务端。
                 // server: rootPath + '/config/upload/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do',
-                server: rootPath + ' /student/uploadStuExcel.do?tnId=' + GLOBAL_CONSTANT.tnId + '&type=' + whichBtn,
+                server: rootPath + '/student/uploadStuExcel.do?tnId=' + GLOBAL_CONSTANT.tnId + '&type=' + whichBtn,
                 // 选择文件的按钮。可选。
                 // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-                pick: whichBtn == 1 ? '#xz-btn-import' : '#jx-btn-import',
+                pick: '#xz-btn-import',
+                // pick: whichBtn == 1 ? '#xz-btn-import' : '#jx-btn-import',
                 // 只允许选择文件，可选。
                 accept: {
                     title: 'excel',
