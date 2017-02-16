@@ -32,11 +32,12 @@ var App = {
         this.fetchGrade();
         this.renderTableHeader();
         this.addEvent();
+        this.chargeCheckClass();
     },
     renderTableHeader: function () {
         Common.ajaxFun('/student/getStuExcelHeader.do', 'GET', {
-            'type':GLOBAL_CONSTANT.cType,
-            'tnId':GLOBAL_CONSTANT.tnId
+            'type': GLOBAL_CONSTANT.cType,
+            'tnId': GLOBAL_CONSTANT.tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
@@ -134,6 +135,16 @@ var App = {
                 });
         })
     },
+    //判断判断当前用户班级类型是否存在教学班
+    chargeCheckClass: function () {
+        Common.ajaxFun('/grade/checkClass.do', 'GET', {
+            "tnId": GLOBAL_CONSTANT.tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                res.bizData.result == true ? $('#jx-template-download').removeClass('hide') : $('#jx-template-download').addClass('hide')
+            }
+        })
+    },
     //动态渲染所属年级
     fetchGrade: function () {
         Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
@@ -149,10 +160,10 @@ var App = {
                     if (dataJson[0].classType == 2) {
                         $classTypeToggle.eq(0).removeClass('hide').addClass('active');
                         $classTypeToggle.eq(0).removeClass('hide');
-                    } else if(dataJson[0].classType == 3){
+                    } else if (dataJson[0].classType == 3) {
                         $classTypeToggle.eq(0).addClass('hide');
                         $classTypeToggle.eq(1).addClass('hide');
-                    }else{
+                    } else {
                         $classTypeToggle.eq(0).addClass('active');
                         $classTypeToggle.eq(1).addClass('hide');
                     }
@@ -234,10 +245,10 @@ var App = {
             if ($checkedInputDom.attr('classType') == 2) {
                 $classTypeToggle.eq(0).removeClass('hide').addClass('active');
                 $classTypeToggle.eq(1).removeClass('hide');
-            } else if($checkedInputDom.attr('classType') == 3) {
+            } else if ($checkedInputDom.attr('classType') == 3) {
                 $classTypeToggle.eq(0).addClass('hide');
                 $classTypeToggle.eq(1).addClass('hide');
-            }else{
+            } else {
                 $classTypeToggle.eq(0).addClass('active');
                 $classTypeToggle.eq(1).addClass('hide');
             }
@@ -406,7 +417,7 @@ var CRUDStd = {
                 if (v.enName == 'student_check_major1'
                     || v.enName == 'student_check_major2'
                     || v.enName == 'student_check_major3') {
-                    selectTpl = '<option>请选择科目</option>'
+                    selectTpl = '<option value="00">请选择科目</option>'
                 }
                 for (var i = 0; i < selectLen.length; i++) {
                     selectTpl += '<option>' + selectLen[i] + '</option>'
@@ -576,11 +587,11 @@ var CRUDStd = {
         layer.confirm('确定删除?', {
             btn: ['确定', '关闭'] //按钮
         }, function () {
-            Common.ajaxFun('/student/removeStuInfo.do', 'POST',{
-                "tnId":GLOBAL_CONSTANT.tnId,
-                "ids":ids
+            Common.ajaxFun('/student/removeStuInfo.do', 'POST', {
+                "tnId": GLOBAL_CONSTANT.tnId,
+                "ids": ids
             }, function (res) {
-            // Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/' + ids + '/remove.do', 'POST', {}, function (res) {
+                // Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/' + ids + '/remove.do', 'POST', {}, function (res) {
                 if (res.rtnCode == "0000000") {
                     if (res.bizData.result = "SUCCESS") {
                         $('#class-change-list').html('');
@@ -697,15 +708,50 @@ var CRUDStd = {
                 });
             }
         })
-        //选考科目3个非必填|入填一个则所有都必填
-        if(GLOBAL_CONSTANT.tnId == 0){
-            if (postData[3].value != '') {
-                if (postData[3].value == postData[5].value || postData[5].value == postData[7].value || postData[7].value == postData[3].value) {
-                    layer.msg('选考科目1,2,3不能相同');
-                    return false;
-                }
+
+
+        //10个必填字段验证[暂时排除所在年级、班级名称]
+        var tagName = ['所在年级','班级名称','学号','学生名称','选考科目一','选考科目一所在班级','选考科目二','选考科目二所在班级','选考科目三','选考科目三所在班级'];
+        if($('#student_check_major1').val() == $('#student_check_major2').val()){
+            layer.msg('选考科目不能重复');
+            return false;
+        }
+
+        if($('#student_check_major2').val() == $('#student_check_major2').val()){
+            layer.msg('选考科目不能重复');
+            return false;
+        }
+
+        if($('#student_check_major3').val() == $('#student_check_major2').val()){
+            layer.msg('选考科目不能重复');
+            return false;
+        }
+
+
+        for (var i = 2; i < tagName.length; i++) {
+            if(postData[i].value == ''){
+                layer.msg(tagName[i]+'为必填字段不能为空');
+                return false;
             }
         }
+
+
+
+        //选考科目3个非必填|入填一个则所有都必填
+        // if (GLOBAL_CONSTANT.cType == 0) {
+        //     if (postData[4].value == '' || postData[6].value == '' || postData[8].value == '') {
+        //         layer.msg('请选择选考科目');
+        //         return false;
+        //     }
+        //     // if (postData[5].value != '') {
+        //     if (postData[5].value == postData[7].value || postData[5].value == postData[8].value || postData[7].value == postData[8].value) {
+        //         layer.msg('选考科目1,2,3不能相同');
+        //         return false;
+        //     }
+        //     // }
+        // }
+
+
         if (type == 'add') {
             return {
                 "clientInfo": {},
@@ -781,7 +827,8 @@ var TplHandler = {
             tpl.push('<div class="upload-box">');
             tpl.push('<span id="uploader-demo">');
             tpl.push('<span id="fileList" class="uploader-list dh"></span>');
-            tpl.push('<button class="btn btn-info btn-import" id="btn-import">导入学生数据Excel</button>');
+            tpl.push('<button class="btn btn-info btn-import" id="xz-btn-import">导入行政班学生数据Excel</button>');
+            tpl.push('<button class="btn btn-info btn-import" id="jx-btn-import">导入教学班学生数据Excel</button>');
             tpl.push('</span>');
             tpl.push('<a href="javascript: void(0);" id="student-template-download" class="download-link">请先导出Excel模板，进行填写</a>');
             tpl.push('<button class="btn btn-cancel cancel-btn" id="cancel-download-btn">取消</button>');
