@@ -10,6 +10,7 @@ TeacherManagement.prototype = {
     constructor: TeacherManagement,
     init: function () {
         this.getThead();
+        this.querySubject();
     },
     // 拉取表格thead
     getThead:function(){
@@ -38,6 +39,16 @@ TeacherManagement.prototype = {
     // 默认拉取列表
     // 提交保存
     // 所教科目
+    querySubject:function(){
+        var that = this;
+        Common.ajaxFun('/teacher/querySubject.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
+
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        });
+    },
     // 所教年级
     // 最大带班数
     // 所带班级list
@@ -47,8 +58,24 @@ TeacherManagement.prototype = {
         addTeacherContentHtml.push('<div class="add-course-box">');
         addTeacherContentHtml.push('<div class="course-box">');
         addTeacherContentHtml.push('<div class="box-row">');
-        addTeacherContentHtml.push('<span><i>*</i>课程名称：</span>');
+        addTeacherContentHtml.push('<span class="class-label"><i>*</i>课程名称：</span>');
         addTeacherContentHtml.push('<input type="text" id="" value="" placeholder="" class=""/>');
+        addTeacherContentHtml.push('</div>');
+        addTeacherContentHtml.push('<div class="box-row">');
+        addTeacherContentHtml.push('<span class="class-label"><i>*</i>所教科目：</span>');
+        addTeacherContentHtml.push('<select id="course-name-list"></select>');
+        addTeacherContentHtml.push('</div>');
+        addTeacherContentHtml.push('<div class="box-row">');
+        addTeacherContentHtml.push('<span class="class-label"><i>*</i>所带年纪：</span>');
+        addTeacherContentHtml.push('<select id="grade-list"></select>');
+        addTeacherContentHtml.push('</div>');
+        addTeacherContentHtml.push('<div class="box-row">');
+        addTeacherContentHtml.push('<span class="class-label"><i>*</i>最大带班数：</span>');
+        addTeacherContentHtml.push('<select id="classMax-list"></select>');
+        addTeacherContentHtml.push('</div>');
+        addTeacherContentHtml.push('<div class="box-row">');
+        addTeacherContentHtml.push('<span class="class-label"><i>*</i>所带班级：</span>');
+        addTeacherContentHtml.push('<span class="class-item"></span>');
         addTeacherContentHtml.push('</div>');
         addTeacherContentHtml.push('<div class="box-row">');
         addTeacherContentHtml.push('<button type="button" class="save-btn" id="save-btn">保存</button>');
