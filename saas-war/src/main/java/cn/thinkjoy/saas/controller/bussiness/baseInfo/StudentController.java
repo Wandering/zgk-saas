@@ -269,7 +269,7 @@ public class StudentController {
             LOGGER.info("文件原名: " + myfile.getOriginalFilename());
             String realPath = env.getProp("configuration.excel.upload.url");
             FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
-            result = exiTenantConfigInstanceService.uploadExcel(Constant.STUDENT, tnId, realPath + myfile.getOriginalFilename());
+            result = exiTenantConfigInstanceService.uploadExcel(Constant.STUDENT, tnId, realPath + myfile.getOriginalFilename(),0);
 
         }
         LOGGER.info("==================student excel上传 E==================");
