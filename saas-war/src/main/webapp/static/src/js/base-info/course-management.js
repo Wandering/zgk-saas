@@ -117,6 +117,7 @@ CourseManagement.prototype = {
     // 新增课程管理信息
     addCourse: function (ids,courseBaseId,updateStatus) {
         var that = this;
+        console.log(courseBaseId)
         var datas = {
             "clientInfo": {},
             "style": "",
@@ -130,6 +131,7 @@ CourseManagement.prototype = {
                 }
             }
         };
+        console.log(JSON.stringify(datas))
         var url = '';
         var msgTxt = '';
         if(updateStatus=='true'){
@@ -362,7 +364,7 @@ CourseManagement.prototype = {
 
         addCourseContentHtml.push('<div class="box-row">');
         if(id){
-            addCourseContentHtml.push('<button type="button" class="save-course-btn" updateStatus="true" id="save-course-btn">保存</button>');
+            addCourseContentHtml.push('<button type="button" class="save-course-btn" courseId="'+ id +'" updateStatus="true" id="save-course-btn">保存</button>');
         }else{
             addCourseContentHtml.push('<button type="button" class="save-course-btn" id="save-course-btn">保存</button>');
         }
