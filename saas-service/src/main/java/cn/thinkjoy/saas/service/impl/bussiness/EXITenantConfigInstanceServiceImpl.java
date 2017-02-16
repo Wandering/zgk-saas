@@ -1084,7 +1084,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         Map<String, Object> params;
         List<Map<String, Object>> paramsList;
         switch (classType) {
-            case "class_adm":
+            case Constant.CLASS_EDU:
                 params = new HashMap<>();
                 paramsList = new ArrayList<>();
                 params.put("key", "class_grade");
@@ -1098,7 +1098,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                 map.put("searchKeys", paramsList);
                 count = iexTeantCustomDAO.getTenantCustomColsCount(map);
                 break;
-            case "class_edu":
+            case Constant.CLASS_ADM:
                 params = new HashMap<>();
                 paramsList = new ArrayList<>();
                 params.put("key", "class_grade");
