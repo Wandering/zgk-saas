@@ -419,7 +419,7 @@ public class ManageController {
          pri=request.getDataInteger("pri");
         String tableName = ParamsUtils.combinationTableName(type, tnId);
         List<String> removeIds=reantCustomRepeat(type, tableName, teantCustoms);
-        if (removeIds!=null && removeIds.size()==1 && removeIds.get(0).equals(pri)){
+        if (removeIds!=null && removeIds.size()==1 && Integer.valueOf(removeIds.get(0)).equals(pri)){
             boolean result = iexTenantCustomService.modifyTeantCustom(type, tnId, pri, teantCustoms);
             resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
         }else if (removeIds != null && removeIds.size() > 0) {
