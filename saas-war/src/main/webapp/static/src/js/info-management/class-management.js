@@ -23,8 +23,20 @@ ClassManagement.prototype = {
     constructor: ClassManagement,
     init: function () {
         this.getItem(GLOBAL_CONSTANT.cType);
+        this.chargeCheckClass();
+        this.getGrade();
         this.initTable('class_adm');  //行政班初始化
         this.initTable('class_edu');  //教学班初始化
+    },
+    //判断判断当前用户班级类型是否存在教学班
+    chargeCheckClass: function () {
+        Common.ajaxFun('/grade/checkClass.do', 'GET', {
+            "tnId": tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                res.bizData.result == true ? $('#jx-template-download').removeClass('hide') : $('#jx-template-download').addClass('hide')
+            }
+        })
     },
     //初始化表头
     initTable: function (classType) {
@@ -40,9 +52,9 @@ ClassManagement.prototype = {
             layer.msg("初始化失败");
         }, true);
     },
-    getItem: function (cType) {//获取用户自定义班级表头
+    getItem: function () {//获取用户自定义班级表头
         var that = this;
-        Common.ajaxFun('/config/get/' + cType + '/' + tnId + '.do', 'GET', {
+        Common.ajaxFun('/config/get/' + GLOBAL_CONSTANT.cType + '/' + tnId + '.do', 'GET', {
             'tnId': tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
@@ -66,7 +78,6 @@ ClassManagement.prototype = {
                     columnHtml.push('</tr>');
                     $("#class-manage-table thead").html(columnHtml.join(''));
                 }
-                that.getGrade();
             } else {
                 layer.msg(res.bizData.result);
             }
@@ -76,7 +87,7 @@ ClassManagement.prototype = {
     },
     getClassData: function () {//获取全部班级数据
         var that = this;
-        Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
+        Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.cType + '/' + tnId + '/getTenantCustomData.do', 'GET', {
             'tnId': tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
@@ -225,7 +236,7 @@ ClassManagement.prototype = {
                         $classTypeToggle.eq(0).addClass('hide');
                         $classTypeToggle.eq(1).addClass('hide');
                     } else {
-                        $classTypeToggle.eq(0).addClass('active');
+                        $classTypeToggle.eq(0).addClass('hide');
                         $classTypeToggle.eq(1).addClass('hide');
                     }
                 }
@@ -614,7 +625,9 @@ $(document).on('change', 'input[name="high-school"]', function () {
 
 
     // 行政班|教学班说明：classType 1或3都为行政班  2教学班
-    var $classTypeToggle = $('#class-type-toggle').find('.tab')
+    var $classTypeToggle = $('#class-type-toggle').find('.tab');
+    $classTypeToggle.eq(1).removeClass('active');
+
     if ($(this).attr('classType') == 2) {
         $classTypeToggle.eq(0).removeClass('hide').addClass('active');
         $classTypeToggle.eq(1).removeClass('hide');
@@ -622,7 +635,7 @@ $(document).on('change', 'input[name="high-school"]', function () {
         $classTypeToggle.eq(0).addClass('hide');
         $classTypeToggle.eq(1).addClass('hide');
     } else {
-        $classTypeToggle.eq(0).addClass('active');
+        $classTypeToggle.eq(0).addClass('hide');
         $classTypeToggle.eq(1).addClass('hide');
     }
 
@@ -824,12 +837,13 @@ $(document).on('click', '#uploadBtn', function () {
 });
 
 
-$(document).on('click', '#xz-btn-import', function () {
-    upload('class_adm');
-});
-$(document).on('click', '#jx-btn-import', function () {
-    upload('class_edu');
-});
+//
+// $(document).on('click', '#xz-btn-import', function () {
+//     upload('class_adm');
+// });
+// $(document).on('click', '#jx-btn-import', function () {
+//     upload('class_edu');
+// });
 
 
 
@@ -856,8 +870,8 @@ $(document).on('click', '#class-type-toggle .tab', function () {
     $(this).addClass('active').siblings().removeClass('active');
     GLOBAL_CONSTANT.cType = $(this).attr('type');
     classManagement.getItem();  //拉取table-head
-    classManagement.loadPage();     //拉取table-body
-    classManagement.pagination();  //分页
+    // classManagement.loadPage();     //拉取table-body
+    // classManagement.pagination();  //分页
 });
 
 

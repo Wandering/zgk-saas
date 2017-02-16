@@ -37,7 +37,7 @@
                                     <h3>班级管理</h3>
                                     <div class="top-handle">
                                         <button class="btn-top" id="xz-template-download">行政班&文理科班模板下载</button>
-                                        <button class="btn-top" id="jx-template-download">教学班模板下载</button>
+                                        <button class="btn-top hide" id="jx-template-download">教学班模板下载</button>
                                         <button class="btn-top" id="uploadBtn">批量上传</button>
                                         <%--<button class="btn-top" id="student-setting">添加字段</button>--%>
                                     </div>
