@@ -371,15 +371,15 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
                         List<Grade> stuGradeList = exiGradeDAO.selectGradeByTnId(stuGradeYear);
                         value = converGradesArr(stuGradeList);
                         break;
-                    case EnumUtil.STUDENT_CLASS_NAME ://学生-班级名称
-                          if( type.equals("student")) {
-                              String stuTableName = ParamsUtils.combinationTableName("class", tnId);
-                              Map mapStu = new HashMap();
-                              mapStu.put("tableName", stuTableName);
-                              List<LinkedHashMap<String, Object>> stuLinkedHashMapList = iexTeantCustomDAO.getTenantCustom(mapStu);
-                              value = converClassName(stuLinkedHashMapList);
-                          }
-                        break;
+//                    case EnumUtil.STUDENT_CLASS_NAME ://学生-班级名称
+//                          if(type.equals("student")) {
+//                              String stuTableName = ParamsUtils.combinationTableName("class", tnId);
+//                              Map mapStu = new HashMap();
+//                              mapStu.put("tableName", stuTableName);
+//                              List<LinkedHashMap<String, Object>> stuLinkedHashMapList = iexTeantCustomDAO.getTenantCustom(mapStu);
+//                              value = converClassName(stuLinkedHashMapList);
+//                          }
+//                        break;
                     case EnumUtil.STUDENT_CHECK_MAJOYTYPE1:
                         value = EnumUtil.STUDENT_EDUCATION_MAJOYTYPE_ARR;
                         break;

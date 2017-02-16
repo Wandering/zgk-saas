@@ -13,6 +13,7 @@ import cn.thinkjoy.saas.service.common.EnumUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import cn.thinkjoy.saas.service.common.ReadExcel;
 import com.alibaba.dubbo.common.utils.StringUtils;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -493,10 +494,11 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * 解析excel 且将对应的值插入动态表
      * @param type
      * @param tnId
+     * @param classType 0：教学班  1：行政班
      * @return
      */
     @Override
-    public String  uploadExcel(String type,Integer tnId,String excelPath) {
+    public String  uploadExcel(String type,Integer tnId,String excelPath,int classType) {
         LOGGER.info("===========解析excel S===========");
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
@@ -519,6 +521,16 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId,"0");
         if (tenantConfigInstanceViews == null)
             return "系统错误";
+
+        if(classType == 1){
+            List<TenantConfigInstanceView> tempList = Lists.newArrayList();
+            for(TenantConfigInstanceView view : tenantConfigInstances){
+                if(Constant.ZDBJ_COLUMNS_KEY.indexOf(view.getEnName()) == -1){
+                    tempList.add(view);
+                }
+            }
+            tenantConfigInstanceViews = tempList;
+        }
 
         String excelValid = ParamsUtils.excelValueValid(configTeantComList, tenantConfigInstanceViews);
 

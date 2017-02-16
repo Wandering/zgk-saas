@@ -131,9 +131,10 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      * @param type
      * @param tnId
      * @param excelPath
+     * @param classType 0：教学班  1：行政班
      * @return
      */
-    String uploadExcel(String type,Integer tnId,String excelPath);
+    String uploadExcel(String type,Integer tnId,String excelPath,int classType);
 
 
     /**
