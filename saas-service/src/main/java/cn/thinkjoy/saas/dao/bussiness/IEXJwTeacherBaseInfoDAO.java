@@ -1,7 +1,5 @@
 package cn.thinkjoy.saas.dao.bussiness;
 
-import cn.thinkjoy.saas.domain.JwTeacherBaseInfo;
-
 import java.util.List;
 
 /**
@@ -13,5 +11,5 @@ public interface IEXJwTeacherBaseInfoDAO {
      * @param jwTeacherBaseInfoList
      * @return
      */
-    Integer syncTeacherInfo(List<JwTeacherBaseInfo> jwTeacherBaseInfoList);
+//    Integer syncTeacherInfo(List<JwTeacherBaseInfo> jwTeacherBaseInfoList);
 }

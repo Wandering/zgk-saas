@@ -3,6 +3,8 @@ package cn.thinkjoy.saas.service.bussiness;
 import cn.thinkjoy.saas.domain.bussiness.SyncClass;
 import cn.thinkjoy.saas.domain.bussiness.SyncCourse;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
+import cn.thinkjoy.saas.dto.ClassBaseDto;
+import cn.thinkjoy.saas.dto.TeacherBaseDto;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -73,6 +75,35 @@ public interface IEXTenantCustomService {
      * @return
      */
     Integer getStuInfoCount(Integer type,Integer tnId,String g);
+
+    /**
+     * 根据类型不同查询教师基础信息集合
+     *
+     * @param tnId
+     * @param grade
+     * @return
+     */
+    List<TeacherBaseDto> getTeacherInfos(Integer tnId, String grade);
+
+    /**
+     * 根据类型不同查询教师基础信息
+     *
+     * @param tnId
+     * @param id
+     * @return
+     */
+    TeacherBaseDto getTeacherInfo(Integer tnId, Integer id);
+
+    /**
+     * 根据类型不同查询班级基础信息集合
+     *
+     * @param type
+     * @param tnId
+     * @param course
+     * @param grade
+     * @return
+     */
+    List<ClassBaseDto> getClassInfos(String type,Integer tnId, String course,String grade);
 
     /**
      * 查询租户自定义表头数据

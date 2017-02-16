@@ -340,21 +340,21 @@ public class ConfigurationController {
      *
      * @return
      */
-    @RequestMapping("/testCourse")
-    @ResponseBody
-    public Map importConfig(
-                            HttpServletRequest request,
-                            HttpServletResponse response) {
-
-//        boolean result = exiTenantConfigInstanceService.createTenantCombinationTable(type, tnId);
-
-//        iexTenantCustomService
-
-        exiTenantConfigInstanceService.syncProcedureData("teacher",4);
-        Map resultMap = new HashMap();
-//        resultMap.put("result", result ? "SUCCESS" : "FAIL");
-        return resultMap;
-    }
+//    @RequestMapping("/testCourse")
+//    @ResponseBody
+//    public Map importConfig(
+//                            HttpServletRequest request,
+//                            HttpServletResponse response) {
+//
+////        boolean result = exiTenantConfigInstanceService.createTenantCombinationTable(type, tnId);
+//
+////        iexTenantCustomService
+//
+//        exiTenantConfigInstanceService.syncProcedureData("teacher",4);
+//        Map resultMap = new HashMap();
+////        resultMap.put("result", result ? "SUCCESS" : "FAIL");
+//        return resultMap;
+//    }
 
     /**
      * excel模板上传

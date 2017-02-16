@@ -29,12 +29,12 @@ public interface IEXScheduleBaseInfoService {
      */
     int getTnIdByTaskId(int taskId);
 
-    /**
-     * 根据任务和课程获取老师列表
-     * @param map
-     * @return
-     */
-    public List<TeacherBaseDto> queryTeacherByTaskId(Map<String,Object> map);
+//    /**
+//     * 根据任务和课程获取老师列表
+//     * @param map
+//     * @return
+//     */
+//    public List<TeacherBaseDto> queryTeacherByTaskId(Map<String,Object> map);
 
     /**
      * 根据任务ID获取教师信息
@@ -51,7 +51,7 @@ public interface IEXScheduleBaseInfoService {
      * @param keyword
      * @return
      */
-    List<TeacherBaseDto> queryTeacherByKeyWord(int taskId,String keyword);
+//    List<TeacherBaseDto> queryTeacherByKeyWord(int taskId,String keyword);
 
     /**
      * 新增或修改教师信息
@@ -62,5 +62,5 @@ public interface IEXScheduleBaseInfoService {
      * @param course
      * @param classId
      */
-    void saveOrUpdateTeacher(int taskId, int teacherId,int classNum,String course, String classId);
+//    void saveOrUpdateTeacher(int taskId, int teacherId,int classNum,String course, String classId);
 }

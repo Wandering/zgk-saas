@@ -132,7 +132,7 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      * @param excelPath
      * @return
      */
-    String  uploadExcel(String type,Integer tnId,String excelPath);
+    String uploadExcel(String type,Integer tnId,String excelPath);
 
 
     /**
@@ -145,7 +145,7 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
 
     public Configuration queryConfigurationOne(Map map);
 
-    public void syncProcedureData(String type,Integer tnId);
+//    public void syncProcedureData(String type,Integer tnId);
 
     /**
      * 是否存在当前列
@@ -186,7 +186,7 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      */
     Integer selectCountByStudentNo(String type,Integer tnId,String studentNo);
 
-    public Integer removeTenantCustomList(String tableName,List<String> removeIds);
+    Integer removeTenantCustomList(String tableName,List<String> removeIds);
 
     int countBySubjectAndGrade(int tnId, String grade, String subject, String classEdu);
 
