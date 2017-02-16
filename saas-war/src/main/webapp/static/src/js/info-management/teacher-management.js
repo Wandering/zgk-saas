@@ -12,6 +12,7 @@ TeacherManagement.prototype = {
         this.getThead();
         this.gradeCode = '';
         this.subjectV  = '';
+
     },
     // 拉取表格thead
     getThead:function(){
@@ -27,7 +28,7 @@ TeacherManagement.prototype = {
                     columnHtml.push('<th class="center"><label><input type="checkbox" id="checkAll" class="ace" /><span class="lbl"></span></label></th>');
                     columnHtml.push('<th class="center">序号</th>');
                     $.each(data, function (i, k) {
-                        columnHtml.push('<th class="center">' + k.name + '</th>');
+                        columnHtml.push('<th class="center"  taecherNamekey ="'+ k.enName +'"  >' + k.name + '</th>');
                     });
                     columnHtml.push('</tr>');
                     $("#teacher-manage-table thead").html(columnHtml.join(''));
@@ -35,10 +36,22 @@ TeacherManagement.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        });
     },
     // 默认拉取列表
     // 提交保存
+    addSubmit:function(datas){
+
+        console.log(datas)
+        Common.ajaxFun('/manage/teant/custom/data/add.do', 'POST', JSON.stringify(datas), function (res) {
+            if (res.rtnCode == "0000000") {
+                layer.closeAll();
+
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, null,true);
+    },
     // 所教科目
     querySubject:function(){
         var that = this;
@@ -95,8 +108,10 @@ TeacherManagement.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var maxClass = res.bizData.maxClass;
-                for(var i = 1;i<=maxClass;i++){
-                    classMaxArr.push('<option value="' + i + '">' + i + '</option>');
+                if(maxClass!=0){
+                    for(var i = 1;i<=maxClass;i++){
+                        classMaxArr.push('<option value="' + i + '">' + i + '</option>');
+                    }
                 }
             } else {
                 layer.msg(res.msg);
@@ -118,55 +133,14 @@ TeacherManagement.prototype = {
             if (res.rtnCode == "0000000") {
                 $('#box-row-classes').removeClass('hides');
                 $.each(res.bizData.class, function (i, v) {
-                    classItemArr.push('<label><input name="form-field-checkbox" type="checkbox" class="ace form-input-checkbox" /><span class="lbl">'+ v.className +'</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                    classItemArr.push('<label><input name="form-field-checkbox" type="checkbox" className = "'+ v.className +'" class="ace form-input-checkbox" /><span class="lbl">'+ v.className +'</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
                 });
-                $('#class-item').append(classItemArr.join(''));
             } else {
                 layer.msg(res.msg);
             }
         }, function (res) {
             layer.msg(res.msg);
         }, true);
-        //return GradeArr.join('');
-        //var data = {
-        //    "bizData": {
-        //        "class": [
-        //            {
-        //                "className":"test2"
-        //            },
-        //            {
-        //                "className":"test2"
-        //            },
-        //            {
-        //                "className":"test2"
-        //            },
-        //            {
-        //                "className":"test2"
-        //            },
-        //            {
-        //                "className":"test2"
-        //            },
-        //            {
-        //                "className":"test2"
-        //            },
-        //            {
-        //                "className":"test2"
-        //            },
-        //            {
-        //                "className":"test2"
-        //            },
-        //            {
-        //                "className":"test2"
-        //            }
-        //        ]
-        //    },
-        //    "rtnCode":"0000000",
-        //    "ts":1487125572539
-        //};
-        //
-        //$.each(data.bizData.class, function (i, v) {
-        //    classItemArr.push('<label><input name="form-field-checkbox" type="checkbox" class="ace form-input-checkbox" /><span class="lbl">'+ v.className +'</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
-        //});
         $('#class-item').append(classItemArr.join(''));
     },
 
@@ -178,23 +152,23 @@ TeacherManagement.prototype = {
         addTeacherContentHtml.push('<div class="course-box">');
         addTeacherContentHtml.push('<div class="box-row">');
         addTeacherContentHtml.push('<span class="class-label"><i>*</i>教师名称：</span>');
-        addTeacherContentHtml.push('<input type="text" id="teacher-name" value="" placeholder="请输入教师名称" class=""/>');
+        addTeacherContentHtml.push('<input type="text" id="teacher-name" teacherKay="teacher_name" value="" placeholder="请输入教师名称" class=""/>');
         addTeacherContentHtml.push('</div>');
         addTeacherContentHtml.push('<div class="box-row">');
         addTeacherContentHtml.push('<span class="class-label"><i>*</i>所教科目：</span>');
-        addTeacherContentHtml.push('<select id="course-name-list">'+ that.querySubject() +'</select>');
+        addTeacherContentHtml.push('<select id="course-name-list" teacherKay="teacher_major_type">'+ that.querySubject() +'</select>');
         addTeacherContentHtml.push('</div>');
         addTeacherContentHtml.push('<div class="box-row">');
         addTeacherContentHtml.push('<span class="class-label"><i>*</i>所带年级：</span>');
-        addTeacherContentHtml.push('<select id="grade-list"></select>');
+        addTeacherContentHtml.push('<select id="grade-list" teacherKay="teacher_grade"></select>');
         addTeacherContentHtml.push('</div>');
         addTeacherContentHtml.push('<div class="box-row">');
         addTeacherContentHtml.push('<span class="class-label"><i>*</i>最大带班数：</span>');
-        addTeacherContentHtml.push('<select id="classMax-list"></select>');
+        addTeacherContentHtml.push('<select id="classMax-list" teacherKay="teacher_max_take_class"></select>');
         addTeacherContentHtml.push('</div>');
         addTeacherContentHtml.push('<div class="box-row" id="box-row-classes">');
         addTeacherContentHtml.push('<span class="class-label class-item-label"><i>*</i>所带班级：</span>');
-        addTeacherContentHtml.push('<span class="class-item" id="class-item"></span>');
+        addTeacherContentHtml.push('<span class="class-item" id="class-item" teacherKay="teacher_class"></span>');
         addTeacherContentHtml.push('</div>');
         addTeacherContentHtml.push('<div class="box-row">');
         addTeacherContentHtml.push('<button type="button" class="save-btn" id="save-btn">保存</button>');
@@ -210,7 +184,7 @@ TeacherManagement.prototype = {
             success: function () {
                 $('#grade-list').html('<option value="00">请选择所带年级</option>');
                 $('#classMax-list').html('<option value="00">请选择最大带班数</option>');
-                //$('#box-row-classes').addClass('hides');
+                $('#box-row-classes').addClass('hides');
                 // 选择科目
                 $('body').on('change', '#course-name-list', function () {
                     that.subjectV = $(this).children('option:selected').val();
@@ -248,13 +222,19 @@ var TeacherManagementIns = new TeacherManagement();
 $(function () {
     // 点击添加教师
     $('#addTeacher-btn').on('click',function(){
+
+
         TeacherManagementIns.addTeacherLayer('添加教师');
     });
 
 
     // 点击保存
     $('body').on('click','#save-btn',function(){
+
+
+
         var teacherNameVal = $.trim($('#teacher-name').val());
+
         if(teacherNameVal==''){
             layer.tips('请输入教师名称', $('#teacher-name'));
             return false;
@@ -268,9 +248,9 @@ $(function () {
             layer.tips('请选择科目', $('#course-name-list'));
             return false;
         }
-        var gradeListV = $('#grade-list').val();
+        var gradeListV = $('#grade-list').children('option:selected').text();
         if(gradeListV == '00'){
-            layer.tips('请选择所带班级', $('#grade-list'));
+            layer.tips('请选择所带年级', $('#grade-list'));
             return false;
         }
         var classMaxListV = $('#classMax-list').val();
@@ -285,13 +265,42 @@ $(function () {
         }
 
         if(classItemSelLen > parseInt(classMaxListV)){
-            layer.tips('请选择所带班级', $('#class-item'));
+            layer.tips('所带班级选中数量不能大于选中最大带班数', $('#class-item'));
             return false;
         }
 
 
+        var classItemSelArr = [];
+        $('.form-input-checkbox[type="checkbox"]:checked').each(function(i,v){
+            classItemSelArr.push('、' + $(v).attr('className'))
+        });
+
+        classItemSelArr = classItemSelArr.join('');
+        classItemSelArr = classItemSelArr.substring(1, classItemSelArr.length);
 
 
+        var datas = {
+            "clientInfo": {},
+            "style": "",
+            "data": {
+                "type": 'teacher',
+                "tnId": tnId,
+                "teantCustomList": [
+                    {"key":'teacher_name',"value":teacherNameVal},
+                    {"key":'teacher_major_type',"value":courseNameListV},
+                    {"key":'teacher_grade',"value":gradeListV},
+                    {"key":'teacher_max_take_class',"value":classMaxListV},
+                    {"key":'teacher_class',"value":classItemSelArr}
+                ]
+            }
+        };
+
+
+
+        console.log(datas)
+
+
+        TeacherManagementIns.addSubmit(datas)
 
 
 
