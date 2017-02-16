@@ -117,25 +117,10 @@ TeacherManagement.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 $('#box-row-classes').removeClass('hides');
-
-                //var data = {
-                //    "bizData": {
-                //        "class": [
-                //            {
-                //                "className":"test2"
-                //            },
-                //            {
-                //                "className":"test2"
-                //            }
-                //        ]
-                //    },
-                //    "rtnCode":"0000000",
-                //    "ts":1487125572539
-                //};
-                //
-                //$.each(data.bizData.class, function (i, v) {
-                //    classItemArr.push('<label><input name="form-field-checkbox" checked="checked" id="gradeOne" data-id="1"  type="checkbox" class="ace form-input-checkbox" /><span class="lbl">高一年级</span></label>&nbsp;&nbsp;&nbsp;&nbsp;'');
-                //});
+                $.each(res.bizData.class, function (i, v) {
+                    classItemArr.push('<label><input name="form-field-checkbox" type="checkbox" class="ace form-input-checkbox" /><span class="lbl">'+ v.className +'</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                });
+                $('#class-item').append(classItemArr.join(''));
             } else {
                 layer.msg(res.msg);
             }
@@ -143,45 +128,45 @@ TeacherManagement.prototype = {
             layer.msg(res.msg);
         }, true);
         //return GradeArr.join('');
-        var data = {
-            "bizData": {
-                "class": [
-                    {
-                        "className":"test2"
-                    },
-                    {
-                        "className":"test2"
-                    },
-                    {
-                        "className":"test2"
-                    },
-                    {
-                        "className":"test2"
-                    },
-                    {
-                        "className":"test2"
-                    },
-                    {
-                        "className":"test2"
-                    },
-                    {
-                        "className":"test2"
-                    },
-                    {
-                        "className":"test2"
-                    },
-                    {
-                        "className":"test2"
-                    }
-                ]
-            },
-            "rtnCode":"0000000",
-            "ts":1487125572539
-        };
-
-        $.each(data.bizData.class, function (i, v) {
-            classItemArr.push('<label><input name="form-field-checkbox" type="checkbox" class="ace form-input-checkbox" /><span class="lbl">'+ v.className +'</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
-        });
+        //var data = {
+        //    "bizData": {
+        //        "class": [
+        //            {
+        //                "className":"test2"
+        //            },
+        //            {
+        //                "className":"test2"
+        //            },
+        //            {
+        //                "className":"test2"
+        //            },
+        //            {
+        //                "className":"test2"
+        //            },
+        //            {
+        //                "className":"test2"
+        //            },
+        //            {
+        //                "className":"test2"
+        //            },
+        //            {
+        //                "className":"test2"
+        //            },
+        //            {
+        //                "className":"test2"
+        //            },
+        //            {
+        //                "className":"test2"
+        //            }
+        //        ]
+        //    },
+        //    "rtnCode":"0000000",
+        //    "ts":1487125572539
+        //};
+        //
+        //$.each(data.bizData.class, function (i, v) {
+        //    classItemArr.push('<label><input name="form-field-checkbox" type="checkbox" class="ace form-input-checkbox" /><span class="lbl">'+ v.className +'</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+        //});
         $('#class-item').append(classItemArr.join(''));
     },
 
@@ -223,7 +208,6 @@ TeacherManagement.prototype = {
             area: ['550px', '400px'],
             content: addTeacherContentHtml.join(''),
             success: function () {
-                that.queryClassByGradeCodeAndSubject()
                 $('#grade-list').html('<option value="00">请选择所带年级</option>');
                 $('#classMax-list').html('<option value="00">请选择最大带班数</option>');
                 //$('#box-row-classes').addClass('hides');
@@ -270,43 +254,47 @@ $(function () {
 
     // 点击保存
     $('body').on('click','#save-btn',function(){
-        //var teacherNameVal = $.trim($('#teacher-name').val());
-        //if(teacherNameVal==''){
-        //    layer.tips('请输入教师名称', $('#teacher-name'));
-        //    return false;
-        //}
-        //if(teacherNameVal.length>10){
-        //    layer.tips('字数限制10个字以内', $('#teacher-name'));
-        //    return false;
-        //}
-        //var courseNameListV = $('#course-name-list').val();
-        //if(courseNameListV == '00'){
-        //    layer.tips('请选择科目', $('#course-name-list'));
-        //    return false;
-        //}
-        //var gradeListV = $('#grade-list').val();
-        //if(gradeListV == '00'){
-        //    layer.tips('请选择所带班级', $('#grade-list'));
-        //    return false;
-        //}
-        //var classMaxListV = $('#classMax-list').val();
-        //if(classMaxListV == '00'){
-        //    layer.tips('请选择最大带班数', $('#classMax-list'));
-        //    return false;
-        //}
-
-
-        for(var i=0;i<$('.form-input-checkbox').length;i++){
-            console.log($('.form-input-checkbox').eq(i).prop('checked'))
-
-            //if($('#class-item .form-input-checkbox').eq(i).is(':checked').length==0){
-            //    alert(4)
-            //    layer.tips('请选择所带班级', $('#class-item'));
-            //    return false;
-            //}
+        var teacherNameVal = $.trim($('#teacher-name').val());
+        if(teacherNameVal==''){
+            layer.tips('请输入教师名称', $('#teacher-name'));
+            return false;
+        }
+        if(teacherNameVal.length>10){
+            layer.tips('字数限制10个字以内', $('#teacher-name'));
+            return false;
+        }
+        var courseNameListV = $('#course-name-list').val();
+        if(courseNameListV == '00'){
+            layer.tips('请选择科目', $('#course-name-list'));
+            return false;
+        }
+        var gradeListV = $('#grade-list').val();
+        if(gradeListV == '00'){
+            layer.tips('请选择所带班级', $('#grade-list'));
+            return false;
+        }
+        var classMaxListV = $('#classMax-list').val();
+        if(classMaxListV == '00'){
+            layer.tips('请选择最大带班数', $('#classMax-list'));
+            return false;
+        }
+        var classItemSelLen = $('.form-input-checkbox[type="checkbox"]:checked').length;
+        if(classItemSelLen==0){
+            layer.tips('请选择所带班级', $('#class-item'));
+            return false;
         }
 
-        //alert(3)
+        if(classItemSelLen > parseInt(classMaxListV)){
+            layer.tips('请选择所带班级', $('#class-item'));
+            return false;
+        }
+
+
+
+
+
+
+
 
 
     });
