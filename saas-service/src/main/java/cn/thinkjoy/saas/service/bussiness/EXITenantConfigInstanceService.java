@@ -188,4 +188,9 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
     Integer selectCountByStudentNo(String type,Integer tnId,String studentNo);
 
     public Integer removeTenantCustomList(String tableName,List<String> removeIds);
+
+    int countBySubjectAndGrade(int tnId, String grade, String subject, String classEdu);
+
+
+    List getBySubjectAndGrade(int tnId, String grade, String subject, String classEdu);
 }

@@ -57,6 +57,51 @@
         </where>
         order by id asc
     </select>
+
+
+    <select id="getStuInfo" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+        select * from ${tableName}
+        <where>
+            <if test="type == 1">
+                and student_check_major1 is null
+            </if>
+            <if test="type == 0">
+                and student_check_major1 is not null
+            </if>
+            <if test="grade != null and grade != ''">
+                and student_grade = #{grade}
+            </if>
+        </where>
+        order by id asc
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+    <select id="getStuInfoCount" parameterType="java.util.Map" resultType="Integer">
+        select count(1) from ${tableName}
+        <where>
+            <if test="type == 1">
+                and student_check_major1 is null
+            </if>
+            <if test="type == 0">
+                and student_check_major1 is not null
+            </if>
+            <if test="grade != null and grade != ''">
+                and student_grade = #{grade}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getTenantCustomColsCount" parameterType="java.util.Map" resultType="Integer">
+        select count(1) from ${tableName}
+        <where>
+            <foreach collection="searchKeys" item="item" index="index" separator="," >
+                ${item.key} = #{item.value}
+            </foreach>
+        </where>
+    </select>
+
     <delete id="removeTenantCustomList" >
 
         DELETE FROM ${tableName} where id in

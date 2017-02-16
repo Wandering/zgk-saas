@@ -1,6 +1,7 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.common.protocol.Request;
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.ClassRoomSetting;
 import cn.thinkjoy.saas.domain.EnrollingRatio;
 import cn.thinkjoy.saas.domain.bussiness.ClassView;
@@ -13,6 +14,7 @@ import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +23,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by douzy on 16/10/21.
@@ -462,10 +461,12 @@ public class ManageController {
                 row = _req.getParameter("r");
 
 
+
         Integer s = (star == null) ? null : Integer.valueOf(star),
                 r=(row==null)?null:Integer.valueOf(row);
         Map resultMap = new HashMap();
         List<LinkedHashMap<String, Object>> tenantCustom = iexTenantCustomService.getTenantCustom(type, tnId, grade, s,r);
+
         resultMap.put("result", tenantCustom);
         Integer count = iexTenantCustomService.getTenantCustomCount(type, tnId, grade);
         resultMap.put("count", count);

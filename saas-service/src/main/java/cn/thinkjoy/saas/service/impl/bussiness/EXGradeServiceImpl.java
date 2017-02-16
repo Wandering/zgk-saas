@@ -1,22 +1,22 @@
 package cn.thinkjoy.saas.service.impl.bussiness;
 
+import cn.thinkjoy.saas.dao.IDataDictDAO;
 import cn.thinkjoy.saas.dao.IGradeDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO;
-import cn.thinkjoy.saas.domain.EnrollingRatio;
+import cn.thinkjoy.saas.domain.DataDict;
 import cn.thinkjoy.saas.domain.Grade;
 import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantService;
+import cn.thinkjoy.saas.core.GradeConstant;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by douzy on 16/10/24.
@@ -34,6 +34,9 @@ public class EXGradeServiceImpl implements EXIGradeService {
 
     @Resource
     IGradeDAO iGradeDAO;
+
+    @Autowired
+    IDataDictDAO dataDictDAO;
 
 
     /**
@@ -117,7 +120,7 @@ public class EXGradeServiceImpl implements EXIGradeService {
             Grade grade = iGradeDAO.queryOne(map, "id", "asc");
             if (grade == null)
                 return false;
-            grade.setgOrder(i);
+            grade.setGorder(i);
             grades.add(grade);
         }
         Integer sortResult = exiGradeDAO.gradeSortUpdate(grades);
@@ -130,7 +133,7 @@ public class EXGradeServiceImpl implements EXIGradeService {
 
     /**
      * 新增年级
-     * @param grade
+     * @param
      * @return
      */
     @Override
@@ -138,7 +141,7 @@ public class EXGradeServiceImpl implements EXIGradeService {
         Grade grade = new Grade();
         grade.setTnId(tnId);
         grade.setGrade(gradeName);
-        grade.setgOrder(0);
+        grade.setGorder(0);
         Integer result = iGradeDAO.insert(grade);
         return (result > 0 ? true : false);
     }
@@ -147,11 +150,19 @@ public class EXGradeServiceImpl implements EXIGradeService {
         Grade grade = new Grade();
         grade.setTnId(tnId);
         grade.setGrade(gradeName);
-        grade.setgOrder(0);
+        grade.setGorder(0);
         grade.setId(gid);
         Integer result = iGradeDAO.update(grade);
         return (result > 0 ? true : false);
     }
+
+    @Override
+    public void updateGrade(List<Grade> grades) {
+            for (Grade grade : grades) {
+                iGradeDAO.update(grade);
+            }
+    }
+
     /**
      * 删除年级
      * @param map
@@ -174,4 +185,40 @@ public class EXGradeServiceImpl implements EXIGradeService {
             return false;
         return (exiGradeDAO.removeGrades(idsList) > 0);
     }
+
+    /**
+     * 初始化年级信息
+     *
+     * @param tnId
+     * @return
+     */
+    @Override
+    public List<Grade> init(int tnId) {
+        List<Grade> gradeList = new ArrayList<>();
+        List<DataDict> dataDicts = dataDictDAO.findList("type", GradeConstant.GRADE_CODE,"dictId","asc");
+        Grade grade = null;
+        for (DataDict dataDict : dataDicts){
+            grade = new Grade();
+            grade.setGrade(dataDict.getName());
+            grade.setGradeCode(dataDict.getDictId());
+            grade.setGorder(dataDict.getDictId());
+            grade.setTnId(tnId);
+            iGradeDAO.insert(grade);
+            gradeList.add(grade);
+        }
+        return gradeList;
+    }
+
+    /**
+     * 根据tnId和年级code查询年级
+     *
+     * @param tnId
+     * @param gradeCodes
+     * @return
+     */
+    @Override
+    public List<Grade> getGradeByTnIdAndGradeCode(int tnId, Set<Integer> gradeCodes) {
+        return exiGradeDAO.getGradeByTnIdAndGradeCode(tnId,gradeCodes);
+    }
+
 }

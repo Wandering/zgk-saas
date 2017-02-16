@@ -2,67 +2,133 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="cn.thinkjoy.saas.dao.IGradeDAO">
-    <!--
-    insert
-    update
-    updateNull
-    deleteById
-    deleteByCondition
-    deleteByProperty
-    fetch
-    findOne
-    findList
-    findAll
-    queryPage
-    like
-    queryList
-    queryOne
-    count
-    selectMaxId
-    updateOrSave
-    selectOne
-    selectList
-    -->
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
     <sql id="Base_Column_List">
-        id,
-        grade,
-        g_order as gOrder
+        id as id,
+        tnId as tnId,
+        gradeCode as gradeCode,
+        grade as grade,
+        g_order as gorder,
+        year as year,
+        classType as classType
     </sql>
-    <insert id="insert" parameterType="Tenant">
+    <insert id="insert" parameterType="Grade">
         INSERT INTO saas_grade (
         tnId,
+        gradeCode,
         grade,
-        g_order
+        g_order,
+        year,
+        classType
         ) VALUES (
         #{tnId},
+        #{gradeCode},
         #{grade},
-        #{gOrder}
+        #{gorder},
+        #{year},
+        #{classType}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
-            SELECT LAST_INSERT_ID() AS ID
+        SELECT LAST_INSERT_ID() AS ID
         </selectKey>
     </insert>
 
+    <!-- 更新 -->
     <update id="update" parameterType="Grade">
         UPDATE saas_grade
         <trim prefix="SET" suffixOverrides=",">
-            <if test="grade!=null">
-                grade = #{grade},
-            </if>
             <if test="tnId!=null">
                 tnId = #{tnId},
             </if>
-            <if test="gOrder!=null">
-                g_order = #{gOrder},
+            <if test="gradeCode!=null">
+                gradeCode = #{gradeCode},
+            </if>
+            <if test="grade!=null">
+                grade = #{grade},
+            </if>
+            <if test="gorder!=null">
+                g_order = #{gorder},
+            </if>
+            <if test="year!=null">
+                year = #{year},
+            </if>
+            <if test="classType!=null">
+                classType = #{classType},
             </if>
         </trim>
         WHERE
         id = #{id}
     </update>
-    <select id="queryOne" parameterType="java.util.Map" resultType="Grade">
-        SELECT
-        <include refid="Base_Column_List" />
-        FROM saas_grade
+
+    <update id="updateMap">
+        UPDATE saas_grade
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.tnId!=null">
+                tnId = #{map.tnId},
+            </if>
+            <if test="map.gradeCode!=null">
+                gradeCode = #{map.gradeCode},
+            </if>
+            <if test="map.grade!=null">
+                grade = #{map.grade},
+            </if>
+            <if test="map.gorder!=null">
+                g_order = #{map.gorder},
+            </if>
+            <if test="map.year!=null">
+                year = #{map.year},
+            </if>
+            <if test="map.classType!=null">
+                classType = #{map.classType},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_grade
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.tnId!=null">
+                tnId = #{update.tnId},
+            </if>
+            <if test="update.gradeCode!=null">
+                gradeCode = #{update.gradeCode},
+            </if>
+            <if test="update.grade!=null">
+                grade = #{update.grade},
+            </if>
+            <if test="update.gorder!=null">
+                g_order = #{update.gorder},
+            </if>
+            <if test="update.year!=null">
+                year = #{update.year},
+            </if>
+            <if test="update.classType!=null">
+                classType = #{update.classType},
+            </if>
+        </trim>
+
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
                 AND id = #{condition.id}
@@ -70,14 +136,123 @@
             <if test="condition.tnId!=null">
                 AND tnId = #{condition.tnId}
             </if>
+            <if test="condition.gradeCode!=null">
+                AND gradeCode = #{condition.gradeCode}
+            </if>
             <if test="condition.grade!=null">
                 AND grade = #{condition.grade}
             </if>
-            <if test="condition.gOrder!=null">
-                AND g_order = #{condition.gOrder}
+            <if test="condition.gorder!=null">
+                AND g_order = #{condition.gorder}
+            </if>
+            <if test="condition.year!=null">
+                AND year = #{condition.year}
+            </if>
+            <if test="condition.classType!=null">
+                AND classType = #{condition.classType}
             </if>
         </trim>
-        limit 0,1
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_grade (
+                tnId,
+                gradeCode,
+                grade,
+                g_order,
+                year,
+                classType
+        ) VALUES (
+                    #{map.tnId},
+                    #{map.gradeCode},
+                    #{map.grade},
+                    #{map.gorder},
+                    #{map.year},
+                    #{map.classType}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="Grade">
+        UPDATE saas_grade
+        <trim prefix="SET" suffixOverrides=",">
+            tnId = #{tnId},
+            gradeCode = #{gradeCode},
+            grade = #{grade},
+            g_order = #{gorder},
+            year = #{year},
+            classType = #{classType},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_grade
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_grade
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="tnId!=null">
+                AND tnId = #{tnId}
+            </if>
+            <if test="gradeCode!=null">
+                AND gradeCode = #{gradeCode}
+            </if>
+            <if test="grade!=null">
+                AND grade = #{grade}
+            </if>
+            <if test="gorder!=null">
+                AND g_order = #{gorder}
+            </if>
+            <if test="year!=null">
+                AND year = #{year}
+            </if>
+            <if test="classType!=null">
+                AND classType = #{classType}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_grade WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="Grade">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_grade
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="Grade">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_grade WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="Grade">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_grade WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
     </select>
 
     <select id="findAll" resultType="Grade">
@@ -89,7 +264,180 @@
         </if>
     </select>
 
+    <select id="queryPage" resultType="Grade">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_grade
+        <where>
 
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   tnId  ${condition.tnId.op}  #{condition.tnId.data}
+            </if>
+            <if test="condition.gradeCode!=null">
+                ${condition.groupOp}   gradeCode  ${condition.gradeCode.op}  #{condition.gradeCode.data}
+            </if>
+            <if test="condition.grade!=null">
+                ${condition.groupOp}   grade  ${condition.grade.op}  #{condition.grade.data}
+            </if>
+            <if test="condition.gorder!=null">
+                ${condition.groupOp}   g_order  ${condition.gorder.op}  #{condition.gorder.data}
+            </if>
+            <if test="condition.year!=null">
+                ${condition.groupOp}   year  ${condition.year.op}  #{condition.year.data}
+            </if>
+            <if test="condition.classType!=null">
+                ${condition.groupOp}   classType  ${condition.classType.op}  #{condition.classType.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="Grade">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_grade
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
+            </if>
+            <if test="condition.tnId!=null">
+                AND tnId like CONCAT('%', #{condition.tnId} , '%')
+            </if>
+            <if test="condition.gradeCode!=null">
+                AND gradeCode like CONCAT('%', #{condition.gradeCode} , '%')
+            </if>
+            <if test="condition.grade!=null">
+                AND grade like CONCAT('%', #{condition.grade} , '%')
+            </if>
+            <if test="condition.gorder!=null">
+                AND g_order like CONCAT('%', #{condition.gorder} , '%')
+            </if>
+            <if test="condition.year!=null">
+                AND year like CONCAT('%', #{condition.year} , '%')
+            </if>
+            <if test="condition.classType!=null">
+                AND classType like CONCAT('%', #{condition.classType} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="Grade">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_grade
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tnId = #{condition.tnId}
+            </if>
+            <if test="condition.gradeCode!=null">
+                AND gradeCode = #{condition.gradeCode}
+            </if>
+            <if test="condition.grade!=null">
+                AND grade = #{condition.grade}
+            </if>
+            <if test="condition.gorder!=null">
+                AND g_order = #{condition.gorder}
+            </if>
+            <if test="condition.year!=null">
+                AND year = #{condition.year}
+            </if>
+            <if test="condition.classType!=null">
+                AND classType = #{condition.classType}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="Grade">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_grade
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tnId = #{condition.tnId}
+            </if>
+            <if test="condition.gradeCode!=null">
+                AND gradeCode = #{condition.gradeCode}
+            </if>
+            <if test="condition.grade!=null">
+                AND grade = #{condition.grade}
+            </if>
+            <if test="condition.gorder!=null">
+                AND g_order = #{condition.gorder}
+            </if>
+            <if test="condition.year!=null">
+                AND year = #{condition.year}
+            </if>
+            <if test="condition.classType!=null">
+                AND classType = #{condition.classType}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_grade
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="tnId!=null">
+               ${groupOp} tnId ${tnId.op}  #{tnId.data}
+           </if>
+           <if test="gradeCode!=null">
+               ${groupOp} gradeCode ${gradeCode.op}  #{gradeCode.data}
+           </if>
+           <if test="grade!=null">
+               ${groupOp} grade ${grade.op}  #{grade.data}
+           </if>
+           <if test="gorder!=null">
+               ${groupOp} g_order ${gorder.op}  #{gorder.data}
+           </if>
+           <if test="year!=null">
+               ${groupOp} year ${year.op}  #{year.data}
+           </if>
+           <if test="classType!=null">
+               ${groupOp} classType ${classType.op}  #{classType.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_grade
+    </select>
 
 </mapper>
 

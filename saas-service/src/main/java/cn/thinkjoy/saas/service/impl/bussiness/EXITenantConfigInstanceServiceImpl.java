@@ -2,6 +2,7 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 
 import cn.thinkjoy.common.dao.IBaseDAO;
 import cn.thinkjoy.common.service.impl.AbstractPageService;
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.*;
 import cn.thinkjoy.saas.dao.bussiness.*;
 import cn.thinkjoy.saas.domain.*;
@@ -29,9 +30,9 @@ import java.util.*;
  * Created by douzy on 16/10/13.
  */
 @Service("EXITenantConfigInstanceServiceImpl")
-public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBaseDAO<TenantConfigInstance>, TenantConfigInstance> implements EXITenantConfigInstanceService<IBaseDAO<TenantConfigInstance>,TenantConfigInstance> {
+public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBaseDAO<TenantConfigInstance>, TenantConfigInstance> implements EXITenantConfigInstanceService<IBaseDAO<TenantConfigInstance>, TenantConfigInstance> {
 
-    private static final Logger LOGGER= LoggerFactory.getLogger(EXITenantConfigInstanceServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EXITenantConfigInstanceServiceImpl.class);
 
     @Autowired
     EXITenantConfigInstanceDAO exiTenantConfigInstanceDAO;
@@ -266,7 +267,8 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_TEANTCUSTOM_EXCEL);
         }
 
-        if (isExistConfigDataByTnId(type,tnId)) {
+        // 学生模板直接添加，不需要删除以前的字段
+        if (isExistConfigDataByTnId(type, tnId) && !type.equals(Constant.STUDENT)) {
             LOGGER.info("tnId:" + tnId + "=[该租户存在历史表头数据.]");
             boolean removeResult = removeConfigDataByTnId(type,tnId);
             LOGGER.info("removeResult:" + removeResult);
@@ -562,6 +564,10 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                     map1.put(map1.size() + "", type + "_" + System.currentTimeMillis()+i);
                 }
             }
+            if (removeIds != null && removeIds.size() > 0)
+                iexTeantCustomDAO.removeTenantCustomList(tableName, removeIds);
+
+
             Integer insertResult = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
 
             if (insertResult > 0) {
@@ -683,7 +689,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             Iterator iter = rowsMap.entrySet().iterator();
 
             int y = 0;
-            String key1 = null, key2 = null, value1 = null, value2 = null,id=null;
+            String key1 = null, key2 = null, value1 = null, value2 = null, id = null;
             boolean repeat = false;
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
@@ -1068,4 +1074,67 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 //        return iexTeantCustomDAO.selectExistByCloumn(map)>0;
 //    }
 
+
+    @Override
+    public int countBySubjectAndGrade(int tnId, String grade, String subject, String classType) {
+        String tableName = ParamsUtils.combinationTableName(classType, tnId);
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        int count = 0;
+        Map<String, Object> params;
+        List<Map<String, Object>> paramsList;
+        switch (classType) {
+            case "class_adm":
+                params = new HashMap<>();
+                paramsList = new ArrayList<>();
+                params.put("key", "class_grade");
+                params.put("value", grade);
+                paramsList.add(params);
+                params = new HashMap<>();
+                paramsList = new ArrayList<>();
+                params.put("key", "class_major_type");
+                params.put("value", subject);
+                paramsList.add(params);
+                map.put("searchKeys", paramsList);
+                count = iexTeantCustomDAO.getTenantCustomColsCount(map);
+                break;
+            case "class_edu":
+                params = new HashMap<>();
+                paramsList = new ArrayList<>();
+                params.put("key", "class_grade");
+                params.put("value", grade);
+                paramsList.add(params);
+                map.put("searchKeys", paramsList);
+                count = iexTeantCustomDAO.getTenantCustomColsCount(map);
+                break;
+            default:
+                break;
+        }
+        return count;
+    }
+
+    @Override
+    public List getBySubjectAndGrade(int tnId, String grade, String subject, String classType) {
+        String tableName = ParamsUtils.combinationTableName(classType, tnId);
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        List list = new ArrayList();
+        switch (classType) {
+            case "class_adm":
+                map.put("key1", "class_grade");
+                map.put("value1", grade);
+                map.put("key2", "class_major_type");
+                map.put("value2", subject);
+                list = iexTeantCustomDAO.getTenantCustom(map);
+                break;
+            case "class_edu":
+                map.put("key1", "class_grade");
+                map.put("value1", grade);
+                list = iexTeantCustomDAO.getTenantCustom(map);
+                break;
+            default:
+                break;
+        }
+        return list;
+    }
 }

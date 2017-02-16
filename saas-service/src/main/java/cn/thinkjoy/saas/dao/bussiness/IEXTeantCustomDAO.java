@@ -55,7 +55,24 @@ public interface IEXTeantCustomDAO {
      */
     List<LinkedHashMap<String, Object>> getTenantCustom(Map map);
 
+    /**
+     * 查询学生数据集合
+     *
+     * @param map
+     * @return
+     */
+    List<LinkedHashMap<String, Object>> getStuInfo(Map map);
+
+    /**
+     * 查询学生总数
+     *
+     * @param map
+     * @return
+     */
+    Integer getStuInfoCount(Map map);
+
     Integer getTenantCustomCount(Map map);
+    Integer getTenantCustomColsCount(Map map);
 
     /**
      * 批量删除
