@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
  *
- * Project Name: saas
- * $Id:  JwTeacher.java 2016-12-07 11:45:05 $
+ * Project Name: zgk-saas
+ * $Id:  JwTeacher.java 2017-02-16 14:02:50 $
  */
 
 
@@ -18,35 +18,19 @@ import cn.thinkjoy.common.domain.BaseDomain;
 import java.util.*;
 
 public class JwTeacher extends BaseDomain{
-    private Integer teachNum;
     private Integer tnId;
-    private String course;
     private Integer teacherId;
     private Integer taskId;
-    private String classId;
+    private Integer isAttend;
 
 	public JwTeacher(){
 	}
-    public void setTeachNum(Integer value) {
-        this.teachNum = value;
-    }
-
-    public Integer getTeachNum() {
-        return this.teachNum;
-    }
     public void setTnId(Integer value) {
         this.tnId = value;
     }
 
     public Integer getTnId() {
         return this.tnId;
-    }
-    public void setCourse(String value) {
-        this.course = value;
-    }
-
-    public String getCourse() {
-        return this.course;
     }
     public void setTeacherId(Integer value) {
         this.teacherId = value;
@@ -62,23 +46,21 @@ public class JwTeacher extends BaseDomain{
     public Integer getTaskId() {
         return this.taskId;
     }
-    public void setClassId(String value) {
-        this.classId = value;
+    public void setIsAttend(Integer value) {
+        this.isAttend = value;
     }
 
-    public String getClassId() {
-        return this.classId;
+    public Integer getIsAttend() {
+        return this.isAttend;
     }
 
 	public String toString() {
 		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
 			.append("Id",getId())
-			.append("TeachNum",getTeachNum())
 			.append("TnId",getTnId())
-			.append("Course",getCourse())
 			.append("TeacherId",getTeacherId())
 			.append("TaskId",getTaskId())
-			.append("ClassId",getClassId())
+			.append("IsAttend",getIsAttend())
 			.toString();
 	}
 	

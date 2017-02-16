@@ -15,7 +15,6 @@ import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
 import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.zgk.common.StringUtil;
 import com.google.common.collect.Maps;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,14 +44,11 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
     @Autowired
     private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
 
-    @Autowired
-    private static Logger LOGGER = Logger.getLogger(EXJwScheduleTaskServiceImpl.class);
 
 
     @Override
     public CourseResultView getCourseResult(String type,Integer taskId,Integer tnId,Map<String,Object> paramsMap) {
         CourseResultView courseResultView = new CourseResultView();
-        LOGGER.info("************取教学时间 Start************");
         Map map = new HashMap();
         map.put("tnId", tnId);
         map.put("taskId",taskId);
@@ -80,11 +76,9 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
                 time += 0;
             }
         }
-        LOGGER.info("************取教学时间 End************");
         courseResultView.setTeachDate(buffer.toString());
         courseResultView.setTeachTime(time);
 
-        LOGGER.info("************取排课数据 Start************");
         Map<String,Object>  roomMap = Maps.newHashMap();
         JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
         roomMap.put("tnId",tnId);
@@ -166,7 +160,6 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
             list1.add(list2);
         }
         courseResultView.setWeek(list1);
-        LOGGER.info("************取排课数据 End************");
         return courseResultView;
     }
 

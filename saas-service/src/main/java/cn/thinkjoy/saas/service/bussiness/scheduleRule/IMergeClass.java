@@ -12,7 +12,7 @@ import java.util.Map;
 public interface IMergeClass {
     void insertMergeInfo(Map<String,Object> map);
 
-    List<MergeClassInfoDto> selectMergeInfo(Map<String,Object> map);
+//    List<MergeClassInfoDto> selectMergeInfo(Map<String,Object> map);
 
     void deleteMergeInfo(Map<String,Object> map);
 }

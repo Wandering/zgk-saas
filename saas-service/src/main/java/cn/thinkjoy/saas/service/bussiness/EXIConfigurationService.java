@@ -33,7 +33,7 @@ public interface EXIConfigurationService<D extends IBaseDAO<T>, T extends BaseDo
      * @param type
      * @return
      */
-    public boolean selectListRetain(String type,Integer tnid);
+    boolean selectListRetain(String type,Integer tnid);
 
     /**
      * 中英文列名互转

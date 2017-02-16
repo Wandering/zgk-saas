@@ -3,6 +3,8 @@ package cn.thinkjoy.saas.dao.bussiness;
 import cn.thinkjoy.saas.domain.bussiness.SyncClass;
 import cn.thinkjoy.saas.domain.bussiness.SyncCourse;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
+import cn.thinkjoy.saas.dto.ClassBaseDto;
+import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
@@ -62,6 +64,30 @@ public interface IEXTeantCustomDAO {
      * @return
      */
     List<LinkedHashMap<String, Object>> getStuInfo(Map map);
+
+    /**
+     * 查询教师数据集合
+     *
+     * @param map
+     * @return
+     */
+    List<TeacherBaseDto> getTeacherInfos(Map map);
+
+    /**
+     * 查询行政班级数据集合
+     *
+     * @param map
+     * @return
+     */
+    List<ClassBaseDto> getClassAdmInfos(Map map);
+
+    /**
+     * 查询教学班级数据集合
+     *
+     * @param map
+     * @return
+     */
+    List<ClassBaseDto> getClassEduInfos(Map map);
 
     /**
      * 查询学生总数

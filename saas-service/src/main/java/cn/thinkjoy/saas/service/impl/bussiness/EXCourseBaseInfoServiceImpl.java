@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by douzy on 17/2/14.
@@ -21,5 +22,15 @@ public class EXCourseBaseInfoServiceImpl implements IEXCourseBaseInfoService {
     @Override
     public List<CourseBaseInfo> getCourseBaseInfoList() {
         return iCourseBaseInfoDAO.findAll("id", "asc");
+    }
+
+    @Override
+    public CourseBaseInfo getCourseBaseInfoById(int id) {
+        return iCourseBaseInfoDAO.fetch(id);
+    }
+
+    @Override
+    public List<CourseBaseInfo> queryList(Map<String, Object> condition, String orderBy, String sortBy) {
+        return iCourseBaseInfoDAO.queryList(condition, orderBy, sortBy);
     }
 }
