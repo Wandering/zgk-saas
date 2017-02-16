@@ -28,8 +28,12 @@
 //@Service("EXJwScheduleTaskServiceImpl")
 //public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
 //
+//    @Autowired
+//    IJwTeacherBaseInfoDAO teacherBaseInfoDAO;
 //    @Resource
 //    IJwTeachDateDAO iJwTeachDateDAO;
+//    @Autowired
+//    IJwClassBaseInfoDAO classBaseInfoDAO;
 //    @Autowired
 //    IJwRoomDAO roomDAO;
 //    @Autowired

@@ -57,9 +57,11 @@ public class CourseController {
         Map parMap=new HashMap();
         parMap.put("tnId",tnId);
         List<CourseManageMapperVo> courseManages = iCourseManageService.selectCourseManageInfo(parMap);
+
         map.put("courses", courseManages);
         return map;
     }
+
 
     /**
      * 新增课程管理信息
