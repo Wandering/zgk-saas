@@ -73,36 +73,33 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
     /**
      * 租户是否已经选择表头
-     *
      * @param tnId
      * @return
      */
-    public boolean isExistConfigDataByTnId(String type, Integer tnId) {
+    public boolean isExistConfigDataByTnId(String type,Integer tnId) {
         Map map = new HashMap();
         map.put("tnId", tnId);
-        map.put("domain", type);
+        map.put("domain",type);
         TenantConfigInstance tenantConfigInstance = iTenantConfigInstanceDAO.queryOne(map, "id", "asc");
         return tenantConfigInstance == null ? false : true;
     }
 
     /**
      * 批量删除租户已选表头  by 租户ID
-     *
      * @param tnId
      * @return
      */
-    public boolean removeConfigDataByTnId(String type, Integer tnId) {
+    public boolean removeConfigDataByTnId(String type,Integer tnId) {
         Map map = new HashMap();
         map.put("tnId", tnId);
-        map.put("domain", type);
+        map.put("domain",type);
         Integer result = iTenantConfigInstanceDAO.deleteByCondition(map);
         return result > 0 ? true : false;
     }
 
     /**
      * 逐条删除租户表头  by
-     *
-     * @param id 表头ID
+     * @param id  表头ID
      * @return
      */
     @Override
@@ -119,12 +116,12 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * @param ids 需要删除的表头ID串  -号分隔
      */
     @Override
-    public boolean removeTeantConfigs(String type, Integer tnId, String ids) {
+    public boolean removeTeantConfigs(String type,Integer tnId,String ids) {
         List<String> idsList = ParamsUtils.idsSplit(ids);
         if (idsList == null)
             return false;
 
-        if (isExsitsTeantCustomTable(type, tnId)) {
+        if(isExsitsTeantCustomTable(type,tnId)) {
             LOGGER.info("该字段已经使用，请勿移除!");
             return false;
         }
@@ -133,13 +130,12 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
     /**
      * 租户表头排序
-     *
      * @param type class:班级 teacher:教师
-     * @param ids  需要调换的两个表头ID
+     * @param ids 需要调换的两个表头ID
      * @return
      */
     @Override
-    public boolean sortTeantConfig(String type, String ids) {
+    public boolean sortTeantConfig(String type,String ids) {
         LOGGER.info("===============租户表头排序 S==============");
         LOGGER.info("type:" + type);
         LOGGER.info("ids:" + ids);
@@ -188,20 +184,26 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
     /**
      * 查询当前租户&当前模块下的表头信息
-     *
      * @param type class:班级  teacher:教师
      * @param tnId 租户ID
      * @return
      */
     @Override
     public List<TenantConfigInstanceView> getTenantConfigListByTnIdAndType(String type, Integer tnId) {
+        return this.getTenantConfigListByTnIdAndType(type,tnId,null);
+    }
 
+    @Override
+    public List<TenantConfigInstanceView> getTenantConfigListByTnIdAndType(String type, Integer tnId,String isShow) {
         if (StringUtils.isBlank(type) || tnId <= 0)
             return null;
 
         Map map = new HashMap();
         map.put("domain", type);
         map.put("tnId", tnId);
+        if(org.apache.commons.lang3.StringUtils.isNotBlank(isShow)) {
+            map.put("isShow", isShow);
+        }
         List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceDAO.selectTeanConfigList(map);
 
         return tenantConfigInstances;
@@ -209,14 +211,13 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
     /**
      * 获取当前租户表头 数组 - 用于导出表头excel
-     *
      * @param type class:班级  teacher:教师
      * @param tnId 租户ID
      * @return
      */
     @Override
     public String[] getTenantConfigListArrByTnIdAndType(String type, Integer tnId) {
-        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId,"0");
         String[] configArr = new String[tenantConfigInstanceViews.size()];
         for (int i = 0; i < tenantConfigInstanceViews.size(); i++) {
             TenantConfigInstanceView tenantConfigInstanceView = tenantConfigInstanceViews.get(i);
@@ -225,20 +226,21 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         }
         return configArr;
     }
-
     /**
      * 生成租户自选表头
-     *
      * @param ids  表头id集
      * @param tnId 租户
-     * @return 0:成功
+     *
+     * @return
+     *
+     * 0:成功
      * -1:失败,系统错误
      * 1:参数错误
      * 2:该租户不存在
      * 3:选项集校验失败
      */
     @Override
-    public String createConfig(String type, String ids, Integer tnId) {
+    public String createConfig(String type,String ids,Integer tnId) {
         String result = EnumUtil.ErrorCode.getDesc(EnumUtil.GLOBAL_SYSTEMERROR);
 
         LOGGER.info("===============生成租户自选表头 S==============");
@@ -250,7 +252,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             LOGGER.info("result:1[参数错误]");
             return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_PARAMSERROR);
         }
-        if (isExsitsTeantCustomTable(type, tnId)) {
+        if(isExsitsTeantCustomTable(type,tnId)) {
             LOGGER.info("该租户已上传模板,表头无法修改!");
             return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_TEANTCUSTOM_EXCEL);
         }
@@ -258,7 +260,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         // 学生模板直接添加，不需要删除以前的字段
         if (isExistConfigDataByTnId(type, tnId) && !type.equals(Constant.STUDENT)) {
             LOGGER.info("tnId:" + tnId + "=[该租户存在历史表头数据.]");
-            boolean removeResult = removeConfigDataByTnId(type, tnId);
+            boolean removeResult = removeConfigDataByTnId(type,tnId);
             LOGGER.info("removeResult:" + removeResult);
 
             if (!removeResult)
@@ -278,7 +280,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         for (String configId : idsList) {
             Map map = new HashMap();
             map.put("id", configId);
-            map.put("domain", type);
+            map.put("domain",type);
             Configuration configuration = iConfigurationDAO.queryOne(map, "id", "asc");
             if (configuration == null) {
                 LOGGER.info("[ERROR]-configId:" + configId);
@@ -306,7 +308,6 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         return result;
     }
 
-
     @Override
     public Configuration queryConfigurationOne(Map map) {
         return iConfigurationDAO.queryOne(map, "id", "asc");
@@ -314,51 +315,45 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
     @Override
     public boolean existColumn(Map map) {
-        return exiTenantConfigInstanceDAO.existColumn(map) > 0;
+        return exiTenantConfigInstanceDAO.existColumn(map)>0;
     }
-
     @Override
     public Integer addConfigs(List<TenantConfigInstance> tenantConfigInstances) {
         return exiTenantConfigInstanceDAO.addConfigs(tenantConfigInstances);
     }
-
     @Override
-    public void addColumn(Map map) {
+    public void addColumn(Map map){
         exiTenantConfigInstanceDAO.addColumn(map);
     }
-
     @Override
-    public Integer teantConfigDeleteByCondition(Map map) {
+    public Integer teantConfigDeleteByCondition(Map map){
         return iTenantConfigInstanceDAO.deleteByCondition(map);
     }
-
     @Override
-    public void removeColumn(Map map) {
+    public void removeColumn(Map map){
         exiTenantConfigInstanceDAO.removeColumn(map);
     }
-
     /**
-     * 新增表头
-     *
+     *  新增表头
      * @param type
      * @param ids
      * @param tnId
      * @return
      */
     @Override
-    public String createColumn(String type, String ids, Integer tnId) {
+    public String createColumn( String type,String ids,  Integer tnId) {
 
 
         LOGGER.info("===============新增租户自选表头 S==============");
         LOGGER.info("ids:" + ids);
         LOGGER.info("tnId:" + tnId);
 
-        List<String> idsList = ParamsUtils.idsSplit(ids);
+         List<String> idsList = ParamsUtils.idsSplit(ids);
         if (tnId <= 0 || idsList == null) {
             LOGGER.info("result:1[参数错误]");
             return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_PARAMSERROR);
         }
-        String tableName = ParamsUtils.combinationTableName(type, tnId);
+         String tableName = ParamsUtils.combinationTableName(type, tnId);
 
 
         for (String configId : idsList) {
@@ -391,7 +386,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
 //        System.out.print(1 / 0);
 
-        isExsitsColumn(idsList, tableName, type, tnId);
+                isExsitsColumn(idsList,tableName,type,tnId);
 
 
         LOGGER.info("===============新增租户自选表头 E==============");
@@ -400,14 +395,13 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
     /**
      * 删除表头
-     *
      * @param type
      * @param ids
      * @param tnId
      * @return
      */
     @Override
-    public String removeColumn(String type, String ids, Integer tnId) {
+    public String removeColumn(String type,String ids,Integer tnId) {
         LOGGER.info("===============删除表头 S==============");
         LOGGER.info("ids:" + ids);
         LOGGER.info("tnId:" + tnId);
@@ -448,13 +442,12 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
     /**
      * 创建租户动态表
-     *
      * @param type class:班级  teacher:教师
      * @param tnId 租户ID
      * @return
      */
     @Override
-    public String createTenantCombinationTable(String type, Integer tnId) {
+    public String createTenantCombinationTable(String type,Integer tnId) {
         LOGGER.info("===========创建租户动态表 S===========");
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
@@ -498,13 +491,12 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
     /**
      * 解析excel 且将对应的值插入动态表
-     *
      * @param type
      * @param tnId
      * @return
      */
     @Override
-    public String uploadExcel(String type, Integer tnId, String excelPath) {
+    public String  uploadExcel(String type,Integer tnId,String excelPath) {
         LOGGER.info("===========解析excel S===========");
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
@@ -512,26 +504,27 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         Map map = new HashMap();
         map.put("domain", type);
         map.put("tnId", tnId);
+        map.put("isShow",0);
         List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceDAO.selectTeanConfigList(map);
 
-        if (tenantConfigInstances == null || tenantConfigInstances.size() <= 0)
+        if(tenantConfigInstances==null||tenantConfigInstances.size()<=0)
             return "系统错误";
 
-        Integer columnLen = tenantConfigInstances.size();
+        Integer columnLen=tenantConfigInstances.size();
 
-        List<LinkedHashMap<String, String>> configTeantComList = readExcel.readExcelFile(excelPath, columnLen);
-        if (configTeantComList == null || configTeantComList.size() <= 0)
+        List<LinkedHashMap<String, String>> configTeantComList = readExcel.readExcelFile(excelPath,columnLen);
+        if (configTeantComList == null||configTeantComList.size()<=0)
             return "输入的数据不完整，请完善数据后再上传";
         LOGGER.info("excel序列化 总数:" + configTeantComList.size());
-        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId,"0");
         if (tenantConfigInstanceViews == null)
             return "系统错误";
 
         String excelValid = ParamsUtils.excelValueValid(configTeantComList, tenantConfigInstanceViews);
 
 
-        if (type.equals("student") && excelValid.equals("SUCCESS"))
-            excelValid = ParamsUtils.repeatStudentNo(configTeantComList);
+        if(type.equals("student")&&excelValid.equals("SUCCESS"))
+            excelValid =ParamsUtils.repeatStudentNo(configTeantComList);
 
 
         String reuslt = "系统错误";
@@ -544,11 +537,23 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             if (StringUtils.isBlank(tableName))
                 return "系统错误";
 
-            Map repeat = isRepeat(tableName, type, configTeantComList, tenantConfigInstanceViews);
+            Map repeat=isRepeat(tableName,type,configTeantComList, tenantConfigInstanceViews);
 
 
-            List<String> removeIds = (List<String>) repeat.get("repeat");
+            List<String> removeIds =(List<String>)repeat.get("repeat");
 
+            if(removeIds!=null&&removeIds.size()>0)
+                iexTeantCustomDAO.removeTenantCustomList(tableName,removeIds);
+            //针对行政班和教学班的特殊业务处理
+            if(type.equals("class_edu")||type.equals("class_adm")) {
+                TenantConfigInstanceView tenantConfigInstanceView = new TenantConfigInstanceView();
+                tenantConfigInstanceView.setEnName("class_code");
+                tenantConfigInstanceViews.add(tenantConfigInstanceView);
+                for(int i=0;i<configTeantComList.size();i++) {
+                    LinkedHashMap<String, String> map1=configTeantComList.get(i);
+                    map1.put(map1.size() + "", type + "_" + System.currentTimeMillis()+i);
+                }
+            }
             if (removeIds != null && removeIds.size() > 0)
                 iexTeantCustomDAO.removeTenantCustomList(tableName, removeIds);
 
@@ -564,9 +569,8 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         LOGGER.info("===========解析excel E===========");
         return reuslt;
     }
-
     @Override
-    public Integer removeTenantCustomList(String tableName, List<String> removeIds) {
+    public Integer removeTenantCustomList(String tableName,List<String> removeIds) {
         return iexTeantCustomDAO.removeTenantCustomList(tableName, removeIds);
     }
 
@@ -654,7 +658,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 //    }
 
 
-    public Map isRepeat(String tableName, String type, List<LinkedHashMap<String, String>> excelValues, List<TenantConfigInstanceView> tenantConfigInstanceViews) {
+    public Map isRepeat(String tableName,String type,List<LinkedHashMap<String, String>> excelValues,List<TenantConfigInstanceView> tenantConfigInstanceViews) {
 
         Map resultMap = new HashMap();
 
@@ -747,10 +751,8 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         resultMap.put("repeat", ids);
         return resultMap;
     }
-
     /**
      * 流程数据同步
-     *
      * @param type
      * @return
      */
@@ -893,9 +895,9 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 //        return info;
 //    }
 
+
     /**
      * 租户动态表名校验  -表级别校验  存在则删除
-     *
      * @param tableName 表名
      * @return
      */
@@ -916,12 +918,11 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
     /**
      * 封装租户已选表头对象
-     *
      * @param configuration 租户已选配置对象
-     * @param tnId          租户ID
+     * @param tnId 租户ID
      * @return
      */
-    public TenantConfigInstance configStructure(Configuration configuration, Integer tnId) {
+    public  TenantConfigInstance configStructure(Configuration configuration,Integer tnId) {
         TenantConfigInstance tenantConfigInstance = new TenantConfigInstance();
         tenantConfigInstance.setCheckRule(configuration.getCheckRule());
         tenantConfigInstance.setConfigKey(configuration.getId().toString());
@@ -938,14 +939,14 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
     }
 
     @Override
-    public boolean isExsitsTeantCustomTable(String type, Integer tnId) {
-        String tableName = ParamsUtils.combinationTableName(type, tnId);
-        Integer count = exiTenantConfigInstanceDAO.existTable(tableName);
-        return (count > 0 ? true : false);
+    public boolean isExsitsTeantCustomTable(String type,Integer tnId){
+        String tableName=ParamsUtils.combinationTableName(type,tnId);
+        Integer count=exiTenantConfigInstanceDAO.existTable(tableName);
+        return (count>0?true:false);
     }
 
     @Override
-    public List<ClassView> selectClassTypeByGrade(String type, Integer tnId, String grade) {
+    public List<ClassView> selectClassTypeByGrade(String type,Integer tnId,String grade) {
         String tableName = ParamsUtils.combinationTableName(type, tnId);
         Map map = new HashMap();
         map.put("tableName", tableName);
@@ -954,7 +955,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
     }
 
     @Override
-    public List<ClassView> selectClassNameByGradeAndType(String type, Integer tnId, String grade, String classType) {
+    public List<ClassView> selectClassNameByGradeAndType(String type,Integer tnId,String grade,String classType) {
         String tableName = ParamsUtils.combinationTableName(type, tnId);
         Map map = new HashMap();
         map.put("tableName", tableName);
@@ -963,18 +964,18 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         return exiTenantConfigInstanceDAO.selectClassNameByGradeAndType(map);
     }
 
-    public boolean isExsitsColumn(List<String> configIds, String tableName, String type, Integer tnId) {
+    public boolean isExsitsColumn(List<String> configIds,String tableName,String type,Integer tnId ) {
 
         List<String> configViews = new ArrayList<>();
 
-        List<TenantConfigInstanceView> tenantConfigInstanceViews = getTenantConfigListByTnIdAndType(type, tnId);
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = getTenantConfigListByTnIdAndType(type, tnId,"0");
 
         for (TenantConfigInstanceView tenantConfigInstanceView : tenantConfigInstanceViews) {
             configViews.add(tenantConfigInstanceView.getConfigKey());
         }
         List<String> diffIds = getDifferent(configIds, configViews);
 
-        for (String configId : diffIds) {
+        for(String configId:diffIds) {
             Map map = new HashMap();
             map.put("configKey", configId);
             map.put("tnId", tnId);
@@ -1016,23 +1017,20 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         return diff;
 
     }
-
     /**
      * 查找学号是否重复
-     *
      * @return
      */
-    public Integer selectCountByStudentNo(String type, Integer tnId, String studentNo) {
+    public Integer selectCountByStudentNo(String type,Integer tnId,String studentNo) {
         String tableName = ParamsUtils.combinationTableName(type, tnId);
         Map map = new HashMap();
         map.put("tableName", tableName);
         map.put("studentNo", studentNo);
         return exiTenantConfigInstanceDAO.selectCountByStudentNo(map);
     }
-
     public static void main(String[] args) {
-        Map<Object, String> map = new HashMap<Object, String>();
-        map.put(1, "22");
+        Map<Object,String> map = new HashMap<Object, String>();
+        map.put(1,"22");
 
 
         System.out.print(map.get(1));
@@ -1077,7 +1075,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         Map<String, Object> params;
         List<Map<String, Object>> paramsList;
         switch (classType) {
-            case "class_adm":
+            case Constant.CLASS_EDU:
                 params = new HashMap<>();
                 paramsList = new ArrayList<>();
                 params.put("key", "class_grade");
@@ -1091,7 +1089,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                 map.put("searchKeys", paramsList);
                 count = iexTeantCustomDAO.getTenantCustomColsCount(map);
                 break;
-            case "class_edu":
+            case Constant.CLASS_ADM:
                 params = new HashMap<>();
                 paramsList = new ArrayList<>();
                 params.put("key", "class_grade");
@@ -1113,17 +1111,18 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         map.put("tableName", tableName);
         List list = new ArrayList();
         switch (classType) {
-            case "class_adm":
+            case Constant.CLASS_EDU:
+
                 map.put("key1", "class_grade");
                 map.put("value1", grade);
                 map.put("key2", "class_major_type");
                 map.put("value2", subject);
-                list = iexTeantCustomDAO.getTenantCustom(map);
+                list = iexTeantCustomDAO.selectExistByCloumn(map);
                 break;
-            case "class_edu":
+            case Constant.CLASS_ADM:
                 map.put("key1", "class_grade");
                 map.put("value1", grade);
-                list = iexTeantCustomDAO.getTenantCustom(map);
+                list = iexTeantCustomDAO.selectExistByCloumn(map);
                 break;
             default:
                 break;

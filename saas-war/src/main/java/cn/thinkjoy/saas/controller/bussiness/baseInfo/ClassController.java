@@ -4,7 +4,6 @@ import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dto.BaseDto;
 import cn.thinkjoy.saas.dto.ClassBaseDto;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
-import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

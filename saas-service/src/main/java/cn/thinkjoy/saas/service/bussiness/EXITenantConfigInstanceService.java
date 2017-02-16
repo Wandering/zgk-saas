@@ -97,6 +97,7 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      * @return
      */
     List<TenantConfigInstanceView> getTenantConfigListByTnIdAndType(String type, Integer tnId);
+    List<TenantConfigInstanceView> getTenantConfigListByTnIdAndType(String type, Integer tnId,String isShow);
 
     /**
      * 获取当前租户表头 数组 - 用于导出表头excel

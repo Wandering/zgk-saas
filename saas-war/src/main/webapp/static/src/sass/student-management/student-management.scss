@@ -36,7 +36,7 @@
     width: 15%;
   }
   select {
-    width: 110px;
+    width: 180px;
   }
   li {
     margin-bottom: 10px;
@@ -256,4 +256,15 @@ a.download-link:hover {
     background: $mainColor;
     border-color: $mainColor;
   }
+}
+
+#uploader-demo{
+  .btn-import{
+    width: 238px!important;
+    margin-bottom: 10px!important;
+  }
+}
+
+#cancel-download-btn{
+  margin-top:15px!important;
 }

@@ -50,8 +50,8 @@
                             <div class="top-handle">
                                 <button class="btn-top"
                                         id="xz-template-download">行政班&理科班模板下载</button>
-                                <button class="btn-top" id="jx-template-download">教学班模板下载</button>
-                                <button class="btn-top">批量上传</button>
+                                <button class="btn-top hide" id="jx-template-download">教学班模板下载</button>
+                                <button class="btn-top" id="student-upload">批量上传</button>
                                 <%--<button class="btn-top" id="student-setting">添加字段</button>--%>
                             </div>
                         </div>

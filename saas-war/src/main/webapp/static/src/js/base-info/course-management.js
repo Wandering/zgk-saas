@@ -25,13 +25,12 @@ CourseManagement.prototype = {
                     courseHtml += '<tr>'
                         + '<th class="center">'
                         + '<label>'
-                        + '<input type="checkbox" courseBaseId = "'+ dataObj[i].courseBaseId +'" courseName="' + dataObj[i].courseName + '" class="ace" />'
+                        + "<input type='checkbox' courseMapList='"+ JSON.stringify(dataObj[i].courseMapList) +"' courseBaseId = '"+ dataObj[i].courseBaseId +"' courseName='"+ dataObj[i].courseName +"' class='ace' />"
                         + '<span class="lbl"></span>'
                         + '</label>'
                         + '</th>'
                         + '<td class="center">' + (i + 1) + '</td>'
                     courseHtml+= '<td class="center">' + dataObj[i].courseName + '</td>';
-
                     var gradeName = [];
                     var grade1CourseTypeName = '-';
                     var grade2CourseTypeName = '-';
@@ -101,14 +100,13 @@ CourseManagement.prototype = {
                                 break;
                         }
                     }
-                    courseHtml+= '<td class="center">'+ gradeName.join(',') +'</td>'
-                        + '<td class="center">'+ grade1CourseTypeName +'</td>'
-                        + '<td class="center">'+ grade2CourseTypeName +'</td>'
-                        + '<td class="center">'+ grade3CourseTypeName +'</td>'
+                    courseHtml+= '<td class="center grades-td">'+ gradeName.join(',') +'</td>'
+                        + '<td class="center grade1Type">'+ grade1CourseTypeName +'</td>'
+                        + '<td class="center grade2Type">'+ grade2CourseTypeName +'</td>'
+                        + '<td class="center grade3Type">'+ grade3CourseTypeName +'</td>'
                         + '</tr>';
                 }
                 $('#course-tbody').append(courseHtml);
-
             } else {
                 layer.msg(res.msg);
             }
@@ -117,8 +115,9 @@ CourseManagement.prototype = {
         });
     },
     // 新增课程管理信息
-    addCourse: function (ids,courseBaseId) {
+    addCourse: function (ids,courseBaseId,updateStatus) {
         var that = this;
+        console.log(courseBaseId)
         var datas = {
             "clientInfo": {},
             "style": "",
@@ -132,10 +131,20 @@ CourseManagement.prototype = {
                 }
             }
         };
-        Common.ajaxFun('/course/add/manager.do?ids='+ids, 'POST', JSON.stringify(datas), function (res) {
+        console.log(JSON.stringify(datas))
+        var url = '';
+        var msgTxt = '';
+        if(updateStatus=='true'){
+            url = '/course/upd/manager.do?ids='+ids;
+            msgTxt = '课程修改成功';
+        }else{
+            url = '/course/add/manager.do?ids='+ids;
+            msgTxt = '课程添加成功';
+        }
+        Common.ajaxFun(url, 'POST', JSON.stringify(datas), function (res) {
             if (res.rtnCode == "0000000") {
                 if(res.bizData.result==true){
-                    layer.msg('课程添加成功');
+                    layer.msg(msgTxt);
                     layer.closeAll();
                     that.getCourse();
                 }
@@ -147,6 +156,9 @@ CourseManagement.prototype = {
         }, null, true);
 
 
+
+
+
     },
     queryCourseList: function () {
         var that = this;
@@ -156,7 +168,7 @@ CourseManagement.prototype = {
             if (res.rtnCode == "0000000") {
                 var resData = res.bizData.courses;
                 $.each(resData, function (i, v) {
-                    if (i > 8) {
+                    if (i > 7) {
                         courseArr.push('<option courseV="' + v['id'] + '" statusV="' + v['status'] + '" value="' + v['id'] + '">' + v['courseName'] + '</option>');
                     }
                 });
@@ -168,7 +180,7 @@ CourseManagement.prototype = {
         }, true);
         return courseArr.join('');
     },
-    addCourseLayer: function (title, id, courseName) {
+    addCourseLayer: function (title, id, courseName,courseMapList) {
         var that = this;
         var addCourseContentHtml = [];
         addCourseContentHtml.push('<div class="add-course-box">');
@@ -183,27 +195,180 @@ CourseManagement.prototype = {
         addCourseContentHtml.push('</div>');
         addCourseContentHtml.push('<div class="box-row box-start-course">');
         addCourseContentHtml.push('<span><i>*</i>开课年级：</span>');
-        addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne" data-id="1"  type="checkbox" class="ace form-input-checkbox" /><span class="lbl">高一年级</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
-        addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo" data-id="2"  type="checkbox" class="ace form-input-checkbox" /><span class="lbl">高二年级</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
-        addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeThree" data-id="3"   type="checkbox" class="ace form-input-checkbox" /><span class="lbl">高三年级</span></label>');
+
+        var grade1Sel = '';
+        var grade2Sel = '';
+        var grade3Sel = '';
+        var grade1CourseType = '';
+        var grade2CourseType = '';
+        var grade3CourseType = '';
+        if(courseMapList){
+            var courseMapListObj = JSON.parse(courseMapList)
+            for(var k=0;k<courseMapListObj.length;k++){
+                switch (courseMapListObj[k].gradeId){
+                    case 1:
+                        grade1Sel = "高一年级";
+                        grade1CourseType = courseMapListObj[k].courseType;
+                        break;
+                    case 2:
+                        grade2Sel = "高二年级";
+                        grade2CourseType = courseMapListObj[k].courseType;
+                        break;
+                    case 3:
+                        grade3Sel = "高三年级";
+                        grade3CourseType = courseMapListObj[k].courseType;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+
+        if(grade1Sel != ""){
+            addCourseContentHtml.push('<label><input name="form-field-checkbox" checked="checked" id="gradeOne" data-id="1"  type="checkbox" class="ace form-input-checkbox" /><span class="lbl">高一年级</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+        }else{
+            addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne" data-id="1"  type="checkbox" class="ace form-input-checkbox" /><span class="lbl">高一年级</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+        }
+        if(grade2Sel != ""){
+            addCourseContentHtml.push('<label><input name="form-field-checkbox" checked="checked" id="gradeTwo" data-id="2"  type="checkbox" class="ace form-input-checkbox" /><span class="lbl">高二年级</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+        }else{
+            addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo" data-id="2"  type="checkbox" class="ace form-input-checkbox" /><span class="lbl">高二年级</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+        }
+        if(grade3Sel != ""){
+            addCourseContentHtml.push('<label><input name="form-field-checkbox" checked="checked" id="gradeThree" data-id="3"   type="checkbox" class="ace form-input-checkbox" /><span class="lbl grade-sel-box">高三年级</span></label>');
+        }else{
+            addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeThree" data-id="3"   type="checkbox" class="ace form-input-checkbox" /><span class="lbl grade-sel-box">高三年级</span></label>');
+        }
+
         addCourseContentHtml.push('</div>');
-        addCourseContentHtml.push('<div class="box-row box-row-course-type box-row-1 hides">');
-        addCourseContentHtml.push('<span><i>*</i>高一年级课程类型：</span>');
-        addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
-        addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne-li"  dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
-        addCourseContentHtml.push('</div>');
-        addCourseContentHtml.push('<div class="box-row box-row-course-type  box-row-2 hides">');
-        addCourseContentHtml.push('<span><i>*</i>高二年级课程类型：</span>');
-        addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
-        addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo-li"  dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
-        addCourseContentHtml.push('</div>');
-        addCourseContentHtml.push('<div class="box-row box-row-course-type box-row-3 hides">');
-        addCourseContentHtml.push('<span><i>*</i>高三年级课程类型：</span>');
-        addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeThree-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
-        addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeThree-li" dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
-        addCourseContentHtml.push('</div>');
+
+
+
+        switch (grade1CourseType){
+            case "0":
+                addCourseContentHtml.push('<div class="box-row box-row-course-type box-row-1 hides" grade="高一年级">');
+                addCourseContentHtml.push('<span><i>*</i>高一年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne-li"  dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+            case "1":
+                addCourseContentHtml.push('<div class="box-row box-row-course-type box-row-1" grade="高一年级">');
+                addCourseContentHtml.push('<span><i>*</i>高一年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne-wen" checked="checked" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne-li"  dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+            case "2":
+                addCourseContentHtml.push('<div class="box-row box-row-course-type box-row-1" grade="高一年级">');
+                addCourseContentHtml.push('<span><i>*</i>高一年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne-wen"  dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne-li" checked="checked"  dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+            case "3":
+                addCourseContentHtml.push('<div class="box-row box-row-course-type box-row-1" grade="高一年级">');
+                addCourseContentHtml.push('<span><i>*</i>高一年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne-wen" checked="checked"   dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne-li" checked="checked"  dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+            default:
+                addCourseContentHtml.push('<div class="box-row box-row-course-type box-row-1 hides" grade="高一年级">');
+                addCourseContentHtml.push('<span><i>*</i>高一年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeOne-li"  dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+        }
+
+
+        switch (grade2CourseType){
+            case "0":
+                addCourseContentHtml.push('<div class="box-row box-row-course-type  box-row-2 hides" grade="高二年级">');
+                addCourseContentHtml.push('<span><i>*</i>高二年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo-li"  dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+            case "1":
+                addCourseContentHtml.push('<div class="box-row box-row-course-type  box-row-2" grade="高二年级">');
+                addCourseContentHtml.push('<span><i>*</i>高二年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" checked="checked" id="gradeTwo-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo-li"  dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+            case "2":
+                addCourseContentHtml.push('<div class="box-row box-row-course-type  box-row-2" grade="高二年级">');
+                addCourseContentHtml.push('<span><i>*</i>高二年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox"  checked="checked" id="gradeTwo-li"  dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+            case "3":
+                addCourseContentHtml.push('<div class="box-row box-row-course-type  box-row-2" grade="高二年级">');
+                addCourseContentHtml.push('<span><i>*</i>高二年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox"  checked="checked" id="gradeTwo-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox"  checked="checked" id="gradeTwo-li"  dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+            default:
+                addCourseContentHtml.push('<div class="box-row box-row-course-type  box-row-2 hides" grade="高二年级">');
+                addCourseContentHtml.push('<span><i>*</i>高二年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeTwo-li"  dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+        }
+
+
+        switch (grade3CourseType){
+            case "0":
+                addCourseContentHtml.push('<div class="box-row box-row-course-type box-row-3 hides" grade="高三年级">');
+                addCourseContentHtml.push('<span><i>*</i>高三年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeThree-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeThree-li" dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+            case "1":
+                addCourseContentHtml.push('<div class="box-row box-row-course-type box-row-3" grade="高三年级">');
+                addCourseContentHtml.push('<span><i>*</i>高三年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" checked="checked" id="gradeThree-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeThree-li" dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+            case "2":
+                addCourseContentHtml.push('<div class="box-row box-row-course-type box-row-3" grade="高三年级">');
+                addCourseContentHtml.push('<span><i>*</i>高三年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeThree-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" checked="checked"  id="gradeThree-li" dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+            case "3":
+                addCourseContentHtml.push('<div class="box-row box-row-course-type box-row-3" grade="高三年级">');
+                addCourseContentHtml.push('<span><i>*</i>高三年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" checked="checked"  id="gradeThree-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" checked="checked"  id="gradeThree-li" dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+            default:
+                addCourseContentHtml.push('<div class="box-row box-row-course-type box-row-3 hides" grade="高三年级">');
+                addCourseContentHtml.push('<span><i>*</i>高三年级课程类型：</span>');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeThree-wen" dataId = "1" type="checkbox" class="ace" /><span class="lbl">文科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('<label><input name="form-field-checkbox" id="gradeThree-li" dataId = "2" type="checkbox" class="ace" /><span class="lbl">理科班开设课程</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                addCourseContentHtml.push('</div>');
+                break;
+        }
+
+
         addCourseContentHtml.push('<div class="box-row">');
-        addCourseContentHtml.push('<button type="button" class="save-course-btn" id="save-course-btn">保存</button>');
+        if(id){
+            addCourseContentHtml.push('<button type="button" class="save-course-btn" courseId="'+ id +'" updateStatus="true" id="save-course-btn">保存</button>');
+        }else{
+            addCourseContentHtml.push('<button type="button" class="save-course-btn" id="save-course-btn">保存</button>');
+        }
+
         addCourseContentHtml.push('</div>');
         addCourseContentHtml.push('</div>');
         addCourseContentHtml.push('</div>');
@@ -291,9 +456,10 @@ $(function () {
     });
     // 修改
     $('#updateCourse-btn').on('click', function () {
-        var id = $('#course-tbody input:checked').attr('courseId'),
+        var id = $('#course-tbody input:checked').attr('coursebaseid'),
             courseName = $('#course-tbody input:checked').attr('courseName'),
-            checkboxLen = $('#course-tbody input:checked').length;
+            checkboxLen = $('#course-tbody input:checked').length,
+            courseMapList = $('#course-tbody input:checked').attr('courseMapList');
         if (checkboxLen == 0) {
             layer.tips('至少选择一项', $(this));
             return false;
@@ -302,7 +468,8 @@ $(function () {
             layer.tips('修改只能选择一项', $(this));
             return false;
         }
-        CourseManagementIns.addCourseLayer('修改课程', id, courseName);
+        console.log(id)
+        CourseManagementIns.addCourseLayer('修改课程',id, courseName ,courseMapList);
     });
 
 
@@ -331,7 +498,8 @@ $(function () {
             courseName == '生物' ||
             courseName == '地理' ||
             courseName == '历史' ||
-            courseName == '生物'
+            courseName == '生物' ||
+            courseName == '通用技术'
         ) {
             layer.tips('不可删除' + courseName + '课程', $('#course-tbody input:checked'));
             return false;
@@ -341,7 +509,6 @@ $(function () {
         layer.confirm('确定删除?', {
             btn: ['确定', '关闭'] //按钮
         }, function () {
-            alert(3)
             CourseManagementIns.delCourse(courseBaseId);
         }, function () {
             layer.closeAll();
@@ -350,6 +517,7 @@ $(function () {
 
     // 保存添加
     $('body').on('click', '#save-course-btn', function () {
+        var updateStatus = $(this).attr('updateStatus');
         var courseNameVal = $('#course-name-list').val();
         var courseNameText = $('#course-name-list').children('option:selected').text();
         if(courseNameVal=='00'){
@@ -357,28 +525,27 @@ $(function () {
             return false;
         }
 
-        for(var i=0;i<$('#course-tbody input[type="checkbox"]').length;i++){
-            var coursename = $('#course-tbody input[type="checkbox"]').eq(i).attr('coursename');
-            if(coursename == courseNameText){
-                layer.tips('不能重复添加同一门课程', $('#course-name-list'));
-                return false;
+        if(updateStatus!="true"){
+            for(var i=0;i<$('#course-tbody input[type="checkbox"]').length;i++){
+                var coursename = $('#course-tbody input[type="checkbox"]').eq(i).attr('coursename');
+                if(coursename == courseNameText){
+                    layer.tips('不能重复添加同一门课程', $('#course-name-list'));
+                    return false;
+                }
             }
         }
 
-
-
-        //if($('.form-input-checkbox[type="checkbox"]:selected').length==0){
-        //    layer.tips('请选择开课年级', $('.box-start-course'));
-        //    return false;
-        //}
-
-
-
+        if($('.form-input-checkbox[type="checkbox"]:checked').length==0){
+            layer.tips('请选择开课年级', $('.grade-sel-box'));
+            return false;
+        }
         var courseId = $(this).attr('courseid');
         var datasArr = [];
-        $('.form-input-checkbox[type="checkbox"]').each(function (i, v) {
-            var _this = $(this);
+
+        for(var i=0;i<$('.form-input-checkbox[type="checkbox"]').length;i++){
+            var _this = $('.form-input-checkbox[type="checkbox"]').eq(i);
             var gradeId = _this.attr('data-id');
+
             if (_this.is(':checked')) {
                 _this.prop('checked', true);
                 if ($('.box-row-' + gradeId).is(":visible")) {
@@ -387,7 +554,7 @@ $(function () {
                     switch (checkedLen) {
                         case 0:
                             layer.tips('请选择高' + gradeId + '年级课程类型', $('.box-row-' + gradeId));
-                            return ;
+                            return false;
                         case 2:
                             gradeSubType = 3;
                             break;
@@ -395,19 +562,19 @@ $(function () {
                             gradeSubType = $('.box-row-' + gradeId).find('input[type="checkbox"]:checked').attr('dataid');
                             break;
                     }
+
                     datasArr.push('-' + gradeId + ':' + gradeSubType);
                 } else {
                     datasArr.push('-' + gradeId + ':' + 0);
                 }
-
             } else {
                 _this.prop('checked', false);
             }
-        });
+        }
         datasArr = datasArr.join('');
         datasArr = datasArr.substring(1, datasArr.length);
         console.log(datasArr);
-        CourseManagementIns.addCourse(datasArr,courseId);
+        CourseManagementIns.addCourse(datasArr,courseId,updateStatus);
     });
 
     //
@@ -419,6 +586,8 @@ $(function () {
             'courseName': selText
         });
     });
+
+
 
 
 });
