@@ -1120,17 +1120,18 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         map.put("tableName", tableName);
         List list = new ArrayList();
         switch (classType) {
-            case "class_adm":
+            case Constant.CLASS_EDU:
+
                 map.put("key1", "class_grade");
                 map.put("value1", grade);
                 map.put("key2", "class_major_type");
                 map.put("value2", subject);
-                list = iexTeantCustomDAO.getTenantCustom(map);
+                list = iexTeantCustomDAO.selectExistByCloumn(map);
                 break;
-            case "class_edu":
+            case Constant.CLASS_ADM:
                 map.put("key1", "class_grade");
                 map.put("value1", grade);
-                list = iexTeantCustomDAO.getTenantCustom(map);
+                list = iexTeantCustomDAO.selectExistByCloumn(map);
                 break;
             default:
                 break;
