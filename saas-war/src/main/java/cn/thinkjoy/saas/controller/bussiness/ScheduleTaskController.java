@@ -20,12 +20,12 @@ import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -62,12 +62,6 @@ public class ScheduleTaskController {
 
     @Autowired
     private IJwTeachDateService jwTeachDateService;
-
-    @Autowired
-    private IJwCourseBaseInfoService jwCourseBaseInfoService;
-
-    @Resource
-    private IEXJwScheduleTaskService iexJwScheduleTaskService;
 
     @Autowired
     IExTeachTimeService teachTimeService;
@@ -341,45 +335,64 @@ public class ScheduleTaskController {
     }
 
     @ResponseBody
-    @ApiDesc(value = "自动补全教师姓名",owner = "gryang")
-    @RequestMapping(value = "/queryTeacherByKeyWord",method = RequestMethod.GET)
-    public List<TeacherBaseDto> queryTeacherByKeyWord(@RequestParam int taskId,@RequestParam String keyWord){
-        List<TeacherBaseDto> dtos = iexScheduleBaseInfoService.queryTeacherByKeyWord(taskId,keyWord);
-        return dtos;
-    }
+    @ApiDesc(value = "保存教师排课设置",owner = "gryang")
+    @RequestMapping(value = "/saveTeacherSchedule",method = RequestMethod.GET)
+    public Map saveTeacherSchedule(@RequestParam String str){
+        // str 传输规则 : 记录ID-设置（0：不排课，1：排课）多个逗号隔开，eg:1-1,2-0,3-1
+        String [] strArr = str.split(",");
+        for(int i=0;i<strArr.length;i++){
+            String id = StringUtils.substringBefore(strArr[i],"-");
+            String isAttend = StringUtils.substringAfter(strArr[i],"-");
 
-    @ResponseBody
-    @ApiDesc(value = "保存或修改教师配置信息",owner = "gryang")
-    @RequestMapping(value = "/saveOrUpdateTeacher",method = RequestMethod.POST)
-    public Map saveOrUpdateTeacher(@RequestParam int taskId,
-                                   @RequestParam int teacherId,
-                                   @RequestParam int classNum,
-                                   @RequestParam String course,
-                                   @RequestParam String classId){
-
-        iexScheduleBaseInfoService.saveOrUpdateTeacher(
-                taskId,
-                teacherId,
-                classNum,
-                course,
-                classId
-        );
+            JwTeacher jwTeacher = new JwTeacher();
+            jwTeacher.setIsAttend(Integer.valueOf(isAttend));
+            jwTeacher.setId(id);
+            jwTeacherService.update(jwTeacher);
+        }
 
         return Maps.newHashMap();
     }
 
-    @ResponseBody
-    @ApiDesc(value = "删除教师配置信息",owner = "gryang")
-    @RequestMapping(value = "/deleteTeacher",method = RequestMethod.GET)
-    public Map deleteTeacher(@RequestParam int taskId,@RequestParam int teacherId){
+//    @ResponseBody
+//    @ApiDesc(value = "自动补全教师姓名",owner = "gryang")
+//    @RequestMapping(value = "/queryTeacherByKeyWord",method = RequestMethod.GET)
+//    public List<TeacherBaseDto> queryTeacherByKeyWord(@RequestParam int taskId,@RequestParam String keyWord){
+//        List<TeacherBaseDto> dtos = iexScheduleBaseInfoService.queryTeacherByKeyWord(taskId,keyWord);
+//        return dtos;
+//    }
 
-        Map<String,Object> paramMap = Maps.newHashMap();
-        paramMap.put("teacherId",teacherId);
-        paramMap.put("taskId",taskId);
-        jwTeacherService.deleteByCondition(paramMap);
+//    @ResponseBody
+//    @ApiDesc(value = "保存或修改教师配置信息",owner = "gryang")
+//    @RequestMapping(value = "/saveOrUpdateTeacher",method = RequestMethod.POST)
+//    public Map saveOrUpdateTeacher(@RequestParam int taskId,
+//                                   @RequestParam int teacherId,
+//                                   @RequestParam int classNum,
+//                                   @RequestParam String course,
+//                                   @RequestParam String classId){
+//
+//        iexScheduleBaseInfoService.saveOrUpdateTeacher(
+//                taskId,
+//                teacherId,
+//                classNum,
+//                course,
+//                classId
+//        );
+//
+//        return Maps.newHashMap();
+//    }
 
-        return Maps.newHashMap();
-    }
+//    @ResponseBody
+//    @ApiDesc(value = "删除教师配置信息",owner = "gryang")
+//    @RequestMapping(value = "/deleteTeacher",method = RequestMethod.GET)
+//    public Map deleteTeacher(@RequestParam int taskId,@RequestParam int teacherId){
+//
+//        Map<String,Object> paramMap = Maps.newHashMap();
+//        paramMap.put("teacherId",teacherId);
+//        paramMap.put("taskId",taskId);
+//        jwTeacherService.deleteByCondition(paramMap);
+//
+//        return Maps.newHashMap();
+//    }
 
     @ResponseBody
     @ApiDesc(value = "根据任务ID检测基础信息是否完善",owner = "gryang")
@@ -412,25 +425,25 @@ public class ScheduleTaskController {
         }
 
         // 检测教师信息是否填写完整(给所有课程是否已经设置教师)
-        for(JwCourse course : courses){
-            JwCourseBaseInfo info = (JwCourseBaseInfo) jwCourseBaseInfoService.fetch(course.getCourseId());
-
-            if(info == null){
-                continue;
-            }
-
-            boolean flag = false;
-            for(JwTeacher teacher : teachers){
-                if(teacher.getCourse().equals(info.getCourseName())){
-                    flag = true;
-                    continue;
-                }
-            }
-
-            if(!flag){
-                ExceptionUtil.throwException(ErrorCode.TEACHER_INFO_NOT_PERFECT);
-            }
-        }
+//        for(JwCourse course : courses){
+//            JwCourseBaseInfo info = (JwCourseBaseInfo) jwCourseBaseInfoService.fetch(course.getCourseId());
+//
+//            if(info == null){
+//                continue;
+//            }
+//
+//            boolean flag = false;
+//            for(JwTeacher teacher : teachers){
+//                if(teacher.getCourse().equals(info.getCourseName())){
+//                    flag = true;
+//                    continue;
+//                }
+//            }
+//
+//            if(!flag){
+//                ExceptionUtil.throwException(ErrorCode.TEACHER_INFO_NOT_PERFECT);
+//            }
+//        }
 
         return Maps.newHashMap();
     }
@@ -439,29 +452,30 @@ public class ScheduleTaskController {
      * 排课结果
      * @return
      */
-    @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
-    @ResponseBody
-    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) {
-        Map<String,Object> paramsMap  = null;
-        if (param!=null) {
-            try {
-                paramsMap = JSON.parseObject(param);
-            } catch (Exception e) {
-                paramsMap = Maps.newHashMap();
-            }
-        }
-        Map resultMap = new HashMap();
-        Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        if ("all".equals(type)){
-            resultMap.put("result",iexJwScheduleTaskService.getAllCourseResult(taskId, tnId));
-            return resultMap;
-        }
-        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap);
+//    @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
+//    @ResponseBody
+//    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) {
+//        Map<String,Object> paramsMap  = null;
+//        if (param!=null) {
+//            try {
+//                paramsMap = JSON.parseObject(param);
+//            } catch (Exception e) {
+//                paramsMap = Maps.newHashMap();
+//            }
+//        }
+//        Map resultMap = new HashMap();
+//        Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+//        if ("all".equals(type)){
+//            resultMap.put("result",iexJwScheduleTaskService.getAllCourseResult(taskId, tnId));
+//            return resultMap;
+//        }
+//        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap);
+//
+//
+//        resultMap.put("result",courseResultView);
+//        return resultMap;
+//    }
 
-
-        resultMap.put("result",courseResultView);
-        return resultMap;
-    }
     public static void main(String[] args) {
         String param = "{\"course\":\"外语\",\"teacherId\":\"\"}";
         Map<String,Object>  map = JSON.parseObject(param);

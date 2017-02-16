@@ -253,7 +253,7 @@ public class StudentController {
      * @return
      * @throws IOException
      */
-    @RequestMapping(value = "/uploadStuExcel",method = RequestMethod.GET)
+    @RequestMapping(value = "/uploadStuExcel",method = RequestMethod.POST)
     @ResponseBody
     public Map uploadStuExcel(@RequestParam String type,
                            @RequestParam Integer tnId,
