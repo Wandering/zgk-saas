@@ -498,7 +498,8 @@ $(function () {
             courseName == '生物' ||
             courseName == '地理' ||
             courseName == '历史' ||
-            courseName == '生物'
+            courseName == '生物' ||
+            courseName == '通用技术'
         ) {
             layer.tips('不可删除' + courseName + '课程', $('#course-tbody input:checked'));
             return false;
