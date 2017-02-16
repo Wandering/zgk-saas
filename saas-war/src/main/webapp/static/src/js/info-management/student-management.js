@@ -936,7 +936,7 @@ var TplHandler = {
             });
             //初始化下载
             // "type":"0：教学班模板  1：行政班模板",
-            // upload(0);
+            upload(0);
             upload(1);
         });
         var upload = function (whichBtn) {
@@ -945,7 +945,6 @@ var TplHandler = {
                 // Web Uploader实例
                 uploader;
             // 初始化Web Uploader
-            alert(rootPath + ' /student/uploadStuExcel.do?tnId=' + GLOBAL_CONSTANT.tnId + '&type=' + whichBtn);
             uploader = WebUploader.create({
                 // 自动上传。
                 auto: true,
@@ -956,8 +955,7 @@ var TplHandler = {
                 server: rootPath + '/student/uploadStuExcel.do?tnId=' + GLOBAL_CONSTANT.tnId + '&type=' + whichBtn,
                 // 选择文件的按钮。可选。
                 // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-                pick: '#xz-btn-import',
-                // pick: whichBtn == 1 ? '#xz-btn-import' : '#jx-btn-import',
+                pick: whichBtn == 1 ? '#xz-btn-import' : '#jx-btn-import',
                 // 只允许选择文件，可选。
                 accept: {
                     title: 'excel',
