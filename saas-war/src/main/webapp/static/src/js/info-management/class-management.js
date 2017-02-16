@@ -6,7 +6,10 @@ var tnId = Common.cookie.getCookie('tnId');
  * 班级类及其原型
  * @constructor
  */
-function ClassManagement () {
+var GLOBAL_CONSTANT = {
+    cType: 'class_adm'   //type:class_adm（行政班）、class_edu（教学班）
+}
+function ClassManagement() {
     this.tnId = tnId;
     this.type = 'class';
     this.classOffset = 0;
@@ -19,11 +22,39 @@ function ClassManagement () {
 ClassManagement.prototype = {
     constructor: ClassManagement,
     init: function () {
-        this.getItem();
+        this.getItem(GLOBAL_CONSTANT.cType);
+        this.chargeCheckClass();
+        this.getGrade();
+        this.initTable('class_adm');  //行政班初始化
+        this.initTable('class_edu');  //教学班初始化
+    },
+    //判断判断当前用户班级类型是否存在教学班
+    chargeCheckClass: function () {
+        Common.ajaxFun('/grade/checkClass.do', 'GET', {
+            "tnId": tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                res.bizData.result == true ? $('#jx-template-download').removeClass('hide') : $('#jx-template-download').addClass('hide')
+            }
+        })
+    },
+    //初始化表头
+    initTable: function (classType) {
+        var that = this;
+        // classType:class_adm（行政班）、class_edu（教学班）
+        Common.ajaxFun('/config/retain/'+classType+'/' + tnId + '.do', 'POST', {
+            'tnId': tnId
+        }, function (res) {
+            if(res.rtnCode === '0000000'){
+
+            }
+        }, function (res) {
+            layer.msg("初始化失败");
+        }, true);
     },
     getItem: function () {//获取用户自定义班级表头
         var that = this;
-        Common.ajaxFun('/config/get/' + that.type + '/' + tnId + '.do', 'GET', {
+        Common.ajaxFun('/config/get/' + GLOBAL_CONSTANT.cType + '/' + tnId + '.do', 'GET', {
             'tnId': tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
@@ -47,7 +78,6 @@ ClassManagement.prototype = {
                     columnHtml.push('</tr>');
                     $("#class-manage-table thead").html(columnHtml.join(''));
                 }
-                that.getGrade();
             } else {
                 layer.msg(res.bizData.result);
             }
@@ -57,7 +87,7 @@ ClassManagement.prototype = {
     },
     getClassData: function () {//获取全部班级数据
         var that = this;
-        Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
+        Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.cType + '/' + tnId + '/getTenantCustomData.do', 'GET', {
             'tnId': tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
@@ -93,7 +123,7 @@ ClassManagement.prototype = {
         this.classRows = rows;
         //var index = layer.load(2);
         //layer.load(1, {shade: [0.3,'#000']});
-        Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
+        Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.cType + '/' + tnId + '/getTenantCustomData.do', 'GET', {
             's': that.classOffset,
             'r': that.classRows,
             'g': that.gradeName
@@ -104,7 +134,7 @@ ClassManagement.prototype = {
                 var data = res.bizData;
                 that.showData(data);
             } else {
-                layer.msg(res.bizData.result);
+                layer.msg(res.msg);
             }
         }, function (res) {
             layer.msg("出错了");
@@ -121,7 +151,7 @@ ClassManagement.prototype = {
             var obj = data[m];
             classDataHtml.push('<tr rowid="' + obj['id'] + '">');
             classDataHtml.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
-            classDataHtml.push('<th class="center">' + (m + 1)+ '</th>');
+            classDataHtml.push('<th class="center">' + (m + 1) + '</th>');
             $.each(that.columnArr, function (i, k) {
                 var tempObj = that.columnArr[i];
                 var tempColumnName = tempObj.enName;
@@ -152,7 +182,7 @@ ClassManagement.prototype = {
     removeClass: function () {//删除某一行班级数据
         var that = this;
         var checkedLen = $("#class-manage-list input[type='checkbox']:checked").size();
-        if(checkedLen == "0"){
+        if (checkedLen == "0") {
             layer.tips('至少选择一项', $('#deleteClassBtn'));
             return false;
         }
@@ -167,9 +197,9 @@ ClassManagement.prototype = {
         layer.confirm('确定删除?', {
             btn: ['确定', '关闭'] //按钮
         }, function () {
-            Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/' + ids + '/remove.do', 'POST', {}, function (res) {
+            Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.cType + '/' + tnId + '/' + ids + '/remove.do', 'POST', {}, function (res) {
                 if (res.rtnCode == "0000000") {
-                    if(res.bizData.result="SUCCESS"){
+                    if (res.bizData.result = "SUCCESS") {
                         $('#class-change-list').html('');
                         $('#checkAll').prop('checked', false);
                         layer.msg('删除成功', {time: 1000});
@@ -194,15 +224,33 @@ ClassManagement.prototype = {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData.grades;
                 var gradeListHtml = [];
+
+
+                if (data[0].grade) {
+                    // 行政班|教学班说明：classType 1或3都为行政班  2教学班
+                    var $classTypeToggle = $('#class-type-toggle').find('.tab')
+                    if (data[0].classType == 2) {
+                        $classTypeToggle.eq(0).removeClass('hide').addClass('active');
+                        $classTypeToggle.eq(0).removeClass('hide');
+                    } else if (data[0].classType == 3) {
+                        $classTypeToggle.eq(0).addClass('hide');
+                        $classTypeToggle.eq(1).addClass('hide');
+                    } else {
+                        $classTypeToggle.eq(0).addClass('hide');
+                        $classTypeToggle.eq(1).addClass('hide');
+                    }
+                }
+
+
                 $.each(data, function (i, k) {
                     if (i != 0) {
                         gradeListHtml.push('<span class="grade-item">');
-                        gradeListHtml.push('<input type="radio" name="high-school" id="senior' + k.id + '" />');
+                        gradeListHtml.push('<input type="radio" name="high-school" id="senior' + k.id + '" classtype="' + k.classType + '" />');
                         gradeListHtml.push('<label for="senior' + k.id + '">' + k.grade + '</label>');
                         gradeListHtml.push('</span>');
                     } else {
                         gradeListHtml.push('<span class="grade-item">');
-                        gradeListHtml.push('<input type="radio" name="high-school" checked="checked" id="senior' + k.id + '" />');
+                        gradeListHtml.push('<input type="radio" name="high-school" checked="checked" id="senior' + k.id + '"  classtype="' + k.classType + '" />');
                         gradeListHtml.push('<label for="senior' + k.id + '">' + k.grade + '</label>');
                         gradeListHtml.push('</span>');
                     }
@@ -225,7 +273,7 @@ ClassManagement.prototype = {
  * @param type
  * @constructor
  */
-function AddClassManagement () {
+function AddClassManagement() {
     ClassManagement.call(this);
 }
 AddClassManagement.prototype = new ClassManagement();
@@ -289,7 +337,7 @@ AddClassManagement.prototype.renderGradeSelect = function (data) {
         $("#class_grade").append(gradeHtml.join(''));
         var checkedGrade = $('input[name="high-school"]:checked').next().text();
         $("#class_grade").val(checkedGrade);
-        $("#class_grade").css({'cursor':'not-allowed'});
+        $("#class_grade").css({'cursor': 'not-allowed'});
         $("#class_grade").prop('disabled', true);
     } else {
         layer.msg(data.bizData.result);
@@ -369,7 +417,7 @@ AddClassManagement.prototype.addClass = function (title) {
  * @param type
  * @constructor
  */
-function UpdateClassManagement () {
+function UpdateClassManagement() {
     ClassManagement.call(this);
 }
 UpdateClassManagement.prototype = {
@@ -433,7 +481,7 @@ UpdateClassManagement.prototype = {
             $("#class_grade").append(gradeHtml.join(''));
             var checkedGrade = $('input[name="high-school"]:checked').next().text();
             $("#class_grade").val(checkedGrade);
-            $("#class_grade").css({'cursor':'not-allowed'});
+            $("#class_grade").css({'cursor': 'not-allowed'});
             $("#class_grade").prop('disabled', true);
         } else {
             layer.msg(data.bizData.result);
@@ -496,7 +544,7 @@ UpdateClassManagement.prototype = {
         var rowid = $(".check-template :checkbox:checked").attr('cid');
         var rowItem = $('#class-manage-list tr[rowid="' + rowid + '"]').find('td');
         $.each(that.columnArr, function (i, k) {
-            if (rowItem.eq(i+1).html() != '-') {
+            if (rowItem.eq(i + 1).html() != '-') {
                 $('#' + k.enName).val(rowItem.eq(i + 1).html());
             }
         });
@@ -504,7 +552,7 @@ UpdateClassManagement.prototype = {
 };
 
 //上传数据类及其原型
-function UploadData () {
+function UploadData() {
 
 }
 UploadData.prototype = {
@@ -512,14 +560,22 @@ UploadData.prototype = {
     init: function () {
 
     },
-    showUploadBox: function (title) {
+    showUploadBox: function (title,hideOrShow) {
         var that = this;
         var uploadDataHtml = [];
         uploadDataHtml.push('<div class="upload-box">');
         uploadDataHtml.push('<span id="uploader-demo">');
+
         uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
-        uploadDataHtml.push('<button class="btn btn-info btn-import" id="btn-import">导入班级数据Excel</button>');
+        uploadDataHtml.push('<button class="btn btn-info btn-import" id="xz-btn-import">导入行政班学生数据Excel</button>');
         uploadDataHtml.push('</span>');
+
+        uploadDataHtml.push('<span id="uploader-demo">');
+        uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
+        uploadDataHtml.push('<button class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">导入教学班学生数据Excel</button>');
+        uploadDataHtml.push('</span>');
+
+
         uploadDataHtml.push('<a href="javascript: void(0);" id="downloadBtn" class="download-link">请先导出Excel模板，进行填写</a>');
         uploadDataHtml.push('<button class="btn btn-cancel cancel-btn" id="cancel-download-btn">取消</button>');
         uploadDataHtml.push('</div>');
@@ -530,7 +586,8 @@ UploadData.prototype = {
             area: ['460px', '300px'],
             content: uploadDataHtml.join('')
         });
-        upload();
+        upload('class_adm');
+        upload('class_edu');
     }
 };
 
@@ -551,7 +608,7 @@ var updateClassManagement = new UpdateClassManagement();
 $(document).on("click", "#updateRole-btn", function () {
     var that = $(this);
     var chknum = $(".check-template :checkbox:checked").size();
-    if(chknum!='1'){
+    if (chknum != '1') {
         layer.tips('修改只能选择一项!', that, {time: 1000});
         return false;
     }
@@ -560,12 +617,33 @@ $(document).on("click", "#updateRole-btn", function () {
     updateClassManagement.updateClass('更新班级');
 });
 
+
+//切换班级管理
 $(document).on('change', 'input[name="high-school"]', function () {
     $('#checkAll').prop('checked', false);
     var checkedGrade = $('input[name="high-school"]:checked').next().text();
+
+
+    // 行政班|教学班说明：classType 1或3都为行政班  2教学班
+    var $classTypeToggle = $('#class-type-toggle').find('.tab');
+    $classTypeToggle.eq(1).removeClass('active');
+
+    if ($(this).attr('classType') == 2) {
+        $classTypeToggle.eq(0).removeClass('hide').addClass('active');
+        $classTypeToggle.eq(1).removeClass('hide');
+    } else if ($(this).attr('classType') == 3) {
+        $classTypeToggle.eq(0).addClass('hide');
+        $classTypeToggle.eq(1).addClass('hide');
+    } else {
+        $classTypeToggle.eq(0).addClass('hide');
+        $classTypeToggle.eq(1).addClass('hide');
+    }
+
+
     classManagement.gradeName = checkedGrade;
     classManagement.loadPage(0, classManagement.classRows);
 });
+
 
 //确认更新操作按钮
 $(document).on("click", "#update-btn", function () {
@@ -630,7 +708,7 @@ $(document).on("click", "#update-btn", function () {
         "clientInfo": {},
         "style": "",
         "data": {
-            "type": updateClassManagement.type,
+            "type": GLOBAL_CONSTANT.cType,
             "tnId": tnId,
             "pri": rowid,//记录的id
             "teantCustomList": postData
@@ -647,7 +725,7 @@ $(document).on("click", "#update-btn", function () {
         }
     }, function (res) {
         layer.msg("出错了");
-    }, null,true);
+    }, null, true);
 });
 
 //确认添加操作按钮
@@ -700,11 +778,12 @@ $(document).on("click", "#add-btn", function () {
         "clientInfo": {},
         "style": "",
         "data": {
-            "type": addClassManagement.type,
+            "type": GLOBAL_CONSTANT.cType,
             "tnId": tnId,
             "teantCustomList": postData
         }
     };
+
     Common.ajaxFun('/manage/teant/custom/data/add.do', 'POST', JSON.stringify(datas), function (res) {
         if (res.rtnCode == "0000000") {
             layer.closeAll();
@@ -716,7 +795,7 @@ $(document).on("click", "#add-btn", function () {
         }
     }, function (res) {
         layer.msg("出错了");
-    }, null,true);
+    }, null, true);
 });
 //取消操作按钮(关闭对话框)
 $(document).on("click", ".cancel-btn", function () {
@@ -727,16 +806,47 @@ $(document).on('click', '#deleteClassBtn', function () {
     classManagement.removeClass();
 });
 
-//模板下载
-$(document).on('click', '#downloadBtn', function () {
-    window.location.href = '/manage/' + classManagement.type + '/export/' + tnId + '.do';
+
+
+
+/**
+ * 模板下载
+ * 行政班模板|教学班模板
+ */
+$(document).on('click', '#xz-template-download', function () {
+    window.location.href = '/manage/class_adm/export/' + tnId + '.do';
+});
+$(document).on('click', '#jx-template-download', function () {
+    window.location.href = '/manage/class_edu/export/' + tnId + '.do';
 });
 
-//上传
+
+
+
+/**
+ * 模板上传
+ * 行政班模板|教学班模板
+ */
 $(document).on('click', '#uploadBtn', function () {
+    var hideOrShow = 'hide';
     var upload = new UploadData();
-    upload.showUploadBox('导入班级数据');
+    if ($('#jx-template-download').is(":visible")) {
+        hideOrShow = '';
+    }
+    upload.showUploadBox('导入班级数据',hideOrShow);
 });
+
+
+//
+// $(document).on('click', '#xz-btn-import', function () {
+//     upload('class_adm');
+// });
+// $(document).on('click', '#jx-btn-import', function () {
+//     upload('class_edu');
+// });
+
+
+
 
 //班级设置操作
 $(document).on('click', '#class-settings-btn', function () {
@@ -755,11 +865,20 @@ $(document).on('click', '#class-settings-btn', function () {
     });
 });
 
+//新增行政班和教学班切换
+$(document).on('click', '#class-type-toggle .tab', function () {
+    $(this).addClass('active').siblings().removeClass('active');
+    GLOBAL_CONSTANT.cType = $(this).attr('type');
+    classManagement.getItem();  //拉取table-head
+    // classManagement.loadPage();     //拉取table-body
+    // classManagement.pagination();  //分页
+});
 
-function upload () {
+
+function upload(whichBtn) {
     var $ = jQuery,
         $list = $('#fileList'),
-    // Web Uploader实例
+        // Web Uploader实例
         uploader;
     // 初始化Web Uploader
     uploader = WebUploader.create({
@@ -771,11 +890,12 @@ function upload () {
         swf: BASE_URL + '/webuploader-0.1.5 2/Uploader.swf',
 
         // 文件接收服务端。
-        server: rootPath + '/config/upload/class/' + tnId + '.do',
+        server: rootPath + '/config/upload/'+whichBtn+'/' + tnId + '.do',
 
         // 选择文件的按钮。可选。
         // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-        pick: '#btn-import',
+        // pick: '#btn-import',
+        pick: whichBtn == 'class_adm' ? '#xz-btn-import' : '#jx-btn-import',
 
         // 只允许选择文件，可选。
         accept: {
@@ -793,7 +913,7 @@ function upload () {
         //return;
         var $li = $(
             '<div id="' + file.id + '" class="file-item thumbnail">' +
-                //'<img>' +
+            //'<img>' +
             '<div class="info">' + file.name + '</div>' +
             '</div>'
         );
@@ -817,7 +937,8 @@ function upload () {
     });
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-    uploader.on('uploadSuccess', function (file, response) {console.info(response);
+    uploader.on('uploadSuccess', function (file, response) {
+        console.info(response);
         if (classManagement != null) {
             var checkedGrade = $('input[name="high-school"]:checked').next().text();
             classManagement.gradeName = checkedGrade;

@@ -1,22 +1,20 @@
 package cn.thinkjoy.saas.service.impl.bussiness;
 
 import cn.thinkjoy.saas.core.Constant;
-import cn.thinkjoy.saas.dao.IJwTeacherBaseInfoDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO;
 import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
 import cn.thinkjoy.saas.domain.Grade;
-import cn.thinkjoy.saas.domain.JwTeacherBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.SyncClass;
 import cn.thinkjoy.saas.domain.bussiness.SyncCourse;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
+import cn.thinkjoy.saas.dto.ClassBaseDto;
+import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
-import cn.thinkjoy.saas.service.common.ConvertUtil;
 import cn.thinkjoy.saas.service.common.EnumUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
-import com.alibaba.fastjson.JSONArray;
-import com.google.common.collect.Maps;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,9 +31,6 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 
     @Resource
     EXIGradeDAO exiGradeDAO;
-
-    @Resource
-    IJwTeacherBaseInfoDAO iJwTeacherBaseInfoDAO;
 
     @Resource
     EXITenantConfigInstanceDAO exiTenantConfigInstanceDAO;
@@ -70,26 +65,26 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 
         boolean flag = result > 0;
 
-        if(flag) {
-            switch (type) {
-                case "teacher":
-                    List<TeantCustom> customs = JSONArray.parseArray(teantCustoms.toString(), TeantCustom.class);
-                    Map<String, Object> map = Maps.newHashMap();
-                    for (TeantCustom custom : customs) {
-                        map.put(custom.getKey(), custom.getValue());
-                    }
-
-                    JwTeacherBaseInfo info = new JwTeacherBaseInfo();
-                    info.setTnId(tnId);
-                    info.setGrade(ConvertUtil.converGrade(map.get("teacher_grade").toString()));
-                    info.setTeacherName(map.get("teacher_name").toString());
-                    info.setTeacherClass(map.get("teacher_class").toString());
-                    info.setTeacherCourse(map.get("teacher_major_type").toString());
-                    iJwTeacherBaseInfoDAO.insert(info);
-                    break;
-            }
-
-        }
+//        if(flag) {
+//            switch (type) {
+//                case "teacher":
+//                    List<TeantCustom> customs = JSONArray.parseArray(teantCustoms.toString(), TeantCustom.class);
+//                    Map<String, Object> map = Maps.newHashMap();
+//                    for (TeantCustom custom : customs) {
+//                        map.put(custom.getKey(), custom.getValue());
+//                    }
+//
+//                    JwTeacherBaseInfo info = new JwTeacherBaseInfo();
+//                    info.setTnId(tnId);
+//                    info.setGrade(ConvertUtil.converGrade(map.get("teacher_grade").toString()));
+//                    info.setTeacherName(map.get("teacher_name").toString());
+//                    info.setTeacherClass(map.get("teacher_class").toString());
+//                    info.setTeacherCourse(map.get("teacher_major_type").toString());
+//                    iJwTeacherBaseInfoDAO.insert(info);
+//                    break;
+//            }
+//
+//        }
 
 
         return flag;
@@ -197,6 +192,69 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
     }
 
     @Override
+    public List<TeacherBaseDto> getTeacherInfos(Integer tnId, String grade) {
+        if (tnId <= 0) {
+            return null;
+        }
+        String tableName = ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER, tnId);
+
+        if (StringUtils.isBlank(tableName)) {
+            return null;
+        }
+        Map map=new HashMap();
+        map.put("tableName",tableName);
+        map.put("grade",grade);
+        map.put("id",null);
+        List<TeacherBaseDto> teacherBaseDtos = iexTeantCustomDAO.getTeacherInfos(map);
+
+        return teacherBaseDtos;
+    }
+
+    @Override
+    public TeacherBaseDto getTeacherInfo(Integer tnId, Integer id) {
+        if (tnId <= 0) {
+            return null;
+        }
+        String tableName = ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER, tnId);
+
+        if (StringUtils.isBlank(tableName)) {
+            return null;
+        }
+        Map map=new HashMap();
+        map.put("tableName",tableName);
+        map.put("grade",null);
+        map.put("id",id);
+        return iexTeantCustomDAO.getTeacherInfos(map).get(0);
+    }
+
+    @Override
+    public List<ClassBaseDto> getClassInfos(String type, Integer tnId, String course, String grade) {
+        if (tnId <= 0) {
+            return null;
+        }
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+
+        if (StringUtils.isBlank(tableName)) {
+            return null;
+        }
+        Map map=new HashMap();
+        map.put("tableName",tableName);
+        map.put("grade",grade);
+        map.put("course",course);
+
+        List<ClassBaseDto> classBaseDtos = Lists.newArrayList();
+        if(grade != null && course == null){
+            classBaseDtos = iexTeantCustomDAO.getClassAdmInfos(map);
+        }
+
+        if(grade == null && course != null){
+            classBaseDtos = iexTeantCustomDAO.getClassEduInfos(map);
+        }
+
+        return classBaseDtos;
+    }
+
+    @Override
     public Integer getStuInfoCount(Integer type, Integer tnId, String g) {
         if (tnId <= 0) {
             return null;
@@ -301,13 +359,13 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
                         List<Grade> gradeList = exiGradeDAO.selectGradeByTnId(gradeYear);
                         value = converGradesArr(gradeList);
                         break;
-                    case EnumUtil.TEACHER_EDUCATION_CLASS://教师-所教班级
-                        String tableName = ParamsUtils.combinationTableName("class", tnId);
-                        Map maplin = new HashMap();
-                        maplin.put("tableName", tableName);
-                        List<LinkedHashMap<String, Object>> linkedHashMapList = iexTeantCustomDAO.getTenantCustom(maplin);
-                        value = converClassName(linkedHashMapList);
-                        break;
+//                    case EnumUtil.TEACHER_EDUCATION_CLASS://教师-所教班级
+//                        String tableName = ParamsUtils.combinationTableName("class", tnId);
+//                        Map maplin = new HashMap();
+//                        maplin.put("tableName", tableName);
+//                        List<LinkedHashMap<String, Object>> linkedHashMapList = iexTeantCustomDAO.getTenantCustom(maplin);
+//                        value = converClassName(linkedHashMapList);
+//                        break;
                     case EnumUtil.TEACHER_EDUCATION_MAJOYTYPE://教师-所教科目
                         value = EnumUtil.TEACHER_EDUCATION_MAJOYTYPE_ARR;
                         break;

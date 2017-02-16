@@ -35,6 +35,12 @@
                             <div class="col-xs-12">
                                 <div class="main-title">
                                     <h3>班级管理</h3>
+                                    <div class="top-handle">
+                                        <button class="btn-top" id="xz-template-download">行政班&文理科班模板下载</button>
+                                        <button class="btn-top hide" id="jx-template-download">教学班模板下载</button>
+                                        <button class="btn-top" id="uploadBtn">批量上传</button>
+                                        <%--<button class="btn-top" id="student-setting">添加字段</button>--%>
+                                    </div>
                                 </div>
                                 <div class="title-2">
                                     <div id="grade-level" class="grade-level">
@@ -56,10 +62,15 @@
                                         <button class="btn btn-pink" id="addRole-btn">添加班级</button>
                                         <button class="btn btn-inverse" id="updateRole-btn">修改</button>
                                         <button class="btn btn-success" id="deleteClassBtn">删除</button>
-                                        <button class="btn btn-warning" id="downloadBtn">模板下载</button>
-                                        <button class="btn btn-warning" id="uploadBtn">批量上传</button>
-                                        <button class="btn btn-warning" id="class-settings-btn">班级设置</button>
+
+                                        <%--<button class="btn btn-warning" id="downloadBtn">模板下载</button>--%>
+                                        <%--<button class="btn btn-warning" id="uploadBtn">批量上传</button>--%>
+                                        <%--<button class="btn btn-warning" id="class-settings-btn">班级设置</button>--%>
                                     </div>
+                                </div>
+                                <div class="toggle-tab" id="class-type-toggle">
+                                    <button class="tab active" type="class_adm">行政班管理</button>
+                                    <button class="tab" type="class_edu">教学班管理</button>
                                 </div>
                                 <div>
                                     <table id="class-manage-table" class="table">
