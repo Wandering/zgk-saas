@@ -209,7 +209,7 @@ public class ConfigurationController {
     @ResponseBody
     public Map getTeantConfigList(@PathVariable String type, @PathVariable Integer tnId) {
 
-        List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceService.getTenantConfigListByTnIdAndType(type, tnId);
+        List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceService.getTenantConfigListByTnIdAndType(type, tnId,"0");
 
         Map resultMap = new HashMap();
 

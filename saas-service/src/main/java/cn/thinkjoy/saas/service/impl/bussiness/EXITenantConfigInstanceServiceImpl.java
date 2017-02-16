@@ -199,13 +199,20 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      */
     @Override
     public List<TenantConfigInstanceView> getTenantConfigListByTnIdAndType(String type, Integer tnId) {
+        return this.getTenantConfigListByTnIdAndType(type,tnId,null);
+    }
 
+    @Override
+    public List<TenantConfigInstanceView> getTenantConfigListByTnIdAndType(String type, Integer tnId,String isShow) {
         if (StringUtils.isBlank(type) || tnId <= 0)
             return null;
 
         Map map = new HashMap();
         map.put("domain", type);
         map.put("tnId", tnId);
+        if(org.apache.commons.lang3.StringUtils.isNotBlank(isShow)) {
+            map.put("isShow", isShow);
+        }
         List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceDAO.selectTeanConfigList(map);
 
         return tenantConfigInstances;
@@ -219,7 +226,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      */
     @Override
     public String[] getTenantConfigListArrByTnIdAndType(String type, Integer tnId) {
-        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId,"0");
         String[] configArr = new String[tenantConfigInstanceViews.size()];
         for (int i = 0; i < tenantConfigInstanceViews.size(); i++) {
             TenantConfigInstanceView tenantConfigInstanceView = tenantConfigInstanceViews.get(i);
@@ -505,6 +512,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         Map map = new HashMap();
         map.put("domain", type);
         map.put("tnId", tnId);
+        map.put("isShow",0);
         List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceDAO.selectTeanConfigList(map);
 
         if(tenantConfigInstances==null||tenantConfigInstances.size()<=0)
@@ -516,7 +524,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         if (configTeantComList == null||configTeantComList.size()<=0)
             return "输入的数据不完整，请完善数据后再上传";
         LOGGER.info("excel序列化 总数:" + configTeantComList.size());
-        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId,"0");
         if (tenantConfigInstanceViews == null)
             return "系统错误";
 
@@ -544,8 +552,16 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
             if(removeIds!=null&&removeIds.size()>0)
                 iexTeantCustomDAO.removeTenantCustomList(tableName,removeIds);
-
-
+            //针对行政班和教学班的特殊业务处理
+            if(type.equals("class_edu")||type.equals("class_adm")) {
+                TenantConfigInstanceView tenantConfigInstanceView = new TenantConfigInstanceView();
+                tenantConfigInstanceView.setEnName("class_code");
+                tenantConfigInstanceViews.add(tenantConfigInstanceView);
+                for(int i=0;i<configTeantComList.size();i++) {
+                    LinkedHashMap<String, String> map1=configTeantComList.get(i);
+                    map1.put(map1.size() + "", type + "_" + System.currentTimeMillis()+i);
+                }
+            }
             Integer insertResult = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
 
             if (insertResult > 0) {
@@ -955,7 +971,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
         List<String> configViews = new ArrayList<>();
 
-        List<TenantConfigInstanceView> tenantConfigInstanceViews = getTenantConfigListByTnIdAndType(type, tnId);
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = getTenantConfigListByTnIdAndType(type, tnId,"0");
 
         for (TenantConfigInstanceView tenantConfigInstanceView : tenantConfigInstanceViews) {
             configViews.add(tenantConfigInstanceView.getConfigKey());

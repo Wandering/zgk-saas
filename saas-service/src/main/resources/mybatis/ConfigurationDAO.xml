@@ -34,7 +34,8 @@ selectList
         data_type as dataType,
         data_url as dataUrl,
         data_value as dataValue,
-        is_retain as isRetain
+        is_retain as isRetain,
+        is_show as isShow
     </sql>
     <insert id="insert" parameterType="Configuration">
         INSERT INTO saas_configuration (
@@ -47,7 +48,8 @@ selectList
         data_type,
         data_url,
         data_value,
-        is_retain
+        is_retain,
+        is_show
         ) VALUES (
         #{enName},
         #{chName},
@@ -58,7 +60,8 @@ selectList
         #{dataType},
         #{dataUrl},
         #{dataValue},
-        #{isRetain}
+        #{isRetain},
+        #{isShow}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
         SELECT LAST_INSERT_ID() AS ID
@@ -97,7 +100,10 @@ selectList
                 data_value=#{dataValue},
             </if>
             <if test="isRetain!=null">
-                is_retain=#{isRetain}
+                is_retain=#{isRetain},
+            </if>
+            <if test="isShow!=null">
+                is_show=#{isShow}
             </if>
         </trim>
         WHERE
@@ -137,6 +143,9 @@ selectList
             <if test="map.isRetain!=null">
                 is_retain=#{map.isRetain},
             </if>
+            <if test="map.isShow!=null">
+                is_show=#{map.isShow},
+            </if>
         </trim>
         WHERE
         id = #{map.id}
@@ -175,6 +184,9 @@ selectList
             <if test="update.isRetain!=null">
                 is_retain=#{update.isRetain},
             </if>
+            <if test="update.isShow!=null">
+                is_show=#{update.isShow},
+            </if>
         </trim>
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -211,6 +223,9 @@ selectList
             <if test="condition.isRetain!=null">
                 AND is_retain=#{condition.isRetain}
             </if>
+            <if test="condition.isShow!=null">
+                AND is_show=#{condition.isShow}
+            </if>
         </trim>
     </update>
 
@@ -225,7 +240,8 @@ selectList
                 data_type,
                 data_url,
                 data_value,
-                is_retain
+                is_retain,
+                is_show
         ) VALUES (
                     #{map.enName},
                     #{map.chName},
@@ -236,7 +252,8 @@ selectList
                     #{map.dataType},
                     #{map.dataUrl},
                     #{map.dataValue},
-                    #{map.isRetain}
+                    #{map.isRetain},
+                    #{map.isShow}
         )
     </insert>
 
@@ -254,6 +271,7 @@ selectList
             data_url=#{dataUrl},
             data_value=#{dataValue},
             is_retain=#{isRetain},
+            is_show=#{isShow},
         </trim>
         WHERE
         id = #{id} 
@@ -303,6 +321,9 @@ selectList
             </if>
             <if test="isRetain!=null">
                 AND is_retain=#{isRetain}
+            </if>
+            <if test="isShow!=null">
+                AND is_show=#{isShow}
             </if>
         </trim>
     </delete>
@@ -394,6 +415,9 @@ selectList
             <if test="condition.isRetain!=null">
                 ${condition.groupOp}   is_retain  ${condition.isRetain.op}  #{condition.isRetain.data}
             </if>
+            <if test="condition.isShow!=null">
+                ${condition.groupOp}   is_show  ${condition.isShow.op}  #{condition.isShow.data}
+            </if>
 
     </where>
 
@@ -443,6 +467,9 @@ selectList
             <if test="isRetain!=null">
                 AND is_retain like CONCAT('%', #{isRetain} , '%')
             </if>
+            <if test="isShow!=null">
+                AND is_show like CONCAT('%', #{isShow} , '%')
+            </if>
         </trim>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -488,6 +515,9 @@ selectList
             <if test="condition.isRetain!=null">
                 AND is_retain=#{condition.isRetain}
             </if>
+            <if test="condition.isShow!=null">
+                AND is_show=#{condition.isShow}
+            </if>
         </trim>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -532,6 +562,9 @@ selectList
             <if test="condition.isRetain!=null">
                 AND is_retain=#{condition.isRetain}
             </if>
+            <if test="condition.isShow!=null">
+                AND is_show=#{condition.isShow}
+            </if>
         </trim>
         limit 0,1
     </select>
@@ -571,6 +604,9 @@ selectList
            </if>
            <if test="isRetain!=null">
                ${groupOp} is_retain ${isRetain.op}  #{isRetain.data}
+           </if>
+           <if test="isShow!=null">
+               ${groupOp} is_show ${isShow.op}  #{isShow.data}
            </if>
        </where>
     <if test="orderBy!=null">

@@ -226,7 +226,13 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
                 Object value = null;
                 switch (str) {
                     case EnumUtil.CLASS_MAJOR_TYPE: //班级类型
-                        value = EnumUtil.CLASS_TYPE_ARR;
+                        if(type.equals("class_adm")){
+                            value = EnumUtil.CLASS_ADM;
+                        }else if(type.equals("class_edu")){
+                            value = EnumUtil.CLASS_EDU;
+                        }else {
+                            value = EnumUtil.CLASS_TYPE_ARR;
+                        }
                         break;
                     case EnumUtil.CLASS_GRADE://所属年级
                         Map gradeMap = new HashMap();
@@ -384,6 +390,14 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 
         switch (type) {
             case "class":
+                key1 = "class_grade";
+                key2 = "class_name";
+                break;
+            case "class_adm":
+                key1 = "class_grade";
+                key2 = "class_name";
+                break;
+            case "class_edu":
                 key1 = "class_grade";
                 key2 = "class_name";
                 break;

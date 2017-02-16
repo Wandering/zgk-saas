@@ -26,8 +26,17 @@ public class Configuration extends BaseDomain{
     private String dataUrl;
     private String dataValue;
     private byte isRetain;
+    private byte isShow;
 
-	public Configuration(){
+    public byte getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(byte isShow) {
+        this.isShow = isShow;
+    }
+
+    public Configuration(){
 	}
     public void setEnName(String value) {
         this.enName = value;
