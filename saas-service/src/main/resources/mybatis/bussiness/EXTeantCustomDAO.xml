@@ -58,7 +58,7 @@
         order by id asc
     </select>
 
-
+    <!-- 查询学生数据 -->
     <select id="getStuInfo" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
         select * from ${tableName}
         <where>
@@ -92,6 +92,63 @@
         </where>
     </select>
 
+    <!-- 查询教师数据 -->
+    <select id="getTeacherInfos" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.TeacherBaseDto">
+        select
+             id as teacherId,
+             teacher_name as teacherName,
+             teacher_major_type as courseName,
+             teacher_grade as grade,
+             teacher_class as classes,
+             teacher_max_take_class as classNum
+        from ${tableName}
+        <where>
+            <if test="id != null and id != -1">
+                and id = #{id}
+            </if>
+            <if test="grade != null and grade != ''">
+                and teacher_grade like  CONCAT("%",#{grade},"%")
+            </if>
+        </where>
+        order by id asc
+        <if test="id != null and id != -1">
+            limit 1
+        </if>
+    </select>
+
+    <!-- 查询行政班级数据 -->
+    <select id="getClassAdmInfos" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.ClassBaseDto">
+        select
+            id as classId,
+            class_grade as classGrade,
+            class_name  as className,
+            class_boss as classBoss,
+            class_type as classType
+        from ${tableName}
+        <where>
+            <if test="grade != null and grade != ''">
+                and class_grade like  CONCAT("%",#{grade},"%")
+            </if>
+        </where>
+        order by id asc
+    </select>
+
+    <!-- 查询教学班级数据 -->
+    <select id="getClassEduInfos" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.ClassBaseDto">
+        select
+            id as classId,
+            class_grade as classGrade,
+            class_name  as className,
+            class_major_type as course,
+            class_type as classType
+        from ${tableName}
+        <where>
+            <if test="course != null and course != ''">
+                and class_major_type = #{course}
+            </if>
+        </where>
+        order by id asc
+    </select>
 
     <select id="getTenantCustomColsCount" parameterType="java.util.Map" resultType="Integer">
         select count(1) from ${tableName}

@@ -1,7 +1,5 @@
 package cn.thinkjoy.saas.dao.bussiness;
 
-import cn.thinkjoy.saas.domain.JwClassBaseInfo;
-
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +12,7 @@ public interface IEXClassBaseInfoDAO {
      * @param jwClassBaseInfos
      * @return
      */
-    Integer syncClassInfo(List<JwClassBaseInfo> jwClassBaseInfos);
+//    Integer syncClassInfo(List<JwClassBaseInfo> jwClassBaseInfos);
 
     /**
      * 查询教室集合
@@ -22,5 +20,5 @@ public interface IEXClassBaseInfoDAO {
      * @param map
      * @return
      */
-    List<JwClassBaseInfo> queryClassList(Map<String,Object> map);
+//    List<JwClassBaseInfo> queryClassList(Map<String,Object> map);
 }
