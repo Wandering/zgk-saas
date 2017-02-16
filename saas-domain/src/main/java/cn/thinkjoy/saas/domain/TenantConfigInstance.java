@@ -27,8 +27,17 @@ public class TenantConfigInstance extends BaseDomain{
     private String dataUrl;
     private String dataValue;
     private byte isRetain;
+    private byte isShow;
 
-	public TenantConfigInstance(){
+    public byte getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(byte isShow) {
+        this.isShow = isShow;
+    }
+
+    public TenantConfigInstance(){
 	}
     public void setTnId(Integer value) {
         this.tnId = value;

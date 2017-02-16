@@ -56,7 +56,9 @@ public  class ParamsUtils {
      */
     public static String getGradeKey(String type) {
         Map map = new HashMap();
-        map.put("class", "class_grade");
+        map.put("class","class_grade");
+        map.put("class_adm", "class_grade");
+        map.put("class_edu", "class_grade");
         map.put("student", "student_grade");
         map.put("teacher", "teacher_grade");
         return map.get(type).toString();
@@ -155,6 +157,14 @@ public  class ParamsUtils {
 
         switch (type) {
             case "class":
+                key1 = "class_grade";
+                key2 = "class_name";
+                break;
+            case "class_adm":
+                key1 = "class_grade";
+                key2 = "class_name";
+                break;
+            case "class_edu":
                 key1 = "class_grade";
                 key2 = "class_name";
                 break;

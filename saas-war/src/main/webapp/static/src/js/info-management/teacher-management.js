@@ -10,6 +10,8 @@ TeacherManagement.prototype = {
     constructor: TeacherManagement,
     init: function () {
         this.getThead();
+        this.gradeCode = '';
+        this.subjectV  = '';
     },
     // 拉取表格thead
     getThead:function(){
@@ -38,17 +40,176 @@ TeacherManagement.prototype = {
     // 默认拉取列表
     // 提交保存
     // 所教科目
+    querySubject:function(){
+        var that = this;
+        var courseArr = [];
+        courseArr.push('<option value="00">请选择科目</option>');
+        Common.ajaxFun('/teacher/querySubject.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
+                $.each(res.bizData.subject, function (i, v) {
+                    courseArr.push('<option value="' + v + '">' + v + '</option>');
+                });
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        }, true);
+        return courseArr.join('');
+    },
     // 所教年级
+    queryGradeBySubject:function(subjectV){
+        var that = this;
+        var GradeArr = [];
+        $('#grade-list').html('');
+        GradeArr.push('<option value="00">请选择所带年级</option>');
+        Common.ajaxFun('/teacher/queryGradeBySubject.do', 'GET', {
+            "subject":subjectV
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                $.each(res.bizData.grade, function (i, v) {
+                    GradeArr.push('<option value="' + v['gradeCode'] + '">' + v['grade'] + '</option>');
+                });
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        }, true);
+        //return GradeArr.join('');
+        $('#grade-list').append(GradeArr.join(''));
+
+    },
+    getGrade:function(){
+
+    },
     // 最大带班数
+    queryMaxClassByGradeAndSubject:function(gradeCode,subject){
+        var that = this;
+        var classMaxArr = [];
+        $('#classMax-list').html('');
+        classMaxArr.push('<option value="00">请选择最大带班数</option>');
+        Common.ajaxFun('/teacher/queryMaxClassByGradeAndSubject.do', 'GET', {
+            "gradeCode":gradeCode,
+            "subject":subject
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var maxClass = res.bizData.maxClass;
+                for(var i = 1;i<=maxClass;i++){
+                    classMaxArr.push('<option value="' + i + '">' + i + '</option>');
+                }
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        }, true);
+        $('#classMax-list').append(classMaxArr.join(''));
+    },
     // 所带班级list
+    queryClassByGradeCodeAndSubject:function(gradeCode,subject){
+        var that = this;
+        var classItemArr = [];
+        $('#class-item').html('');
+        Common.ajaxFun('/teacher/queryClassByGradeCodeAndSubject.do', 'GET', {
+            "gradeCode":gradeCode,
+            "subject":subject
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                $('#box-row-classes').removeClass('hides');
+
+                //var data = {
+                //    "bizData": {
+                //        "class": [
+                //            {
+                //                "className":"test2"
+                //            },
+                //            {
+                //                "className":"test2"
+                //            }
+                //        ]
+                //    },
+                //    "rtnCode":"0000000",
+                //    "ts":1487125572539
+                //};
+                //
+                //$.each(data.bizData.class, function (i, v) {
+                //    classItemArr.push('<label><input name="form-field-checkbox" checked="checked" id="gradeOne" data-id="1"  type="checkbox" class="ace form-input-checkbox" /><span class="lbl">高一年级</span></label>&nbsp;&nbsp;&nbsp;&nbsp;'');
+                //});
+            } else {
+                layer.msg(res.msg);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        }, true);
+        //return GradeArr.join('');
+        var data = {
+            "bizData": {
+                "class": [
+                    {
+                        "className":"test2"
+                    },
+                    {
+                        "className":"test2"
+                    },
+                    {
+                        "className":"test2"
+                    },
+                    {
+                        "className":"test2"
+                    },
+                    {
+                        "className":"test2"
+                    },
+                    {
+                        "className":"test2"
+                    },
+                    {
+                        "className":"test2"
+                    },
+                    {
+                        "className":"test2"
+                    },
+                    {
+                        "className":"test2"
+                    }
+                ]
+            },
+            "rtnCode":"0000000",
+            "ts":1487125572539
+        };
+
+        $.each(data.bizData.class, function (i, v) {
+            classItemArr.push('<label><input name="form-field-checkbox" type="checkbox" class="ace form-input-checkbox" /><span class="lbl">'+ v.className +'</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+        });
+        $('#class-item').append(classItemArr.join(''));
+    },
+
     // 添加教师
     addTeacherLayer:function(title){
+        var that = this;
         var addTeacherContentHtml = [];
         addTeacherContentHtml.push('<div class="add-course-box">');
         addTeacherContentHtml.push('<div class="course-box">');
         addTeacherContentHtml.push('<div class="box-row">');
-        addTeacherContentHtml.push('<span><i>*</i>课程名称：</span>');
-        addTeacherContentHtml.push('<input type="text" id="" value="" placeholder="" class=""/>');
+        addTeacherContentHtml.push('<span class="class-label"><i>*</i>教师名称：</span>');
+        addTeacherContentHtml.push('<input type="text" id="teacher-name" value="" placeholder="请输入教师名称" class=""/>');
+        addTeacherContentHtml.push('</div>');
+        addTeacherContentHtml.push('<div class="box-row">');
+        addTeacherContentHtml.push('<span class="class-label"><i>*</i>所教科目：</span>');
+        addTeacherContentHtml.push('<select id="course-name-list">'+ that.querySubject() +'</select>');
+        addTeacherContentHtml.push('</div>');
+        addTeacherContentHtml.push('<div class="box-row">');
+        addTeacherContentHtml.push('<span class="class-label"><i>*</i>所带年级：</span>');
+        addTeacherContentHtml.push('<select id="grade-list"></select>');
+        addTeacherContentHtml.push('</div>');
+        addTeacherContentHtml.push('<div class="box-row">');
+        addTeacherContentHtml.push('<span class="class-label"><i>*</i>最大带班数：</span>');
+        addTeacherContentHtml.push('<select id="classMax-list"></select>');
+        addTeacherContentHtml.push('</div>');
+        addTeacherContentHtml.push('<div class="box-row" id="box-row-classes">');
+        addTeacherContentHtml.push('<span class="class-label class-item-label"><i>*</i>所带班级：</span>');
+        addTeacherContentHtml.push('<span class="class-item" id="class-item"></span>');
         addTeacherContentHtml.push('</div>');
         addTeacherContentHtml.push('<div class="box-row">');
         addTeacherContentHtml.push('<button type="button" class="save-btn" id="save-btn">保存</button>');
@@ -59,9 +220,35 @@ TeacherManagement.prototype = {
             type: 1,
             title: '<span class="layer-title">' + title + "</span>",
             offset: 'auto',
-            area: ['550px', '350px'],
+            area: ['550px', '400px'],
             content: addTeacherContentHtml.join(''),
             success: function () {
+                that.queryClassByGradeCodeAndSubject()
+                $('#grade-list').html('<option value="00">请选择所带年级</option>');
+                $('#classMax-list').html('<option value="00">请选择最大带班数</option>');
+                //$('#box-row-classes').addClass('hides');
+                // 选择科目
+                $('body').on('change', '#course-name-list', function () {
+                    that.subjectV = $(this).children('option:selected').val();
+                    if(that.subjectV!=='00'){
+                        that.queryGradeBySubject(that.subjectV);
+                    }else{
+                        $('#grade-list').html('<option value="00">请选择所带年级</option>');
+                        $('#classMax-list').html('<option value="00">请选择最大带班数</option>');
+                        $('#box-row-classes').addClass('hides');
+                    }
+                });
+                // 选择所带班级
+                $('body').on('change', '#grade-list', function () {
+                    that.gradeCode = $(this).children('option:selected').val();
+                    if(that.gradeCode!=='00'){
+                        that.queryMaxClassByGradeAndSubject(that.gradeCode,that.subjectV);
+                        that.queryClassByGradeCodeAndSubject(that.gradeCode,that.subjectV);
+                    }else{
+                        $('#box-row-classes').addClass('hides');
+                        $('#classMax-list').html('<option value="00">请选择最大带班数</option>');
+                    }
+                });
 
             }
         });
@@ -79,26 +266,229 @@ $(function () {
     $('#addTeacher-btn').on('click',function(){
         TeacherManagementIns.addTeacherLayer('添加教师');
     });
+
+
     // 点击保存
-    $('#add-btn').on('click',function(){
+    $('body').on('click','#save-btn',function(){
+        //var teacherNameVal = $.trim($('#teacher-name').val());
+        //if(teacherNameVal==''){
+        //    layer.tips('请输入教师名称', $('#teacher-name'));
+        //    return false;
+        //}
+        //if(teacherNameVal.length>10){
+        //    layer.tips('字数限制10个字以内', $('#teacher-name'));
+        //    return false;
+        //}
+        //var courseNameListV = $('#course-name-list').val();
+        //if(courseNameListV == '00'){
+        //    layer.tips('请选择科目', $('#course-name-list'));
+        //    return false;
+        //}
+        //var gradeListV = $('#grade-list').val();
+        //if(gradeListV == '00'){
+        //    layer.tips('请选择所带班级', $('#grade-list'));
+        //    return false;
+        //}
+        //var classMaxListV = $('#classMax-list').val();
+        //if(classMaxListV == '00'){
+        //    layer.tips('请选择最大带班数', $('#classMax-list'));
+        //    return false;
+        //}
+
+
+        for(var i=0;i<$('.form-input-checkbox').length;i++){
+            console.log($('.form-input-checkbox').eq(i).prop('checked'))
+
+            //if($('#class-item .form-input-checkbox').eq(i).is(':checked').length==0){
+            //    alert(4)
+            //    layer.tips('请选择所带班级', $('#class-item'));
+            //    return false;
+            //}
+        }
+
+        //alert(3)
+
 
     });
     // 点击修改
     $('#updateTeacher-btn').on('click',function(){
-
+        var courseName = '';
+        var selSubject = '';
+        var selGrade = '';
+        var classMaxNum = '';
+        var classItem = '';
+        TeacherManagementIns.addTeacherLayer('修改教师',courseName,selSubject,selGrade,classMaxNum,classItem);
     });
     // 点击删除
     $('#delTeacher-btn').on('click',function(){
+        var checkboxLen = $('#teacher-manage-list input:checked').length;
+        if (checkboxLen == 0) {
+            layer.tips('至少选择一项', $(this));
+            return false;
+        }
+        if (checkboxLen > 1) {
+            layer.tips('删除只能选择一项', $(this));
+            return false;
+        }
 
+        layer.confirm('确定删除?', {
+            btn: ['确定', '关闭'] //按钮
+        }, function () {
+
+
+        }, function () {
+            layer.closeAll();
+        });
     });
     // 点击模板下载
-    $('#downloadBtn').on('click',function(){
-
+    $('body').on('click','#downloadBtn',function(){
+        window.location.href = '/manage/teacher/export/' + tnId + '.do';
     });
-    // 点击上传
-    $('#uploadBtn').on('click',function(){
 
+
+    //上传数据类及其原型
+    function UploadData () {
+
+    }
+    UploadData.prototype = {
+        constructor: UploadData,
+        init: function () {
+
+        },
+        showUploadBox: function (title) {
+            var that = this;
+            var uploadDataHtml = [];
+            uploadDataHtml.push('<div class="upload-box">');
+            uploadDataHtml.push('<span id="uploader-demo">');
+            uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
+            uploadDataHtml.push('<button class="btn btn-info btn-import" id="btn-import">导入教师数据Excel</button>');
+            uploadDataHtml.push('</span>');
+            uploadDataHtml.push('<a href="javascript: void(0);" id="downloadBtn" class="download-link">请先导出Excel模板，进行填写</a>');
+            uploadDataHtml.push('<button class="btn btn-cancel cancel-btn" id="cancel-download-btn">取消</button>');
+            uploadDataHtml.push('</div>');
+            layer.open({
+                type: 1,
+                title: '<span style="color: #CB171D;font-size: 14px;">' + title + "</span>",
+                offset: 'auto',
+                area: ['460px', '300px'],
+                content: uploadDataHtml.join('')
+            });
+            upload();
+        }
+    };
+
+//上传
+    $(document).on('click', '#uploadBtn', function () {
+        var upload = new UploadData();
+        upload.showUploadBox('导入教师数据');
     });
+
+    //取消操作按钮(关闭对话框)
+    $(document).on("click", ".cancel-btn", function () {
+        layer.closeAll();
+    });
+
+    function upload () {
+        var $ = jQuery,
+            $list = $('#fileList'),
+
+        // Web Uploader实例
+            uploader;
+        // 初始化Web Uploader
+        uploader = WebUploader.create({
+
+            // 自动上传。
+            auto: true,
+
+            // swf文件路径
+            swf: BASE_URL + '/webuploader-0.1.5 2/Uploader.swf',
+
+            // 文件接收服务端。
+            server: rootPath + '/config/upload/teacher/' + tnId + '.do',
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#btn-import',
+
+            // 只允许选择文件，可选。
+            accept: {
+                title: 'excel',
+                extensions: 'xlsx,xls',
+                mimeTypes: '.xlsx,.xls'
+            },
+            fileVal: 'inputFile',
+            duplicate: new Date()
+
+        });
+
+        // 当有文件添加进来的时候
+        uploader.on('fileQueued', function (file) {
+            var $li = $(
+                '<div id="' + file.id + '" class="file-item thumbnail">' +
+                    //'<img>' +
+                '<div class="info">' + file.name + '</div>' +
+                '</div>'
+            );
+            $list.append($li);
+
+        });
+
+        // 文件上传过程中创建进度条实时显示。
+        uploader.on('uploadProgress', function (file, percentage) {
+            var $li = $('#' + file.id),
+                $percent = $li.find('.progress span');
+
+            // 避免重复创建
+            if (!$percent.length) {
+                $percent = $('<p class="progress"><span></span></p>')
+                    .appendTo($li)
+                    .find('span');
+            }
+
+            $percent.css('width', percentage * 100 + '%');
+            //layer.load(1, {shade: [0.3,'#000']});
+        });
+
+        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+        uploader.on('uploadSuccess', function (file, response) {
+            if (teacherManagement != null) {
+                teacherManagement.getTeacherData();
+            }
+            if (response.bizData.result) {
+                if (response.bizData.result == 'SUCCESS') {
+                    layer.msg('上传成功');
+                } else {
+                    layer.msg(response.bizData.result);
+                }
+            } else {
+                layer.msg(response.msg);
+            }
+        });
+
+        // 文件上传失败，现实上传出错。
+        uploader.on('uploadError', function (file, response) {
+            var $li = $('#' + file.id),
+                $error = $li.find('div.error');
+
+            // 避免重复创建
+            if (!$error.length) {
+                $error = $('<div class="error"></div>').appendTo($li);
+            }
+
+            $error.text('上传失败');
+            if (response.bizData.result) {
+                layer.msg(response.bizData.result);
+            } else {
+                layer.msg(response.msg);
+            }
+        });
+
+        // 完成上传完了，成功或者失败，先删除进度条。
+        uploader.on('uploadComplete', function (file) {
+            $('#' + file.id).find('.progress').remove();
+            //layer.closeAll('loading');
+        });
+    }
 });
 
 
