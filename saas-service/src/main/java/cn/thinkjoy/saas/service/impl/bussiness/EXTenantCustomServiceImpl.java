@@ -352,13 +352,13 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
                         List<Grade> gradeList = exiGradeDAO.selectGradeByTnId(gradeYear);
                         value = converGradesArr(gradeList);
                         break;
-                    case EnumUtil.TEACHER_EDUCATION_CLASS://教师-所教班级
-                        String tableName = ParamsUtils.combinationTableName("class", tnId);
-                        Map maplin = new HashMap();
-                        maplin.put("tableName", tableName);
-                        List<LinkedHashMap<String, Object>> linkedHashMapList = iexTeantCustomDAO.getTenantCustom(maplin);
-                        value = converClassName(linkedHashMapList);
-                        break;
+//                    case EnumUtil.TEACHER_EDUCATION_CLASS://教师-所教班级
+//                        String tableName = ParamsUtils.combinationTableName("class", tnId);
+//                        Map maplin = new HashMap();
+//                        maplin.put("tableName", tableName);
+//                        List<LinkedHashMap<String, Object>> linkedHashMapList = iexTeantCustomDAO.getTenantCustom(maplin);
+//                        value = converClassName(linkedHashMapList);
+//                        break;
                     case EnumUtil.TEACHER_EDUCATION_MAJOYTYPE://教师-所教科目
                         value = EnumUtil.TEACHER_EDUCATION_MAJOYTYPE_ARR;
                         break;
