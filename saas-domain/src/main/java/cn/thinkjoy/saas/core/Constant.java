@@ -9,6 +9,8 @@ public class Constant {
 
     public static final String [] NoFilter_Pages = {"/account/login","/account/forgetPwd","/account/sendSmsCode","/account/loginOut"};
 
+    public static final String [] GRADES = {"高一","高二","高三"};
+
     public static final String ID = "id";
 
     public static final String DESC = "desc";
@@ -68,4 +70,9 @@ public class Constant {
     public static final Integer TASK_SUCCESS = 3;
     public static final String CLASS_ADM = "class_adm";
     public static final String CLASS_EDU = "class_edu";
+    public static final String CREATE_TABLE_TYPE_TEACHER_IDS = "9-26-28-42-59";
+    /**课程表redis相关start**/
+    public static final String COURSE_TABLE_REDIS_KEY = "course_key_";
+    public static final String COURSE_TABLE_REDIS_SPLIT = "_";
+    /**课程表redis相关end**/
 }

@@ -6,6 +6,7 @@
  */
 package cn.thinkjoy.saas.service.impl.bussiness;
 
+import cn.thinkjoy.cloudstack.cache.RedisRepository;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.*;
 import cn.thinkjoy.saas.domain.*;
@@ -14,11 +15,15 @@ import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
 import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.zgk.common.StringUtil;
+import com.alibaba.dubbo.common.json.JSON;
+import com.alibaba.dubbo.common.json.ParseException;
 import com.google.common.collect.Maps;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +47,13 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
     IJwClassBaseInfoDAO jwClassBaseInfoDAO;
 
     @Autowired
+    private static final Logger LOGGER = Logger.getLogger(EXJwScheduleTaskServiceImpl.class);
+
+    @Autowired
     private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
+
+    @Autowired
+    private RedisRepository<String,Object> redis;
 
 
 
@@ -296,5 +307,74 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         a.add(4);
         for (int i =100;i>0;i--)
         System.out.println(a.get(random.nextInt(a.size())));
+    }
+
+    /**
+     * 获取并翻译课程表
+     *
+     * @param tnId
+     * @param taskId
+     * @return
+     */
+    private CourseResultView getCourseResult(int tnId, int taskId)
+            throws ParseException, IOException {
+        String redisKey = new StringBuilder()
+                .append(Constant.COURSE_TABLE_REDIS_KEY)
+                .append(Constant.COURSE_TABLE_REDIS_SPLIT)
+                .append(tnId)
+                .append(Constant.COURSE_TABLE_REDIS_SPLIT)
+                .append(taskId)
+                .toString();
+        if (!this.redis.exists(redisKey)) {
+
+            CourseResultView courseResultView = new CourseResultView();
+            LOGGER.info("************获取时间设置 S************");
+            Map map = new HashMap();
+            map.put("tnId", tnId);
+            map.put("taskId", taskId);
+            List<JwTeachDate> list = iJwTeachDateDAO.queryList(map, "tid", "asc");
+            if (list.size() == 0) {
+                return null;
+            }
+            StringBuffer buffer = new StringBuffer();
+            for (JwTeachDate jwTeachDate : list) {
+                buffer.append(jwTeachDate.getTeachDate()).append("|");
+            }
+            if (buffer.length() > 0) {
+                buffer.delete(buffer.length() - 1, buffer.length());
+            }
+            String time = "";
+            Integer count = 0;
+            if (list != null && list.size() > 0) {
+                JwTeachDate jwTeachDate = list.get(0);
+                String[] strings = jwTeachDate.getTeachDetail().split(Constant.TIME_INTERVAL);
+                for (String s : strings) {
+                    time += s.length();
+                    count += s.length();
+                }
+                if (strings.length < 3) {
+                    time += 0;
+                }
+            }
+            courseResultView.setTeachDate(buffer.toString());
+            courseResultView.setTeachTime(time);
+            LOGGER.info("************获取时间设置 E************");
+
+            LOGGER.info("************获取课表 S************");
+
+            LOGGER.info("************获取课表 E************");
+
+
+            LOGGER.info("************翻译课表 S************");
+
+            LOGGER.info("************翻译课表 E************");
+
+            LOGGER.info("************存redis S************");
+            this.redis.set(redisKey, JSON.json(courseResultView));
+            LOGGER.info("************存redis E************");
+            return courseResultView;
+        } else {
+            return JSON.parse(redisKey, CourseResultView.class);
+        }
     }
 }
