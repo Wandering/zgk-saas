@@ -204,8 +204,12 @@ ClassManagement.prototype = {
                         $('#class-change-list').html('');
                         $('#checkAll').prop('checked', false);
                         layer.msg('删除成功', {time: 1000});
-                        var classManagement = new ClassManagement();
-                        classManagement.init();
+                        // var classManagement = new ClassManagement();
+                        // classManagement.init();
+
+                        var checkedGrade = $('input[name="high-school"]:checked').next().text();
+                        classManagement.gradeName = checkedGrade;
+                        classManagement.loadPage(0, classManagement.classRows);
                     }
                 } else {
                     layer.msg(res.bizData.result);
@@ -569,12 +573,12 @@ UploadData.prototype = {
         uploadDataHtml.push('<span id="uploader-demo">');
 
         uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
-        uploadDataHtml.push('<button class="btn btn-info btn-import" id="xz-btn-import">导入行政班学生数据Excel</button>');
+        uploadDataHtml.push('<button class="btn btn-info btn-import" id="xz-btn-import">导入行政班班级数据Excel</button>');
         uploadDataHtml.push('</span>');
 
         uploadDataHtml.push('<span id="uploader-demo">');
         uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
-        uploadDataHtml.push('<button class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">导入教学班学生数据Excel</button>');
+        uploadDataHtml.push('<button class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">导入教学班班级数据Excel</button>');
         uploadDataHtml.push('</span>');
 
 
@@ -614,6 +618,7 @@ $(document).on("click", "#updateRole-btn", function () {
         layer.tips('修改只能选择一项!', that, {time: 1000});
         return false;
     }
+
     updateClassManagement = new UpdateClassManagement();
     updateClassManagement.init(classManagement.columnArr);
     updateClassManagement.updateClass('更新班级');
@@ -641,6 +646,7 @@ $(document).on('change', 'input[name="high-school"]', function () {
         $classTypeToggle.eq(1).addClass('hide');
     }
 
+    classManagement.getItem();
 
     classManagement.gradeName = checkedGrade;
     classManagement.loadPage(0, classManagement.classRows);
@@ -650,8 +656,8 @@ $(document).on('change', 'input[name="high-school"]', function () {
 //确认更新操作按钮
 $(document).on("click", "#update-btn", function () {
     var postData = [];
-    for (var i = 0; i < updateClassManagement.columnArr.length; i++) {
-        var tempObj = addClassManagement.columnArr[i];
+    for (var i = 0; i < classManagement.columnArr.length; i++) {
+        var tempObj = classManagement.columnArr[i];
         //if (tempObj.dataType == 'text') {
         //    if ($('#' + tempObj.enName).val() == '') {
         //        layer.msg(tempObj.name + '不能为空!', {time: 1000});
@@ -723,7 +729,7 @@ $(document).on("click", "#update-btn", function () {
             classManagement.gradeName = checkedGrade;
             classManagement.loadPage(0, classManagement.classRows);
         } else {
-            layer.msg(res.bizData.result);
+            layer.msg(res.msg);
         }
     }, function (res) {
         layer.msg("出错了");
@@ -874,6 +880,8 @@ $(document).on('click', '#class-type-toggle .tab', function () {
     classManagement.getItem();  //拉取table-head
     classManagement.loadPage(classManagement.classOffset, classManagement.classRows);     //拉取table-body
     classManagement.pagination();  //分页
+    console.info("========================");
+    console.info(classManagement.columnArr);
 });
 
 

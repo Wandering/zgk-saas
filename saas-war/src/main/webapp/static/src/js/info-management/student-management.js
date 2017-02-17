@@ -5,6 +5,14 @@
  * @api:http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=44436387
  * */
 //layer.load(1, {shade: [0.3,'#000']});
+
+// 学生基础信息管理
+//
+// 年级接口参数说明：
+// type：0（教学班）、1（行政班）
+// calssType : 1（行政班）行政班、2（行政班+教学班）教学班、3（文科班+理科班） 行政班
+
+
 /**
  * 全局常量
  * @type {{tnId: *, typ: string}}
@@ -952,7 +960,7 @@ var TplHandler = {
                 swf: BASE_URL + '/webuploader-0.1.5 2/Uploader.swf',
                 // 文件接收服务端。
                 // server: rootPath + '/config/upload/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do',
-                server: rootPath + '/student/uploadStuExcel.do?tnId=' + GLOBAL_CONSTANT.tnId + '&type=' + whichBtn,
+                server: rootPath + '/student/uploadStuExcel.do?tnId=' + GLOBAL_CONSTANT.tnId + '&classType=' + whichBtn,
                 // 选择文件的按钮。可选。
                 // 内部根据当前运行是创建，可能是input元素，也可能是flash.
                 pick: whichBtn == 1 ? '#xz-btn-import' : '#jx-btn-import',

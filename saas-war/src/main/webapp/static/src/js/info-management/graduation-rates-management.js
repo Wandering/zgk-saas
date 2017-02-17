@@ -66,7 +66,7 @@ NumberManagement.prototype = {
         var yearContentHtml = [];
         yearContentHtml.push('<div class="add-class-box add-year-box">');
         yearContentHtml.push('<ul>');
-        yearContentHtml.push('<li><span class="mandatory">*</span><span class="year-title">选择年份</span><select id="rate-year"><option value="00">选择高考年份</option></select></li>');
+        yearContentHtml.push('<li><span class="mandatory">*</span><span class="year-title">高考年份</span><select id="rate-year"><option value="00">选择高考年份</option></select></li>');
         yearContentHtml.push('<li><span class="mandatory">*</span><span>高三考生数量</span><input type="text" class="rate-input" id="senior-three" /></li>');
         yearContentHtml.push('<li><span class="mandatory">*</span><span>一本上线人数</span><input type="text" class="rate-input" id="batch-first" /></li>');
         yearContentHtml.push('<li><span class="mandatory">*</span><span>二本上线人数</span><input type="text" class="rate-input" id="batch-second" /></li>');
@@ -89,7 +89,7 @@ NumberManagement.prototype = {
         var yearContentHtml = [];
         yearContentHtml.push('<div class="add-class-box add-year-box">');
         yearContentHtml.push('<ul id="update-ratio-list">');
-        yearContentHtml.push('<li><span class="mandatory">*</span><span class="year-title">选择年份</span><select id="rate-year"><option value="00">选择年份</option></select></li>');
+        yearContentHtml.push('<li><span class="mandatory">*</span><span class="year-title">高考年份</span><select id="rate-year"><option value="00">选择高考年份</option></select></li>');
         yearContentHtml.push('<li><span class="mandatory">*</span><span>高三考生数量</span><input type="text" class="rate-input" id="senior-three" /></li>');
         yearContentHtml.push('<li><span class="mandatory">*</span><span>一本上线人数</span><input type="text" class="rate-input" id="batch-first" /></li>');
         yearContentHtml.push('<li><span class="mandatory">*</span><span>二本上线人数</span><input type="text" class="rate-input" id="batch-second" /></li>');
