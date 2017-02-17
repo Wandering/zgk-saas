@@ -60,9 +60,6 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         if (StringUtils.isBlank(tableName))
             return false;
 
-<<<<<<< HEAD
-            Integer result = iexTeantCustomDAO.insertTenantCustom(tableName, teantCustoms);
-=======
         if(type.equals("class_edu")||type.equals("class_adm")) {
             TeantCustom teantCustom = new TeantCustom();
             teantCustom.setKey("class_code");
@@ -71,7 +68,6 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         }
 
         Integer result = iexTeantCustomDAO.insertTenantCustom(tableName, teantCustoms);
->>>>>>> 65ffac008d94bedf6069731b5f8c08fdb0246e6b
 
         boolean flag = result > 0;
 
