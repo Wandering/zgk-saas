@@ -424,22 +424,20 @@ CourseManagement.prototype = {
         $('body').on('click', '.form-input-checkbox', function () {
             var id = $(this).attr('data-id');
             for (var l = 0; l < dataObj.length; l++) {
-                if (dataObj[l].gradeCode == id) {
+                if (dataObj[l].gradeCode == id) { // 判断年级
                     var classType = dataObj[l].classType;
-                    $('.form-input-checkbox[type="checkbox"]').each(function (i, v) {
-                        var _this = $(this);
-                        if (_this.is(':checked')) {
-                            _this.prop('checked', true);
-                            if (classType == 3) {
-                                $('.box-row-' + classType).removeClass('hides');
-                            }
-                        } else {
-                            _this.prop('checked', false);
-                            if (classType == 3) {
-                                $('.box-row-' + classType).addClass('hides').find('input[type="checkbox"]').prop('checked', false);
-                            }
+                    if ($(this).is(':checked')) {
+                        $(this).prop('checked', true);
+                        if (classType == 3) {
+                            console.log("判断年级="+id);
+                            $('.box-row-' + id).removeClass('hides');
                         }
-                    });
+                    } else {
+                        $(this).prop('checked', false);
+                        if (classType == 3) {
+                            $('.box-row-' + id).addClass('hides').find('input[type="checkbox"]').prop('checked', false);
+                        }
+                    }
                 }
             }
         });

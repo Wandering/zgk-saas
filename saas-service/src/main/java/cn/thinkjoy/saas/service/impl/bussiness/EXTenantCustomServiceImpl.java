@@ -5,16 +5,19 @@ import cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO;
 import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
 import cn.thinkjoy.saas.domain.Grade;
+import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.SyncClass;
 import cn.thinkjoy.saas.domain.bussiness.SyncCourse;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 import cn.thinkjoy.saas.dto.ClassBaseDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
+import cn.thinkjoy.saas.service.ICourseBaseInfoService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
 import cn.thinkjoy.saas.service.common.EnumUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,6 +38,9 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
     @Resource
     EXITenantConfigInstanceDAO exiTenantConfigInstanceDAO;
 
+    @Autowired
+    ICourseBaseInfoService courseBaseInfoService;
+
 
     /**
      * 租户自定义表头数据添加
@@ -53,6 +59,13 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 
         if (StringUtils.isBlank(tableName))
             return false;
+
+        if(type.equals("class_edu")||type.equals("class_adm")) {
+            TeantCustom teantCustom = new TeantCustom();
+            teantCustom.setKey("class_code");
+            teantCustom.setValue(type + "_" + System.currentTimeMillis()+0);
+            teantCustoms.add(teantCustom);
+        }
 
         Integer result = iexTeantCustomDAO.insertTenantCustom(tableName, teantCustoms);
 
@@ -360,7 +373,7 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 //                        value = converClassName(linkedHashMapList);
 //                        break;
                     case EnumUtil.TEACHER_EDUCATION_MAJOYTYPE://教师-所教科目
-                        value = EnumUtil.TEACHER_EDUCATION_MAJOYTYPE_ARR;
+                        value = courseBaseInfoService.findAll().toArray();
                         break;
                     case EnumUtil.STUDENT_EDUCATION_MAJOYTYPE://学生-选择科目
                         value = EnumUtil.STUDENT_EDUCATION_MAJOYTYPE_ARR;

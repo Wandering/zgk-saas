@@ -567,10 +567,6 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                     map1.put(map1.size() + "", type + "_" + System.currentTimeMillis()+i);
                 }
             }
-            if (removeIds != null && removeIds.size() > 0)
-                iexTeantCustomDAO.removeTenantCustomList(tableName, removeIds);
-
-
             Integer insertResult = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
 
             if (insertResult > 0) {
