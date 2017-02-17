@@ -54,6 +54,13 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         if (StringUtils.isBlank(tableName))
             return false;
 
+        if(type.equals("class_edu")||type.equals("class_adm")) {
+            TeantCustom teantCustom = new TeantCustom();
+            teantCustom.setKey("class_code");
+            teantCustom.setValue(type + "_" + System.currentTimeMillis()+0);
+            teantCustoms.add(teantCustom);
+        }
+
         Integer result = iexTeantCustomDAO.insertTenantCustom(tableName, teantCustoms);
 
         boolean flag = result > 0;
@@ -371,15 +378,15 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
                         List<Grade> stuGradeList = exiGradeDAO.selectGradeByTnId(stuGradeYear);
                         value = converGradesArr(stuGradeList);
                         break;
-                    case EnumUtil.STUDENT_CLASS_NAME ://学生-班级名称
-                          if( type.equals("student")) {
-                              String stuTableName = ParamsUtils.combinationTableName("class", tnId);
-                              Map mapStu = new HashMap();
-                              mapStu.put("tableName", stuTableName);
-                              List<LinkedHashMap<String, Object>> stuLinkedHashMapList = iexTeantCustomDAO.getTenantCustom(mapStu);
-                              value = converClassName(stuLinkedHashMapList);
-                          }
-                        break;
+//                    case EnumUtil.STUDENT_CLASS_NAME ://学生-班级名称
+//                          if(type.equals("student")) {
+//                              String stuTableName = ParamsUtils.combinationTableName("class", tnId);
+//                              Map mapStu = new HashMap();
+//                              mapStu.put("tableName", stuTableName);
+//                              List<LinkedHashMap<String, Object>> stuLinkedHashMapList = iexTeantCustomDAO.getTenantCustom(mapStu);
+//                              value = converClassName(stuLinkedHashMapList);
+//                          }
+//                        break;
                     case EnumUtil.STUDENT_CHECK_MAJOYTYPE1:
                         value = EnumUtil.STUDENT_EDUCATION_MAJOYTYPE_ARR;
                         break;

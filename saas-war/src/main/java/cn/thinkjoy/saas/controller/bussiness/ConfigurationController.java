@@ -381,7 +381,7 @@ public class ConfigurationController {
             LOGGER.info("文件原名: " + myfile.getOriginalFilename());
             String realPath = env.getProp("configuration.excel.upload.url");
             FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
-            result = exiTenantConfigInstanceService.uploadExcel(type, tnId, realPath + myfile.getOriginalFilename());
+            result = exiTenantConfigInstanceService.uploadExcel(type, tnId, realPath + myfile.getOriginalFilename(),0);
             if (result.equals("SUCCESS") && iexTenantService.getStep(tnId) != 0)
                 iexTenantService.stepSetting(tnId, (type.equals("teacher") ? true : false));
         }

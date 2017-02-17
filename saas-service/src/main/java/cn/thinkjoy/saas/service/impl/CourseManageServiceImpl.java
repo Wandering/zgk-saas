@@ -88,7 +88,7 @@ public class CourseManageServiceImpl extends AbstractPageService<IBaseDAO<Course
                 CourseManage courseManage = new CourseManage();
                 courseManage.setTnId(Integer.valueOf(map.get("tnId").toString()));
                 courseManage.setCourseBaseId(Integer.valueOf(info.getId().toString()));
-                courseManage.setCourseType("3");
+                courseManage.setCourseType("0");
                 courseManage.setCustom((byte) 0);
                 courseManage.setCreateTime(System.currentTimeMillis());
                 insertCourseManage(courseManage);
