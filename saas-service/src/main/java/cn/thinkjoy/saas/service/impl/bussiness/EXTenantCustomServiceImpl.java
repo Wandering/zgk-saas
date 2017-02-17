@@ -1,5 +1,7 @@
 package cn.thinkjoy.saas.service.impl.bussiness;
 
+import cn.thinkjoy.common.exception.BizException;
+import cn.thinkjoy.common.utils.UserContext;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO;
@@ -10,8 +12,11 @@ import cn.thinkjoy.saas.domain.bussiness.SyncClass;
 import cn.thinkjoy.saas.domain.bussiness.SyncCourse;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 import cn.thinkjoy.saas.dto.ClassBaseDto;
+import cn.thinkjoy.saas.dto.CourseManageDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
+import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.service.ICourseBaseInfoService;
+import cn.thinkjoy.saas.service.bussiness.IEXCourseManageService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
 import cn.thinkjoy.saas.service.common.EnumUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
@@ -39,7 +44,7 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
     EXITenantConfigInstanceDAO exiTenantConfigInstanceDAO;
 
     @Autowired
-    ICourseBaseInfoService courseBaseInfoService;
+    IEXCourseManageService courseManageService;
 
 
     /**
@@ -373,7 +378,17 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 //                        value = converClassName(linkedHashMapList);
 //                        break;
                     case EnumUtil.TEACHER_EDUCATION_MAJOYTYPE://教师-所教科目
-                        value = courseBaseInfoService.findAll().toArray();
+                        List<CourseManageDto> courseManageDtos = courseManageService.getCourseByTnId(tnId);
+                        Set<String> subjects = new HashSet<>();
+                        for (CourseManageDto courseManageDto : courseManageDtos) {
+                            subjects.add(courseManageDto.getCourseBaseName());
+                        }
+                        String[] strs = new String[subjects.size()];
+                        Object[] objects = subjects.toArray();
+                        for (int t = 0; t < subjects.size(); t++) {
+                            strs[t] = String.valueOf(objects[t]);
+                        }
+                        value = strs;
                         break;
                     case EnumUtil.STUDENT_EDUCATION_MAJOYTYPE://学生-选择科目
                         value = EnumUtil.STUDENT_EDUCATION_MAJOYTYPE_ARR;
