@@ -54,7 +54,7 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         if (StringUtils.isBlank(tableName))
             return false;
 
-        Integer result = iexTeantCustomDAO.insertTenantCustom(tableName, teantCustoms);
+            Integer result = iexTeantCustomDAO.insertTenantCustom(tableName, teantCustoms);
 
         boolean flag = result > 0;
 
