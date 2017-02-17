@@ -259,7 +259,7 @@ TeacherManagement.prototype = {
                 }
 
                 // 选择科目
-                $('body').on('change', '#course-name-list', function () {
+                $('#course-name-list').on('change', function () {
                     that.subjectV = $(this).children('option:selected').val();
                     if(that.subjectV!=='00'){
                         that.queryGradeBySubject(that.subjectV);
@@ -270,7 +270,7 @@ TeacherManagement.prototype = {
                     }
                 });
                 // 选择所带班级
-                $('body').on('change', '#grade-list', function () {
+                $('#grade-list').on('change', function () {
                     that.gradeCode = $(this).children('option:selected').val();
                     if(that.gradeCode!=='00'){
                         that.queryMaxClassByGradeAndSubject(that.gradeCode,that.subjectV);
