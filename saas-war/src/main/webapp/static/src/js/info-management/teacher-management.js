@@ -577,7 +577,6 @@ $(function () {
                     setTimeout(function(){
                         layer.closeAll();
                     },1000)
-
                 } else {
                     layer.msg(response.bizData.result);
                 }
