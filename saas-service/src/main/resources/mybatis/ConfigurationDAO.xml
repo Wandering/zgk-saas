@@ -28,6 +28,7 @@ selectList
         en_name as enName,
         ch_name as chName,
         meta_type as metaType,
+        regular as regular,
         check_rule as checkRule,
         domain,
         config_order as   configOrder,
@@ -42,6 +43,7 @@ selectList
         en_name,
         ch_name,
         meta_type,
+        regular,
         check_rule,
         domain,
         config_order,
@@ -54,6 +56,7 @@ selectList
         #{enName},
         #{chName},
         #{metaType},
+        #{regular},
         #{checkRule},
         #{domain},
         #{configOrder},
@@ -80,6 +83,9 @@ selectList
             </if>
             <if test="metaType!=null">
                 meta_type = #{metaType},
+            </if>
+            <if test="regular!=null">
+                regular = #{regular},
             </if>
             <if test="checkRule!=null">
                 check_rule = #{checkRule},
@@ -122,6 +128,9 @@ selectList
             <if test="map.metaType!=null">
                 meta_type = #{map.metaType},
             </if>
+            <if test="map.regular!=null">
+                regular = #{map.regular},
+            </if>
             <if test="map.checkRule!=null">
                 check_rule = #{map.checkRule},
             </if>
@@ -163,6 +172,9 @@ selectList
             <if test="update.metaType!=null">
                 meta_type = #{update.metaType},
             </if>
+            <if test="update.regular!=null">
+                regular = #{update.regular},
+            </if>
             <if test="update.checkRule!=null">
                 check_rule = #{update.checkRule},
             </if>
@@ -202,6 +214,9 @@ selectList
             <if test="condition.metaType!=null">
                 AND meta_type = #{condition.metaType}
             </if>
+            <if test="condition.regular!=null">
+                AND regular = #{condition.regular}
+            </if>
             <if test="condition.checkRule!=null">
                 AND check_rule = #{condition.checkRule}
             </if>
@@ -234,6 +249,7 @@ selectList
                 en_name,
                 ch_name,
                 meta_type,
+                regular,
                 check_rule,
                 domain,
                 config_order,
@@ -246,6 +262,7 @@ selectList
                     #{map.enName},
                     #{map.chName},
                     #{map.metaType},
+                    #{map.regular},
                     #{map.checkRule},
                     #{map.domain},
                     #{map.configOrder},
@@ -264,6 +281,7 @@ selectList
             en_name = #{enName},
             ch_name = #{chName},
             meta_type = #{metaType},
+            regular = #{regular},
             check_rule = #{checkRule},
             domain = #{domain},
             config_order = #{configOrder},
@@ -300,6 +318,9 @@ selectList
             </if>
             <if test="metaType!=null">
                 AND meta_type = #{metaType}
+            </if>
+            <if test="regular!=null">
+                AND regular = #{regular}
             </if>
             <if test="checkRule!=null">
                 AND check_rule = #{checkRule}
@@ -394,6 +415,9 @@ selectList
             <if test="condition.metaType!=null">
                 ${condition.groupOp}   meta_type  ${condition.meta_type.op}  #{condition.meta_type.data}
             </if>
+            <if test="condition.regular!=null">
+                ${condition.groupOp}   regular  ${condition.regular.op}  #{condition.regular.data}
+            </if>
             <if test="condition.checkRule!=null">
                 ${condition.groupOp}   check_rule  ${condition.check_rule.op}  #{condition.check_rule.data}
             </if>
@@ -446,6 +470,9 @@ selectList
             <if test="metaType!=null">
                 AND meta_type like CONCAT('%', #{metaType} , '%')
             </if>
+            <if test="regular!=null">
+                AND regular like CONCAT('%', #{regular} , '%')
+            </if>
             <if test="checkRule!=null">
                 AND check_rule like CONCAT('%', #{checkRule} , '%')
             </if>
@@ -494,6 +521,9 @@ selectList
             <if test="condition.metaType!=null">
                 AND meta_type = #{condition.metaType}
             </if>
+            <if test="condition.regular!=null">
+                AND regular = #{condition.regular}
+            </if>
             <if test="condition.checkRule!=null">
                 AND check_rule = #{condition.checkRule}
             </if>
@@ -541,6 +571,9 @@ selectList
             <if test="condition.metaType!=null">
                 AND meta_type = #{condition.metaType}
             </if>
+            <if test="condition.regular!=null">
+                AND regular = #{condition.regular}
+            </if>
             <if test="condition.checkRule!=null">
                 AND check_rule = #{condition.checkRule}
             </if>
@@ -583,6 +616,9 @@ selectList
            </if>
            <if test="metaType!=null">
                ${groupOp} meta_type ${meta_type.op}  #{meta_type.data}
+           </if>
+           <if test="regular!=null">
+               ${groupOp} regular ${regular.op}  #{regular.data}
            </if>
            <if test="checkRule!=null">
                ${groupOp} check_rule ${check_rule.op}  #{check_rule.data}
