@@ -1140,4 +1140,27 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         }
         return list;
     }
+
+    @Override
+    public List<LinkedHashMap<String,Object>> getClassByTnIdAndGrade(int tnId, String grade, String classType) {
+        String tableName = ParamsUtils.combinationTableName(classType, tnId);
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        List<LinkedHashMap<String,Object>> list = new ArrayList();
+        switch (classType) {
+            case "class_adm":
+                map.put("key1", "class_grade");
+                map.put("value1", grade);
+                list = iexTeantCustomDAO.getTenantCustom(map);
+                break;
+            case "class_edu":
+                map.put("key1", "class_grade");
+                map.put("value1", grade);
+                list = iexTeantCustomDAO.getTenantCustom(map);
+                break;
+            default:
+                break;
+        }
+        return list;
+    }
 }

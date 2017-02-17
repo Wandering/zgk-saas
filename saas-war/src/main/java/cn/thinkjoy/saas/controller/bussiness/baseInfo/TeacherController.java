@@ -1,13 +1,13 @@
 package cn.thinkjoy.saas.controller.bussiness.baseInfo;
 
 import cn.thinkjoy.common.exception.BizException;
+import cn.thinkjoy.saas.service.common.EduClassUtil;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.Grade;
 import cn.thinkjoy.saas.dto.CourseManageDto;
 import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.enums.GradeTypeEnum;
-import cn.thinkjoy.saas.enums.SubjectEnum;
 import cn.thinkjoy.saas.service.IGradeService;
 import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
@@ -133,7 +133,7 @@ public class TeacherController {
             throw new BizException(ErrorCode.GRADE_FORMAT_ERROR.getCode(), ErrorCode.GRADE_FORMAT_ERROR.getMessage());
         String grade = gradeServiceOne.getGrade();
         boolean isExistTeaching = GradeTypeEnum.Teaching.getCode().equals(gradeType);
-        boolean isMove = isEduSubject(subject);
+        boolean isMove = EduClassUtil.isEduSubject(subject);
         int classCount = 0;
         if (isExistTeaching && isMove) {
             //是教学班+是走班课程
@@ -170,7 +170,7 @@ public class TeacherController {
         int gradeType = gradeServiceOne.getClassType();
         String grade = gradeServiceOne.getGrade();
         boolean isExistTeaching = GradeTypeEnum.Teaching.getCode().equals(gradeType);
-        boolean isMove = isEduSubject(subject);
+        boolean isMove = EduClassUtil.isEduSubject(subject);
         List<LinkedHashMap<String, Object>> classes = new ArrayList();
         if (isExistTeaching && isMove) {
             //是教学班+是走班课程
@@ -202,13 +202,5 @@ public class TeacherController {
         return gradeServiceOne;
     }
 
-    private boolean isEduSubject(String subject) {
-        return SubjectEnum.dl.equals(subject) ||
-                SubjectEnum.hx.equals(subject) ||
-                SubjectEnum.sw.equals(subject) ||
-                SubjectEnum.wl.equals(subject) ||
-                SubjectEnum.zz.equals(subject) ||
-                SubjectEnum.ty.equals(subject) ||
-                SubjectEnum.ls.equals(subject);
-    }
+
 }

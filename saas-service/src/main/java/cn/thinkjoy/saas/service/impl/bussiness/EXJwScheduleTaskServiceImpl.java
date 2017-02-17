@@ -7,50 +7,74 @@
 package cn.thinkjoy.saas.service.impl.bussiness;
 
 import cn.thinkjoy.cloudstack.cache.RedisRepository;
+import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.*;
 import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
+import cn.thinkjoy.saas.dto.CourseManageDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
+import cn.thinkjoy.saas.enums.ErrorCode;
+import cn.thinkjoy.saas.enums.GradeTypeEnum;
+import cn.thinkjoy.saas.service.IGradeService;
+import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
+import cn.thinkjoy.saas.service.bussiness.IEXCourseManageService;
 import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
 import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
+import cn.thinkjoy.saas.service.common.EduClassUtil;
 import cn.thinkjoy.zgk.common.StringUtil;
 import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.dubbo.common.json.ParseException;
 import com.google.common.collect.Maps;
+import com.google.common.io.CharSource;
+import com.google.common.io.Files;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.charset.Charset;
+import java.util.*;
 
 
 @Service("EXJwScheduleTaskServiceImpl")
 public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
 
     @Autowired
-    IJwTeacherBaseInfoDAO teacherBaseInfoDAO;
+    private IJwTeacherBaseInfoDAO teacherBaseInfoDAO;
     @Resource
-    IJwTeachDateDAO iJwTeachDateDAO;
+    private IJwTeachDateDAO iJwTeachDateDAO;
     @Autowired
-    IJwClassBaseInfoDAO classBaseInfoDAO;
+    private IJwClassBaseInfoDAO classBaseInfoDAO;
     @Autowired
-    IJwRoomDAO roomDAO;
+    private IJwRoomDAO roomDAO;
     @Autowired
-    IJwScheduleTaskDAO scheduleTaskDAO;
+    private IJwScheduleTaskDAO scheduleTaskDAO;
     @Autowired
-    IJwClassBaseInfoDAO jwClassBaseInfoDAO;
+    private IJwClassBaseInfoDAO jwClassBaseInfoDAO;
+
+    @Autowired
+    private IGradeService gradeService;
+
+    @Autowired
+    private EXITenantConfigInstanceService exiTenantConfigInstanceService;
 
     @Autowired
     private static final Logger LOGGER = Logger.getLogger(EXJwScheduleTaskServiceImpl.class);
 
     @Autowired
     private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
+
+    @Autowired
+    private IJwCourseDAO jwCourseDAO;
+
+    @Autowired
+    private IEXCourseManageService iexCourseManageService;
+
+//    @Autowired
+//    private
 
     @Autowired
     private RedisRepository<String,Object> redis;
@@ -175,81 +199,9 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
     }
 
     @Override
-    public Map<String,Object> getAllCourseResult(Integer taskId,Integer tnId) {
-        Map<String,Object> resultMap = Maps.newHashMap();
-        Map map = new HashMap();
-        map.put("tnId", tnId);
-        map.put("taskId",taskId);
-        List<JwTeachDate> list = iJwTeachDateDAO.queryList(map, "tid", "asc");
-        if (list.size() == 0) {
-            return null;
-        }
-        StringBuffer buffer = new StringBuffer();
-        for (JwTeachDate jwTeachDate : list) {
-            buffer.append(jwTeachDate.getTeachDate()).append("|");
-        }
-        if (buffer.length() > 0) {
-            buffer.delete(buffer.length() - 1, buffer.length());
-        }
-        String time = "";
-        Integer count = 0;
-        if (list != null && list.size() > 0) {
-            JwTeachDate jwTeachDate = list.get(0);
-            String[] strings = jwTeachDate.getTeachDetail().split(Constant.TIME_INTERVAL);
-            for (String s : strings) {
-                time += s.length();
-                count += s.length();
-            }
-            if (strings.length < 3) {
-                time += 0;
-            }
-        }
-        resultMap.put("teachDate",buffer.toString());
-        resultMap.put("teachTime",time);
-        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
-        Map<String,Object>  roomMap = Maps.newHashMap();
-        roomMap.put("tnId",tnId);
-        roomMap.put("taskId",taskId);
-        roomMap.put("grade",jwScheduleTask.getGrade());
-        List<JwRoom> roomList = roomDAO.queryList(roomMap,"id","desc");
-        StringBuffer buffer1 = new StringBuffer();
-        for (JwRoom jwRoom:roomList){
-            buffer1.append(jwRoom.getRoomName()).append("|");
-        }
-        if (buffer1.length() > 0) {
-            buffer1.delete(buffer1.length() - 1, buffer1.length());
-        }
-        resultMap.put("room",buffer1.toString());
-        Map<String,Object> teacherMap = Maps.newHashMap();
-        teacherMap.put("tnId",tnId);
-        teacherMap.put("grade",jwScheduleTask.getGrade());
-        List<TeacherBaseDto> teacherBaseInfos = iexScheduleBaseInfoService.queryTeacherByTaskId(teacherMap);
-        List<List<List<String>>> list1  = new ArrayList<>();
-        List<List<String>> list2;
-        List<String> list3;
-        for (int j = roomList.size(); j > 0; j--){
-            list2 = new ArrayList<>();
-            for (int i = list.size();i>0;i--) {
-                list3 = new ArrayList<>();
-                for (int m = count;m>0;m--) {
-                    java.util.Random random=new java.util.Random();// 定义随机类
-                    if (i==5 && m ==1){
-                        list3.add("");
-                    }else if (random.nextInt(10)>3){
-                        list3.add(getTeacherCourse(teacherBaseInfos,tnId,jwScheduleTask.getGrade())+ " ");
-                    }
-                    else {
-                        //控制比例三分之一是空白
-                        list3.add("");
-                    }
+    public Map<String,Object> getAllCourseResult(Integer taskId,Integer tnId) throws IOException, ParseException {
 
-                }
-                list2.add(list3);
-            }
-            list1.add(list2);
-        }
-        resultMap.put("roomData",list1);
-        return resultMap;
+        return getCourseResult(tnId,taskId);
     }
 
     private String getCourse(Map<Integer,String> map){
@@ -298,16 +250,6 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         return jwClassBaseInfo.getClassName();
 
     }
-    public static void main(String[] args) {
-        java.util.Random random=new java.util.Random();//
-        List<Integer> a = new ArrayList();
-        a.add(1);
-        a.add(2);
-        a.add(3);
-        a.add(4);
-        for (int i =100;i>0;i--)
-        System.out.println(a.get(random.nextInt(a.size())));
-    }
 
     /**
      * 获取并翻译课程表
@@ -316,7 +258,7 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
      * @param taskId
      * @return
      */
-    private CourseResultView getCourseResult(int tnId, int taskId)
+    private Map<String,Object> getCourseResult(int tnId, int taskId)
             throws ParseException, IOException {
         String redisKey = new StringBuilder()
                 .append(Constant.COURSE_TABLE_REDIS_KEY)
@@ -326,55 +268,152 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
                 .append(taskId)
                 .toString();
         if (!this.redis.exists(redisKey)) {
-
+            Map<String,Object> resultMap = Maps.newHashMap();
+            List<List<List<String>>> courseTables = new ArrayList<>();
+            ;
             CourseResultView courseResultView = new CourseResultView();
             LOGGER.info("************获取时间设置 S************");
-            Map map = new HashMap();
-            map.put("tnId", tnId);
-            map.put("taskId", taskId);
-            List<JwTeachDate> list = iJwTeachDateDAO.queryList(map, "tid", "asc");
-            if (list.size() == 0) {
-                return null;
+            Map<String,Object> timeConfigMap = this.getCourseTimeConfig(tnId,taskId);
+            resultMap.put("teachDate",timeConfigMap.get("teachDate").toString());
+            resultMap.put("teachTime",timeConfigMap.get("time").toString());
+            LOGGER.info("************获取时间设置 E************");
+
+            LOGGER.info("************获取时间设置 S************");
+            List<LinkedHashMap<String,Object>> classList = this.getClassByTnIdAndTaskId(tnId,taskId);
+            StringBuffer buffer1 = new StringBuffer();
+            for (LinkedHashMap<String,Object> class_:classList){
+                buffer1.append(class_.get("class_name")).append("|");
             }
-            StringBuffer buffer = new StringBuffer();
-            for (JwTeachDate jwTeachDate : list) {
-                buffer.append(jwTeachDate.getTeachDate()).append("|");
+            if (buffer1.length() > 0) {
+                buffer1.delete(buffer1.length() - 1, buffer1.length());
             }
-            if (buffer.length() > 0) {
-                buffer.delete(buffer.length() - 1, buffer.length());
-            }
-            String time = "";
-            Integer count = 0;
-            if (list != null && list.size() > 0) {
-                JwTeachDate jwTeachDate = list.get(0);
-                String[] strings = jwTeachDate.getTeachDetail().split(Constant.TIME_INTERVAL);
-                for (String s : strings) {
-                    time += s.length();
-                    count += s.length();
-                }
-                if (strings.length < 3) {
-                    time += 0;
-                }
-            }
-            courseResultView.setTeachDate(buffer.toString());
-            courseResultView.setTeachTime(time);
+            resultMap.put("room",buffer1.toString());
             LOGGER.info("************获取时间设置 E************");
 
             LOGGER.info("************获取课表 S************");
+            Map<Integer,String> courses = getCourseByTnIdAndTaskId(tnId,taskId);
+            CharSource main = Files.asCharSource(new File("classpath:config/admin_course_0.txt"), Charset.defaultCharset());
+            List<String> allCourseList =  main.readLines();
+            List<List<String>> weekCourseList;
+            for (String courseLine : allCourseList){
+                String[] weekCourses  =  courseLine.split("\t");
 
+                weekCourseList = new LinkedList<>();
+                List<String> dayCourseList;
+                for (String dayCourseStr : weekCourses){
+                    dayCourseList = new LinkedList<>();
+                    String[] dayCourses = dayCourseStr.split("  ");
+                    for (int i = 0 ; i < dayCourses.length ; i++){
+                        //课程转换
+                        String course = courses.get(Integer.valueOf(dayCourses[i]));
+                        dayCourseList.add(course);
+                    }
+                    weekCourseList.add(dayCourseList);
+                }
+                courseTables.add(weekCourseList);
+            }
+            resultMap.put("roomData",courses);
             LOGGER.info("************获取课表 E************");
 
-
-            LOGGER.info("************翻译课表 S************");
-
-            LOGGER.info("************翻译课表 E************");
-
             LOGGER.info("************存redis S************");
-            this.redis.set(redisKey, JSON.json(courseResultView));
+            this.redis.set(redisKey, JSON.json(resultMap));
             LOGGER.info("************存redis E************");
-            return courseResultView;
+            return resultMap;
         } else {
-            return JSON.parse(redisKey, CourseResultView.class);
+            return JSON.parse(redisKey, HashMap.class);
         }
     }
+
+    private Map<String,Object> getCourseTimeConfig(int tnId, int taskId){
+
+
+        LOGGER.info("************获取时间设置 S************");
+        Map map = new HashMap();
+        map.put("tnId", tnId);
+        map.put("taskId", taskId);
+        List<JwTeachDate> list = iJwTeachDateDAO.queryList(map, "tid", "asc");
+        if (list.size() == 0) {
+            return null;
+        }
+        StringBuffer buffer = new StringBuffer();
+        for (JwTeachDate jwTeachDate : list) {
+            buffer.append(jwTeachDate.getTeachDate()).append("|");
+        }
+        if (buffer.length() > 0) {
+            buffer.delete(buffer.length() - 1, buffer.length());
+        }
+        String time = "";
+        Integer count = 0;
+        if (list != null && list.size() > 0) {
+            JwTeachDate jwTeachDate = list.get(0);
+            String[] strings = jwTeachDate.getTeachDetail().split(Constant.TIME_INTERVAL);
+            for (String s : strings) {
+                time += s.length();
+                count += s.length();
+            }
+            if (strings.length < 3) {
+                time += 0;
+            }
+        }
+
+        Map<String,Object > rtnMap = new HashMap<>();
+        rtnMap.put("teachDate",buffer.toString());
+        rtnMap.put("time",time);
+        rtnMap.put("list",list);
+        rtnMap.put("count",count);
+
+        LOGGER.info("************获取时间设置 E************");
+        return rtnMap;
+    }
+
+    private List<LinkedHashMap<String,Object>> getClassByTnIdAndTaskId(int tnId,int taskId){
+        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
+        List<LinkedHashMap<String, Object>> classes = new ArrayList();
+        Map<String, Object> param = new HashMap<>();
+        param.put("gradeCode", jwScheduleTask.getGrade());
+        param.put("tnId", tnId);
+        Grade gradeServiceOne = (Grade) gradeService.queryOne(param);
+        if (gradeServiceOne == null)
+            throw new BizException(ErrorCode.GRADE_FORMAT_ERROR.getCode(), ErrorCode.GRADE_FORMAT_ERROR.getMessage());
+        //判定是否存在教学班
+        Integer gradeType = gradeServiceOne.getClassType();
+        if (gradeType == null)
+            throw new BizException(ErrorCode.GRADE_FORMAT_ERROR.getCode(), ErrorCode.GRADE_FORMAT_ERROR.getMessage());
+        String grade = gradeServiceOne.getGrade();
+        boolean isExistTeaching = GradeTypeEnum.Teaching.getCode().equals(gradeType);
+        if (isExistTeaching) {
+            //是教学班+是走班课程
+            classes = exiTenantConfigInstanceService.getClassByTnIdAndGrade(tnId, grade,Constant.CLASS_EDU);
+        } else {
+            //是教学班+不是走班课程
+            classes = exiTenantConfigInstanceService.getClassByTnIdAndGrade(tnId, grade,Constant.CLASS_ADM);
+            //不教学班+是走班课程
+        }
+        return classes;
+    }
+
+    private Map<Integer,String> getCourseByTnIdAndTaskId(int tnId,int taskId){
+        Map<String,Object> map = new HashMap<>();
+        map.put("tnId",tnId);
+        map.put("taskId",taskId);
+        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
+        List<CourseManageDto> courses = iexCourseManageService.getCourseByTnIdAndGrade(tnId,Integer.valueOf(jwScheduleTask.getGrade()));
+        List<JwCourse> list = jwCourseDAO.queryList(map,"id","desc");
+        Map<Integer,String> courseMap = new LinkedHashMap();
+        for (int i = 1 ; i < list.size()+1 ; i++){
+            courseMap.put(i,courses.get(list.get(i-1).getCourseId()).getCourseBaseName());
+        }
+        return courseMap;
+    }
+
+//    public static void main(String[] args) {
+//        CharSource main = Files.asCharSource(new File("/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt"), Charset.defaultCharset());
+////        CharSource main = Files.asCharSource(new File("classpath:config/admin_course_0.txt"), Charset.defaultCharset());
+//        try {
+//
+//            main.readFirstLine().split("\t")[0];
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

@@ -8,7 +8,9 @@
 package cn.thinkjoy.saas.service.bussiness;
 
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
+import com.alibaba.dubbo.common.json.ParseException;
 
+import java.io.IOException;
 import java.util.Map;
 
 public interface IEXJwScheduleTaskService {
@@ -25,5 +27,5 @@ public interface IEXJwScheduleTaskService {
      * @param tnId
      * @return
      */
-    Map<String,Object> getAllCourseResult(Integer taskId, Integer tnId);
+    Map<String,Object> getAllCourseResult(Integer taskId, Integer tnId) throws IOException, ParseException;
 }

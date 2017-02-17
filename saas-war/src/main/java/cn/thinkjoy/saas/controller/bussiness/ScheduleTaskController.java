@@ -18,6 +18,7 @@ import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
+import com.alibaba.dubbo.common.json.ParseException;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -441,7 +443,7 @@ public class ScheduleTaskController {
      */
     @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
     @ResponseBody
-    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) {
+    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) throws IOException, ParseException {
         Map<String,Object> paramsMap  = null;
         if (param!=null) {
             try {

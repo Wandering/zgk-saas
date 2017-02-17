@@ -16,6 +16,12 @@ public interface IEXCourseManageService {
     List<CourseManageDto> getCourseByTnId(Integer tnId);
 
     /**
+     * 根据TnId查询课程
+     * @param tnId
+     * @return
+     */
+    List<CourseManageDto> getCourseByTnIdAndGrade(Integer tnId,Integer gradeCode);
+    /**
      * 根据课程和TnId查询年级信息
      * @param tnId
      * @return
