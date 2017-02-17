@@ -71,4 +71,8 @@ public class Constant {
     public static final String CLASS_ADM = "class_adm";
     public static final String CLASS_EDU = "class_edu";
     public static final String CREATE_TABLE_TYPE_TEACHER_IDS = "9-26-28-42-59";
+    /**课程表redis相关start**/
+    public static final String COURSE_TABLE_REDIS_KEY = "course_key_";
+    public static final String COURSE_TABLE_REDIS_SPLIT = "_";
+    /**课程表redis相关end**/
 }

@@ -13,6 +13,7 @@ import cn.thinkjoy.saas.service.common.EnumUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import cn.thinkjoy.saas.service.common.ReadExcel;
 import com.alibaba.dubbo.common.utils.StringUtils;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -493,10 +494,11 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * 解析excel 且将对应的值插入动态表
      * @param type
      * @param tnId
+     * @param classType 0：教学班  1：行政班
      * @return
      */
     @Override
-    public String  uploadExcel(String type,Integer tnId,String excelPath) {
+    public String  uploadExcel(String type,Integer tnId,String excelPath,int classType) {
         LOGGER.info("===========解析excel S===========");
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
@@ -509,16 +511,27 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
         if(tenantConfigInstances==null||tenantConfigInstances.size()<=0)
             return "系统错误";
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId,"0");
+        if (tenantConfigInstanceViews == null)
+            return "系统错误";
 
-        Integer columnLen=tenantConfigInstances.size();
+        // 上传学生数据 行政班去除教学班属性
+        if(Constant.STUDENT.equals(type) && classType == 1){
+            List<TenantConfigInstanceView> tempList = Lists.newArrayList();
+            for(TenantConfigInstanceView view : tenantConfigInstances){
+                if(Constant.ZDBJ_COLUMNS_KEY.indexOf(view.getEnName()) == -1){
+                    tempList.add(view);
+                }
+            }
+            tenantConfigInstanceViews = tempList;
+        }
+
+        Integer columnLen=tenantConfigInstanceViews.size();
 
         List<LinkedHashMap<String, String>> configTeantComList = readExcel.readExcelFile(excelPath,columnLen);
         if (configTeantComList == null||configTeantComList.size()<=0)
             return "输入的数据不完整，请完善数据后再上传";
         LOGGER.info("excel序列化 总数:" + configTeantComList.size());
-        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId,"0");
-        if (tenantConfigInstanceViews == null)
-            return "系统错误";
 
         String excelValid = ParamsUtils.excelValueValid(configTeantComList, tenantConfigInstanceViews);
 
@@ -554,10 +567,6 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
                     map1.put(map1.size() + "", type + "_" + System.currentTimeMillis()+i);
                 }
             }
-            if (removeIds != null && removeIds.size() > 0)
-                iexTeantCustomDAO.removeTenantCustomList(tableName, removeIds);
-
-
             Integer insertResult = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
 
             if (insertResult > 0) {

@@ -8,6 +8,7 @@
         <result column="en_name" property="enName" jdbcType="VARCHAR" />
         <result column="ch_name" property="chName" jdbcType="VARCHAR" />
         <result column="meta_type" property="metaType" jdbcType="VARCHAR" />
+        <result column="regular" property="regular" jdbcType="VARCHAR" />
         <result column="check_rule" property="checkRule" jdbcType="VARCHAR" />
         <result column="domain" property="domain" jdbcType="VARCHAR" />
         <result column="config_order" property="configOrder" jdbcType="INTEGER" />

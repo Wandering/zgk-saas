@@ -568,12 +568,15 @@ $(function () {
 
         // 文件上传成功，给item添加成功class, 用样式标记上传成功。
         uploader.on('uploadSuccess', function (file, response) {
-            if (teacherManagement != null) {
-                teacherManagement.getTeacherData();
+            if (TeacherManagementIns != null) {
+                TeacherManagementIns.getTeacherData();
             }
             if (response.bizData.result) {
                 if (response.bizData.result == 'SUCCESS') {
                     layer.msg('上传成功');
+                    setTimeout(function(){
+                        layer.closeAll();
+                    },1000)
                 } else {
                     layer.msg(response.bizData.result);
                 }
