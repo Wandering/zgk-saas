@@ -5,6 +5,14 @@
  * @api:http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=44436387
  * */
 //layer.load(1, {shade: [0.3,'#000']});
+
+// 学生基础信息管理
+//
+// 年级接口参数说明：
+// type：0（教学班）、1（行政班）
+// calssType : 1（行政班）行政班、2（行政班+教学班）教学班、3（文科班+理科班） 行政班
+
+
 /**
  * 全局常量
  * @type {{tnId: *, typ: string}}
