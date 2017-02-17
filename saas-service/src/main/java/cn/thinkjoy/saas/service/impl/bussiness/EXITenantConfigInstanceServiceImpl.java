@@ -511,18 +511,12 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
         if(tenantConfigInstances==null||tenantConfigInstances.size()<=0)
             return "系统错误";
-
-        Integer columnLen=tenantConfigInstances.size();
-
-        List<LinkedHashMap<String, String>> configTeantComList = readExcel.readExcelFile(excelPath,columnLen);
-        if (configTeantComList == null||configTeantComList.size()<=0)
-            return "输入的数据不完整，请完善数据后再上传";
-        LOGGER.info("excel序列化 总数:" + configTeantComList.size());
         List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId,"0");
         if (tenantConfigInstanceViews == null)
             return "系统错误";
 
-        if(classType == 1){
+        // 上传学生数据 行政班去除教学班属性
+        if(Constant.STUDENT.equals(type) && classType == 1){
             List<TenantConfigInstanceView> tempList = Lists.newArrayList();
             for(TenantConfigInstanceView view : tenantConfigInstances){
                 if(Constant.ZDBJ_COLUMNS_KEY.indexOf(view.getEnName()) == -1){
@@ -531,6 +525,13 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             }
             tenantConfigInstanceViews = tempList;
         }
+
+        Integer columnLen=tenantConfigInstanceViews.size();
+
+        List<LinkedHashMap<String, String>> configTeantComList = readExcel.readExcelFile(excelPath,columnLen);
+        if (configTeantComList == null||configTeantComList.size()<=0)
+            return "输入的数据不完整，请完善数据后再上传";
+        LOGGER.info("excel序列化 总数:" + configTeantComList.size());
 
         String excelValid = ParamsUtils.excelValueValid(configTeantComList, tenantConfigInstanceViews);
 
