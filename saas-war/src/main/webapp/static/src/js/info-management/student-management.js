@@ -960,7 +960,7 @@ var TplHandler = {
                 swf: BASE_URL + '/webuploader-0.1.5 2/Uploader.swf',
                 // 文件接收服务端。
                 // server: rootPath + '/config/upload/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do',
-                server: rootPath + '/student/uploadStuExcel.do?tnId=' + GLOBAL_CONSTANT.tnId + '&type=' + whichBtn,
+                server: rootPath + '/student/uploadStuExcel.do?tnId=' + GLOBAL_CONSTANT.tnId + '&classType=' + whichBtn,
                 // 选择文件的按钮。可选。
                 // 内部根据当前运行是创建，可能是input元素，也可能是flash.
                 pick: whichBtn == 1 ? '#xz-btn-import' : '#jx-btn-import',
