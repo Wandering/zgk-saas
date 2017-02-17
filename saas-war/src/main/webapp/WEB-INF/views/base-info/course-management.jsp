@@ -44,9 +44,9 @@
                         <div class="title-2">
                             <span class="txt-t"></span>
                             <div class="btns">
-                                <button class="btn btn-pink" id="addCourse-btn">+&nbsp;添加课程</button>
+                                <button class="btn btn-pink" id="addCourse-btn">添加课程</button>
                                 <button class="btn btn-inverse" id="updateCourse-btn">修改</button>
-                                <button class="btn btn-success" id="deleteCourse-btn">x&nbsp;删除</button>
+                                <button class="btn btn-success" id="deleteCourse-btn">删除</button>
                             </div>
                         </div>
                         <div class="">

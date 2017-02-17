@@ -265,9 +265,9 @@ TeacherManagement.prototype = {
                         that.queryGradeBySubject(that.subjectV);
                     }else{
                         $('#grade-list').html('<option value="00">请选择所带年级</option>');
-                        $('#classMax-list').html('<option value="00">请选择最大带班数</option>');
-                        $('#box-row-classes').addClass('hides');
                     }
+                    $('#classMax-list').html('<option value="00">请选择最大带班数</option>');
+                    $('#box-row-classes').addClass('hides');
                 });
                 // 选择所带班级
                 $('#grade-list').on('change', function () {
