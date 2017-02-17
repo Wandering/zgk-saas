@@ -255,7 +255,7 @@ public class StudentController {
      */
     @RequestMapping(value = "/uploadStuExcel",method = RequestMethod.POST)
     @ResponseBody
-    public Map uploadStuExcel(@RequestParam Integer type,
+    public Map uploadStuExcel(@RequestParam String type,
                            @RequestParam Integer tnId,
                            @RequestParam("inputFile") MultipartFile myfile) throws IOException {
         String result = "系统错误";
@@ -269,7 +269,7 @@ public class StudentController {
             LOGGER.info("文件原名: " + myfile.getOriginalFilename());
             String realPath = env.getProp("configuration.excel.upload.url");
             FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
-            result = exiTenantConfigInstanceService.uploadExcel(Constant.STUDENT, tnId, realPath + myfile.getOriginalFilename(),type);
+            result = exiTenantConfigInstanceService.uploadExcel(Constant.STUDENT, tnId, realPath + myfile.getOriginalFilename(),Integer.valueOf(type));
 
         }
         LOGGER.info("==================student excel上传 E==================");
