@@ -31,6 +31,7 @@ import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.saas.service.common.ConvertUtil;
 import cn.thinkjoy.saas.service.common.FileOperation;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
+import cn.thinkjoy.saas.service.common.TimeTabling;
 import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.dubbo.common.json.ParseException;
 import com.google.common.collect.Maps;
@@ -277,6 +278,11 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
 
         result = printBuffers(tnId,taskId,teacherSettingBuffers, FileOperation.TEACHERS_SETTING);
 
+        if(result) {
+            TimeTabling timeTabling = new TimeTabling();
+            String path = FileOperation.getParamsPath(tnId, taskId);
+            Integer scheduleResult = timeTabling.runTimetabling(path, path);
+        }
 
 
         return result;
