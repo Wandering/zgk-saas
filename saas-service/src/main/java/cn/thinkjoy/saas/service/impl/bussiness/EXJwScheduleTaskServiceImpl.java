@@ -286,44 +286,44 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
 
         List<StringBuffer> admClassRuleBuffers = getClassRule(taskId,1);//行政班 不排课
 
-        result = printBuffers(admClassRuleBuffers, FileOperation.ADMIN_CLASS_NON_DISPACHING);
+        result = printBuffers(tnId,taskId,admClassRuleBuffers, FileOperation.ADMIN_CLASS_NON_DISPACHING);
 
         List<StringBuffer> eduClassRuleBuffers = getClassRule(taskId,1);//走读班 不排课
 
-        result = printBuffers(eduClassRuleBuffers, FileOperation.CLASS_NON_DISPACHING);
+        result = printBuffers(tnId,taskId,eduClassRuleBuffers, FileOperation.CLASS_NON_DISPACHING);
 
         List<StringBuffer> admClassInfoBuffers = getClassInfo(taskId,tnId);//行政班基础信息
 
-        result = printBuffers(admClassInfoBuffers, FileOperation.CLASS_INFO);
+        result = printBuffers(tnId,taskId,admClassInfoBuffers, FileOperation.CLASS_INFO);
 
         List<StringBuffer> courseRuleBuffers = getCourseRule(taskId);//课程不排课
 
-        result = printBuffers(courseRuleBuffers, FileOperation.COURSE_NON_DISPACHING);
+        result = printBuffers(tnId,taskId,courseRuleBuffers, FileOperation.COURSE_NON_DISPACHING);
 
         List<StringBuffer> teachDataBuffers = getTeachDateInfo(taskId,tnId);//基础规则设置
 
-        result = printBuffers(teachDataBuffers, FileOperation.COURSE_TIMESLOTS);
+        result = printBuffers(tnId,taskId,teachDataBuffers, FileOperation.COURSE_TIMESLOTS);
 
         List<StringBuffer> gradeNonDisBuffers = getGradeNonDispaching(taskId,1);//年级不排课
 
-        result = printBuffers(gradeNonDisBuffers, FileOperation.GRAD_NON_DISPACHING);
+        result = printBuffers(tnId,taskId,gradeNonDisBuffers, FileOperation.GRAD_NON_DISPACHING);
 
 
         List<StringBuffer> courseInfomationBuffers = courseInfomation(taskId,tnId);//课程信息
 
-        result = printBuffers(courseInfomationBuffers, FileOperation.COURSE_INFORMATION);
+        result = printBuffers(tnId,taskId,courseInfomationBuffers, FileOperation.COURSE_INFORMATION);
 
         List<StringBuffer> teacherSettingBuffers = teachersSetting(taskId,tnId);//教师设置
 
-        result = printBuffers(teacherSettingBuffers, FileOperation.TEACHERS_SETTING);
+        result = printBuffers(tnId,taskId,teacherSettingBuffers, FileOperation.TEACHERS_SETTING);
 
 
 
         return result;
     }
 
-    private boolean printBuffers(List<StringBuffer> classRuleBuffers,String fileName) throws IOException {
-        boolean flag = FileOperation.creatTxtFile(fileName);
+    private boolean printBuffers(Integer tnId,Integer taskId ,List<StringBuffer> classRuleBuffers,String fileName) throws IOException {
+        boolean flag = FileOperation.creatTxtFile(tnId,taskId,fileName);
         if (flag) {
             String str = "";
             for (StringBuffer stringBuffer : classRuleBuffers)
