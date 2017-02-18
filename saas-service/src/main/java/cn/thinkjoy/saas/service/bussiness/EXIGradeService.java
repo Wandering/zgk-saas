@@ -82,4 +82,13 @@ public interface EXIGradeService {
      * @return
      */
     List<Grade> getGradeByTnIdAndGradeCode(int tnId, Set<Integer> gradeCodes);
+
+    /**
+     * 查询年级类型
+     * @param tnId
+     * @param gradeCode
+     * @return
+     */
+    Integer getGradeType(Integer tnId,Integer gradeCode);
+    Integer getGradeType(Integer tnId,String grade);
 }

@@ -3,11 +3,11 @@ package cn.thinkjoy.saas.controller.bussiness;
 import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.*;
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.*;
-import cn.thinkjoy.saas.service.IExamDetailService;
-import cn.thinkjoy.saas.service.IExamPropertiesService;
-import cn.thinkjoy.saas.service.IExamService;
-import cn.thinkjoy.saas.service.IExamStuWeakCourseService;
+import cn.thinkjoy.saas.enums.GradeEnum;
+import cn.thinkjoy.saas.enums.GradeTypeEnum;
+import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
@@ -61,6 +61,9 @@ public class ScoreAnalyseController
 
     @Autowired
     EXIGradeService exiGradeService;
+
+    @Autowired
+    EXIGradeService gradeService;
 
     private Set<Integer> advancedScoreSet;
 
@@ -1068,7 +1071,9 @@ public class ScoreAnalyseController
         @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade)
     {
-        String tableName = ParamsUtils.combinationTableName("class", Integer.parseInt(tnId));
+        int gradeType = gradeService.getGradeType(Integer.valueOf(tnId), grade);
+//        String tableName = ParamsUtils.combinationTableName(gradeType == GradeTypeEnum.Teaching.getCode() ? Constant.CLASS_EDU : Constant.CLASS_ADM, Integer.parseInt(tnId));
+        String tableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM, Integer.parseInt(tnId));
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("tableName", tableName);
         paramMap.put("grade", grade);

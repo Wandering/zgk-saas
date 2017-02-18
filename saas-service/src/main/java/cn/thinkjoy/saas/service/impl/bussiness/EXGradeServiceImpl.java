@@ -221,4 +221,29 @@ public class EXGradeServiceImpl implements EXIGradeService {
         return exiGradeDAO.getGradeByTnIdAndGradeCode(tnId,gradeCodes);
     }
 
+    /**
+     * 查询年级类型
+     *
+     * @param tnId
+     * @param gradeCode
+     * @return
+     */
+    @Override
+    public Integer getGradeType(Integer tnId, Integer gradeCode) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("gradeCode", gradeCode);
+        map.put("tnId", tnId);
+        Grade gradeObj = (Grade) iGradeDAO.queryOne(map,"id","asc");
+        return gradeObj.getClassType();
+    }
+
+    @Override
+    public Integer getGradeType(Integer tnId, String grade) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("grade", grade);
+        map.put("tnId", tnId);
+        Grade gradeObj = (Grade) iGradeDAO.queryOne(map,"id","asc");
+        return gradeObj.getClassType();
+    }
+
 }
