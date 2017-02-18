@@ -30,7 +30,8 @@ public class FileOperation {
 
 
 
-    private static String path = "/Users/douzy/"; //文件保存路径设置
+//    private static String path = "C:\\timetable\\schedule\\task\\"; ///Users/douzy/ 文件保存路径设置
+    private static String path = "/Users/douzy/schedule/task/"; // 文件保存路径设置
 
     private static String filenameTemp;
 
@@ -38,14 +39,14 @@ public class FileOperation {
 
         boolean flag = false;
 
+//        filenameTemp = path+tnId+"\\"+taskId+"\\" + name + ".txt";
         filenameTemp = path+tnId+"/"+taskId+"/" + name + ".txt";
 
         File filename = new File(filenameTemp);
 
         if (!filename.exists()) {
-
+            filename.getParentFile().mkdirs();
             filename.createNewFile();
-
             flag = true;
 
         } else {

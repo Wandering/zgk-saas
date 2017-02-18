@@ -118,13 +118,13 @@ public class ScheduleTaskController {
      */
     @ResponseBody
     @RequestMapping("/updateScheduleTaskStatus")
-    public boolean updateScheduleTaskStatus(@RequestParam Integer taskId) throws IOException {
+    public boolean updateScheduleTaskStatus(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
 //        JwScheduleTask jwScheduleTask = new JwScheduleTask();
 //        jwScheduleTask.setId(taskId);
 //        jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
 
 
-        return iexJwScheduleTaskService.InitParmasFile(taskId, 13);
+        return iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
 
 
 //        return jwScheduleTaskService.update(jwScheduleTask)>0;
