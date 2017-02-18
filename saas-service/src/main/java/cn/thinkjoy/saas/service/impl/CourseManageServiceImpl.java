@@ -91,17 +91,11 @@ public class CourseManageServiceImpl extends AbstractPageService<IBaseDAO<Course
                 courseManage.setCourseType("0");
                 courseManage.setCustom((byte) 0);
                 courseManage.setCreateTime(System.currentTimeMillis());
-                insertCourseManage(courseManage);
+                courseManage.setGradeId(0);
+                iCourseManageDAO.insert(courseManage);
             }
         }
         return iCourseManageDAO.selectCourseManageGroup(map);
-    }
-
-    private void insertCourseManage(CourseManage courseManage){
-        for(int i=1;i<4;i++){
-            courseManage.setGradeId(i);
-            iCourseManageDAO.insert(courseManage);
-        }
     }
 
 

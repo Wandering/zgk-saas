@@ -463,6 +463,7 @@ public class ManageController {
                 star = _req.getParameter("s"),
                 row = _req.getParameter("r");
 
+        exiTenantConfigInstanceService.createTenantCombinationTable(type,tnId);
 
 
         Integer s = (star == null) ? null : Integer.valueOf(star),
