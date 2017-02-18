@@ -60,6 +60,62 @@ ClassManagement.prototype = {
         Common.ajaxFun('/config/get/' + GLOBAL_CONSTANT.cType + '/' + tnId + '.do', 'GET', {
             'tnId': tnId
         }, function (res) {
+            // res = {
+            //     "bizData": {
+            //         "configList": [{
+            //             "checkRule": "/^\\s*[\\s\\S]{1,12}\\s*$/",
+            //             "configKey": "48",
+            //             "configOrder": 1,
+            //             "createDate": 1485051058661,
+            //             "dataType": "select",
+            //             "dataUrl": "/config/grade/get/{tnId}.do",
+            //             "domain": "class_edu",
+            //             "enName": "class_grade",
+            //             "id": 1776,
+            //             "isRetain": 1,
+            //             "name": "所属年级",
+            //             "tnId": 13
+            //         }, {
+            //             "checkRule": "/^\\s*[\\s\\S]{1,12}\\s*$/",
+            //             "configKey": "44",
+            //             "configOrder": 2,
+            //             "createDate": 1485051058661,
+            //             "dataType": "text",
+            //             "domain": "class_edu",
+            //             "enName": "class_name",
+            //             "id": 1777,
+            //             "isRetain": 1,
+            //             "name": "班级名称",
+            //             "tnId": 13
+            //         }, {
+            //             "checkRule": "/^\\s*[\\s\\S]{1,10}\\s*$/",
+            //             "configKey": "49",
+            //             "configOrder": 4,
+            //             "createDate": 1485051058661,
+            //             "dataType": "select",
+            //             "domain": "class_edu",
+            //             "enName": "class_major_type",
+            //             "dataUrl":'"/config/grade/get/{tnId}.do"',
+            //             "id": 1779,
+            //             "isRetain": 1,
+            //             "name": "教学科目",
+            //             "tnId": 13
+            //         }, {
+            //             "checkRule": "/^\\s*[\\s\\S]{1,12}\\s*$/",
+            //             "configKey": "45",
+            //             "configOrder": 6,
+            //             "createDate": 1485051058661,
+            //             "dataType": "select",
+            //             "domain": "class_edu",
+            //             "enName": "class_type",
+            //             "dataValue":"行政班-教学班-文科班-理科班",
+            //             "id": 1780,
+            //             "isRetain": 1,
+            //             "name": "班级类型",
+            //             "tnId": 13
+            //         }]
+            //     }, "rtnCode": "0000000", "ts": 1487399105353
+            // }
             if (res.rtnCode == "0000000") {
                 var data = res.bizData.configList;
                 if (data.length != 0) {
@@ -349,12 +405,21 @@ AddClassManagement.prototype.renderGradeSelect = function (data) {
         layer.msg(data.bizData.result);
     }
 };
+AddClassManagement.prototype.getUrl = function(url,name){
+    Common.ajaxFun(url, 'GET',{}, function (res) {
+       if(res.rtnCode == '0000000'){
+           var tpl = '';
+            $.each(res.bizData.courses,function(i,v){
+                tpl += '<option value="'+v.courseName+'">'+v.courseName+'</option>'
+            })
+           $('#'+name).html(tpl);
+       }
+    },function(res){},'true')
+},
 AddClassManagement.prototype.getType = function (type) {
-
     var that = this;
     var typeHtml = [];
     var types = null;
-
     $.each(this.columnArr, function (i, k) {
         if (k.enName == type) {
             types = k.dataValue.split('-');
@@ -367,23 +432,12 @@ AddClassManagement.prototype.getType = function (type) {
                 'cursor': 'not-allowed'
             }).attr('disabled', true);
         } else if (GLOBAL_CONSTANT.clsType === '2') {
-            // //如果clsType等于2还要根据cType判断行政班级和教学班级那个选中了
-            // if (GLOBAL_CONSTANT.cType == 'class_adm') {
-            //     $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
-            //         'cursor': 'not-allowed'
-            //     }).attr('disabled', true);
-            // } else {
-            //     $('#class_type').html('<option value="' + types[1] + '">' + types[1] + '</option>').css({
-            //         'cursor': 'not-allowed'
-            //     }).attr('disabled', true);
-            // }
             $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
                 'cursor': 'not-allowed'
             }).attr('disabled', true);
         } else {
             $('#class_type').html('<option value="' + types[3] + '">' + types[3] + '</option><option value="' + types[2] + '">' + types[2] + '</option>')
         }
-
     } else {
         if (types != null) {
             $.each(types, function (i, k) {
@@ -441,7 +495,10 @@ AddClassManagement.prototype.addClass = function (title) {
                 that.getType(k.enName);
             }
             if (k.dataUrl) {
-
+                if(k.enName == 'class_major_type'){
+                    var class_major_type_url = '/course/get/course/'+tnId+'/'+classManagement.gradeName+'.do'
+                    that.getUrl(class_major_type_url,'class_major_type');
+                }
             }
         }
     });
@@ -522,6 +579,17 @@ UpdateClassManagement.prototype = {
             layer.msg(data.bizData.result);
         }
     },
+    getUrl:function(url,name){
+        Common.ajaxFun(url, 'GET',{}, function (res) {
+            if(res.rtnCode == '0000000'){
+                var tpl = '';
+                $.each(res.bizData.courses,function(i,v){
+                    tpl += '<option value="'+v.courseName+'">'+v.courseName+'</option>'
+                })
+                $('#'+name).html(tpl);
+            }
+        },function(res){},'true')
+    },
     getType: function (type) {
         var that = this;
         var typeHtml = [];
@@ -531,7 +599,7 @@ UpdateClassManagement.prototype = {
                 types = k.dataValue.split('-');
             }
         });
-        if(type == 'class_type'){
+        if (type == 'class_type') {
             if (GLOBAL_CONSTANT.clsType === '1') {
                 $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
                     'cursor': 'not-allowed'
@@ -553,7 +621,7 @@ UpdateClassManagement.prototype = {
             } else {
                 $('#class_type').html('<option value="' + types[3] + '">' + types[3] + '</option><option value="' + types[2] + '">' + types[2] + '</option>')
             }
-        }else{
+        } else {
             if (types != null) {
                 $.each(types, function (i, k) {
                     typeHtml.push('<option value="' + k + '">' + k + '</option>');
@@ -596,7 +664,10 @@ UpdateClassManagement.prototype = {
                     that.getType(k.enName);
                 }
                 if (k.dataUrl) {
-
+                    if(k.enName == 'class_major_type'){
+                        var class_major_type_url = '/course/get/course/'+tnId+'/'+classManagement.gradeName+'.do'
+                        that.getUrl(class_major_type_url,'class_major_type');
+                    }
                 }
             }
         });
@@ -732,7 +803,8 @@ $(document).on("click", "#update-btn", function () {
                 var tempType = eval(tempObj.checkRule);
                 var typeResult = tempType.test($('#' + tempObj.enName).val());
                 if (typeResult === false) {
-                    layer.msg(tempObj.name + '长度为1~12个字符!', {time: 1000});
+                    layer.msg(tempObj.name + '长度为6个字符!', {time: 1000});
+                    // layer.msg(tempObj.name + '长度为1~12个字符!', {time: 1000});
                     $('#' + tempObj.enName).focus();
                     return;
                 }
@@ -803,7 +875,8 @@ $(document).on("click", "#add-btn", function () {
                 var tempType = eval(tempObj.checkRule);
                 var typeResult = tempType.test($('#' + tempObj.enName).val());
                 if (typeResult === false) {
-                    layer.msg(tempObj.name + '长度为1~12个字符!', {time: 1000});
+                    layer.msg(tempObj.name + '长度为6个字符!', {time: 1000});
+                    // layer.msg(tempObj.name + '长度为1~12个字符!', {time: 1000});
                     $('#' + tempObj.enName).focus();
                     return;
                 }
