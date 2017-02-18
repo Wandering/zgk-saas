@@ -13,7 +13,6 @@ public class ClassBaseDto implements Serializable {
     private String classBoss; // 班主任
     private String classType; // 班级类型 教学班，行政班，文科班，理科班
     private String course; // 班级课程
-    private String isMerge;
 
     public int getClassId() {
         return classId;
@@ -63,14 +62,6 @@ public class ClassBaseDto implements Serializable {
         this.course = course;
     }
 
-    public String getIsMerge() {
-        return isMerge;
-    }
-
-    public void setIsMerge(String isMerge) {
-        this.isMerge = isMerge;
-    }
-
     @Override
     public String toString() {
         return "ClassBaseDto{" +
@@ -80,7 +71,6 @@ public class ClassBaseDto implements Serializable {
                 ", classBoss='" + classBoss + '\'' +
                 ", classType='" + classType + '\'' +
                 ", course='" + course + '\'' +
-                ", isMerge='" + isMerge + '\'' +
                 '}';
     }
 }

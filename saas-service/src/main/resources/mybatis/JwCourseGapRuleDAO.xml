@@ -407,38 +407,45 @@ selectList
     </select>
 
     <select id="queryLinkList" resultType="java.util.Map" >
-        select b.course_name,b.grade,c.course_hour,c.chour
-        from saas_jw_course_base_info b
-        inner join saas_jw_course c on b.id=c.course_id
-        where c.task_id=#{taskId}
+        SELECT
+            a.course_name,
+            b.grade_id as grade,
+            c.course_hour,
+            c.chour
+        FROM
+            saas_course_base_info a,
+            saas_course_manage b,
+            saas_jw_course c
+        WHERE
+            a.id = b.course_base_id
+        AND a.id = c.course_id
+        AND c.task_id = #{taskId}
     </select>
 
     <select id="queryClassList" resultType="java.util.HashMap" >
-        select c.class_name as name,c.id,c.grade
-        from saas_jw_class_base_info c
-        inner join saas_jw_schedule_task t on c.tn_id=t.tn_id and c.grade=t.grade
-        where t.id=#{taskId} and c.class_type=1
+        SELECT
+            id,
+            class_name AS NAME,
+            class_grade as grade,
+            class_type as type
+        FROM
+            ${tableName}
+        where
+            ${searchKey} like CONCAT("%",#{searchValue},"%")
     </select>
 
     <select id="queryCourseList" resultType="java.util.HashMap" >
-        select c.course_name as name,c.id,c.grade
-        from saas_jw_course_base_info c
-        inner join saas_jw_schedule_task t on c.tn_id=t.tn_id and c.grade=t.grade
-        where t.id=#{taskId}
+        SELECT
+            c.id,
+            c.course_name AS NAME,
+            m.grade_id as grade
+        FROM
+            saas_course_base_info c
+        INNER JOIN saas_course_manage m ON c.id = m.course_base_id
+        WHERE
+            m.tn_id = #{tnId}
+        AND	m.grade_id = #{grade}
     </select>
 
-    <select id="queryTeacherList" resultType="java.util.HashMap" >
-        select c.teacher_name as name,c.id,c.teacher_course as teacherCourse,c.grade
-        from saas_jw_teacher_base_info c
-        inner join saas_jw_schedule_task t on c.tn_id=t.tn_id and c.grade=t.grade
-        where t.id=#{taskId} and c.teacher_course=#{teacherCourse}
-    </select>
-
-    <select id="queryTeacherCourseList" resultType="java.lang.String" >
-        select DISTINCT c.teacher_course as teacherCourse
-        from saas_jw_teacher_base_info c
-        inner join saas_jw_schedule_task t on c.tn_id=t.tn_id and c.grade=t.grade
-        where t.id=#{taskId}
-    </select>
 </mapper>
 

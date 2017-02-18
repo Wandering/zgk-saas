@@ -53,7 +53,9 @@ public enum ErrorCode {
 
     SUBJECT_NULL("2000001","科目数据未设置"),
 
-    GRADE_FORMAT_ERROR("2000002","年级数据不完整");
+    GRADE_FORMAT_ERROR("2000002","年级数据不完整"),
+
+    MEEGE_CLASS_REPEAT("2000003","合班重复");
 
     private final String code;
 

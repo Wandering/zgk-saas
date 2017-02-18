@@ -8,9 +8,14 @@ package cn.thinkjoy.saas.service.impl;
 
 import cn.thinkjoy.common.dao.IBaseDAO;
 import cn.thinkjoy.common.service.impl.AbstractPageService;
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.IJwCourseGapRuleDAO;
+import cn.thinkjoy.saas.dao.IJwScheduleTaskDAO;
 import cn.thinkjoy.saas.domain.JwCourseGapRule;
+import cn.thinkjoy.saas.domain.JwScheduleTask;
 import cn.thinkjoy.saas.service.IJwCourseGapRuleService;
+import cn.thinkjoy.saas.service.common.ParamsUtils;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +27,9 @@ import java.util.Map;
 public class JwCourseGapRuleServiceImpl extends AbstractPageService<IBaseDAO<JwCourseGapRule>, JwCourseGapRule> implements IJwCourseGapRuleService<IBaseDAO<JwCourseGapRule>,JwCourseGapRule>{
     @Autowired
     private IJwCourseGapRuleDAO jwCourseGapRuleDAO;
+
+    @Autowired
+    private IJwScheduleTaskDAO jwScheduleTaskDAO;
 
     @Override
     public IBaseDAO<JwCourseGapRule> getDao() {
@@ -35,28 +43,33 @@ public class JwCourseGapRuleServiceImpl extends AbstractPageService<IBaseDAO<JwC
     }
 
     @Override
-    public List<Map<String, Object>> queryClassList(Map<String, String> map)
+    public List<Map<String, Object>> queryClassList(int taskId)
     {
+        JwScheduleTask task = jwScheduleTaskDAO.fetch(taskId);
+        int tnId = task.getTnId();
+        int grade = Integer.valueOf(task.getGrade());
+
+        Map<String,String> map = Maps.newHashMap();
+        map.put("tableName",ParamsUtils.combinationTableName(Constant.CLASS_ADM,tnId));
+        map.put("searchKey","class_grade");
+        map.put("searchValue",Constant.GRADES[Integer.valueOf(grade-1)]);
+
         return jwCourseGapRuleDAO.queryClassList(map);
     }
 
     @Override
-    public List<Map<String, Object>> queryCourseList(Map<String, String> map)
+    public List<Map<String, Object>> queryCourseList(int taskId)
     {
+        JwScheduleTask task = jwScheduleTaskDAO.fetch(taskId);
+        int tnId = task.getTnId();
+        int grade = Integer.valueOf(task.getGrade());
+
+        Map<String,Integer> map = Maps.newHashMap();
+        map.put("tnId",tnId);
+        map.put("grade",grade);
         return jwCourseGapRuleDAO.queryCourseList(map);
     }
 
-    @Override
-    public List<Map<String, Object>> queryTeacherList(Map<String, String> map)
-    {
-        return jwCourseGapRuleDAO.queryTeacherList(map);
-    }
-
-    @Override
-    public List<String> queryTeacherCourseList(Map<String, String> map)
-    {
-        return jwCourseGapRuleDAO.queryTeacherCourseList(map);
-    }
 
 //    @Override
 //    public void insert(BaseDomain entity) {
