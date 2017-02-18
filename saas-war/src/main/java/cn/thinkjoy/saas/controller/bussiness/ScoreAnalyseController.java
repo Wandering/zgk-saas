@@ -3,11 +3,11 @@ package cn.thinkjoy.saas.controller.bussiness;
 import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.*;
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.*;
-import cn.thinkjoy.saas.service.IExamDetailService;
-import cn.thinkjoy.saas.service.IExamPropertiesService;
-import cn.thinkjoy.saas.service.IExamService;
-import cn.thinkjoy.saas.service.IExamStuWeakCourseService;
+import cn.thinkjoy.saas.enums.GradeEnum;
+import cn.thinkjoy.saas.enums.GradeTypeEnum;
+import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
@@ -61,6 +61,9 @@ public class ScoreAnalyseController
 
     @Autowired
     EXIGradeService exiGradeService;
+
+    @Autowired
+    EXIGradeService gradeService;
 
     private Set<Integer> advancedScoreSet;
 
@@ -574,17 +577,30 @@ public class ScoreAnalyseController
         Map<String, String> classBossMap = new HashMap<>();
         if(check)
         {
-            String tableName = ParamsUtils.combinationTableName("class", Integer.parseInt(tnId));
+            String tableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM, Integer.parseInt(tnId));
             Map<String, Object> map = new HashMap<>();
             map.put("tableName",tableName);
             map.put("grade",grade);
-            List<Map<String,Object>> list = examDetailService.getClassBossList(map);
-            for (Map<String,Object> mp : list)
-            {
+            List<Map<String,Object>> allList = new ArrayList<>();
+            List<Map<String,Object>> list = new ArrayList<>();
+            try {
+                list = examDetailService.getClassBossList(map);
+                allList.addAll(list);
+            }catch (Exception e){}
+
+            allList.addAll(list);
+            tableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, Integer.parseInt(tnId));
+            map = new HashMap<>();
+            map.put("tableName",tableName);
+            map.put("grade",grade);
+            try {
+                list = examDetailService.getClassBossList(map);
+                allList.addAll(list);
+            }catch (Exception e){}
+            for (Map<String, Object> mp : allList) {
                 String className = mp.get("class_name") + "";
-                String classBoss =mp.get("class_boss") + "";
-                if(StringUtils.isNotEmpty(classBoss))
-                {
+                String classBoss = mp.get("class_boss") + "";
+                if (StringUtils.isNotEmpty(classBoss)) {
                     classBossMap.put(className, classBoss);
                 }
             }
@@ -1068,18 +1084,35 @@ public class ScoreAnalyseController
         @RequestParam(value = "tnId", required = true) String tnId,
         @RequestParam(value = "grade", required = true) String grade)
     {
-        String tableName = ParamsUtils.combinationTableName("class", Integer.parseInt(tnId));
+        int gradeType = gradeService.getGradeType(Integer.valueOf(tnId), grade);
+//        String tableName = ParamsUtils.combinationTableName(gradeType == GradeTypeEnum.Teaching.getCode() ? Constant.CLASS_EDU : Constant.CLASS_ADM, Integer.parseInt(tnId));
+        String tableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM, Integer.parseInt(tnId));
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("tableName", tableName);
         paramMap.put("grade", grade);
-        List<String> classNames;
+        List<String> classNames = new ArrayList<>();
         try
         {
-            classNames = examDetailService.getClassesNameByGrade(paramMap);
+            List<String> classNamesAdm = examDetailService.getClassesNameByGrade(paramMap);
+            classNames.addAll(classNamesAdm);
         }
         catch (Exception e)
         {
             throw new BizException("1100221", "班级信息未设置或设置不正确,必须包含班级名称和年级！");
+        }
+
+        tableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, Integer.parseInt(tnId));
+        paramMap = new HashMap<>();
+        paramMap.put("tableName", tableName);
+        paramMap.put("grade", grade);
+        try
+        {
+            List<String> classNamesEdu = examDetailService.getClassesNameByGrade(paramMap);
+            classNames.addAll(classNamesEdu);
+        }
+        catch (Exception e)
+        {
+            //吃掉异常
         }
         return classNames;
     }
@@ -2012,12 +2045,19 @@ public class ScoreAnalyseController
     {
         boolean flag =false;
         Map<String, String> paramMap = new HashMap<>();
-        String tableName = ParamsUtils.combinationTableName("class", Integer.parseInt(tnId));
+        String tableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM, Integer.parseInt(tnId));
         paramMap.put("tableName", tableName);
         if(examDetailService.checkIsTableExist(paramMap))
         {
             paramMap.put("columnName", "class_boss");
             flag = examDetailService.checkIsColumnExist(paramMap);
+        }
+        tableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, Integer.parseInt(tnId));
+        paramMap.put("tableName", tableName);
+        if(examDetailService.checkIsTableExist(paramMap))
+        {
+            paramMap.put("columnName", "class_boss");
+            flag = flag || examDetailService.checkIsColumnExist(paramMap);
         }
         return flag;
     }

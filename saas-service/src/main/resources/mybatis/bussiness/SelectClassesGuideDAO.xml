@@ -207,10 +207,16 @@
     </select>
 
     <select id="selectStudentExcel" parameterType="java.util.Map" resultType="java.util.Map">
-        select *,CONCAT(t1.student_check_major1,'-',t1.student_check_major2,'-',t1.student_check_major3) as student_major_type  from ${tableName} t1
-        <if test="classTableName!=null">
-            INNER JOIN ${classTableName} t2 on t1.student_grade=t2.class_grade and t1.student_class=t2.class_name
-        </if>
+        select t1.id,gg.year as class_in_year,CONCAT(t1.student_check_major1,'-',t1.student_check_major2,'-',t1.student_check_major3) as student_major_type
+        from ${tableName} t1
+        INNER JOIN
+        (select  class_grade,class_name from ${classTableName1}
+        UNION ALL
+        select  class_grade,class_name from ${classTableName2})
+        t2 on t1.student_grade=t2.class_grade and t1.student_class=t2.class_name
+        INNER JOIN
+        saas_grade gg
+        on gg.tnId=#{tnId} and gg.grade=t2.class_grade
         <if test="grade!=null">
           where t1.student_grade LIKE CONCAT('%',#{grade},'%')
         </if>

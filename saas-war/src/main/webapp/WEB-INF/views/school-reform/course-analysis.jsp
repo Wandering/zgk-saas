@@ -79,11 +79,11 @@
                                     <ul class="single-course-analysis-list">
                                         <li>
                                             <input type="radio" name="senior-analysis" id="senior-two" checked />
-                                            <label for="senior-two">高二</label>
+                                            <label for="senior-two">高二年级</label>
                                         </li>
                                         <li>
                                             <input type="radio" name="senior-analysis" id="senior-three" />
-                                            <label for="senior-three">高三</label>
+                                            <label for="senior-three">高三年级</label>
                                         </li>
                                     </ul>
                                     <div class="single-course-info"></div>
