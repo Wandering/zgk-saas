@@ -1163,4 +1163,9 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         }
         return list;
     }
+
+    @Override
+    public List<LinkedHashMap<String, Object>> getTeacherByParams(int tnId, String grade) {
+        return null;
+    }
 }

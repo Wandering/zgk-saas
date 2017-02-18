@@ -963,13 +963,13 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
             List<String> allCourseList =  main.readLines();
             List<List<String>> weekCourseList;
             for (String courseLine : allCourseList){
-                String[] weekCourses  =  courseLine.split("\t");
+                String[] weekCourses  =  courseLine.split(Constant.COURSE_LINE_TABLE_SPLIT_T);
 
                 weekCourseList = new LinkedList<>();
                 List<String> dayCourseList;
                 for (String dayCourseStr : weekCourses){
                     dayCourseList = new LinkedList<>();
-                    String[] dayCourses = dayCourseStr.split("  ");
+                    String[] dayCourses = dayCourseStr.split(Constant.COURSE_TABLE_LINE_SPLIT_CHAR);
                     for (int i = 0 ; i < dayCourses.length ; i++){
                         //课程转换
                         String course = courses.get(Integer.valueOf(dayCourses[i]));
@@ -1070,6 +1070,8 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         for (int i = 1 ; i < list.size()+1 ; i++){
             courseMap.put(i,courses.get(list.get(i-1).getCourseId()).getCourseBaseName());
         }
+        //0的时候是没有课程
+        courseMap.put(0,"没课");
         return courseMap;
     }
 
