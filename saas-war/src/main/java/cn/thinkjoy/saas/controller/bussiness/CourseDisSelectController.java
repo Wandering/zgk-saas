@@ -305,18 +305,18 @@ public class CourseDisSelectController
         , @RequestParam(value = "teacherCourse", required = false) String teacherCourse)
     {
         List<Map<String, String>> list = new ArrayList<>();
-        Map<String, String> params = new HashMap<>();
-        params.put("taskId", taskId + "");
         if ("class".equals(type))
         {
-            list = jwCourseGapRuleService.queryClassList(params);
+            list = jwCourseGapRuleService.queryClassList(taskId);
         }
         else if ("course".equals(type))
         {
-            list = jwCourseGapRuleService.queryCourseList(params);
+            list = jwCourseGapRuleService.queryCourseList(taskId);
         }
         else if ("teacher".equals(type))
         {
+            Map<String, String> params = new HashMap<>();
+            params.put("taskId", taskId + "");
             params.put("teacherCourse", teacherCourse);
             List<TeacherBaseDto> dtos = iexScheduleBaseInfoService.queryTeacherByTaskId(taskId);
             if(null != dtos && dtos.size() >0)

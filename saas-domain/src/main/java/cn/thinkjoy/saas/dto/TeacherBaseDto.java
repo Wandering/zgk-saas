@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class TeacherBaseDto implements Serializable {
 
+    private int id; // 主键ID
     private int teacherId; // 教师ID
     private String teacherName; // 教师姓名
     private String courseName; // 课程名
@@ -70,6 +71,15 @@ public class TeacherBaseDto implements Serializable {
 
     public void setIsAttend(int isAttend) {
         this.isAttend = isAttend;
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override

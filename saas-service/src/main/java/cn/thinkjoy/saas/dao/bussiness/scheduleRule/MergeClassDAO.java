@@ -13,7 +13,9 @@ public interface MergeClassDAO {
 
     void insertMergeInfo(Map<String,Object> map);
 
-    List<MergeClassInfoDto> selectMergeInfo(Map<String,Object> map);
+    List<MergeClassInfoDto> selectMergeInfo(Map<String,String> map);
 
     void deleteMergeInfo(Map<String,Object> map);
+
+    Integer checkIsRepeat(Map<String,Object> map);
 }

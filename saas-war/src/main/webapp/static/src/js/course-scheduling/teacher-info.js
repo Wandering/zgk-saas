@@ -18,12 +18,39 @@ TeacherInfo.prototype = {
                 'taskId': taskId
             },
             function (res) {
+                res = {
+                    "bizData": [{
+                        "id": 4,
+                        "classes": "高二2班 高二7班",
+                        "classNum": 1,
+                        "courseName": "地理",
+                        "teacherId": 799,
+                        "teacherName": "王丹青",
+                        "isAttend": 0
+                    }, {
+                        "id": 42,
+                        "classes": "生物1 生物2 生物3班",
+                        "classNum": 3,
+                        "courseName": "生物",
+                        "teacherId": 778,
+                        "teacherName": "安瑞娟",
+                        "isAttend": 1
+                    }, {
+                        "id": 22,
+                        "classes": "化学1 化学2",
+                        "classNum": 1,
+                        "courseName": "物理",
+                        "teacherId": 795,
+                        "teacherName": "张博",
+                        "isAttend": 0
+                    }], "rtnCode": "0000000", "ts": 1487407317656
+                };
                 if (res.rtnCode == "0000000") {
                     $('#teacher-list').html('');
                     var myTemplate = Handlebars.compile($("#teacher-template").html());
                     Handlebars.registerHelper("classInfoData", function (v) {
                         var data = [];
-                        $.each(v,function(i,k){
+                        $.each(v, function (i, k) {
                             console.log(k);
                             data.push(k.classId);
                         });
@@ -38,15 +65,16 @@ TeacherInfo.prototype = {
                 layer.msg(res.msg);
             });
     },
-    addOrUpdateTeacher: function (title,teachername) {
+
+    addOrUpdateTeacher: function (title, teachername) {
         var that = this;
         var addTeacherContentHtml = [];
         addTeacherContentHtml.push('<div class="add-teacher-box">');
         addTeacherContentHtml.push('<div class="teacher-box">');
         addTeacherContentHtml.push('<div class="box-row">');
-        if(teachername){
+        if (teachername) {
             addTeacherContentHtml.push('<span class="title"><i>*</i>教师姓名：</span><input type="text" disabled="disabled" id="teacher-keywords" /><span class="teach-subject">所授课程：<span class="subject-name"></span></span>');
-        }else{
+        } else {
             addTeacherContentHtml.push('<span class="title"><i>*</i>教师姓名：</span><input type="text" id="teacher-keywords" /><span class="teach-subject">所授课程：<span class="subject-name"></span></span>');
         }
         addTeacherContentHtml.push('<ul class="like-teacher-list" id="search-list">');
@@ -78,15 +106,15 @@ TeacherInfo.prototype = {
             area: ['471px', '380px'],
             content: addTeacherContentHtml.join(''),
             success: function () {
-                if(teachername){
-                    that.queryTeacherByKeyWord(taskId,teachername);
-                }else{
-                    that.queryTeacherByKeyWord(taskId,"");
+                if (teachername) {
+                    that.queryTeacherByKeyWord(taskId, teachername);
+                } else {
+                    that.queryTeacherByKeyWord(taskId, "");
                     //that.keywordsPropertychange();
 
-                    $('#teacher-keywords').bind('input propertychange', function() {
+                    $('#teacher-keywords').bind('input propertychange', function () {
                         console.log($(this).val().length)
-                        if($(this).val().length=='0'){
+                        if ($(this).val().length == '0') {
                             $('.teach-subject,.class-box').hide();
                             $('.subject-name').text('');
                             $('#max-class-count option:gt(0)').remove();
@@ -110,9 +138,9 @@ TeacherInfo.prototype = {
             },
             function (res) {
                 if (res.rtnCode == "0000000") {
-                    if(keyWord==""){
+                    if (keyWord == "") {
                         that.getWordList(res.bizData);
-                    }else{
+                    } else {
                         that.setWordList(res.bizData);
                     }
                 }
@@ -120,21 +148,21 @@ TeacherInfo.prototype = {
                 layer.msg(res.msg);
             }, true);
     },
-    getWordList:function(wordData){
+    getWordList: function (wordData) {
         var wordArr = [];
-        $.each(wordData,function(i,v){
+        $.each(wordData, function (i, v) {
             var wordsObj = {};
-            wordsObj['title']= v['teacherName'];
-            wordsObj['teacherId']= v['teacherId'];
-            wordsObj['courseName']= v['courseName'];
-            wordsObj['classNum']= v['classInfo'].length;
-            wordsObj['classInfo']= v['classInfo'];
+            wordsObj['title'] = v['teacherName'];
+            wordsObj['teacherId'] = v['teacherId'];
+            wordsObj['courseName'] = v['courseName'];
+            wordsObj['classNum'] = v['classInfo'].length;
+            wordsObj['classInfo'] = v['classInfo'];
             wordArr.push(wordsObj);
         });
         $("#teacher-keywords").bigAutocomplete({
-            width:159,
+            width: 159,
             data: wordArr,
-            callback:function(data){
+            callback: function (data) {
                 $('.teaching-class-list').html('');
                 $('#max-class-count option:gt(0)').remove();
                 $('.teach-subject').show().find('.subject-name').text(data.courseName);
@@ -160,7 +188,7 @@ TeacherInfo.prototype = {
             }
         });
     },
-    setWordList:function(result){
+    setWordList: function (result) {
         var data = result[0];
         $('#teacher-keywords').val(data.teacherName);
         $('.teach-subject').show().find('.subject-name').text(data.courseName);
@@ -301,6 +329,34 @@ $(function () {
         TeacherInfoIns.addOrUpdateTeacher('添加教师');
     });
 
+
+    //二次迭代保存教师列表 ============
+    $('#save-teacher').click(function () {
+        var parentDom = $('#teacher-list tr'), tId, tVal, foo = [];
+        for (var i = 0; i < parentDom.length; i++) {
+            tId = parentDom.eq(i).find('td').eq(5).find('input[type="checkbox"]').attr('tId');
+            if (parentDom.eq(i).find('td').eq(5).find('input[type="checkbox"]:checked').val()) {
+                tVal = 1
+            } else {
+                tVal = 0
+            }
+            foo.push(tId + '-' + tVal);
+        }
+        // （0：不排课，1：排课）eg:1-0,2-1,3-1,4-1
+        Common.ajaxFun('/scheduleTask/saveTeacherSchedule.do', 'POST', {
+                "str": foo.join()
+            },
+            function (res) {
+                if (res.rtnCode === '0000000') {
+                    console.info(res);
+                }
+            }, function (res) {
+                layer.msg(res.msg);
+            })
+
+    });
+
+
     // 模糊搜索
     //$(document).on('mouseover', '#teacher-keywords', function () {
     //    $('.like-teacher-list').show();
@@ -327,14 +383,14 @@ $(function () {
         var teachername = teacherV.attr('teachername');
         var classnum = teacherV.attr('classnum');
         var classinfo = teacherV.attr('classinfo');
-        TeacherInfoIns.addOrUpdateTeacher('修改教师',teachername);
-        $('#max-class-count option[value="'+ classnum +'"]').attr('selected','selected');
+        TeacherInfoIns.addOrUpdateTeacher('修改教师', teachername);
+        $('#max-class-count option[value="' + classnum + '"]').attr('selected', 'selected');
 
         console.log(classinfo.split(","))
 
-        $.each(classinfo.split(","),function(i,v){
+        $.each(classinfo.split(","), function (i, v) {
             console.log(v);
-            $('.teaching-class-list input[classid="'+ v +'"]').attr('checked','checked');
+            $('.teaching-class-list input[classid="' + v + '"]').attr('checked', 'checked');
         });
     });
 
@@ -385,14 +441,13 @@ $(function () {
         }
         var courseName = $(this).attr('courseName');
         var teachingClassArr = [];
-        $('.teaching-class-list input:checked').each(function(i,v){
+        $('.teaching-class-list input:checked').each(function (i, v) {
             teachingClassArr.push($(this).attr('classid'));
         });
         TeacherInfoIns.saveOrUpdateTeacher(taskId, teacherid, maxClassCount, courseName, teachingClassArr.join(","));
 
 
     });
-
 
 
     $(document).on('click', '#rule-settings', function () {

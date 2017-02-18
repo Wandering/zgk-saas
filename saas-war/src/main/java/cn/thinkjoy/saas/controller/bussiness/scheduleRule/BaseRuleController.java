@@ -1,7 +1,9 @@
 package cn.thinkjoy.saas.controller.bussiness.scheduleRule;
 
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dto.BaseRuleDto;
 import cn.thinkjoy.saas.service.bussiness.scheduleRule.IBaseRule;
+import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,7 @@ public class BaseRuleController {
             paramMap.put("courseId", courseId);
         }
         paramMap.put("ruleTable","saas_jw_base_jaqp_rule");
+        paramMap.put("teacherTable", ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER,Integer.valueOf(tnId)));
         Map<String,Object> resultMap=new HashMap<>();
         resultMap.put("baseRuleList",iBaseRule.selectBaseRule(paramMap));
         return resultMap;
@@ -67,6 +70,7 @@ public class BaseRuleController {
             paramMap.put("courseId", courseId);
         }
         paramMap.put("ruleTable","saas_jw_base_week_rule");
+        paramMap.put("teacherTable", ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER,Integer.valueOf(tnId)));
         paramMap.put("weekType",1);
         Map<String,Object> resultMap=new HashMap<>();
         resultMap.put("baseRuleList",iBaseRule.selectBaseRule(paramMap));
@@ -96,6 +100,7 @@ public class BaseRuleController {
             paramMap.put("courseId", courseId);
         }
         paramMap.put("ruleTable","saas_jw_base_day_rule");
+        paramMap.put("teacherTable", ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER,Integer.valueOf(tnId)));
         paramMap.put("dayType",1);
         Map<String,Object> resultMap=new HashMap<>();
         resultMap.put("baseRuleList",iBaseRule.selectBaseRule(paramMap));
@@ -124,6 +129,7 @@ public class BaseRuleController {
             paramMap.put("courseId", courseId);
         }
         paramMap.put("ruleTable","saas_jw_base_con_rule");
+        paramMap.put("teacherTable", ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER,Integer.valueOf(tnId)));
         paramMap.put("dayConType",1);
         Map<String,Object> resultMap=new HashMap<>();
         resultMap.put("baseRuleList",iBaseRule.selectBaseRule(paramMap));

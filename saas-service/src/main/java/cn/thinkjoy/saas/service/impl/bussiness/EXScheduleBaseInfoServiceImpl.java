@@ -15,6 +15,7 @@ import cn.thinkjoy.saas.service.bussiness.IEXCourseBaseInfoService;
 import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
+import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,9 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
 
     @Autowired
     private IEXClassBaseInfoDAO iexClassBaseInfoDAO;
+
+    @Autowired
+    private IJwCourseGapRuleDAO jwCourseGapRuleDAO;
 
     @Autowired
     private IJwBaseConRuleDAO iJwBaseConRuleDAO;
@@ -171,10 +175,10 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
 
         if(teachers == null || teachers.size() == 0){
             JwScheduleTask task = getTaskByTaskId(taskId);
-            Integer grade = Integer.valueOf(task.getGrade());
-            List<TeacherBaseDto> dtos = iexTenantCustomService.getTeacherInfos(task.getTnId(),Constant.GRADES[grade]);
+            int grade = Integer.valueOf(task.getGrade());
+            List<TeacherBaseDto> dtos = iexTenantCustomService.getTeacherInfos(task.getTnId(),Constant.GRADES[grade-1]);
             insertJwTeacher(dtos,taskId,task.getTnId());
-            return dtos;
+            return insertJwTeacher(dtos,taskId,task.getTnId());
         }
 
         return convertTeachers2Dtos(teachers);
@@ -187,15 +191,18 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
      * @param taskId
      * @param tnId
      */
-    private void insertJwTeacher(List<TeacherBaseDto> dtos,int taskId,int tnId){
+    private List<TeacherBaseDto> insertJwTeacher(List<TeacherBaseDto> dtos,int taskId,int tnId){
         for(TeacherBaseDto dto : dtos){
             JwTeacher teacher = new JwTeacher();
             teacher.setIsAttend(0);
             teacher.setTaskId(taskId);
             teacher.setTeacherId(dto.getTeacherId());
             teacher.setTnId(tnId);
-            jwTeacherDAO.insert(teacher);
+            int id = jwTeacherDAO.insert(teacher);
+
+            dto.setId(id);
         }
+        return dtos;
     }
 
 
@@ -209,6 +216,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         List<TeacherBaseDto> dtos = Lists.newArrayList();
         for(JwTeacher teacher : teachers){
             TeacherBaseDto dto = iexTenantCustomService.getTeacherInfo(teacher.getTnId(),teacher.getTeacherId());
+            dto.setId(Integer.valueOf(teacher.getId().toString()));
             dtos.add(dto);
         }
         return dtos;
@@ -244,43 +252,33 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
 //        return dtos;
 //    }
 
-    /**
-     * 根据年级和课程名获取班级信息
-     *
-     * @param tnId
-     * @param grade
-     * @param course
-     * @return
-     */
-//    public List<ClassBaseDto> getClassBaseDtosByCourse(int tnId,int grade,String course){
-//
-//        List<ClassBaseDto> dtos = Lists.newArrayList();
-//
-//        Map<String,Object> paramMap = Maps.newHashMap();
-//        paramMap.put("className",course);
-//        paramMap.put("classType",2);
-//        paramMap.put("grade",grade);
-//        paramMap.put("tnId",tnId);
-//        List<JwClassBaseInfo> infos = iexClassBaseInfoDAO.queryClassList(paramMap);
-//
-//        // 不存在则查询行政班级
-//        if(infos.size() == 0){
-//            paramMap.clear();
-//            paramMap.put("grade",grade);
-//            paramMap.put("classType",1);
-//            paramMap.put("tnId",tnId);
-//            infos = iexClassBaseInfoDAO.queryClassList(paramMap);
-//        }
-//
-//        for(JwClassBaseInfo info : infos){
-//            ClassBaseDto dto = new ClassBaseDto();
-//            dto.setClassId(Integer.valueOf(info.getId().toString()));
-//            dto.setClassName(info.getClassName());
-//            dtos.add(dto);
-//        }
-//
-//        return dtos;
-//    }
+    @Override
+    public List<Map<String,Object>> getClassBaseDtosByCourse(int tnId,int grade,String course){
+
+        List<Map<String,Object>> returnMaps = Lists.newArrayList();
+
+        Map<String,String> paramMap = Maps.newHashMap();
+        paramMap.put("tableName", ParamsUtils.combinationTableName(Constant.CLASS_ADM,tnId));
+        paramMap.put("searchKey","class_grade");
+        paramMap.put("searchValue",Constant.GRADES[Integer.valueOf(grade-1)]);
+
+        List<Map<String,Object>> maps = jwCourseGapRuleDAO.queryClassList(paramMap);
+
+        // 根据课程名称和年纪查询班级信息
+        for(Map map : maps){
+            if(map.get("name").toString().indexOf(course) != -1){
+                returnMaps.add(map);
+            }
+        }
+
+        // 不存在则查询行政班级
+        if(maps.size() == 0){
+            paramMap.put("tableName", ParamsUtils.combinationTableName(Constant.CLASS_EDU,tnId));
+            returnMaps = jwCourseGapRuleDAO.queryClassList(paramMap);
+        }
+
+        return returnMaps;
+    }
 
 //    @Override
 //    public void saveOrUpdateTeacher(int taskId, int teacherId, int classNum,String course, String classId) {
