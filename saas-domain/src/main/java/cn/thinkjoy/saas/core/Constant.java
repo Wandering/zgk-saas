@@ -75,4 +75,7 @@ public class Constant {
     public static final String COURSE_TABLE_REDIS_KEY = "course_key_";
     public static final String COURSE_TABLE_REDIS_SPLIT = "_";
     /**课程表redis相关end**/
+
+    public static final java.lang.String COURSE_LINE_TABLE_SPLIT_T = "\t";
+    public static final java.lang.String COURSE_TABLE_LINE_SPLIT_CHAR = "  ";
 }
