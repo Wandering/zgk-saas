@@ -577,11 +577,19 @@ public class ScoreAnalyseController
         Map<String, String> classBossMap = new HashMap<>();
         if(check)
         {
-            String tableName = ParamsUtils.combinationTableName("class", Integer.parseInt(tnId));
+            String tableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM, Integer.parseInt(tnId));
             Map<String, Object> map = new HashMap<>();
             map.put("tableName",tableName);
             map.put("grade",grade);
+            List<Map<String,Object>> allList = new ArrayList<>();
             List<Map<String,Object>> list = examDetailService.getClassBossList(map);
+            allList.addAll(list);
+            tableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, Integer.parseInt(tnId));
+            map = new HashMap<>();
+            map.put("tableName",tableName);
+            map.put("grade",grade);
+            list = examDetailService.getClassBossList(map);
+            allList.addAll(list);
             for (Map<String,Object> mp : list)
             {
                 String className = mp.get("class_name") + "";
@@ -1077,10 +1085,24 @@ public class ScoreAnalyseController
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("tableName", tableName);
         paramMap.put("grade", grade);
-        List<String> classNames;
+        List<String> classNames = new ArrayList<>();
         try
         {
-            classNames = examDetailService.getClassesNameByGrade(paramMap);
+            List<String> classNamesAdm = examDetailService.getClassesNameByGrade(paramMap);
+            classNames.addAll(classNamesAdm);
+        }
+        catch (Exception e)
+        {
+            throw new BizException("1100221", "班级信息未设置或设置不正确,必须包含班级名称和年级！");
+        }
+        tableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM, Integer.parseInt(tnId));
+        paramMap = new HashMap<>();
+        paramMap.put("tableName", tableName);
+        paramMap.put("grade", grade);
+        try
+        {
+            List<String> classNamesEdu = examDetailService.getClassesNameByGrade(paramMap);
+            classNames.addAll(classNamesEdu);
         }
         catch (Exception e)
         {
