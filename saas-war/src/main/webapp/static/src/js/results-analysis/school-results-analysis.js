@@ -25,7 +25,7 @@ SchoolResultsAnalysis.prototype = {
         Common.ajaxFun('/scoreAnalyse/getExamProperties', 'GET', {
             'tnId': tnId
         }, function (res) {
-            console.log(res);
+            //console.log(res);
             if (res.rtnCode == "0000000") {
                 $.each(res.bizData, function (i,v) {
                     if(v.name=='defaultGrade'){
@@ -37,11 +37,12 @@ SchoolResultsAnalysis.prototype = {
                         that.getSchoolBossForGrade(v.value);
                         if (v.value.indexOf('高三') >= 0 || v.value.indexOf('高3') >= 0) {
                             that.getOverLineNumberByDate(v.value);
-                            $('.grade3-main,.grade3-t').show();
+                            $('.grade3-t').show();
+                            $('.grade3-main').removeClass('echartsShow');
                         } else {
-                            $('.grade3-main,.grade3-t').hide();
+                            $('.grade3-t').hide();
+                            $('.grade3-main').addClass('echartsShow');
                         }
-
                     }
                 });
 
@@ -59,7 +60,7 @@ SchoolResultsAnalysis.prototype = {
             'name': 'defaultGrade',
             'value': grade
         }, function (res) {
-            console.log(res);
+            //console.log(res);
             if (res.rtnCode == "0000000") {
                 if(res.bizData==true){
                     // 提交成功
@@ -96,10 +97,12 @@ SchoolResultsAnalysis.prototype = {
             that.updateExamProperties(radioV);
             that.getSchoolBossForGrade(radioV);
             if (radioV.indexOf('高三') >= 0 || radioV.indexOf('高3') >= 0) {
-                $('.grade3-main,.grade3-t').show();
+                $('.grade3-t').show();
+                $('.grade3-main').removeClass('echartsShow');
                 that.getOverLineNumberByDate(radioV);
             } else {
-                $('.grade3-main,.grade3-t').hide();
+                $('.grade3-t').hide();
+                $('.grade3-main').addClass('echartsShow');
             }
         });
         // 默认高一年级
@@ -189,7 +192,7 @@ SchoolResultsAnalysis.prototype = {
 
                     tbodyArr += '<tr>';
                     $.each(v, function (n, k) {
-                        console.log(k)
+                        //console.log(k)
 
                         switch (k) {
                             case "batchOne":
@@ -399,7 +402,7 @@ SchoolResultsAnalysis.prototype = {
                 $('#MostAdvanced').show();
                 that.getMostAdvancedNumbers(grade,that.counselor,that.stepStart,that.stepEnd)
             } else if(res.rtnCode == "1100012"){
-                console.log('该年级只有一次成绩录入!');
+                //console.log('该年级只有一次成绩录入!');
                 $('#MostAdvanced').hide();
             }
         }, function (res) {
@@ -412,6 +415,10 @@ SchoolResultsAnalysis.prototype = {
         $('#ranking-sel').change(function(){
             that.stepStart = $(this).children('option:checked').attr('stepStart');
             that.stepEnd = $(this).children('option:checked').attr('stepEnd');
+            if(!that.stepStart || !that.stepEnd){
+                that.stepStart = '';
+                that.stepEnd = '';
+            }
             that.getMostAdvancedNumbers(grade,that.counselor,that.stepStart,that.stepEnd);
         });
     },
@@ -424,7 +431,7 @@ SchoolResultsAnalysis.prototype = {
             'stepStart': stepStart,
             'stepEnd': stepEnd
         }, function (res) {
-            console.log(res)
+            //console.log(res)
             if (res.rtnCode == "0000000") {
                 $('#progress-tbody').html('');
                 if(res.bizData.length == 0){

@@ -149,3 +149,13 @@
 .layui-layer-loading1 {
   margin: 0 auto;
 }
+
+.echartsShow{
+  font-size:0;
+  line-height:0;
+  z-index: -1;
+  text-indent: -1000px;
+  overflow: hidden;
+  height: 1px;
+}
+
