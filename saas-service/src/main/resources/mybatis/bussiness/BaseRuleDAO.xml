@@ -23,8 +23,8 @@
             ii.create_date as createDate,
             ii.task_id as taskId
         from ${ruleTable} ii
-        left join saas_jw_course_base_info cc on ii.course_id = cc.id
-        left join saas_jw_teacher_base_info tt on ii.teacher_id = tt.id
+        left join saas_course_base_info cc on ii.course_id = cc.id
+        left join ${teacherTable} tt on ii.teacher_id = tt.id
         where 1=1
           <if test="courseId!=null">
             and ii.course_id=#{courseId}

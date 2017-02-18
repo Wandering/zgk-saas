@@ -230,31 +230,31 @@ public class ScheduleTaskController {
         try {
             map = iexTenantCustomService.existDataCount(params);
         }catch (Exception e){
-            throw new BizException(ErrorCode.TASK_ERROR.getCode(),"您还未完善学生信息，请至学生管理中完善!");
+            throw new BizException(ErrorCode.TASK_ERROR.getCode(),"您还未上传学生信息，请至学生管理中完善!");
         }
 
-        Iterator<String> iterator = map.keySet().iterator();
-        List<String> emptyColumns = new ArrayList<>();
-        while (iterator.hasNext()){
-            String key = iterator.next();
-            if ("0".equals(map.get(key)==null?null:map.get(key).toString())) {
-                emptyColumns.add(key);
-            }
-        }
-        if (emptyColumns.size()>0) {
-            StringBuffer buffer = new StringBuffer();
-            buffer.append("您还未填写");
-            for (String s : emptyColumns) {
-                Map<String, Object> queryMap = Maps.newHashMap();
-                queryMap.put("domain", Constant.STUDENT);
-                queryMap.put("enName", s);
-                String cnName = exiConfigurationService.selectColumnName(queryMap);
-                buffer.append(cnName).append("、");
-            }
-            buffer.delete(buffer.length()-1,buffer.length());
-            buffer.append("字段信息，请至学生管理中完善");
-            throw new BizException(ErrorCode.TASK_ERROR.getCode(), buffer.toString());
-        }
+//        Iterator<String> iterator = map.keySet().iterator();
+//        List<String> emptyColumns = new ArrayList<>();
+//        while (iterator.hasNext()){
+//            String key = iterator.next();
+//            if ("0".equals(map.get(key)==null?null:map.get(key).toString())) {
+//                emptyColumns.add(key);
+//            }
+//        }
+//        if (emptyColumns.size()>0) {
+//            StringBuffer buffer = new StringBuffer();
+//            buffer.append("您还未填写");
+//            for (String s : emptyColumns) {
+//                Map<String, Object> queryMap = Maps.newHashMap();
+//                queryMap.put("domain", Constant.STUDENT);
+//                queryMap.put("enName", s);
+//                String cnName = exiConfigurationService.selectColumnName(queryMap);
+//                buffer.append(cnName).append("、");
+//            }
+//            buffer.delete(buffer.length()-1,buffer.length());
+//            buffer.append("字段信息，请至学生管理中完善");
+//            throw new BizException(ErrorCode.TASK_ERROR.getCode(), buffer.toString());
+//        }
         return true;
     }
 

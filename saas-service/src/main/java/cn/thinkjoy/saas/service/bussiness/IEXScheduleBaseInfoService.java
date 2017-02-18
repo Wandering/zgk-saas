@@ -45,6 +45,16 @@ public interface IEXScheduleBaseInfoService {
     List<TeacherBaseDto> queryTeacherByTaskId(int taskId);
 
     /**
+     * 根据年级和课程名获取班级信息
+     *
+     * @param tnId
+     * @param grade
+     * @param course
+     * @return
+     */
+    List<Map<String,Object>> getClassBaseDtosByCourse(int tnId,int grade,String course);
+
+    /**
      * 根据关键词搜索教师信息
      *
      * @param taskId
