@@ -9,6 +9,7 @@ package cn.thinkjoy.saas.service.bussiness;
 
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 
+import java.io.IOException;
 import java.util.Map;
 
 public interface IEXJwScheduleTaskService {
@@ -26,4 +27,13 @@ public interface IEXJwScheduleTaskService {
      * @return
      */
     Map<String,Object> getAllCourseResult(Integer taskId, Integer tnId);
+
+
+    /**
+     * 初始化排课参数
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    boolean InitParmasFile(Integer taskId, Integer tnId) throws IOException;
 }

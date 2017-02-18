@@ -29,6 +29,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -116,11 +117,16 @@ public class ScheduleTaskController {
      */
     @ResponseBody
     @RequestMapping("/updateScheduleTaskStatus")
-    public boolean updateScheduleTaskStatus(@RequestParam Integer taskId){
-        JwScheduleTask jwScheduleTask = new JwScheduleTask();
-        jwScheduleTask.setId(taskId);
-        jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
-        return jwScheduleTaskService.update(jwScheduleTask)>0;
+    public boolean updateScheduleTaskStatus(@RequestParam Integer taskId) throws IOException {
+//        JwScheduleTask jwScheduleTask = new JwScheduleTask();
+//        jwScheduleTask.setId(taskId);
+//        jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
+
+
+        return iexJwScheduleTaskService.InitParmasFile(taskId, 13);
+
+
+//        return jwScheduleTaskService.update(jwScheduleTask)>0;
     }
     /**
      * 修改排课任务

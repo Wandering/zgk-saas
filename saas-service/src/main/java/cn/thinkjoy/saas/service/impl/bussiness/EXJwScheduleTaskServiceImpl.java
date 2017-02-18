@@ -8,21 +8,30 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.*;
+import cn.thinkjoy.saas.dao.bussiness.ICourseBaseInfoDAO;
+import cn.thinkjoy.saas.dao.bussiness.ICourseManageDAO;
+import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
+import cn.thinkjoy.saas.dao.bussiness.scheduleRule.MergeClassDAO;
 import cn.thinkjoy.saas.domain.*;
+import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
+import cn.thinkjoy.saas.domain.bussiness.CourseManageVo;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
+import cn.thinkjoy.saas.domain.bussiness.MergeClassInfoVo;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
 import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
+import cn.thinkjoy.saas.service.common.ConvertUtil;
+import cn.thinkjoy.saas.service.common.FileOperation;
+import cn.thinkjoy.saas.service.common.ParamsUtils;
 import cn.thinkjoy.zgk.common.StringUtil;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 
 @Service("EXJwScheduleTaskServiceImpl")
@@ -40,10 +49,34 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
     IJwScheduleTaskDAO scheduleTaskDAO;
     @Autowired
     IJwClassBaseInfoDAO jwClassBaseInfoDAO;
-
     @Autowired
-    private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
-
+    IEXScheduleBaseInfoService iexScheduleBaseInfoService;
+    @Autowired
+    IJwClassRuleDAO iJwClassRuleDAO;
+    @Autowired
+    IEXTeantCustomDAO iexTeantCustomDAO;
+    @Autowired
+    ICourseManageDAO iCourseManageDAO;
+    @Autowired
+     IGradeDAO iGradeDAO;
+    @Autowired
+    IJwCourseRuleDAO jwCourseRuleDAO;
+    @Autowired
+    IJwCourseDAO jwCourseDAO;
+    @Autowired
+    MergeClassDAO mergeClassDAO;
+    @Autowired
+    ICourseBaseInfoDAO iCourseBaseInfoDAO;
+    @Autowired
+    IJwTeacherRuleDAO iJwTeacherRuleDAO;
+    @Autowired
+     IJwBaseConRuleDAO iJwBaseConRuleDAO;
+    @Autowired
+    IJwBaseJaqpRuleDAO iJwBaseJaqpRuleDAO;
+    @Autowired
+    IJwBaseWeekRuleDAO iJwBaseWeekRuleDAO;
+    @Autowired
+    IJwBaseDayRuleDAO iJwBaseDayRuleDAO;
 
 
     @Override
@@ -239,6 +272,603 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         }
         resultMap.put("roomData",list1);
         return resultMap;
+    }
+
+    /**
+     * 初始化排课参数
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    @Override
+    public boolean InitParmasFile(Integer taskId, Integer tnId) throws IOException {
+        boolean result = false;
+
+        List<StringBuffer> admClassRuleBuffers = getClassRule(taskId,1);//行政班 不排课
+
+        result = printBuffers(admClassRuleBuffers, FileOperation.ADMIN_CLASS_NON_DISPACHING);
+
+        List<StringBuffer> eduClassRuleBuffers = getClassRule(taskId,1);//走读班 不排课
+
+        result = printBuffers(eduClassRuleBuffers, FileOperation.CLASS_NON_DISPACHING);
+
+        List<StringBuffer> admClassInfoBuffers = getClassInfo(taskId,tnId);//行政班基础信息
+
+        result = printBuffers(admClassInfoBuffers, FileOperation.CLASS_INFO);
+
+        List<StringBuffer> courseRuleBuffers = getCourseRule(taskId);//课程不排课
+
+        result = printBuffers(courseRuleBuffers, FileOperation.COURSE_NON_DISPACHING);
+
+        List<StringBuffer> teachDataBuffers = getTeachDateInfo(taskId,tnId);//基础规则设置
+
+        result = printBuffers(teachDataBuffers, FileOperation.COURSE_TIMESLOTS);
+
+        List<StringBuffer> gradeNonDisBuffers = getGradeNonDispaching(taskId,1);//年级不排课
+
+        result = printBuffers(gradeNonDisBuffers, FileOperation.GRAD_NON_DISPACHING);
+
+
+        List<StringBuffer> courseInfomationBuffers = courseInfomation(taskId,tnId);//课程信息
+
+        result = printBuffers(courseInfomationBuffers, FileOperation.COURSE_INFORMATION);
+
+        List<StringBuffer> teacherSettingBuffers = teachersSetting(taskId,tnId);//教师设置
+
+        result = printBuffers(teacherSettingBuffers, FileOperation.TEACHERS_SETTING);
+
+
+
+        return result;
+    }
+
+    private boolean printBuffers(List<StringBuffer> classRuleBuffers,String fileName) throws IOException {
+        boolean flag = FileOperation.creatTxtFile(fileName);
+        if (flag) {
+            String str = "";
+            for (StringBuffer stringBuffer : classRuleBuffers)
+                str += stringBuffer.toString();
+            flag = FileOperation.writeTxtFile(str);
+        }
+        return flag;
+    }
+
+    /**
+     * 教师设置
+     * @return
+     */
+    private List<StringBuffer> teachersSetting(Integer taskId,Integer tnId) {
+
+        List<StringBuffer> stringBuffers = new ArrayList<>();
+
+        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
+
+        String teacherGrade = ConvertUtil.converGradeByTag(jwScheduleTask.getGrade());
+
+        String tableName = ParamsUtils.combinationTableName("teacher", tnId);
+
+
+        Map map = new HashMap();
+        map.put("tableName",tableName);
+        map.put("searchKey", "teacher_grade");
+        map.put("searchValue", teacherGrade);
+
+        List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.getTenantCustom(map);
+
+        for (int j = 0; j < linkedHashMaps.size(); j++) {
+            LinkedHashMap<String, Object> dataLinkedMap = linkedHashMaps.get(j);
+            StringBuffer stringBuffer = new StringBuffer();
+            Integer teacherId=0,courseId=0;
+            for (Iterator iter = dataLinkedMap.entrySet().iterator(); iter.hasNext(); ) {
+                Map.Entry element = (Map.Entry) iter.next();
+                Object strKey = element.getKey();
+                Object strObj = element.getValue();
+                if(strKey.equals("id")){
+                    teacherId=Integer.valueOf(strObj.toString());
+                    stringBuffer.append(teacherId);//ID
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+                if(strKey.equals("teacher_name")){
+                    stringBuffer.append(strObj);//姓名
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+                if(strKey.equals("teacher_major_type")){
+                    courseId=getCourseId(strObj.toString());
+                    stringBuffer.append(courseId);//所授课程编号
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+                if(strKey.equals("teacher_max_take_class")){
+                    stringBuffer.append(strObj);//最大带班数
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+                if(strKey.equals("teacher_class")){
+                    stringBuffer.append(1); //指定班级个数
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                    stringBuffer.append(getClassId(tnId,strObj.toString(),teacherGrade));//指定所带班级
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+
+
+
+                    Map teacherMap=new HashMap();
+                    teacherMap.put("taskId",taskId);
+                    teacherMap.put("teacherId",teacherId);
+
+                    JwTeacherRule jwTeacherRule= iJwTeacherRuleDAO.queryOne(teacherMap,"id","asc");
+                    StringBuilder stringBuilder=new StringBuilder();
+                    stringBuilder.append(jwTeacherRule.getMon());
+                    stringBuilder.append(jwTeacherRule.getTues());
+                    stringBuilder.append(jwTeacherRule.getWed());
+                    stringBuilder.append(jwTeacherRule.getThur());
+                    stringBuilder.append(jwTeacherRule.getFri());
+                    stringBuilder.append(jwTeacherRule.getSut());
+                    stringBuilder.append(jwTeacherRule.getSun());
+
+                    String str=stringBuilder.toString();
+
+
+                    String[] arr=str.split("0");
+
+                    stringBuffer.append(arr.length-1); //不排课个数
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+
+                    for(Integer i=0;i<str.length();i++) {
+                         String s= str.charAt(i)+"";
+                        if (s.equals("0")) {
+                            stringBuffer.append(i); //不排课时间点
+                            stringBuffer.append(FileOperation.STR_SPLIT);
+                        }
+                    }
+                    stringBuffer.append(1); //连上规则
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                    stringBuffer.append(1); //规则个数
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+
+                    Map conRuleMap=new HashMap();
+                    conRuleMap.put("tnId",tnId);
+                    conRuleMap.put("courseId",courseId);
+                    conRuleMap.put("taskId",taskId);
+                    conRuleMap.put("teacherId",teacherId);
+                    JwBaseConRule jwBaseConRule=iJwBaseConRuleDAO.queryOne(conRuleMap,"id","asc");
+
+                    stringBuffer.append((jwBaseConRule.getDayConType()==1?3:4)); //连上节数
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+
+                    stringBuffer.append(jwBaseConRule.getImportantType()); //连上规则权重
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+
+                    stringBuffer.append(1); //教案平齐 都是1
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+
+                    JwBaseJaqpRule jwBaseJaqpRule=iJwBaseJaqpRuleDAO.queryOne(conRuleMap,"id","asc");
+
+                    stringBuffer.append(jwBaseJaqpRule.getImportantType()); //教案平齐权重
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+
+                    JwBaseWeekRule jwBaseWeekRule=iJwBaseWeekRuleDAO.queryOne(conRuleMap,"id","asc");
+
+                    stringBuffer.append(jwBaseWeekRule.getWeekType()); //周任课规则
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+
+                    stringBuffer.append(jwBaseWeekRule.getImportantType()); //周任课规则权重
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+
+                    JwBaseDayRule jwBaseDayRule=iJwBaseDayRuleDAO.queryOne(conRuleMap,"id","asc");
+                    stringBuffer.append(jwBaseDayRule.getDayType()); //日任课规则
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+
+                    stringBuffer.append(jwBaseDayRule.getImportantType()); //日任课规则权重
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+            }
+            stringBuffer.append(FileOperation.LINE_SPLIT);
+
+            stringBuffers.add(stringBuffer);
+        }
+
+
+        return stringBuffers;
+    }
+
+
+
+    private Integer getCourseId(String courseName) {
+        Map map = new HashMap();
+        map.put("courseName", courseName);
+        CourseBaseInfo courseBaseInfo = iCourseBaseInfoDAO.queryOne(map, "id", "asc");
+        Integer courseId = courseBaseInfo == null ? 0 : Integer.valueOf(courseBaseInfo.getId().toString());
+        return courseId;
+    }
+
+    private Integer getClassId(Integer tnId,String className,String grade) {
+
+        Integer classId = 0;
+
+        String tableName = ParamsUtils.combinationTableName("class_adm", tnId);
+
+
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        map.put("searchKey", "class_name");
+        map.put("searchValue", className);
+
+        List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.getTenantCustom(map);
+
+        for (int j = 0; j < linkedHashMaps.size(); j++) {
+            LinkedHashMap<String, Object> dataLinkedMap = linkedHashMaps.get(j);
+            StringBuffer stringBuffer = new StringBuffer();
+            for (Iterator iter = dataLinkedMap.entrySet().iterator(); iter.hasNext(); ) {
+                Map.Entry element = (Map.Entry) iter.next();
+                Object strKey = element.getKey();
+                Object strObj = element.getValue();
+                if (strKey.equals("class_grade")) {
+                    if (!grade.equals(strObj))
+                        break;
+                }
+                if (strKey.equals("id")) {
+                    classId = Integer.valueOf(strObj.toString());
+                    break;
+                }
+            }
+        }
+        return classId;
+    }
+    /**
+     * 年级不排课
+     * @param taskId
+     * @param type
+     * @return
+     */
+    private List<StringBuffer> getGradeNonDispaching(Integer taskId,Integer type) {
+        Map map = new HashMap();
+        map.put("taskId", taskId);
+        map.put("classType", type);
+        List<JwClassRule> jwClassRules = iJwClassRuleDAO.queryList(map, "id", "asc");
+
+        List<StringBuffer> stringBuffers = new ArrayList<>();
+        StringBuffer stringBuffer1 = new StringBuffer();
+
+        JwClassRule jwClassRule = jwClassRules.get(0);
+
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(converGradeNon(jwClassRule.getMon()));
+        stringBuffer.append(FileOperation.STR_SPLIT);
+        stringBuffer.append(converGradeNon(jwClassRule.getTues()));
+        stringBuffer.append(FileOperation.STR_SPLIT);
+        stringBuffer.append(converGradeNon(jwClassRule.getWed()));
+        stringBuffer.append(FileOperation.STR_SPLIT);
+        stringBuffer.append(converGradeNon(jwClassRule.getTues()));
+        stringBuffer.append(FileOperation.STR_SPLIT);
+        stringBuffer.append(converGradeNon(jwClassRule.getFri()));
+        stringBuffer.append(FileOperation.STR_SPLIT);
+        stringBuffer.append(converGradeNon(jwClassRule.getSut()));
+        stringBuffer.append(FileOperation.STR_SPLIT);
+        stringBuffer.append(converGradeNon(jwClassRule.getSun()));
+        stringBuffer.append(FileOperation.STR_SPLIT);
+        stringBuffer.append(FileOperation.LINE_SPLIT);
+        stringBuffers.add(stringBuffer);
+
+        return stringBuffers;
+    }
+
+    private String converGradeNon(String str) {
+        String result = "";
+        for (Integer i = 0; i < str.length(); i++) {
+            result += 0;
+            result += FileOperation.CHAR_SPLIT;
+        }
+        return result;
+    }
+
+
+    private List<StringBuffer> courseInfomation(Integer taskId,Integer tnId){
+
+        List<StringBuffer> stringBuffers = new ArrayList<>();
+
+        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
+
+        Map map=new HashMap();
+        map.put("tnId",tnId);
+        map.put("gradeId",jwScheduleTask.getGrade());
+        List<CourseManageVo> courseManageVos=iCourseManageDAO.selectCourseManageInfo(map);
+
+
+        for(CourseManageVo courseManageVo:courseManageVos) {
+            StringBuffer stringBuffer = new StringBuffer();
+            CourseBaseInfo courseBaseInfo = iCourseBaseInfoDAO.fetch(courseManageVo.getCourseId());
+            stringBuffer.append(courseBaseInfo.getId());
+            stringBuffer.append(FileOperation.STR_SPLIT);
+
+            stringBuffer.append(courseBaseInfo.getCourseName());
+            stringBuffer.append(FileOperation.STR_SPLIT);
+
+            Map jwCourseMap = new HashMap();
+            jwCourseMap.put("tnId", tnId);
+            jwCourseMap.put("courseId", courseBaseInfo.getId());
+            jwCourseMap.put("taskId", taskId);
+            JwCourse jwCourse = jwCourseDAO.queryOne(jwCourseMap, "id", "asc");
+
+            stringBuffer.append(converCourseHour(jwCourse.getCourseHour(), 0));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(converCourseHour(jwCourse.getCourseHour(), 1));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+
+            stringBuffer.append(courseManageVo.getCourseType());
+            stringBuffer.append(FileOperation.STR_SPLIT);
+
+            Map mergeMap = new HashMap();
+            mergeMap.put("tnId", tnId);
+            mergeMap.put("taskId", taskId);
+            mergeMap.put("courseId", courseBaseInfo.getId());
+            List<MergeClassInfoVo> mergeClassInfoVos = mergeClassDAO.selectMergeClassInfo(mergeMap);
+
+
+            stringBuffer.append((mergeClassInfoVos==null||mergeClassInfoVos.size()<=0?0:mergeClassInfoVos.size()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+
+            for(MergeClassInfoVo mergeClassInfoVo:mergeClassInfoVos) {
+                String[] merArr = mergeArr(mergeClassInfoVo.getClassIds());
+                stringBuffer.append(merArr.length);
+                stringBuffer.append(FileOperation.STR_SPLIT);
+                for (String str : merArr) {
+                    stringBuffer.append(str);
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+            }
+            stringBuffer.append(FileOperation.LINE_SPLIT);
+            stringBuffers.add(stringBuffer);
+        }
+        return stringBuffers;
+    }
+
+    private String[] mergeArr(String str){
+        return str.split(",");
+    }
+
+    private String converCourseHour(String hour,Integer index) {
+
+        String result = "0";
+
+        if (StringUtils.isBlank(hour))
+            return result;
+
+        String[] arr = hour.split("\\+");
+
+        if (index < arr.length)
+            result = arr[index];
+
+        return result;
+    }
+
+    /**
+     * 基础信息设置
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    private List<StringBuffer> getTeachDateInfo(Integer taskId,Integer tnId) {
+
+        Map map = new HashMap();
+        map.put("taskId", taskId);
+        map.put("tnId", tnId);
+        List<JwTeachDate> jwTeachDates = iJwTeachDateDAO.queryList(map, "tid", "asc");
+
+        List<StringBuffer> stringBuffers = new ArrayList<>();
+        StringBuffer stringBuffer1 = new StringBuffer();
+        stringBuffer1.append(jwTeachDates.size());
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+
+        String sw = "";
+        for (JwTeachDate jwTeachDate : jwTeachDates) {
+            Integer week = ConvertUtil.converWeek(jwTeachDate.getTeachDate());
+            sw += week + FileOperation.STR_SPLIT;
+        }
+        stringBuffer1.append(sw);
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+
+        stringBuffer1.append(9);
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+
+        for (JwTeachDate jwTeachDate : jwTeachDates) {
+            String teachDetail = jwTeachDate.getTeachDetail();
+            String[] teachDetaArr = teachDetail.split("_");
+            String sd="";
+            System.out.print(teachDetaArr.length);
+            for (String str : teachDetaArr) {
+                sd += str.length() + FileOperation.STR_SPLIT;
+            }
+            for(int i=teachDetaArr.length;i<3;i++){  //空的 补0
+                sd += 0 + FileOperation.STR_SPLIT;
+            }
+            stringBuffer1.append(sd);
+            stringBuffer1.append(FileOperation.LINE_SPLIT);
+        }
+        stringBuffers.add(stringBuffer1);
+        return stringBuffers;
+    }
+
+
+    /**
+     * 获取年级课程信息
+     * @param tnId
+     * @param grade
+     * @param classType
+     * @return
+     */
+    private StringBuffer  gradeCourseInfo(Integer tnId,Integer grade,Integer classType) {
+        StringBuffer stringBuffer = new StringBuffer();
+
+        Map map = new HashMap();
+        map.put("tnId", tnId);
+        map.put("gradeCode", grade);
+        Grade gradeObj = iGradeDAO.queryOne(map, "id", "asc");
+        if (gradeObj != null) {
+            Map courMap = new HashMap();
+            courMap.put("tnId", tnId);
+            courMap.put("gradeId", grade);
+            courMap.put("classType", classType);
+            List<CourseManageVo> courseManageVos = iCourseManageDAO.selectCourseManageInfo(courMap);
+
+            //行政班 文科班&理科班
+            if (gradeObj.getClassType() == 1 || gradeObj.getClassType() == 3) {
+                stringBuffer.append(courseManageVos.size());
+                stringBuffer.append(FileOperation.STR_SPLIT);
+                for (CourseManageVo courseManageVo : courseManageVos) {
+                    stringBuffer.append(courseManageVo.getCourseId());
+                    stringBuffer.append(FileOperation.CHAR_SPLIT);
+                }
+            } else if (gradeObj.getClassType() == 2) {   //走读班
+
+            }
+        }
+        return stringBuffer;
+    }
+
+    /**
+     * 课程不排课规则
+     * @param taskId
+     * @return
+     */
+    private List<StringBuffer> getCourseRule(Integer taskId) {
+        Map map = new HashMap();
+        map.put("taskId", taskId);
+        List<JwCourseRule> jwCourseRules = jwCourseRuleDAO.queryList(map, "id", "asc");
+
+        List<StringBuffer> stringBuffers = new ArrayList<>();
+        StringBuffer stringBuffer1 = new StringBuffer();
+        stringBuffer1.append(jwCourseRules.size());
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+        stringBuffers.add(stringBuffer1);
+        for (JwCourseRule jwCourseRule : jwCourseRules) {
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append(jwCourseRule.getCourseId());
+            stringBuffer.append(FileOperation.LINE_SPLIT);
+            stringBuffer.append(getCharStr(jwCourseRule.getMon()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(getCharStr(jwCourseRule.getTues()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(getCharStr(jwCourseRule.getWed()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(getCharStr(jwCourseRule.getTues()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(getCharStr(jwCourseRule.getFri()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(getCharStr(jwCourseRule.getSut()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(getCharStr(jwCourseRule.getSun()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(FileOperation.LINE_SPLIT);
+            stringBuffers.add(stringBuffer);
+        }
+
+        return stringBuffers;
+    }
+    /**
+     * 班级不排课
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    private List<StringBuffer> getClassInfo(Integer taskId,Integer tnId) {
+
+        List<StringBuffer> stringBuffers = new ArrayList<>();
+
+        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
+
+        String classGrade = ConvertUtil.converGradeByTag(jwScheduleTask.getGrade());
+
+        String tableName = ParamsUtils.combinationTableName("class_adm", tnId);
+
+        Map map = new HashMap();
+        map.put("tableName",tableName);
+        map.put("searchKey", "class_grade");
+        map.put("searchValue", classGrade);
+
+        List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.getTenantCustom(map);
+
+
+        for (int j = 0; j < linkedHashMaps.size(); j++) {
+
+            LinkedHashMap<String, Object> dataLinkedMap = linkedHashMaps.get(j);
+            StringBuffer stringBuffer = new StringBuffer();
+            for (Iterator iter = dataLinkedMap.entrySet().iterator(); iter.hasNext(); ) {
+
+                Map.Entry element = (Map.Entry) iter.next();
+                Object strKey = element.getKey();
+                Object strObj = element.getValue();
+                if(strKey.equals("id")){
+                    stringBuffer.append(strObj);
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+                if(strKey.equals("class_name")){
+                    stringBuffer.append(strObj);
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+                if(strKey.equals("class_type")){
+                    stringBuffer.append(ConvertUtil.converClassTypeByTag(strObj.toString()));
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                    stringBuffer.append(gradeCourseInfo(tnId,ConvertUtil.converGrade(classGrade),ConvertUtil.converClassTypeByTag(strObj.toString())));
+                }
+            }
+            stringBuffer.append(FileOperation.LINE_SPLIT);
+
+            stringBuffers.add(stringBuffer);
+        }
+
+        return stringBuffers;
+    }
+
+    /**
+     * 行政班&走读班
+     * @param taskId
+     * @param type
+     * @return
+     */
+    private List<StringBuffer> getClassRule(Integer taskId,Integer type) {
+//        Map map=new HashMap();
+//        map.put("taskId",taskId);
+//        map.put("classType",type);
+//        List<JwClassRule> jwClassRules = iJwClassRuleDAO.queryList(map, "id", "asc");
+//
+        List<StringBuffer> stringBuffers = new ArrayList<>();
+//        StringBuffer stringBuffer1 = new StringBuffer();
+//        stringBuffer1.append(jwClassRules.size());
+//        stringBuffer1.append(FileOperation.LINE_SPLIT);
+//        stringBuffers.add(stringBuffer1);
+//        for (JwClassRule jwClassRule : jwClassRules) {
+//            StringBuffer stringBuffer = new StringBuffer();
+//            stringBuffer.append(jwClassRule.getClassId());
+//            stringBuffer.append(FileOperation.LINE_SPLIT);
+//            stringBuffer.append(getCharStr(jwClassRule.getMon()));
+//            stringBuffer.append(FileOperation.STR_SPLIT);
+//            stringBuffer.append(getCharStr(jwClassRule.getTues()));
+//            stringBuffer.append(FileOperation.STR_SPLIT);
+//            stringBuffer.append(getCharStr(jwClassRule.getWed()));
+//            stringBuffer.append(FileOperation.STR_SPLIT);
+//            stringBuffer.append(getCharStr(jwClassRule.getTues()));
+//            stringBuffer.append(FileOperation.STR_SPLIT);
+//            stringBuffer.append(getCharStr(jwClassRule.getFri()));
+//            stringBuffer.append(FileOperation.STR_SPLIT);
+//            stringBuffer.append(getCharStr(jwClassRule.getSut()));
+//            stringBuffer.append(FileOperation.STR_SPLIT);
+//            stringBuffer.append(getCharStr(jwClassRule.getSun()));
+//            stringBuffer.append(FileOperation.STR_SPLIT);
+//            stringBuffer.append(FileOperation.LINE_SPLIT);
+//            stringBuffers.add(stringBuffer);
+//        }
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(0);
+        stringBuffers.add(stringBuffer);
+        return stringBuffers;
+    }
+
+
+    private String getCharStr(String str) {
+        String result = "";
+        for (Integer i = 0; i < str.length(); i++) {
+            result += str.charAt(i);
+            result += FileOperation.CHAR_SPLIT;
+        }
+        return result;
     }
 
     private String getCourse(Map<Integer,String> map){
