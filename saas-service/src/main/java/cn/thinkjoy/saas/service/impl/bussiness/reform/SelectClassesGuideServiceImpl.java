@@ -1,5 +1,6 @@
 package cn.thinkjoy.saas.service.impl.bussiness.reform;
 
+import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.dao.bussiness.reform.SelectClassesGuideDAO;
 import cn.thinkjoy.saas.dto.*;
 import cn.thinkjoy.saas.enums.ErrorCode;
@@ -191,6 +192,9 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         map.put("grade",studentGrade);
         //从saas_enrolling_ratio中获取上线率
         String t=selectClassesGuideDAO.getEnrollingPercent(map);
+        if (t == null) {
+            throw new BizException("error","请先设置升学率");
+        }
         map.put("examId",selectClassesGuideDAO.selectExamId(map));
         List<String> selectCoursesAll=selectClassesGuideDAO.selectLimitStudent(map);
         Map<String, Integer> typeMap=new HashMap<>();
