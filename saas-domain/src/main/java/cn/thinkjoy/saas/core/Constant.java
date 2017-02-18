@@ -78,4 +78,5 @@ public class Constant {
 
     public static final java.lang.String COURSE_LINE_TABLE_SPLIT_T = "\t";
     public static final java.lang.String COURSE_TABLE_LINE_SPLIT_CHAR = "  ";
+    public static final java.lang.String COURSE_TABLE_LINE_SPLIT_CLASS = "     ";
 }
