@@ -18,8 +18,8 @@ import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseManageVo;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
-import cn.thinkjoy.saas.dto.CourseManageDto;
 import cn.thinkjoy.saas.domain.bussiness.MergeClassInfoVo;
+import cn.thinkjoy.saas.dto.CourseManageDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.enums.GradeTypeEnum;
@@ -31,22 +31,21 @@ import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.saas.service.common.ConvertUtil;
 import cn.thinkjoy.saas.service.common.FileOperation;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
-import cn.thinkjoy.zgk.common.StringUtil;
 import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.dubbo.common.json.ParseException;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang.StringUtils;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.util.*;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.*;
 
 
 @Service("EXJwScheduleTaskServiceImpl")
@@ -365,22 +364,49 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
                     stringBuilder.append(jwTeacherRule.getFri());
                     stringBuilder.append(jwTeacherRule.getSut());
                     stringBuilder.append(jwTeacherRule.getSun());
-
                     String str=stringBuilder.toString();
-
 
                     String[] arr=str.split("0");
 
                     stringBuffer.append(arr.length-1); //不排课个数
                     stringBuffer.append(FileOperation.STR_SPLIT);
 
-                    for(Integer i=0;i<str.length();i++) {
-                         String s= str.charAt(i)+"";
-                        if (s.equals("0")) {
-                            stringBuffer.append(i); //不排课时间点
-                            stringBuffer.append(FileOperation.STR_SPLIT);
-                        }
+                    String m=getWeekNonAndDayNon(jwTeacherRule.getMon(),1),//周1不排课节点
+                            tu=getWeekNonAndDayNon(jwTeacherRule.getTues(),2),//周2不排课节点
+                            w=getWeekNonAndDayNon(jwTeacherRule.getWed(),3),//周3不排课节点
+                            th=getWeekNonAndDayNon(jwTeacherRule.getThur(),4),//周4不排课节点
+                            f=getWeekNonAndDayNon(jwTeacherRule.getFri(),5),//周5不排课节点
+                            s=getWeekNonAndDayNon(jwTeacherRule.getSut(),6),//周6不排课节点
+                            su=getWeekNonAndDayNon(jwTeacherRule.getSun(),7);//周7不排课节点
+                    if(!StringUtils.isBlank(m)) {
+                        stringBuffer.append(m);
+                        stringBuffer.append(FileOperation.STR_SPLIT);
                     }
+                    if(!StringUtils.isBlank(tu)) {
+                        stringBuffer.append(tu);
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                    }
+                    if(!StringUtils.isBlank(w)) {
+                        stringBuffer.append(w);
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                    }
+                    if(!StringUtils.isBlank(th)) {
+                        stringBuffer.append(th);
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                    }
+                    if(!StringUtils.isBlank(f)) {
+                        stringBuffer.append(f);
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                    }
+                    if(!StringUtils.isBlank(s)) {
+                        stringBuffer.append(s);
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                    }
+                    if(!StringUtils.isBlank(su)) {
+                        stringBuffer.append(su);
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                    }
+
                     stringBuffer.append(1); //连上规则
                     stringBuffer.append(FileOperation.STR_SPLIT);
                     stringBuffer.append(1); //规则个数
@@ -432,6 +458,19 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         return stringBuffers;
     }
 
+    private String getWeekNonAndDayNon(String str,Integer week) {
+
+        String result = "";
+
+        String[] arr = str.split("0");
+
+        for (Integer i = 0; i < str.length(); i++) {
+            String s = str.charAt(i) + "";
+            if (s.equals("0"))
+                result += week + FileOperation.CHAR_SPLIT + i;
+        }
+        return result;
+    }
 
 
     private Integer getCourseId(String courseName) {

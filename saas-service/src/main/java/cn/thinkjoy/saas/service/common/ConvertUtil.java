@@ -90,6 +90,7 @@ public class ConvertUtil {
         }
         return w;
     }
+
     public static Integer converClassTypeByTag(String classType) {
         Integer t = 0;
         switch (classType) {
