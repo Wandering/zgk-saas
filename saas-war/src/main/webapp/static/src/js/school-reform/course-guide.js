@@ -353,6 +353,7 @@ CoursePlan.prototype = {
                             } else if (i == 2) {
                                 dataHtml.push('<td><i class="rank-top3"></i>Top' + (i + 1) + '</td>');
                             }
+
                             dataHtml.push('<td>' + tempName + '</td>');
                             dataHtml.push('<td>' + k.schoolNumber + '个学校' + k.majorNumber + '个专业可选</td>');
                             dataHtml.push('</tr>');
@@ -597,3 +598,15 @@ Array.prototype.delete = function (varElement) {
     }
     return numDeleteIndex;
 };
+
+
+
+Array.prototype.delete=function(delIndex){
+    var temArray=[];
+    for(var i=0;i<this.length;i++){
+        if(i!=delIndex){
+            temArray.push(this[i]);
+        }
+    }
+    return temArray;
+}
