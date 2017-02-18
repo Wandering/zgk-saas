@@ -74,6 +74,11 @@ public class CourseManageServiceImpl extends AbstractPageService<IBaseDAO<Course
         return courseManageMapperVos;
     }
 
+    @Override
+    public Object selectCourseList(Map map) {
+        return iCourseManageDAO.selectCourseList(map);
+    }
+
     /**
      * 初始化租户课程数据
      *

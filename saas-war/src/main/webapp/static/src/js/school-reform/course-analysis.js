@@ -635,9 +635,9 @@ function groupCourseAnalysis (groups, stuNumbers) {
                 },
                 axisLabel:{
                     interval: 0 ,
-                    formatter:function(val){
-                        return val.split("").join("\n");
-                    }
+                    //formatter:function(val){
+                    //    return val.split("").join("\n");
+                    //}
                 }
             }
         ],
@@ -786,6 +786,8 @@ function getAnalysisGroup (tnId, grade) {
                 datas.groups.push(k.group);
                 datas.stuNumbers.push(k.stuNumber);
             });
+            console.log("datas.groups="+datas.groups)
+            console.log("datas.stuNumbers="+datas.stuNumbers)
             groupCourseAnalysis(datas.groups, datas.stuNumbers);
         }
     }, function (res) {
