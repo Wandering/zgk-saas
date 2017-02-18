@@ -28,7 +28,6 @@ public interface IEXJwScheduleTaskService {
      * @return
      */
     Map<String,Object> getAllCourseResult(Integer taskId, Integer tnId) throws IOException, ParseException;
-    Map<String,Object> getAllCourseResult(Integer taskId, Integer tnId);
 
 
     /**
