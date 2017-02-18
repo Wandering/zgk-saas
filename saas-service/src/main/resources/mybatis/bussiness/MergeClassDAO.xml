@@ -44,5 +44,20 @@
     <delete id="deleteMergeInfo" parameterType="java.util.Map">
         delete from saas_jw_merge_class_info where id=#{id}
     </delete>
+    <select id="selectMergeClassInfo" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.domain.bussiness.MergeClassInfoVo">
+        select course_id as courseId, class_ids as classIds,task_id as taskId,classType as classType
+        from saas_jw_merge_class_info
+        <where>
+            <if test="tnId!=null">
+                and tn_id=#{tnId}
+            </if>
+            <if test="taskId!=null">
+                and task_id=#{taskId}
+            </if>
+            <if test="courseId!=null">
+                and course_id=#{courseId}
+            </if>
+        </where>
+    </select>
 
 </mapper>

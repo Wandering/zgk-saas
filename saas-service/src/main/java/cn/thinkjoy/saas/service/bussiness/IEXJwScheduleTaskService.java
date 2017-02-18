@@ -28,4 +28,14 @@ public interface IEXJwScheduleTaskService {
      * @return
      */
     Map<String,Object> getAllCourseResult(Integer taskId, Integer tnId) throws IOException, ParseException;
+    Map<String,Object> getAllCourseResult(Integer taskId, Integer tnId);
+
+
+    /**
+     * 初始化排课参数
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    boolean InitParmasFile(Integer taskId, Integer tnId) throws IOException;
 }

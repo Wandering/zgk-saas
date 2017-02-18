@@ -531,46 +531,7 @@ selectList
 
     <select id="queryList" parameterType="java.util.Map" resultType="JwCourseRule">
         SELECT
-        <if test="selector!=null">
-            <trim prefixOverrides=",">
-                <if test="selector.id!=null">
-                    , id
-                </if>
-                <if test="selector.mon!=null">
-                    , mon
-                </if>
-                <if test="selector.tues!=null">
-                    , tues
-                </if>
-                <if test="selector.wed!=null">
-                    , wed
-                </if>
-                <if test="selector.thur!=null">
-                    , thur
-                </if>
-                <if test="selector.fri!=null">
-                    , fri
-                </if>
-                <if test="selector.sut!=null">
-                    , sut
-                </if>
-                <if test="selector.sun!=null">
-                    , sun
-                </if>
-                <if test="selector.courseId!=null">
-                    , courseId
-                </if>
-                <if test="selector.taskId!=null">
-                    , taskId
-                </if>
-                <if test="selector.createDate!=null">
-                    , createDate
-                </if>
-        </trim>
-    </if>
-<if test="selector==null">
-<include refid="Base_Column_List" />
-</if>
+        <include refid="Base_Column_List" />
         FROM saas_jw_course_rule
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">

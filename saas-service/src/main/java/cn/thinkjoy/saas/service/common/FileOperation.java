@@ -24,16 +24,21 @@ public class FileOperation {
     //教师设置
     public static final String TEACHERS_SETTING="teachers_setting";
 
+    public static final String LINE_SPLIT="\r\n";
+    public static final String STR_SPLIT="\t";
+    public static final String CHAR_SPLIT=" ";
+
+
 
     private static String path = "/Users/douzy/"; //文件保存路径设置
 
     private static String filenameTemp;
 
-    public static boolean creatTxtFile(String name) throws IOException {
+    public static boolean creatTxtFile(Integer tnId,Integer taskId,String name) throws IOException {
 
         boolean flag = false;
 
-        filenameTemp = path + name + ".txt";
+        filenameTemp = path+tnId+"/"+taskId+"/" + name + ".txt";
 
         File filename = new File(filenameTemp);
 
@@ -43,6 +48,15 @@ public class FileOperation {
 
             flag = true;
 
+        } else {
+            try {
+                FileWriter fw5 = new FileWriter(filename);
+                BufferedWriter bw1 = new BufferedWriter(fw5);
+                bw1.write("");
+                flag = true;
+            } catch (Exception e) {
+                flag = false;
+            }
         }
 
         return flag;
@@ -157,9 +171,8 @@ public class FileOperation {
 
     public static void main(String[] args) throws IOException {
 
-        creatTxtFile("20160725测试文件");
+        creatTxtFile(13,28,"20160725测试文件");
 
         writeTxtFile("0,0,0,0,0,0\r\n0,2,1,3,4,2\r1,2,3,1,1,2\n1,2,3,4 1,2,3,22");
-
     }
 }

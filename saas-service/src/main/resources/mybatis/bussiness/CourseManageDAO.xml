@@ -421,8 +421,14 @@
         select courseManage.id as id,courseManage.course_base_id as courseId,courseBase.course_name as courseName,courseManage.grade_id as gradeId,courseManage.course_type as courseType  from saas_course_manage as courseManage inner join saas_course_base_info as courseBase on courseManage.course_base_id=courseBase.id
         <where>
              <if test="tnId!=null">
-                tn_id=#{tnId}
+                AND tn_id=#{tnId}
              </if>
+            <if test="gradeId!=null">
+                AND courseManage.grade_id=#{gradeId}
+            </if>
+            <if test="courseType!=null">
+                AND courseManage.course_Type=#{courseType}
+            </if>
         </where>
     </select>
 
