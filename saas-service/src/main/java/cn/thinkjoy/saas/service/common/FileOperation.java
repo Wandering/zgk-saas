@@ -1,6 +1,7 @@
 package cn.thinkjoy.saas.service.common;
 
 import java.io.*;
+import java.util.Calendar;
 
 /**
  * Created by douzy on 17/2/15.
@@ -30,17 +31,18 @@ public class FileOperation {
 
 
 
-//    private static String path = "C:\\timetable\\schedule\\task\\"; ///Users/douzy/ 文件保存路径设置
-    private static String path = "/Users/douzy/schedule/task/"; // 文件保存路径设置
+    private static String path = "C:\\timetable\\schedule\\task\\"; ///Users/douzy/ 文件保存路径设置
+//    private static String path = "/Users/douzy/schedule/task/"; // 文件保存路径设置
 
     private static String filenameTemp;
 
     public static boolean creatTxtFile(Integer tnId,Integer taskId,String name) throws IOException {
 
         boolean flag = false;
+        Calendar now = Calendar.getInstance();
 
-//        filenameTemp = path+tnId+"\\"+taskId+"\\" + name + ".txt";
-        filenameTemp = path+tnId+"/"+taskId+"/" + name + ".txt";
+        filenameTemp = path + tnId + "\\" + taskId + "\\" + now.get(Calendar.YEAR) + "\\" + (now.get(Calendar.MONTH) + 1) + "\\" + now.get(Calendar.DAY_OF_MONTH) + "\\" + name + ".txt";
+//        filenameTemp = path + tnId + "/" + taskId + "/" + now.get(Calendar.YEAR) + "/" + (now.get(Calendar.MONTH) + 1) + "/" + now.get(Calendar.DAY_OF_MONTH) + "/" + name + ".txt";
 
         File filename = new File(filenameTemp);
 
