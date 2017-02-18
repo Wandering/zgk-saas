@@ -1100,7 +1100,8 @@ public class ScoreAnalyseController
         {
             throw new BizException("1100221", "班级信息未设置或设置不正确,必须包含班级名称和年级！");
         }
-        tableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM, Integer.parseInt(tnId));
+
+        tableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, Integer.parseInt(tnId));
         paramMap = new HashMap<>();
         paramMap.put("tableName", tableName);
         paramMap.put("grade", grade);
@@ -1111,7 +1112,7 @@ public class ScoreAnalyseController
         }
         catch (Exception e)
         {
-            throw new BizException("1100221", "班级信息未设置或设置不正确,必须包含班级名称和年级！");
+            //吃掉异常
         }
         return classNames;
     }
