@@ -1,5 +1,6 @@
 package cn.thinkjoy.saas.service.impl.bussiness.reform;
 
+import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.dao.bussiness.reform.SelectClassesGuideDAO;
 import cn.thinkjoy.saas.dto.*;
 import cn.thinkjoy.saas.enums.ErrorCode;
@@ -131,10 +132,12 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
 //            ExceptionUtil.throwException(ErrorCode.TABLE_NOT_EXIST);
 //        }
         String tableName = "saas_"+tnId+"_student_excel";
-        String classTableName = "saas_"+tnId+"_class_excel";
+        String classTableName1 = "saas_"+tnId+"_class_adm_excel";
+        String classTableName2 = "saas_"+tnId+"_class_edu_excel";
         List<Map<String,String>> mapList = Lists.newArrayList();
         map.put("tableName",tableName);
-        map.put("classTableName",classTableName);
+        map.put("classTableName1",classTableName1);
+        map.put("classTableName2",classTableName2);
         try{
             mapList = selectClassesGuideDAO.selectStudentExcel(map);
         }catch (Exception e){
@@ -189,6 +192,9 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         map.put("grade",studentGrade);
         //从saas_enrolling_ratio中获取上线率
         String t=selectClassesGuideDAO.getEnrollingPercent(map);
+        if (t == null) {
+            throw new BizException("error","请先设置升学率");
+        }
         map.put("examId",selectClassesGuideDAO.selectExamId(map));
         List<String> selectCoursesAll=selectClassesGuideDAO.selectLimitStudent(map);
         Map<String, Integer> typeMap=new HashMap<>();
