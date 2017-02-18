@@ -582,20 +582,25 @@ public class ScoreAnalyseController
             map.put("tableName",tableName);
             map.put("grade",grade);
             List<Map<String,Object>> allList = new ArrayList<>();
-            List<Map<String,Object>> list = examDetailService.getClassBossList(map);
+            List<Map<String,Object>> list = new ArrayList<>();
+            try {
+                list = examDetailService.getClassBossList(map);
+                allList.addAll(list);
+            }catch (Exception e){}
+
             allList.addAll(list);
             tableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, Integer.parseInt(tnId));
             map = new HashMap<>();
             map.put("tableName",tableName);
             map.put("grade",grade);
-            list = examDetailService.getClassBossList(map);
-            allList.addAll(list);
-            for (Map<String,Object> mp : list)
-            {
+            try {
+                list = examDetailService.getClassBossList(map);
+                allList.addAll(list);
+            }catch (Exception e){}
+            for (Map<String, Object> mp : allList) {
                 String className = mp.get("class_name") + "";
-                String classBoss =mp.get("class_boss") + "";
-                if(StringUtils.isNotEmpty(classBoss))
-                {
+                String classBoss = mp.get("class_boss") + "";
+                if (StringUtils.isNotEmpty(classBoss)) {
                     classBossMap.put(className, classBoss);
                 }
             }
@@ -2039,12 +2044,19 @@ public class ScoreAnalyseController
     {
         boolean flag =false;
         Map<String, String> paramMap = new HashMap<>();
-        String tableName = ParamsUtils.combinationTableName("class", Integer.parseInt(tnId));
+        String tableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM, Integer.parseInt(tnId));
         paramMap.put("tableName", tableName);
         if(examDetailService.checkIsTableExist(paramMap))
         {
             paramMap.put("columnName", "class_boss");
             flag = examDetailService.checkIsColumnExist(paramMap);
+        }
+        tableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, Integer.parseInt(tnId));
+        paramMap.put("tableName", tableName);
+        if(examDetailService.checkIsTableExist(paramMap))
+        {
+            paramMap.put("columnName", "class_boss");
+            flag = flag || examDetailService.checkIsColumnExist(paramMap);
         }
         return flag;
     }

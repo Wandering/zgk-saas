@@ -159,7 +159,10 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
                 map2.put("通用技术",0);
                 yearMap.put(year,map2);
             }
-            String[] types=map1.get("student_major_type").split("-");
+            String[] types=map1.get("student_major_type") == null ? null : map1.get("student_major_type").split("-");
+            if (types == null){
+                throw new BizException("error","student_major_type为空");
+            }
             for(String type:types){
                 if(!yearMap.get(year).containsKey(type)){
                     yearMap.get(year).put(type, 0);
