@@ -635,6 +635,7 @@ function groupCourseAnalysis (groups, stuNumbers) {
                 },
                 axisLabel:{
                     interval: 0 ,
+                    rotate:-30
                     //formatter:function(val){
                     //    return val.split("").join("\n");
                     //}
