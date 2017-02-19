@@ -42,6 +42,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 @Service("EXJwScheduleTaskServiceImpl")
@@ -183,7 +185,10 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         result = printBuffers(tnId,taskId,teacherSettingBuffers, FileOperation.TEACHERS_SETTING);
         LOGGER.info("===================参数序列化结果:"+result+"===================");
         if(result) {
-            new Thread() {
+            //创建可缓存线程
+            ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+            cachedThreadPool.execute(new Runnable() {
+                @Override
                 public void run() {
                     LOGGER.info("=线程启动=" + System.currentTimeMillis());
                     LOGGER.info("排课状态:正在排课");
@@ -203,7 +208,28 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     }
                     LOGGER.info("排课状态:完成排课");
                 }
-            }.start();
+            });
+//            new Thread() {
+//                public void run() {
+//                    LOGGER.info("=线程启动=" + System.currentTimeMillis());
+//                    LOGGER.info("排课状态:正在排课");
+//                    String path = FileOperation.getParamsPath(tnId, taskId);
+//                    TimeTabling timeTabling = new TimeTabling();
+//                    timeTabling.runTimetabling(path, path);
+//                    try {
+//                        String result = getSchduleResultStatus(taskId, tnId);
+//                        if (Integer.valueOf(result) == 1)
+//                            getAllCourseResult(taskId, tnId);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    } catch (ParseException e) {
+//                        e.printStackTrace();
+//                    } catch (Exception ex) {
+//                        ex.printStackTrace();
+//                    }
+//                    LOGGER.info("排课状态:完成排课");
+//                }
+//            }.start();
         }
         LOGGER.info("===================已完成异步调用排课===================");
 
@@ -651,18 +677,22 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         Map params = new HashMap<>();
         params.put("taskId", taskId);
         JwCourseGapRule rule = (JwCourseGapRule)iJwCourseGapRuleDAO.queryOne(params,"id","asc");
-        String[] rules = rule.getRule().split("@@");
-        String rul="";
-        int len = rules.length;
-        if (len > 0) {
-            for (int i = 0; i < len; i++) {
-                String[] detail = rules[i].split(":");
-                if (detail.length < 2)
-                    continue;
-                rul+=detail[1]+FileOperation.STR_SPLIT;
+        Integer n=0;
+        String rul = "";
+        if(rule!=null) {
+            String[] rules = rule.getRule().split("@@");
+            n=rules.length;
+            int len = rules.length;
+            if (len > 0) {
+                for (int i = 0; i < len; i++) {
+                    String[] detail = rules[i].split(":");
+                    if (detail.length < 2)
+                        continue;
+                    rul += detail[1] + FileOperation.STR_SPLIT;
+                }
             }
         }
-        for(int i=rules.length;i<maxNum;i++) {  //空的 补0
+        for(int i=n;i<maxNum;i++) {  //空的 补0
             rul += 0 + FileOperation.STR_SPLIT;
         }
         stringBuffer1.append(rul+FileOperation.LINE_SPLIT);
