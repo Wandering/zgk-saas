@@ -147,6 +147,12 @@ public class ScheduleTaskController {
     public String scheduleResult(@RequestParam Integer taskId,@RequestParam Integer tnId) {
         return iexJwScheduleTaskService.getSchduleResultStatus(taskId, tnId);
     }
+
+    @ResponseBody
+    @RequestMapping("/error/desc")
+    public String getSchduleErrorDesc(@RequestParam Integer taskId,@RequestParam Integer tnId){
+           return  iexJwScheduleTaskService.getSchduleErrorDesc(taskId,tnId);
+    }
     /**
      * 修改排课任务
      * @return

@@ -30,6 +30,8 @@ public class FileOperation {
     public static final String LINE_SPLIT="\r\n";
     public static final String STR_SPLIT="\t";
     public static final String CHAR_SPLIT=" ";
+    public static final String ERROR_TXT="error.txt";
+    public static final String FAIL_TXT="FAIL.txt";
 
 
 

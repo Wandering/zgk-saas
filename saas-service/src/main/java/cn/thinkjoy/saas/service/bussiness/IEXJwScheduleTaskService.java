@@ -46,4 +46,13 @@ public interface IEXJwScheduleTaskService {
      * @return
      */
     String getSchduleResultStatus(Integer taskId, Integer tnId);
+
+
+    /**
+     * 排课失败
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    String getSchduleErrorDesc(Integer taskId, Integer tnId);
 }
