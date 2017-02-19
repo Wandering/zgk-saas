@@ -77,13 +77,13 @@ public class BaseResultController {
         param.put("op","=");
         param.put("value",teacherCourse);
         params.add(param);
-        List<Map<String,Object>> rtnList = exiTenantConfigInstanceService.likeTeacherByParams(tableName,params);
+        List<LinkedHashMap<String,Object>> rtnList = exiTenantConfigInstanceService.likeTeacherByParams(tableName,params);
         return teacherBaseDtotoMap(rtnList);
     }
-    List<Map<String,Object>> teacherBaseDtotoMap(List<Map<String,Object>> list){
+    List<Map<String,Object>> teacherBaseDtotoMap(List<LinkedHashMap<String,Object>> list){
         Map<String,Object> map ;
         List<Map<String,Object> >  maps = new ArrayList<>();
-        for (Map<String,Object> teacherBaseDto:list){
+        for (LinkedHashMap<String,Object> teacherBaseDto:list){
             map = Maps.newHashMap();
             map.put("id",teacherBaseDto.get("id"));
             map.put("teacherName",teacherBaseDto.get("teacher_name"));
