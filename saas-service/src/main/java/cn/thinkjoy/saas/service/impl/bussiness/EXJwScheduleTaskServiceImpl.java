@@ -1244,41 +1244,67 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      */
     private List<List<String>> getCourseByTeacher(int tnId,int taskId,List<List<List<String>>> roomData,Map<String,Object> teacherMap,String classId){
         String[] classIds = classId.split("\\|");
-        List<List<String>> rtnLists = new ArrayList<>();
-        List<String> rtnList;
+        List<List<String>> rtnLists = new ArrayList<>(roomData.get(0).size());
+        List<String> rtnList = null;
         Map<Integer, String> classMap = this.getClassByTnIdAndTaskId(tnId, taskId);
         String teacherCourse = mergeTeacherAndCourse(teacherMap.get("teacher_major_type").toString(),teacherMap.get("teacher_name").toString());
         List<List<String>> tmpLists;
         List<String> tmpList;
+        Map<Integer,Boolean> flags = new HashMap<>();
+        Map<Integer,Map<Integer,Boolean>> allFlags = new HashMap<>();
         for (int i = 0; i < roomData.size(); i++) {
+            //班级序列
             tmpLists = roomData.get(i);
-            rtnList = new ArrayList<>();
+
             /**同一时间教师只能去一个教师 eg:星期一的第一节教师只能去某一个班级 即使去两个班级 那么班级一定是合班**/
             for (int j = 0; j < tmpLists.size(); j++) {
+                if (!flags.containsKey(j)){
+                    flags.put(j,false);
+                    rtnList= new ArrayList<>();
+                }else {
+                    rtnList = rtnLists.get(j);
+                }
                 tmpList = tmpLists.get(j);
+                Map<Integer,Boolean> flags2 =null;
+                if (!allFlags.containsKey(j)){
+                    flags2 = new HashMap<>();
+                    allFlags.put(j,flags2);
+                }else{
+                    flags2 = allFlags.get(j);
+
+                }
+
                 for (int m = 0 ; m < tmpList.size();m ++ ){
                      String tmpCourse = tmpList.get(m);
                      String ss;
                      StringBuilder sb;
-                    if (rtnList.size()<m){
-                        ss = rtnList.get(m);
-                    }else{
-                        ss = "";
+                    if (!flags2.containsKey(m)){
+                        rtnList.add(m, "");
+                        flags2.put(m,false);
                     }
+                    ss = rtnList.get(m);
                     sb = new StringBuilder(ss);
                      if (teacherCourse.equals(tmpCourse)){
-                         if (sb.length()>0){
-                             rtnList.add(sb.append(Constant.COURSE_TABLE_LINE_SPLIT_CHAR).append(classMap.get(Integer.valueOf(classIds[i]))).toString());
+                         //相等的注入到相同的位置
+                         if (flags2.get(m)){
+                             ss = sb.append(Constant.COURSE_TABLE_LINE_SPLIT_CHAR).append(classMap.get(Integer.valueOf(classIds[i]))).toString();
+                             rtnList.set(m,ss);
+                             flags2.put(m,true);
                          }else {
-                             rtnList.add(sb.append(tmpCourse).append(Constant.COURSE_TABLE_LINE_SPLIT_CHAR).append(classMap.get(Integer.valueOf(classIds[i]))).toString());
+                             ss = sb.append(tmpCourse).append(Constant.COURSE_TABLE_LINE_SPLIT_CHAR).append(classMap.get(Integer.valueOf(classIds[i]))).toString();
+                             rtnList.set(m,ss);
+                             flags2.put(m,true);
                          }
-                     }else {
-                         rtnList.add(sb.append("").toString());
                      }
+
+                }
+                if (!flags.get(j)){
+                    rtnLists.add(rtnList);
+                    flags.put(j,true);
                 }
 
             }
-            rtnLists.add(rtnList);
+
         }
         return rtnLists;
     }
@@ -1287,5 +1313,14 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         StringBuilder sb = new StringBuilder();
         sb.append(course == "" ? "":course).append((course == ""||teacher=="" || teacher == null)? "" : Constant.COURSE_TABLE_LINE_SPLIT_CHAR).append((teacher == ""|| teacher == null) ? "":teacher);
         return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        list.add("123");
+        list.add("456");
+        list.add("789");
+        list.set(2,"444");
+        System.out.println(list.size());
     }
 }
