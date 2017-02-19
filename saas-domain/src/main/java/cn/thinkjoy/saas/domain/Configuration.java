@@ -19,6 +19,7 @@ public class Configuration extends BaseDomain{
     private String enName;
     private String chName;
     private String metaType;
+    private String regular;
     private String checkRule;
     private String domain;
     private Integer configOrder;
@@ -26,8 +27,25 @@ public class Configuration extends BaseDomain{
     private String dataUrl;
     private String dataValue;
     private byte isRetain;
+    private byte isShow;
 
-	public Configuration(){
+    public String getRegular() {
+        return regular;
+    }
+
+    public void setRegular(String regular) {
+        this.regular = regular;
+    }
+
+    public byte getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(byte isShow) {
+        this.isShow = isShow;
+    }
+
+    public Configuration(){
 	}
     public void setEnName(String value) {
         this.enName = value;

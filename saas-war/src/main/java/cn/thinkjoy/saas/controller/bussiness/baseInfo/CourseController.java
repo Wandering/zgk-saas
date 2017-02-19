@@ -57,9 +57,11 @@ public class CourseController {
         Map parMap=new HashMap();
         parMap.put("tnId",tnId);
         List<CourseManageMapperVo> courseManages = iCourseManageService.selectCourseManageInfo(parMap);
+
         map.put("courses", courseManages);
         return map;
     }
+
 
     /**
      * 新增课程管理信息
@@ -114,5 +116,22 @@ public class CourseController {
         return map;
     }
 
+    /**
+     * 获取租户下的课程设置信息
+     *
+     * @param tnId
+     * @return
+     */
+    @RequestMapping(value = "/get/course/{tnId}/{gradeName}",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getCourseManager(@PathVariable Integer tnId,@PathVariable String gradeName) {
+        Map map = new HashMap();
+        Map parMap=new HashMap();
+        parMap.put("tnId",tnId);
+        parMap.put("gradeName",gradeName);
+
+        map.put("courses", iCourseManageService.selectCourseList(parMap));
+        return map;
+    }
 
 }

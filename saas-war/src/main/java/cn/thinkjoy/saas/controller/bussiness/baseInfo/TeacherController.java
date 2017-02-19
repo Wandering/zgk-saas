@@ -202,5 +202,13 @@ public class TeacherController {
         return gradeServiceOne;
     }
 
-
+    private boolean isEduSubject(String subject) {
+        return SubjectEnum.dl.getSub().equals(subject) ||
+                SubjectEnum.hx.getSub().equals(subject) ||
+                SubjectEnum.sw.getSub().equals(subject) ||
+                SubjectEnum.wl.getSub().equals(subject) ||
+                SubjectEnum.zz.getSub().equals(subject) ||
+                SubjectEnum.ty.getSub().equals(subject) ||
+                SubjectEnum.ls.getSub().equals(subject);
+    }
 }

@@ -8,6 +8,7 @@
         <result column="en_name" property="enName" jdbcType="VARCHAR" />
         <result column="ch_name" property="chName" jdbcType="VARCHAR" />
         <result column="meta_type" property="metaType" jdbcType="VARCHAR" />
+        <result column="regular" property="regular" jdbcType="VARCHAR" />
         <result column="check_rule" property="checkRule" jdbcType="VARCHAR" />
         <result column="domain" property="domain" jdbcType="VARCHAR" />
         <result column="config_order" property="configOrder" jdbcType="INTEGER" />
@@ -15,6 +16,7 @@
         <result column="data_url" property="dataUrl" jdbcType="VARCHAR" />
         <result column="data_value" property="dataValue" jdbcType="VARCHAR" />
         <result column="is_retain" property="isRetain" jdbcType="VARCHAR" />
+        <result column="is_show" property="isShow" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -28,7 +30,8 @@
         data_type,
         data_url,
         data_value,
-        is_retain
+        is_retain,
+        is_show
     </sql>
 
     <!--获取初始化字段 by domain-->
@@ -56,6 +59,9 @@
             <if test="isRetain!=null">
                 and is_retain=#{isRetain}
             </if>
+            <if test="isShow!=null">
+                and is_show=#{isShow}
+            </if>
         </where>
         <if test="orderBy!=null">
             ORDER BY ${orderBy} ${sortBy}
@@ -72,6 +78,9 @@
             </if>
             <if test="enName!=null">
                 and en_name=#{enName}
+            </if>
+            <if test="isShow!=null">
+                and is_show=#{isShow}
             </if>
         </where>
     </select>

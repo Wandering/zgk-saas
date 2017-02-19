@@ -28,37 +28,43 @@ selectList
         en_name as enName,
         ch_name as chName,
         meta_type as metaType,
+        regular as regular,
         check_rule as checkRule,
         domain,
         config_order as   configOrder,
         data_type as dataType,
         data_url as dataUrl,
         data_value as dataValue,
-        is_retain as isRetain
+        is_retain as isRetain,
+        is_show as isShow
     </sql>
     <insert id="insert" parameterType="Configuration">
         INSERT INTO saas_configuration (
         en_name,
         ch_name,
         meta_type,
+        regular,
         check_rule,
         domain,
         config_order,
         data_type,
         data_url,
         data_value,
-        is_retain
+        is_retain,
+        is_show
         ) VALUES (
         #{enName},
         #{chName},
         #{metaType},
+        #{regular},
         #{checkRule},
         #{domain},
         #{configOrder},
         #{dataType},
         #{dataUrl},
         #{dataValue},
-        #{isRetain}
+        #{isRetain},
+        #{isShow}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
         SELECT LAST_INSERT_ID() AS ID
@@ -77,6 +83,9 @@ selectList
             </if>
             <if test="metaType!=null">
                 meta_type = #{metaType},
+            </if>
+            <if test="regular!=null">
+                regular = #{regular},
             </if>
             <if test="checkRule!=null">
                 check_rule = #{checkRule},
@@ -97,7 +106,10 @@ selectList
                 data_value=#{dataValue},
             </if>
             <if test="isRetain!=null">
-                is_retain=#{isRetain}
+                is_retain=#{isRetain},
+            </if>
+            <if test="isShow!=null">
+                is_show=#{isShow}
             </if>
         </trim>
         WHERE
@@ -115,6 +127,9 @@ selectList
             </if>
             <if test="map.metaType!=null">
                 meta_type = #{map.metaType},
+            </if>
+            <if test="map.regular!=null">
+                regular = #{map.regular},
             </if>
             <if test="map.checkRule!=null">
                 check_rule = #{map.checkRule},
@@ -137,6 +152,9 @@ selectList
             <if test="map.isRetain!=null">
                 is_retain=#{map.isRetain},
             </if>
+            <if test="map.isShow!=null">
+                is_show=#{map.isShow},
+            </if>
         </trim>
         WHERE
         id = #{map.id}
@@ -153,6 +171,9 @@ selectList
             </if>
             <if test="update.metaType!=null">
                 meta_type = #{update.metaType},
+            </if>
+            <if test="update.regular!=null">
+                regular = #{update.regular},
             </if>
             <if test="update.checkRule!=null">
                 check_rule = #{update.checkRule},
@@ -175,6 +196,9 @@ selectList
             <if test="update.isRetain!=null">
                 is_retain=#{update.isRetain},
             </if>
+            <if test="update.isShow!=null">
+                is_show=#{update.isShow},
+            </if>
         </trim>
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -189,6 +213,9 @@ selectList
             </if>
             <if test="condition.metaType!=null">
                 AND meta_type = #{condition.metaType}
+            </if>
+            <if test="condition.regular!=null">
+                AND regular = #{condition.regular}
             </if>
             <if test="condition.checkRule!=null">
                 AND check_rule = #{condition.checkRule}
@@ -211,6 +238,9 @@ selectList
             <if test="condition.isRetain!=null">
                 AND is_retain=#{condition.isRetain}
             </if>
+            <if test="condition.isShow!=null">
+                AND is_show=#{condition.isShow}
+            </if>
         </trim>
     </update>
 
@@ -219,24 +249,28 @@ selectList
                 en_name,
                 ch_name,
                 meta_type,
+                regular,
                 check_rule,
                 domain,
                 config_order,
                 data_type,
                 data_url,
                 data_value,
-                is_retain
+                is_retain,
+                is_show
         ) VALUES (
                     #{map.enName},
                     #{map.chName},
                     #{map.metaType},
+                    #{map.regular},
                     #{map.checkRule},
                     #{map.domain},
                     #{map.configOrder},
                     #{map.dataType},
                     #{map.dataUrl},
                     #{map.dataValue},
-                    #{map.isRetain}
+                    #{map.isRetain},
+                    #{map.isShow}
         )
     </insert>
 
@@ -247,6 +281,7 @@ selectList
             en_name = #{enName},
             ch_name = #{chName},
             meta_type = #{metaType},
+            regular = #{regular},
             check_rule = #{checkRule},
             domain = #{domain},
             config_order = #{configOrder},
@@ -254,6 +289,7 @@ selectList
             data_url=#{dataUrl},
             data_value=#{dataValue},
             is_retain=#{isRetain},
+            is_show=#{isShow},
         </trim>
         WHERE
         id = #{id} 
@@ -283,6 +319,9 @@ selectList
             <if test="metaType!=null">
                 AND meta_type = #{metaType}
             </if>
+            <if test="regular!=null">
+                AND regular = #{regular}
+            </if>
             <if test="checkRule!=null">
                 AND check_rule = #{checkRule}
             </if>
@@ -303,6 +342,9 @@ selectList
             </if>
             <if test="isRetain!=null">
                 AND is_retain=#{isRetain}
+            </if>
+            <if test="isShow!=null">
+                AND is_show=#{isShow}
             </if>
         </trim>
     </delete>
@@ -373,6 +415,9 @@ selectList
             <if test="condition.metaType!=null">
                 ${condition.groupOp}   meta_type  ${condition.meta_type.op}  #{condition.meta_type.data}
             </if>
+            <if test="condition.regular!=null">
+                ${condition.groupOp}   regular  ${condition.regular.op}  #{condition.regular.data}
+            </if>
             <if test="condition.checkRule!=null">
                 ${condition.groupOp}   check_rule  ${condition.check_rule.op}  #{condition.check_rule.data}
             </if>
@@ -393,6 +438,9 @@ selectList
             </if>
             <if test="condition.isRetain!=null">
                 ${condition.groupOp}   is_retain  ${condition.isRetain.op}  #{condition.isRetain.data}
+            </if>
+            <if test="condition.isShow!=null">
+                ${condition.groupOp}   is_show  ${condition.isShow.op}  #{condition.isShow.data}
             </if>
 
     </where>
@@ -422,6 +470,9 @@ selectList
             <if test="metaType!=null">
                 AND meta_type like CONCAT('%', #{metaType} , '%')
             </if>
+            <if test="regular!=null">
+                AND regular like CONCAT('%', #{regular} , '%')
+            </if>
             <if test="checkRule!=null">
                 AND check_rule like CONCAT('%', #{checkRule} , '%')
             </if>
@@ -442,6 +493,9 @@ selectList
             </if>
             <if test="isRetain!=null">
                 AND is_retain like CONCAT('%', #{isRetain} , '%')
+            </if>
+            <if test="isShow!=null">
+                AND is_show like CONCAT('%', #{isShow} , '%')
             </if>
         </trim>
         <if test="orderBy!=null">
@@ -467,6 +521,9 @@ selectList
             <if test="condition.metaType!=null">
                 AND meta_type = #{condition.metaType}
             </if>
+            <if test="condition.regular!=null">
+                AND regular = #{condition.regular}
+            </if>
             <if test="condition.checkRule!=null">
                 AND check_rule = #{condition.checkRule}
             </if>
@@ -487,6 +544,9 @@ selectList
             </if>
             <if test="condition.isRetain!=null">
                 AND is_retain=#{condition.isRetain}
+            </if>
+            <if test="condition.isShow!=null">
+                AND is_show=#{condition.isShow}
             </if>
         </trim>
         <if test="orderBy!=null">
@@ -511,6 +571,9 @@ selectList
             <if test="condition.metaType!=null">
                 AND meta_type = #{condition.metaType}
             </if>
+            <if test="condition.regular!=null">
+                AND regular = #{condition.regular}
+            </if>
             <if test="condition.checkRule!=null">
                 AND check_rule = #{condition.checkRule}
             </if>
@@ -532,6 +595,9 @@ selectList
             <if test="condition.isRetain!=null">
                 AND is_retain=#{condition.isRetain}
             </if>
+            <if test="condition.isShow!=null">
+                AND is_show=#{condition.isShow}
+            </if>
         </trim>
         limit 0,1
     </select>
@@ -550,6 +616,9 @@ selectList
            </if>
            <if test="metaType!=null">
                ${groupOp} meta_type ${meta_type.op}  #{meta_type.data}
+           </if>
+           <if test="regular!=null">
+               ${groupOp} regular ${regular.op}  #{regular.data}
            </if>
            <if test="checkRule!=null">
                ${groupOp} check_rule ${check_rule.op}  #{check_rule.data}
@@ -571,6 +640,9 @@ selectList
            </if>
            <if test="isRetain!=null">
                ${groupOp} is_retain ${isRetain.op}  #{isRetain.data}
+           </if>
+           <if test="isShow!=null">
+               ${groupOp} is_show ${isShow.op}  #{isShow.data}
            </if>
        </where>
     <if test="orderBy!=null">

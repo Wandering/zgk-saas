@@ -14,6 +14,7 @@ public class MergeClassInfoDto implements Serializable {
     private String classNames;
     private String taskId;
     private String createDate;
+    private Integer classType;
 
     public String getId() {
         return id;
@@ -77,5 +78,28 @@ public class MergeClassInfoDto implements Serializable {
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
+    }
+
+    public Integer getClassType() {
+        return classType;
+    }
+
+    public void setClassType(Integer classType) {
+        this.classType = classType;
+    }
+
+    @Override
+    public String toString() {
+        return "MergeClassInfoDto{" +
+                "id='" + id + '\'' +
+                ", tnId='" + tnId + '\'' +
+                ", courseId='" + courseId + '\'' +
+                ", courseName='" + courseName + '\'' +
+                ", classIds='" + classIds + '\'' +
+                ", classNames='" + classNames + '\'' +
+                ", taskId='" + taskId + '\'' +
+                ", createDate='" + createDate + '\'' +
+                ", classType=" + classType +
+                '}';
     }
 }

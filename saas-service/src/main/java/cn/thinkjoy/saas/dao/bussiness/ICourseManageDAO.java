@@ -17,4 +17,6 @@ public interface ICourseManageDAO extends IBaseDAO<CourseManage> {
     List<CourseManageVo> selectCourseManageGroup(Map map);
 
     Integer addCourses(List<CourseManage> courseManages);
+
+    List<Map> selectCourseList(Map map);
 }

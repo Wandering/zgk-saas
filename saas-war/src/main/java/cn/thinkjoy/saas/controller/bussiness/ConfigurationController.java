@@ -212,7 +212,7 @@ public class ConfigurationController {
     @ResponseBody
     public Map getTeantConfigList(@PathVariable String type, @PathVariable Integer tnId) {
 
-        List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceService.getTenantConfigListByTnIdAndType(type, tnId);
+        List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceService.getTenantConfigListByTnIdAndType(type, tnId,"0");
 
         Map resultMap = new HashMap();
         if (tenantConfigInstances.size() == 0){
@@ -340,21 +340,21 @@ public class ConfigurationController {
      *
      * @return
      */
-    @RequestMapping("/testCourse")
-    @ResponseBody
-    public Map importConfig(
-                            HttpServletRequest request,
-                            HttpServletResponse response) {
-
-//        boolean result = exiTenantConfigInstanceService.createTenantCombinationTable(type, tnId);
-
-//        iexTenantCustomService
-
-        exiTenantConfigInstanceService.syncProcedureData("teacher",4);
-        Map resultMap = new HashMap();
-//        resultMap.put("result", result ? "SUCCESS" : "FAIL");
-        return resultMap;
-    }
+//    @RequestMapping("/testCourse")
+//    @ResponseBody
+//    public Map importConfig(
+//                            HttpServletRequest request,
+//                            HttpServletResponse response) {
+//
+////        boolean result = exiTenantConfigInstanceService.createTenantCombinationTable(type, tnId);
+//
+////        iexTenantCustomService
+//
+//        exiTenantConfigInstanceService.syncProcedureData("teacher",4);
+//        Map resultMap = new HashMap();
+////        resultMap.put("result", result ? "SUCCESS" : "FAIL");
+//        return resultMap;
+//    }
 
     /**
      * excel模板上传
@@ -381,7 +381,7 @@ public class ConfigurationController {
             LOGGER.info("文件原名: " + myfile.getOriginalFilename());
             String realPath = env.getProp("configuration.excel.upload.url");
             FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
-            result = exiTenantConfigInstanceService.uploadExcel(type, tnId, realPath + myfile.getOriginalFilename());
+            result = exiTenantConfigInstanceService.uploadExcel(type, tnId, realPath + myfile.getOriginalFilename(),0);
             if (result.equals("SUCCESS") && iexTenantService.getStep(tnId) != 0)
                 iexTenantService.stepSetting(tnId, (type.equals("teacher") ? true : false));
         }

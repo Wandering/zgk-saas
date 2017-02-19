@@ -8,11 +8,14 @@ import java.util.List;
  */
 public class TeacherBaseDto implements Serializable {
 
+    private int id; // 主键ID
     private int teacherId; // 教师ID
     private String teacherName; // 教师姓名
     private String courseName; // 课程名
     private int classNum; // 最大带班数
-    private List<ClassBaseDto> classInfo;
+    private String classes; // 所带班级
+    private String grade; // 所带年纪
+    private int isAttend = 0;// 是否排课 0：不排课 1：排课
 
     public int getTeacherId() {
         return teacherId;
@@ -46,12 +49,37 @@ public class TeacherBaseDto implements Serializable {
         this.classNum = classNum;
     }
 
-    public List<ClassBaseDto> getClassInfo() {
-        return classInfo;
+    public String getClasses() {
+        return classes;
     }
 
-    public void setClassInfo(List<ClassBaseDto> classInfo) {
-        this.classInfo = classInfo;
+    public void setClasses(String classes) {
+        this.classes = classes;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public int getIsAttend() {
+        return isAttend;
+    }
+
+    public void setIsAttend(int isAttend) {
+        this.isAttend = isAttend;
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
@@ -61,7 +89,9 @@ public class TeacherBaseDto implements Serializable {
                 ", teacherName='" + teacherName + '\'' +
                 ", courseName='" + courseName + '\'' +
                 ", classNum=" + classNum +
-                ", classInfo=" + classInfo +
+                ", classes='" + classes + '\'' +
+                ", grade='" + grade + '\'' +
+                ", isAttend=" + isAttend +
                 '}';
     }
 }

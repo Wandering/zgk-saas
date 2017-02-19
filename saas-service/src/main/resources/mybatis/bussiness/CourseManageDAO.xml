@@ -196,19 +196,19 @@
         DELETE FROM saas_course_manage
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="tnId!=null">
-                AND tn_id=#{tnId},
+                AND tn_id=#{tnId}
             </if>
             <if test="courseBaseId!=null">
-                AND course_base_id = #{courseBaseId},
+                AND course_base_id = #{courseBaseId}
             </if>
             <if test="custom!=null">
-                AND custom = #{custom},
+                AND custom = #{custom}
             </if>
             <if test="gradeId!=null">
-                AND grade_id = #{gradeId},
+                AND grade_id = #{gradeId}
             </if>
             <if test="courseType!=null">
-                AND course_type = #{courseType},
+                AND course_type = #{courseType}
             </if>
             <if test="createTime!=null">
                 AND create_time=#{createTime}
@@ -463,5 +463,13 @@
             (#{item.tnId},#{item.courseBaseId},#{item.custom},#{item.gradeId},#{item.courseType},#{item.createTime})
         </foreach>
     </insert>
+
+    <select id="selectCourseList" parameterType="java.util.Map" resultType="java.util.Map">
+        select cm.id,cbi.course_name as courseName,gg.grade
+        from saas_course_manage cm
+         left JOIN saas_course_base_info cbi on cm.course_base_id=cbi.id
+         left join saas_grade gg on cm.grade_id=gg.gradeCode and cm.tn_id=gg.tnId
+        where cm.tn_id=#{tnId} and gg.grade=#{gradeName}
+    </select>
 </mapper>
 

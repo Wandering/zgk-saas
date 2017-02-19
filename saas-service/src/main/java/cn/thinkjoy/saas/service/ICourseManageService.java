@@ -17,6 +17,8 @@ public interface ICourseManageService<D extends IBaseDAO<T>, T extends BaseDomai
 
     List<CourseManageMapperVo> selectCourseManageInfo(Map map);
 
+    Object selectCourseList(Map map);
+
     public boolean insertCourseManage(CourseManage courseManage,String ids);
 
     public boolean updateCourseManage(CourseManage courseManage,String ids);

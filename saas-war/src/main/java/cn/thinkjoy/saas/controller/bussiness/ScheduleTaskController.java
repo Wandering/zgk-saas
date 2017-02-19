@@ -18,7 +18,6 @@ import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
-import com.alibaba.dubbo.common.json.ParseException;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
@@ -247,31 +246,31 @@ public class ScheduleTaskController {
         try {
             map = iexTenantCustomService.existDataCount(params);
         }catch (Exception e){
-            throw new BizException(ErrorCode.TASK_ERROR.getCode(),"您还未完善学生信息，请至学生管理中完善!");
+            throw new BizException(ErrorCode.TASK_ERROR.getCode(),"您还未上传学生信息，请至学生管理中完善!");
         }
 
-        Iterator<String> iterator = map.keySet().iterator();
-        List<String> emptyColumns = new ArrayList<>();
-        while (iterator.hasNext()){
-            String key = iterator.next();
-            if ("0".equals(map.get(key)==null?null:map.get(key).toString())) {
-                emptyColumns.add(key);
-            }
-        }
-        if (emptyColumns.size()>0) {
-            StringBuffer buffer = new StringBuffer();
-            buffer.append("您还未填写");
-            for (String s : emptyColumns) {
-                Map<String, Object> queryMap = Maps.newHashMap();
-                queryMap.put("domain", Constant.STUDENT);
-                queryMap.put("enName", s);
-                String cnName = exiConfigurationService.selectColumnName(queryMap);
-                buffer.append(cnName).append("、");
-            }
-            buffer.delete(buffer.length()-1,buffer.length());
-            buffer.append("字段信息，请至学生管理中完善");
-            throw new BizException(ErrorCode.TASK_ERROR.getCode(), buffer.toString());
-        }
+//        Iterator<String> iterator = map.keySet().iterator();
+//        List<String> emptyColumns = new ArrayList<>();
+//        while (iterator.hasNext()){
+//            String key = iterator.next();
+//            if ("0".equals(map.get(key)==null?null:map.get(key).toString())) {
+//                emptyColumns.add(key);
+//            }
+//        }
+//        if (emptyColumns.size()>0) {
+//            StringBuffer buffer = new StringBuffer();
+//            buffer.append("您还未填写");
+//            for (String s : emptyColumns) {
+//                Map<String, Object> queryMap = Maps.newHashMap();
+//                queryMap.put("domain", Constant.STUDENT);
+//                queryMap.put("enName", s);
+//                String cnName = exiConfigurationService.selectColumnName(queryMap);
+//                buffer.append(cnName).append("、");
+//            }
+//            buffer.delete(buffer.length()-1,buffer.length());
+//            buffer.append("字段信息，请至学生管理中完善");
+//            throw new BizException(ErrorCode.TASK_ERROR.getCode(), buffer.toString());
+//        }
         return true;
     }
 
@@ -352,45 +351,64 @@ public class ScheduleTaskController {
     }
 
     @ResponseBody
-    @ApiDesc(value = "自动补全教师姓名",owner = "gryang")
-    @RequestMapping(value = "/queryTeacherByKeyWord",method = RequestMethod.GET)
-    public List<TeacherBaseDto> queryTeacherByKeyWord(@RequestParam int taskId,@RequestParam String keyWord){
-        List<TeacherBaseDto> dtos = iexScheduleBaseInfoService.queryTeacherByKeyWord(taskId,keyWord);
-        return dtos;
-    }
+    @ApiDesc(value = "保存教师排课设置",owner = "gryang")
+    @RequestMapping(value = "/saveTeacherSchedule",method = RequestMethod.POST)
+    public Map saveTeacherSchedule(@RequestParam String str){
+        // str 传输规则 : 记录ID-设置（0：不排课，1：排课）多个逗号隔开，eg:1-1,2-0,3-1
+        String [] strArr = str.split(",");
+        for(int i=0;i<strArr.length;i++){
+            String id = StringUtils.substringBefore(strArr[i],"-");
+            String isAttend = StringUtils.substringAfter(strArr[i],"-");
 
-    @ResponseBody
-    @ApiDesc(value = "保存或修改教师配置信息",owner = "gryang")
-    @RequestMapping(value = "/saveOrUpdateTeacher",method = RequestMethod.POST)
-    public Map saveOrUpdateTeacher(@RequestParam int taskId,
-                                   @RequestParam int teacherId,
-                                   @RequestParam int classNum,
-                                   @RequestParam String course,
-                                   @RequestParam String classId){
-
-        iexScheduleBaseInfoService.saveOrUpdateTeacher(
-                taskId,
-                teacherId,
-                classNum,
-                course,
-                classId
-        );
+            JwTeacher jwTeacher = new JwTeacher();
+            jwTeacher.setIsAttend(Integer.valueOf(isAttend));
+            jwTeacher.setId(id);
+            jwTeacherService.update(jwTeacher);
+        }
 
         return Maps.newHashMap();
     }
 
-    @ResponseBody
-    @ApiDesc(value = "删除教师配置信息",owner = "gryang")
-    @RequestMapping(value = "/deleteTeacher",method = RequestMethod.GET)
-    public Map deleteTeacher(@RequestParam int taskId,@RequestParam int teacherId){
+//    @ResponseBody
+//    @ApiDesc(value = "自动补全教师姓名",owner = "gryang")
+//    @RequestMapping(value = "/queryTeacherByKeyWord",method = RequestMethod.GET)
+//    public List<TeacherBaseDto> queryTeacherByKeyWord(@RequestParam int taskId,@RequestParam String keyWord){
+//        List<TeacherBaseDto> dtos = iexScheduleBaseInfoService.queryTeacherByKeyWord(taskId,keyWord);
+//        return dtos;
+//    }
 
-        Map<String,Object> paramMap = Maps.newHashMap();
-        paramMap.put("teacherId",teacherId);
-        paramMap.put("taskId",taskId);
-        jwTeacherService.deleteByCondition(paramMap);
+//    @ResponseBody
+//    @ApiDesc(value = "保存或修改教师配置信息",owner = "gryang")
+//    @RequestMapping(value = "/saveOrUpdateTeacher",method = RequestMethod.POST)
+//    public Map saveOrUpdateTeacher(@RequestParam int taskId,
+//                                   @RequestParam int teacherId,
+//                                   @RequestParam int classNum,
+//                                   @RequestParam String course,
+//                                   @RequestParam String classId){
+//
+//        iexScheduleBaseInfoService.saveOrUpdateTeacher(
+//                taskId,
+//                teacherId,
+//                classNum,
+//                course,
+//                classId
+//        );
+//
+//        return Maps.newHashMap();
+//    }
 
-        return Maps.newHashMap();
-    }
+//    @ResponseBody
+//    @ApiDesc(value = "删除教师配置信息",owner = "gryang")
+//    @RequestMapping(value = "/deleteTeacher",method = RequestMethod.GET)
+//    public Map deleteTeacher(@RequestParam int taskId,@RequestParam int teacherId){
+//
+//        Map<String,Object> paramMap = Maps.newHashMap();
+//        paramMap.put("teacherId",teacherId);
+//        paramMap.put("taskId",taskId);
+//        jwTeacherService.deleteByCondition(paramMap);
+//
+//        return Maps.newHashMap();
+//    }
 
     @ResponseBody
     @ApiDesc(value = "根据任务ID检测基础信息是否完善",owner = "gryang")
@@ -423,25 +441,25 @@ public class ScheduleTaskController {
         }
 
         // 检测教师信息是否填写完整(给所有课程是否已经设置教师)
-        for(JwCourse course : courses){
-            JwCourseBaseInfo info = (JwCourseBaseInfo) jwCourseBaseInfoService.fetch(course.getCourseId());
-
-            if(info == null){
-                continue;
-            }
-
-            boolean flag = false;
-            for(JwTeacher teacher : teachers){
-                if(teacher.getCourse().equals(info.getCourseName())){
-                    flag = true;
-                    continue;
-                }
-            }
-
-            if(!flag){
-                ExceptionUtil.throwException(ErrorCode.TEACHER_INFO_NOT_PERFECT);
-            }
-        }
+//        for(JwCourse course : courses){
+//            JwCourseBaseInfo info = (JwCourseBaseInfo) jwCourseBaseInfoService.fetch(course.getCourseId());
+//
+//            if(info == null){
+//                continue;
+//            }
+//
+//            boolean flag = false;
+//            for(JwTeacher teacher : teachers){
+//                if(teacher.getCourse().equals(info.getCourseName())){
+//                    flag = true;
+//                    continue;
+//                }
+//            }
+//
+//            if(!flag){
+//                ExceptionUtil.throwException(ErrorCode.TEACHER_INFO_NOT_PERFECT);
+//            }
+//        }
 
         return Maps.newHashMap();
     }

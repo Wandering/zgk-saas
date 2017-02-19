@@ -64,27 +64,26 @@
                         <div class="base-content">
                             <div class="title-2">
                                 <span class="txt-t"></span>
-                                <%--<div class="btns">--%>
-                                    <%--<button class="btn btn-pink" id="add-teacher-btn">添加教师</button>--%>
-                                    <%--<button class="btn btn-inverse" id="modify-teacher-btn">修改</button>--%>
-                                    <%--<button class="btn btn-success del-btn" id="delete-teacher-btn">删除</button>--%>
-                                <%--</div>--%>
+                                <div class="btns">
+                                    <button class="btn btn-pink" id="add-teacher-btn">添加教师</button>
+                                    <button class="btn btn-inverse" id="modify-teacher-btn">修改</button>
+                                    <button class="btn btn-success del-btn" id="delete-teacher-btn">删除</button>
+                                </div>
                             </div>
                             <table id="teacher-table" class="table">
                                 <thead>
                                     <tr>
-                                        <%--<th class="center" width="50px">--%>
-                                            <%--<label>--%>
-                                                <%--<input type="checkbox" id="checkAll" class="ace" />--%>
-                                                <%--<span class="lbl"></span>--%>
-                                            <%--</label>--%>
-                                        <%--</th>--%>
+                                        <th class="center" width="50px">
+                                            <label>
+                                                <input type="checkbox" id="checkAll" class="ace" />
+                                                <span class="lbl"></span>
+                                            </label>
+                                        </th>
                                         <th class="center" width="80px">序号</th>
-                                        <th class="center" width="200px">教师姓名</th>
-                                        <th class="center" width="200px">所授课程</th>
-                                        <th class="center" width="100px">最大带班数</th>
+                                        <th class="center" width="250px">教师姓名</th>
+                                        <th class="center" width="250px">所授课程</th>
+                                        <th class="center" width="250px">最大带班数</th>
                                         <th class="center">所带班级</th>
-                                        <th class="center" width="120px">是否排课</th>
                                     </tr>
                                 </thead>
                                 <tbody id="teacher-list" class="check-template">
@@ -129,7 +128,6 @@
                                     <%--</tr>--%>
                                 </tbody>
                             </table>
-                            <button class="btn-save-base" id="save-teacher" style="margin-top: 20px">保存</button>
                         </div>
                     </div>
                 </div>
@@ -140,17 +138,21 @@
 <script id="teacher-template" type="text/x-handlebars-template">
     {{#each bizData}}
     <tr>
+        <td class="center">
+            <label>
+                <input type="checkbox" classInfo="{{classInfoData classInfo}}" teacherId="{{teacherId}}" teacherName="{{teacherName}}" courseName="{{courseName}}" classNum="{{classNum}}" class="ace"/>
+                <span class="lbl"></span>
+            </label>
+        </td>
         <td class="center">{{addOne @index}}</td>
         <td class="center">{{teacherName}}</td>
         <td class="center">{{courseName}}</td>
         <td class="center">{{classNum}}</td>
-        <td class="center">{{classes}}</td>
-        <td>
-            {{#if isAttend}}
-                <input type="checkbox" id="pai-{{@index}}" style="margin:0 10px"  tId="{{id}}" value="1" checked><label for="pai-{{@index}}">对其排课</label>
-            {{else}}
-                <input type="checkbox" id="pai-{{@index}}" style="margin:0 10px"  tId="{{id}}" value="1"><label for="pai-{{@index}}">对其排课</label>
-            {{/if}}
+        <td class="center">
+            {{#each classInfo}}
+            {{className}}
+            {{/each}}
+        </td>
         </td>
     </tr>
     {{/each}}

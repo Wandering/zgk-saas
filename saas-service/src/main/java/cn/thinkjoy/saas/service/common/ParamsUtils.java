@@ -56,7 +56,9 @@ public  class ParamsUtils {
      */
     public static String getGradeKey(String type) {
         Map map = new HashMap();
-        map.put("class", "class_grade");
+        map.put("class","class_grade");
+        map.put("class_adm", "class_grade");
+        map.put("class_edu", "class_grade");
         map.put("student", "student_grade");
         map.put("teacher", "teacher_grade");
         return map.get(type).toString();
@@ -158,6 +160,14 @@ public  class ParamsUtils {
                 key1 = "class_grade";
                 key2 = "class_name";
                 break;
+            case "class_adm":
+                key1 = "class_grade";
+                key2 = "class_name";
+                break;
+            case "class_edu":
+                key1 = "class_grade";
+                key2 = "class_name";
+                break;
             case "teacher":
                 key1 = "teacher_name";
                 key2 = "teacher_major_type";
@@ -199,9 +209,9 @@ public  class ParamsUtils {
 
         String stuNo = "";
         for (int i = 0; i < excelValues.size() - 1; i++) {
-            stuNo = excelValues.get(i).get("1");
+            stuNo = excelValues.get(i).get("2");
             for (int j = i + 1; j < excelValues.size(); j++) {
-                if (stuNo.equals(excelValues.get(j).get("1"))) {
+                if (stuNo.equals(excelValues.get(j).get("2"))) {
                     result = "第" + (i + 1) + "行学号信息与第" + (j + 1) + "行学号信息重复";
                     return result;
                 }

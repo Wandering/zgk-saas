@@ -419,7 +419,10 @@ public class ManageController {
          pri=request.getDataInteger("pri");
         String tableName = ParamsUtils.combinationTableName(type, tnId);
         List<String> removeIds=reantCustomRepeat(type, tableName, teantCustoms);
-        if (removeIds != null && removeIds.size() > 0) {
+        if (removeIds!=null && removeIds.size()==1 && Integer.valueOf(removeIds.get(0)).equals(pri)){
+            boolean result = iexTenantCustomService.modifyTeantCustom(type, tnId, pri, teantCustoms);
+            resultMap.put("result", (result ? "SUCCESS" : "FAIL"));
+        }else if (removeIds != null && removeIds.size() > 0) {
             resultMap.put("result", "存在重复数据,请修正!");
         }else {
             boolean result = iexTenantCustomService.modifyTeantCustom(type, tnId, pri, teantCustoms);
@@ -460,6 +463,7 @@ public class ManageController {
                 star = _req.getParameter("s"),
                 row = _req.getParameter("r");
 
+        exiTenantConfigInstanceService.createTenantCombinationTable(type,tnId);
 
 
         Integer s = (star == null) ? null : Integer.valueOf(star),
