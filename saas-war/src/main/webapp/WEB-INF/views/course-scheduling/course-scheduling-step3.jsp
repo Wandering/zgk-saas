@@ -112,10 +112,10 @@
                                 <div class="bottom-page">
                                     <%@ include file="../course-scheduling/step3-child-all.jsp"%>
                                 </div>
-                                <div class="bottom-page">
+                                <div class="bottom-page dh">
                                     <%@ include file="../course-scheduling/step3-child-class.jsp"%>
                                 </div>
-                                <div class="bottom-page">
+                                <div class="bottom-page dh">
                                     <%@ include file="../course-scheduling/step3-child-teacher.jsp"%>
                                 </div>
                                 <%--<div class="bottom-page dh">--%>

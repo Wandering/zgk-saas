@@ -11,6 +11,170 @@ var taskId = Common.cookie.getCookie('taskId');
 var scheduleName = Common.cookie.getCookie('scheduleName');
 $('.scheduleName').text(scheduleName);
 
+var ClassRoomTableIns = new ClassRoomTable();
+
+var HashHandle = {
+    init: function () {
+        this.hashArr = ['#all','#class','#teacher'];
+        this.addEvent();
+        this.hashOperate();
+        this.initStatus();
+    },
+    addEvent: function () {
+        $('#role-scheduling-tab .role-tab li').click(function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            var index = $(this).index();
+            $('#control-jsp .bottom-page').eq(index).removeClass('dh').siblings().addClass('dh');
+            window.location.hash = HashHandle.hashArr[index];
+        });
+    },
+    hashOperate: function () {
+        // 防止刷新|hash处理
+        window.onhashchange = function () {
+            if (window.location.hash === '') {
+                window.location.reload();
+            }
+        };
+        for (var i = 0; i < HashHandle.hashArr.length; i++) {
+            if (window.location.hash === HashHandle.hashArr[i]) {
+                $('#role-scheduling-tab .role-tab li').eq(i).addClass('active').siblings().removeClass('active');
+                $('#control-jsp .bottom-page').eq(i).removeClass('dh').siblings().addClass('dh');
+            }
+        }
+    },
+    initStatus: function () {
+        var that = this;
+        Common.ajaxFun('/scheduleTask/queryScheduleTaskStatus', 'GET', {
+            'taskId': taskId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData;
+                switch (parseInt(data)) {
+                    // 1. 没点过没排课  2.排课失败  3.已经点过
+                    case 1:
+                        $('.btn-one-key').removeClass('dh');
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        $('.btn-one-key').addClass('dh');
+                        that.scheduleTaskState();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        }, true);
+    },
+    updateStatus: function () {
+        //Common.ajaxFun('/scheduleTask/updateScheduleTaskStatus', 'GET', {
+        //    'taskId': taskId
+        //}, function (res) {
+        //    if (res.rtnCode == "0000000") {
+        //        var data = res.bizData;
+        //        $('#role-scheduling-tab, #step3-child-class').removeClass('dh');
+        //        $('.info-modify, .btn-one-key').addClass('dh');
+        //    }
+        //}, function (res) {
+        //    layer.msg("出错了");
+        //}, true);
+    },
+    // 一键排课触发
+    scheduleTaskTrigger: function () {
+        var that = this;
+        Common.ajaxFun('/scheduleTask/trigger.do', 'GET', {
+            'taskId': taskId,
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                if (res.bizData == true) {
+                    that.scheduleTaskState();
+                }
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        }, true);
+    },
+    // 一键排课结果
+    scheduleTaskState: function () {
+        var that = this;
+        Common.ajaxFun('/scheduleTask/state.do', 'GET', {
+            'taskId': taskId,
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                // 0:正在排课  1:排课成功   -1 ：排课失败
+                var dataNum = res.bizData;
+                switch (parseInt(dataNum)) {
+                    case 1:
+                        console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦");
+
+
+
+                        //clearInterval(that.progressTims);
+                        //var current = 0;
+                        //var totalTime = 1000 * 60 * 10; // 10分钟
+                        //that.progressTims = setInterval(function(){
+                        //    current++;
+                        //    $('#counter').html(current + '%');
+                        //    if (current == 100) {
+                        //        current=0;
+                        //        clearInterval(that.progressTims);
+                        //    }
+                        //},1000);
+
+
+
+
+
+                        //var interval = setInterval(increment, 100);
+                        //var current = 0;
+                        //
+                        //function increment() {
+                        //    current++;
+                        //    $('#counter').html(current + '%');
+                        //    if (current == 100) {
+                        //        current = 0;
+                        //    }
+                        //}
+                        //
+                        //interval = setInterval(increment, 100);
+
+                        $('.arranging-course-tips').removeClass('dh');
+                        $('.scheduling-error,#role-scheduling-tab,#control-jsp').addClass('dh');
+                        clearInterval(that.items);
+                        that.items = setInterval(function () {
+                            that.scheduleTaskState();
+                        }, 30000);
+                        break;
+                    case 0:
+                        console.log("排课成功");
+                        clearInterval(that.items);
+                        $('.one-key-page').addClass('dh');
+                        $('#role-scheduling-tab,#control-jsp').removeClass('dh');
+                        ClassRoomTableIns.getQueryCourse();
+                        ClassRoomTableIns.getQueryClass();
+                        break;
+                    case -1:
+                        console.log("排课失败");
+                        $('.btn-one-key,#role-scheduling-tab,#control-jsp').addClass('dh');
+                        $('.scheduling-error').removeClass('dh');
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        }, true);
+    }
+
+};
+HashHandle.init();
+
+
 
 function ClassRoomTable() {
     this.init();
@@ -35,6 +199,31 @@ ClassRoomTable.prototype = {
         //$('#role-scheduling-tab,#control-jsp').removeClass('dh');
 
     },
+    // 拉取教室
+    //getClassRoom: function () {
+    //    var that = this;
+    //    Common.ajaxFun('/baseResult/queryRoom.do', 'GET', {
+    //        "taskId": taskId
+    //    }, function (result) {
+    //        if (result.rtnCode == "0000000") {
+    //            $('#select-class option:gt(0)').remove();
+    //            var classRoom = [];
+    //            $.each(result.bizData, function (i, v) {
+    //                classRoom.push('<option value="' + v.id + '">' + v.roomName + '</option>')
+    //            });
+    //            $('#select-class').append(classRoom);
+    //            $('#select-class option:eq(1)').attr('selected', 'selected');
+    //            var selectedV = $('#select-class option:eq(1):selected').val();
+    //            var selectedTxt = $('#select-class option:eq(1):selected').text();
+    //            $('.scheduling-name').show().text(selectedTxt);
+    //            that.getClassRoomTable('room', {'room': selectedV});
+    //        } else {
+    //            layer.msg(result.msg);
+    //        }
+    //    }, function (result) {
+    //        layer.msg(result.msg);
+    //    });
+    //},
     // 拉取科目
     getQueryCourse: function () {
         var that = this;
@@ -250,136 +439,6 @@ ClassRoomTable.prototype = {
         }, true);
     }
 };
-
-
-
-var ClassRoomTableIns = new ClassRoomTable();
-
-
-
-
-
-
-var HashHandle = {
-    init: function () {
-        this.hashArr = ['#all','#class','#teacher'];
-        this.addEvent();
-        this.hashOperate();
-        this.initStatus();
-    },
-    addEvent: function () {
-        $('#role-scheduling-tab .role-tab li').click(function () {
-            $(this).addClass('active').siblings().removeClass('active');
-            var index = $(this).index();
-            $('#control-jsp .bottom-page').eq(index).removeClass('dh').siblings().addClass('dh');
-            window.location.hash = HashHandle.hashArr[index];
-        });
-    },
-    hashOperate: function () {
-        // 防止刷新|hash处理
-        window.onhashchange = function () {
-            if (window.location.hash === '') {
-                window.location.reload();
-            }
-        };
-        for (var i = 0; i < HashHandle.hashArr.length; i++) {
-            if (window.location.hash === HashHandle.hashArr[i]) {
-                $('#role-scheduling-tab .role-tab li').eq(i).addClass('active').siblings().removeClass('active');
-                $('#control-jsp .bottom-page').eq(i).removeClass('dh').siblings().addClass('dh');
-            }
-        }
-    },
-    initStatus: function () {
-        var that = this;
-        Common.ajaxFun('/scheduleTask/queryScheduleTaskStatus', 'GET', {
-            'taskId': taskId
-        }, function (res) {
-            if (res.rtnCode == "0000000") {
-                var data = res.bizData;
-                switch (parseInt(data)) {
-                    // 1. 没点过没排课  2.排课失败  3.已经点过
-                    case 1:
-                        $('.btn-one-key').removeClass('dh');
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        $('.btn-one-key').addClass('dh');
-                        that.scheduleTaskState();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }, function (res) {
-            layer.msg("出错了");
-        }, true);
-    },
-    // 一键排课触发
-    scheduleTaskTrigger: function () {
-        var that = this;
-        Common.ajaxFun('/scheduleTask/trigger.do', 'GET', {
-            'taskId': taskId,
-            'tnId': tnId
-        }, function (res) {
-            if (res.rtnCode == "0000000") {
-                if (res.bizData == true) {
-                    that.scheduleTaskState();
-                }
-            }
-        }, function (res) {
-            layer.msg(res.msg);
-        }, true);
-    },
-    // 一键排课结果
-    scheduleTaskState: function () {
-        var that = this;
-        Common.ajaxFun('/scheduleTask/state.do', 'GET', {
-            'taskId': taskId,
-            'tnId': tnId
-        }, function (res) {
-            if (res.rtnCode == "0000000") {
-                // 0:正在排课  1:排课成功   -1 ：排课失败
-                var dataNum = res.bizData;
-                switch (parseInt(dataNum)) {
-                    case 0:
-                        console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦");
-                        $('.arranging-course-tips').removeClass('dh');
-                        $('.scheduling-error,#role-scheduling-tab,#control-jsp').addClass('dh');
-                        clearInterval(that.items);
-                        that.items = setInterval(function () {
-                            that.scheduleTaskState();
-                        }, 30000);
-                        break;
-                    case 1:
-                        console.log("排课成功");
-                        clearInterval(that.items);
-                        $('.one-key-page,.arranging-course-tips').addClass('dh');
-                        $('#role-scheduling-tab,#control-jsp').removeClass('dh');
-                        ClassRoomTableIns.getAllQueryCourse();
-                        ClassRoomTableIns.getQueryCourse();
-                        ClassRoomTableIns.getQueryClass();
-                        break;
-                    case -1:
-                        console.log("排课失败");
-                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips').addClass('dh');
-                        $('.scheduling-error').removeClass('dh');
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }, function (res) {
-            layer.msg(res.msg);
-        }, true);
-    }
-
-};
-HashHandle.init();
-
-
-
-
 
 
 
