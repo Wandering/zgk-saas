@@ -196,13 +196,15 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
     private List<TeacherBaseDto> insertJwTeacher(List<TeacherBaseDto> dtos,int taskId,int tnId){
         for(TeacherBaseDto dto : dtos){
             JwTeacher teacher = new JwTeacher();
-            teacher.setIsAttend(0);
+            teacher.setIsAttend(1);
             teacher.setTaskId(taskId);
             teacher.setTeacherId(dto.getTeacherId());
             teacher.setTnId(tnId);
             int id = jwTeacherDAO.insert(teacher);
-
             dto.setId(id);
+
+            // 异步插入教师规则信息
+            insert(dto.getTeacherId(),tnId,taskId,dto.getCourseName());
         }
         return dtos;
     }
@@ -313,7 +315,6 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
 //    }
 
     @Override
-    @Async
     public void insertBaseRule(int recordId,int isAttend){
 
         JwTeacher jwTeacher = jwTeacherDAO.fetch(recordId);
@@ -342,54 +343,60 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
             if(StringUtils.isEmpty(course)){
                 return;
             }
-            // 根据课程名查询课程Id
-            CourseBaseInfo info = iCourseBaseInfoDAO.findOne("course_name",course,null,null);
 
-            int courseId = Integer.valueOf(info.getId().toString());
-            long currentTime = System.currentTimeMillis();
-
-            // 连上规则
-            JwBaseConRule conRule = new JwBaseConRule();
-            conRule.setTeacherId(teacherId);
-            conRule.setTnId(tnId);
-            conRule.setCourseId(courseId);
-            conRule.setCreateDate(currentTime);
-            conRule.setDayConType(1);
-            conRule.setImportantType(2);
-            conRule.setTaskId(taskId);
-            iJwBaseConRuleDAO.insert(conRule);
-
-            // 日任课规则
-            JwBaseDayRule dayRule = new JwBaseDayRule();
-            dayRule.setCreateDate(currentTime);
-            dayRule.setTaskId(taskId);
-            dayRule.setImportantType(2);
-            dayRule.setCourseId(courseId);
-            dayRule.setDayType(1);
-            dayRule.setTeacherId(teacherId);
-            dayRule.setTnId(tnId);
-            iJwBaseDayRuleDAO.insert(dayRule);
-
-            // 周任课规则
-            JwBaseWeekRule weekRule = new JwBaseWeekRule();
-            weekRule.setCreateDate(currentTime);
-            weekRule.setTnId(tnId);
-            weekRule.setTeacherId(teacherId);
-            weekRule.setCourseId(courseId);
-            weekRule.setImportantType(2);
-            weekRule.setTaskId(taskId);
-            weekRule.setWeekType(1);
-            iJwBaseWeekRuleDAO.insert(weekRule);
-
-            // 教案齐平规则
-            JwBaseJaqpRule jaqpRule = new JwBaseJaqpRule();
-            jaqpRule.setCreateDate(currentTime);
-            jaqpRule.setTaskId(taskId);
-            jaqpRule.setImportantType(2);
-            jaqpRule.setCourseId(courseId);
-            jaqpRule.setTeacherId(teacherId);
-            jaqpRule.setTnId(tnId);
-            iJwBaseJaqpRuleDAO.insert(jaqpRule);
+            insert(teacherId,tnId,taskId,course);
         }
+    }
+
+    @Async
+    private void insert(int teacherId,int tnId,int taskId,String course){
+        // 根据课程名查询课程Id
+        CourseBaseInfo info = iCourseBaseInfoDAO.findOne("course_name",course,null,null);
+
+        int courseId = Integer.valueOf(info.getId().toString());
+        long currentTime = System.currentTimeMillis();
+
+        // 连上规则
+        JwBaseConRule conRule = new JwBaseConRule();
+        conRule.setTeacherId(teacherId);
+        conRule.setTnId(tnId);
+        conRule.setCourseId(courseId);
+        conRule.setCreateDate(currentTime);
+        conRule.setDayConType(1);
+        conRule.setImportantType(2);
+        conRule.setTaskId(taskId);
+        iJwBaseConRuleDAO.insert(conRule);
+
+        // 日任课规则
+        JwBaseDayRule dayRule = new JwBaseDayRule();
+        dayRule.setCreateDate(currentTime);
+        dayRule.setTaskId(taskId);
+        dayRule.setImportantType(2);
+        dayRule.setCourseId(courseId);
+        dayRule.setDayType(1);
+        dayRule.setTeacherId(teacherId);
+        dayRule.setTnId(tnId);
+        iJwBaseDayRuleDAO.insert(dayRule);
+
+        // 周任课规则
+        JwBaseWeekRule weekRule = new JwBaseWeekRule();
+        weekRule.setCreateDate(currentTime);
+        weekRule.setTnId(tnId);
+        weekRule.setTeacherId(teacherId);
+        weekRule.setCourseId(courseId);
+        weekRule.setImportantType(2);
+        weekRule.setTaskId(taskId);
+        weekRule.setWeekType(1);
+        iJwBaseWeekRuleDAO.insert(weekRule);
+
+        // 教案齐平规则
+        JwBaseJaqpRule jaqpRule = new JwBaseJaqpRule();
+        jaqpRule.setCreateDate(currentTime);
+        jaqpRule.setTaskId(taskId);
+        jaqpRule.setImportantType(2);
+        jaqpRule.setCourseId(courseId);
+        jaqpRule.setTeacherId(teacherId);
+        jaqpRule.setTnId(tnId);
+        iJwBaseJaqpRuleDAO.insert(jaqpRule);
     }
 }
