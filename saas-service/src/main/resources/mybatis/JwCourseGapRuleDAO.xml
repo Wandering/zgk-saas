@@ -420,14 +420,18 @@ selectList
             a.id = b.course_base_id
         AND a.id = c.course_id
         AND c.task_id = #{taskId}
+        group by a.id
     </select>
 
     <select id="queryClassList" resultType="java.util.HashMap" >
         SELECT
             id,
-            class_name AS NAME,
+            class_name AS name,
             class_grade as grade,
-            class_type as type
+            <if test="classType == 0">
+                class_major_type as course,
+            </if>
+            class_type as classType
         FROM
             ${tableName}
         where
@@ -437,7 +441,7 @@ selectList
     <select id="queryCourseList" resultType="java.util.HashMap" >
         SELECT
             c.id,
-            c.course_name AS NAME,
+            c.course_name AS name,
             m.grade_id as grade
         FROM
             saas_course_base_info c

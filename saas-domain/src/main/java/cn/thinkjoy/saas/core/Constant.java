@@ -7,7 +7,7 @@ package cn.thinkjoy.saas.core;
  */
 public class Constant {
 
-    public static final String [] NoFilter_Pages = {"/account/login","/account/forgetPwd","/account/sendSmsCode","/account/loginOut"};
+    public static final String [] NoFilter_Pages = {"/account/login","/account/forgetPwd","/account/sendSmsCode","/account/loginOut","/scheduleTask/trigger","/scheduleTask/state"};
 
     public static final String [] GRADES = {"高一","高二","高三"};
 
@@ -75,4 +75,8 @@ public class Constant {
     public static final String COURSE_TABLE_REDIS_KEY = "course_key_";
     public static final String COURSE_TABLE_REDIS_SPLIT = "_";
     /**课程表redis相关end**/
+
+    public static final java.lang.String COURSE_LINE_TABLE_SPLIT_T = "\t";
+    public static final java.lang.String COURSE_TABLE_LINE_SPLIT_CHAR = "  ";
+    public static final java.lang.String COURSE_TABLE_LINE_SPLIT_CLASS = "     ";
 }

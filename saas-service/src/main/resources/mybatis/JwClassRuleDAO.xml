@@ -33,6 +33,7 @@ selectList
         fri as fri ,
         sut as sut ,
         sun as sun ,
+        classType as classType,
         classId as classId ,
         taskId as taskId ,
         createDate as createDate 
@@ -46,6 +47,7 @@ selectList
         fri,
         sut,
         sun,
+        classType,
         classId,
         taskId,
         createDate
@@ -57,6 +59,7 @@ selectList
         #{fri},
         #{sut},
         #{sun},
+        #{classType},
         #{classId},
         #{taskId},
         #{createDate}
@@ -90,6 +93,9 @@ selectList
             </if>
             <if test="sun!=null">
                 sun = #{sun},
+            </if>
+            <if test="classType!=null">
+                classType=#{classType},
             </if>
             <if test="classId!=null">
                 classId = #{classId},
@@ -129,6 +135,9 @@ selectList
             <if test="map.sun!=null">
                 sun = #{map.sun},
             </if>
+            <if test="map.classType!=null">
+                classType=#{map.classType},
+            </if>
             <if test="map.classId!=null">
                 classId = #{map.classId},
             </if>
@@ -167,6 +176,9 @@ selectList
             <if test="update.sun!=null">
                 sun = #{update.sun},
             </if>
+            <if test="update.classType!=null">
+                classType=#{update.classType},
+            </if>
             <if test="update.classId!=null">
                 classId = #{update.classId},
             </if>
@@ -203,6 +215,9 @@ selectList
             <if test="condition.sun!=null">
                 AND sun = #{condition.sun}
             </if>
+            <if test="condition.classType!=null">
+                AND classType=#{condition.classType}
+            </if>
             <if test="condition.classId!=null">
                 AND classId = #{condition.classId}
             </if>
@@ -224,6 +239,7 @@ selectList
                 fri,
                 sut,
                 sun,
+                classType,
                 classId,
                 taskId,
                 createDate
@@ -235,6 +251,7 @@ selectList
                     #{map.fri},
                     #{map.sut},
                     #{map.sun},
+                    #{map.classType},
                     #{map.classId},
                     #{map.taskId},
                     #{map.createDate}
@@ -252,6 +269,7 @@ selectList
             fri = #{fri},
             sut = #{sut},
             sun = #{sun},
+            classType=#{classType},
             classId = #{classId},
             taskId = #{taskId},
             createDate = #{createDate},
@@ -295,6 +313,9 @@ selectList
             </if>
             <if test="sun!=null">
                 AND sun = #{sun}
+            </if>
+            <if test="classType!=null">
+                AND classType=#{classType}
             </if>
             <if test="classId!=null">
                 AND classId = #{classId}
@@ -380,6 +401,9 @@ selectList
                         <if test="selector.sun!=null">
                             , sun
                         </if>
+                        <if test="selector.classType!=null">
+                            ,classType
+                        </if>
                         <if test="selector.classId!=null">
                             , classId
                         </if>
@@ -424,6 +448,9 @@ selectList
             </if>
             <if test="condition.sun!=null">
                 ${condition.groupOp}   ${condition.sun.field}  ${condition.sun.op}  #{condition.sun.data}
+            </if>
+            <if test="condition.classType!=null">
+                ${condition.groupOp}   ${condition.classType.field}  ${condition.classType.op}  #{condition.classType.data}
             </if>
             <if test="condition.classId!=null">
                 ${condition.groupOp}   ${condition.classId.field}  ${condition.classId.op}  #{condition.classId.data}
@@ -473,6 +500,9 @@ selectList
                     <if test="selector.sun!=null">
                         , sun
                     </if>
+                    <if test="selector.classType!=null">
+                        ,classType
+                    </if>
                     <if test="selector.classId!=null">
                         , classId
                     </if>
@@ -513,6 +543,9 @@ selectList
             <if test="condition.sun!=null">
                 AND sun like CONCAT('%', #{condition.sun} , '%')
             </if>
+            <if test="condition.classType!=null">
+                AND classType like CONCAT('%', #{condition.classType} , '%')
+            </if>
             <if test="condition.classId!=null">
                 AND classId like CONCAT('%', #{condition.classId} , '%')
             </if>
@@ -531,46 +564,7 @@ selectList
 
     <select id="queryList" parameterType="java.util.Map" resultType="JwClassRule">
         SELECT
-        <if test="selector!=null">
-            <trim prefixOverrides=",">
-                <if test="selector.id!=null">
-                    , id
-                </if>
-                <if test="selector.mon!=null">
-                    , mon
-                </if>
-                <if test="selector.tues!=null">
-                    , tues
-                </if>
-                <if test="selector.wed!=null">
-                    , wed
-                </if>
-                <if test="selector.thur!=null">
-                    , thur
-                </if>
-                <if test="selector.fri!=null">
-                    , fri
-                </if>
-                <if test="selector.sut!=null">
-                    , sut
-                </if>
-                <if test="selector.sun!=null">
-                    , sun
-                </if>
-                <if test="selector.classId!=null">
-                    , classId
-                </if>
-                <if test="selector.taskId!=null">
-                    , taskId
-                </if>
-                <if test="selector.createDate!=null">
-                    , createDate
-                </if>
-        </trim>
-    </if>
-<if test="selector==null">
-<include refid="Base_Column_List" />
-</if>
+        <include refid="Base_Column_List" />
         FROM saas_jw_class_rule
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
@@ -596,6 +590,9 @@ selectList
             </if>
             <if test="condition.sun!=null">
                 AND sun = #{condition.sun}
+            </if>
+            <if test="condition.classType!=null">
+                AND classType = #{condition.classType}
             </if>
             <if test="condition.classId!=null">
                 AND classId = #{condition.classId}
@@ -640,6 +637,9 @@ selectList
                     <if test="selector.sun!=null">
                         , sun
                     </if>
+                <if test="selector.classType!=null">
+                    , classType
+                </if>
                     <if test="selector.classId!=null">
                         , classId
                     </if>
@@ -679,6 +679,9 @@ selectList
             </if>
             <if test="condition.sun!=null">
                 AND sun = #{condition.sun}
+            </if>
+            <if test="condition.classType!=null">
+                AND classType = #{condition.classType}
             </if>
             <if test="condition.classId!=null">
                 AND classId = #{condition.classId}
@@ -722,6 +725,9 @@ selectList
            </if>
            <if test="sun!=null">
                ${groupOp} ${sun.field} ${sun.op}  #{sun.data}
+           </if>
+           <if test="classType!=null">
+               ${groupOp} ${classType.field} ${classType.op}  #{classType.data}
            </if>
            <if test="classId!=null">
                ${groupOp} ${classId.field} ${classId.op}  #{classId.data}

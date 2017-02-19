@@ -1,7 +1,5 @@
 package cn.thinkjoy.saas.dao.bussiness;
 
-import java.util.List;
-
 /**
  * Created by douzy on 16/12/8.
  */

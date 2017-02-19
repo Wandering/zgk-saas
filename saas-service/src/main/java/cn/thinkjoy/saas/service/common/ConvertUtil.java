@@ -47,6 +47,65 @@ public class ConvertUtil {
         }
         return g;
     }
+
+    public static String converGradeByTag(String grade) {
+        String g = "";
+        switch (grade) {
+            case "1":
+                g = "高一年级";
+                break;
+            case "2":
+                g = "高二年级";
+                break;
+            case "3":
+                g = "高三年级";
+                break;
+        }
+        return g;
+    }
+    public static Integer converWeek(String week) {
+        Integer w = 0;
+        switch (week) {
+            case "星期一":
+                w = 1;
+                break;
+            case "星期二":
+                w = 2;
+                break;
+            case "星期三":
+                w = 3;
+                break;
+            case "星期四":
+                w = 4;
+                break;
+            case "星期五":
+                w = 5;
+                break;
+            case "星期六":
+                w = 6;
+                break;
+            case "星期天":
+                w = 7;
+                break;
+        }
+        return w;
+    }
+
+    public static Integer converClassTypeByTag(String classType) {
+        Integer t = 0;
+        switch (classType) {
+            case "行政班":
+                t = 0;
+                break;
+            case "文科班":
+                t = 1;
+                break;
+            case "理科班":
+                t = 2;
+                break;
+        }
+        return t;
+    }
     /**
      * 班级类型转换
      * @return

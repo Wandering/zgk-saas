@@ -15,21 +15,4 @@ public interface IEXCourseBaseInfoService {
      */
     List<CourseBaseInfo> getCourseBaseInfoList();
 
-    /**
-     * 根据Id查询课程信息
-     *
-     * @param id
-     * @return
-     */
-    CourseBaseInfo getCourseBaseInfoById(int id);
-
-    /**
-     * 查询集合
-     *
-     * @param condition
-     * @param orderBy
-     * @param sortBy
-     * @return
-     */
-    List<CourseBaseInfo> queryList(Map<String, Object> condition, String orderBy, String sortBy);
 }

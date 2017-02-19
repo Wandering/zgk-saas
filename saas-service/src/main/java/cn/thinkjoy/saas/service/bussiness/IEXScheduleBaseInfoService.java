@@ -73,4 +73,12 @@ public interface IEXScheduleBaseInfoService {
      * @param classId
      */
 //    void saveOrUpdateTeacher(int taskId, int teacherId,int classNum,String course, String classId);
+
+    /**
+     * 同步基本规则数据
+     *
+     * @param recordId 教师排课记录ID
+     * @param isAttend 0：不排课，1：排课
+     */
+    void insertBaseRule(int recordId,int isAttend);
 }

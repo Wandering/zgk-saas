@@ -1,10 +1,9 @@
 package cn.thinkjoy.saas.controller.bussiness.scheduleRule;
 
-import cn.thinkjoy.saas.dto.ClassBaseDto;
 import cn.thinkjoy.saas.dto.MergeClassInfoDto;
+import cn.thinkjoy.saas.enums.ClassTypeEnum;
 import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.saas.service.bussiness.scheduleRule.IMergeClass;
-import cn.thinkjoy.saas.service.impl.bussiness.EXScheduleBaseInfoServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,7 +46,7 @@ public class MergeClassController {
         paramMap.put("taskId",taskId);
         paramMap.put("courseId",courseId);
         paramMap.put("classIds",classIds);
-        paramMap.put("classType",classType);
+        paramMap.put("classType", ClassTypeEnum.getCode(classType)==0?0:1);
         iMergeClass.insertMergeInfo(paramMap);
         return resultMap;
     }

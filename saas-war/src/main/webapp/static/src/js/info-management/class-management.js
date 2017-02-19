@@ -36,7 +36,12 @@ ClassManagement.prototype = {
             "tnId": tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                res.bizData.result == true ? $('#jx-template-download').removeClass('hide') : $('#jx-template-download').addClass('hide')
+                if(res.bizData.result){
+                    $('#jx-template-download').removeClass('hide');
+                }else{
+                    $('#jx-template-download').addClass('hide')
+                    $('#xz-template-download').html('模板下载');
+                }
             }
         })
     },
@@ -704,19 +709,19 @@ UploadData.prototype = {
     init: function () {
 
     },
-    showUploadBox: function (title, hideOrShow) {
+    showUploadBox: function (title, hideOrShow,textTip) {
         var that = this;
         var uploadDataHtml = [];
         uploadDataHtml.push('<div class="upload-box">');
         uploadDataHtml.push('<span id="uploader-demo">');
 
         uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
-        uploadDataHtml.push('<button class="btn btn-info btn-import" id="xz-btn-import">导入行政班班级数据Excel</button>');
+        uploadDataHtml.push('<button class="btn btn-info btn-import" id="xz-btn-import">'+textTip+'</button>');
         uploadDataHtml.push('</span>');
 
         uploadDataHtml.push('<span id="uploader-demo">');
         uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
-        uploadDataHtml.push('<button class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">导入教学班班级数据Excel</button>');
+        uploadDataHtml.push('<button class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">教学班模板上传</button>');
         uploadDataHtml.push('</span>');
 
 
@@ -975,12 +980,13 @@ $(document).on('click', '#jx-template-download', function () {
  * 行政班模板|教学班模板
  */
 $(document).on('click', '#uploadBtn', function () {
-    var hideOrShow = 'hide';
+    var hideOrShow = 'hide',textTip = '模板上传'
     var upload = new UploadData();
     if ($('#jx-template-download').is(":visible")) {
         hideOrShow = '';
+        textTip = '行政班&文理科班模板上传';
     }
-    upload.showUploadBox('导入班级数据', hideOrShow);
+    upload.showUploadBox('导入班级数据', hideOrShow,textTip);
 });
 
 

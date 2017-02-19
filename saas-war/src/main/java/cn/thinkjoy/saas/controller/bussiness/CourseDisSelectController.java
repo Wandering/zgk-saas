@@ -124,6 +124,7 @@ public class CourseDisSelectController
         if ("class".equals(type))
         {
             rule.put("classId", id);
+            rule.put("classType","1");
 
         }
         else if ("course".equals(type))

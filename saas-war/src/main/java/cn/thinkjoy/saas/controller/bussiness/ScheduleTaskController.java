@@ -5,7 +5,10 @@ import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
-import cn.thinkjoy.saas.domain.*;
+import cn.thinkjoy.saas.domain.JwCourse;
+import cn.thinkjoy.saas.domain.JwScheduleTask;
+import cn.thinkjoy.saas.domain.JwTeachDate;
+import cn.thinkjoy.saas.domain.JwTeacher;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.JwScheduleTaskDto;
@@ -14,13 +17,17 @@ import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.enums.GradeEnum;
 import cn.thinkjoy.saas.enums.StatusEnum;
 import cn.thinkjoy.saas.enums.TermEnum;
-import cn.thinkjoy.saas.service.*;
+import cn.thinkjoy.saas.service.IJwCourseService;
+import cn.thinkjoy.saas.service.IJwScheduleTaskService;
+import cn.thinkjoy.saas.service.IJwTeachDateService;
+import cn.thinkjoy.saas.service.IJwTeacherService;
 import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
+import com.alibaba.dubbo.common.json.ParseException;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -29,7 +36,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yangyongping on 2016/12/6.
@@ -62,6 +73,9 @@ public class ScheduleTaskController {
 
     @Autowired
     private IJwTeachDateService jwTeachDateService;
+
+    @Resource
+    private IEXJwScheduleTaskService iexJwScheduleTaskService;
 
     @Autowired
     IExTeachTimeService teachTimeService;
@@ -105,16 +119,35 @@ public class ScheduleTaskController {
         return jwScheduleTask.getStatus();
     }
     /**
-     * 修改拍客任务状态
+     * 一键排课
      * @return
      */
     @ResponseBody
-    @RequestMapping("/updateScheduleTaskStatus")
-    public boolean updateScheduleTaskStatus(@RequestParam Integer taskId){
-        JwScheduleTask jwScheduleTask = new JwScheduleTask();
-        jwScheduleTask.setId(taskId);
-        jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
-        return jwScheduleTaskService.update(jwScheduleTask)>0;
+    @RequestMapping("/trigger")
+    public boolean updateScheduleTaskStatus(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
+
+        boolean initBool = iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+
+        if (initBool) {
+            JwScheduleTask jwScheduleTask = new JwScheduleTask();
+            jwScheduleTask.setId(taskId);
+            jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
+
+            initBool = jwScheduleTaskService.update(jwScheduleTask) > 0;
+        }
+        return initBool;
+    }
+
+    /**
+     * 排课结果查询
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/state")
+    public String scheduleResult(@RequestParam Integer taskId,@RequestParam Integer tnId) {
+        return iexJwScheduleTaskService.getSchduleResultStatus(taskId, tnId);
     }
     /**
      * 修改排课任务
@@ -336,22 +369,28 @@ public class ScheduleTaskController {
 
     @ResponseBody
     @ApiDesc(value = "保存教师排课设置",owner = "gryang")
-    @RequestMapping(value = "/saveTeacherSchedule",method = RequestMethod.GET)
+    @RequestMapping(value = "/saveTeacherSchedule",method = RequestMethod.POST)
     public Map saveTeacherSchedule(@RequestParam String str){
         // str 传输规则 : 记录ID-设置（0：不排课，1：排课）多个逗号隔开，eg:1-1,2-0,3-1
         String [] strArr = str.split(",");
         for(int i=0;i<strArr.length;i++){
-            String id = StringUtils.substringBefore(strArr[i],"-");
-            String isAttend = StringUtils.substringAfter(strArr[i],"-");
+            Integer id = Integer.valueOf(StringUtils.substringBefore(strArr[i],"-"));
+            Integer isAttend = Integer.valueOf(StringUtils.substringAfter(strArr[i],"-"));
 
             JwTeacher jwTeacher = new JwTeacher();
-            jwTeacher.setIsAttend(Integer.valueOf(isAttend));
+            jwTeacher.setIsAttend(isAttend);
             jwTeacher.setId(id);
             jwTeacherService.update(jwTeacher);
+
+            // 如果对教师排课，则异步插入教师规则数据
+            if(isAttend == 1){
+                iexScheduleBaseInfoService.insertBaseRule(id,isAttend);
+            }
         }
 
         return Maps.newHashMap();
     }
+
 
 //    @ResponseBody
 //    @ApiDesc(value = "自动补全教师姓名",owner = "gryang")
@@ -452,30 +491,29 @@ public class ScheduleTaskController {
      * 排课结果
      * @return
      */
-//    @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
-//    @ResponseBody
-//    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) {
-//        Map<String,Object> paramsMap  = null;
-//        if (param!=null) {
-//            try {
-//                paramsMap = JSON.parseObject(param);
-//            } catch (Exception e) {
-//                paramsMap = Maps.newHashMap();
-//            }
-//        }
-//        Map resultMap = new HashMap();
-//        Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-//        if ("all".equals(type)){
-//            resultMap.put("result",iexJwScheduleTaskService.getAllCourseResult(taskId, tnId));
-//            return resultMap;
-//        }
-//        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap);
-//
-//
-//        resultMap.put("result",courseResultView);
-//        return resultMap;
-//    }
+    @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) throws IOException, ParseException {
+        Map<String,Object> paramsMap  = null;
+        if (param!=null) {
+            try {
+                paramsMap = JSON.parseObject(param);
+            } catch (Exception e) {
+                paramsMap = Maps.newHashMap();
+            }
+        }
+        Map resultMap = new HashMap();
+        Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        if ("all".equals(type)){
+            resultMap.put("result",iexJwScheduleTaskService.getAllCourseResult(taskId, tnId));
+            return resultMap;
+        }
+        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap);
 
+
+        resultMap.put("result",courseResultView);
+        return resultMap;
+    }
     public static void main(String[] args) {
         String param = "{\"course\":\"外语\",\"teacherId\":\"\"}";
         Map<String,Object>  map = JSON.parseObject(param);

@@ -18,33 +18,33 @@ TeacherInfo.prototype = {
                 'taskId': taskId
             },
             function (res) {
-                res = {
-                    "bizData": [{
-                        "id": 4,
-                        "classes": "高二2班 高二7班",
-                        "classNum": 1,
-                        "courseName": "地理",
-                        "teacherId": 799,
-                        "teacherName": "王丹青",
-                        "isAttend": 0
-                    }, {
-                        "id": 42,
-                        "classes": "生物1 生物2 生物3班",
-                        "classNum": 3,
-                        "courseName": "生物",
-                        "teacherId": 778,
-                        "teacherName": "安瑞娟",
-                        "isAttend": 1
-                    }, {
-                        "id": 22,
-                        "classes": "化学1 化学2",
-                        "classNum": 1,
-                        "courseName": "物理",
-                        "teacherId": 795,
-                        "teacherName": "张博",
-                        "isAttend": 0
-                    }], "rtnCode": "0000000", "ts": 1487407317656
-                };
+                // res = {
+                //     "bizData": [{
+                //         "id": 4,
+                //         "classes": "高二2班 高二7班",
+                //         "classNum": 1,
+                //         "courseName": "地理",
+                //         "teacherId": 799,
+                //         "teacherName": "王丹青",
+                //         "isAttend": 0
+                //     }, {
+                //         "id": 42,
+                //         "classes": "生物1 生物2 生物3班",
+                //         "classNum": 3,
+                //         "courseName": "生物",
+                //         "teacherId": 778,
+                //         "teacherName": "安瑞娟",
+                //         "isAttend": 1
+                //     }, {
+                //         "id": 22,
+                //         "classes": "化学1 化学2",
+                //         "classNum": 1,
+                //         "courseName": "物理",
+                //         "teacherId": 795,
+                //         "teacherName": "张博",
+                //         "isAttend": 0
+                //     }], "rtnCode": "0000000", "ts": 1487407317656
+                // };
                 if (res.rtnCode == "0000000") {
                     $('#teacher-list').html('');
                     var myTemplate = Handlebars.compile($("#teacher-template").html());

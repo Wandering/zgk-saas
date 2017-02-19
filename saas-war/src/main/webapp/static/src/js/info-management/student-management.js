@@ -20,7 +20,7 @@
 var GLOBAL_CONSTANT = {
     tnId: Common.cookie.getCookie('tnId'), //租户ID
     type: 'student',   //角色
-    cType: 1   //classType默认都为1-行政班管理
+    cType: null   // classType通过fetchGrade接口获取
 }
 
 
@@ -44,7 +44,7 @@ var App = {
     },
     renderTableHeader: function () {
         Common.ajaxFun('/student/getStuExcelHeader.do', 'GET', {
-            'type': GLOBAL_CONSTANT.cType,
+            'type': GLOBAL_CONSTANT.cType == 2 ? 0 :1,
             'tnId': GLOBAL_CONSTANT.tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
@@ -149,35 +149,41 @@ var App = {
             "tnId": GLOBAL_CONSTANT.tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                res.bizData.result == true ? $('#jx-template-download').removeClass('hide') : $('#jx-template-download').addClass('hide')
+                if(res.bizData.result){
+                    $('#jx-template-download').removeClass('hide');
+                }else{
+                    $('#jx-template-download').addClass('hide')
+                    $('#xz-template-download').html('模板下载');
+                }
             }
         })
     },
     //动态渲染所属年级
     fetchGrade: function () {
-        Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
+        // Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/grade/getGrade.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
-                var dataJson = res.bizData.grades;
+                var dataJson = res.bizData;
                 //初始页面table-header渲染
                 var template = Handlebars.compile($('#grade-list-tpl').html());
                 $('#grade-list').html(template(dataJson));
                 if (dataJson[0].grade) {
 
                     // 行政班|教学班说明：classType 1或3都为行政班  2教学班
-                    var $classTypeToggle = $('#class-type-toggle').find('.tab')
-                    if (dataJson[0].classType == 2) {
-                        $classTypeToggle.eq(0).removeClass('hide').addClass('active');
-                        $classTypeToggle.eq(0).removeClass('hide');
-                    } else if (dataJson[0].classType == 3) {
-                        $classTypeToggle.eq(0).addClass('hide');
-                        $classTypeToggle.eq(1).addClass('hide');
-                    } else {
-                        // $classTypeToggle.eq(0).addClass('active');
-                        $classTypeToggle.eq(0).addClass('hide');
-                        $classTypeToggle.eq(1).addClass('hide');
-                    }
+                    // var $classTypeToggle = $('#class-type-toggle').find('.tab')
+                    // if (dataJson[0].classType == 2) {
+                    //     $classTypeToggle.eq(0).removeClass('hide').addClass('active');
+                    //     $classTypeToggle.eq(0).removeClass('hide');
+                    // } else if (dataJson[0].classType == 3) {
+                    //     $classTypeToggle.eq(0).addClass('hide');
+                    //     $classTypeToggle.eq(1).addClass('hide');
+                    // } else {
+                    //     // $classTypeToggle.eq(0).addClass('active');
+                    //     $classTypeToggle.eq(0).addClass('hide');
+                    //     $classTypeToggle.eq(1).addClass('hide');
+                    // }
                     App.checkGradeName = dataJson[0].grade;
-
+                    GLOBAL_CONSTANT.cType = dataJson[0].classType;
                 }
             }
             setTimeout(function () {
@@ -245,39 +251,40 @@ var App = {
                 'count': ''
             }
             var $checkedInputDom = $('input[name="grade-li"]:checked');
+
+
             App.checkGradeName = $checkedInputDom.next().text();
-            $('#class-type-toggle').find('.tab').eq(1).removeClass('active');
+            GLOBAL_CONSTANT.cType = $(this).attr('classType');
+            // $('#class-type-toggle').find('.tab').eq(1).removeClass('active');
 
 
             // 行政班|教学班说明：classType 1或3都为行政班  2教学班
-            var $classTypeToggle = $('#class-type-toggle').find('.tab');
-            if ($checkedInputDom.attr('classType') == 2) {
-                $classTypeToggle.eq(0).removeClass('hide').addClass('active');
-                $classTypeToggle.eq(1).removeClass('hide');
-            } else if ($checkedInputDom.attr('classType') == 3) {
-                $classTypeToggle.eq(0).addClass('hide');
-                $classTypeToggle.eq(1).addClass('hide');
-            } else {
-                $classTypeToggle.eq(0).addClass('hide');
-                // $classTypeToggle.eq(0).addClass('active');
-                $classTypeToggle.eq(1).addClass('hide');
-            }
+            // var $classTypeToggle = $('#class-type-toggle').find('.tab');
+            // if ($checkedInputDom.attr('classType') == 2) {
+            //     $classTypeToggle.eq(0).removeClass('hide').addClass('active');
+            //     $classTypeToggle.eq(1).removeClass('hide');
+            // } else if ($checkedInputDom.attr('classType') == 3) {
+            //     $classTypeToggle.eq(0).addClass('hide');
+            //     $classTypeToggle.eq(1).addClass('hide');
+            // } else {
+            //     $classTypeToggle.eq(0).addClass('hide');
+            //     // $classTypeToggle.eq(0).addClass('active');
+            //     $classTypeToggle.eq(1).addClass('hide');
+            // }
 
-
-            GLOBAL_CONSTANT.cType = 1;
             App.renderTableHeader();
             App.loadPage();
             App.pagination();
             $('#student-table').find('#stdCheckAll').prop('checked', false);
         })
         //新增行政班和教学班切换
-        $(document).on('click', '#class-type-toggle .tab', function () {
-            GLOBAL_CONSTANT.cType = $(this).attr('type');
-            App.renderTableHeader();
-            App.loadPage();
-            App.pagination();
-            $(this).addClass('active').siblings().removeClass('active');
-        });
+        // $(document).on('click', '#class-type-toggle .tab', function () {
+        //     GLOBAL_CONSTANT.cType = $(this).attr('type');
+        //     App.renderTableHeader();
+        //     App.loadPage();
+        //     App.pagination();
+        //     $(this).addClass('active').siblings().removeClass('active');
+        // });
     }
 }
 App.init();
@@ -921,16 +928,17 @@ var TplHandler = {
     tplUpload: function () {
         //上传
         $(document).on('click', '#student-upload', function () {
-            var tpl = [], hideOrShow = 'hide';
+            var tpl = [], hideOrShow = 'hide',toggleText = '导入学生数据';
             if ($('#jx-template-download').is(":visible")) {
                 hideOrShow = '';
+                toggleText = '导入无教学班年级学生数据Excel';
             }
             // "type":"0：教学班模板  1：行政班模板",
             tpl.push('<div class="upload-box">');
             tpl.push('<span id="uploader-demo">');
             tpl.push('<span id="fileList" class="uploader-list dh"></span>');
-            tpl.push('<button class="btn btn-info btn-import" id="xz-btn-import">导入行政班学生数据Excel</button>');
-            tpl.push('<button class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">导入教学班学生数据Excel</button>');
+            tpl.push('<button class="btn btn-info btn-import" id="xz-btn-import">'+toggleText+'</button>');
+            tpl.push('<button class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">导入有教学班年级学生数据Excel</button>');
             tpl.push('</span>');
             tpl.push('<a href="javascript: void(0);" id="student-template-download" class="download-link">请先导出Excel模板，进行填写</a>');
             tpl.push('<button class="btn btn-cancel cancel-btn" id="cancel-download-btn">取消</button>');
@@ -997,8 +1005,6 @@ var TplHandler = {
             });
             // 文件上传成功，给item添加成功class, 用样式标记上传成功。
             uploader.on('uploadSuccess', function (file, response) {
-                console.info('file', file)
-                console.info('response', response)
                 if (response.msg) {
                     layer.msg(response.msg);
                     return false;
@@ -1011,7 +1017,12 @@ var TplHandler = {
                     layer.msg(response.bizData.result);
                     return false;
                 }
-                layer.closeAll();
+                if (response.bizData.result == 'SUCCESS') {
+                        layer.msg('数据上传成功');
+                        setTimeout(function(){
+                            layer.closeAll();
+                        },2000)
+                }
                 if (App != null) {
                     App.renderTableHeader();
                 }

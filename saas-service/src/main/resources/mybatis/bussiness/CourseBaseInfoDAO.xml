@@ -145,15 +145,12 @@ selectList
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND id = #{id}
         </trim>
-        <if test="orderBy!=null">
-        ORDER BY ${orderBy} ${sortBy}
-        </if>
     </select>
 
     <select id="findOne" parameterType="java.util.Map" resultType="CourseBaseInfo">
         SELECT
         <include refid="Base_Column_List" />
-        FROM saas_class_rooms WHERE
+        FROM saas_course_base_info WHERE
         ${property} = #{value}
         LIMIT 0,1
     </select>

@@ -130,15 +130,22 @@ public class EXClassRoomServiceImpl implements EXIClassRoomService {
     @Override
     public boolean updateClassRoomSetting(Integer maxNum,Integer cid,Integer tnId) {
 
-        ClassRoomSetting classRoomSetting=new ClassRoomSetting();
+        ClassRoomSetting classRoomSetting = iClassRoomSettingDAO.findOne("id",cid,null,null);
+        if(classRoomSetting == null){
+            classRoomSetting = new ClassRoomSetting();
+            classRoomSetting.setMaxNumber(maxNum);
+            classRoomSetting.setTnId(tnId);
+            classRoomSetting.setId(cid);
+            classRoomSetting.setCreateDate(System.currentTimeMillis());
+            return iClassRoomSettingDAO.insert(classRoomSetting) > 0;
+        }
+
         classRoomSetting.setMaxNumber(maxNum);
-        classRoomSetting.setTnId(tnId);
-        classRoomSetting.setId(cid);
         return (iClassRoomSettingDAO.update(classRoomSetting) > 0 ? true : false);
     }
     @Override
     public ClassRoomSetting getClassRoomSetting(Integer tnId){
-        return  iClassRoomSettingDAO.findOne("tn_Id",tnId,"id","asc");
+        return iClassRoomSettingDAO.findOne("tn_Id",tnId,"id","asc");
     }
 
     /**
