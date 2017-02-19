@@ -267,7 +267,7 @@ public class StudentController {
             LOGGER.info("文件类型: " + myfile.getContentType());
             LOGGER.info("文件名称: " + myfile.getName());
             LOGGER.info("文件原名: " + myfile.getOriginalFilename());
-            String fileName = myfile.getName();
+            String fileName = myfile.getOriginalFilename();
             if(fileName.indexOf("_"+classType+"_") == -1){
                 result = "表中字段与模板中的字段不符，请先下载模板填写后再进行上传";
             }else {
