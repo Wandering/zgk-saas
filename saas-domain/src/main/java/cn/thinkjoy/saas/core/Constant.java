@@ -1,5 +1,8 @@
 package cn.thinkjoy.saas.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by yangguorong on 16/10/17.
  *
@@ -10,6 +13,8 @@ public class Constant {
     public static final String [] NoFilter_Pages = {"/account/login","/account/forgetPwd","/account/sendSmsCode","/account/loginOut","/scheduleTask/trigger","/scheduleTask/state"};
 
     public static final String [] GRADES = {"高一","高二","高三"};
+
+    public static final List<String> COURSEES = new ArrayList<String>(){{add("物理"); add("化学");add("生物");add("政治");add("地理");add("历史");add("通用技术");}};
 
     public static final String ID = "id";
 
@@ -44,6 +49,10 @@ public class Constant {
     public static final String STUDENT = "student";
 
     public static final String TABLE_TYPE_TEACHER = "teacher";
+
+    public static final String TABLE_TYPE_CLASS = "class";
+
+    public static final String TABLE_TYPE_ALL = "all";
 
     public static final String STUDENT_GRADE = "student_grade";
 

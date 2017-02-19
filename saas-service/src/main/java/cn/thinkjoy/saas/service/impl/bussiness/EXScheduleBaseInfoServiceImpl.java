@@ -180,7 +180,6 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
             JwScheduleTask task = getTaskByTaskId(taskId);
             int grade = Integer.valueOf(task.getGrade());
             List<TeacherBaseDto> dtos = iexTenantCustomService.getTeacherInfos(task.getTnId(),Constant.GRADES[grade-1]);
-            insertJwTeacher(dtos,taskId,task.getTnId());
             return insertJwTeacher(dtos,taskId,task.getTnId());
         }
 
@@ -314,6 +313,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
 //    }
 
     @Override
+    @Async
     public void insertBaseRule(int recordId,int isAttend){
 
         JwTeacher jwTeacher = jwTeacherDAO.fetch(recordId);

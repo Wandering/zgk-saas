@@ -348,12 +348,11 @@ $(function () {
             },
             function (res) {
                 if (res.rtnCode === '0000000') {
-                    console.info(res);
+                    layer.msg('教师信息保存成功');
                 }
             }, function (res) {
                 layer.msg(res.msg);
             })
-
     });
 
 
