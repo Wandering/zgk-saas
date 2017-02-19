@@ -43,6 +43,22 @@
                         <div id="page-container">
                             <%@ include file="./../common/footer.jsp" %>
                             <%--<%@ include file="../course-scheduling/step3-common.jsp"%>--%>
+                            <script src="/static/src/lib/jquery.table2excel/jquery.table2excel.js"></script>
+                            <script>
+                                $(function() {
+                                    $(".output-tpl").click(function(){
+                                        $(".table").table2excel({
+                                            exclude: ".noExl",
+                                            name: "Excel Document Name",
+                                            filename: "课表",
+                                            exclude_img: true,
+                                            exclude_links: true,
+                                            exclude_inputs: true,
+                                            fileext: ".xls"
+                                        });
+                                    });
+                                });
+                            </script>
                             <div class="main-title">
                                 <h3>排课任务</h3>
                             </div>
@@ -129,22 +145,7 @@
         </div>
     </div>
 </div>
-<script src="/static/src/lib/jquery.table2excel/jquery.table2excel.js"></script>
-<script>
-    $(function() {
-        $(".output-tpl").click(function(){
-            $(".table").table2excel({
-                exclude: ".noExl",
-                name: "Excel Document Name",
-                filename: "课表",
-                exclude_img: true,
-                exclude_links: true,
-                exclude_inputs: true,
-                fileext: ".xls"
-            });
-        });
-    });
-</script>
+
 <%--<script src="<%=ctx%>/static/src/js/course-scheduling/step3-common.js"></script>--%>
 <script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>
 </body>
