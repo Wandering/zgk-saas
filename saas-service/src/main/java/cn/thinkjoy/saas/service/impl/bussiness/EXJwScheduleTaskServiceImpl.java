@@ -42,6 +42,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 @Service("EXJwScheduleTaskServiceImpl")
@@ -183,7 +185,10 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         result = printBuffers(tnId,taskId,teacherSettingBuffers, FileOperation.TEACHERS_SETTING);
         LOGGER.info("===================参数序列化结果:"+result+"===================");
         if(result) {
-            new Thread() {
+            //创建可缓存线程
+            ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+            cachedThreadPool.execute(new Runnable() {
+                @Override
                 public void run() {
                     LOGGER.info("=线程启动=" + System.currentTimeMillis());
                     LOGGER.info("排课状态:正在排课");
@@ -203,7 +208,28 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     }
                     LOGGER.info("排课状态:完成排课");
                 }
-            }.start();
+            });
+//            new Thread() {
+//                public void run() {
+//                    LOGGER.info("=线程启动=" + System.currentTimeMillis());
+//                    LOGGER.info("排课状态:正在排课");
+//                    String path = FileOperation.getParamsPath(tnId, taskId);
+//                    TimeTabling timeTabling = new TimeTabling();
+//                    timeTabling.runTimetabling(path, path);
+//                    try {
+//                        String result = getSchduleResultStatus(taskId, tnId);
+//                        if (Integer.valueOf(result) == 1)
+//                            getAllCourseResult(taskId, tnId);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    } catch (ParseException e) {
+//                        e.printStackTrace();
+//                    } catch (Exception ex) {
+//                        ex.printStackTrace();
+//                    }
+//                    LOGGER.info("排课状态:完成排课");
+//                }
+//            }.start();
         }
         LOGGER.info("===================已完成异步调用排课===================");
 
