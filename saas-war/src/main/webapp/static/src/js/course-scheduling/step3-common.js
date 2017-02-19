@@ -34,69 +34,130 @@ var HashHandle = {
         }
     },
     initStatus: function () {
-        Common.ajaxFun('/scheduleTask/queryScheduleTaskStatus', 'GET', {
+        //Common.ajaxFun('/scheduleTask/queryScheduleTaskStatus', 'GET', {
+        //    'taskId': taskId
+        //}, function (res) {
+        //    if (res.rtnCode == "0000000") {
+        //        var data = res.bizData;
+        //        switch (parseInt(data)) {
+        //            case 1:
+        //                    $('.btn-one-key').removeClass('dh');
+        //                break;
+        //            case 2:
+        //
+        //                break;
+        //            case 3:
+        //                $('.btn-one-key').addClass('dh');
+        //                //$('.info-modify').removeClass('dh');
+        //                $('#role-scheduling-tab, #step3-child-class').removeClass('dh');
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //    }
+        //}, function (res) {
+        //    layer.msg("出错了");
+        //}, true);
+    },
+    updateStatus: function () {
+        //Common.ajaxFun('/scheduleTask/updateScheduleTaskStatus', 'GET', {
+        //    'taskId': taskId
+        //}, function (res) {
+        //    if (res.rtnCode == "0000000") {
+        //        var data = res.bizData;
+        //        $('#role-scheduling-tab, #step3-child-class').removeClass('dh');
+        //        $('.info-modify, .btn-one-key').addClass('dh');
+        //    }
+        //}, function (res) {
+        //    layer.msg("出错了");
+        //}, true);
+    },
+    // 一键排课触发
+    scheduleTaskTrigger:function(){
+        Common.ajaxFun('/scheduleTask/trigger.do', 'GET', {
             'taskId': taskId
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                var data = res.bizData;
-                switch (parseInt(data)) {
-                    case 1:
-                            $('.btn-one-key').removeClass('dh');
-                        break;
-                    case 2:
 
-                        break;
-                    case 3:
-                        $('.btn-one-key').addClass('dh');
-                        //$('.info-modify').removeClass('dh');
-                        $('#role-scheduling-tab, #step3-child-class').removeClass('dh');
-                        break;
-                    default:
-                        break;
-                }
             }
         }, function (res) {
             layer.msg("出错了");
         }, true);
     },
-    updateStatus: function () {
-        Common.ajaxFun('/scheduleTask/updateScheduleTaskStatus', 'GET', {
+    // 一键排课结果
+    scheduleTaskState:function(){
+        Common.ajaxFun('/scheduleTask/state.do', 'GET', {
             'taskId': taskId
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                var data = res.bizData;
-                $('#role-scheduling-tab, #step3-child-class').removeClass('dh');
-                $('.info-modify, .btn-one-key').addClass('dh');
+                // 0:正在排课  1:排课成功   -1 ：排课失败
+
+                var dataNum = '0';
+                switch (parseInt(dataNum)) {
+                    case 0:
+                        console.log("正在排课");
+                        $('.scheduling-error,#role-scheduling-tab,#control-jsp').addClass('dh');
+                        break;
+                    case 1:
+                        console.log("排课成功");
+                        $('.one-key-page').addClass('dh');
+                        $('#role-scheduling-tab,#control-jsp').removeClass('dh');
+                        break;
+                    case -1:
+                        console.log("排课失败");
+                        $('.btn-one-key,#role-scheduling-tab,#control-jsp').addClass('dh');
+                        $('.scheduling-error').removeClass('dh');
+                        break;
+                    default:
+                        break;
+                }
+
+
+
             }
         }, function (res) {
             layer.msg("出错了");
         }, true);
     }
+
 };
 HashHandle.init();
+
+
+$(function(){
+    // 点击一键排课
+    $('.btn-one-key').on('click',function(){
+        HashHandle.scheduleTaskTrigger();
+        HashHandle.scheduleTaskState();
+    });
+});
+
+
+
+
 
 
 /**
  * 一键生成课表
  * lockSubject 0,1
  */
-$('.btn-one-key').click(function(){
-    HashHandle.updateStatus();
-    //$(this).hide();
-    //$('#role-scheduling-tab,#step3-child-class').show();
-    //Common.cookie.setCookie('lockSubject',1);
-});
-//if(Common.cookie.getCookie('lockSubject') == 1){
-//    $('.btn-one-key').hide();
+//$('.btn-one-key').click(function(){
+//    HashHandle.updateStatus();
+//    //$(this).hide();
+//    //$('#role-scheduling-tab,#step3-child-class').show();
+//    //Common.cookie.setCookie('lockSubject',1);
+//});
+////if(Common.cookie.getCookie('lockSubject') == 1){
+////    $('.btn-one-key').hide();
+////    $('#role-scheduling-tab, #step3-child-class').removeClass('dh');
+////}
+//$(document).on('click', '.look-origin-schedule', function () {
 //    $('#role-scheduling-tab, #step3-child-class').removeClass('dh');
-//}
-$(document).on('click', '.look-origin-schedule', function () {
-    $('#role-scheduling-tab, #step3-child-class').removeClass('dh');
-    $('.info-modify').addClass('dh');
-});
-$(document).on('click', '.retry-scheduling', function () {
-    window.location.href = '/course-scheduling-step1';
-});
+//    $('.info-modify').addClass('dh');
+//});
+//$(document).on('click', '.retry-scheduling', function () {
+//    window.location.href = '/course-scheduling-step1';
+//});
 
 //$(function () {
 //
@@ -105,3 +166,6 @@ $(document).on('click', '.retry-scheduling', function () {
 //        window.location.href = '/course-scheduling-step1';
 //    }
 //});
+
+
+

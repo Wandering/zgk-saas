@@ -150,7 +150,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         result = printBuffers(tnId,taskId,admClassRuleBuffers, FileOperation.ADMIN_CLASS_NON_DISPACHING);
 
-        List<StringBuffer> eduClassRuleBuffers = getClassRule(taskId,1);//走读班 不排课
+        List<StringBuffer> eduClassRuleBuffers = getClassRule(taskId,0);//走读班 不排课
 
         result = printBuffers(tnId,taskId,eduClassRuleBuffers, FileOperation.CLASS_NON_DISPACHING);
 
@@ -186,6 +186,17 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     String path = FileOperation.getParamsPath(tnId, taskId);
                     TimeTabling timeTabling = new TimeTabling();
                     timeTabling.runTimetabling(path, path);
+                    try {
+                        String result = getSchduleResultStatus(taskId, tnId);
+                        if (Integer.valueOf(result) == 1)
+                            getAllCourseResult(taskId, tnId);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                     LOGGER.info("排课状态:完成排课");
                 }
             }.start();
@@ -242,7 +253,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     stringBuffer.append(FileOperation.STR_SPLIT);
                 }
                 if(strKey.equals("teacher_name")){
-                    stringBuffer.append(strObj);//姓名
+                    stringBuffer.append(" ");//姓名
                     stringBuffer.append(FileOperation.STR_SPLIT);
                 }
                 if(strKey.equals("teacher_major_type")){
@@ -267,57 +278,74 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     teacherMap.put("teacherId",teacherId);
 
                     JwTeacherRule jwTeacherRule= iJwTeacherRuleDAO.queryOne(teacherMap,"id","asc");
-                    StringBuilder stringBuilder=new StringBuilder();
-                    stringBuilder.append(jwTeacherRule.getMon());
-                    stringBuilder.append(jwTeacherRule.getTues());
-                    stringBuilder.append(jwTeacherRule.getWed());
-                    stringBuilder.append(jwTeacherRule.getThur());
-                    stringBuilder.append(jwTeacherRule.getFri());
-                    stringBuilder.append(jwTeacherRule.getSut());
-                    stringBuilder.append(jwTeacherRule.getSun());
-                    String str=stringBuilder.toString();
 
-                    String[] arr=str.split("0");
+                    if(jwTeacherRule==null){
+                        stringBuffer.append(0);
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                        stringBuffer.append(0);
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                        stringBuffer.append(0);
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                        stringBuffer.append(0);
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                        stringBuffer.append(0);
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                        stringBuffer.append(0);
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                        stringBuffer.append(0);
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                    }else {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        stringBuilder.append(jwTeacherRule.getMon());
+                        stringBuilder.append(jwTeacherRule.getTues());
+                        stringBuilder.append(jwTeacherRule.getWed());
+                        stringBuilder.append(jwTeacherRule.getThur());
+                        stringBuilder.append(jwTeacherRule.getFri());
+                        stringBuilder.append(jwTeacherRule.getSut());
+                        stringBuilder.append(jwTeacherRule.getSun());
+                        String str = stringBuilder.toString();
 
-                    stringBuffer.append(arr.length-1); //不排课个数
-                    stringBuffer.append(FileOperation.STR_SPLIT);
+                        String[] arr = str.split("0");
 
-                    String m=getWeekNonAndDayNon(jwTeacherRule.getMon(),1),//周1不排课节点
-                            tu=getWeekNonAndDayNon(jwTeacherRule.getTues(),2),//周2不排课节点
-                            w=getWeekNonAndDayNon(jwTeacherRule.getWed(),3),//周3不排课节点
-                            th=getWeekNonAndDayNon(jwTeacherRule.getThur(),4),//周4不排课节点
-                            f=getWeekNonAndDayNon(jwTeacherRule.getFri(),5),//周5不排课节点
-                            s=getWeekNonAndDayNon(jwTeacherRule.getSut(),6),//周6不排课节点
-                            su=getWeekNonAndDayNon(jwTeacherRule.getSun(),7);//周7不排课节点
-                    if(!StringUtils.isBlank(m)) {
-                        stringBuffer.append(m);
+                        stringBuffer.append(arr.length - 1); //不排课个数
                         stringBuffer.append(FileOperation.STR_SPLIT);
-                    }
-                    if(!StringUtils.isBlank(tu)) {
-                        stringBuffer.append(tu);
-                        stringBuffer.append(FileOperation.STR_SPLIT);
-                    }
-                    if(!StringUtils.isBlank(w)) {
-                        stringBuffer.append(w);
-                        stringBuffer.append(FileOperation.STR_SPLIT);
-                    }
-                    if(!StringUtils.isBlank(th)) {
-                        stringBuffer.append(th);
-                        stringBuffer.append(FileOperation.STR_SPLIT);
-                    }
-                    if(!StringUtils.isBlank(f)) {
-                        stringBuffer.append(f);
-                        stringBuffer.append(FileOperation.STR_SPLIT);
-                    }
-                    if(!StringUtils.isBlank(s)) {
-                        stringBuffer.append(s);
-                        stringBuffer.append(FileOperation.STR_SPLIT);
-                    }
-                    if(!StringUtils.isBlank(su)) {
-                        stringBuffer.append(su);
-                        stringBuffer.append(FileOperation.STR_SPLIT);
-                    }
 
+                        String m = getWeekNonAndDayNon(jwTeacherRule.getMon(), 1),//周1不排课节点
+                                tu = getWeekNonAndDayNon(jwTeacherRule.getTues(), 2),//周2不排课节点
+                                w = getWeekNonAndDayNon(jwTeacherRule.getWed(), 3),//周3不排课节点
+                                th = getWeekNonAndDayNon(jwTeacherRule.getThur(), 4),//周4不排课节点
+                                f = getWeekNonAndDayNon(jwTeacherRule.getFri(), 5),//周5不排课节点
+                                s = getWeekNonAndDayNon(jwTeacherRule.getSut(), 6),//周6不排课节点
+                                su = getWeekNonAndDayNon(jwTeacherRule.getSun(), 7);//周7不排课节点
+                        if (!StringUtils.isBlank(m)) {
+                            stringBuffer.append(m);
+                            stringBuffer.append(FileOperation.STR_SPLIT);
+                        }
+                        if (!StringUtils.isBlank(tu)) {
+                            stringBuffer.append(tu);
+                            stringBuffer.append(FileOperation.STR_SPLIT);
+                        }
+                        if (!StringUtils.isBlank(w)) {
+                            stringBuffer.append(w);
+                            stringBuffer.append(FileOperation.STR_SPLIT);
+                        }
+                        if (!StringUtils.isBlank(th)) {
+                            stringBuffer.append(th);
+                            stringBuffer.append(FileOperation.STR_SPLIT);
+                        }
+                        if (!StringUtils.isBlank(f)) {
+                            stringBuffer.append(f);
+                            stringBuffer.append(FileOperation.STR_SPLIT);
+                        }
+                        if (!StringUtils.isBlank(s)) {
+                            stringBuffer.append(s);
+                            stringBuffer.append(FileOperation.STR_SPLIT);
+                        }
+                        if (!StringUtils.isBlank(su)) {
+                            stringBuffer.append(su);
+                            stringBuffer.append(FileOperation.STR_SPLIT);
+                        }
+                    }
                     stringBuffer.append(1); //连上规则
                     stringBuffer.append(FileOperation.STR_SPLIT);
                     stringBuffer.append(1); //规则个数
@@ -438,10 +466,13 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         List<StringBuffer> stringBuffers = new ArrayList<>();
         StringBuffer stringBuffer1 = new StringBuffer();
+        StringBuffer stringBuffer = new StringBuffer();
+            if(jwClassRules==null||jwClassRules.size()<=0)
+                return ObjIsNothing();
 
         JwClassRule jwClassRule = jwClassRules.get(0);
 
-        StringBuffer stringBuffer = new StringBuffer();
+
         stringBuffer.append(converGradeNon(jwClassRule.getMon()));
         stringBuffer.append(FileOperation.STR_SPLIT);
         stringBuffer.append(converGradeNon(jwClassRule.getTues()));
@@ -490,7 +521,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             stringBuffer.append(courseBaseInfo.getId());
             stringBuffer.append(FileOperation.STR_SPLIT);
 
-            stringBuffer.append(courseBaseInfo.getCourseName());
+//            stringBuffer.append(courseBaseInfo.getCourseName());
+            stringBuffer.append(" ");
             stringBuffer.append(FileOperation.STR_SPLIT);
 
             Map jwCourseMap = new HashMap();
@@ -577,7 +609,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         stringBuffer1.append(sw);
         stringBuffer1.append(FileOperation.LINE_SPLIT);
 
-        stringBuffer1.append(9);
+        stringBuffer1.append(14);
         stringBuffer1.append(FileOperation.LINE_SPLIT);
 
         for (JwTeachDate jwTeachDate : jwTeachDates) {
@@ -712,7 +744,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     stringBuffer.append(FileOperation.STR_SPLIT);
                 }
                 if(strKey.equals("class_name")){
-                    stringBuffer.append(strObj);
+                    stringBuffer.append(" ");
                     stringBuffer.append(FileOperation.STR_SPLIT);
                 }
                 if(strKey.equals("class_type")){
@@ -729,6 +761,14 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return stringBuffers;
     }
 
+    private List<StringBuffer> ObjIsNothing(){
+        List<StringBuffer> stringBuffers = new ArrayList<>();
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(0);
+        stringBuffers.add(stringBuffer);
+        return stringBuffers;
+    }
+
     /**
      * 行政班&走读班
      * @param taskId
@@ -736,40 +776,43 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      * @return
      */
     private List<StringBuffer> getClassRule(Integer taskId,Integer type) {
-//        Map map=new HashMap();
-//        map.put("taskId",taskId);
-//        map.put("classType",type);
-//        List<JwClassRule> jwClassRules = iJwClassRuleDAO.queryList(map, "id", "asc");
-//
         List<StringBuffer> stringBuffers = new ArrayList<>();
-//        StringBuffer stringBuffer1 = new StringBuffer();
-//        stringBuffer1.append(jwClassRules.size());
-//        stringBuffer1.append(FileOperation.LINE_SPLIT);
-//        stringBuffers.add(stringBuffer1);
-//        for (JwClassRule jwClassRule : jwClassRules) {
-//            StringBuffer stringBuffer = new StringBuffer();
-//            stringBuffer.append(jwClassRule.getClassId());
-//            stringBuffer.append(FileOperation.LINE_SPLIT);
-//            stringBuffer.append(getCharStr(jwClassRule.getMon()));
-//            stringBuffer.append(FileOperation.STR_SPLIT);
-//            stringBuffer.append(getCharStr(jwClassRule.getTues()));
-//            stringBuffer.append(FileOperation.STR_SPLIT);
-//            stringBuffer.append(getCharStr(jwClassRule.getWed()));
-//            stringBuffer.append(FileOperation.STR_SPLIT);
-//            stringBuffer.append(getCharStr(jwClassRule.getTues()));
-//            stringBuffer.append(FileOperation.STR_SPLIT);
-//            stringBuffer.append(getCharStr(jwClassRule.getFri()));
-//            stringBuffer.append(FileOperation.STR_SPLIT);
-//            stringBuffer.append(getCharStr(jwClassRule.getSut()));
-//            stringBuffer.append(FileOperation.STR_SPLIT);
-//            stringBuffer.append(getCharStr(jwClassRule.getSun()));
-//            stringBuffer.append(FileOperation.STR_SPLIT);
-//            stringBuffer.append(FileOperation.LINE_SPLIT);
-//            stringBuffers.add(stringBuffer);
-//        }
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(0);
-        stringBuffers.add(stringBuffer);
+        if(type==0)
+            return ObjIsNothing();
+
+        Map map=new HashMap();
+        map.put("taskId",taskId);
+        map.put("classType",type);
+        List<JwClassRule> jwClassRules = iJwClassRuleDAO.queryList(map, "id", "asc");
+
+        if(jwClassRules==null||jwClassRules.size()<=0)
+            return ObjIsNothing();
+        StringBuffer stringBuffer1 = new StringBuffer();
+        stringBuffer1.append(jwClassRules.size());
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+        stringBuffers.add(stringBuffer1);
+        for (JwClassRule jwClassRule : jwClassRules) {
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append(jwClassRule.getClassId());
+            stringBuffer.append(FileOperation.LINE_SPLIT);
+            stringBuffer.append(getCharStr(jwClassRule.getMon()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(getCharStr(jwClassRule.getTues()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(getCharStr(jwClassRule.getWed()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(getCharStr(jwClassRule.getTues()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(getCharStr(jwClassRule.getFri()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(getCharStr(jwClassRule.getSut()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(getCharStr(jwClassRule.getSun()));
+            stringBuffer.append(FileOperation.STR_SPLIT);
+            stringBuffer.append(FileOperation.LINE_SPLIT);
+            stringBuffers.add(stringBuffer);
+        }
+
         return stringBuffers;
     }
 

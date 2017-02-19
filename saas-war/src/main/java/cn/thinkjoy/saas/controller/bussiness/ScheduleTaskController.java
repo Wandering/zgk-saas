@@ -125,7 +125,17 @@ public class ScheduleTaskController {
     @ResponseBody
     @RequestMapping("/trigger")
     public boolean updateScheduleTaskStatus(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
-        return iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+
+        boolean initBool = iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+
+        if (initBool) {
+            JwScheduleTask jwScheduleTask = new JwScheduleTask();
+            jwScheduleTask.setId(taskId);
+            jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
+
+            initBool = jwScheduleTaskService.update(jwScheduleTask) > 0;
+        }
+        return initBool;
     }
 
     /**

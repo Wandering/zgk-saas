@@ -20,7 +20,7 @@
 var GLOBAL_CONSTANT = {
     tnId: Common.cookie.getCookie('tnId'), //租户ID
     type: 'student',   //角色
-    cType: 1   //classType默认都为1-行政班管理
+    cType: null   // classType通过fetchGrade接口获取
 }
 
 
@@ -44,7 +44,7 @@ var App = {
     },
     renderTableHeader: function () {
         Common.ajaxFun('/student/getStuExcelHeader.do', 'GET', {
-            'type': GLOBAL_CONSTANT.cType,
+            'type': GLOBAL_CONSTANT.cType == 2 ? 0 :1,
             'tnId': GLOBAL_CONSTANT.tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
@@ -160,29 +160,30 @@ var App = {
     },
     //动态渲染所属年级
     fetchGrade: function () {
-        Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
+        // Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/grade/getGrade.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
-                var dataJson = res.bizData.grades;
+                var dataJson = res.bizData;
                 //初始页面table-header渲染
                 var template = Handlebars.compile($('#grade-list-tpl').html());
                 $('#grade-list').html(template(dataJson));
                 if (dataJson[0].grade) {
 
                     // 行政班|教学班说明：classType 1或3都为行政班  2教学班
-                    var $classTypeToggle = $('#class-type-toggle').find('.tab')
-                    if (dataJson[0].classType == 2) {
-                        $classTypeToggle.eq(0).removeClass('hide').addClass('active');
-                        $classTypeToggle.eq(0).removeClass('hide');
-                    } else if (dataJson[0].classType == 3) {
-                        $classTypeToggle.eq(0).addClass('hide');
-                        $classTypeToggle.eq(1).addClass('hide');
-                    } else {
-                        // $classTypeToggle.eq(0).addClass('active');
-                        $classTypeToggle.eq(0).addClass('hide');
-                        $classTypeToggle.eq(1).addClass('hide');
-                    }
+                    // var $classTypeToggle = $('#class-type-toggle').find('.tab')
+                    // if (dataJson[0].classType == 2) {
+                    //     $classTypeToggle.eq(0).removeClass('hide').addClass('active');
+                    //     $classTypeToggle.eq(0).removeClass('hide');
+                    // } else if (dataJson[0].classType == 3) {
+                    //     $classTypeToggle.eq(0).addClass('hide');
+                    //     $classTypeToggle.eq(1).addClass('hide');
+                    // } else {
+                    //     // $classTypeToggle.eq(0).addClass('active');
+                    //     $classTypeToggle.eq(0).addClass('hide');
+                    //     $classTypeToggle.eq(1).addClass('hide');
+                    // }
                     App.checkGradeName = dataJson[0].grade;
-
+                    GLOBAL_CONSTANT.cType = dataJson[0].classType;
                 }
             }
             setTimeout(function () {
@@ -250,39 +251,40 @@ var App = {
                 'count': ''
             }
             var $checkedInputDom = $('input[name="grade-li"]:checked');
+
+
             App.checkGradeName = $checkedInputDom.next().text();
-            $('#class-type-toggle').find('.tab').eq(1).removeClass('active');
+            GLOBAL_CONSTANT.cType = $(this).attr('classType');
+            // $('#class-type-toggle').find('.tab').eq(1).removeClass('active');
 
 
             // 行政班|教学班说明：classType 1或3都为行政班  2教学班
-            var $classTypeToggle = $('#class-type-toggle').find('.tab');
-            if ($checkedInputDom.attr('classType') == 2) {
-                $classTypeToggle.eq(0).removeClass('hide').addClass('active');
-                $classTypeToggle.eq(1).removeClass('hide');
-            } else if ($checkedInputDom.attr('classType') == 3) {
-                $classTypeToggle.eq(0).addClass('hide');
-                $classTypeToggle.eq(1).addClass('hide');
-            } else {
-                $classTypeToggle.eq(0).addClass('hide');
-                // $classTypeToggle.eq(0).addClass('active');
-                $classTypeToggle.eq(1).addClass('hide');
-            }
+            // var $classTypeToggle = $('#class-type-toggle').find('.tab');
+            // if ($checkedInputDom.attr('classType') == 2) {
+            //     $classTypeToggle.eq(0).removeClass('hide').addClass('active');
+            //     $classTypeToggle.eq(1).removeClass('hide');
+            // } else if ($checkedInputDom.attr('classType') == 3) {
+            //     $classTypeToggle.eq(0).addClass('hide');
+            //     $classTypeToggle.eq(1).addClass('hide');
+            // } else {
+            //     $classTypeToggle.eq(0).addClass('hide');
+            //     // $classTypeToggle.eq(0).addClass('active');
+            //     $classTypeToggle.eq(1).addClass('hide');
+            // }
 
-
-            GLOBAL_CONSTANT.cType = 1;
             App.renderTableHeader();
             App.loadPage();
             App.pagination();
             $('#student-table').find('#stdCheckAll').prop('checked', false);
         })
         //新增行政班和教学班切换
-        $(document).on('click', '#class-type-toggle .tab', function () {
-            GLOBAL_CONSTANT.cType = $(this).attr('type');
-            App.renderTableHeader();
-            App.loadPage();
-            App.pagination();
-            $(this).addClass('active').siblings().removeClass('active');
-        });
+        // $(document).on('click', '#class-type-toggle .tab', function () {
+        //     GLOBAL_CONSTANT.cType = $(this).attr('type');
+        //     App.renderTableHeader();
+        //     App.loadPage();
+        //     App.pagination();
+        //     $(this).addClass('active').siblings().removeClass('active');
+        // });
     }
 }
 App.init();

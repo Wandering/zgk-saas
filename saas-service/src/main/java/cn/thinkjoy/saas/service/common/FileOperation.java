@@ -33,8 +33,9 @@ public class FileOperation {
 
 
 
-//    private static String path = "C:\\timetable\\schedule\\task\\"; ///Users/douzy/ 文件保存路径设置
-    private static String path = "/Users/douzy/schedule/task/"; // 文件保存路径设置
+//    private static String path = "C:\\timetable\\schedule\\task\\"; //windows server 文件保存路径设置
+    private static String path = "/Users/dengshaofei/schedule/task/"; //本地 文件保存路径设置
+//    private static String path = "/home/ubuntu/tm/schedule/task/"; //线上 文件保存路径设置
 
     private static String filenameTemp;
 
@@ -47,6 +48,7 @@ public class FileOperation {
     public static String getParamsPath(Integer tnId,Integer taskId) {
         Calendar now = Calendar.getInstance();
         return path + tnId + "/" + taskId + "/" + now.get(Calendar.YEAR) + "/" + (now.get(Calendar.MONTH) + 1) + "/" + now.get(Calendar.DAY_OF_MONTH) + "/";
+//        return path + tnId + "\\" + taskId + "\\" + now.get(Calendar.YEAR) + "\\" + (now.get(Calendar.MONTH) + 1) + "\\" + now.get(Calendar.DAY_OF_MONTH) + "\\";
     }
 
     public static boolean creatTxtFile(Integer tnId,Integer taskId,String name) throws IOException {

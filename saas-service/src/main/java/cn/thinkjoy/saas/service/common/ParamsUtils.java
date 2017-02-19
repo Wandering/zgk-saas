@@ -137,6 +137,18 @@ public  class ParamsUtils {
                     return "输入的数据不完整，请完善数据后再上传";
 
                 boolean valid = (StringUtils.isBlank(regularStr) ? true : isRegValid(regularStr, val));
+                //select 类型校验
+                if (valid) {
+                    if (tenantConfigInstanceView.getDataType().equals("select")&&StringUtils.isNotBlank(tenantConfigInstanceView.getDataValue())) {
+                        valid = false;
+                        for (String data : tenantConfigInstanceView.getDataValue().split("-")) {
+                            if (data.equals(val)) {
+                                valid = true;
+                                break;
+                            }
+                        }
+                    }
+                }
                 LOGGER.info("校验结果:" + valid);
                 if (!valid) {
                     return (x+1)+ "行-" + key + "列,数据校验失败,请检查!";
