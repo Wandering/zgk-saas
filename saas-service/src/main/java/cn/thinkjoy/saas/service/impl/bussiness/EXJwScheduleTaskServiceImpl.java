@@ -544,10 +544,16 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         List<StringBuffer> stringBuffers = new ArrayList<>();
         StringBuffer stringBuffer1 = new StringBuffer();
+        StringBuffer stringBuffer = new StringBuffer();
+        if(jwClassRules==null||jwClassRules.size()<=0) {
+            stringBuffer.append(0);
+            stringBuffers.add(stringBuffer);
+            return stringBuffers;
+        }
 
         JwClassRule jwClassRule = jwClassRules.get(0);
 
-        StringBuffer stringBuffer = new StringBuffer();
+
         stringBuffer.append(converGradeNon(jwClassRule.getMon()));
         stringBuffer.append(FileOperation.STR_SPLIT);
         stringBuffer.append(converGradeNon(jwClassRule.getTues()));

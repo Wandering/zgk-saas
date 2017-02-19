@@ -34,7 +34,7 @@ public class FileOperation {
 
 
 //    private static String path = "C:\\timetable\\schedule\\task\\"; ///Users/douzy/ 文件保存路径设置
-    private static String path = "/Users/douzy/schedule/task/"; // 文件保存路径设置
+    private static String path = "/Users/dengshaofei/schedule/task/"; // 文件保存路径设置
 
     private static String filenameTemp;
 
