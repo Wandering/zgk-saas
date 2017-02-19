@@ -1,6 +1,7 @@
 package cn.thinkjoy.saas.dao.bussiness;
 
 import cn.thinkjoy.common.dao.IBaseDAO;
+import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseManage;
 import cn.thinkjoy.saas.dto.CourseManageDto;
 
@@ -18,5 +19,7 @@ public interface IEXCourseManageDAO extends IBaseDAO<CourseManage> {
      * @return
      */
     List<CourseManageDto> getCourseByParams(Map<String,Object> params);
+
+    List<CourseBaseInfo> queryListByCondition(Map<String,Object> map);
 
 }

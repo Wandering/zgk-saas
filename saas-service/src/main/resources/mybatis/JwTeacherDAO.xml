@@ -25,10 +25,10 @@ selectList
 -->
     <sql id="Base_Column_List">
         id,
-        tn_id,
-        teacher_id,
-        task_id,
-        is_attend
+        tn_id as tnId,
+        teacher_id as teacherId,
+        task_id as taskId,
+        is_attend as isAttend
     </sql>
     <insert id="insert" parameterType="JwTeacher">
         INSERT INTO saas_jw_teacher (

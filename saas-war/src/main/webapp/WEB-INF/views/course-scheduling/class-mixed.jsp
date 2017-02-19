@@ -112,13 +112,13 @@
                                     {{#each this}}
                                         {{#compare isMerge '==' 1}}
                                             <li>
-                                                <input type="checkbox" name="merge-class" value="{{classId}}" id="class{{classId}}" checked disabled/>
-                                                <label for="class{{classId}}">{{className}}</label>
+                                                <input type="checkbox" name="merge-class" value="{{id}}" cType="{{classType}}" id="class{{id}}" checked disabled/>
+                                                <label for="class{{id}}">{{name}}</label>
                                             </li>
                                         {{else}}
                                             <li>
-                                                <input type="checkbox" name="merge-class" value="{{classId}}" id="class{{classId}}" isRight=false />
-                                                <label for="class{{classId}}">{{className}}</label>
+                                                <input type="checkbox" name="merge-class" value="{{id}}" cType="{{classType}}" id="class{{id}}" isRight=false />
+                                                <label for="class{{id}}">{{name}}</label>
                                             </li>
                                         {{/compare}}
                                     {{/each}}

@@ -82,7 +82,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         Map<String,Object> paramMap = Maps.newHashMap();
         paramMap.put("tnId",task.getTnId());
         paramMap.put("grade",task.getGrade());
-        List<CourseBaseInfo> infos = iexCourseBaseInfoService.queryList(paramMap,"id",Constant.DESC);
+        List<CourseBaseInfo> infos = iexCourseBaseInfoService.queryListByCondition(paramMap);
 
         return convertInfos2Dtos(infos,taskId,task.getTnId());
     }
@@ -217,6 +217,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         for(JwTeacher teacher : teachers){
             TeacherBaseDto dto = iexTenantCustomService.getTeacherInfo(teacher.getTnId(),teacher.getTeacherId());
             dto.setId(Integer.valueOf(teacher.getId().toString()));
+            dto.setIsAttend(teacher.getIsAttend());
             dtos.add(dto);
         }
         return dtos;
@@ -258,22 +259,24 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
         List<Map<String,Object>> returnMaps = Lists.newArrayList();
 
         Map<String,String> paramMap = Maps.newHashMap();
-        paramMap.put("tableName", ParamsUtils.combinationTableName(Constant.CLASS_ADM,tnId));
+        paramMap.put("tableName", ParamsUtils.combinationTableName(Constant.CLASS_EDU,tnId));
         paramMap.put("searchKey","class_grade");
         paramMap.put("searchValue",Constant.GRADES[Integer.valueOf(grade-1)]);
+        paramMap.put("classType","0");
 
         List<Map<String,Object>> maps = jwCourseGapRuleDAO.queryClassList(paramMap);
 
         // 根据课程名称和年纪查询班级信息
         for(Map map : maps){
-            if(map.get("name").toString().indexOf(course) != -1){
+            if(map.get("course").toString().indexOf(course) != -1){
                 returnMaps.add(map);
             }
         }
 
         // 不存在则查询行政班级
-        if(maps.size() == 0){
-            paramMap.put("tableName", ParamsUtils.combinationTableName(Constant.CLASS_EDU,tnId));
+        if(returnMaps.size() == 0){
+            paramMap.put("classType","1");
+            paramMap.put("tableName", ParamsUtils.combinationTableName(Constant.CLASS_ADM,tnId));
             returnMaps = jwCourseGapRuleDAO.queryClassList(paramMap);
         }
 

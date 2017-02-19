@@ -5,8 +5,10 @@ import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
-import cn.thinkjoy.saas.domain.*;
-import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
+import cn.thinkjoy.saas.domain.JwCourse;
+import cn.thinkjoy.saas.domain.JwScheduleTask;
+import cn.thinkjoy.saas.domain.JwTeachDate;
+import cn.thinkjoy.saas.domain.JwTeacher;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.JwScheduleTaskDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
@@ -14,8 +16,14 @@ import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.enums.GradeEnum;
 import cn.thinkjoy.saas.enums.StatusEnum;
 import cn.thinkjoy.saas.enums.TermEnum;
-import cn.thinkjoy.saas.service.*;
-import cn.thinkjoy.saas.service.bussiness.*;
+import cn.thinkjoy.saas.service.IJwCourseService;
+import cn.thinkjoy.saas.service.IJwScheduleTaskService;
+import cn.thinkjoy.saas.service.IJwTeachDateService;
+import cn.thinkjoy.saas.service.IJwTeacherService;
+import cn.thinkjoy.saas.service.bussiness.EXIConfigurationService;
+import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
+import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
+import cn.thinkjoy.saas.service.bussiness.IExTeachTimeService;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.fastjson.JSON;
@@ -26,10 +34,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yangyongping on 2016/12/6.
@@ -336,7 +348,7 @@ public class ScheduleTaskController {
 
     @ResponseBody
     @ApiDesc(value = "保存教师排课设置",owner = "gryang")
-    @RequestMapping(value = "/saveTeacherSchedule",method = RequestMethod.GET)
+    @RequestMapping(value = "/saveTeacherSchedule",method = RequestMethod.POST)
     public Map saveTeacherSchedule(@RequestParam String str){
         // str 传输规则 : 记录ID-设置（0：不排课，1：排课）多个逗号隔开，eg:1-1,2-0,3-1
         String [] strArr = str.split(",");

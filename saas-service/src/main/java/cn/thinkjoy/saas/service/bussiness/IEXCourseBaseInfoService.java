@@ -27,9 +27,7 @@ public interface IEXCourseBaseInfoService {
      * 查询集合
      *
      * @param condition
-     * @param orderBy
-     * @param sortBy
      * @return
      */
-    List<CourseBaseInfo> queryList(Map<String, Object> condition, String orderBy, String sortBy);
+    List<CourseBaseInfo> queryListByCondition(Map<String, Object> condition);
 }

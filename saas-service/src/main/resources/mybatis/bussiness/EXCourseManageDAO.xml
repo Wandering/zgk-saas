@@ -63,5 +63,19 @@
         </where>
 
     </select>
+
+    <select id="queryListByCondition" parameterType="java.util.Map" resultType="CourseBaseInfo">
+        SELECT
+          t0.course_name as courseName,t0.id,t0.status
+        FROM saas_course_base_info t0,saas_course_manage t1
+        where t0.id = t1.course_base_id
+            <if test="tnId!=null">
+                AND tn_id = #{tnId}
+            </if>
+            <if test="grade!=null">
+                AND grade_id = #{grade}
+            </if>
+    </select>
+
 </mapper>
 

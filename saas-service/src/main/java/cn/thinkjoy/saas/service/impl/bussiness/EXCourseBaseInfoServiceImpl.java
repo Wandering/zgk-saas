@@ -1,6 +1,8 @@
 package cn.thinkjoy.saas.service.impl.bussiness;
 
 import cn.thinkjoy.saas.dao.bussiness.ICourseBaseInfoDAO;
+import cn.thinkjoy.saas.dao.bussiness.IEXCourseBaseInfoDAO;
+import cn.thinkjoy.saas.dao.bussiness.IEXCourseManageDAO;
 import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.service.bussiness.IEXCourseBaseInfoService;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ public class EXCourseBaseInfoServiceImpl implements IEXCourseBaseInfoService {
     @Resource
     ICourseBaseInfoDAO iCourseBaseInfoDAO;
 
+    @Resource
+    IEXCourseManageDAO iexCourseManageDAO;
+
 
 
     @Override
@@ -30,7 +35,7 @@ public class EXCourseBaseInfoServiceImpl implements IEXCourseBaseInfoService {
     }
 
     @Override
-    public List<CourseBaseInfo> queryList(Map<String, Object> condition, String orderBy, String sortBy) {
-        return iCourseBaseInfoDAO.queryList(condition, orderBy, sortBy);
+    public List<CourseBaseInfo> queryListByCondition(Map<String, Object> condition) {
+        return iexCourseManageDAO.queryListByCondition(condition);
     }
 }

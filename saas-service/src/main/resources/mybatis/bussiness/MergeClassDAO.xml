@@ -11,8 +11,8 @@
           #{courseId},
           #{classIds},
           #{taskId},
-          #{classType},
-          now()
+          now(),
+          #{classType}
         )
     </insert>
 
