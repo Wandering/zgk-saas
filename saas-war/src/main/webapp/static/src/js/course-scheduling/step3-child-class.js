@@ -345,7 +345,7 @@ var HashHandle = {
                     case 0:
                         console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦");
                         $('.arranging-course-tips').removeClass('dh');
-                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.one-key-page').addClass('dh');
+                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.btn-one-key').addClass('dh');
                         clearInterval(that.items);
                         that.items = setInterval(function () {
                             that.scheduleTaskState();
@@ -354,7 +354,7 @@ var HashHandle = {
                     case 1:
                         console.log("排课成功");
                         clearInterval(that.items);
-                        $('.one-key-page,.arranging-course-tips').addClass('dh');
+                        $('.one-key-page,.arranging-course-tips,.btn-one-key').addClass('dh');
                         $('#role-scheduling-tab,#control-jsp').removeClass('dh');
                         ClassRoomTableIns.getAllQueryCourse();
                         ClassRoomTableIns.getQueryCourse();
