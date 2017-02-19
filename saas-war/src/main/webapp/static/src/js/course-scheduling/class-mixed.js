@@ -20,7 +20,7 @@ $(document).ready(function () {
                     gradeId = '2';
                     break;
                 case '高三年级':
-                    gradeId = '2';
+                    gradeId = '3';
                     break;
             }
             return gradeId;
