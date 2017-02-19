@@ -34,7 +34,7 @@ public class FileOperation {
 
 
 //    private static String path = "C:\\timetable\\schedule\\task\\"; //windows server 文件保存路径设置
-//    private static String path = "/Users/dengshaofei/schedule/task/"; //本地 文件保存路径设置
+//    private static String path = "/Users/douzy/sched10.136.13.233ule/task/"; //本地 文件保存路径设置
     private static String path = "/home/ubuntu/tm/schedule/task/"; //线上 文件保存路径设置
 
     private static String filenameTemp;
@@ -203,6 +203,20 @@ public class FileOperation {
     }
 
     public static void main(String[] args) throws IOException {
+
+        String s="3\n" +
+                "4\n" +
+                "1 0 0 0 0 0 1 1 1 \t1 1 1 0 1 1 1 1 1 \t1 1 1 1 1 0 1 1 1 \t1 1 1 0 1 1 1 1 1 \t1 1 1 1 1 0 1 1 1 \t1 1 1 1 1 1 1 1 1 \t1 1 1 1 1 1 1 1 1 \t\n" +
+                "8\n" +
+                "1 1 1 1 1 1 1 0 0 \t1 1 1 1 0 0 1 1 1 \t1 1 1 1 1 0 1 1 1 \t1 1 1 1 0 0 1 1 1 \t1 1 1 1 1 1 1 1 1 \t1 1 1 1 1 1 1 1 1 \t1 1 1 1 1 1 1 1 1 \t\n" +
+                "19\n" +
+                "0 1 1 1 1 0 1 1 0 \t0 0 1 1 1 1 1 1 1 \t1 0 1 1 1 1 1 1 1 \t0 0 1 1 1 1 1 1 1 \t1 1 0 1 1 1 1 1 1 \t1 1 1 1 1 1 1 1 1 \t1 1 1 1 1 1 1 1 1 \t\n";
+
+//        System.out.print(4093);
+//        System.out.print();
+        String d=s.substring(0,s.lastIndexOf("\t"));
+        System.out.print(d.length());
+        System.out.print(d);
 
         creatTxtFile(13,28,"20160725测试文件");
 

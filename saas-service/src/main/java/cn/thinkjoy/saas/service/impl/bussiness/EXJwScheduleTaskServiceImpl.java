@@ -19,11 +19,9 @@ import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseManageVo;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.domain.bussiness.MergeClassInfoVo;
-import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.service.IGradeService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
-import cn.thinkjoy.saas.service.bussiness.IEXCourseManageService;
 import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
 import cn.thinkjoy.saas.service.common.ConvertUtil;
 import cn.thinkjoy.saas.service.common.FileOperation;
@@ -212,6 +210,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             String str = "";
             for (StringBuffer stringBuffer : classRuleBuffers)
                 str += stringBuffer.toString();
+            if(str.lastIndexOf(FileOperation.LINE_SPLIT)>0)
+                str=str.substring(0,str.lastIndexOf(FileOperation.LINE_SPLIT));
             flag = FileOperation.writeTxtFile(str);
         }
         return flag;
