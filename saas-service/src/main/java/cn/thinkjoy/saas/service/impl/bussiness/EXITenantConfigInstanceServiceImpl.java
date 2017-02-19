@@ -498,7 +498,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * @return
      */
     @Override
-    public String  uploadExcel(String type,Integer tnId,String excelPath,int classType) {
+    public String uploadExcel(String type,Integer tnId,String excelPath,int classType) {
         LOGGER.info("===========解析excel S===========");
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
