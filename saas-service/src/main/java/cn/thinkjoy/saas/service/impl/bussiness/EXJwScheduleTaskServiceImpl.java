@@ -1217,7 +1217,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             e.printStackTrace();
         }
         List<List<List<String>>> roomData = (List<List<List<String>>>) allCourseTable.get("roomData");
-        List<List<String>> classCourseList = roomData.get(classId);
+        String classIdStr = (String) allCourseTable.get("classId");
+        String[] classIds = classIdStr.split("\\|");
+        List<List<String>> classCourseList = roomData.get(getIntegersNum(classIds,classId));
         courseResultView.setWeek(classCourseList);
         LOGGER.info("********学生课程表 E********");
         return courseResultView;
@@ -1352,5 +1354,13 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         list.add("789");
         list.set(2,"444");
         System.out.println(list.size());
+    }
+
+    private static int getIntegersNum(String[] ss,Integer ii){
+        for (int i = 0 ; i< ss.length ;i++){
+            if (Integer.valueOf(ss[i]).equals(ii))
+                return i;
+        }
+        return -1;
     }
 }

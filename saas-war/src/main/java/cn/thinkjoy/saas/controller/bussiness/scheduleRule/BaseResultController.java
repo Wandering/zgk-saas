@@ -100,9 +100,10 @@ public class BaseResultController {
     public Set<Map<String,Object>> queryCourse(@RequestParam Integer taskId) {
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         List<CourseManageDto> courseManageDtos = courseManageService.getCourseByTnId(tnId);
-        Map<String,Object> map = new HashMap<>();
+        Map<String,Object> map;
         Set<Map<String,Object>> maps = new HashSet<>();
         for (CourseManageDto courseManageDto : courseManageDtos) {
+            map = new HashMap<>();
             map.put("courseBaseId",courseManageDto.getCourseBaseId());
             map.put("courseBaseName",courseManageDto.getCourseBaseName());
             maps.add(map);
