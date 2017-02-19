@@ -192,7 +192,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 @Override
                 public void run() {
                     String redisKey = getScheduleRedisKey(tnId,taskId);
-                    redis.del(redisKey);
+                    if (redis.exists(redisKey)) redis.del(redisKey);
                     LOGGER.info("=线程启动=" + System.currentTimeMillis());
                     LOGGER.info("排课状态:正在排课");
                     String path = FileOperation.getParamsPath(tnId, taskId);
