@@ -9,84 +9,96 @@
 
 package cn.thinkjoy.saas.domain;
 
+import cn.thinkjoy.common.domain.BaseDomain;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import cn.thinkjoy.common.domain.BaseDomain;
 
-import java.util.*;
-
-public class ClassRooms extends BaseDomain{
+public class ClassRooms extends BaseDomain {
     private Integer tnId;
-    private Integer grade1classes;
-    private Integer grade2classes;
-    private Integer grade3classes;
-    private Date createDate;
+    private Integer gradeId;
+    private Integer executiveNumber;
+    private Integer dayNumber;
+    private Integer roomOrder;
+    private Long createDate;
 
-	public ClassRooms(){
-	}
-    public void setTnId(Integer value) {
-        this.tnId = value;
+    public ClassRooms() {
     }
 
     public Integer getTnId() {
-        return this.tnId;
-    }
-    public void setGrade1classes(Integer value) {
-        this.grade1classes = value;
+        return tnId;
     }
 
-    public Integer getGrade1classes() {
-        return this.grade1classes;
-    }
-    public void setGrade2classes(Integer value) {
-        this.grade2classes = value;
+    public void setTnId(Integer tnId) {
+        this.tnId = tnId;
     }
 
-    public Integer getGrade2classes() {
-        return this.grade2classes;
-    }
-    public void setGrade3classes(Integer value) {
-        this.grade3classes = value;
+    public Integer getGradeId() {
+        return gradeId;
     }
 
-    public Integer getGrade3classes() {
-        return this.grade3classes;
+    public void setGradeId(Integer gradeId) {
+        this.gradeId = gradeId;
     }
 
-    public void setCreateDate(Date value) {
-        this.createDate = value;
+    public Integer getExecutiveNumber() {
+        return executiveNumber;
     }
 
-    public Date getCreateDate() {
-        return this.createDate;
+    public void setExecutiveNumber(Integer executiveNumber) {
+        this.executiveNumber = executiveNumber;
     }
 
-	public String toString() {
-		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-			.append("Id",getId())
-			.append("TnId",getTnId())
-			.append("Grade1classes",getGrade1classes())
-			.append("Grade2classes",getGrade2classes())
-			.append("Grade3classes",getGrade3classes())
-			.append("CreateDate",getCreateDate())
-			.toString();
-	}
-	
-	public int hashCode() {
-		return new HashCodeBuilder()
-			.append(getId())
-			.toHashCode();
-	}
-	
-	public boolean equals(Object obj) {
-		if(obj instanceof ClassRooms == false) return false;
-		if(this == obj) return true;
-		ClassRooms other = (ClassRooms)obj;
-		return new EqualsBuilder()
-			.append(getId(),other.getId())
-			.isEquals();
-	}
+    public Integer getDayNumber() {
+        return dayNumber;
+    }
+
+    public void setDayNumber(Integer dayNumber) {
+        this.dayNumber = dayNumber;
+    }
+
+    public Integer getRoomOrder() {
+        return roomOrder;
+    }
+
+    public void setRoomOrder(Integer roomOrder) {
+        this.roomOrder = roomOrder;
+    }
+
+    public Long getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Long createDate) {
+        this.createDate = createDate;
+    }
+
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("Id", getId())
+                .append("TnId", getTnId())
+                .append("GradeId", getGradeId())
+                .append("ExecutiveNumber",getExecutiveNumber())
+                .append("DayNumber", getDayNumber())
+                .append("RoomOrder", getRoomOrder())
+                .append("CreateDate", getCreateDate())
+                .toString();
+    }
+
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(getId())
+                .toHashCode();
+    }
+
+    public boolean equals(Object obj) {
+        if (obj instanceof ClassRooms == false) return false;
+        if (this == obj) return true;
+        ClassRooms other = (ClassRooms) obj;
+        return new EqualsBuilder()
+                .append(getId(), other.getId())
+                .isEquals();
+    }
 }
 

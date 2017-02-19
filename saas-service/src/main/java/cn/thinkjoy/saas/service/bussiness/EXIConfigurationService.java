@@ -7,6 +7,7 @@ import cn.thinkjoy.common.service.IPageService;
 import cn.thinkjoy.saas.domain.Configuration;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by douzy on 16/10/12.
@@ -18,4 +19,20 @@ public interface EXIConfigurationService<D extends IBaseDAO<T>, T extends BaseDo
      * @return
      */
     public List<Configuration> selectListBydomain(String type);
+
+
+    /**
+     * 初始化必选字段
+     * @param type
+     * @return
+     */
+    public boolean selectListRetain(String type,Integer tnid);
+
+    /**
+     * 中英文列名互转
+     * @param map
+     * @return
+     */
+    String selectColumnName(Map map);
+
 }

@@ -2,7 +2,7 @@
  * Copyright (c) 2013-2014, thinkjoy Inc. All Rights Reserved.
  *
  * Project Name: saas
- * $Id:  RelationRoleResource.java 2016-10-12 10:51:40 $
+ * $Id:  RelationRoleResource.java 2016-10-14 09:50:57 $
  */
 
 
@@ -20,7 +20,6 @@ import java.util.*;
 public class RelationRoleResource extends BaseDomain{
     private Integer roleId;
     private Integer resId;
-    private Integer tnId;
 
 	public RelationRoleResource(){
 	}
@@ -38,20 +37,12 @@ public class RelationRoleResource extends BaseDomain{
     public Integer getResId() {
         return this.resId;
     }
-    public void setTnId(Integer value) {
-        this.tnId = value;
-    }
-
-    public Integer getTnId() {
-        return this.tnId;
-    }
 
 	public String toString() {
 		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
 			.append("Id",getId())
 			.append("RoleId",getRoleId())
 			.append("ResId",getResId())
-			.append("TnId",getTnId())
 			.toString();
 	}
 	

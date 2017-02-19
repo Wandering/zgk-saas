@@ -9,21 +9,24 @@
 
 package cn.thinkjoy.saas.domain;
 
+import cn.thinkjoy.common.domain.BaseDomain;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import cn.thinkjoy.common.domain.BaseDomain;
-
-import java.util.*;
 
 public class TenantConfigInstance extends BaseDomain{
     private Integer tnId;
     private String configKey;
     private Integer configOrder;
     private String checkRule;
-    private Date createDate;
-    private Date modifyDate;
+    private String domain;
+    private Long createDate;
+    private Long modifyDate;
+    private String dataType;
+    private String dataUrl;
+    private String dataValue;
+    private byte isRetain;
 
 	public TenantConfigInstance(){
 	}
@@ -56,33 +59,78 @@ public class TenantConfigInstance extends BaseDomain{
         return this.checkRule;
     }
 
-    public void setCreateDate(Date value) {
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public void setCreateDate(Long value) {
         this.createDate = value;
     }
 
-    public Date getCreateDate() {
+    public Long getCreateDate() {
         return this.createDate;
     }
 
-    public void setModifyDate(Date value) {
+    public void setModifyDate(Long value) {
         this.modifyDate = value;
     }
 
-    public Date getModifyDate() {
+    public Long getModifyDate() {
         return this.modifyDate;
     }
 
-	public String toString() {
-		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-			.append("Id",getId())
-			.append("TnId",getTnId())
-			.append("ConfigKey",getConfigKey())
-			.append("ConfigOrder",getConfigOrder())
-			.append("CheckRule",getCheckRule())
-			.append("CreateDate",getCreateDate())
-			.append("ModifyDate",getModifyDate())
-			.toString();
-	}
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getDataUrl() {
+        return dataUrl;
+    }
+
+    public void setDataUrl(String dataUrl) {
+        this.dataUrl = dataUrl;
+    }
+
+    public String getDataValue() {
+        return dataValue;
+    }
+
+    public void setDataValue(String dataValue) {
+        this.dataValue = dataValue;
+    }
+
+    public byte getIsRetain() {
+        return isRetain;
+    }
+
+    public void setIsRetain(byte isRetain) {
+        this.isRetain = isRetain;
+    }
+
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("Id", getId())
+                .append("TnId", getTnId())
+                .append("ConfigKey", getConfigKey())
+                .append("ConfigOrder", getConfigOrder())
+                .append("CheckRule", getCheckRule())
+                .append("Domain", getDomain())
+                .append("CreateDate", getCreateDate())
+                .append("ModifyDate", getModifyDate())
+                .append("DataType", getDataType())
+                .append("DataUrl",getDataUrl())
+                .append("DataValue",getDataValue())
+                .append("IsRetain", getIsRetain())
+                .toString();
+    }
 	
 	public int hashCode() {
 		return new HashCodeBuilder()

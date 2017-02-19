@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.scheduleRule.MergeClassDAO">
+
+    <insert id="insertMergeInfo" parameterType="java.util.Map">
+        insert into saas_jw_merge_class_info
+        (tn_id,course_id,class_ids,task_id,create_date)
+        VALUES
+        (
+          #{tnId},
+          #{courseId},
+          #{classIds},
+          #{taskId},
+          now()
+        )
+    </insert>
+
+    <select id="selectMergeInfo" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.MergeClassInfoDto">
+        select
+        ii.id as id,
+        ii.tn_id as tnId,
+        ii.course_id as courseId,
+        cc.course_name as courseName,
+        ii.class_ids as classIds,
+        ii.task_id as taskId,
+        ii.create_date as createDate
+        from saas_jw_merge_class_info ii
+        left join saas_jw_course_base_info cc on ii.course_id = cc.id
+        where 1=1
+        <if test="tnId!=null">
+          and ii.tn_id=#{tnId}
+        </if>
+        <if test="taskId!=null">
+          and ii.task_id=#{taskId}
+        </if>
+        <if test="grade!=null">
+          and cc.grade=#{grade}
+        </if>
+        <if test="courseId!=null">
+          and cc.id=#{courseId}
+        </if>
+    </select>
+
+    <delete id="deleteMergeInfo" parameterType="java.util.Map">
+        delete from saas_jw_merge_class_info where id=#{id}
+    </delete>
+
+</mapper>

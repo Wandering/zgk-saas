@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IJwTeachTimeDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+    <sql id="Base_Column_List">
+        id as id,
+        teach_time as teachTime,
+        ten_id as tenId,
+        create_time as createTime,
+        tid as tid
+    </sql>
+    <insert id="insert" parameterType="JwTeachTime">
+        INSERT INTO saas_jw_teach_time (
+        teach_time,
+        ten_id,
+        create_time,
+        tid
+        ) VALUES (
+        #{teachTime},
+        #{tenId},
+        #{createTime},
+        #{tid}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="JwTeachTime">
+        UPDATE saas_jw_teach_time
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="teachTime!=null">
+                teach_time = #{teachTime},
+            </if>
+            <if test="tenId!=null">
+                ten_id = #{tenId},
+            </if>
+            <if test="createTime!=null">
+                create_time = #{createTime},
+            </if>
+            <if test="tid!=null">
+                tid = #{tid},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_jw_teach_time
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.teachTime!=null">
+                teach_time = #{map.teachTime},
+            </if>
+            <if test="map.tenId!=null">
+                ten_id = #{map.tenId},
+            </if>
+            <if test="map.createTime!=null">
+                create_time = #{map.createTime},
+            </if>
+            <if test="map.tid!=null">
+                tid = #{map.tid},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_jw_teach_time
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.teachTime!=null">
+                teach_time = #{update.teachTime},
+            </if>
+            <if test="update.tenId!=null">
+                ten_id = #{update.tenId},
+            </if>
+            <if test="update.createTime!=null">
+                create_time = #{update.createTime},
+            </if>
+            <if test="update.tid!=null">
+                tid = #{update.tid},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.teachTime!=null">
+                AND teach_time = #{condition.teachTime}
+            </if>
+            <if test="condition.tenId!=null">
+                AND ten_id = #{condition.tenId}
+            </if>
+            <if test="condition.createTime!=null">
+                AND create_time = #{condition.createTime}
+            </if>
+            <if test="condition.tid!=null">
+                AND tid = #{condition.tid}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_jw_teach_time (
+                teach_time,
+                ten_id,
+                create_time,
+                tid
+        ) VALUES (
+                    #{map.teachTime},
+                    #{map.tenId},
+                    #{map.createTime},
+                    #{map.tid}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="JwTeachTime">
+        UPDATE saas_jw_teach_time
+        <trim prefix="SET" suffixOverrides=",">
+            teach_time = #{teachTime},
+            ten_id = #{tenId},
+            create_time = #{createTime},
+            tid = #{tid},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_jw_teach_time
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_jw_teach_time
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="teachTime!=null">
+                AND teach_time = #{teachTime}
+            </if>
+            <if test="tenId!=null">
+                AND ten_id = #{tenId}
+            </if>
+            <if test="createTime!=null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="tid!=null">
+                AND tid = #{tid}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_jw_teach_time WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="JwTeachTime">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_time
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="JwTeachTime">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_time WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="JwTeachTime">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_time WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="JwTeachTime">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_time
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="JwTeachTime">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_time
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.teachTime!=null">
+                ${condition.groupOp}   teach_time  ${condition.teachTime.op}  #{condition.teachTime.data}
+            </if>
+            <if test="condition.tenId!=null">
+                ${condition.groupOp}   ten_id  ${condition.tenId.op}  #{condition.tenId.data}
+            </if>
+            <if test="condition.createTime!=null">
+                ${condition.groupOp}   create_time  ${condition.createTime.op}  #{condition.createTime.data}
+            </if>
+            <if test="condition.tid!=null">
+                ${condition.groupOp}   tid  ${condition.tid.op}  #{condition.tid.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="JwTeachTime">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_time
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
+            </if>
+            <if test="condition.teachTime!=null">
+                AND teach_time like CONCAT('%', #{condition.teachTime} , '%')
+            </if>
+            <if test="condition.tenId!=null">
+                AND ten_id like CONCAT('%', #{condition.tenId} , '%')
+            </if>
+            <if test="condition.createTime!=null">
+                AND create_time like CONCAT('%', #{condition.createTime} , '%')
+            </if>
+            <if test="condition.tid!=null">
+                AND tid like CONCAT('%', #{condition.tid} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="JwTeachTime">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_time
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.teachTime!=null">
+                AND teach_time = #{condition.teachTime}
+            </if>
+            <if test="condition.tenId!=null">
+                AND ten_id = #{condition.tenId}
+            </if>
+            <if test="condition.createTime!=null">
+                AND create_time = #{condition.createTime}
+            </if>
+            <if test="condition.tid!=null">
+                AND tid = #{condition.tid}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="JwTeachTime">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teach_time
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.teachTime!=null">
+                AND teach_time = #{condition.teachTime}
+            </if>
+            <if test="condition.tenId!=null">
+                AND ten_id = #{condition.tenId}
+            </if>
+            <if test="condition.createTime!=null">
+                AND create_time = #{condition.createTime}
+            </if>
+            <if test="condition.tid!=null">
+                AND tid = #{condition.tid}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_jw_teach_time
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="teachTime!=null">
+               ${groupOp} teach_time ${teachTime.op}  #{teachTime.data}
+           </if>
+           <if test="tenId!=null">
+               ${groupOp} ten_id ${tenId.op}  #{tenId.data}
+           </if>
+           <if test="createTime!=null">
+               ${groupOp} create_time ${createTime.op}  #{createTime.data}
+           </if>
+           <if test="tid!=null">
+               ${groupOp} tid ${tid.op}  #{tid.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_jw_teach_time
+    </select>
+
+</mapper>
+

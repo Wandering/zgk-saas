@@ -18,4 +18,14 @@ public interface EXIConfigurationDAO extends IBaseDAO<Configuration> {
      * @return
      */
     public List<Configuration> selectListBydomain(Map map);
+
+    /**
+     * 获取初始化字段
+     * @param map
+     * @return
+     */
+    public List<Configuration> selectListRetain(Map map);
+
+
+    String selectColumnName(Map map);
 }

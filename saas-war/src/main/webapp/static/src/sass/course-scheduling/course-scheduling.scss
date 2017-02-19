@@ -1,0 +1,118 @@
+@import "../common/common";
+#schedule-table {
+    tbody {
+        tr {
+            td {
+                .btn-split:nth-child(1) {
+                    margin-right: 31px;
+                }
+                .btn-split:nth-child(2) {
+                    margin-left: 31px;
+                }
+            }
+        }
+    }
+}
+.layer-title {
+    color: #CB171D;
+    font-size: 14px;
+}
+#addRole-btn, #updateRole-btn, #deleteRole-btn {
+    outline: 0;
+}
+#addRole-btn {
+    width: 111px;
+    outline: 0;
+}
+a.start-schedule-btn:link,
+a.start-schedule-btn:visited,
+a.start-schedule-btn:hover {
+    font-size: 12px;
+    color: #CB171D;
+    text-decoration: underline;
+    outline: 0;
+}
+a.fail-schedule-btn:link,
+a.fail-schedule-btn:visited,
+a.fail-schedule-btn:hover {
+    font-size: 12px;
+    color: #F6A623;
+    text-decoration: underline;
+    outline: 0;
+}
+a.again-schedule-btn:link,
+a.again-schedule-btn:visited,
+a.again-schedule-btn:hover {
+    font-size: 12px;
+    color: #8B572A;
+    text-decoration: underline;
+    outline: 0;
+}
+a.timetable-btn:link,
+a.timetable-btn:visited,
+a.timetable-btn:hover {
+    font-size: 12px;
+    color: #4990E2;
+    text-decoration: underline;
+    outline: 0;
+}
+.add-schedule-box {
+    width: 100%;
+    height: 100%;
+    padding: 29px 43px 29px 44px;
+    .schedule-box {
+        height: inherit;
+        font-size: 14px;
+        color: #000000;
+        .box-row {
+            margin-bottom: 24px;
+            i {
+                font-size: 14px;
+                color: #CB171D;
+                position: relative;
+                top: 2px;
+                left: -2px;
+            }
+            input[type='text'], #grade-list, #term-list {
+                width: 225px;
+                background: #FFFFFF;
+                border: 1px solid #D5D9DF;
+                border-radius: 2px!important;
+            }
+            #term-year {
+                width: 107px;
+                margin-right: 5px;
+            }
+            #term-list {
+                width: 96px;
+                margin-left: 3px;
+            }
+            button, button:focus {
+                display: block;
+                width: 84px;
+                height: 26px;
+                margin: 0 auto;
+                background: #CB171D;
+                border: 1px solid #CB171D;
+                border-radius: 2px;
+                font-size: 14px;
+                color: #FFFFFF;
+                outline: 0;
+            }
+            button:hover {
+                -moz-opacity: 0.6;
+                -ms-opacity: 0.6;
+                opacity: 0.6;
+                filter: alpha(opacify=60);
+            }
+        }
+        .box-row + .box-row + .box-row + .box-row {
+            margin-bottom: 0;
+        }
+    }
+}
+#addTask-btn {
+    width: 110px;
+    padding: 0 10px;
+    text-align: center;
+}

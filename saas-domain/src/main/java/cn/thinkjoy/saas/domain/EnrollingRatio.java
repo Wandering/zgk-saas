@@ -9,13 +9,11 @@
 
 package cn.thinkjoy.saas.domain;
 
+import cn.thinkjoy.common.domain.BaseDomain;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import cn.thinkjoy.common.domain.BaseDomain;
-
-import java.util.*;
 
 public class EnrollingRatio extends BaseDomain{
     private Integer tnId;
@@ -24,7 +22,9 @@ public class EnrollingRatio extends BaseDomain{
     private Integer batch2enrolls;
     private Integer batch3enrolls;
     private Integer batch4enrolls;
-    private Date createDate;
+    private Integer year;
+    private Integer ratioOrder;
+    private Long createDate;
 
 	public EnrollingRatio(){
 	}
@@ -71,24 +71,42 @@ public class EnrollingRatio extends BaseDomain{
         return this.batch4enrolls;
     }
 
-    public void setCreateDate(Date value) {
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getRatioOrder() {
+        return ratioOrder;
+    }
+
+    public void setRatioOrder(Integer ratioOrder) {
+        this.ratioOrder = ratioOrder;
+    }
+
+    public void setCreateDate(Long value) {
         this.createDate = value;
     }
 
-    public Date getCreateDate() {
+    public Long getCreateDate() {
         return this.createDate;
     }
 
 	public String toString() {
 		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
 			.append("Id",getId())
-			.append("TnId",getTnId())
+			.append("TnId", getTnId())
 			.append("Stu3numbers",getStu3numbers())
 			.append("Batch1enrolls",getBatch1enrolls())
 			.append("Batch2enrolls",getBatch2enrolls())
 			.append("Batch3enrolls",getBatch3enrolls())
 			.append("Batch4enrolls",getBatch4enrolls())
-			.append("CreateDate",getCreateDate())
+            .append("Year", getYear())
+            .append("RatioOrder", getRatioOrder())
+            .append("CreateDate", getCreateDate())
 			.toString();
 	}
 	

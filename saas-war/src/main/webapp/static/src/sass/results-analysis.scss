@@ -1,0 +1,151 @@
+@import "./common/common";
+
+.upload-layer{
+  margin-top:20px;
+}
+.main-subject {
+  overflow: hidden;
+  padding-right:90px;
+  .form-group{
+    float: left;
+    margin:0;
+  }
+}
+.h5{
+  font-weight: bold;
+  font-size:16px;
+  display: inline-block;
+  &.p-t{
+    color: #CB171D;
+    font-size:16px;
+    .line{
+      width:6px;
+      height:16px;
+      display: inline-block;
+      background: #CB171D;
+      position: relative;
+      top:3px;
+      margin-right:7px;
+    }
+  }
+}
+.p-t2{
+  color: #9B9B9B;
+  font-size:14px;
+}
+
+
+.class-chart,
+.subject-chart{
+  float: left;
+  width:400px;
+  margin:30px 0 0 30px;
+}
+.sel-main{
+  margin:20px 0 10px 30px;
+  select{
+    margin-right:20px;
+  }
+}
+.table-details-main{
+  margin:0;
+}
+.title-2 {
+  padding:10px 0 30px;
+  .txt-t{
+    float: left;
+  }
+}
+.class-sel{
+  float: left;
+  margin:10px;
+}
+.chart-main1,
+.chart-main2{
+  overflow: hidden;
+  .chart-tab,
+  .student-chart-tab{
+    float: right;
+    overflow: hidden;
+    height:40px;
+    .btn{
+      margin-right:10px;
+    }
+    .cur{
+      background: #cb171d !important;
+      color: #fff;
+    }
+  }
+  .chart-box,
+  .student-chart-box{
+    clear: both;
+    overflow: hidden;
+    &.hds{
+      font-size:0;
+      height:0;
+      overflow: hidden;
+    }
+  }
+}
+
+.grade-studeng-num{
+  display: none;
+}
+.chart-main2{
+  padding:20px;
+}
+.txt1{
+  font-weight: bold;
+  font-size:16px;
+}
+.grade1-2-line{
+  overflow: hidden;
+  margin-bottom:10px;
+}
+.online-txt{
+  float: left;
+  line-height:26px;
+}
+.online-input{
+  float: left;
+  border:1px solid #D5D9DF;
+  width:116px;
+  height:26px;
+  padding:3px;
+  line-height:26px;
+  margin:0 4px;
+}
+.set-line-btn{
+  float: left;
+  width:64px;
+  height:26px;
+  background: #CB171D;
+  color: #fff;
+  line-height:26px;
+  border: none;
+  border-radius: 3px;
+}
+.student-change-table{
+  td{
+    text-align: center;
+  }
+}
+.class-no-content{
+  margin: 30px 0 0;
+  text-align: center;
+}
+.nodata{
+  font-size:0;
+  line-height:0;
+  z-index: -1;
+  text-indent: -1000px;
+  overflow: hidden;
+  height: 1px;
+}
+.form-horizontal .form-group{
+  margin-left:0;
+  margin-right:0;
+}
+.layui-layer-loading1 {
+  margin: 0 auto;
+}

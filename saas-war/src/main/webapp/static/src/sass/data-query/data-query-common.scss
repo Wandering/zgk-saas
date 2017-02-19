@@ -1,0 +1,115 @@
+@import "../common/common";
+
+.common-title {
+  overflow: hidden;
+  margin-bottom: 20px;
+  margin-top: 16px;
+  clear: both;
+  width: 100%;
+  border-bottom: 1px solid #D8D8D8;
+  h3 {
+    font-size: 16px;
+    height: 46px;
+    line-height: 46px;
+    margin: 0;
+    border-bottom: 2px solid $mainColor;
+  }
+  .search-box {
+    .search-input {
+      height: 30px;
+      line-height: 30px;
+      width: 210px;
+      border-radius: 2px !important;
+      padding: 0 10px;
+      box-sizing: border-box;
+      border: 1px solid $border;
+      position: relative;
+      top: 2px;
+    }
+    .search-btn {
+      height: 30px;
+      width: 70px;
+      text-align: center;
+      color: $mainColor;
+      border: 1px solid $mainColor;
+      background: #fff;
+      outline: none;
+      border-radius: 2px !important;
+      box-sizing: border-box;
+    }
+  }
+}
+
+.common-select {
+  overflow: hidden;
+  border-bottom: 1px dashed $border;
+  dt, dd {
+    float: left;
+  }
+  dd {
+    width: 93%;
+    span {
+      display: block;
+      float: left;
+      margin-right: 20px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    .active {
+      color: $mainColor;
+    }
+  }
+  //&:la {
+  //  border-bottom-color: #fff;
+  //}
+}
+
+.table-list {
+  width: 100%;
+  border: 1px solid #e0e3e8;
+  th {
+    background: #f2f4f6;
+    text-align: center;
+  }
+  tr {
+    text-align: center;
+    height: 40px;
+  }
+}
+
+.table-loading-img {
+  height: 30px;
+  position: relative;
+  top: 20px;
+  left: 52%;
+  margin-bottom: 30px;
+}
+
+.load-more {
+  text-align: center;
+  color: $mainColor;
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+  margin-top: 20px;
+  position: absolute;
+  left: 51.3%;
+  border: none;
+  background-color: #fff;
+}
+
+#search-list {
+  position: absolute;
+  background: #fff;
+  width: 210px;
+  padding: 1px 10px;
+  line-height: 24px;
+  border: 1px solid #bfbfbf;
+  display: none;
+  li {
+    cursor: pointer;
+    &:hover {
+      color: $mainColor
+    }
+  }
+}

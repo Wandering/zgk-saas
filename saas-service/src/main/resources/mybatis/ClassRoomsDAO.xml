@@ -25,24 +25,27 @@ selectList
 -->
     <sql id="Base_Column_List">
         id,
-        tn_id,
-        grade_1_classes,
-        grade_2_classes,
-        grade_3_classes,
-        create_date
+        tn_id as tnId,
+        grade_id as gradeId,
+        executive_number as executiveNumber,
+        day_number as dayNumber,
+        room_order as roomOrder,
+        create_date as createDate
     </sql>
     <insert id="insert" parameterType="ClassRooms">
         INSERT INTO saas_class_rooms (
         tn_id,
-        grade_1_classes,
-        grade_2_classes,
-        grade_3_classes,
+        grade_id,
+        executive_number,
+        day_number,
+        room_order,
         create_date
         ) VALUES (
         #{tnId},
-        #{grade1classes},
-        #{grade2classes},
-        #{grade3classes},
+        #{gradeId},
+        #{executiveNumber},
+        #{dayNumber},
+        #{roomOrder},
         #{createDate}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
@@ -57,14 +60,17 @@ selectList
             <if test="tnId!=null">
                 tn_id = #{tnId},
             </if>
-            <if test="grade1classes!=null">
-                grade_1_classes = #{grade1classes},
+            <if test="gradeId!=null">
+                grade_id = #{gradeId},
             </if>
-            <if test="grade2classes!=null">
-                grade_2_classes = #{grade2classes},
+            <if test="executiveNumber!=null">
+                executive_number = #{executiveNumber},
             </if>
-            <if test="grade3classes!=null">
-                grade_3_classes = #{grade3classes},
+            <if test="dayNumber!=null">
+                day_number = #{dayNumber},
+            </if>
+            <if test="roomOrder!=null">
+                room_order=#{roomOrder},
             </if>
             <if test="createDate!=null">
                 create_date = #{createDate},
@@ -80,14 +86,17 @@ selectList
             <if test="map.tnId!=null">
                 tn_id = #{map.tnId},
             </if>
-            <if test="map.grade1classes!=null">
-                grade_1_classes = #{map.grade1classes},
+            <if test="map.gradeId!=null">
+                grade_id = #{map.gradeId},
             </if>
-            <if test="map.grade2classes!=null">
-                grade_2_classes = #{map.grade2classes},
+            <if test="map.executiveNumber!=null">
+                executive_number = #{map.executiveNumber},
             </if>
-            <if test="map.grade3classes!=null">
-                grade_3_classes = #{map.grade3classes},
+            <if test="map.dayNumber!=null">
+                day_number = #{map.dayNumber},
+            </if>
+            <if test="map.roomOrder!=null">
+                room_order=#{map.roomOrder},
             </if>
             <if test="map.createDate!=null">
                 create_date = #{map.createDate},
@@ -103,14 +112,17 @@ selectList
             <if test="update.tnId!=null">
                 tn_id = #{update.tnId},
             </if>
-            <if test="update.grade1classes!=null">
-                grade_1_classes = #{update.grade1classes},
+            <if test="update.gradeId!=null">
+                grade_id = #{update.gradeId},
             </if>
-            <if test="update.grade2classes!=null">
-                grade_2_classes = #{update.grade2classes},
+            <if test="update.executiveNumber!=null">
+                executive_number = #{update.executiveNumber},
             </if>
-            <if test="update.grade3classes!=null">
-                grade_3_classes = #{update.grade3classes},
+            <if test="update.dayNumber!=null">
+                day_number = #{update.dayNumber},
+            </if>
+            <if test="update.roomOrder!=null">
+                room_order=#{update.roomOrder},
             </if>
             <if test="update.createDate!=null">
                 create_date = #{update.createDate},
@@ -124,14 +136,17 @@ selectList
             <if test="condition.tnId!=null">
                 AND tn_id = #{condition.tnId}
             </if>
-            <if test="condition.grade1classes!=null">
-                AND grade_1_classes = #{condition.grade1classes}
+            <if test="condition.gradeId!=null">
+                AND grade_id = #{condition.gradeId}
             </if>
-            <if test="condition.grade2classes!=null">
-                AND grade_2_classes = #{condition.grade2classes}
+            <if test="condition.executiveNumber!=null">
+                AND executive_number = #{condition.executiveNumber}
             </if>
-            <if test="condition.grade3classes!=null">
-                AND grade_3_classes = #{condition.grade3classes}
+            <if test="condition.dayNumber!=null">
+                AND day_number = #{condition.dayNumber}
+            </if>
+            <if test="condition.roomOrder!=null">
+                AND room_order=#{condition.roomOrder}
             </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
@@ -142,15 +157,17 @@ selectList
     <insert id="insertMap" >
         INSERT INTO saas_class_rooms (
                 tn_id,
-                grade_1_classes,
-                grade_2_classes,
-                grade_3_classes,
+                grade_id,
+                executive_number,
+                day_number,
+                room_order,
                 create_date
         ) VALUES (
                     #{map.tnId},
-                    #{map.grade1classes},
-                    #{map.grade2classes},
-                    #{map.grade3classes},
+                    #{map.gradeId},
+                    #{map.executiveNumber},
+                    #{map.dayNumber},
+                    #{map.roomOrder},
                     #{map.createDate}
         )
     </insert>
@@ -160,9 +177,10 @@ selectList
         UPDATE saas_class_rooms
         <trim prefix="SET" suffixOverrides=",">
             tn_id = #{tnId},
-            grade_1_classes = #{grade1classes},
-            grade_2_classes = #{grade2classes},
-            grade_3_classes = #{grade3classes},
+            grade_id = #{gradeId},
+            executive_number = #{executiveNumber},
+            day_number = #{dayNumber},
+            room_order=#{roomOrder},
             create_date = #{createDate},
         </trim>
         WHERE
@@ -187,14 +205,17 @@ selectList
             <if test="tnId!=null">
                 AND tn_id = #{tnId}
             </if>
-            <if test="grade1classes!=null">
-                AND grade_1_classes = #{grade1classes}
+            <if test="gradeId!=null">
+                AND grade_id = #{gradeId}
             </if>
-            <if test="grade2classes!=null">
-                AND grade_2_classes = #{grade2classes}
+            <if test="executiveNumber!=null">
+                AND executive_number = #{executiveNumber}
             </if>
-            <if test="grade3classes!=null">
-                AND grade_3_classes = #{grade3classes}
+            <if test="dayNumber!=null">
+                AND day_number = #{dayNumber}
+            </if>
+            <if test="roomOrder!=null">
+                AND room_order=#{roomOrder}
             </if>
             <if test="createDate!=null">
                 AND create_date = #{createDate}
@@ -262,14 +283,17 @@ selectList
             <if test="condition.tnId!=null">
                 ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
             </if>
-            <if test="condition.grade1classes!=null">
-                ${condition.groupOp}   grade_1_classes  ${condition.grade_1_classes.op}  #{condition.grade_1_classes.data}
+            <if test="condition.gradeId!=null">
+                ${condition.groupOp}   grade_id  ${condition.grade_id.op}  #{condition.grade_id.data}
             </if>
-            <if test="condition.grade2classes!=null">
-                ${condition.groupOp}   grade_2_classes  ${condition.grade_2_classes.op}  #{condition.grade_2_classes.data}
+            <if test="condition.executiveNumber!=null">
+                ${condition.groupOp}   executive_number  ${condition.executive_number.op}  #{condition.executive_number.data}
             </if>
-            <if test="condition.grade3classes!=null">
-                ${condition.groupOp}   grade_3_classes  ${condition.grade_3_classes.op}  #{condition.grade_3_classes.data}
+            <if test="condition.dayNumber!=null">
+                ${condition.groupOp}   day_number  ${condition.day_number.op}  #{condition.day_number.data}
+            </if>
+            <if test="condition.roomOrder!=null">
+                ${condition.groupOp}   room_order  ${condition.roomOrder.op}  #{condition.roomOrder.data}
             </if>
             <if test="condition.createDate!=null">
                 ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
@@ -297,14 +321,17 @@ selectList
             <if test="tnId!=null">
                 AND tn_id like CONCAT('%', #{tnId} , '%')
             </if>
-            <if test="grade1classes!=null">
-                AND grade_1_classes like CONCAT('%', #{grade1classes} , '%')
+            <if test="gradeId!=null">
+                AND grade_id like CONCAT('%', #{gradeId} , '%')
             </if>
-            <if test="grade2classes!=null">
-                AND grade_2_classes like CONCAT('%', #{grade2classes} , '%')
+            <if test="executiveNumber!=null">
+                AND executive_number like CONCAT('%', #{executiveNumber} , '%')
             </if>
-            <if test="grade3classes!=null">
-                AND grade_3_classes like CONCAT('%', #{grade3classes} , '%')
+            <if test="dayNumber!=null">
+                AND day_number like CONCAT('%', #{dayNumber} , '%')
+            </if>
+            <if test="roomOrder!=null">
+                AND room_order like CONCAT('%', #{roomOrder} , '%')
             </if>
             <if test="createDate!=null">
                 AND create_date like CONCAT('%', #{createDate} , '%')
@@ -314,6 +341,7 @@ selectList
         ORDER BY ${orderBy} ${sortBy}
         </if>
     </select>
+
 
 
     <select id="queryList" parameterType="java.util.Map" resultType="ClassRooms">
@@ -327,15 +355,19 @@ selectList
             <if test="condition.tnId!=null">
                 AND tn_id = #{condition.tnId}
             </if>
-            <if test="condition.grade1classes!=null">
-                AND grade_1_classes = #{condition.grade1classes}
+            <if test="condition.gradeId!=null">
+                AND grade_id = #{condition.gradeId}
             </if>
-            <if test="condition.grade2classes!=null">
-                AND grade_2_classes = #{condition.grade2classes}
+            <if test="condition.executiveNumber!=null">
+                AND executive_number = #{condition.executiveNumber}
             </if>
-            <if test="condition.grade3classes!=null">
-                AND grade_3_classes = #{condition.grade3classes}
+            <if test="condition.dayNumber!=null">
+                AND day_number = #{condition.dayNumber}
             </if>
+            <if test="condition.roomOrder!=null">
+                AND room_order = #{condition.roomOrder}
+            </if>
+
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -356,14 +388,17 @@ selectList
             <if test="condition.tnId!=null">
                 AND tn_id = #{condition.tnId}
             </if>
-            <if test="condition.grade1classes!=null">
-                AND grade_1_classes = #{condition.grade1classes}
+            <if test="condition.gradeId!=null">
+                AND grade_id = #{condition.gradeId}
             </if>
-            <if test="condition.grade2classes!=null">
-                AND grade_2_classes = #{condition.grade2classes}
+            <if test="condition.executiveNumber!=null">
+                AND executive_number = #{condition.executiveNumber}
             </if>
-            <if test="condition.grade3classes!=null">
-                AND grade_3_classes = #{condition.grade3classes}
+            <if test="condition.dayNumber!=null">
+                AND day_number = #{condition.dayNumber}
+            </if>
+            <if test="condition.roomOrder!=null">
+                AND room_order = #{condition.roomOrder}
             </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
@@ -381,14 +416,17 @@ selectList
            <if test="tnId!=null">
                ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
            </if>
-           <if test="grade1classes!=null">
-               ${groupOp} grade_1_classes ${grade_1_classes.op}  #{grade_1_classes.data}
+           <if test="gradeId!=null">
+               ${groupOp} grade_id ${grade_id.op}  #{grade_id.data}
            </if>
-           <if test="grade2classes!=null">
-               ${groupOp} grade_2_classes ${grade_2_classes.op}  #{grade_2_classes.data}
+           <if test="executiveNumber!=null">
+               ${groupOp} executive_number ${executiveNumber.op}  #{executiveNumber.data}
            </if>
-           <if test="grade3classes!=null">
-               ${groupOp} grade_3_classes ${grade_3_classes.op}  #{grade_3_classes.data}
+           <if test="dayNumber!=null">
+               ${groupOp} day_number ${dayNumber.op}  #{dayNumber.data}
+           </if>
+           <if test="roomOrder!=null">
+               ${groupOp} room_order ${roomOrder.op}  #{roomOrder.data}
            </if>
            <if test="createDate!=null">
                ${groupOp} create_date ${create_date.op}  #{create_date.data}

@@ -25,13 +25,15 @@ selectList
 -->
     <sql id="Base_Column_List">
         id,
-        tn_id,
-        stu_3_numbers,
-        batch_1_enrolls,
-        batch_2_enrolls,
-        batch_3_enrolls,
-        batch_4_enrolls,
-        create_date
+        tn_id as tnId,
+        stu_3_numbers as stu3numbers,
+        batch_1_enrolls as batch1enrolls,
+        batch_2_enrolls as batch2enrolls,
+        batch_3_enrolls as batch3enrolls,
+        batch_4_enrolls as batch4enrolls,
+        year as year,
+        ratio_order as ratioOrder,
+        create_date as createDate
     </sql>
     <insert id="insert" parameterType="EnrollingRatio">
         INSERT INTO saas_enrolling_ratio (
@@ -41,6 +43,8 @@ selectList
         batch_2_enrolls,
         batch_3_enrolls,
         batch_4_enrolls,
+        year,
+        ratio_order,
         create_date
         ) VALUES (
         #{tnId},
@@ -49,6 +53,8 @@ selectList
         #{batch2enrolls},
         #{batch3enrolls},
         #{batch4enrolls},
+        #{year},
+        #{ratioOrder},
         #{createDate}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
@@ -77,6 +83,12 @@ selectList
             </if>
             <if test="batch4enrolls!=null">
                 batch_4_enrolls = #{batch4enrolls},
+            </if>
+            <if test="year!=null">
+                year=#{year},
+            </if>
+            <if test="ratioOrder!=null">
+                ratio_order=#{ratioOrder},
             </if>
             <if test="createDate!=null">
                 create_date = #{createDate},
@@ -107,6 +119,12 @@ selectList
             <if test="map.batch4enrolls!=null">
                 batch_4_enrolls = #{map.batch4enrolls},
             </if>
+            <if test="map.year!=null">
+                year=#{map.year},
+            </if>
+            <if test="map.ratioOrder!=null">
+                ratio_order=#{map.ratioOrder},
+            </if>
             <if test="map.createDate!=null">
                 create_date = #{map.createDate},
             </if>
@@ -136,6 +154,12 @@ selectList
             <if test="update.batch4enrolls!=null">
                 batch_4_enrolls = #{update.batch4enrolls},
             </if>
+            <if test="update.year">
+                year=#{update.year},
+            </if>
+            <if test="ratioOrder!=null">
+                ratio_order=#{ratioOrder},
+            </if>
             <if test="update.createDate!=null">
                 create_date = #{update.createDate},
             </if>
@@ -163,6 +187,12 @@ selectList
             <if test="condition.batch4enrolls!=null">
                 AND batch_4_enrolls = #{condition.batch4enrolls}
             </if>
+            <if test="condition.year">
+                AND year=#{condition.year}
+            </if>
+            <if test="condition.ratioOrder!=null">
+                AND ratio_order=#{condition.ratioOrder}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -177,6 +207,8 @@ selectList
                 batch_2_enrolls,
                 batch_3_enrolls,
                 batch_4_enrolls,
+                year,
+                ratio_order,
                 create_date
         ) VALUES (
                     #{map.tnId},
@@ -185,6 +217,8 @@ selectList
                     #{map.batch2enrolls},
                     #{map.batch3enrolls},
                     #{map.batch4enrolls},
+                    #{map.year},
+                    #{map.ratioOrder},
                     #{map.createDate}
         )
     </insert>
@@ -199,6 +233,8 @@ selectList
             batch_2_enrolls = #{batch2enrolls},
             batch_3_enrolls = #{batch3enrolls},
             batch_4_enrolls = #{batch4enrolls},
+            year=#{year},
+            ratio_order=#{ratioOrder},
             create_date = #{createDate},
         </trim>
         WHERE
@@ -237,6 +273,12 @@ selectList
             </if>
             <if test="batch4enrolls!=null">
                 AND batch_4_enrolls = #{batch4enrolls}
+            </if>
+            <if test="year!=null">
+                AND year=#{year}
+            </if>
+            <if test="ratioOrder!=null">
+                AND ratio_order=#{ratioOrder}
             </if>
             <if test="createDate!=null">
                 AND create_date = #{createDate}
@@ -319,6 +361,12 @@ selectList
             <if test="condition.batch4enrolls!=null">
                 ${condition.groupOp}   batch_4_enrolls  ${condition.batch_4_enrolls.op}  #{condition.batch_4_enrolls.data}
             </if>
+            <if test="condition.year!=null">
+                ${condition.groupOp}   year  ${condition.year.op}  #{condition.year.data}
+            </if>
+            <if test="condition.ratioOrder!=null">
+                ${condition.groupOp}   ratio_order  ${condition.ratioOrder.op}  #{condition.ratioOrder.data}
+            </if>
             <if test="condition.createDate!=null">
                 ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
             </if>
@@ -360,6 +408,12 @@ selectList
             <if test="batch4enrolls!=null">
                 AND batch_4_enrolls like CONCAT('%', #{batch4enrolls} , '%')
             </if>
+            <if test="year!=null">
+                AND year like CONCAT('%', #{year} , '%')
+            </if>
+            <if test="ratioOrder!=null">
+                AND ratio_order like CONCAT('%', #{ratioOrder} , '%')
+            </if>
             <if test="createDate!=null">
                 AND create_date like CONCAT('%', #{createDate} , '%')
             </if>
@@ -396,6 +450,12 @@ selectList
             <if test="condition.batch4enrolls!=null">
                 AND batch_4_enrolls = #{condition.batch4enrolls}
             </if>
+            <if test="condition.year!=null">
+                AND year = #{condition.year}
+            </if>
+            <if test="condition.ratioOrder!=null">
+                AND ratio_order=#{condition.ratioOrder}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -431,6 +491,12 @@ selectList
             <if test="condition.batch4enrolls!=null">
                 AND batch_4_enrolls = #{condition.batch4enrolls}
             </if>
+            <if test="condition.year!=null">
+                AND year = #{condition.year}
+            </if>
+            <if test="condition.ratioOrder!=null">
+                AND ratio_order=#{condition.ratioOrder}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
@@ -461,6 +527,12 @@ selectList
            </if>
            <if test="batch4enrolls!=null">
                ${groupOp} batch_4_enrolls ${batch_4_enrolls.op}  #{batch_4_enrolls.data}
+           </if>
+           <if test="year!=null">
+               ${groupOp} year ${year.op}  #{year.data}
+           </if>
+           <if test="ratioOrder!=null">
+               ${groupOp} ratio_order ${ratio_order.op}  #{ratio_order.data}
            </if>
            <if test="createDate!=null">
                ${groupOp} create_date ${create_date.op}  #{create_date.data}

@@ -1,0 +1,333 @@
+@import "../common/common";
+@import "data-query-common";
+.common-select {
+  margin-bottom: 0 !important;
+  border-bottom: none !important;
+  .tab-li {
+    border-left: 1px solid $border;
+    overflow: hidden;
+    li {
+      float: left;
+      display: block;
+      height: 30px;
+      line-height: 30px;
+      padding: 0 20px;
+      border: 1px solid $border;
+      border-left: none;
+      color: $border;
+      cursor: pointer;
+    }
+    .active {
+      background: $mainColor;
+      color: #fff;
+      border-color: $mainColor;
+    }
+  }
+  .select {
+    padding-bottom: 20px;
+    padding-top: 10px;
+    border-bottom: 1px dashed $border;
+    overflow: hidden;
+  }
+}
+
+.professional-detail {
+  .title {
+    font-size: 14px;
+  }
+  .tab-detail-li {
+    overflow: hidden;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 15px;
+    dd {
+      span {
+        display: block;
+        float: left;
+        margin: 10px 25px 0 0;
+        cursor: pointer;
+      }
+    }
+  }
+  dl {
+    margin-bottom: 0 !important;
+  }
+}
+
+/*
+==================================================
+专业详情
+==================================================
+*/
+#detail-content {
+  overflow-y: scroll;
+  padding: 20px 60px 20px 20px;
+  .top-info {
+    font-size: 14px;
+    margin-bottom: 10px;
+    .title {
+      font-size: 18px;
+      margin-right: 20px;
+    }
+    .red-dashed {
+      display: inline-block;
+      min-width: 25px;
+      min-height: 19px;
+      border-radius: 50%;
+      background-color: $mainColor;
+      color: #fff;
+      text-align: center;
+      line-height: 24px;
+      font-size: 12px;
+      padding-top: 1px;
+      margin: 0 10px;
+    }
+  }
+  .middle-info {
+    overflow: hidden;
+    li {
+      float: left;
+      min-width: 200px;
+    }
+  }
+  //图表比例
+  .bottom-info {
+    height: 100px;
+    margin-top: 10px;
+    border-bottom: 1px solid $border;
+    .sex-proportion {
+      float: left;
+      width: 440px;
+      margin-top: 10px;
+      position: relative;
+      img {
+        float: left;
+      }
+      .male-txt {
+        position: absolute;
+        left: 7px;
+        top: 50px;
+        font-size: 14px;
+        color: #000000;
+        letter-spacing: -0.49px;
+      }
+      .female-txt {
+        position: absolute;
+        right: 7px;
+        top: 50px;
+        font-size: 14px;
+        color: #000000;
+        letter-spacing: -0.49px;
+      }
+      .sex-bar {
+        width: -webkit-calc(100% - 47px - 47px - 15px * 2);
+        width: -moz-calc(100% - 47px - 47px - 15px * 2);
+        width: calc(100% - 47px - 47px - 15px * 2);
+        height: 36px;
+        float: left;
+        margin: 6px 15px 0;
+        position: relative;
+        span {
+          display: inline-block;
+          text-align: center;
+          color: #fff;
+        }
+        .male-bar {
+          float: left;
+          width: -webkit-calc(100% - 21.6%- 2px);
+          width: -moz-calc(100% - 21.6% - 2px);
+          width: calc(100% - 21.6% - 2px);
+          height: 29px;
+          line-height: 29px;
+          background: #4A90E2;
+          border-top-left-radius: 24px;
+          -webkit-border-top-left-radius: 24px;
+          border-bottom-left-radius: 24px;
+          -webkit-border-bottom-left-radius: 24px;
+        }
+        .center-bar {
+          float: left;
+          width: 2px;
+          height: 36px;
+          position: relative;
+          top: -3.5px;
+          background: #4A90E2;
+        }
+        .female-bar {
+          float: left;
+          width: -webkit-calc(100% - 78.4%- 2px);
+          width: -moz-calc(100% - 78.4% - 2px);
+          width: calc(100% - 78.4% - 2px);
+          height: 29px;
+          line-height: 29px;
+          background: #EA6264;
+          border-top-right-radius: 24px;
+          -webkit-border-top-right-radius: 24px;
+          border-bottom-right-radius: 24px;
+          -webkit-border-bottom-right-radius: 24px;
+        }
+      }
+    }
+    .monthly-salary {
+      float: right;
+      width: 137px;
+      height: 76px;
+      margin-top: 10px;
+      border: 1px solid #D70C18;
+      border-radius: 4px;
+      text-align: center;
+      overflow: hidden;
+      .price {
+        color: #D70C18;
+        font-size: 24px;
+        display: block;
+        margin-top: 10px;
+      }
+      .txt {
+        color: #9B9B9B;
+        font-size: 16px;
+      }
+    }
+  }
+  .specialty-about {
+    p {
+      font-size: 16px;
+      margin: 20px 0 5px 0;
+    }
+    .common-intro {
+      font-size: 13px;
+      color: #4a4a4a;
+    }
+  }
+  //tab切换
+  .tab-detail-title {
+    overflow: hidden;
+    margin-top: 20px;
+    border-left: 1px solid $border;
+    border-bottom: 1px solid $border;
+    box-sizing: border-box;
+    li {
+      float: left;
+      display: block;
+      height: 30px;
+      line-height: 30px;
+      padding: 0 10px;
+      background: #fff;
+      color: #b5b5b5;
+      border: 1px solid $border;
+      cursor: pointer;
+      border-left: none;
+      border-bottom: none;
+      box-sizing: border-box;
+    }
+    .active {
+      box-sizing: border-box;
+      background: $mainColor;
+      color: #fff;
+      border: 1px solid $mainColor;
+    }
+  }
+  .content {
+    .sub-content {
+      padding-top: 15px;
+      line-height: 24px;
+    }
+    //开设院校
+    #open-school {
+      .school-list {
+        border-bottom: 1px solid $border;
+        position: relative;
+        height: 140px;
+        font-size: 14px;
+        color: #666666;
+        min-width: 750px;
+        .school-logo {
+          position: absolute;
+          cursor: pointer;
+          top: 20px;
+          left: 0;
+          width: 105px;
+          height: 105px;
+          border-radius: 50%;
+        }
+        .comm-position {
+          position: absolute;
+          top: 20px;
+        }
+        .top {
+          @extend .comm-position;
+          left: 125px;
+          font-weight: 700;
+          .school-name {
+            cursor: pointer;
+            font-size: 20px;
+            color: #333;
+            margin-right: 120px;
+            margin-left: 0;
+          }
+          .icon-flags{
+            width: 17px!important;
+            margin-right: 6px;
+            position: relative;
+            top: 3px;
+          }
+          .national-rank{
+            margin-right: 40px;
+          }
+        }
+        .middle {
+          @extend .comm-position;
+          top: 57px;
+          left: 125px;
+          width: 570px;
+          span {
+            padding: 1px 3px;
+            border-radius: 1px;
+            margin-right: 2px;
+          }
+          .type-985 {
+            color: $listColor1;
+            border: 1px solid $listColor1;
+          }
+          .type-211 {
+            color: $listColor2;
+            border: 1px solid $listColor2;
+          }
+          .type-yan {
+            color: $listColor3;
+            border: 1px solid $listColor3;
+          }
+          .type-zi {
+            color: $listColor4;
+            border: 1px solid $listColor4;
+          }
+          .type-guo {
+            color: $listColor5;
+            border: 1px solid $listColor5;
+          }
+          .type-zhuo {
+            color: $listColor6;
+            border: 1px solid $listColor6;
+          }
+        }
+      }
+      .bottom {
+        position: absolute;
+        top: 100px;
+        left: 125px;
+        .province, .belong, .school-type {
+          margin-right: 45px;
+        }
+        .enter-site {
+          color: #666;
+          font-size: 14px;
+          text-decoration: none;
+        }
+        b {
+          font-weight: normal;
+        }
+      }
+    }
+  }
+
+}
+

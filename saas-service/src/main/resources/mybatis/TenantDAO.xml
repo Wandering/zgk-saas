@@ -25,28 +25,31 @@ selectList
 -->
     <sql id="Base_Column_List">
         id,
-        login_code,
-        login_pass,
-        tn_name,
-        tn_addr,
-        tn_extro_info,
-        create_date
+        tn_name as tnName,
+        tn_addr as tnAddr,
+        tn_extro_info as tnExtroInfo,
+        is_init as isInit,
+        create_date as createDate,
+        tn_logo as tnLogo,
+        county_id as countyId
     </sql>
     <insert id="insert" parameterType="Tenant">
         INSERT INTO saas_tenant (
-        login_code,
-        login_pass,
         tn_name,
         tn_addr,
         tn_extro_info,
-        create_date
+        is_init,
+        create_date,
+        tn_logo,
+        county_id
         ) VALUES (
-        #{loginCode},
-        #{loginPass},
         #{tnName},
         #{tnAddr},
         #{tnExtroInfo},
-        #{createDate}
+        #{isInit},
+        #{createDate},
+        #{tnLogo},
+        #{countyId}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
         SELECT LAST_INSERT_ID() AS ID
@@ -57,12 +60,6 @@ selectList
     <update id="update" parameterType="Tenant">
         UPDATE saas_tenant
         <trim prefix="SET" suffixOverrides=",">
-            <if test="loginCode!=null">
-                login_code = #{loginCode},
-            </if>
-            <if test="loginPass!=null">
-                login_pass = #{loginPass},
-            </if>
             <if test="tnName!=null">
                 tn_name = #{tnName},
             </if>
@@ -72,8 +69,17 @@ selectList
             <if test="tnExtroInfo!=null">
                 tn_extro_info = #{tnExtroInfo},
             </if>
+            <if test="isInit!=null">
+                is_init = #{isInit},
+            </if>
             <if test="createDate!=null">
                 create_date = #{createDate},
+            </if>
+            <if test="tnLogo!=null">
+                tn_logo = #{tnLogo},
+            </if>
+            <if test="countyId!=null">
+                county_id = #{countyId},
             </if>
         </trim>
         WHERE
@@ -83,12 +89,6 @@ selectList
     <update id="updateMap">
         UPDATE saas_tenant
         <trim prefix="SET" suffixOverrides=",">
-            <if test="map.loginCode!=null">
-                login_code = #{map.loginCode},
-            </if>
-            <if test="map.loginPass!=null">
-                login_pass = #{map.loginPass},
-            </if>
             <if test="map.tnName!=null">
                 tn_name = #{map.tnName},
             </if>
@@ -98,8 +98,17 @@ selectList
             <if test="map.tnExtroInfo!=null">
                 tn_extro_info = #{map.tnExtroInfo},
             </if>
+            <if test="map.isInit!=null">
+                is_init = #{map.isInit},
+            </if>
             <if test="map.createDate!=null">
                 create_date = #{map.createDate},
+            </if>
+            <if test="map.tnLogo!=null">
+                tn_logo = #{map.tnLogo},
+            </if>
+            <if test="map.countyId!=null">
+                county_id = #{map.countyId},
             </if>
         </trim>
         WHERE
@@ -109,12 +118,6 @@ selectList
     <update id="updateByCondition">
         UPDATE saas_tenant
         <trim prefix="SET" suffixOverrides=",">
-            <if test="update.loginCode!=null">
-                login_code = #{update.loginCode},
-            </if>
-            <if test="update.loginPass!=null">
-                login_pass = #{update.loginPass},
-            </if>
             <if test="update.tnName!=null">
                 tn_name = #{update.tnName},
             </if>
@@ -124,20 +127,23 @@ selectList
             <if test="update.tnExtroInfo!=null">
                 tn_extro_info = #{update.tnExtroInfo},
             </if>
+            <if test="update.isInit!=null">
+                is_init = #{update.isInit},
+            </if>
             <if test="update.createDate!=null">
                 create_date = #{update.createDate},
+            </if>
+            <if test="update.tnLogo!=null">
+                tn_logo = #{update.tnLogo},
+            </if>
+            <if test="update.countyId!=null">
+                county_id = #{update.countyId},
             </if>
         </trim>
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
                 AND id = #{condition.id}
-            </if>
-            <if test="condition.loginCode!=null">
-                AND login_code = #{condition.loginCode}
-            </if>
-            <if test="condition.loginPass!=null">
-                AND login_pass = #{condition.loginPass}
             </if>
             <if test="condition.tnName!=null">
                 AND tn_name = #{condition.tnName}
@@ -148,27 +154,38 @@ selectList
             <if test="condition.tnExtroInfo!=null">
                 AND tn_extro_info = #{condition.tnExtroInfo}
             </if>
+            <if test="condition.isInit!=null">
+                AND is_init = #{condition.isInit}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
+            </if>
+            <if test="condition.tnLogo!=null">
+                AND tn_logo = #{condition.tnLogo}
+            </if>
+            <if test="condition.countyId!=null">
+                AND county_id = #{condition.countyId}
             </if>
         </trim>
     </update>
 
     <insert id="insertMap" >
         INSERT INTO saas_tenant (
-                login_code,
-                login_pass,
                 tn_name,
                 tn_addr,
                 tn_extro_info,
-                create_date
+                is_init,
+                create_date,
+                tn_logo,
+                county_id
         ) VALUES (
-                    #{map.loginCode},
-                    #{map.loginPass},
                     #{map.tnName},
                     #{map.tnAddr},
                     #{map.tnExtroInfo},
-                    #{map.createDate}
+                    #{map.isInit},
+                    #{map.createDate},
+                    #{map.tnLogo},
+                    #{map.countyId}
         )
     </insert>
 
@@ -176,12 +193,13 @@ selectList
     <update id="updateNull" parameterType="Tenant">
         UPDATE saas_tenant
         <trim prefix="SET" suffixOverrides=",">
-            login_code = #{loginCode},
-            login_pass = #{loginPass},
             tn_name = #{tnName},
             tn_addr = #{tnAddr},
             tn_extro_info = #{tnExtroInfo},
+            is_init = #{isInit},
             create_date = #{createDate},
+            tn_logo = #{tnLogo},
+            county_id = #{countyId},
         </trim>
         WHERE
         id = #{id} 
@@ -202,12 +220,6 @@ selectList
             <if test="id!=null">
                 AND id = #{id}
             </if>
-            <if test="loginCode!=null">
-                AND login_code = #{loginCode}
-            </if>
-            <if test="loginPass!=null">
-                AND login_pass = #{loginPass}
-            </if>
             <if test="tnName!=null">
                 AND tn_name = #{tnName}
             </if>
@@ -217,8 +229,17 @@ selectList
             <if test="tnExtroInfo!=null">
                 AND tn_extro_info = #{tnExtroInfo}
             </if>
+            <if test="isInit!=null">
+                AND is_init = #{isInit}
+            </if>
             <if test="createDate!=null">
                 AND create_date = #{createDate}
+            </if>
+            <if test="tnLogo!=null">
+                AND tn_logo = #{tnLogo}
+            </if>
+            <if test="countyId!=null">
+                AND county_id = #{countyId}
             </if>
         </trim>
     </delete>
@@ -280,12 +301,6 @@ selectList
             <if test="condition.id!=null">
                 ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
             </if>
-            <if test="condition.loginCode!=null">
-                ${condition.groupOp}   login_code  ${condition.login_code.op}  #{condition.login_code.data}
-            </if>
-            <if test="condition.loginPass!=null">
-                ${condition.groupOp}   login_pass  ${condition.login_pass.op}  #{condition.login_pass.data}
-            </if>
             <if test="condition.tnName!=null">
                 ${condition.groupOp}   tn_name  ${condition.tn_name.op}  #{condition.tn_name.data}
             </if>
@@ -295,8 +310,17 @@ selectList
             <if test="condition.tnExtroInfo!=null">
                 ${condition.groupOp}   tn_extro_info  ${condition.tn_extro_info.op}  #{condition.tn_extro_info.data}
             </if>
+            <if test="condition.isInit!=null">
+                ${condition.groupOp}   is_init  ${condition.is_init.op}  #{condition.is_init.data}
+            </if>
             <if test="condition.createDate!=null">
                 ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
+            </if>
+            <if test="condition.tnLogo!=null">
+                ${condition.groupOp}   tn_logo  ${condition.tn_logo.op}  #{condition.tn_logo.data}
+            </if>
+            <if test="condition.countyId!=null">
+                ${condition.groupOp}   county_id  ${condition.county_id.op}  #{condition.county_id.data}
             </if>
 
 
@@ -318,12 +342,6 @@ selectList
             <if test="id!=null">
                 AND id like CONCAT('%', #{id} , '%')
             </if>
-            <if test="loginCode!=null">
-                AND login_code like CONCAT('%', #{loginCode} , '%')
-            </if>
-            <if test="loginPass!=null">
-                AND login_pass like CONCAT('%', #{loginPass} , '%')
-            </if>
             <if test="tnName!=null">
                 AND tn_name like CONCAT('%', #{tnName} , '%')
             </if>
@@ -333,8 +351,17 @@ selectList
             <if test="tnExtroInfo!=null">
                 AND tn_extro_info like CONCAT('%', #{tnExtroInfo} , '%')
             </if>
+            <if test="isInit!=null">
+                AND is_init like CONCAT('%', #{isInit} , '%')
+            </if>
             <if test="createDate!=null">
                 AND create_date like CONCAT('%', #{createDate} , '%')
+            </if>
+            <if test="tnLogo!=null">
+                AND tn_logo like CONCAT('%', #{tnLogo} , '%')
+            </if>
+            <if test="countyId!=null">
+                AND county_id like CONCAT('%', #{countyId} , '%')
             </if>
         </trim>
         <if test="orderBy!=null">
@@ -351,12 +378,6 @@ selectList
             <if test="condition.id!=null">
                 AND id = #{condition.id}
             </if>
-            <if test="condition.loginCode!=null">
-                AND login_code = #{condition.loginCode}
-            </if>
-            <if test="condition.loginPass!=null">
-                AND login_pass = #{condition.loginPass}
-            </if>
             <if test="condition.tnName!=null">
                 AND tn_name = #{condition.tnName}
             </if>
@@ -366,8 +387,17 @@ selectList
             <if test="condition.tnExtroInfo!=null">
                 AND tn_extro_info = #{condition.tnExtroInfo}
             </if>
+            <if test="condition.isInit!=null">
+                AND is_init = #{condition.isInit}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
+            </if>
+            <if test="condition.tnLogo!=null">
+                AND tn_logo = #{condition.tnLogo}
+            </if>
+            <if test="condition.countyId!=null">
+                AND county_id = #{condition.countyId}
             </if>
         </trim>
         <if test="orderBy!=null">
@@ -383,12 +413,6 @@ selectList
             <if test="condition.id!=null">
                 AND id = #{condition.id}
             </if>
-            <if test="condition.loginCode!=null">
-                AND login_code = #{condition.loginCode}
-            </if>
-            <if test="condition.loginPass!=null">
-                AND login_pass = #{condition.loginPass}
-            </if>
             <if test="condition.tnName!=null">
                 AND tn_name = #{condition.tnName}
             </if>
@@ -398,8 +422,17 @@ selectList
             <if test="condition.tnExtroInfo!=null">
                 AND tn_extro_info = #{condition.tnExtroInfo}
             </if>
+            <if test="condition.isInit!=null">
+                AND is_init = #{condition.isInit}
+            </if>
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
+            </if>
+            <if test="condition.tnLogo!=null">
+                AND tn_logo = #{condition.tnLogo}
+            </if>
+            <if test="condition.countyId!=null">
+                AND county_id = #{condition.countyId}
             </if>
         </trim>
         limit 0,1
@@ -411,12 +444,6 @@ selectList
            <if test="id!=null">
                ${groupOp} id ${id.op}  #{id.data}
            </if>
-           <if test="loginCode!=null">
-               ${groupOp} login_code ${login_code.op}  #{login_code.data}
-           </if>
-           <if test="loginPass!=null">
-               ${groupOp} login_pass ${login_pass.op}  #{login_pass.data}
-           </if>
            <if test="tnName!=null">
                ${groupOp} tn_name ${tn_name.op}  #{tn_name.data}
            </if>
@@ -426,8 +453,17 @@ selectList
            <if test="tnExtroInfo!=null">
                ${groupOp} tn_extro_info ${tn_extro_info.op}  #{tn_extro_info.data}
            </if>
+           <if test="isInit!=null">
+               ${groupOp} is_init ${is_init.op}  #{is_init.data}
+           </if>
            <if test="createDate!=null">
                ${groupOp} create_date ${create_date.op}  #{create_date.data}
+           </if>
+           <if test="tnLogo!=null">
+               ${groupOp} tn_logo ${tn_logo.op}  #{tn_logo.data}
+           </if>
+           <if test="countyId!=null">
+               ${groupOp} county_id ${county_id.op}  #{county_id.data}
            </if>
 
        </where>

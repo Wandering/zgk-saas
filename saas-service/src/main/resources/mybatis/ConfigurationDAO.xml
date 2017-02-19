@@ -25,12 +25,16 @@ selectList
 -->
     <sql id="Base_Column_List">
         id,
-        en_name,
-        ch_name,
-        meta_type,
-        check_rule,
+        en_name as enName,
+        ch_name as chName,
+        meta_type as metaType,
+        check_rule as checkRule,
         domain,
-        order
+        config_order as   configOrder,
+        data_type as dataType,
+        data_url as dataUrl,
+        data_value as dataValue,
+        is_retain as isRetain
     </sql>
     <insert id="insert" parameterType="Configuration">
         INSERT INTO saas_configuration (
@@ -39,14 +43,22 @@ selectList
         meta_type,
         check_rule,
         domain,
-        order
+        config_order,
+        data_type,
+        data_url,
+        data_value,
+        is_retain
         ) VALUES (
         #{enName},
         #{chName},
         #{metaType},
         #{checkRule},
         #{domain},
-        #{order}
+        #{configOrder},
+        #{dataType},
+        #{dataUrl},
+        #{dataValue},
+        #{isRetain}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
         SELECT LAST_INSERT_ID() AS ID
@@ -72,8 +84,20 @@ selectList
             <if test="domain!=null">
                 domain = #{domain},
             </if>
-            <if test="order!=null">
-                order = #{order},
+            <if test="configOrder!=null">
+                config_order = #{configOrder},
+            </if>
+            <if test="dataType!=null">
+                data_type=#{dataType},
+            </if>
+            <if test="dataUrl!=null">
+                data_url=#{dataUrl},
+            </if>
+            <if test="dataValue!=null">
+                data_value=#{dataValue},
+            </if>
+            <if test="isRetain!=null">
+                is_retain=#{isRetain}
             </if>
         </trim>
         WHERE
@@ -98,8 +122,20 @@ selectList
             <if test="map.domain!=null">
                 domain = #{map.domain},
             </if>
-            <if test="map.order!=null">
-                order = #{map.order},
+            <if test="map.configOrder!=null">
+                config_order = #{map.configOrder},
+            </if>
+            <if test="map.dataType!=null">
+                data_type=#{map.dataType},
+            </if>
+            <if test="map.dataUrl!=null">
+                data_url=#{map.dataUrl},
+            </if>
+            <if test="map.dataValue!=null">
+                data_value=#{map.dataValue},
+            </if>
+            <if test="map.isRetain!=null">
+                is_retain=#{map.isRetain},
             </if>
         </trim>
         WHERE
@@ -124,8 +160,20 @@ selectList
             <if test="update.domain!=null">
                 domain = #{update.domain},
             </if>
-            <if test="update.order!=null">
-                order = #{update.order},
+            <if test="update.configOrder!=null">
+                config_order = #{update.configOrder},
+            </if>
+            <if test="update.dataType!=null">
+                data_type=#{update.dataType},
+            </if>
+            <if test="update.dataUrl!=null">
+                data_url=#{update.dataUrl},
+            </if>
+            <if test="update.dataValue!=null">
+                data_value=#{update.dataValue},
+            </if>
+            <if test="update.isRetain!=null">
+                is_retain=#{update.isRetain},
             </if>
         </trim>
 
@@ -148,8 +196,20 @@ selectList
             <if test="condition.domain!=null">
                 AND domain = #{condition.domain}
             </if>
-            <if test="condition.order!=null">
-                AND order = #{condition.order}
+            <if test="condition.configOrder!=null">
+                AND config_order = #{condition.configOrder}
+            </if>
+            <if test="condition.dataType!=null">
+                AND data_type = #{condition.dataType}
+            </if>
+            <if test="condition.dataUrl!=null">
+                AND data_url = #{condition.dataUrl}
+            </if>
+            <if test="condition.dataValue!=null">
+                AND data_value = #{condition.dataValue}
+            </if>
+            <if test="condition.isRetain!=null">
+                AND is_retain=#{condition.isRetain}
             </if>
         </trim>
     </update>
@@ -161,14 +221,22 @@ selectList
                 meta_type,
                 check_rule,
                 domain,
-                order
+                config_order,
+                data_type,
+                data_url,
+                data_value,
+                is_retain
         ) VALUES (
                     #{map.enName},
                     #{map.chName},
                     #{map.metaType},
                     #{map.checkRule},
                     #{map.domain},
-                    #{map.order}
+                    #{map.configOrder},
+                    #{map.dataType},
+                    #{map.dataUrl},
+                    #{map.dataValue},
+                    #{map.isRetain}
         )
     </insert>
 
@@ -181,7 +249,11 @@ selectList
             meta_type = #{metaType},
             check_rule = #{checkRule},
             domain = #{domain},
-            order = #{order},
+            config_order = #{configOrder},
+            data_type=#{dataType},
+            data_url=#{dataUrl},
+            data_value=#{dataValue},
+            is_retain=#{isRetain},
         </trim>
         WHERE
         id = #{id} 
@@ -217,8 +289,20 @@ selectList
             <if test="domain!=null">
                 AND domain = #{domain}
             </if>
-            <if test="order!=null">
-                AND order = #{order}
+            <if test="configOrder!=null">
+                AND config_order = #{configOrder}
+            </if>
+            <if test="dataType!=null">
+                AND data_type = #{dataType}
+            </if>
+            <if test="dataUrl!=null">
+                AND data_url = #{dataUrl}
+            </if>
+            <if test="dataValue!=null">
+                AND data_value = #{dataValue}
+            </if>
+            <if test="isRetain!=null">
+                AND is_retain=#{isRetain}
             </if>
         </trim>
     </delete>
@@ -295,10 +379,21 @@ selectList
             <if test="condition.domain!=null">
                 ${condition.groupOp}   domain  ${condition.domain.op}  #{condition.domain.data}
             </if>
-            <if test="condition.order!=null">
-                ${condition.groupOp}   order  ${condition.order.op}  #{condition.order.data}
+            <if test="condition.configOrder!=null">
+                ${condition.groupOp}   config_order  ${condition.configOrder.op}  #{condition.configOrder.data}
             </if>
-
+            <if test="condition.dataType!=null">
+                ${condition.groupOp}   data_type  ${condition.dataType.op}  #{condition.dataType.data}
+            </if>
+            <if test="condition.dataUrl!=null">
+                ${condition.groupOp}   data_url  ${condition.dataUrl.op}  #{condition.dataUrl.data}
+            </if>
+            <if test="condition.dataValue!=null">
+                ${condition.groupOp}   data_value  ${condition.dataValue.op}  #{condition.dataValue.data}
+            </if>
+            <if test="condition.isRetain!=null">
+                ${condition.groupOp}   is_retain  ${condition.isRetain.op}  #{condition.isRetain.data}
+            </if>
 
     </where>
 
@@ -333,8 +428,20 @@ selectList
             <if test="domain!=null">
                 AND domain like CONCAT('%', #{domain} , '%')
             </if>
-            <if test="order!=null">
-                AND order like CONCAT('%', #{order} , '%')
+            <if test="configOrder!=null">
+                AND config_order like CONCAT('%', #{configOrder} , '%')
+            </if>
+            <if test="dataType!=null">
+                AND data_type like CONCAT('%', #{dataType} , '%')
+            </if>
+            <if test="dataUrl!=null">
+                AND data_url like CONCAT('%', #{dataUrl} , '%')
+            </if>
+            <if test="dataValue!=null">
+                AND data_value like CONCAT('%', #{dataValue} , '%')
+            </if>
+            <if test="isRetain!=null">
+                AND is_retain like CONCAT('%', #{isRetain} , '%')
             </if>
         </trim>
         <if test="orderBy!=null">
@@ -366,8 +473,20 @@ selectList
             <if test="condition.domain!=null">
                 AND domain = #{condition.domain}
             </if>
-            <if test="condition.order!=null">
-                AND order = #{condition.order}
+            <if test="condition.configOrder!=null">
+                AND config_order = #{condition.configOrder}
+            </if>
+            <if test="condition.dataType!=null">
+                AND data_type = #{condition.dataType}
+            </if>
+            <if test="condition.dataUrl!=null">
+                AND data_url = #{condition.dataUrl}
+            </if>
+            <if test="condition.dataValue!=null">
+                AND data_value = #{condition.dataValue}
+            </if>
+            <if test="condition.isRetain!=null">
+                AND is_retain=#{condition.isRetain}
             </if>
         </trim>
         <if test="orderBy!=null">
@@ -398,8 +517,20 @@ selectList
             <if test="condition.domain!=null">
                 AND domain = #{condition.domain}
             </if>
-            <if test="condition.order!=null">
-                AND order = #{condition.order}
+            <if test="condition.configOrder!=null">
+                AND config_order = #{condition.configOrder}
+            </if>
+            <if test="condition.dataType!=null">
+                AND data_type = #{condition.dataType}
+            </if>
+            <if test="condition.dataUrl!=null">
+                AND data_url = #{condition.dataUrl}
+            </if>
+            <if test="condition.dataValue!=null">
+                AND data_value = #{condition.dataValue}
+            </if>
+            <if test="condition.isRetain!=null">
+                AND is_retain=#{condition.isRetain}
             </if>
         </trim>
         limit 0,1
@@ -426,10 +557,21 @@ selectList
            <if test="domain!=null">
                ${groupOp} domain ${domain.op}  #{domain.data}
            </if>
-           <if test="order!=null">
-               ${groupOp} order ${order.op}  #{order.data}
+           <if test="configOrder!=null">
+               ${groupOp} config_order ${configOrder.op}  #{configOrder.data}
            </if>
-
+           <if test="dataType!=null">
+               ${groupOp} data_type ${dataType.op}  #{dataType.data}
+           </if>
+           <if test="dataUrl!=null">
+               ${groupOp} data_url ${dataUrl.op}  #{dataUrl.data}
+           </if>
+           <if test="dataValue!=null">
+               ${groupOp} data_value ${dataValue.op}  #{dataValue.data}
+           </if>
+           <if test="isRetain!=null">
+               ${groupOp} is_retain ${isRetain.op}  #{isRetain.data}
+           </if>
        </where>
     <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}

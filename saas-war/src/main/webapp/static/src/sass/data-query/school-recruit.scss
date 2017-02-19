@@ -1,0 +1,106 @@
+@charset "utf-8";
+@import "../common/common";
+@import "data-query-common";
+
+#province-list {
+  min-height: 84px;
+}
+
+.common-select {
+  display: none;
+}
+
+.admission-detail {
+  margin-top: 40px;
+  .tab-detail-title {
+    margin-bottom: 20px;
+    overflow: hidden;
+    border-left: 1px solid $border;
+    border-bottom: 1px solid $border;
+    box-sizing: border-box;
+    li {
+      float: left;
+      display: block;
+      height: 30px;
+      line-height: 30px;
+      padding: 0 10px;
+      background: #fff;
+      color: #b5b5b5;
+      border: 1px solid $border;
+      cursor: pointer;
+      border-left: none;
+      border-bottom: none;
+      box-sizing: border-box;
+    }
+    .active {
+      box-sizing: border-box;
+      background: $mainColor;
+      color: #fff;
+      border: 1px solid $mainColor;
+    }
+  }
+  td {
+    .active {
+      color: $mainColor !important;
+    }
+  }
+}
+
+/*
+==================================
+院校招生计划详情
+==================================
+*/
+.layui-layer-content{
+  padding: 20px 60px 0 20px;
+}
+.school-base-info {
+  margin-top: 24px;
+  .top {
+    .icon-flags {
+      position: relative;
+      top: 4px;
+      margin: 0 5px 0 20px;
+    }
+    .collect {
+      margin-left: 20px;
+    }
+  }
+  .school {
+    font-size: 20px;
+  }
+  #property {
+    margin: 10px 0;
+  }
+  .bottom {
+    overflow: hidden;
+    .bottom-common-li {
+      float: left;
+      min-width: 250px;
+      margin-bottom: 6px;
+    }
+  }
+}
+
+.student-enroll-table {
+  .title {
+    font-size: 16px;
+    float: left;
+    height: 40px;
+    line-height: 40px;
+  }
+  .sub-title {
+    margin-top: 23px;
+  }
+  .select-condition {
+    float: right;
+  }
+  .load-more {
+    text-align: center;
+    color: $mainColor;
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+}

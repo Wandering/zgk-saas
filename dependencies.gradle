@@ -11,4 +11,13 @@ allprojects {
 
     freemarkerVersion = "2.3.20"
     ucmVersion = "0.0.27-SNAPSHOT"
+
+    poiVersion="3.9"
+
+    servletVersion="4.0.0-b01"
+    zgkSmsVersion = "0.0.3-SNAPSHOT"
+
+    gkVersion = "0.0.47-SNAPSHOT"
+    gk360Version = "0.0.40-SNAPSHOT"
 }
+

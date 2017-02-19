@@ -9,13 +9,11 @@
 
 package cn.thinkjoy.saas.domain;
 
+import cn.thinkjoy.common.domain.BaseDomain;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import cn.thinkjoy.common.domain.BaseDomain;
-
-import java.util.*;
 
 public class Configuration extends BaseDomain{
     private String enName;
@@ -23,7 +21,11 @@ public class Configuration extends BaseDomain{
     private String metaType;
     private String checkRule;
     private String domain;
-    private Integer order;
+    private Integer configOrder;
+    private String dataType;
+    private String dataUrl;
+    private String dataValue;
+    private byte isRetain;
 
 	public Configuration(){
 	}
@@ -62,24 +64,60 @@ public class Configuration extends BaseDomain{
     public String getDomain() {
         return this.domain;
     }
-    public void setOrder(Integer value) {
-        this.order = value;
+    public void setConfigOrder(Integer value) {
+        this.configOrder = value;
     }
 
-    public Integer getOrder() {
-        return this.order;
+    public Integer getConfigOrder() {
+        return this.configOrder;
     }
 
-	public String toString() {
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getDataUrl() {
+        return dataUrl;
+    }
+
+    public void setDataUrl(String dataUrl) {
+        this.dataUrl = dataUrl;
+    }
+
+    public String getDataValue() {
+        return dataValue;
+    }
+
+    public void setDataValue(String dataValue) {
+        this.dataValue = dataValue;
+    }
+
+    public byte getIsRetain() {
+        return isRetain;
+    }
+
+    public void setIsRetain(byte isRetain) {
+        this.isRetain = isRetain;
+    }
+
+    public String toString() {
 		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
 			.append("Id",getId())
-			.append("EnName",getEnName())
+			.append("EnName", getEnName())
 			.append("ChName",getChName())
 			.append("MetaType",getMetaType())
 			.append("CheckRule",getCheckRule())
 			.append("Domain",getDomain())
-			.append("Order",getOrder())
-			.toString();
+			.append("ConfigOrder",getConfigOrder())
+            .append("DataType", getDataType())
+            .append("DataUrl",getDataUrl())
+            .append("DataValue",getDataValue())
+            .append("IsRetain", getIsRetain())
+                .toString();
 	}
 	
 	public int hashCode() {
