@@ -9,6 +9,7 @@ import cn.thinkjoy.saas.domain.TenantConfigInstance;
 import cn.thinkjoy.saas.domain.bussiness.ClassView;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -191,5 +192,9 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
     int countBySubjectAndGrade(int tnId, String grade, String subject, String classEdu);
 
 
-    List getBySubjectAndGrade(int tnId, String grade, String subject, String classEdu);
+    List<LinkedHashMap<String,Object>> getBySubjectAndGrade(int tnId, String grade, String subject, String classEdu);
+
+    List<LinkedHashMap<String,Object>> getClassByTnIdAndGrade(int tnId, String grade, String classEdu);
+
+    List<LinkedHashMap<String,Object>> likeTeacherByParams(List<Map<String,Object>> list);
 }

@@ -1140,4 +1140,49 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         }
         return list;
     }
+
+    @Override
+    public List<LinkedHashMap<String,Object>> getClassByTnIdAndGrade(int tnId, String grade, String classType) {
+        String tableName = ParamsUtils.combinationTableName(classType, tnId);
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        List<LinkedHashMap<String,Object>> list = new ArrayList();
+        switch (classType) {
+            case "class_adm":
+                map.put("key1", "class_grade");
+                map.put("value1", grade);
+                list = iexTeantCustomDAO.getTenantCustom(map);
+                break;
+            case "class_edu":
+                map.put("key1", "class_grade");
+                map.put("value1", grade);
+                list = iexTeantCustomDAO.getTenantCustom(map);
+                break;
+            default:
+                break;
+        }
+        return list;
+    }
+
+
+    @Override
+    public List<LinkedHashMap<String, Object>> likeTeacherByParams(List<Map<String,Object>> list) {
+//        List<Map<String,Object>> params = new ArrayList<>();
+//        Map<String,Object> param = new HashMap<>();
+//        param.put("key","tnId");
+//        param.put("eq","=");
+//        param.put("value",tnId);
+//        params.add(param);
+//        param = new HashMap<>();
+//        param.put("key","teacher_grade");
+//        param.put("eq","=");
+//        param.put("value",grade);
+//        params.add(param);
+//        param = new HashMap<>();
+//        param.put("key","teacher_class");
+//        param.put("eq","like");
+//        param.put("value","高三一班");
+//        params.add(param);
+        return iexTeantCustomDAO.likeTeacherByParams(list);
+    }
 }

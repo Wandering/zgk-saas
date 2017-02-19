@@ -18,6 +18,7 @@ import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
+import com.alibaba.dubbo.common.json.ParseException;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -111,16 +113,25 @@ public class ScheduleTaskController {
         return jwScheduleTask.getStatus();
     }
     /**
-     * 修改拍客任务状态
+     * 一键排课
      * @return
      */
     @ResponseBody
-    @RequestMapping("/updateScheduleTaskStatus")
-    public boolean updateScheduleTaskStatus(@RequestParam Integer taskId){
-        JwScheduleTask jwScheduleTask = new JwScheduleTask();
-        jwScheduleTask.setId(taskId);
-        jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
-        return jwScheduleTaskService.update(jwScheduleTask)>0;
+    @RequestMapping("/trigger")
+    public boolean updateScheduleTaskStatus(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
+        return iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+    }
+
+    /**
+     * 排课结果查询
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/state")
+    public String scheduleResult(@RequestParam Integer taskId,@RequestParam Integer tnId) {
+        return iexJwScheduleTaskService.getSchduleResultStatus(taskId, tnId);
     }
     /**
      * 修改排课任务
@@ -441,7 +452,7 @@ public class ScheduleTaskController {
      */
     @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
     @ResponseBody
-    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) {
+    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) throws IOException, ParseException {
         Map<String,Object> paramsMap  = null;
         if (param!=null) {
             try {

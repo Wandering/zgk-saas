@@ -437,6 +437,12 @@
             <if test="courseBaseId!=null">
                 AND course_base_id=#{courseBaseId}
             </if>
+            <if test="gradeId!=null">
+                AND courseManage.grade_id=#{gradeId}
+            </if>
+            <if test="courseType!=null">
+                AND courseManage.course_Type=#{courseType}
+            </if>
         </where>
     </select>
 
