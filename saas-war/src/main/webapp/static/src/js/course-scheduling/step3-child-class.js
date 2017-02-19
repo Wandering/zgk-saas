@@ -79,14 +79,14 @@ var HashHandle = {
         //}, true);
     },
     // 一键排课触发
-    scheduleTaskTrigger:function(){
+    scheduleTaskTrigger: function () {
         var that = this;
         Common.ajaxFun('/scheduleTask/trigger.do', 'GET', {
             'taskId': taskId,
-            'tnId':tnId
+            'tnId': tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                if(res.bizData == true){
+                if (res.bizData == true) {
                     that.scheduleTaskState();
                 }
             }
@@ -95,23 +95,67 @@ var HashHandle = {
         }, true);
     },
     // 一键排课结果
-    scheduleTaskState:function(){
+    scheduleTaskState: function () {
         var that = this;
         Common.ajaxFun('/scheduleTask/state.do', 'GET', {
             'taskId': taskId,
-            'tnId':tnId
+            'tnId': tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 // 0:正在排课  1:排课成功   -1 ：排课失败
                 var dataNum = res.bizData;
                 switch (parseInt(dataNum)) {
                     case 0:
-                        console.log("正在排课");
+                        console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦");
+
+
+
+                        //clearInterval(that.progressTims);
+                        //var current = 0;
+                        //var totalTime = 1000 * 60 * 10; // 10分钟
+                        //that.progressTims = setInterval(function(){
+                        //    current++;
+                        //    $('#counter').html(current + '%');
+                        //    if (current == 100) {
+                        //        current=0;
+                        //        clearInterval(that.progressTims);
+                        //    }
+                        //},1000);
+
+
+
+
+
+                        //var interval = setInterval(increment, 100);
+                        //var current = 0;
+                        //
+                        //function increment() {
+                        //    current++;
+                        //    $('#counter').html(current + '%');
+                        //    if (current == 100) {
+                        //        current = 0;
+                        //    }
+                        //}
+                        //
+                        //interval = setInterval(increment, 100);
+
+
+
+
+
+
+
+
+
+
+
+
+
                         $('.scheduling-error,#role-scheduling-tab,#control-jsp').addClass('dh');
                         clearInterval(that.items);
-                        that.items = setInterval(function(){
+                        that.items = setInterval(function () {
                             that.scheduleTaskState();
-                        },30000);
+                        }, 30000);
                         break;
                     case 1:
                         console.log("排课成功");
@@ -138,8 +182,6 @@ var HashHandle = {
 
 };
 HashHandle.init();
-
-
 
 
 function ClassRoomTable() {
@@ -304,40 +346,40 @@ ClassRoomTable.prototype = {
         }, function (result) {
             //console.log(result);
             if (result.rtnCode == "0000000") {
-                var theadTemplate = Handlebars.compile($("#"+ urlType +"-thead-list-template").html());
+                var theadTemplate = Handlebars.compile($("#" + urlType + "-thead-list-template").html());
                 Handlebars.registerHelper("thead", function (res) {
                     var resData = res.split('|');
                     var str = '<td></td>';
                     for (var i = 0; i < resData.length; i++) {
-                        str += '<td class="center">'+ resData[i] +'</td>';
+                        str += '<td class="center">' + resData[i] + '</td>';
                     }
                     return str;
                 });
-                $("#"+ urlType +"-thead-list").html(theadTemplate(result));
-                var tbodyTemplate = Handlebars.compile($("#"+ urlType +"-tbody-list-template").html());
+                $("#" + urlType + "-thead-list").html(theadTemplate(result));
+                var tbodyTemplate = Handlebars.compile($("#" + urlType + "-tbody-list-template").html());
                 Handlebars.registerHelper("week", function (res) {
                     var wkDate = res.teachTime;
-                    var Num1 = parseInt(wkDate.substr(0,1));
-                    var Num2 = parseInt(wkDate.substr(1,1));
-                    var Num3 = parseInt(wkDate.substr(2,1));
+                    var Num1 = parseInt(wkDate.substr(0, 1));
+                    var Num2 = parseInt(wkDate.substr(1, 1));
+                    var Num3 = parseInt(wkDate.substr(2, 1));
                     var itemCount = Num1 + Num2 + Num3;
                     var wkList = res.week;
                     var trHtml = '';
-                    for(var i=0;i<itemCount;i++){
+                    for (var i = 0; i < itemCount; i++) {
                         trHtml += '<tr>';
-                        trHtml += '<td class="center">'+ (i+1) +'</td>';
-                        for(var j=0;j<wkList.length;j++){
-                            if(wkList[j][i]==null || wkList[j][i]==""){
+                        trHtml += '<td class="center">' + (i + 1) + '</td>';
+                        for (var j = 0; j < wkList.length; j++) {
+                            if (wkList[j][i] == null || wkList[j][i] == "") {
                                 trHtml += '<td class="center"></td>';
-                            }else{
-                                trHtml += '<td class="center">'+ wkList[j][i] +'</td>';
+                            } else {
+                                trHtml += '<td class="center">' + wkList[j][i] + '</td>';
                             }
                         }
                         trHtml += '</tr>';
                     }
                     return trHtml;
                 });
-                $("#"+ urlType +"-tbody-list").html(tbodyTemplate(result));
+                $("#" + urlType + "-tbody-list").html(tbodyTemplate(result));
             } else {
                 layer.msg(result.msg);
             }
@@ -352,8 +394,8 @@ ClassRoomTable.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 $('.all-time-date-container').css({
-                    'width':$(window).width()-190-40,
-                    'overflow':'auto'
+                    'width': $(window).width() - 190 - 40,
+                    'overflow': 'auto'
                 });
                 var theadTemplate = Handlebars.compile($("#all-thead-list-template").html());
                 Handlebars.registerHelper("thead", function (res) {
@@ -394,8 +436,6 @@ ClassRoomTable.prototype = {
                 $("#all-tbody-list").html(tbodyTemplate(res));
 
 
-
-
             } else {
                 layer.msg(res.msg);
             }
@@ -411,7 +451,7 @@ $(function () {
 
 
     // 点击一键排课
-    $('.btn-one-key').on('click',function(){
+    $('.btn-one-key').on('click', function () {
         HashHandle.scheduleTaskTrigger();
     });
 
@@ -466,7 +506,7 @@ $(function () {
     $("#role-scheduling-tab li").eq(3).click(function () {
         ClassRoomTableIns.getAllQueryCourse();
     });
-    if(window.location.hash == '#all'){
+    if (window.location.hash == '#all') {
         ClassRoomTableIns.getAllQueryCourse();
     }
 });
