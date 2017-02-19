@@ -90,10 +90,10 @@
                         </div>
 
                         <%--行政办管理|教学班管理--%>
-                        <div class="toggle-tab" id="class-type-toggle">
-                            <button class="tab" type="1">行政班管理</button>
-                            <button class="tab" type="0">教学班管理</button>
-                        </div>
+                        <%--<div class="toggle-tab" id="class-type-toggle">--%>
+                            <%--<button class="tab" type="1">行政班管理</button>--%>
+                            <%--<button class="tab" type="0">教学班管理</button>--%>
+                        <%--</div>--%>
 
                         <div id="student-table">
                                 <table class="table">

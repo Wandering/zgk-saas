@@ -46,7 +46,7 @@ public class MergeClassController {
         paramMap.put("taskId",taskId);
         paramMap.put("courseId",courseId);
         paramMap.put("classIds",classIds);
-        paramMap.put("classType", ClassTypeEnum.getCode(classType));
+        paramMap.put("classType", ClassTypeEnum.getCode(classType)==0?0:1);
         iMergeClass.insertMergeInfo(paramMap);
         return resultMap;
     }
