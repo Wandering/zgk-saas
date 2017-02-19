@@ -1,6 +1,7 @@
 package cn.thinkjoy.saas.service.impl.bussiness.reform;
 
 import cn.thinkjoy.common.exception.BizException;
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.bussiness.reform.SelectClassesGuideDAO;
 import cn.thinkjoy.saas.dto.*;
 import cn.thinkjoy.saas.enums.ErrorCode;
@@ -262,6 +263,11 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         // [2] 按科目重新组装教师带班信息
         Map<String,CourseAndTeacherDto> ctMap = Maps.newHashMap();
         for(TeacherAndClassDto tcDto : tcDtos){
+
+            // 只展示可选课的科目
+            if(!Constant.COURSEES.contains(tcDto.getCourseName())){
+                continue;
+            }
 
             CourseAndTeacherDto ctDtoTmp = ctMap.get(tcDto.getCourseName().trim());
             if(ctDtoTmp != null){
