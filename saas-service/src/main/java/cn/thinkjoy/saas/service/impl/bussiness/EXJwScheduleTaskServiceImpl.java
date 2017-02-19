@@ -93,6 +93,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     @Autowired
     private IJwCourseDAO jwCourseDAO;
 
+    @Autowired
+    IJwCourseGapRuleDAO iJwCourseGapRuleDAO;
 //    @Autowired
 //    private
 
@@ -208,14 +210,25 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return result;
     }
 
+
+    private String converTag(String str){
+        str = str.replace("1", "@").replace("0", "|");
+
+        str = str.replace("@", "0").replace("|", "1");
+
+
+        return str;
+    }
+
     private boolean printBuffers(Integer tnId,Integer taskId ,List<StringBuffer> classRuleBuffers,String fileName) throws IOException {
         boolean flag = FileOperation.creatTxtFile(tnId,taskId,fileName);
         if (flag) {
             String str = "";
             for (StringBuffer stringBuffer : classRuleBuffers)
                 str += stringBuffer.toString();
-            if(str.lastIndexOf(FileOperation.LINE_SPLIT)>0)
-                str=str.substring(0,str.lastIndexOf(FileOperation.LINE_SPLIT));
+            if (str.lastIndexOf(FileOperation.LINE_SPLIT) > 0)
+                str = str.substring(0, str.lastIndexOf(FileOperation.LINE_SPLIT));
+
             flag = FileOperation.writeTxtFile(str);
         }
         return flag;
@@ -257,7 +270,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     stringBuffer.append(FileOperation.STR_SPLIT);
                 }
                 if(strKey.equals("teacher_name")){
-                    stringBuffer.append(" ");//姓名
+                    stringBuffer.append(strObj.toString());//姓名
                     stringBuffer.append(FileOperation.STR_SPLIT);
                 }
                 if(strKey.equals("teacher_major_type")){
@@ -270,12 +283,16 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     stringBuffer.append(FileOperation.STR_SPLIT);
                 }
                 if(strKey.equals("teacher_class")){
-                    stringBuffer.append(1); //指定班级个数
-                    stringBuffer.append(FileOperation.STR_SPLIT);
-                    stringBuffer.append(getClassId(tnId,strObj.toString(),teacherGrade));//指定所带班级
+
+                    String[] classStr=strObj.toString().split("、");
+
+                    stringBuffer.append(classStr.length); //指定班级个数
                     stringBuffer.append(FileOperation.STR_SPLIT);
 
-
+                    for(String str:classStr) {
+                        stringBuffer.append(getClassId(tnId, str.toString(), teacherGrade));//指定所带班级
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                    }
 
                     Map teacherMap=new HashMap();
                     teacherMap.put("taskId",taskId);
@@ -286,18 +303,18 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     if(jwTeacherRule==null){
                         stringBuffer.append(0);
                         stringBuffer.append(FileOperation.STR_SPLIT);
-                        stringBuffer.append(0);
-                        stringBuffer.append(FileOperation.STR_SPLIT);
-                        stringBuffer.append(0);
-                        stringBuffer.append(FileOperation.STR_SPLIT);
-                        stringBuffer.append(0);
-                        stringBuffer.append(FileOperation.STR_SPLIT);
-                        stringBuffer.append(0);
-                        stringBuffer.append(FileOperation.STR_SPLIT);
-                        stringBuffer.append(0);
-                        stringBuffer.append(FileOperation.STR_SPLIT);
-                        stringBuffer.append(0);
-                        stringBuffer.append(FileOperation.STR_SPLIT);
+//                        stringBuffer.append(0);
+//                        stringBuffer.append(FileOperation.STR_SPLIT);
+//                        stringBuffer.append(0);
+//                        stringBuffer.append(FileOperation.STR_SPLIT);
+//                        stringBuffer.append(0);
+//                        stringBuffer.append(FileOperation.STR_SPLIT);
+//                        stringBuffer.append(0);
+//                        stringBuffer.append(FileOperation.STR_SPLIT);
+//                        stringBuffer.append(0);
+//                        stringBuffer.append(FileOperation.STR_SPLIT);
+//                        stringBuffer.append(0);
+//                        stringBuffer.append(FileOperation.STR_SPLIT);
                     }else {
                         StringBuilder stringBuilder = new StringBuilder();
                         stringBuilder.append(jwTeacherRule.getMon());
@@ -410,7 +427,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         for (Integer i = 0; i < str.length(); i++) {
             String s = str.charAt(i) + "";
             if (s.equals("0"))
-                result += week + FileOperation.CHAR_SPLIT + i;
+                result += week + FileOperation.CHAR_SPLIT + (i+1);
         }
         return result;
     }
@@ -526,7 +543,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             stringBuffer.append(FileOperation.STR_SPLIT);
 
 //            stringBuffer.append(courseBaseInfo.getCourseName());
-            stringBuffer.append(" ");
+            stringBuffer.append(courseBaseInfo.getCourseName());
             stringBuffer.append(FileOperation.STR_SPLIT);
 
             Map jwCourseMap = new HashMap();
@@ -612,8 +629,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         }
         stringBuffer1.append(sw);
         stringBuffer1.append(FileOperation.LINE_SPLIT);
-
-        stringBuffer1.append(14);
+                            Integer maxNum=14;
+        stringBuffer1.append(maxNum);
         stringBuffer1.append(FileOperation.LINE_SPLIT);
 
         for (JwTeachDate jwTeachDate : jwTeachDates) {
@@ -630,6 +647,25 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             stringBuffer1.append(sd);
             stringBuffer1.append(FileOperation.LINE_SPLIT);
         }
+
+        Map params = new HashMap<>();
+        params.put("taskId", taskId);
+        JwCourseGapRule rule = (JwCourseGapRule)iJwCourseGapRuleDAO.queryOne(params,"id","asc");
+        String[] rules = rule.getRule().split("@@");
+        String rul="";
+        int len = rules.length;
+        if (len > 0) {
+            for (int i = 0; i < len; i++) {
+                String[] detail = rules[i].split(":");
+                if (detail.length < 2)
+                    continue;
+                rul+=detail[1]+FileOperation.STR_SPLIT;
+            }
+        }
+        for(int i=rules.length;i<maxNum;i++) {  //空的 补0
+            rul += 0 + FileOperation.STR_SPLIT;
+        }
+        stringBuffer1.append(rul+FileOperation.LINE_SPLIT);
         stringBuffers.add(stringBuffer1);
         return stringBuffers;
     }
@@ -748,10 +784,11 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     stringBuffer.append(FileOperation.STR_SPLIT);
                 }
                 if(strKey.equals("class_name")){
-                    stringBuffer.append(" ");
+                    stringBuffer.append(strObj);
                     stringBuffer.append(FileOperation.STR_SPLIT);
                 }
                 if(strKey.equals("class_type")){
+                    stringBuffer.append(FileOperation.STR_SPLIT);
                     stringBuffer.append(ConvertUtil.converClassTypeByTag(strObj.toString()));
                     stringBuffer.append(FileOperation.STR_SPLIT);
                     stringBuffer.append(gradeCourseInfo(tnId,ConvertUtil.converGrade(classGrade),ConvertUtil.converClassTypeByTag(strObj.toString())));
@@ -841,6 +878,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             result += str.charAt(i);
             result += FileOperation.CHAR_SPLIT;
         }
+        result = converTag(result);
         return result;
     }
 

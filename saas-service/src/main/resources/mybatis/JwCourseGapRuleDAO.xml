@@ -341,25 +341,8 @@ selectList
 
     <select id="queryOne" parameterType="java.util.Map" resultType="JwCourseGapRule">
         SELECT
-        <if test="selector!=null">
-            <trim prefixOverrides=",">
-                    <if test="selector.id!=null">
-                        , id
-                    </if>
-                    <if test="selector.taskId!=null">
-                        , taskId
-                    </if>
-                    <if test="selector.rule!=null">
-                        , rule
-                    </if>
-                    <if test="selector.createDate!=null">
-                        , createDate
-                    </if>
-            </trim>
-        </if>
-        <if test="selector==null">
+
             <include refid="Base_Column_List" />
-        </if>
         FROM saas_jw_course_gap_rule
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
