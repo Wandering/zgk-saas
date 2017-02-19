@@ -217,7 +217,7 @@
         select * from ${tableName}
          <where>
              <foreach collection="list" item="domain">
-                  and ${domain.key} ${domain.eq} #{domain.value}
+                  and ${domain.key} ${domain.op} #{domain.value}
              </foreach>
          </where>
     </select>

@@ -198,5 +198,5 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
 
     List<LinkedHashMap<String,Object>> getClassByTnIdAndGrade(int tnId, String grade, String classEdu);
 
-    List<LinkedHashMap<String,Object>> likeTeacherByParams(List<Map<String,Object>> list);
+    List<LinkedHashMap<String,Object>> likeTeacherByParams(String tableName,List<Map<String,Object>> list);
 }

@@ -125,7 +125,17 @@ public class ScheduleTaskController {
     @ResponseBody
     @RequestMapping("/trigger")
     public boolean updateScheduleTaskStatus(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
-        return iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+
+        boolean initBool = iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+
+        if (initBool) {
+            JwScheduleTask jwScheduleTask = new JwScheduleTask();
+            jwScheduleTask.setId(taskId);
+            jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
+
+            initBool = jwScheduleTaskService.update(jwScheduleTask) > 0;
+        }
+        return initBool;
     }
 
     /**
@@ -364,17 +374,23 @@ public class ScheduleTaskController {
         // str 传输规则 : 记录ID-设置（0：不排课，1：排课）多个逗号隔开，eg:1-1,2-0,3-1
         String [] strArr = str.split(",");
         for(int i=0;i<strArr.length;i++){
-            String id = StringUtils.substringBefore(strArr[i],"-");
-            String isAttend = StringUtils.substringAfter(strArr[i],"-");
+            Integer id = Integer.valueOf(StringUtils.substringBefore(strArr[i],"-"));
+            Integer isAttend = Integer.valueOf(StringUtils.substringAfter(strArr[i],"-"));
 
             JwTeacher jwTeacher = new JwTeacher();
-            jwTeacher.setIsAttend(Integer.valueOf(isAttend));
+            jwTeacher.setIsAttend(isAttend);
             jwTeacher.setId(id);
             jwTeacherService.update(jwTeacher);
+
+            // 如果对教师排课，则异步插入教师规则数据
+            if(isAttend == 1){
+                iexScheduleBaseInfoService.insertBaseRule(id,isAttend);
+            }
         }
 
         return Maps.newHashMap();
     }
+
 
 //    @ResponseBody
 //    @ApiDesc(value = "自动补全教师姓名",owner = "gryang")

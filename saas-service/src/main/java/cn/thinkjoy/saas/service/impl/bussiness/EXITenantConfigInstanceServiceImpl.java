@@ -1164,7 +1164,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
 
     @Override
-    public List<LinkedHashMap<String, Object>> likeTeacherByParams(List<Map<String,Object>> list) {
+    public List<LinkedHashMap<String, Object>> likeTeacherByParams(String tableName,List<Map<String,Object>> list) {
 //        List<Map<String,Object>> params = new ArrayList<>();
 //        Map<String,Object> param = new HashMap<>();
 //        param.put("key","tnId");
@@ -1181,6 +1181,6 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 //        param.put("eq","like");
 //        param.put("value","高三一班");
 //        params.add(param);
-        return iexTeantCustomDAO.likeTeacherByParams(list);
+        return iexTeantCustomDAO.likeTeacherByParams(tableName,list);
     }
 }
