@@ -51,8 +51,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
     @Resource
     private IJwTeachDateDAO iJwTeachDateDAO;
-    @Autowired
-    private IJwRoomDAO roomDAO;
+
     @Autowired
     private IJwScheduleTaskDAO scheduleTaskDAO;
 
@@ -96,9 +95,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     @Autowired
     private IJwCourseDAO jwCourseDAO;
 
-    @Autowired
-    private IEXCourseManageService iexCourseManageService;
-
 //    @Autowired
 //    private
 
@@ -109,119 +105,17 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
     @Override
     public CourseResultView getCourseResult(String type,Integer taskId,Integer tnId,Map<String,Object> paramsMap) {
-//        CourseResultView courseResultView = new CourseResultView();
-//        Map map = new HashMap();
-//        map.put("tnId", tnId);
-//        map.put("taskId",taskId);
-//        List<JwTeachDate> list = iJwTeachDateDAO.queryList(map, "tid", "asc");
-//        if (list.size() == 0) {
-//            return null;
-//        }
-//        StringBuffer buffer = new StringBuffer();
-//        for (JwTeachDate jwTeachDate : list) {
-//            buffer.append(jwTeachDate.getTeachDate()).append("|");
-//        }
-//        if (buffer.length() > 0) {
-//            buffer.delete(buffer.length() - 1, buffer.length());
-//        }
-//        String time = "";
-//        Integer count = 0;
-//        if (list != null && list.size() > 0) {
-//            JwTeachDate jwTeachDate = list.get(0);
-//            String[] strings = jwTeachDate.getTeachDetail().split(Constant.TIME_INTERVAL);
-//            for (String s : strings) {
-//                time += s.length();
-//                count += s.length();
-//            }
-//            if (strings.length < 3) {
-//                time += 0;
-//            }
-//        }
-//        courseResultView.setTeachDate(buffer.toString());
-//        courseResultView.setTeachTime(time);
-//
-//        Map<String,Object>  roomMap = Maps.newHashMap();
-//        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
-//        roomMap.put("tnId",tnId);
-//        roomMap.put("taskId",taskId);
-//        roomMap.put("grade",jwScheduleTask.getGrade());
-//        List<JwRoom> roomList = roomDAO.queryList(roomMap,"id","desc");
-//        Map<Integer,String > rtnMap = Maps.newHashMap();
-//        Map<String,Object> teacherMap = Maps.newHashMap();
-//        teacherMap.put("tnId",tnId);
-//        teacherMap.put("grade",jwScheduleTask.getGrade());
-//        List<TeacherBaseDto> teacherBaseInfos = iexScheduleBaseInfoService.queryTeacherByTaskId(teacherMap);
-//        if ("teacher".equals(type)) {
-//            if (!StringUtil.isNulOrBlank(paramsMap.get("teacherId")!=null?paramsMap.get("teacherId").toString():null)) {
-//                JwTeacherBaseInfo jwTeacherBaseInfo = (JwTeacherBaseInfo) teacherBaseInfoDAO.fetch(paramsMap.get("teacherId"));
-//                Map<String,Object> classQueryMap = Maps.newHashMap();
-//                classQueryMap.put("tnId",tnId);
-//                classQueryMap.put("grade",jwScheduleTask.getGrade());
-//                classQueryMap.put("className",jwTeacherBaseInfo.getTeacherCourse());
-//                classQueryMap.put("classType",Constant.SUBJECT_CLASS_TYPE);
-//                List<JwClassBaseInfo> classBaseInfos = jwClassBaseInfoDAO.like(classQueryMap,"id","asc");
-//                if (classBaseInfos.size()==0){
-//                    classQueryMap.put("className",null);
-//                    classQueryMap.put("classType",Constant.DEFULT_CLASS_TYPE);
-//                    classBaseInfos = jwClassBaseInfoDAO.queryList(classQueryMap,"id","asc");
-//                }
-//                classBaseInfos = classBaseInfos.size() >= Constant.DEFULT_CLASS_NUM ? classBaseInfos.subList(0,Constant.DEFULT_CLASS_NUM) : classBaseInfos;
-//                rtnMap.put(0, "");
-//                rtnMap.put(1, jwTeacherBaseInfo.getTeacherCourse() + "  " + getClassRandom(classBaseInfos) + "  " + "  "+getRoomRandom(roomList));
-//                rtnMap.put(2,jwTeacherBaseInfo.getTeacherCourse() + "  " + getClassRandom(classBaseInfos) + "  " + "  "+getRoomRandom(roomList));
-//                rtnMap.put(3, jwTeacherBaseInfo.getTeacherCourse() + "  " + getClassRandom(classBaseInfos) + "  " + "  "+getRoomRandom(roomList));
-//                rtnMap.put(4, jwTeacherBaseInfo.getTeacherCourse() + "  " + getClassRandom(classBaseInfos) + "  " + "  "+getRoomRandom(roomList));
-//                rtnMap.put(5, jwTeacherBaseInfo.getTeacherCourse() + "  " + getClassRandom(classBaseInfos) + "  " + "  "+getRoomRandom(roomList));
-//                rtnMap.put(6, "");
-//                rtnMap.put(7, "");
-//                rtnMap.put(8, "");
-//                rtnMap.put(10, "");
-//                rtnMap.put(11, "");
-//                rtnMap.put(12, "");
-//            }
-//        }else if ("student".equals(type)){
-//            rtnMap.put(0, "");
-//            rtnMap.put(1, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
-//            rtnMap.put(2, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
-//            rtnMap.put(3, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
-//            rtnMap.put(4, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
-//            rtnMap.put(5, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
-//            rtnMap.put(6, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
-//            rtnMap.put(7, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
-//            rtnMap.put(8, getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
-//            rtnMap.put(10,getTeacherCourse(teacherBaseInfos)+"\n"+getRoomRandom(roomList));
-//            rtnMap.put(11, "");
-//            rtnMap.put(12, "");
-//        }else if ("room".equals(type)){
-//            rtnMap.put(0, "");
-//            rtnMap.put(1, getTeacherCourse(teacherBaseInfos,tnId,jwScheduleTask.getGrade()));
-//            rtnMap.put(2, getTeacherCourse(teacherBaseInfos,tnId,jwScheduleTask.getGrade()));
-//            rtnMap.put(3, "");
-//            rtnMap.put(4, getTeacherCourse(teacherBaseInfos,tnId,jwScheduleTask.getGrade()));
-//            rtnMap.put(5, "");
-//            rtnMap.put(6, getTeacherCourse(teacherBaseInfos,tnId,jwScheduleTask.getGrade()));
-//            rtnMap.put(7, "");
-//            rtnMap.put(8, getTeacherCourse(teacherBaseInfos,tnId,jwScheduleTask.getGrade()));
-//            rtnMap.put(10, getTeacherCourse(teacherBaseInfos,tnId,jwScheduleTask.getGrade()));
-//            rtnMap.put(11, "");
-//            rtnMap.put(12, "");
-//        }
-//        List<List<String>> list1  = new ArrayList<>();
-//        List<String> list2;
-//        for (int i = list.size();i>0;i--){
-//            list2 = new ArrayList<>();
-//            for (int j = count;j>0;j--){
-//                if (i==5 && j==1){
-//                    //星期一第7节不排课
-//                    list2.add("");
-//                }else {
-//                    list2.add(getCourse(rtnMap));
-//                }
-//            }
-//            list1.add(list2);
-//        }
-//        courseResultView.setWeek(list1);
-//        return courseResultView;
+
+        switch (type){
+            case Constant.TABLE_TYPE_TEACHER:
+                break;
+            case Constant.STUDENT:
+                break;
+            case Constant.TABLE_TYPE_CLASS:
+                return this.getClassCourseTable(tnId,taskId,paramsMap);
+            default:
+                break;
+        }
         return null;
     }
 
@@ -292,6 +186,17 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     String path = FileOperation.getParamsPath(tnId, taskId);
                     TimeTabling timeTabling = new TimeTabling();
                     timeTabling.runTimetabling(path, path);
+                    try {
+                        String result = getSchduleResultStatus(taskId, tnId);
+                        if (Integer.valueOf(result) == 1)
+                            getAllCourseResult(taskId, tnId);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                     LOGGER.info("排课状态:完成排课");
                 }
             }.start();
@@ -704,7 +609,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         stringBuffer1.append(sw);
         stringBuffer1.append(FileOperation.LINE_SPLIT);
 
-        stringBuffer1.append(9);
+        stringBuffer1.append(14);
         stringBuffer1.append(FileOperation.LINE_SPLIT);
 
         for (JwTeachDate jwTeachDate : jwTeachDates) {
@@ -921,45 +826,45 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return result;
     }
 
-    private String getCourse(Map<Integer,String> map){
-        java.util.Random random=new java.util.Random();// 定义随机类
-        return map.get(random.nextInt(12));
-
-    }
-
-    private String getTeacherCourse(List<TeacherBaseDto> teacherBaseInfos){
-        java.util.Random random=new java.util.Random();// 定义随机类
-        if (teacherBaseInfos.size()==0)return "";
-        TeacherBaseDto teacherBaseDto = teacherBaseInfos.get(random.nextInt(teacherBaseInfos.size()));
-        return teacherBaseDto.getCourseName()+"\n("+teacherBaseDto.getTeacherName()+")";
-
-    }
-
-    private String getTeacherCourse(List<TeacherBaseDto> teacherBaseInfos,Integer tnId,String grade){
-//        if (teacherBaseInfos.size()==0)return "";
+//    private String getCourse(Map<Integer,String> map){
 //        java.util.Random random=new java.util.Random();// 定义随机类
+//        return map.get(random.nextInt(12));
+//
+//    }
+//
+//    private String getTeacherCourse(List<TeacherBaseDto> teacherBaseInfos){
+//        java.util.Random random=new java.util.Random();// 定义随机类
+//        if (teacherBaseInfos.size()==0)return "";
 //        TeacherBaseDto teacherBaseDto = teacherBaseInfos.get(random.nextInt(teacherBaseInfos.size()));
-//        Map<String,Object> classQueryMap = Maps.newHashMap();
-//        classQueryMap.put("tnId",tnId);
-//        classQueryMap.put("grade",grade);
-//        classQueryMap.put("className",teacherBaseDto.getCourseName());
-//        classQueryMap.put("classType",Constant.SUBJECT_CLASS_TYPE);
-//        List<JwClassBaseInfo> classBaseInfos = jwClassBaseInfoDAO.like(classQueryMap,"id","asc");
-//        if (classBaseInfos.size()==0){
-//            classQueryMap.put("className",null);
-//            classQueryMap.put("classType",Constant.DEFULT_CLASS_TYPE);
-//            classBaseInfos = jwClassBaseInfoDAO.queryList(classQueryMap,"id","asc");
-//        }
-//        return teacherBaseDto.getCourseName()+"\n("+teacherBaseDto.getTeacherName()+")   "+getClassRandom(classBaseInfos);
-        return null;
-    }
-    private String getRoomRandom(List<JwRoom> rooms){
-        java.util.Random random=new java.util.Random();// 定义随机类
-        if (rooms.size()==0)return "";
-        JwRoom jwRoom = rooms.get(random.nextInt(rooms.size()));
-        return jwRoom.getRoomName();
+//        return teacherBaseDto.getCourseName()+"\n("+teacherBaseDto.getTeacherName()+")";
+//
+//    }
 
-    }
+//    private String getTeacherCourse(List<TeacherBaseDto> teacherBaseInfos,Integer tnId,String grade){
+////        if (teacherBaseInfos.size()==0)return "";
+////        java.util.Random random=new java.util.Random();// 定义随机类
+////        TeacherBaseDto teacherBaseDto = teacherBaseInfos.get(random.nextInt(teacherBaseInfos.size()));
+////        Map<String,Object> classQueryMap = Maps.newHashMap();
+////        classQueryMap.put("tnId",tnId);
+////        classQueryMap.put("grade",grade);
+////        classQueryMap.put("className",teacherBaseDto.getCourseName());
+////        classQueryMap.put("classType",Constant.SUBJECT_CLASS_TYPE);
+////        List<JwClassBaseInfo> classBaseInfos = jwClassBaseInfoDAO.like(classQueryMap,"id","asc");
+////        if (classBaseInfos.size()==0){
+////            classQueryMap.put("className",null);
+////            classQueryMap.put("classType",Constant.DEFULT_CLASS_TYPE);
+////            classBaseInfos = jwClassBaseInfoDAO.queryList(classQueryMap,"id","asc");
+////        }
+////        return teacherBaseDto.getCourseName()+"\n("+teacherBaseDto.getTeacherName()+")   "+getClassRandom(classBaseInfos);
+//        return null;
+//    }
+//    private String getRoomRandom(List<JwRoom> rooms){
+//        java.util.Random random=new java.util.Random();// 定义随机类
+//        if (rooms.size()==0)return "";
+//        JwRoom jwRoom = rooms.get(random.nextInt(rooms.size()));
+//        return jwRoom.getRoomName();
+//
+//    }
 //    private String getClassRandom(List<JwClassBaseInfo> classBaseInfos){
 //        java.util.Random random=new java.util.Random();// 定义随机类
 //        if (classBaseInfos.size()==0)return "";
@@ -979,7 +884,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             throws ParseException, IOException {
         String redisKey = new StringBuilder()
                 .append(Constant.COURSE_TABLE_REDIS_KEY)
-                .append(Constant.COURSE_TABLE_REDIS_SPLIT)
                 .append(tnId)
                 .append(Constant.COURSE_TABLE_REDIS_SPLIT)
                 .append(taskId)
@@ -1024,8 +928,10 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
             LOGGER.info("************获取课表 S************");
             Map<Integer,String> courses = getCourseByTnIdAndTaskId(tnId,taskId);
-//            FileOperation.getParamsPath(Integer tnId,Integer taskId)
-            CharSource main = Files.asCharSource(new File("/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt"), Charset.defaultCharset());
+//            String path = FileOperation.getParamsPath(tnId,taskId);
+            String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
+
+            CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
             List<String> allCourseList =  main.readLines();
             List<List<String>> weekCourseList;
             List<String> dayCourseList;
@@ -1044,8 +950,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                         String course = courses.get(Integer.valueOf(dayCourse));
                         String teacherName = this.getTeacherByCourseAndClass(course,grade,className,tnId,taskId);
                         //课程转换
-                        course = course + teacherName;
-                        dayCourseList.add(course);
+                        dayCourseList.add(mergeTeacherAndCourse(course,teacherName));
                     }
                     weekCourseList.add(dayCourseList);
                 }
@@ -1186,6 +1091,23 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return rtnList.size()>0?rtnList.get(0).get("teacher_name").toString():null;
     }
 
+    /**
+     * 获取教师
+     * @return
+     */
+    private Map<String,Object> getTeacherByTeacherId(Integer teacherId,int tnId){
+        String tableName = "saas"+Constant.TIME_INTERVAL+tnId+Constant.TIME_INTERVAL+Constant.TABLE_TYPE_TEACHER+Constant.TIME_INTERVAL+"excel";
+        List<Map<String,Object>> params = new ArrayList<>();
+        Map<String,Object> param = new HashMap<>();
+        param = new HashMap<>();
+        param.put("key","id");
+        param.put("op","=");
+        param.put("value",teacherId);
+        params.add(param);
+        List<Map<String,Object>> rtnList = exiTenantConfigInstanceService.likeTeacherByParams(tableName,params);
+        return rtnList.size()>0?rtnList.get(0):null;
+    }
+
     public static void main(String[] args) throws IOException {
 //        CharSource main = Files.asCharSource(new File("/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt"), Charset.defaultCharset());
 //        List<String> list = main.readLines();
@@ -1214,4 +1136,150 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return lists;
     }
 
+    private Object getMapKey(Map map,Object value) {
+        Set set = map.entrySet();
+        Iterator it = set.iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            if (entry.getValue().equals(value)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取班级课表
+     * @param tnId
+     * @param taskId
+     * @param paramsMap
+     * @return
+     */
+    private CourseResultView getClassCourseTable(int tnId,int taskId,Map<String,Object> paramsMap){
+        CourseResultView courseResultView = new CourseResultView();
+
+        Map<String, Object> courseTimeConfig = this.getCourseTimeConfig(tnId, taskId);
+        courseResultView.setTeachDate(courseTimeConfig.get("teachDate").toString());
+        courseResultView.setTeachTime(courseTimeConfig.get("time").toString());
+        LOGGER.info("********学生课程表 S********");
+        //获取学生的班级信息
+        //参数校验
+        if (!paramsMap.containsKey("classId")) {
+            throw new BizException(ErrorCode.PARAN_NULL.getCode(), ErrorCode.PARAN_NULL.getMessage());
+        }
+        int classId = 0;
+        try {
+            classId = Integer.valueOf(paramsMap.get("classId").toString());
+        } catch (Exception e) {
+            throw new BizException(ErrorCode.PARAN_NULL.getCode(), ErrorCode.PARAN_NULL.getMessage());
+        }
+        Map<String, Object> allCourseTable = null;
+        try {
+            allCourseTable = this.getAllCourseResult(taskId, tnId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        List<List<List<String>>> roomData = (List<List<List<String>>>) allCourseTable.get("roomData");
+        List<List<String>> classCourseList = roomData.get(classId);
+        courseResultView.setWeek(classCourseList);
+        LOGGER.info("********学生课程表 E********");
+        return courseResultView;
+    }
+
+    /**
+     * 获取教师课表
+     * @param tnId
+     * @param taskId
+     * @param paramsMap
+     * @return
+     */
+    private CourseResultView getTeacherCourseTable(int tnId,int taskId,Map<String,Object> paramsMap){
+        CourseResultView courseResultView = new CourseResultView();
+
+        Map<String,Object> courseTimeConfig = this.getCourseTimeConfig(tnId,taskId);
+        courseResultView.setTeachDate(courseTimeConfig.get("teachDate").toString());
+        courseResultView.setTeachTime(courseTimeConfig.get("time").toString());
+        LOGGER.info("********学生课程表 S********");
+        //获取学生的班级信息
+        //参数校验
+        if (!paramsMap.containsKey("teacherId") && !paramsMap.containsKey("classId")){
+            throw new BizException(ErrorCode.PARAN_NULL.getCode(),ErrorCode.PARAN_NULL.getMessage());
+        }
+        int teacherId = 0;
+        try {
+            teacherId = Integer.valueOf(paramsMap.get("teacherId").toString());
+        }catch (Exception e){
+            throw new BizException(ErrorCode.PARAN_NULL.getCode(),ErrorCode.PARAN_NULL.getMessage());
+        }
+        Map<String,Object> teacherMap =  this.getTeacherByTeacherId(teacherId,tnId);
+        Map<String,Object> allCourseTable = null;
+        try {
+            allCourseTable = this.getAllCourseResult(taskId,tnId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        List<List<List<String>>> roomData = (List<List<List<String>>>) allCourseTable.get("roomData");
+
+        courseResultView.setWeek(getCourseByTeacher(tnId,taskId,roomData,teacherMap));
+        LOGGER.info("********学生课程表 E********");
+        return courseResultView;
+    }
+
+    /**
+     *
+     * @param tnId
+     * @param taskId
+     * @param roomData
+     * @param teacherMap
+     * @return
+     */
+    private List<List<String>> getCourseByTeacher(int tnId,int taskId,List<List<List<String>>> roomData,Map<String,Object> teacherMap){
+        List<List<String>> rtnLists = new ArrayList<>();
+        List<String> rtnList;
+        Map<Integer, String> classMap = this.getClassByTnIdAndTaskId(tnId, taskId);
+        String teacherCourse = mergeTeacherAndCourse(teacherMap.get("teacher_name").toString(),teacherMap.get("teacher_major_type").toString());
+        List<List<String>> tmpLists;
+        List<String> tmpList;
+        for (int i = 0; i < roomData.size(); i++) {
+            tmpLists = roomData.get(i);
+            rtnList = new ArrayList<>();
+            /**同一时间教师只能去一个教师 eg:星期一的第一节教师只能去某一个班级 即使去两个班级 那么班级一定是合班**/
+            for (int j = 0; j < tmpLists.size(); j++) {
+                tmpList = tmpLists.get(j);
+                for (int m = 0 ; m < tmpList.size();m ++ ){
+                     String tmpCourse = tmpList.get(m);
+                     String ss;
+                     StringBuilder sb;
+                    if (rtnList.size()<m){
+                        ss = rtnList.get(m);
+                    }else{
+                        ss = "";
+                    }
+                    sb = new StringBuilder(ss);
+                     if (teacherCourse.equals(tmpCourse)){
+                         if (sb.length()>0){
+                             sb.append(Constant.COURSE_TABLE_LINE_SPLIT_CHAR).append(classMap.get(j));
+                         }else {
+                             rtnList.add(sb.append(tmpCourse).toString());
+                         }
+                     }else {
+                         rtnList.add(sb.append("").toString());
+                     }
+                }
+
+            }
+            rtnLists.add(rtnList);
+        }
+        return rtnLists;
+    }
+
+    private String mergeTeacherAndCourse(String course,String teacher){
+        StringBuilder sb = new StringBuilder();
+        sb.append(course).append(Constant.COURSE_TABLE_LINE_SPLIT_CHAR).append(teacher);
+        return sb.toString();
+    }
 }
