@@ -586,7 +586,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             stringBuffer.append(converCourseHour(jwCourse.getCourseHour(), 1));
             stringBuffer.append(FileOperation.STR_SPLIT);
 
-            stringBuffer.append(courseManageVo.getCourseType());
+            stringBuffer.append(ConvertUtil.converCourseType(courseManageVo.getCourseType()));
             stringBuffer.append(FileOperation.STR_SPLIT);
 
             Map mergeMap = new HashMap();

@@ -98,13 +98,25 @@ public class ConvertUtil {
                 t = 0;
                 break;
             case "文科班":
-                t = 1;
+                t = 2;
                 break;
             case "理科班":
-                t = 2;
+                t = 1;
                 break;
         }
         return t;
+    }
+    public static Integer converCourseType(String t){
+        Integer m=0;
+        switch (t) {
+            case "1":
+                m = 2;
+                break;
+            case "2":
+                m = 1;
+                break;
+        }
+        return m;
     }
     /**
      * 班级类型转换
