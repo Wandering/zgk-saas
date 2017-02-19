@@ -588,15 +588,14 @@ public class ScoreAnalyseController
                 allList.addAll(list);
             }catch (Exception e){}
 
-            allList.addAll(list);
-            tableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, Integer.parseInt(tnId));
-            map = new HashMap<>();
-            map.put("tableName",tableName);
-            map.put("grade",grade);
-            try {
-                list = examDetailService.getClassBossList(map);
-                allList.addAll(list);
-            }catch (Exception e){}
+//            tableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, Integer.parseInt(tnId));
+//            map = new HashMap<>();
+//            map.put("tableName",tableName);
+//            map.put("grade",grade);
+//            try {
+//                list = examDetailService.getClassBossList(map);
+//                allList.addAll(list);
+//            }catch (Exception e){}
             for (Map<String, Object> mp : allList) {
                 String className = mp.get("class_name") + "";
                 String classBoss = mp.get("class_boss") + "";
@@ -1101,19 +1100,19 @@ public class ScoreAnalyseController
             throw new BizException("1100221", "班级信息未设置或设置不正确,必须包含班级名称和年级！");
         }
 
-        tableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, Integer.parseInt(tnId));
-        paramMap = new HashMap<>();
-        paramMap.put("tableName", tableName);
-        paramMap.put("grade", grade);
-        try
-        {
-            List<String> classNamesEdu = examDetailService.getClassesNameByGrade(paramMap);
-            classNames.addAll(classNamesEdu);
-        }
-        catch (Exception e)
-        {
-            //吃掉异常
-        }
+//        tableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, Integer.parseInt(tnId));
+//        paramMap = new HashMap<>();
+//        paramMap.put("tableName", tableName);
+//        paramMap.put("grade", grade);
+//        try
+//        {
+//            List<String> classNamesEdu = examDetailService.getClassesNameByGrade(paramMap);
+//            classNames.addAll(classNamesEdu);
+//        }
+//        catch (Exception e)
+//        {
+//            //吃掉异常
+//        }
         return classNames;
     }
 
@@ -2052,13 +2051,13 @@ public class ScoreAnalyseController
             paramMap.put("columnName", "class_boss");
             flag = examDetailService.checkIsColumnExist(paramMap);
         }
-        tableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, Integer.parseInt(tnId));
-        paramMap.put("tableName", tableName);
-        if(examDetailService.checkIsTableExist(paramMap))
-        {
-            paramMap.put("columnName", "class_boss");
-            flag = flag || examDetailService.checkIsColumnExist(paramMap);
-        }
+//        tableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, Integer.parseInt(tnId));
+//        paramMap.put("tableName", tableName);
+//        if(examDetailService.checkIsTableExist(paramMap))
+//        {
+//            paramMap.put("columnName", "class_boss");
+//            flag = flag || examDetailService.checkIsColumnExist(paramMap);
+//        }
         return flag;
     }
 
