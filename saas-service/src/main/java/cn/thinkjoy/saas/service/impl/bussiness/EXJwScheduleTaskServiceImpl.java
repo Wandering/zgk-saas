@@ -348,7 +348,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     stringBuffer.append(FileOperation.STR_SPLIT);
                 }
                 if(strKey.equals("teacher_name")){
-                    stringBuffer.append(strObj);//姓名
+                    stringBuffer.append(" ");//姓名
                     stringBuffer.append(FileOperation.STR_SPLIT);
                 }
                 if(strKey.equals("teacher_major_type")){
@@ -596,7 +596,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             stringBuffer.append(courseBaseInfo.getId());
             stringBuffer.append(FileOperation.STR_SPLIT);
 
-            stringBuffer.append(courseBaseInfo.getCourseName());
+//            stringBuffer.append(courseBaseInfo.getCourseName());
+            stringBuffer.append(" ");
             stringBuffer.append(FileOperation.STR_SPLIT);
 
             Map jwCourseMap = new HashMap();
@@ -818,7 +819,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     stringBuffer.append(FileOperation.STR_SPLIT);
                 }
                 if(strKey.equals("class_name")){
-                    stringBuffer.append(strObj);
+                    stringBuffer.append(" ");
                     stringBuffer.append(FileOperation.STR_SPLIT);
                 }
                 if(strKey.equals("class_type")){
