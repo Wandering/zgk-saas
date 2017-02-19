@@ -106,7 +106,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         switch (type){
             case Constant.TABLE_TYPE_TEACHER:
-                break;
+                return this.getTeacherCourseTable(tnId,taskId,paramsMap);
             case Constant.STUDENT:
                 break;
             case Constant.TABLE_TYPE_CLASS:
@@ -875,16 +875,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
             LOGGER.info("************获取时间设置 S************");
             Map<Integer,String> classMap = this.getClassByTnIdAndTaskId(tnId,taskId);
-            StringBuffer buffer1 = new StringBuffer();
-            Iterator<Integer> $i = classMap.keySet().iterator();
-            while ($i.hasNext()){
-                buffer1.append(classMap.get($i.next())).append("|");
-            }
-            if (buffer1.length() > 0) {
-                buffer1.delete(buffer1.length() - 1, buffer1.length());
-            }
-            String roomStr = buffer1.toString();
-            resultMap.put("room",roomStr);
+            StringBuffer classBf = new StringBuffer();
+            StringBuffer classIdBf = new StringBuffer();
             LOGGER.info("************获取时间设置 E************");
 
             LOGGER.info("************获取年级信息设置 S************");
@@ -901,8 +893,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             List<String> allCourseList = null;
             Map<Integer,String> courses = getCourseByTnIdAndTaskId(tnId,taskId);
             try {
-                String path = FileOperation.getParamsPath(tnId, taskId);
-//                String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
+//                String path = FileOperation.getParamsPath(tnId, taskId);
+                String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
                 CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
                 allCourseList = main.readLines();
             }catch (Exception e){
@@ -920,6 +912,10 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     throw new BizException("error","班级不存在");
                 }
                 String className = classMap.get(classId);
+
+                classBf.append(className).append("|");
+                classIdBf.append(classId).append("|");
+
                 List<List<String>> weekTempCourses = spiltDay(everyDaySection,courseStr);
                 weekCourseList = new LinkedList<>();
 
@@ -928,7 +924,13 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
                     for (String dayCourse : dayCourseTempList){
                         String course = courses.get(Integer.valueOf(dayCourse));
-                        String teacherName = this.getTeacherByCourseAndClass(course,grade,className,tnId,taskId);
+                        String teacherName = null;
+                        if (course == ""){
+                            teacherName = "";
+                        }else {
+                            teacherName = this.getTeacherByCourseAndClass(course,grade,className,tnId,taskId);
+                        }
+
                         //课程转换
                         dayCourseList.add(mergeTeacherAndCourse(course,teacherName));
                     }
@@ -936,6 +938,14 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 }
                 courseTables.add(weekCourseList);
             }
+            if (classBf.length() > 0) {
+                classBf.delete(classBf.length() - 1, classBf.length());
+            }
+            if (classIdBf.length() > 0) {
+                classIdBf.delete(classIdBf.length() - 1, classIdBf.length());
+            }
+            resultMap.put("room",classBf.toString());
+            resultMap.put("classId",classIdBf.toString());
             resultMap.put("roomData",courseTables);
             LOGGER.info("************获取课表 E************");
 
@@ -1040,7 +1050,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             courseMap.put(Integer.valueOf(courseBaseInfo.getId().toString()),courseBaseInfo.getCourseName());
         }
         //0的时候是没有课程
-        courseMap.put(0,"没课");
+        courseMap.put(0,"");
         return courseMap;
     }
 
@@ -1104,17 +1114,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return lists;
     }
 
-    private Object getMapKey(Map map,Object value) {
-        Set set = map.entrySet();
-        Iterator it = set.iterator();
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
-            if (entry.getValue().equals(value)) {
-                return entry.getKey();
-            }
-        }
-        return null;
-    }
 
     /**
      * 获取班级课表
@@ -1172,7 +1171,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         LOGGER.info("********学生课程表 S********");
         //获取学生的班级信息
         //参数校验
-        if (!paramsMap.containsKey("teacherId") && !paramsMap.containsKey("classId")){
+        if (!paramsMap.containsKey("teacherId")){
             throw new BizException(ErrorCode.PARAN_NULL.getCode(),ErrorCode.PARAN_NULL.getMessage());
         }
         int teacherId = 0;
@@ -1191,8 +1190,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             e.printStackTrace();
         }
         List<List<List<String>>> roomData = (List<List<List<String>>>) allCourseTable.get("roomData");
-
-        courseResultView.setWeek(getCourseByTeacher(tnId,taskId,roomData,teacherMap));
+        String classId = (String) allCourseTable.get("classId");
+        courseResultView.setWeek(getCourseByTeacher(tnId,taskId,roomData,teacherMap,classId));
         LOGGER.info("********学生课程表 E********");
         return courseResultView;
     }
@@ -1205,11 +1204,12 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      * @param teacherMap
      * @return
      */
-    private List<List<String>> getCourseByTeacher(int tnId,int taskId,List<List<List<String>>> roomData,Map<String,Object> teacherMap){
+    private List<List<String>> getCourseByTeacher(int tnId,int taskId,List<List<List<String>>> roomData,Map<String,Object> teacherMap,String classId){
+        String[] classIds = classId.split("\\|");
         List<List<String>> rtnLists = new ArrayList<>();
         List<String> rtnList;
         Map<Integer, String> classMap = this.getClassByTnIdAndTaskId(tnId, taskId);
-        String teacherCourse = mergeTeacherAndCourse(teacherMap.get("teacher_name").toString(),teacherMap.get("teacher_major_type").toString());
+        String teacherCourse = mergeTeacherAndCourse(teacherMap.get("teacher_major_type").toString(),teacherMap.get("teacher_name").toString());
         List<List<String>> tmpLists;
         List<String> tmpList;
         for (int i = 0; i < roomData.size(); i++) {
@@ -1230,9 +1230,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     sb = new StringBuilder(ss);
                      if (teacherCourse.equals(tmpCourse)){
                          if (sb.length()>0){
-                             sb.append(Constant.COURSE_TABLE_LINE_SPLIT_CHAR).append(classMap.get(j));
+                             rtnList.add(sb.append(Constant.COURSE_TABLE_LINE_SPLIT_CHAR).append(classMap.get(Integer.valueOf(classIds[i]))).toString());
                          }else {
-                             rtnList.add(sb.append(tmpCourse).toString());
+                             rtnList.add(sb.append(tmpCourse).append(Constant.COURSE_TABLE_LINE_SPLIT_CHAR).append(classMap.get(Integer.valueOf(classIds[i]))).toString());
                          }
                      }else {
                          rtnList.add(sb.append("").toString());
@@ -1247,7 +1247,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
     private String mergeTeacherAndCourse(String course,String teacher){
         StringBuilder sb = new StringBuilder();
-        sb.append(course).append(Constant.COURSE_TABLE_LINE_SPLIT_CHAR).append(teacher);
+        sb.append(course == "" ? "":course).append((course == ""||teacher=="" || teacher == null)? "" : Constant.COURSE_TABLE_LINE_SPLIT_CHAR).append((teacher == ""|| teacher == null) ? "":teacher);
         return sb.toString();
     }
 }
