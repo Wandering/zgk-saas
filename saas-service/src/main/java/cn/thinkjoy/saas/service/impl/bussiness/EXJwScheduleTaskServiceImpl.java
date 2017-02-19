@@ -826,53 +826,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return result;
     }
 
-//    private String getCourse(Map<Integer,String> map){
-//        java.util.Random random=new java.util.Random();// 定义随机类
-//        return map.get(random.nextInt(12));
-//
-//    }
-//
-//    private String getTeacherCourse(List<TeacherBaseDto> teacherBaseInfos){
-//        java.util.Random random=new java.util.Random();// 定义随机类
-//        if (teacherBaseInfos.size()==0)return "";
-//        TeacherBaseDto teacherBaseDto = teacherBaseInfos.get(random.nextInt(teacherBaseInfos.size()));
-//        return teacherBaseDto.getCourseName()+"\n("+teacherBaseDto.getTeacherName()+")";
-//
-//    }
-
-//    private String getTeacherCourse(List<TeacherBaseDto> teacherBaseInfos,Integer tnId,String grade){
-////        if (teacherBaseInfos.size()==0)return "";
-////        java.util.Random random=new java.util.Random();// 定义随机类
-////        TeacherBaseDto teacherBaseDto = teacherBaseInfos.get(random.nextInt(teacherBaseInfos.size()));
-////        Map<String,Object> classQueryMap = Maps.newHashMap();
-////        classQueryMap.put("tnId",tnId);
-////        classQueryMap.put("grade",grade);
-////        classQueryMap.put("className",teacherBaseDto.getCourseName());
-////        classQueryMap.put("classType",Constant.SUBJECT_CLASS_TYPE);
-////        List<JwClassBaseInfo> classBaseInfos = jwClassBaseInfoDAO.like(classQueryMap,"id","asc");
-////        if (classBaseInfos.size()==0){
-////            classQueryMap.put("className",null);
-////            classQueryMap.put("classType",Constant.DEFULT_CLASS_TYPE);
-////            classBaseInfos = jwClassBaseInfoDAO.queryList(classQueryMap,"id","asc");
-////        }
-////        return teacherBaseDto.getCourseName()+"\n("+teacherBaseDto.getTeacherName()+")   "+getClassRandom(classBaseInfos);
-//        return null;
-//    }
-//    private String getRoomRandom(List<JwRoom> rooms){
-//        java.util.Random random=new java.util.Random();// 定义随机类
-//        if (rooms.size()==0)return "";
-//        JwRoom jwRoom = rooms.get(random.nextInt(rooms.size()));
-//        return jwRoom.getRoomName();
-//
-//    }
-//    private String getClassRandom(List<JwClassBaseInfo> classBaseInfos){
-//        java.util.Random random=new java.util.Random();// 定义随机类
-//        if (classBaseInfos.size()==0)return "";
-//        JwClassBaseInfo jwClassBaseInfo = classBaseInfos.get(random.nextInt(classBaseInfos.size()));
-//        return jwClassBaseInfo.getClassName();
-//
-//    }
-
     /**
      * 获取并翻译课程表
      *
@@ -927,12 +880,16 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             LOGGER.info("************获取年级信息设置 E************");
 
             LOGGER.info("************获取课表 S************");
+            List<String> allCourseList = null;
             Map<Integer,String> courses = getCourseByTnIdAndTaskId(tnId,taskId);
-//            String path = FileOperation.getParamsPath(tnId,taskId);
-            String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
-
-            CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
-            List<String> allCourseList =  main.readLines();
+            try {
+                String path = FileOperation.getParamsPath(tnId, taskId);
+//            String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
+                CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
+                allCourseList = main.readLines();
+            }catch (Exception e){
+                throw new BizException("error","排课数据获取失败");
+            }
             List<List<String>> weekCourseList;
             List<String> dayCourseList;
             for (String courseLine : allCourseList){
@@ -1108,18 +1065,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return rtnList.size()>0?rtnList.get(0):null;
     }
 
-    public static void main(String[] args) throws IOException {
-//        CharSource main = Files.asCharSource(new File("/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt"), Charset.defaultCharset());
-//        List<String> list = main.readLines();
-//        for (String ss : list){
-//            ss.split(Constant.COURSE_TABLE_LINE_SPLIT_CLASS);
-//        }
-        String tt = "0  8  0  2  8  3  0  0  4  0  2  0  8  4  0  3  5  2  8  5  6  0  5  2  5  4  0  6  3  0  6  8  2  5  0";
-        int everyDaySection = 8;
-
-        System.out.println(1);
-//        spiltDay()
-    }
     private List<List<String>> spiltDay(int everyDaySection,String tt){
         String[] tts = tt.split(Constant.COURSE_TABLE_LINE_SPLIT_CHAR);
         List<List<String>> lists = new ArrayList<>();
