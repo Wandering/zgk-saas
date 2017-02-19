@@ -425,21 +425,28 @@ AddClassManagement.prototype.getType = function (type) {
     var that = this;
     var typeHtml = [];
     var types = null;
-    $.each(this.columnArr, function (i, k) {
-        if (k.enName == type) {
-            types = k.dataValue.split('-');
-        }
-    });
+    //$.each(this.columnArr, function (i, k) {
+    //    if (k.enName == type) {
+    //        types = k.dataValue.split('-');
+    //    }
+    //});
     //改造添加班级获取班级类型select值
+    types = ['行政班','教学班','文科班','理科班'];
     if (type == 'class_type') {
         if (GLOBAL_CONSTANT.clsType === '1') {
             $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
                 'cursor': 'not-allowed'
             }).attr('disabled', true);
         } else if (GLOBAL_CONSTANT.clsType === '2') {
-            $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
-                'cursor': 'not-allowed'
-            }).attr('disabled', true);
+            if(GLOBAL_CONSTANT.cType == 'class_adm'){
+                $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
+                    'cursor': 'not-allowed'
+                }).attr('disabled', true);
+            }else{
+                $('#class_type').html('<option value="' + types[1] + '">' + types[1] + '</option>').css({
+                    'cursor': 'not-allowed'
+                }).attr('disabled', true);
+            }
         } else {
             $('#class_type').html('<option value="' + types[3] + '">' + types[3] + '</option><option value="' + types[2] + '">' + types[2] + '</option>')
         }
@@ -599,11 +606,12 @@ UpdateClassManagement.prototype = {
         var that = this;
         var typeHtml = [];
         var types = null;
-        $.each(this.columnArr, function (i, k) {
-            if (k.enName == type) {
-                types = k.dataValue.split('-');
-            }
-        });
+        //$.each(this.columnArr, function (i, k) {
+        //    if (k.enName == type) {
+        //        types = k.dataValue.split('-');
+        //    }
+        //});
+        types = ['行政班','教学班','文科班','理科班'];
         if (type == 'class_type') {
             if (GLOBAL_CONSTANT.clsType === '1') {
                 $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
@@ -620,9 +628,15 @@ UpdateClassManagement.prototype = {
                 //         'cursor': 'not-allowed'
                 //     }).attr('disabled', true);
                 // }
-                $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
-                    'cursor': 'not-allowed'
-                }).attr('disabled', true);
+                if(GLOBAL_CONSTANT.cType == 'class_adm'){
+                    $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
+                        'cursor': 'not-allowed'
+                    }).attr('disabled', true);
+                }else{
+                    $('#class_type').html('<option value="' + types[1] + '">' + types[1] + '</option>').css({
+                        'cursor': 'not-allowed'
+                    }).attr('disabled', true);
+                }
             } else {
                 $('#class_type').html('<option value="' + types[3] + '">' + types[3] + '</option><option value="' + types[2] + '">' + types[2] + '</option>')
             }
