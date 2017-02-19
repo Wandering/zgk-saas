@@ -25,7 +25,6 @@ import cn.thinkjoy.saas.service.IGradeService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import cn.thinkjoy.saas.service.bussiness.IEXCourseManageService;
 import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
-import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
 import cn.thinkjoy.saas.service.common.ConvertUtil;
 import cn.thinkjoy.saas.service.common.FileOperation;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
@@ -48,10 +47,8 @@ import java.util.*;
 
 
 @Service("EXJwScheduleTaskServiceImpl")
-public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
+public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
-    @Autowired
-    private IJwTeacherBaseInfoDAO teacherBaseInfoDAO;
     @Resource
     private IJwTeachDateDAO iJwTeachDateDAO;
     @Autowired
@@ -95,7 +92,6 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
     IJwBaseWeekRuleDAO iJwBaseWeekRuleDAO;
     @Autowired
     IJwBaseDayRuleDAO iJwBaseDayRuleDAO;
-    private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
 
     @Autowired
     private IJwCourseDAO jwCourseDAO;
@@ -932,13 +928,13 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         return jwRoom.getRoomName();
 
     }
-    private String getClassRandom(List<JwClassBaseInfo> classBaseInfos){
-        java.util.Random random=new java.util.Random();// 定义随机类
-        if (classBaseInfos.size()==0)return "";
-        JwClassBaseInfo jwClassBaseInfo = classBaseInfos.get(random.nextInt(classBaseInfos.size()));
-        return jwClassBaseInfo.getClassName();
-
-    }
+//    private String getClassRandom(List<JwClassBaseInfo> classBaseInfos){
+//        java.util.Random random=new java.util.Random();// 定义随机类
+//        if (classBaseInfos.size()==0)return "";
+//        JwClassBaseInfo jwClassBaseInfo = classBaseInfos.get(random.nextInt(classBaseInfos.size()));
+//        return jwClassBaseInfo.getClassName();
+//
+//    }
 
     /**
      * 获取并翻译课程表
