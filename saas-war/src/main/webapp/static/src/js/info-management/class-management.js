@@ -8,7 +8,7 @@ var tnId = Common.cookie.getCookie('tnId');
  */
 var GLOBAL_CONSTANT = {
     cType: 'class_adm',   //type:class_adm（行政班）、class_edu（教学班）
-    clsType: '1'
+    clsType: null     //班级类型
 }
 function ClassManagement() {
     this.tnId = tnId;
@@ -23,10 +23,11 @@ function ClassManagement() {
 ClassManagement.prototype = {
     constructor: ClassManagement,
     init: function () {
+        this.getGrade();
+
         this.initTable('class_adm');  //行政班初始化
         this.initTable('class_edu');  //教学班初始化
         this.chargeCheckClass();
-        this.getGrade();
 
         this.getItem(GLOBAL_CONSTANT.cType);
     },
@@ -292,7 +293,7 @@ ClassManagement.prototype = {
                 var data = res.bizData.grades;
                 var gradeListHtml = [];
 
-
+                GLOBAL_CONSTANT.clsType = data[0].classType;
                 if (data[0].grade) {
                     // 行政班|教学班说明：classType 1或3都为行政班  2教学班
                     var $classTypeToggle = $('#class-type-toggle').find('.tab')
@@ -307,8 +308,6 @@ ClassManagement.prototype = {
                         $classTypeToggle.eq(1).addClass('hide');
                     }
                 }
-
-
                 $.each(data, function (i, k) {
                     if (i != 0) {
                         gradeListHtml.push('<span class="grade-item">');
@@ -331,7 +330,7 @@ ClassManagement.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, true,'true');
     }
 };
 
@@ -432,12 +431,13 @@ AddClassManagement.prototype.getType = function (type) {
     //});
     //改造添加班级获取班级类型select值
     types = ['行政班','教学班','文科班','理科班'];
+
     if (type == 'class_type') {
         if (GLOBAL_CONSTANT.clsType === '1') {
             $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
                 'cursor': 'not-allowed'
             }).attr('disabled', true);
-        } else if (GLOBAL_CONSTANT.clsType === '2') {
+        } else if (GLOBAL_CONSTANT.clsType == '2') {
             if(GLOBAL_CONSTANT.cType == 'class_adm'){
                 $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
                     'cursor': 'not-allowed'
@@ -612,22 +612,13 @@ UpdateClassManagement.prototype = {
         //    }
         //});
         types = ['行政班','教学班','文科班','理科班'];
+
         if (type == 'class_type') {
             if (GLOBAL_CONSTANT.clsType === '1') {
                 $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
                     'cursor': 'not-allowed'
                 }).attr('disabled', true);
-            } else if (GLOBAL_CONSTANT.clsType === '2') {
-                // //如果clsType等于2还要根据cType判断行政班级和教学班级那个选中了
-                // if (GLOBAL_CONSTANT.cType == 'class_adm') {
-                //     $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
-                //         'cursor': 'not-allowed'
-                //     }).attr('disabled', true);
-                // } else {
-                //     $('#class_type').html('<option value="' + types[1] + '">' + types[1] + '</option>').css({
-                //         'cursor': 'not-allowed'
-                //     }).attr('disabled', true);
-                // }
+            } else if (GLOBAL_CONSTANT.clsType == '2') {
                 if(GLOBAL_CONSTANT.cType == 'class_adm'){
                     $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
                         'cursor': 'not-allowed'

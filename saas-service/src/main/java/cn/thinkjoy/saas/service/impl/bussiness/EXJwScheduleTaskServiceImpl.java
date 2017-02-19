@@ -884,7 +884,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             Map<Integer,String> courses = getCourseByTnIdAndTaskId(tnId,taskId);
             try {
                 String path = FileOperation.getParamsPath(tnId, taskId);
-//            String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
+//                String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
                 CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
                 allCourseList = main.readLines();
             }catch (Exception e){
@@ -895,7 +895,12 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             for (String courseLine : allCourseList){
                 String[] courseInfo = courseLine.split(Constant.COURSE_TABLE_LINE_SPLIT_CLASS);
                 String courseStr = courseInfo[1];
-                Integer classId = Integer.valueOf(courseInfo[0]);
+                Integer classId = null;
+                try {
+                    classId = Integer.valueOf(courseInfo[0]);
+                }catch (Exception e){
+                    throw new BizException("error","班级不存在");
+                }
                 String className = classMap.get(classId);
                 List<List<String>> weekTempCourses = spiltDay(everyDaySection,courseStr);
                 weekCourseList = new LinkedList<>();
