@@ -162,7 +162,7 @@ var HashHandle = {
                         clearInterval(that.items);
                         $('.one-key-page').addClass('dh');
                         $('#role-scheduling-tab,#control-jsp').removeClass('dh');
-                        ClassRoomTableIns.getClassRoom();
+                        //ClassRoomTableIns.getClassRoom();
                         ClassRoomTableIns.getQueryCourse();
                         ClassRoomTableIns.getQueryClass();
                         break;
@@ -184,6 +184,7 @@ var HashHandle = {
 HashHandle.init();
 
 
+
 function ClassRoomTable() {
     this.init();
     this.courseTxt = '';
@@ -199,48 +200,50 @@ ClassRoomTable.prototype = {
     init: function () {
         //// 拉取教室
         //this.getClassRoom();
-        //// 拉取科目
-        //this.getQueryCourse();
-        //// 拉取班级
-        //this.getQueryClass();
+        // 拉取科目
+        this.getQueryCourse();
+        // 拉取班级
+        this.getQueryClass();
+        $('.one-key-page').addClass('dh');
+        $('#role-scheduling-tab,#control-jsp').removeClass('dh');
+
     },
     // 拉取教室
-    getClassRoom: function () {
-        var that = this;
-        Common.ajaxFun('/baseResult/queryRoom.do', 'GET', {
-            "taskId": taskId
-        }, function (result) {
-            if (result.rtnCode == "0000000") {
-                $('#select-class option:gt(0)').remove();
-                var classRoom = [];
-                $.each(result.bizData, function (i, v) {
-                    classRoom.push('<option value="' + v.id + '">' + v.roomName + '</option>')
-                });
-                $('#select-class').append(classRoom);
-                $('#select-class option:eq(1)').attr('selected', 'selected');
-                var selectedV = $('#select-class option:eq(1):selected').val();
-                var selectedTxt = $('#select-class option:eq(1):selected').text();
-                $('.scheduling-name').show().text(selectedTxt);
-                that.getClassRoomTable('room', {'room': selectedV});
-            } else {
-                layer.msg(result.msg);
-            }
-        }, function (result) {
-            layer.msg(result.msg);
-        });
-    },
+    //getClassRoom: function () {
+    //    var that = this;
+    //    Common.ajaxFun('/baseResult/queryRoom.do', 'GET', {
+    //        "taskId": taskId
+    //    }, function (result) {
+    //        if (result.rtnCode == "0000000") {
+    //            $('#select-class option:gt(0)').remove();
+    //            var classRoom = [];
+    //            $.each(result.bizData, function (i, v) {
+    //                classRoom.push('<option value="' + v.id + '">' + v.roomName + '</option>')
+    //            });
+    //            $('#select-class').append(classRoom);
+    //            $('#select-class option:eq(1)').attr('selected', 'selected');
+    //            var selectedV = $('#select-class option:eq(1):selected').val();
+    //            var selectedTxt = $('#select-class option:eq(1):selected').text();
+    //            $('.scheduling-name').show().text(selectedTxt);
+    //            that.getClassRoomTable('room', {'room': selectedV});
+    //        } else {
+    //            layer.msg(result.msg);
+    //        }
+    //    }, function (result) {
+    //        layer.msg(result.msg);
+    //    });
+    //},
     // 拉取科目
     getQueryCourse: function () {
         var that = this;
         Common.ajaxFun('/baseResult/queryCourse.do', 'GET', {
-            "taskId": taskId,
-
+            "taskId": taskId
         }, function (result) {
             if (result.rtnCode == "0000000") {
                 $('#select-queryCourse option:gt(0)').remove();
                 var queryCourse = [];
                 $.each(result.bizData, function (i, v) {
-                    queryCourse.push('<option value="' + v.id + '">' + v.courseName + '</option>')
+                    queryCourse.push('<option value="' + v.courseBaseId + '">' + v.courseBaseName + '</option>')
                 });
                 $('#select-queryCourse').append(queryCourse);
                 $('#select-queryCourse option:eq(1)').attr('selected', 'selected');
@@ -291,17 +294,18 @@ ClassRoomTable.prototype = {
             "taskId": taskId
         }, function (result) {
             if (result.rtnCode == "0000000") {
-                $('#select-classes option:gt(0)').remove();
+                $('#select-class option:gt(0)').remove();
                 var queryCourse = [];
                 $.each(result.bizData, function (i, v) {
-                    queryCourse.push('<option value="' + v.id + '">' + v.className + '</option>')
+                    console.log(v.id + "==" + v.class_name)
+                    queryCourse.push('<option value="' + v.id + '">' + v.class_name + '</option>')
                 });
-                $('#select-classes').append(queryCourse);
-                $('#select-classes option:eq(1)').attr('selected', 'selected');
-                var selectedV = $('#select-classes option:eq(1):selected').val()
-                var selectedTxt = $('#select-classes option:eq(1):selected').text();
+                $('#select-class').append(queryCourse);
+                $('#select-class option:eq(1)').attr('selected', 'selected');
+                var selectedV = $('#select-class option:eq(1):selected').val()
+                var selectedTxt = $('#select-class option:eq(1):selected').text();
                 $('.classes-label').text(selectedTxt);
-                that.getQueryStudent(selectedV)
+                that.getClassRoomTable('class', {'classId': selectedV}, selectedV);
             } else {
                 layer.msg(result.msg);
             }
@@ -455,12 +459,12 @@ $(function () {
         HashHandle.scheduleTaskTrigger();
     });
 
-    // 选择教室
+    // 选择班级
     $("#select-class").change(function () {
         var selectedTxt = $(this).children('option:selected').text();
         var selectedV = $(this).children('option:selected').val();
         $('.scheduling-name').text(selectedTxt);
-        ClassRoomTableIns.getClassRoomTable('room', {'room': selectedV}, selectedV);
+        ClassRoomTableIns.getClassRoomTable('class', {'classId': selectedV}, selectedV);
     });
 
 
