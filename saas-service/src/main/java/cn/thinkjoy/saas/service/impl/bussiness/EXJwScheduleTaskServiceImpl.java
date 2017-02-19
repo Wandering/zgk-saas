@@ -292,6 +292,17 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     String path = FileOperation.getParamsPath(tnId, taskId);
                     TimeTabling timeTabling = new TimeTabling();
                     timeTabling.runTimetabling(path, path);
+                    try {
+                        String result = getSchduleResultStatus(taskId, tnId);
+                        if (Integer.valueOf(result) == 1)
+                            getAllCourseResult(taskId, tnId);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                     LOGGER.info("排课状态:完成排课");
                 }
             }.start();
