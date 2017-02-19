@@ -9,6 +9,7 @@ import cn.thinkjoy.saas.domain.JwCourse;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
 import cn.thinkjoy.saas.domain.JwTeachDate;
 import cn.thinkjoy.saas.domain.JwTeacher;
+import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.JwScheduleTaskDto;
@@ -17,10 +18,7 @@ import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.enums.GradeEnum;
 import cn.thinkjoy.saas.enums.StatusEnum;
 import cn.thinkjoy.saas.enums.TermEnum;
-import cn.thinkjoy.saas.service.IJwCourseService;
-import cn.thinkjoy.saas.service.IJwScheduleTaskService;
-import cn.thinkjoy.saas.service.IJwTeachDateService;
-import cn.thinkjoy.saas.service.IJwTeacherService;
+import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
@@ -69,13 +67,13 @@ public class ScheduleTaskController {
     private IEXTenantCustomService iexTenantCustomService;
 
     @Autowired
-    private EXIConfigurationService exiConfigurationService;
-
-    @Autowired
     private IJwTeachDateService jwTeachDateService;
 
     @Resource
     private IEXJwScheduleTaskService iexJwScheduleTaskService;
+
+    @Autowired
+    private ICourseBaseInfoService courseBaseInfoService;
 
     @Autowired
     IExTeachTimeService teachTimeService;
@@ -458,31 +456,48 @@ public class ScheduleTaskController {
         }
 
         // 检测教师信息是否填写
-        List<JwTeacher> teachers = jwTeacherService.findList("task_id",taskId);
+        Map<String,Object> paramMap = Maps.newHashMap();
+        paramMap.put("taskId",taskId);
+        paramMap.put("isAttend",1);
+        List<JwTeacher> teachers = jwTeacherService.queryList(paramMap,null,null);
         if(teachers.size() == 0){
             ExceptionUtil.throwException(ErrorCode.TEACHER_INFO_ERROR);
         }
 
         // 检测教师信息是否填写完整(给所有课程是否已经设置教师)
-//        for(JwCourse course : courses){
-//            JwCourseBaseInfo info = (JwCourseBaseInfo) jwCourseBaseInfoService.fetch(course.getCourseId());
-//
-//            if(info == null){
-//                continue;
-//            }
-//
-//            boolean flag = false;
-//            for(JwTeacher teacher : teachers){
-//                if(teacher.getCourse().equals(info.getCourseName())){
-//                    flag = true;
-//                    continue;
-//                }
-//            }
-//
-//            if(!flag){
-//                ExceptionUtil.throwException(ErrorCode.TEACHER_INFO_NOT_PERFECT);
-//            }
-//        }
+        Map<Integer,String> map = Maps.newHashMap(); // 存放教师ID与课程名
+        for(JwCourse course : courses){
+            CourseBaseInfo info = (CourseBaseInfo) courseBaseInfoService.fetch(course.getCourseId());
+
+            if(info == null){
+                continue;
+            }
+
+            boolean flag = false;
+            for(JwTeacher teacher : teachers){
+
+                String teachCourse = "";
+                if(map.get(teacher.getTeacherId()) != null){
+                    teachCourse = map.get(teacher.getTeacherId());
+                }else {
+                    TeacherBaseDto dto = iexTenantCustomService.getTeacherInfo(
+                            teacher.getTnId(),
+                            teacher.getTeacherId()
+                    );
+                    map.put(dto.getTeacherId(),dto.getCourseName());
+                    teachCourse = dto.getCourseName();
+                }
+
+                if(teachCourse.equals(info.getCourseName())){
+                    flag = true;
+                    break;
+                }
+            }
+
+            if(!flag){
+                ExceptionUtil.throwException(ErrorCode.TEACHER_INFO_NOT_PERFECT);
+            }
+        }
 
         return Maps.newHashMap();
     }
