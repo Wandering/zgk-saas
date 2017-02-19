@@ -44,6 +44,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 
 @Service("EXJwScheduleTaskServiceImpl")
@@ -190,6 +191,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             cachedThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
+                    String redisKey = getScheduleRedisKey(tnId,taskId);
+                    redis.del(redisKey);
                     LOGGER.info("=线程启动=" + System.currentTimeMillis());
                     LOGGER.info("排课状态:正在排课");
                     String path = FileOperation.getParamsPath(tnId, taskId);
@@ -921,12 +924,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      */
     private Map<String,Object> getCourseResult(int tnId, int taskId)
             throws ParseException, IOException {
-        String redisKey = new StringBuilder()
-                .append(Constant.COURSE_TABLE_REDIS_KEY)
-                .append(tnId)
-                .append(Constant.COURSE_TABLE_REDIS_SPLIT)
-                .append(taskId)
-                .toString();
+        String redisKey = getScheduleRedisKey(tnId,taskId);
         if (!this.redis.exists(redisKey)) {
             Map<String,Object> resultMap = Maps.newHashMap();
             List<List<List<String>>> courseTables = new ArrayList<>();
@@ -1018,7 +1016,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             LOGGER.info("************获取课表 E************");
 
             LOGGER.info("************存redis S************");
-            this.redis.set(redisKey, JSON.json(resultMap));
+            this.redis.set(redisKey, JSON.json(resultMap),Constant.SCHEDULE_REDIS_TIME, TimeUnit.DAYS);
             LOGGER.info("************存redis E************");
             return resultMap;
         } else {
@@ -1354,6 +1352,16 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         list.add("789");
         list.set(2,"444");
         System.out.println(list.size());
+    }
+
+    private static String getScheduleRedisKey(int tnId,int taskId){
+        String redisKey = new StringBuilder()
+                .append(Constant.COURSE_TABLE_REDIS_KEY)
+                .append(tnId)
+                .append(Constant.COURSE_TABLE_REDIS_SPLIT)
+                .append(taskId)
+                .toString();
+        return redisKey;
     }
 
     private static int getIntegersNum(String[] ss,Integer ii){
