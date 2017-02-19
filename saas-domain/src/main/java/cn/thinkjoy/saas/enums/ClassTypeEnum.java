@@ -21,7 +21,7 @@ public enum ClassTypeEnum {
     // 普通方法
     public static int getCode(String typeName) {
         for (ClassTypeEnum c : ClassTypeEnum.values()) {
-            if (c.typeName == typeName) {
+            if (c.typeName.equals(typeName)) {
                 return c.code;
             }
         }
