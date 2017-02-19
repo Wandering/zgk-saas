@@ -313,7 +313,7 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
 //
 //    }
 
-    @Async
+    @Autowired
     public void insertBaseRule(int recordId,int isAttend){
 
         JwTeacher jwTeacher = jwTeacherDAO.fetch(recordId);
