@@ -884,7 +884,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             Map<Integer,String> courses = getCourseByTnIdAndTaskId(tnId,taskId);
             try {
                 String path = FileOperation.getParamsPath(tnId, taskId);
-//                String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
+//                String path = "/Users/dengshaofei/Documents/git/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
                 CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
                 allCourseList = main.readLines();
             }catch (Exception e){
