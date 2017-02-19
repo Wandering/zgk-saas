@@ -12,6 +12,7 @@ import cn.thinkjoy.saas.service.IGradeService;
 import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import cn.thinkjoy.saas.service.bussiness.IEXCourseManageService;
+import cn.thinkjoy.saas.service.common.EduClassUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -133,7 +134,7 @@ public class TeacherController {
             throw new BizException(ErrorCode.GRADE_FORMAT_ERROR.getCode(), ErrorCode.GRADE_FORMAT_ERROR.getMessage());
         String grade = gradeServiceOne.getGrade();
         boolean isExistTeaching = GradeTypeEnum.Teaching.getCode().equals(gradeType);
-        boolean isMove = isEduSubject(subject);
+        boolean isMove = EduClassUtil.isEduSubject(subject);
         int classCount = 0;
         if (isExistTeaching && isMove) {
             //是教学班+是走班课程
@@ -170,7 +171,7 @@ public class TeacherController {
         int gradeType = gradeServiceOne.getClassType();
         String grade = gradeServiceOne.getGrade();
         boolean isExistTeaching = GradeTypeEnum.Teaching.getCode().equals(gradeType);
-        boolean isMove = isEduSubject(subject);
+        boolean isMove = EduClassUtil.isEduSubject(subject);
         List<LinkedHashMap<String, Object>> classes = new ArrayList();
         if (isExistTeaching && isMove) {
             //是教学班+是走班课程

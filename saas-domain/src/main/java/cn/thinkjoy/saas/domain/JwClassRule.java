@@ -15,17 +15,24 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import cn.thinkjoy.common.domain.BaseDomain;
-
-import java.util.*;
 
 public class JwClassRule extends JwBaseRule{
+
+	private String classType;
     /**  */
     private Integer classId;
     /**  */
     private Integer taskId;
 
 	public JwClassRule(){
+	}
+
+	public String getClassType() {
+		return classType;
+	}
+
+	public void setClassType(String classType) {
+		this.classType = classType;
 	}
 
 	public void setClassId(Integer value) {
@@ -53,6 +60,7 @@ public class JwClassRule extends JwBaseRule{
 			.append("Fri",getFri())
 			.append("Sut",getSut())
 			.append("Sun",getSun())
+			.append("ClassType",getClassType())
 			.append("ClassId",getClassId())
 			.append("TaskId",getTaskId())
 			.toString();
