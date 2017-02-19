@@ -927,12 +927,16 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             LOGGER.info("************获取年级信息设置 E************");
 
             LOGGER.info("************获取课表 S************");
+            List<String> allCourseList = null;
             Map<Integer,String> courses = getCourseByTnIdAndTaskId(tnId,taskId);
-//            String path = FileOperation.getParamsPath(tnId,taskId);
-            String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
-
-            CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
-            List<String> allCourseList =  main.readLines();
+            try {
+                String path = FileOperation.getParamsPath(tnId, taskId);
+//            String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
+                CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
+                allCourseList = main.readLines();
+            }catch (Exception e){
+                throw new BizException("error","排课数据获取失败");
+            }
             List<List<String>> weekCourseList;
             List<String> dayCourseList;
             for (String courseLine : allCourseList){
