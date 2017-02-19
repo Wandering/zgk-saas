@@ -113,21 +113,25 @@ public class ScheduleTaskController {
         return jwScheduleTask.getStatus();
     }
     /**
-     * 修改拍客任务状态
+     * 一键排课
      * @return
      */
     @ResponseBody
-    @RequestMapping("/updateScheduleTaskStatus")
+    @RequestMapping("/trigger")
     public boolean updateScheduleTaskStatus(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
-//        JwScheduleTask jwScheduleTask = new JwScheduleTask();
-//        jwScheduleTask.setId(taskId);
-//        jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
-
-
         return iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+    }
 
-
-//        return jwScheduleTaskService.update(jwScheduleTask)>0;
+    /**
+     * 排课结果查询
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/state")
+    public String scheduleResult(@RequestParam Integer taskId,@RequestParam Integer tnId) {
+        return iexJwScheduleTaskService.getSchduleResultStatus(taskId, tnId);
     }
     /**
      * 修改排课任务

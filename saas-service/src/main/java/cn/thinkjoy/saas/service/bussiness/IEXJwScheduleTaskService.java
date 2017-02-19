@@ -37,4 +37,13 @@ public interface IEXJwScheduleTaskService {
      * @return
      */
     boolean InitParmasFile(Integer taskId, Integer tnId) throws IOException;
+
+
+    /**
+     * 排课结果状态   0:正在排课  1:排课成功   -1:排课失败
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    String getSchduleResultStatus(Integer taskId, Integer tnId);
 }

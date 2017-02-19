@@ -19,10 +19,8 @@ import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseManageVo;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.domain.bussiness.MergeClassInfoVo;
-import cn.thinkjoy.saas.dto.CourseManageDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.enums.ErrorCode;
-import cn.thinkjoy.saas.enums.GradeTypeEnum;
 import cn.thinkjoy.saas.service.IGradeService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import cn.thinkjoy.saas.service.bussiness.IEXCourseManageService;
@@ -237,6 +235,17 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         return getCourseResult(tnId,taskId);
     }
 
+
+    /**
+     * 获取排课结果状态
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    @Override
+    public String getSchduleResultStatus(Integer taskId, Integer tnId) {
+        return FileOperation.readerTxtString(taskId, tnId, FileOperation.SCHEDULE_RESULT);
+    }
     /**
      * 初始化排课参数
      * @param taskId
@@ -244,7 +253,7 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
      * @return
      */
     @Override
-    public boolean InitParmasFile(Integer taskId, Integer tnId) throws IOException {
+    public boolean InitParmasFile(final Integer taskId, final Integer tnId) throws IOException {
         boolean result = false;
 
         List<StringBuffer> admClassRuleBuffers = getClassRule(taskId,1);//行政班 不排课
@@ -271,7 +280,6 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
 
         result = printBuffers(tnId,taskId,gradeNonDisBuffers, FileOperation.GRAD_NON_DISPACHING);
 
-
         List<StringBuffer> courseInfomationBuffers = courseInfomation(taskId,tnId);//课程信息
 
         result = printBuffers(tnId,taskId,courseInfomationBuffers, FileOperation.COURSE_INFORMATION);
@@ -279,13 +287,20 @@ public class EXJwScheduleTaskServiceImpl  implements IEXJwScheduleTaskService {
         List<StringBuffer> teacherSettingBuffers = teachersSetting(taskId,tnId);//教师设置
 
         result = printBuffers(tnId,taskId,teacherSettingBuffers, FileOperation.TEACHERS_SETTING);
-
+        LOGGER.info("===================参数序列化结果:"+result+"===================");
         if(result) {
-            TimeTabling timeTabling = new TimeTabling();
-            String path = FileOperation.getParamsPath(tnId, taskId);
-            Integer scheduleResult = timeTabling.runTimetabling(path, path);
+            new Thread() {
+                public void run() {
+                    LOGGER.info("=线程启动=" + System.currentTimeMillis());
+                    LOGGER.info("排课状态:正在排课");
+                    String path = FileOperation.getParamsPath(tnId, taskId);
+                    TimeTabling timeTabling = new TimeTabling();
+                    timeTabling.runTimetabling(path, path);
+                    LOGGER.info("排课状态:完成排课");
+                }
+            }.start();
         }
-
+        LOGGER.info("===================已完成异步调用排课===================");
 
         return result;
     }

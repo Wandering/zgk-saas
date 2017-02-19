@@ -25,6 +25,8 @@ public class FileOperation {
     //教师设置
     public static final String TEACHERS_SETTING="teachers_setting";
 
+    public static final String SCHEDULE_RESULT="result";
+
     public static final String LINE_SPLIT="\r\n";
     public static final String STR_SPLIT="\t";
     public static final String CHAR_SPLIT=" ";
@@ -74,7 +76,24 @@ public class FileOperation {
         return flag;
 
     }
+    public static String readerTxtString(Integer taskId,Integer tnId,String name) {
 
+        String filenPath = getParamsPath(tnId, taskId) + name + ".txt";
+
+        File file = new File(filenPath);
+        StringBuilder result = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
+            String s = null;
+            while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
+                result.append(s);
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result.toString();
+    }
     public static boolean writeTxtFile(String newStr) throws IOException {
 
 // 先读取原有文件内容，然后进行写入操作
