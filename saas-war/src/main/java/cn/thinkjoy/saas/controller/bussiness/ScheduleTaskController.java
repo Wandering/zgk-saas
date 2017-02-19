@@ -5,10 +5,7 @@ import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
-import cn.thinkjoy.saas.domain.JwCourse;
-import cn.thinkjoy.saas.domain.JwScheduleTask;
-import cn.thinkjoy.saas.domain.JwTeachDate;
-import cn.thinkjoy.saas.domain.JwTeacher;
+import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.JwScheduleTaskDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
@@ -33,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -353,17 +351,23 @@ public class ScheduleTaskController {
         // str 传输规则 : 记录ID-设置（0：不排课，1：排课）多个逗号隔开，eg:1-1,2-0,3-1
         String [] strArr = str.split(",");
         for(int i=0;i<strArr.length;i++){
-            String id = StringUtils.substringBefore(strArr[i],"-");
-            String isAttend = StringUtils.substringAfter(strArr[i],"-");
+            Integer id = Integer.valueOf(StringUtils.substringBefore(strArr[i],"-"));
+            Integer isAttend = Integer.valueOf(StringUtils.substringAfter(strArr[i],"-"));
 
             JwTeacher jwTeacher = new JwTeacher();
-            jwTeacher.setIsAttend(Integer.valueOf(isAttend));
+            jwTeacher.setIsAttend(isAttend);
             jwTeacher.setId(id);
             jwTeacherService.update(jwTeacher);
+
+            // 如果对教师排课，则异步插入教师规则数据
+            if("1".equals(isAttend)){
+                iexScheduleBaseInfoService.insertBaseRule(id,isAttend);
+            }
         }
 
         return Maps.newHashMap();
     }
+
 
 //    @ResponseBody
 //    @ApiDesc(value = "自动补全教师姓名",owner = "gryang")

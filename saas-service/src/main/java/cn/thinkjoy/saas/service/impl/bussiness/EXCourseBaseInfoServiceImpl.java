@@ -19,23 +19,9 @@ public class EXCourseBaseInfoServiceImpl implements IEXCourseBaseInfoService {
     @Resource
     ICourseBaseInfoDAO iCourseBaseInfoDAO;
 
-    @Resource
-    IEXCourseManageDAO iexCourseManageDAO;
-
-
-
     @Override
     public List<CourseBaseInfo> getCourseBaseInfoList() {
         return iCourseBaseInfoDAO.findAll("id", "asc");
     }
 
-    @Override
-    public CourseBaseInfo getCourseBaseInfoById(int id) {
-        return iCourseBaseInfoDAO.fetch(id);
-    }
-
-    @Override
-    public List<CourseBaseInfo> queryListByCondition(Map<String, Object> condition) {
-        return iexCourseManageDAO.queryListByCondition(condition);
-    }
 }
