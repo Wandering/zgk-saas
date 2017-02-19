@@ -96,7 +96,10 @@
                                     <div class="analysis-ratio">
                                         <span class="total-student">高二共计考生数量<span class="stu-count">0</span>人</span>
                                         <div class="ratio-detail">
-                                            <span class="ratio-left reach-line">预计0人上线</span>
+                                            <span class="ratio-left reach-line">
+                                                <i></i>
+                                            </span>
+
                                             <span class="ratio-right"></span>
                                         </div>
                                         <div id="partCourseAnalysisChart" style="width: 100%;height: 361px;margin-bottom: 35px;"></div>

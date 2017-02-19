@@ -706,6 +706,8 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
                 switch (type) {
                     case "class":
+                    case "class_adm":
+                    case "class_edu":
                         if (configuration.getEnName().equals("class_grade")) {
                             key1 = "class_grade";
                             value1 = val;

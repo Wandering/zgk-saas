@@ -3,9 +3,9 @@
  */
 var tnId = Common.cookie.getCookie('tnId');
 var countyId = Common.cookie.getCookie('countyId');
-if(countyId.substring(0,2)=='33'){
+if (countyId.substring(0, 2) == '33') {
     $('.subject-tyjs-item').show();
-}else{
+} else {
     $('.subject-tyjs-item').hide();
 }
 
@@ -27,7 +27,7 @@ $(function () {
 
 });
 
-function CourseAnalysis () {
+function CourseAnalysis() {
     this.selectCount = 0; //当前选中的课程数目,初始化0
     //if(countyId.substring(0,2)=='33'){
     //    this.course = ['物理', '化学', '生物', '地理', '历史', '政治', '通用技术'];  //当前选中的课程
@@ -75,7 +75,7 @@ CourseAnalysis.prototype = {
     historyCourseAnalysis: function (years, subjects) {
         var that = this;
         this.historyCourseAnalysisChart = echarts.init(document.getElementById('historyCourseAnalysisChart'));
-        if(countyId.substring(0,2)=='33'){
+        if (countyId.substring(0, 2) == '33') {
             this.historyCourseAnalysisOption = {
                 title: {
                     show: false,
@@ -149,7 +149,7 @@ CourseAnalysis.prototype = {
                 series: [
                     {
                         name: '物理',
-                        type:'line',
+                        type: 'line',
                         symbolSize: [9, 9],
                         itemStyle: {
                             normal: {
@@ -158,11 +158,11 @@ CourseAnalysis.prototype = {
                                 borderType: 'solid'
                             }
                         },
-                        data:subjects['物理']
+                        data: subjects['物理']
                     },
                     {
                         name: '化学',
-                        type:'line',
+                        type: 'line',
                         symbolSize: [9, 9],
                         itemStyle: {
                             normal: {
@@ -171,11 +171,11 @@ CourseAnalysis.prototype = {
                                 borderType: 'solid'
                             }
                         },
-                        data:subjects['化学']
+                        data: subjects['化学']
                     },
                     {
                         name: '生物',
-                        type:'line',
+                        type: 'line',
                         symbolSize: [9, 9],
                         itemStyle: {
                             normal: {
@@ -184,11 +184,11 @@ CourseAnalysis.prototype = {
                                 borderType: 'solid'
                             }
                         },
-                        data:subjects['生物']
+                        data: subjects['生物']
                     },
                     {
                         name: '政治',
-                        type:'line',
+                        type: 'line',
                         symbolSize: [9, 9],
                         itemStyle: {
                             normal: {
@@ -197,11 +197,11 @@ CourseAnalysis.prototype = {
                                 borderType: 'solid'
                             }
                         },
-                        data:subjects['政治']
+                        data: subjects['政治']
                     },
                     {
                         name: '历史',
-                        type:'line',
+                        type: 'line',
                         symbolSize: [9, 9],
                         itemStyle: {
                             normal: {
@@ -210,11 +210,11 @@ CourseAnalysis.prototype = {
                                 borderType: 'solid'
                             }
                         },
-                        data:subjects['历史']
+                        data: subjects['历史']
                     },
                     {
                         name: '地理',
-                        type:'line',
+                        type: 'line',
                         symbolSize: [9, 9],
                         itemStyle: {
                             normal: {
@@ -227,7 +227,7 @@ CourseAnalysis.prototype = {
                     },
                     {
                         name: '通用技术',
-                        type:'line',
+                        type: 'line',
                         symbolSize: [9, 9],
                         itemStyle: {
                             normal: {
@@ -240,7 +240,7 @@ CourseAnalysis.prototype = {
                     }
                 ]
             };
-        }else{
+        } else {
             this.historyCourseAnalysisOption = {
                 title: {
                     show: false,
@@ -314,7 +314,7 @@ CourseAnalysis.prototype = {
                 series: [
                     {
                         name: '物理',
-                        type:'line',
+                        type: 'line',
                         symbolSize: [9, 9],
                         itemStyle: {
                             normal: {
@@ -323,11 +323,11 @@ CourseAnalysis.prototype = {
                                 borderType: 'solid'
                             }
                         },
-                        data:subjects['物理']
+                        data: subjects['物理']
                     },
                     {
                         name: '化学',
-                        type:'line',
+                        type: 'line',
                         symbolSize: [9, 9],
                         itemStyle: {
                             normal: {
@@ -336,11 +336,11 @@ CourseAnalysis.prototype = {
                                 borderType: 'solid'
                             }
                         },
-                        data:subjects['化学']
+                        data: subjects['化学']
                     },
                     {
                         name: '生物',
-                        type:'line',
+                        type: 'line',
                         symbolSize: [9, 9],
                         itemStyle: {
                             normal: {
@@ -349,11 +349,11 @@ CourseAnalysis.prototype = {
                                 borderType: 'solid'
                             }
                         },
-                        data:subjects['生物']
+                        data: subjects['生物']
                     },
                     {
                         name: '政治',
-                        type:'line',
+                        type: 'line',
                         symbolSize: [9, 9],
                         itemStyle: {
                             normal: {
@@ -362,11 +362,11 @@ CourseAnalysis.prototype = {
                                 borderType: 'solid'
                             }
                         },
-                        data:subjects['政治']
+                        data: subjects['政治']
                     },
                     {
                         name: '历史',
-                        type:'line',
+                        type: 'line',
                         symbolSize: [9, 9],
                         itemStyle: {
                             normal: {
@@ -375,11 +375,11 @@ CourseAnalysis.prototype = {
                                 borderType: 'solid'
                             }
                         },
-                        data:subjects['历史']
+                        data: subjects['历史']
                     },
                     {
                         name: '地理',
-                        type:'line',
+                        type: 'line',
                         symbolSize: [9, 9],
                         itemStyle: {
                             normal: {
@@ -445,7 +445,7 @@ CourseAnalysis.prototype = {
 };
 
 //往年选课分析
-function getNumberByYear (tnId) {
+function getNumberByYear(tnId) {
     Common.ajaxFun('/selectClassesGuide/getNumberByYear.do', 'GET', {
         'tnId': tnId
     }, function (res) {
@@ -475,7 +475,7 @@ function getNumberByYear (tnId) {
             courseAnalysis.historyCourseAnalysis(historyData.year, historyData.subjects);
             console.log(historyData.subjects)
 
-            if(countyId.substring(0,2)!='33'){
+            if (countyId.substring(0, 2) != '33') {
                 delete historyData.subjects['通用技术'];
             }
             console.log(historyData.subjects)
@@ -486,7 +486,7 @@ function getNumberByYear (tnId) {
 }
 
 //单科选课情况分析
-function partCourseAnalysisChart (subjects, numbers) {
+function partCourseAnalysisChart(subjects, numbers) {
     var partCourseAnalysisChart = echarts.init(document.getElementById('partCourseAnalysisChart'));
     var partCourseAnalysisOption = {
         title: {
@@ -571,7 +571,7 @@ function partCourseAnalysisChart (subjects, numbers) {
 }
 
 //组合招生计划
-function groupCourseAnalysis (groups, stuNumbers) {
+function groupCourseAnalysis(groups, stuNumbers) {
     console.info('===================================');
     console.info(groups);
     console.info('===================================');
@@ -633,9 +633,9 @@ function groupCourseAnalysis (groups, stuNumbers) {
                 axisTick: {
                     show: false
                 },
-                axisLabel:{
-                    interval: 0 ,
-                    rotate:-30
+                axisLabel: {
+                    interval: 0,
+                    rotate: -30
                     //formatter:function(val){
                     //    return val.split("").join("\n");
                     //}
@@ -711,8 +711,9 @@ function groupCourseAnalysis (groups, stuNumbers) {
     groupCourseAnalysisBar.setOption(groupCourseAnalysisOption);
 }
 
+selectTypeAnalysis('25', '高二年级');
 //单科选课情况分析
-function selectTypeAnalysis (tnId, studentGrade) {
+function selectTypeAnalysis(tnId, studentGrade) {
     Common.ajaxFun('/selectClassesGuide/selectTypeAnalysis.do', 'GET', {
         'tnId': tnId,
         'studentGrade': studentGrade
@@ -721,17 +722,20 @@ function selectTypeAnalysis (tnId, studentGrade) {
             var data = res.bizData;
             $('.stu-count').html(data.count);
             if (data.top != 0) {
-                $('.reach-line').html('预计' + data.top + '人上线').css({'width': (data.top / data.count) * 100 + '%'});
+                $('.reach-line').css({'width': (data.top / data.count) * 100 + '%'})
+                    .find('i').html('预计' + data.top + '人上线');
             } else {
-                $('.reach-line').hide();//.html('预计' + data.top + '人上线').css({'width': '0%'});
+                //$('.reach-line').hide();//.html('预计' + data.top + '人上线').css({'width': '0%'});
                 $('.ratio-detail').hide();
+                $('.reach-line').css({'width': '0%'})
+                    .find('i').html('预计' + data.top + '人上线');
             }
             var datas = {
                 subjects: [],
                 numbers: []
             };
 
-            if(countyId.substring(0,2)!='33'){
+            if (countyId.substring(0, 2) != '33') {
                 delete data.limitTypeMap['通用技术'];
             }
 
@@ -745,7 +749,7 @@ function selectTypeAnalysis (tnId, studentGrade) {
             if (!isEmptyObject(data.oneTypeMap)) {
                 $.each(data.oneTypeMap, function (i, k) {
 
-                    if(i=="通用技术" || countyId.substring(0,2)=='33'){
+                    if (i == "通用技术" || countyId.substring(0, 2) == '33') {
                         subjectHtml.push('<span class="item subject-tyjs-item" style="display: none;>' + i + '（' + k + '人）</span>');
                     }
                     subjectHtml.push('<span class="item">' + i + '（' + k + '人）</span>');
@@ -757,7 +761,7 @@ function selectTypeAnalysis (tnId, studentGrade) {
                 subjectHtml.push('<span class="item">政治（0人）</span>');
                 subjectHtml.push('<span class="item">地理（0人）</span>');
                 subjectHtml.push('<span class="item">历史（0人）</span>');
-                if(countyId.substring(0,2)=='33'){
+                if (countyId.substring(0, 2) == '33') {
                     subjectHtml.push('<span class="item subject-tyjs-item" style="display: none;">通用技术（0人）</span>');
                 }
             }
@@ -772,7 +776,7 @@ function selectTypeAnalysis (tnId, studentGrade) {
 }
 
 //组合选课情况分析
-function getAnalysisGroup (tnId, grade) {
+function getAnalysisGroup(tnId, grade) {
     Common.ajaxFun('/selectClassesGuide/getAnalysisGroup.do', 'GET', {
         'tnId': tnId,
         'grade': grade //两个值: 高二或高三
@@ -787,8 +791,8 @@ function getAnalysisGroup (tnId, grade) {
                 datas.groups.push(k.group);
                 datas.stuNumbers.push(k.stuNumber);
             });
-            console.log("datas.groups="+datas.groups)
-            console.log("datas.stuNumbers="+datas.stuNumbers)
+            console.log("datas.groups=" + datas.groups)
+            console.log("datas.stuNumbers=" + datas.stuNumbers)
             groupCourseAnalysis(datas.groups, datas.stuNumbers);
         }
     }, function (res) {
@@ -815,7 +819,7 @@ Array.prototype.delete = function (varElement) {
 };
 
 //判断对象是否为空
-function isEmptyObject (e) {
+function isEmptyObject(e) {
     var t;
     for (t in e) {
         return !1;
