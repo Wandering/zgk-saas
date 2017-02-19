@@ -267,9 +267,14 @@ public class StudentController {
             LOGGER.info("文件类型: " + myfile.getContentType());
             LOGGER.info("文件名称: " + myfile.getName());
             LOGGER.info("文件原名: " + myfile.getOriginalFilename());
-            String realPath = env.getProp("configuration.excel.upload.url");
-            FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
-            result = exiTenantConfigInstanceService.uploadExcel(Constant.STUDENT, tnId, realPath + myfile.getOriginalFilename(),Integer.valueOf(classType));
+            String fileName = myfile.getName();
+            if(fileName.indexOf("_"+classType+"_") == -1){
+                result = "表中字段与模板中的字段不符，请先下载模板填写后再进行上传";
+            }else {
+                String realPath = env.getProp("configuration.excel.upload.url");
+                FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
+                result = exiTenantConfigInstanceService.uploadExcel(Constant.STUDENT, tnId, realPath + myfile.getOriginalFilename(),Integer.valueOf(classType));
+            }
 
         }
         LOGGER.info("==================student excel上传 E==================");
