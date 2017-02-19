@@ -131,7 +131,7 @@ public  class ParamsUtils {
                 String regularStr = getConverReg(checkRuleStr);
                 LOGGER.info("转换正则:" + regularStr);
 
-                LOGGER.info((x+1) + "行-" + (key+1) + "列 value:" + val + "");
+                LOGGER.info((x+1+1) + "行-" + (key+1) + "列 value:" + val + "");
                 boolean isNoth = isNothing(val);
                 if (isNoth)
                     return "输入的数据不完整，请完善数据后再上传";
@@ -151,7 +151,7 @@ public  class ParamsUtils {
                 }
                 LOGGER.info("校验结果:" + valid);
                 if (!valid) {
-                    return (x+1)+ "行-" + (key+1) + "列,数据校验失败,请检查!";
+                    return (x+1+1)+ "行-" + (key+1) + "列,数据校验失败,请检查!";
                 }
                 y++;
             }
