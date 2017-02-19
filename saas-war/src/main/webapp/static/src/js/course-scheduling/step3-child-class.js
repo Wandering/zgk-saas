@@ -54,7 +54,8 @@ var HashHandle = {
                     case 2:
                         break;
                     case 3:
-                        that.scheduleTaskTrigger();
+                        $('.btn-one-key').addClass('dh');
+                        that.scheduleTaskState();
                         break;
                     default:
                         break;
@@ -85,7 +86,7 @@ var HashHandle = {
             'tnId':tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
-                if(res.bizData == 'true'){
+                if(res.bizData == true){
                     that.scheduleTaskState();
                 }
             }
@@ -102,7 +103,7 @@ var HashHandle = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 // 0:正在排课  1:排课成功   -1 ：排课失败
-                var dataNum = '0';
+                var dataNum = res.bizData;
                 switch (parseInt(dataNum)) {
                     case 0:
                         console.log("正在排课");
@@ -120,7 +121,6 @@ var HashHandle = {
                         ClassRoomTableIns.getClassRoom();
                         ClassRoomTableIns.getQueryCourse();
                         ClassRoomTableIns.getQueryClass();
-
                         break;
                     case -1:
                         console.log("排课失败");
@@ -413,7 +413,6 @@ $(function () {
     // 点击一键排课
     $('.btn-one-key').on('click',function(){
         HashHandle.scheduleTaskTrigger();
-        HashHandle.scheduleTaskState();
     });
 
     // 选择教室
