@@ -23,7 +23,9 @@ public class FileOperation {
     //年级不排课
     public static final String GRAD_NON_DISPACHING="grad_non_dispaching";
     //教师设置
-    public static final String TEACHERS_SETTING="teachers_setting";
+    public static final String TEACHERS_SETTING="teachers_setting_preference";
+
+    public static final String PARMETERS="parameters";
 
     public static final String SCHEDULE_RESULT="result";
 

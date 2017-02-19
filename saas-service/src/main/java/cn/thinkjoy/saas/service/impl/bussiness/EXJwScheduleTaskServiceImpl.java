@@ -144,6 +144,10 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     public boolean InitParmasFile(final Integer taskId, final Integer tnId) throws IOException {
         boolean result = false;
 
+        List<StringBuffer> parametersBuffers =getParameters();
+
+        result = printBuffers(tnId,taskId,parametersBuffers, FileOperation.PARMETERS);
+
         List<StringBuffer> admClassRuleBuffers = getClassRule(taskId,1);//行政班 不排课
 
         result = printBuffers(tnId,taskId,admClassRuleBuffers, FileOperation.ADMIN_CLASS_NON_DISPACHING);
@@ -769,6 +773,20 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return stringBuffers;
     }
 
+    private List<StringBuffer> getParameters() {
+        List<StringBuffer> stringBuffers = new ArrayList<>();
+        StringBuffer stringBuffer1 = new StringBuffer();
+        stringBuffer1.append(101);
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+        stringBuffer1.append(20);
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+        stringBuffer1.append(200);
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+        stringBuffer1.append(10);
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+        stringBuffers.add(stringBuffer1);
+        return stringBuffers;
+    }
     /**
      * 行政班&走读班
      * @param taskId
