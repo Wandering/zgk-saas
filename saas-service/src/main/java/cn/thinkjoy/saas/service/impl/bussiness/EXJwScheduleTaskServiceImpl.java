@@ -704,7 +704,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         stringBuffer1.append(sw);
         stringBuffer1.append(FileOperation.LINE_SPLIT);
 
-        stringBuffer1.append(9);
+        stringBuffer1.append(14);
         stringBuffer1.append(FileOperation.LINE_SPLIT);
 
         for (JwTeachDate jwTeachDate : jwTeachDates) {
