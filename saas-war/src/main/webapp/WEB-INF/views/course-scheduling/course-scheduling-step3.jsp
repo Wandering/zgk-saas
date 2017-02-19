@@ -61,6 +61,28 @@
                             </div>
                             <div id="one-key-page" class="">
                                 <div class="btn-one-key dh">一键生成课表</div>
+                                <div class="arranging-course-tips dh">
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                            <span class="sr-only">100% Complete</span>
+                                        </div>
+                                    </div>
+                                    <p>正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦</p>
+                                </div>
+
+
+
+                                <%--<div class="wrapper">--%>
+                                    <%--<div class="load-bar">--%>
+                                        <%--<div class="load-bar-inner" data-loading="0"> <span id="counter"></span> </div>--%>
+                                    <%--</div>--%>
+                                    <%--<h1>正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦</h1>--%>
+                                <%--</div>--%>
+
+
+
+
+
                                 <div class="info-modify dh">
                                     <p>基础信息/排课规则已更改，是否重新排课</p>
                                     <div class="retry-scheduling">重新排课</div>
@@ -88,17 +110,17 @@
                             </div>
                             <div id="control-jsp" class="dh">
                                 <div class="bottom-page">
-                                    <%@ include file="../course-scheduling/step3-child-class.jsp"%>
-                                </div>
-                                <div class="bottom-page dh">
-                                    <%@ include file="../course-scheduling/step3-child-teacher.jsp"%>
-                                </div>
-                                <div class="bottom-page dh">
-                                    <%@ include file="../course-scheduling/step3-child-student.jsp"%>
-                                </div>
-                                <div class="bottom-page dh">
                                     <%@ include file="../course-scheduling/step3-child-all.jsp"%>
                                 </div>
+                                <div class="bottom-page">
+                                    <%@ include file="../course-scheduling/step3-child-class.jsp"%>
+                                </div>
+                                <div class="bottom-page">
+                                    <%@ include file="../course-scheduling/step3-child-teacher.jsp"%>
+                                </div>
+                                <%--<div class="bottom-page dh">--%>
+                                    <%--<%@ include file="../course-scheduling/step3-child-student.jsp"%>--%>
+                                <%--</div>--%>
                             </div>
                         </div>
                     </div>
