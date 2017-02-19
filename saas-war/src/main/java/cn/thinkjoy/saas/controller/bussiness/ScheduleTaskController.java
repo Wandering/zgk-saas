@@ -5,7 +5,11 @@ import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
-import cn.thinkjoy.saas.domain.*;
+import cn.thinkjoy.saas.domain.JwCourse;
+import cn.thinkjoy.saas.domain.JwScheduleTask;
+import cn.thinkjoy.saas.domain.JwTeachDate;
+import cn.thinkjoy.saas.domain.JwTeacher;
+import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.JwScheduleTaskDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
@@ -17,27 +21,25 @@ import cn.thinkjoy.saas.service.IJwCourseService;
 import cn.thinkjoy.saas.service.IJwScheduleTaskService;
 import cn.thinkjoy.saas.service.IJwTeachDateService;
 import cn.thinkjoy.saas.service.IJwTeacherService;
-import cn.thinkjoy.saas.service.bussiness.EXIConfigurationService;
-import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
-import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
-import cn.thinkjoy.saas.service.bussiness.IExTeachTimeService;
+import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
+import com.alibaba.dubbo.common.json.ParseException;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,6 +74,9 @@ public class ScheduleTaskController {
 
     @Autowired
     private IJwTeachDateService jwTeachDateService;
+
+    @Resource
+    private IEXJwScheduleTaskService iexJwScheduleTaskService;
 
     @Autowired
     IExTeachTimeService teachTimeService;
@@ -115,16 +120,25 @@ public class ScheduleTaskController {
         return jwScheduleTask.getStatus();
     }
     /**
-     * 修改拍客任务状态
+     * 一键排课
      * @return
      */
     @ResponseBody
-    @RequestMapping("/updateScheduleTaskStatus")
-    public boolean updateScheduleTaskStatus(@RequestParam Integer taskId){
-        JwScheduleTask jwScheduleTask = new JwScheduleTask();
-        jwScheduleTask.setId(taskId);
-        jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
-        return jwScheduleTaskService.update(jwScheduleTask)>0;
+    @RequestMapping("/trigger")
+    public boolean updateScheduleTaskStatus(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
+        return iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+    }
+
+    /**
+     * 排课结果查询
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/state")
+    public String scheduleResult(@RequestParam Integer taskId,@RequestParam Integer tnId) {
+        return iexJwScheduleTaskService.getSchduleResultStatus(taskId, tnId);
     }
     /**
      * 修改排课任务
@@ -468,30 +482,29 @@ public class ScheduleTaskController {
      * 排课结果
      * @return
      */
-//    @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
-//    @ResponseBody
-//    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) {
-//        Map<String,Object> paramsMap  = null;
-//        if (param!=null) {
-//            try {
-//                paramsMap = JSON.parseObject(param);
-//            } catch (Exception e) {
-//                paramsMap = Maps.newHashMap();
-//            }
-//        }
-//        Map resultMap = new HashMap();
-//        Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-//        if ("all".equals(type)){
-//            resultMap.put("result",iexJwScheduleTaskService.getAllCourseResult(taskId, tnId));
-//            return resultMap;
-//        }
-//        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap);
-//
-//
-//        resultMap.put("result",courseResultView);
-//        return resultMap;
-//    }
+    @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) throws IOException, ParseException {
+        Map<String,Object> paramsMap  = null;
+        if (param!=null) {
+            try {
+                paramsMap = JSON.parseObject(param);
+            } catch (Exception e) {
+                paramsMap = Maps.newHashMap();
+            }
+        }
+        Map resultMap = new HashMap();
+        Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        if ("all".equals(type)){
+            resultMap.put("result",iexJwScheduleTaskService.getAllCourseResult(taskId, tnId));
+            return resultMap;
+        }
+        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap);
 
+
+        resultMap.put("result",courseResultView);
+        return resultMap;
+    }
     public static void main(String[] args) {
         String param = "{\"course\":\"外语\",\"teacherId\":\"\"}";
         Map<String,Object>  map = JSON.parseObject(param);

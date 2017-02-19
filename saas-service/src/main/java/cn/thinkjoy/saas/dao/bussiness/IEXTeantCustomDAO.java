@@ -151,4 +151,5 @@ public interface IEXTeantCustomDAO {
      */
     List<LinkedHashMap<String, Object>> selectExistByCloumn(Map map);
 
+    List<LinkedHashMap<String,Object>> likeTeacherByParams(@Param("list")List<Map<String, Object>> list);
 }

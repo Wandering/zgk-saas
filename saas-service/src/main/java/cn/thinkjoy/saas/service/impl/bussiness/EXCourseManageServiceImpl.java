@@ -35,6 +35,21 @@ public class EXCourseManageServiceImpl implements IEXCourseManageService {
     }
 
     /**
+     * 根据TnId查询课程
+     *
+     * @param tnId
+     * @param gradeCode
+     * @return
+     */
+    @Override
+    public List<CourseManageDto> getCourseByTnIdAndGrade(Integer tnId, Integer gradeCode) {
+        Map<String,Object> params = new HashMap();
+        params.put("tnId",tnId);
+        params.put("gradeId",gradeCode);
+        return iexCourseManageDAO.getCourseByParams(params);
+    }
+
+    /**
      * 根据课程和TnId查询年级信息
      *
      * @param tnId
