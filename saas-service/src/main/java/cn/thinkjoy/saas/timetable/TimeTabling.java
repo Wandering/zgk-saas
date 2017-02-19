@@ -1,4 +1,4 @@
-package cn.thinkjoy.saas.service.common;
+package cn.thinkjoy.saas.timetable;
 
 /**
  * Created by douzy on 17/2/18.

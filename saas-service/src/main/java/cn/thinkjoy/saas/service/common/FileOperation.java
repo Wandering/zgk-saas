@@ -23,7 +23,9 @@ public class FileOperation {
     //年级不排课
     public static final String GRAD_NON_DISPACHING="grad_non_dispaching";
     //教师设置
-    public static final String TEACHERS_SETTING="teachers_setting";
+    public static final String TEACHERS_SETTING="teachers_setting_preference";
+
+    public static final String PARMETERS="parameters";
 
     public static final String SCHEDULE_RESULT="result";
 
@@ -34,7 +36,7 @@ public class FileOperation {
 
 
 //    private static String path = "C:\\timetable\\schedule\\task\\"; //windows server 文件保存路径设置
-//    private static String path = "/Users/douzy/sched10.136.13.233ule/task/"; //本地 文件保存路径设置
+//    private static String path = "/Users/douzy/schedule/task/"; //本地 文件保存路径设置
     private static String path = "/home/ubuntu/tm/schedule/task/"; //线上 文件保存路径设置
 
     private static String filenameTemp;
