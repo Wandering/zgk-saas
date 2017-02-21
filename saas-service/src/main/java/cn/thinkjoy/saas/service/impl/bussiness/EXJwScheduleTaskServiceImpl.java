@@ -285,6 +285,12 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.getTenantCustom(map);
 
+
+        StringBuffer stringBuffer1 = new StringBuffer();
+        stringBuffer1.append(linkedHashMaps.size());
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+        stringBuffers.add(stringBuffer1);
+
         for (int j = 0; j < linkedHashMaps.size(); j++) {
             LinkedHashMap<String, Object> dataLinkedMap = linkedHashMaps.get(j);
             StringBuffer stringBuffer = new StringBuffer();
@@ -565,6 +571,11 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         List<CourseManageVo> courseManageVos=iCourseManageDAO.selectCourseManageInfo(map);
 
 
+        StringBuffer stringBuffer1 = new StringBuffer();
+        stringBuffer1.append(courseManageVos.size());
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+        stringBuffers.add(stringBuffer1);
+
         for(CourseManageVo courseManageVo:courseManageVos) {
             StringBuffer stringBuffer = new StringBuffer();
             CourseBaseInfo courseBaseInfo = iCourseBaseInfoDAO.fetch(courseManageVo.getCourseId());
@@ -802,6 +813,10 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.getTenantCustom(map);
 
+        StringBuffer stringBuffer1 = new StringBuffer();
+        stringBuffer1.append(linkedHashMaps.size());
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+        stringBuffers.add(stringBuffer1);
 
         for (int j = 0; j < linkedHashMaps.size(); j++) {
 
