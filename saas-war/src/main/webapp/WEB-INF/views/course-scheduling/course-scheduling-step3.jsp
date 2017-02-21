@@ -43,6 +43,22 @@
                         <div id="page-container">
                             <%@ include file="./../common/footer.jsp" %>
                             <%--<%@ include file="../course-scheduling/step3-common.jsp"%>--%>
+                            <script src="/static/src/lib/jquery.table2excel/jquery.table2excel.js"></script>
+                            <script>
+                                $(function() {
+                                    $(".output-tpl").click(function(){
+                                        $(".table").table2excel({
+                                            exclude: ".noExl",
+                                            name: "Excel Document Name",
+                                            filename: "课表",
+                                            exclude_img: true,
+                                            exclude_links: true,
+                                            exclude_inputs: true,
+                                            fileext: ".xls"
+                                        });
+                                    });
+                                });
+                            </script>
                             <div class="main-title">
                                 <h3>排课任务</h3>
                             </div>
@@ -67,7 +83,7 @@
                                             <span class="sr-only">100% Complete</span>
                                         </div>
                                     </div>
-                                    <p>正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦</p>
+                                    <p>正在努力排课中,预计3-10分钟,请耐心等待哦</p>
                                 </div>
 
 
@@ -90,7 +106,8 @@
                                 </div>
                                 <div class="scheduling-error dh">
                                     <i class="icon-cry-face"></i>
-                                    <p>排课失败~ 因为*******，所以无法排出课表。请调整**规则/信息后，再进行排课</p>
+                                    <%--<p>排课失败~ 因为*******，所以无法排出课表。请调整**规则/信息后，再进行排课</p>--%>
+                                    <p>排课失败!,请调整基础规则后，再重新排课</p>
                                 </div>
                             </div>
                             <%--教室课表|教师课表|学生课表|总课表--%>
@@ -129,22 +146,7 @@
         </div>
     </div>
 </div>
-<script src="/static/src/lib/jquery.table2excel/jquery.table2excel.js"></script>
-<script>
-    $(function() {
-        $(".output-tpl").click(function(){
-            $(".table").table2excel({
-                exclude: ".noExl",
-                name: "Excel Document Name",
-                filename: "课表",
-                exclude_img: true,
-                exclude_links: true,
-                exclude_inputs: true,
-                fileext: ".xls"
-            });
-        });
-    });
-</script>
+
 <%--<script src="<%=ctx%>/static/src/js/course-scheduling/step3-common.js"></script>--%>
 <script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>
 </body>

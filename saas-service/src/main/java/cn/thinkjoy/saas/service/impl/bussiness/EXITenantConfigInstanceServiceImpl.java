@@ -706,6 +706,8 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
                 switch (type) {
                     case "class":
+                    case "class_adm":
+                    case "class_edu":
                         if (configuration.getEnName().equals("class_grade")) {
                             key1 = "class_grade";
                             value1 = val;
@@ -1147,13 +1149,13 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         List<LinkedHashMap<String,Object>> list = new ArrayList();
         switch (classType) {
             case "class_adm":
-                map.put("key1", "class_grade");
-                map.put("value1", grade);
+                map.put("searchKey", "class_grade");
+                map.put("searchValue", grade);
                 list = iexTeantCustomDAO.getTenantCustom(map);
                 break;
             case "class_edu":
-                map.put("key1", "class_grade");
-                map.put("value1", grade);
+                map.put("searchKey", "class_grade");
+                map.put("searchValue", grade);
                 list = iexTeantCustomDAO.getTenantCustom(map);
                 break;
             default:

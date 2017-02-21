@@ -78,12 +78,22 @@ ul {
             font-size: 14px;
             .ratio-left {
                 display: inline-block;
-                width: 47.5%;
+                //width: 47.5%;
                 height: 26px;
                 line-height: 26px;
-                padding-left: 8px;
+                //padding-left: 8px;
                 background: #EA6264;
                 color: #FFFFFF;
+                position: relative;
+                i{
+                    position: absolute;
+                    left:10px;
+                    width: 200px;
+                    display: block;
+                    color: #333;
+                    font-style: normal;
+                    font-size: 12px;
+                }
             }
             .ratio-right {
                 display: inline-block;

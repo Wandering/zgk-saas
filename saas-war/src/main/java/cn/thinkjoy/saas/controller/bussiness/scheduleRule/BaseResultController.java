@@ -97,16 +97,19 @@ public class BaseResultController {
      */
     @RequestMapping(value = "/queryCourse",method = RequestMethod.GET)
     @ResponseBody
-    public List queryCourse(@RequestParam Integer taskId) {
+    public Set<Map<String,Object>> queryCourse(@RequestParam Integer taskId) {
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         List<CourseManageDto> courseManageDtos = courseManageService.getCourseByTnId(tnId);
+        Map<String,Object> map;
+        Set<Map<String,Object>> maps = new HashSet<>();
         for (CourseManageDto courseManageDto : courseManageDtos) {
-            courseManageDto.setId(null);
-            courseManageDto.setTnId(null);
-            courseManageDto.setGradeId(null);
-            courseManageDto.setCourseType(null);
+            map = new HashMap<>();
+            map.put("courseBaseId",courseManageDto.getCourseBaseId());
+            map.put("courseBaseName",courseManageDto.getCourseBaseName());
+            maps.add(map);
         }
-        return courseManageDtos;
+
+        return maps;
     }
 
 

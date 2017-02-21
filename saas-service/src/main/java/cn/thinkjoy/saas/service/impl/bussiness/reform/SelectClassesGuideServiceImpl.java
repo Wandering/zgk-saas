@@ -151,7 +151,7 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
             String year=String.valueOf(Integer.valueOf(String.valueOf(map1.get("class_in_year")))+3);
             String[] types=map1.get("student_major_type") == null ? null : map1.get("student_major_type").split("-");
             if (types == null){
-                break;
+                continue;
             }
             if(!yearMap.containsKey(year)){
                 Map<String,Integer> map2=new HashMap<String, Integer>();

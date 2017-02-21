@@ -88,4 +88,7 @@ public class Constant {
     public static final java.lang.String COURSE_LINE_TABLE_SPLIT_T = "\t";
     public static final java.lang.String COURSE_TABLE_LINE_SPLIT_CHAR = "  ";
     public static final java.lang.String COURSE_TABLE_LINE_SPLIT_CLASS = "     ";
+    public static final java.lang.String PATH_SCHEDULE = "admin_course_0.txt";
+    //redis缓存时间30天
+    public static final long SCHEDULE_REDIS_TIME = 1 * 30;
 }
