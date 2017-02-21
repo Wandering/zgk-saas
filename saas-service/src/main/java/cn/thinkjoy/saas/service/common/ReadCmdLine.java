@@ -26,7 +26,7 @@ public class ReadCmdLine {
             //waitFor()判断Process进程是否终止，通过返回值判断是否正常终止。0代表正常终止
             int c=proc.waitFor();
             if(c!=0)
-                System.out.println("Process进程异常终止");
+                System.out.println("=====================Schedule Task Process进程异常终止=====================");
         } catch (Throwable t) {
             t.printStackTrace();
         }
