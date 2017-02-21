@@ -289,12 +289,13 @@ $(function () {
         });
     });
     // 跳转进入流程设置,检测完整性
-    $('body').on('click', '.start-schedule-btn, .timetable-btn, .again-schedule-btn', function () {
+    $('.start-schedule-btn, .timetable-btn, .again-schedule-btn').on('click', function () {
         var id = $(this).parent().attr('dataid');
         var gradeName = $(this).parent().attr('gradeName');
         var scheduleName = $(this).parent().attr('scheduleName');
         Common.cookie.setCookie('gradeName', gradeName);
         Common.cookie.setCookie('scheduleName', scheduleName);
+        Common.cookie.setCookie('taskId', id);
         schedule.checkTaskBaseInfo(id);
 
     });
