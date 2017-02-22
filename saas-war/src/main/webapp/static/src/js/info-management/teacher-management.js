@@ -164,7 +164,7 @@ TeacherManagement.prototype = {
             if (res.rtnCode == "0000000") {
                 $('#box-row-classes').removeClass('hides');
                 $.each(res.bizData.class, function (i, v) {
-                    classItemArr.push('<label><input name="form-field-checkbox" type="checkbox" className = "'+ v.className +'" class="ace form-input-checkbox" /><span class="lbl">'+ v.className +'</span></label>&nbsp;&nbsp;&nbsp;&nbsp;');
+                    classItemArr.push('<label class="push-label"><input name="form-field-checkbox" type="checkbox" className = "'+ v.className +'" class="ace form-input-checkbox" /><span class="lbl">'+ v.className +'</span></label>');
                 });
             } else {
                 layer.msg(res.msg);
