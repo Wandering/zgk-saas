@@ -138,15 +138,17 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     }
 
     private String getScheduleTaskPath(Integer taskId, Integer tnId) {
-        String result = "";
-        Map map = new HashMap();
-        map.put("tnId", tnId);
-        map.put("id", taskId);
-        JwScheduleTask jwScheduleTask = selectScheduleTaskPath(map);
-        if (jwScheduleTask == null || StringUtils.isBlank(jwScheduleTask.getPath()))
-            result = FileOperation.getParamsPath(taskId, tnId);
-        else
-            result = jwScheduleTask.getPath();
+
+        String result = "/Users/dengshaofei/0221_test/";
+//        String result = "";
+//        Map map = new HashMap();
+//        map.put("tnId", tnId);
+//        map.put("id", taskId);
+//        JwScheduleTask jwScheduleTask = selectScheduleTaskPath(map);
+//        if (jwScheduleTask == null || StringUtils.isBlank(jwScheduleTask.getPath()))
+//            result = FileOperation.getParamsPath(taskId, tnId);
+//        else
+//            result = jwScheduleTask.getPath();
 
         return result;
     }

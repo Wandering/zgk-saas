@@ -8,9 +8,6 @@ $('.scheduleName').text(scheduleName);
 /**
  * 地址Hash处理
  */
-var taskId = Common.cookie.getCookie('taskId');
-var scheduleName = Common.cookie.getCookie('scheduleName');
-$('.scheduleName').text(scheduleName);
 
 
 function ClassRoomTable() {
@@ -379,6 +376,7 @@ var HashHandle = {
                         console.log("排课失败");
                         $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips').addClass('dh');
                         $('.scheduling-error').removeClass('dh');
+                        that.scheduleTaskError();
                         break;
                     default:
                         break;
@@ -387,14 +385,28 @@ var HashHandle = {
         }, function (res) {
             layer.msg(res.msg);
         }, true);
+    },
+    // 错误接口 /scheduleTask/error/desc?taskId=37&tnId=10
+    scheduleTaskError:function(){
+        var that = this;
+        Common.ajaxFun('/scheduleTask/error/desc', 'GET', {
+            'taskId': taskId,
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var errorBoxList = [];
+                for(var i=0;i<res.bizData.length;i++){
+                    errorBoxList.push('<li>'+res.bizData[i]+'</li>');
+                }
+                $('.error-box-list').append(errorBoxList);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        }, true);
     }
 
 };
 HashHandle.init();
-ClassRoomTableIns.getQueryClass();
-
-
-
 
 
 

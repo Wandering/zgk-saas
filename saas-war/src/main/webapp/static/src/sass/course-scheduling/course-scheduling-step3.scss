@@ -99,13 +99,11 @@
       border-radius: 2px;
       text-align: center;
       line-height: 34px;
-      float: left;
       cursor: pointer;
+      display: inline-block;
       transition: all .3s ease-out;
     }
     .retry-scheduling {
-      margin-left: 489px;
-      margin-right: 29px;
       color: $mainColor;
       border: 1px solid $mainColor;
       &:hover {
@@ -121,7 +119,6 @@
         color: #fff;
       }
     }
-
   }
   .scheduling-error {
     margin: $parentMargin;
@@ -129,6 +126,7 @@
     .icon-cry-face {
       margin-bottom: 20px;
     }
+    color: $mainColor;
   }
 }
 #role-scheduling-tab {
