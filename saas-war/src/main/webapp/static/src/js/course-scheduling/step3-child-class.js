@@ -1,7 +1,7 @@
 var tnId = Common.cookie.getCookie('tnId');
 var taskId = Common.cookie.getCookie('taskId');
 var scheduleName = Common.cookie.getCookie('scheduleName');
-var resValtaskId = Common.cookie.getCookie('resVal' + taskId);
+//var resValtaskId = Common.cookie.getCookie('resVal' + taskId);
 $('.scheduleName').text(scheduleName);
 
 
@@ -428,8 +428,6 @@ var HashHandle = {
 
 };
 HashHandle.init();
-
-HashHandle.scheduleTaskError();
 
 $(function () {
 

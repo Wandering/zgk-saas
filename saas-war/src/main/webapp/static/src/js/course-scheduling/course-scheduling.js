@@ -30,7 +30,7 @@ Schedule.prototype = {
                             result = '<a href="javascript: void(0);" class="start-schedule-btn">开始排课</a>';
                             break;
                         case 2: // 排课失败,重新排课
-                            result = '<a href="javascript: void(0);" class="fail-schedule-btn btn-split">排课失败</a><a href="javascript: void(0);" class="again-schedule-btn btn-split">重新排课</a>';
+                            result = '排课失败&nbsp;&nbsp;<a href="javascript: void(0);" class="again-schedule-btn btn-split">重新排课</a>';
                             break;
                         case 3: // 排课中
                             result = '排课中';
@@ -301,7 +301,4 @@ $(function () {
         Common.cookie.setCookie('taskId', id);
         schedule.checkTaskBaseInfo(id);
     });
-
-    var dataNum = '1';
-    Common.cookie.setCookie("resVal"+taskId, parseInt(dataNum));
 });
