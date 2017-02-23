@@ -21,7 +21,7 @@ public interface IEXJwScheduleTaskService {
      * @param type
      * @return
      */
-    public CourseResultView getCourseResult(String type,Integer taskId, Integer tnId, Map<String,Object> paramsMap);
+    public CourseResultView getCourseResult(String type,Integer taskId, Integer tnId, Map<String,Object> paramsMap,Map<String, Object> courseTimeConfig);
 
     /**
      * 总课表
@@ -56,7 +56,7 @@ public interface IEXJwScheduleTaskService {
      * @param tnId
      * @return
      */
-    String getSchduleErrorDesc(Integer taskId, Integer tnId);
+    List<String> getSchduleErrorDesc(Integer taskId, Integer tnId);
 
 
     JwScheduleTask selectScheduleTaskPath(Map map);

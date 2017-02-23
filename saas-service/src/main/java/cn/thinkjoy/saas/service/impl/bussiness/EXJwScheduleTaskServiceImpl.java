@@ -24,6 +24,7 @@ import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.service.IGradeService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
+import cn.thinkjoy.saas.service.bussiness.IEXTeacherService;
 import cn.thinkjoy.saas.service.common.ConvertUtil;
 import cn.thinkjoy.saas.service.common.FileOperation;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
@@ -107,6 +108,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     IJwScheduleTaskDAO iJwScheduleTaskDAO;
     @Autowired
     IEXJwScheduleTaskDAO iexJwScheduleTaskDAO;
+
+    @Autowired
+    IEXTeacherService iexTeacherService;
 //    @Autowired
 //    private
 
@@ -116,15 +120,14 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
 
     @Override
-    public CourseResultView getCourseResult(String type,Integer taskId,Integer tnId,Map<String,Object> paramsMap) {
-
+    public CourseResultView getCourseResult(String type,Integer taskId,Integer tnId,Map<String,Object> paramsMap,Map<String, Object> courseTimeConfig) {
         switch (type){
             case Constant.TABLE_TYPE_TEACHER:
-                return this.getTeacherCourseTable(tnId,taskId,paramsMap);
+                return this.getTeacherCourseTable(tnId,taskId,paramsMap,courseTimeConfig);
             case Constant.STUDENT:
                 break;
             case Constant.TABLE_TYPE_CLASS:
-                return this.getClassCourseTable(tnId,taskId,paramsMap);
+                return this.getClassCourseTable(tnId,taskId,paramsMap,courseTimeConfig);
             default:
                 break;
         }
@@ -175,7 +178,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      * @return
      */
     @Override
-    public String getSchduleErrorDesc(Integer taskId, Integer tnId) {
+    public List<String> getSchduleErrorDesc(Integer taskId, Integer tnId) {
+
+        List<String> failMsg=new ArrayList<>();
 
         String path=getScheduleTaskPath(taskId,tnId);
 
@@ -184,18 +189,59 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         File file = new File(filenPath);
 
-        StringBuilder result = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
             String s = null;
             while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
-                result.append(s);
+                if (!s.equals("0")) {
+                    Map<String, String> map = JSON.parse(s, HashMap.class);
+                    String regex = "\"data_error\":\"(.*?)\",";//别忘了使用非贪婪模式！
+                    Matcher matcher = Pattern.compile(regex).matcher(s);
+                    while (matcher.find()) {
+                        String ret = matcher.group(1);
+                        failMsg.add(getRuleMessage(map, ret, taskId, tnId));
+                    }
+                }
             }
             br.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result.toString();
+        return failMsg;
+    }
+
+    /**
+     * 硬性规则违反描述
+     * @param map
+     * @param ret
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    private String  getRuleMessage(Map<String,String> map,String ret,Integer taskId,Integer tnId) {
+        String msg = "";
+        switch (ret) {
+            case "01":
+                String adm01 = map.get("adm"),
+                        time01 = map.get("time");
+                String className01 = getClassName(taskId, tnId, adm01);
+                msg = String.format(FileOperation.NON_ADM_ERROR_MSG, className01, time01);
+                break;
+            case "02":
+                String teacher02 = map.get("teacher"),
+                        time02 = map.get("time");
+                String teacherName02 = getTeacherName(taskId, tnId, teacher02);
+                msg = String.format(FileOperation.NON_TEACHER_ERROR_MSG, teacherName02, time02);
+                break;
+            case "03":
+                String adm03 = map.get("adm"),
+                        course03 = map.get("course");
+                String className03 = getClassName(taskId, tnId, adm03);
+                CourseBaseInfo courseBaseInfo = courseBaseInfoDAO.fetch(course03);
+                msg = String.format(FileOperation.NON_COURSE_ERROR_MSG, className03, courseBaseInfo.getCourseName());
+                break;
+        }
+        return msg;
     }
 
     /**
@@ -214,14 +260,11 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         File file = new File(filenPath);
 
-        StringBuilder result = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
             String s = null;
             while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
-
                 Map<String,String> map=JSON.parse(s,HashMap.class);
-
                 String regex="\"imperf\":\"(.*?)\",";//别忘了使用非贪婪模式！
                 Matcher matcher= Pattern.compile(regex).matcher(s);
                 while(matcher.find())
@@ -229,8 +272,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     String ret=matcher.group(1);
                     failMsg.add(getPliableRuleMessage(map,ret,taskId,tnId));
                 }
-
-                result.append(s);
             }
             br.close();
         } catch (Exception e) {
@@ -1162,8 +1203,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             Map<String,Object> timeConfigMap = this.getCourseTimeConfig(tnId,taskId);
             resultMap.put("teachDate",timeConfigMap.get("teachDate").toString());
             resultMap.put("teachTime",timeConfigMap.get("time").toString());
-//            List timeList = (List) timeConfigMap.get("list");
-//            int time = Integer.valueOf(timeConfigMap.get("time").toString());
+
+
             int everyDaySection = Integer.valueOf(timeConfigMap.get("count").toString());
             LOGGER.info("************获取时间设置 E************");
 
@@ -1196,6 +1237,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             }
             List<List<String>> weekCourseList;
             List<String> dayCourseList;
+            Map<String,Object> teachers = this.getTeacherByCourse(tnId,taskId,grade);
             for (String courseLine : allCourseList){
                 String[] courseInfo = courseLine.split(Constant.COURSE_TABLE_LINE_SPLIT_CLASS);
                 String courseStr = courseInfo[1];
@@ -1222,9 +1264,10 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                         if (course == ""){
                             teacherName = "";
                         }else {
-                            teacherName = this.getTeacherByCourseAndClass(course,grade,className,tnId,taskId);
+//
+                            Map<String,Object> teacherMap = (Map<String,Object>)teachers.get(getTeacherKey(course,className));
+                            teacherName = teacherMap.get("teacher_name").toString();
                         }
-
                         //课程转换
                         dayCourseList.add(mergeTeacherAndCourse(course,teacherName));
                     }
@@ -1349,33 +1392,52 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     }
 
 
-
     /**
      * 获取教师
      * @return
      */
-    private String getTeacherByCourseAndClass(String course,String grade,String className,int tnId,int taskId){
+    private Map<String,Object> getTeacherByCourse(int tnId,int taskId,String grade){
         String tableName = ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER,tnId);
-        List<Map<String,Object>> params = new ArrayList<>();
         Map<String,Object> param = new HashMap<>();
-        param = new HashMap<>();
-        param.put("key","teacher_grade");
-        param.put("op","=");
-        param.put("value",grade);
-        params.add(param);
-        param = new HashMap<>();
-        param.put("key","teacher_class");
-        param.put("op","like");
-        param.put("value","%"+className+"%");
-        params.add(param);
-        param = new HashMap<>();
-        param.put("key","teacher_major_type");
-        param.put("op","=");
-        param.put("value",course);
-        params.add(param);
-        List<Map<String,Object>> rtnList = exiTenantConfigInstanceService.likeTableByParams(tableName,params);
-        return rtnList.size()>0?rtnList.get(0).get("teacher_name").toString():null;
+        param.put("teacher_grade",grade);
+        List<LinkedHashMap<String,Object>> rtnList = iexTeacherService.getScheduleTeacherByTnIdAndTaskId(tnId,taskId,param);
+        Map<String,Object> rtnMap = new HashMap<>();
+        for (Map<String,Object> map : rtnList){
+            String[] teacherClasses = map.get("teacher_class").toString().split("、");
+            for (String className : teacherClasses){
+                String course = map.get("teacher_major_type").toString();
+                rtnMap.put(getTeacherKey(course,className),map);
+            }
+        }
+        return rtnMap;
     }
+
+//    /**
+//     * 获取教师
+//     * @return
+//     */
+//    private String getTeacherByCourseAndClass(String course,String grade,String className,int tnId,int taskId){
+//        String tableName = ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER,tnId);
+//        List<Map<String,Object>> params = new ArrayList<>();
+//        Map<String,Object> param = new HashMap<>();
+//        param = new HashMap<>();
+//        param.put("key","teacher_grade");
+//        param.put("op","=");
+//        param.put("value",grade);
+//        params.add(param);
+//        param = new HashMap<>();
+//        param.put("key","teacher_class");
+//        param.put("op","like");
+//        param.put("value","%"+className+"%");
+//        params.add(param);
+//        param = new HashMap<>();
+//        param.put("key","teacher_major_type");
+//        param.put("op","=");
+//        param.put("value",course);
+//        params.add(param);
+//        List<Map<String,Object>> rtnList = exiTenantConfigInstanceService.likeTableByParams(tableName,params);
+//        return rtnList.size()>0?rtnList.get(0).get("teacher_name").toString():null;
+//    }
 
     /**
      * 获取教师
@@ -1418,10 +1480,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      * @param paramsMap
      * @return
      */
-    private CourseResultView getClassCourseTable(int tnId,int taskId,Map<String,Object> paramsMap){
+    private CourseResultView getClassCourseTable(int tnId,int taskId,Map<String,Object> paramsMap,Map<String, Object> courseTimeConfig){
         CourseResultView courseResultView = new CourseResultView();
-
-        Map<String, Object> courseTimeConfig = this.getCourseTimeConfig(tnId, taskId);
         courseResultView.setTeachDate(courseTimeConfig.get("teachDate").toString());
         courseResultView.setTeachTime(courseTimeConfig.get("time").toString());
         LOGGER.info("********学生课程表 S********");
@@ -1460,10 +1520,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      * @param paramsMap
      * @return
      */
-    private CourseResultView getTeacherCourseTable(int tnId,int taskId,Map<String,Object> paramsMap){
+    private CourseResultView getTeacherCourseTable(int tnId,int taskId,Map<String,Object> paramsMap,Map<String,Object> courseTimeConfig){
         CourseResultView courseResultView = new CourseResultView();
 
-        Map<String,Object> courseTimeConfig = this.getCourseTimeConfig(tnId,taskId);
         courseResultView.setTeachDate(courseTimeConfig.get("teachDate").toString());
         courseResultView.setTeachTime(courseTimeConfig.get("time").toString());
         LOGGER.info("********学生课程表 S********");
@@ -1593,5 +1652,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return -1;
     }
 
+    private static String getTeacherKey(String course,String className){
+        return course+Constant.TIME_INTERVAL+className;
+    }
 
 }

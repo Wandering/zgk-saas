@@ -167,7 +167,7 @@ public class ScheduleTaskController {
      */
     @ResponseBody
     @RequestMapping("/error/desc")
-    public String getSchduleErrorDesc(@RequestParam Integer taskId,@RequestParam Integer tnId){
+    public List<String> getSchduleErrorDesc(@RequestParam Integer taskId,@RequestParam Integer tnId){
            return  iexJwScheduleTaskService.getSchduleErrorDesc(taskId,tnId);
     }
 
@@ -558,7 +558,8 @@ public class ScheduleTaskController {
             resultMap.put("result",iexJwScheduleTaskService.getAllCourseResult(taskId, tnId));
             return resultMap;
         }
-        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap);
+        Map<String, Object> courseTimeConfig = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
+        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap,courseTimeConfig);
 
 
         resultMap.put("result",courseResultView);
@@ -585,8 +586,8 @@ public class ScheduleTaskController {
         param.put("delStatus", StatusEnum.Y.getCode());
         JwScheduleTask jwScheduleTask = (JwScheduleTask) jwScheduleTaskService.queryOne(param);
         List<List<List<String>>> courseLists = new ArrayList<>();
-        Map<String, Object> rtnTimeMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
-        int count = ((List) rtnTimeMap.get("list")).size();
+        Map<String, Object> courseTimeConfig = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
+        int count = ((List) courseTimeConfig.get("list")).size();
         strings = new String[count];
         for (int i = 0; i < count; i++) {
             strings[i] = getWeek(i);
@@ -605,7 +606,7 @@ public class ScheduleTaskController {
                     courseParam = new HashMap<>();
                     sheetNames[i] = map.get("teacher_name").toString();
                     courseParam.put("teacherId", map.get("id"));
-                    CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(Constant.TABLE_TYPE_TEACHER, taskId, tnId, courseParam);
+                    CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(Constant.TABLE_TYPE_TEACHER, taskId, tnId, courseParam,courseTimeConfig);
                     courseLists.add(courseResultView.getWeek());
                 }
 
@@ -624,7 +625,7 @@ public class ScheduleTaskController {
                     courseParam = new HashMap<>();
                     sheetNames[i] = map.get("class_name").toString();
                     courseParam.put("classId", map.get("id"));
-                    CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(Constant.TABLE_TYPE_CLASS, taskId, tnId, courseParam);
+                    CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(Constant.TABLE_TYPE_CLASS, taskId, tnId, courseParam,courseTimeConfig);
                     courseLists.add(courseResultView.getWeek());
                 }
                 workbook = ExcelUtils.createWorkBook(strings, sheetNames, courseLists);
