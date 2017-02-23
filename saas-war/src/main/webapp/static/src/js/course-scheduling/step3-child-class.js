@@ -434,11 +434,13 @@ $(function () {
 
     // 点击一键排课
     $('.btn-one-key').on('click', function () {
+        $('.btn-one-key').removeClass('dh');
         HashHandle.scheduleTaskTrigger();
     });
 
     // 重新排课
     $('.retry-scheduling').on('click',function(){
+        $('.btn-one-key').removeClass('dh');
         HashHandle.scheduleTaskTrigger();
     });
 
