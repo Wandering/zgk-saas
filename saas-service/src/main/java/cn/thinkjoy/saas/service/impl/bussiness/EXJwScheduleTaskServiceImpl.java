@@ -264,13 +264,12 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
             String s = null;
             while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
-                Map<String,String> map=JSON.parse(s,HashMap.class);
-                String regex="\"imperf\":\"(.*?)\",";//别忘了使用非贪婪模式！
-                Matcher matcher= Pattern.compile(regex).matcher(s);
-                while(matcher.find())
-                {
-                    String ret=matcher.group(1);
-                    failMsg.add(getPliableRuleMessage(map,ret,taskId,tnId));
+                Map<String, String> map = JSON.parse(s, HashMap.class);
+                String regex = "\"imperf\":\"(.*?)\",";//别忘了使用非贪婪模式！
+                Matcher matcher = Pattern.compile(regex).matcher(s);
+                while (matcher.find()) {
+                    String ret = matcher.group(1);
+                    failMsg.add(getPliableRuleMessage(map, ret, taskId, tnId));
                 }
             }
             br.close();
@@ -404,43 +403,43 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     public boolean InitParmasFile(final Integer taskId, final Integer tnId) throws IOException {
         boolean result = false;
 
-        List<StringBuffer> parametersBuffers =getParameters();
+        List<StringBuffer> parametersBuffers = getParameters();
 
-        result = printBuffers(tnId,taskId,parametersBuffers, FileOperation.PARMETERS);
+        result = printBuffers(tnId, taskId, parametersBuffers, FileOperation.PARMETERS);
 
-        List<StringBuffer> admClassRuleBuffers = getClassRule(taskId,1);//行政班 不排课
+        List<StringBuffer> admClassRuleBuffers = getClassRule(taskId, 1);//行政班 不排课
 
-        result = printBuffers(tnId,taskId,admClassRuleBuffers, FileOperation.ADMIN_CLASS_NON_DISPACHING);
+        result = printBuffers(tnId, taskId, admClassRuleBuffers, FileOperation.ADMIN_CLASS_NON_DISPACHING);
 
-        List<StringBuffer> eduClassRuleBuffers = getClassRule(taskId,0);//走读班 不排课
+        List<StringBuffer> eduClassRuleBuffers = getClassRule(taskId, 0);//走读班 不排课
 
-        result = printBuffers(tnId,taskId,eduClassRuleBuffers, FileOperation.CLASS_NON_DISPACHING);
+        result = printBuffers(tnId, taskId, eduClassRuleBuffers, FileOperation.CLASS_NON_DISPACHING);
 
-        List<StringBuffer> admClassInfoBuffers = getClassInfo(taskId,tnId);//行政班基础信息
+        List<StringBuffer> admClassInfoBuffers = getClassInfo(taskId, tnId);//行政班基础信息
 
-        result = printBuffers(tnId,taskId,admClassInfoBuffers, FileOperation.CLASS_INFO);
+        result = printBuffers(tnId, taskId, admClassInfoBuffers, FileOperation.CLASS_INFO);
 
         List<StringBuffer> courseRuleBuffers = getCourseRule(taskId);//课程不排课
 
-        result = printBuffers(tnId,taskId,courseRuleBuffers, FileOperation.COURSE_NON_DISPACHING);
+        result = printBuffers(tnId, taskId, courseRuleBuffers, FileOperation.COURSE_NON_DISPACHING);
 
-        List<StringBuffer> teachDataBuffers = getTeachDateInfo(taskId,tnId);//基础规则设置
+        List<StringBuffer> teachDataBuffers = getTeachDateInfo(taskId, tnId);//基础规则设置
 
-        result = printBuffers(tnId,taskId,teachDataBuffers, FileOperation.COURSE_TIMESLOTS);
+        result = printBuffers(tnId, taskId, teachDataBuffers, FileOperation.COURSE_TIMESLOTS);
 
-        List<StringBuffer> gradeNonDisBuffers = getGradeNonDispaching(taskId,1);//年级不排课
+        List<StringBuffer> gradeNonDisBuffers = getGradeNonDispaching(taskId, 1);//年级不排课
 
-        result = printBuffers(tnId,taskId,gradeNonDisBuffers, FileOperation.GRAD_NON_DISPACHING);
+        result = printBuffers(tnId, taskId, gradeNonDisBuffers, FileOperation.GRAD_NON_DISPACHING);
 
-        List<StringBuffer> courseInfomationBuffers = courseInfomation(taskId,tnId);//课程信息
+        List<StringBuffer> courseInfomationBuffers = courseInfomation(taskId, tnId);//课程信息
 
-        result = printBuffers(tnId,taskId,courseInfomationBuffers, FileOperation.COURSE_INFORMATION);
+        result = printBuffers(tnId, taskId, courseInfomationBuffers, FileOperation.COURSE_INFORMATION);
 
-        List<StringBuffer> teacherSettingBuffers = teachersSetting(taskId,tnId);//教师设置
+        List<StringBuffer> teacherSettingBuffers = teachersSetting(taskId, tnId);//教师设置
 
-        result = printBuffers(tnId,taskId,teacherSettingBuffers, FileOperation.TEACHERS_SETTING);
-        LOGGER.info("===================参数序列化结果:"+result+"===================");
-        if(result) {
+        result = printBuffers(tnId, taskId, teacherSettingBuffers, FileOperation.TEACHERS_SETTING);
+        LOGGER.info("===================参数序列化结果:" + result + "===================");
+        if (result) {
 
             ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
             cachedThreadPool.execute(new Runnable() {
@@ -448,49 +447,24 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 public void run() {
                     String path = FileOperation.getParamsPath(tnId, taskId);
                     ReadCmdLine.run(path);
-                    try {
-                        String result = getSchduleResultStatus(taskId, tnId);
-                        if (Integer.valueOf(result) == 1)
-                            getAllCourseResult(taskId, tnId);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
+                    String result = getSchduleResultStatus(taskId, tnId);
+                    if (Integer.valueOf(result) == 1) {
+                        updateScheduleTask(taskId, 4);
+                    } else if (Integer.valueOf(result) == -1)
+                        updateScheduleTask(taskId, 2);
                 }
             });
-            //创建可缓存线程
-//            ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
-//            cachedThreadPool.execute(new Runnable() {
-//                @Override
-//                public void run() {
-//                    String redisKey = getScheduleRedisKey(tnId,taskId);
-//                    if (redis.exists(redisKey)) redis.del(redisKey);
-//                    LOGGER.info("=线程启动=" + System.currentTimeMillis());
-//                    LOGGER.info("排课状态:正在排课");
-//                    String path = FileOperation.getParamsPath(tnId, taskId);
-//                    TimeTabling timeTabling = new TimeTabling();
-//                    timeTabling.runTimetabling(path, path);
-//                    try {
-//                        String result = getSchduleResultStatus(taskId, tnId);
-//                        if (Integer.valueOf(result) == 1)
-//                            getAllCourseResult(taskId, tnId);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    } catch (ParseException e) {
-//                        e.printStackTrace();
-//                    } catch (Exception ex) {
-//                        ex.printStackTrace();
-//                    }
-//                    LOGGER.info("排课状态:完成排课");
-//                }
-//            });
         }
         LOGGER.info("===================已完成异步调用排课===================");
 
         return result;
+    }
+
+    private boolean updateScheduleTask(Integer taskId,Integer status) {
+        JwScheduleTask jwScheduleTask = new JwScheduleTask();
+        jwScheduleTask.setId(taskId);
+        jwScheduleTask.setStatus(status);
+        return iJwScheduleTaskDAO.update(jwScheduleTask) > 0;
     }
 
 
@@ -592,18 +566,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     if(jwTeacherRule==null){
                         stringBuffer.append(0);
                         stringBuffer.append(FileOperation.STR_SPLIT);
-//                        stringBuffer.append(0);
-//                        stringBuffer.append(FileOperation.STR_SPLIT);
-//                        stringBuffer.append(0);
-//                        stringBuffer.append(FileOperation.STR_SPLIT);
-//                        stringBuffer.append(0);
-//                        stringBuffer.append(FileOperation.STR_SPLIT);
-//                        stringBuffer.append(0);
-//                        stringBuffer.append(FileOperation.STR_SPLIT);
-//                        stringBuffer.append(0);
-//                        stringBuffer.append(FileOperation.STR_SPLIT);
-//                        stringBuffer.append(0);
-//                        stringBuffer.append(FileOperation.STR_SPLIT);
                     }else {
                         StringBuilder stringBuilder = new StringBuilder();
                         stringBuilder.append(jwTeacherRule.getMon());
