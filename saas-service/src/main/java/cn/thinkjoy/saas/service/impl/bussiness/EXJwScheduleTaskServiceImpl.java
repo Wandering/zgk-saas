@@ -10,10 +10,7 @@ import cn.thinkjoy.cloudstack.cache.RedisRepository;
 import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.*;
-import cn.thinkjoy.saas.dao.bussiness.ICourseBaseInfoDAO;
-import cn.thinkjoy.saas.dao.bussiness.ICourseManageDAO;
-import cn.thinkjoy.saas.dao.bussiness.IEXJwScheduleTaskDAO;
-import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
+import cn.thinkjoy.saas.dao.bussiness.*;
 import cn.thinkjoy.saas.dao.bussiness.scheduleRule.MergeClassDAO;
 import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
@@ -35,7 +32,8 @@ import com.google.common.collect.Maps;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +67,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     private EXITenantConfigInstanceService exiTenantConfigInstanceService;
 
     @Autowired
-    private static final Logger LOGGER = Logger.getLogger(EXJwScheduleTaskServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EXJwScheduleTaskServiceImpl.class);
 
 
     @Autowired
@@ -111,6 +109,12 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
     @Autowired
     IEXTeacherService iexTeacherService;
+
+    @Autowired
+    IJwCourseTableDAO jwCourseTableDAO;
+
+    @Autowired
+    private IEXJwCourseTableDAO iexJwCourseTableDAO;
 //    @Autowired
 //    private
 
@@ -1153,6 +1157,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      */
     private Map<String,Object> getCourseResult(int tnId, int taskId)
             throws ParseException, IOException {
+        List<JwCourseTable> jwCourseTables = new ArrayList<>();
         String redisKey = getScheduleRedisKey(tnId,taskId);
         if (!this.redis.exists(redisKey)) {
             Map<String,Object> resultMap = Maps.newHashMap();
@@ -1188,8 +1193,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             List<String> allCourseList = null;
             Map<Integer,String> courses = getCourseByTnIdAndTaskId(tnId,taskId);
             try {
-                String path = getScheduleTaskPath(tnId, taskId) + Constant.PATH_SCHEDULE;
-//                String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
+//                String path = getScheduleTaskPath(tnId, taskId) + Constant.PATH_SCHEDULE;
+                String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
                 CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
                 allCourseList = main.readLines();
             }catch (Exception e){
@@ -1215,18 +1220,49 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 List<List<String>> weekTempCourses = spiltDay(everyDaySection,courseStr);
                 weekCourseList = new LinkedList<>();
 
-                for (List<String> dayCourseTempList : weekTempCourses){
+                for ( int i = 0;i < weekTempCourses.size() ; i ++ ){
+                    List<String> dayCourseTempList = weekTempCourses.get(i);
                     dayCourseList = new LinkedList<>();
 
-                    for (String dayCourse : dayCourseTempList){
+                    for ( int j = 0 ; j < dayCourseTempList.size() ; j++ ){
+                        String dayCourse = dayCourseTempList.get(j);
                         String course = courses.get(Integer.valueOf(dayCourse));
                         String teacherName = null;
                         if (course == ""){
                             teacherName = "";
+                            JwCourseTable jwCourseTable = new JwCourseTable();
+                            jwCourseTable.setTnId(tnId);
+                            jwCourseTable.setTaskId(taskId);
+                            jwCourseTable.setGradeId(Integer.valueOf(jwScheduleTask.getGrade()));
+                            jwCourseTable.setClassId(classId);
+                            jwCourseTable.setCourseId(Integer.valueOf(dayCourse));
+                            jwCourseTable.setTeacherId(0);
+                            jwCourseTable.setStatus(0);
+                            jwCourseTable.setWeek(i);
+                            jwCourseTable.setSort(j);
+                            jwCourseTables.add(jwCourseTable);
                         }else {
 //
                             Map<String,Object> teacherMap = (Map<String,Object>)teachers.get(getTeacherKey(course,className));
                             teacherName = teacherMap.get("teacher_name").toString();
+                            //teacherId teacherMap.get("id")
+                            //gradeId jwScheduleTask.getGrade()
+                            //classId classId
+                            //courseId Integer.valueOf(dayCourse)
+                            //week i
+                            //sort j
+                            JwCourseTable jwCourseTable = new JwCourseTable();
+                            jwCourseTable.setTnId(tnId);
+                            jwCourseTable.setTaskId(taskId);
+                            jwCourseTable.setGradeId(Integer.valueOf(jwScheduleTask.getGrade()));
+                            jwCourseTable.setClassId(classId);
+                            jwCourseTable.setCourseId(Integer.valueOf(dayCourse));
+                            jwCourseTable.setTeacherId(Integer.valueOf(teacherMap.get("id").toString()));
+                            jwCourseTable.setWeek(i);
+                            jwCourseTable.setSort(j);
+                            jwCourseTable.setStatus(Constant.COURSE_STATUS_Y);
+                            jwCourseTables.add(jwCourseTable);
+
                         }
                         //课程转换
                         dayCourseList.add(mergeTeacherAndCourse(course,teacherName));
@@ -1249,6 +1285,11 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             LOGGER.info("************存redis S************");
             this.redis.set(redisKey, JSON.json(resultMap),Constant.SCHEDULE_REDIS_TIME, TimeUnit.DAYS);
             LOGGER.info("************存redis E************");
+            try {
+                iexJwCourseTableDAO.insertList(jwCourseTables);
+            }catch (Exception e){
+                LOGGER.info("************存数据库失败*************");
+            }
             return resultMap;
         } else {
             return JSON.parse(redis.get(redisKey).toString(), HashMap.class);

@@ -93,4 +93,5 @@ public class Constant {
     public static final java.lang.String PATH_SCHEDULE = "admin_course_0.txt";
     //redis缓存时间30天
     public static final long SCHEDULE_REDIS_TIME = 1 * 30;
+    public static final Integer COURSE_STATUS_Y = 1;
 }
