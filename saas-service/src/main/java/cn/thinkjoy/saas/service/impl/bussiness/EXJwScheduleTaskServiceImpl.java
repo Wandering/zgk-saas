@@ -219,11 +219,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                         break;
                     case "-1":
                         failMsg.add("排课系统异常,请联系管理员!" + s);
-                        updateScheduleTask(taskId,1);
                         break;
                     case "-2":
                         failMsg.add("排课系统异常,请联系管理员!" + s);
-                        updateScheduleTask(taskId,1);
                         break;
                 }
             }
