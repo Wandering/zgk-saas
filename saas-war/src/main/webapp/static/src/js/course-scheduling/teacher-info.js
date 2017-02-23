@@ -348,7 +348,7 @@ $(function () {
             },
             function (res) {
                 if (res.rtnCode === '0000000') {
-                    layer.msg('教师信息保存成功');
+                    layer.tips('教师信息保存成功', $(this));
                 }
             }, function (res) {
                 layer.msg(res.msg);

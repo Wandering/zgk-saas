@@ -77,12 +77,11 @@ ul, li, span, div {
   position: relative;
   .mandatory {
     position: absolute;
-    left:-10px;
-    top:3px;
+    left: -10px;
+    top: 3px;
     color: #c00;
   }
 }
-
 
 .add-class-box ul li i {
   color: #CB171D;
@@ -284,8 +283,6 @@ a.download-link:hover {
   margin-left: 5px;
 }
 
-
-
 // 课程管理
 .add-course-box {
   width: 100%;
@@ -297,7 +294,7 @@ a.download-link:hover {
     color: #000000;
     .box-row {
       overflow: hidden;
-      margin-bottom:12px;
+      margin-bottom: 12px;
       i {
         font-size: 14px;
         color: #CB171D;
@@ -310,7 +307,7 @@ a.download-link:hover {
         width: 225px;
         background: #FFFFFF;
         border: 1px solid #D5D9DF;
-        border-radius: 2px!important;
+        border-radius: 2px !important;
       }
       #term-year {
         width: 107px;
@@ -344,25 +341,24 @@ a.download-link:hover {
     //}
   }
 }
-.save-course-btn{
+
+.save-course-btn {
 }
-.hides{
+
+.hides {
   display: none;
 }
 
-.class-label{
-  width:100px;
+.class-label {
+  width: 100px;
   display: inline-block;
   text-align: right;
 }
 
-.class-item-label{
+.class-item-label {
   float: left;
   height: 77px;
 }
-
-
-
 
 //2.14 迭代
 //======================
@@ -392,11 +388,11 @@ a.download-link:hover {
   }
 }
 
-.toggle-tab{
+.toggle-tab {
   overflow: hidden;
-  margin-bottom:10px;
-  .tab{
-    border:1px solid #ccc;
+  margin-bottom: 10px;
+  .tab {
+    border: 1px solid #ccc;
     background: #fff;
     outline: none;
     padding: 0 8px;
@@ -404,25 +400,31 @@ a.download-link:hover {
     line-height: 30px;
     color: #ccc;
   }
-  .nbr{
-    border-right:none;
+  .nbr {
+    border-right: none;
   }
-  .active{
+  .active {
     color: #fff;
     background: $mainColor;
     border-color: $mainColor;
   }
 }
 
-#uploader-demo{
+#uploader-demo {
   display: block;
-  .btn-import{
-    width: 238px!important;
-    margin-bottom: 10px!important;
+  .btn-import {
+    width: 238px !important;
+    margin-bottom: 10px !important;
     display: block;
   }
 }
 
-#cancel-download-btn{
-  margin-top:15px!important;
+#cancel-download-btn {
+  margin-top: 15px !important;
+}
+
+.push-label {
+  display: block;
+  float: left;
+  margin-right: 10px
 }

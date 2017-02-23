@@ -26,7 +26,7 @@ import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
 import cn.thinkjoy.saas.service.common.ConvertUtil;
 import cn.thinkjoy.saas.service.common.FileOperation;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
-import cn.thinkjoy.saas.timetable.TimeTabling;
+import cn.thinkjoy.saas.service.common.ReadCmdLine;
 import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.dubbo.common.json.ParseException;
 import com.google.common.collect.Maps;
@@ -186,18 +186,13 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         result = printBuffers(tnId,taskId,teacherSettingBuffers, FileOperation.TEACHERS_SETTING);
         LOGGER.info("===================参数序列化结果:"+result+"===================");
         if(result) {
-            //创建可缓存线程
+
             ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
             cachedThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
-                    String redisKey = getScheduleRedisKey(tnId,taskId);
-                    if (redis.exists(redisKey)) redis.del(redisKey);
-                    LOGGER.info("=线程启动=" + System.currentTimeMillis());
-                    LOGGER.info("排课状态:正在排课");
                     String path = FileOperation.getParamsPath(tnId, taskId);
-                    TimeTabling timeTabling = new TimeTabling();
-                    timeTabling.runTimetabling(path, path);
+                    ReadCmdLine.run(path);
                     try {
                         String result = getSchduleResultStatus(taskId, tnId);
                         if (Integer.valueOf(result) == 1)
@@ -209,11 +204,15 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
-                    LOGGER.info("排课状态:完成排课");
                 }
             });
-//            new Thread() {
+            //创建可缓存线程
+//            ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+//            cachedThreadPool.execute(new Runnable() {
+//                @Override
 //                public void run() {
+//                    String redisKey = getScheduleRedisKey(tnId,taskId);
+//                    if (redis.exists(redisKey)) redis.del(redisKey);
 //                    LOGGER.info("=线程启动=" + System.currentTimeMillis());
 //                    LOGGER.info("排课状态:正在排课");
 //                    String path = FileOperation.getParamsPath(tnId, taskId);
@@ -232,7 +231,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 //                    }
 //                    LOGGER.info("排课状态:完成排课");
 //                }
-//            }.start();
+//            });
         }
         LOGGER.info("===================已完成异步调用排课===================");
 
@@ -284,6 +283,12 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         map.put("searchValue", teacherGrade);
 
         List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.getTenantCustom(map);
+
+
+        StringBuffer stringBuffer1 = new StringBuffer();
+        stringBuffer1.append(linkedHashMaps.size());
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+        stringBuffers.add(stringBuffer1);
 
         for (int j = 0; j < linkedHashMaps.size(); j++) {
             LinkedHashMap<String, Object> dataLinkedMap = linkedHashMaps.get(j);
@@ -565,6 +570,11 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         List<CourseManageVo> courseManageVos=iCourseManageDAO.selectCourseManageInfo(map);
 
 
+        StringBuffer stringBuffer1 = new StringBuffer();
+        stringBuffer1.append(courseManageVos.size());
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+        stringBuffers.add(stringBuffer1);
+
         for(CourseManageVo courseManageVo:courseManageVos) {
             StringBuffer stringBuffer = new StringBuffer();
             CourseBaseInfo courseBaseInfo = iCourseBaseInfoDAO.fetch(courseManageVo.getCourseId());
@@ -802,6 +812,10 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.getTenantCustom(map);
 
+        StringBuffer stringBuffer1 = new StringBuffer();
+        stringBuffer1.append(linkedHashMaps.size());
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+        stringBuffers.add(stringBuffer1);
 
         for (int j = 0; j < linkedHashMaps.size(); j++) {
 
