@@ -182,8 +182,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         String path=getScheduleTaskPath(taskId,tnId);
 
-//        String filenPath =path + FileOperation.ERROR_TXT;
-        String filenPath ="/Users/douzy/0221_test/" + FileOperation.ERROR_TXT;
+        String filenPath =path + FileOperation.ERROR_TXT;
+//        String filenPath ="/Users/douzy/0221_test/" + FileOperation.ERROR_TXT;
 
         File file = new File(filenPath);
 
