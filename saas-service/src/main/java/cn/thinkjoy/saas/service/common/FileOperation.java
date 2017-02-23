@@ -42,7 +42,7 @@ public class FileOperation {
 
     //软性规则
     public static final String MERGE_CLASS_FAIL_MSG="合班失败!时间:周%s,班级:%s,课程:%s";
-    public static final String CON_NUMBER_FAIL_MSG="连堂数目违反规则。 班级:%s,课程:%s,系统计算连堂课程数目[%s],规则连堂数目[%s]";
+    public static final String CON_NUMBER_FAIL_MSG="连堂数目违反规则。 班级:%s,课程:%s,预设规则连堂数目%s,课表连堂课程数目%s";
     public static final String NON_CON_NUMBER_FAIL_MSG="不连堂违反规则。课程:%s";
     public static final String CON_TEACHER_FAIL_MSG="老师连上违反规则。时间:周%s,老师:%s,课程:%s";
     public static final String NO_JAPQ_FAIL_MSG="教案平齐违反规则。时间:周%s,老师:%s,课程:%s";
