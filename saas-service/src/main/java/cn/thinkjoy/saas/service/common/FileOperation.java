@@ -97,9 +97,9 @@ public class FileOperation {
     }
     public static String readerTxtString(String filenPath,String name) {
 
-//        String filenPath = getParamsPath(tnId, taskId) + name + ".txt";
+        String f =filenPath + name;
 
-        File file = new File(filenPath);
+        File file = new File(f);
         StringBuilder result = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
