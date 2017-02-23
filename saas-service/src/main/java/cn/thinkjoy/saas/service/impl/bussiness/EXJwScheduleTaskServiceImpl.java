@@ -176,27 +176,70 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      * @return
      */
     @Override
-    public String getSchduleErrorDesc(Integer taskId, Integer tnId) {
+    public List<String> getSchduleErrorDesc(Integer taskId, Integer tnId) {
+
+        List<String> failMsg=new ArrayList<>();
 
         String path=getScheduleTaskPath(taskId,tnId);
 
-        String filenPath =path + FileOperation.ERROR_TXT;
-//        String filenPath ="/Users/douzy/0221_test/" + FileOperation.ERROR_TXT;
+//        String filenPath =path + FileOperation.ERROR_TXT;
+        String filenPath ="/Users/douzy/0221_test/" + FileOperation.ERROR_TXT;
 
         File file = new File(filenPath);
 
-        StringBuilder result = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
             String s = null;
             while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
-                result.append(s);
+                if (!s.equals("0")) {
+                    Map<String, String> map = JSON.parse(s, HashMap.class);
+                    String regex = "\"data_error\":\"(.*?)\",";//别忘了使用非贪婪模式！
+                    Matcher matcher = Pattern.compile(regex).matcher(s);
+                    while (matcher.find()) {
+                        String ret = matcher.group(1);
+                        failMsg.add(getRuleMessage(map, ret, taskId, tnId));
+                    }
+                }
             }
             br.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result.toString();
+        return failMsg;
+    }
+
+    /**
+     * 硬性规则违反描述
+     * @param map
+     * @param ret
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    private String  getRuleMessage(Map<String,String> map,String ret,Integer taskId,Integer tnId) {
+        String msg = "";
+        switch (ret) {
+            case "01":
+                String adm01 = map.get("adm"),
+                        time01 = map.get("time");
+                String className01 = getClassName(taskId, tnId, adm01);
+                msg = String.format(FileOperation.NON_ADM_ERROR_MSG, className01, time01);
+                break;
+            case "02":
+                String teacher02 = map.get("teacher"),
+                        time02 = map.get("time");
+                String teacherName02 = getTeacherName(taskId, tnId, teacher02);
+                msg = String.format(FileOperation.NON_TEACHER_ERROR_MSG, teacherName02, time02);
+                break;
+            case "03":
+                String adm03 = map.get("adm"),
+                        course03 = map.get("course");
+                String className03 = getClassName(taskId, tnId, adm03);
+                CourseBaseInfo courseBaseInfo = courseBaseInfoDAO.fetch(course03);
+                msg = String.format(FileOperation.NON_COURSE_ERROR_MSG, className03, courseBaseInfo.getCourseName());
+                break;
+        }
+        return msg;
     }
 
     /**
@@ -215,14 +258,11 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         File file = new File(filenPath);
 
-        StringBuilder result = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
             String s = null;
             while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
-
                 Map<String,String> map=JSON.parse(s,HashMap.class);
-
                 String regex="\"imperf\":\"(.*?)\",";//别忘了使用非贪婪模式！
                 Matcher matcher= Pattern.compile(regex).matcher(s);
                 while(matcher.find())
@@ -230,8 +270,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     String ret=matcher.group(1);
                     failMsg.add(getPliableRuleMessage(map,ret,taskId,tnId));
                 }
-
-                result.append(s);
             }
             br.close();
         } catch (Exception e) {

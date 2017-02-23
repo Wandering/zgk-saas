@@ -167,7 +167,7 @@ public class ScheduleTaskController {
      */
     @ResponseBody
     @RequestMapping("/error/desc")
-    public String getSchduleErrorDesc(@RequestParam Integer taskId,@RequestParam Integer tnId){
+    public List<String> getSchduleErrorDesc(@RequestParam Integer taskId,@RequestParam Integer tnId){
            return  iexJwScheduleTaskService.getSchduleErrorDesc(taskId,tnId);
     }
 

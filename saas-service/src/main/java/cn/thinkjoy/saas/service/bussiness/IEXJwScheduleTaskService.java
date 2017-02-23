@@ -56,7 +56,7 @@ public interface IEXJwScheduleTaskService {
      * @param tnId
      * @return
      */
-    String getSchduleErrorDesc(Integer taskId, Integer tnId);
+    List<String> getSchduleErrorDesc(Integer taskId, Integer tnId);
 
 
     JwScheduleTask selectScheduleTaskPath(Map map);
