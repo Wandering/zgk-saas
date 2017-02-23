@@ -297,6 +297,8 @@ $(function () {
         Common.cookie.setCookie('scheduleName', scheduleName);
         Common.cookie.setCookie('taskId', id);
         schedule.checkTaskBaseInfo(id);
-
     });
+
+    var dataNum = '1';
+    Common.cookie.setCookie("resVal"+taskId, parseInt(dataNum));
 });

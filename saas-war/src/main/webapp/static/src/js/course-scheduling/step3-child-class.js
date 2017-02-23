@@ -1,6 +1,7 @@
 var tnId = Common.cookie.getCookie('tnId');
 var taskId = Common.cookie.getCookie('taskId');
 var scheduleName = Common.cookie.getCookie('scheduleName');
+var resValtaskId = Common.cookie.getCookie('resVal' + taskId);
 $('.scheduleName').text(scheduleName);
 
 
@@ -95,6 +96,7 @@ ClassRoomTable.prototype = {
         Common.ajaxFun('/baseResult/queryClass.do', 'GET', {
             "taskId": taskId
         }, function (result) {
+            var result = {"bizData":[{"id":1,"class_grade":"高一年级","class_name":"高一1班","class_boss":"\u00A0李璇 ","class_type":"行政班","class_code":"class_adm_14874858922160"},{"id":2,"class_grade":"高一年级","class_name":"高一2班","class_boss":"马舒滟","class_type":"行政班","class_code":"class_adm_14874858922161"},{"id":3,"class_grade":"高一年级","class_name":"高一3班","class_boss":"许青云","class_type":"行政班","class_code":"class_adm_14874858922162"},{"id":4,"class_grade":"高一年级","class_name":"高一4班","class_boss":"徐丹","class_type":"行政班","class_code":"class_adm_14874858922163"},{"id":5,"class_grade":"高一年级","class_name":"高一5班","class_boss":"张奕","class_type":"行政班","class_code":"class_adm_14874858922164"},{"id":6,"class_grade":"高一年级","class_name":"高一6班","class_boss":"田野","class_type":"行政班","class_code":"class_adm_14874858922165"},{"id":7,"class_grade":"高一年级","class_name":"高一7班","class_boss":"彭亚光","class_type":"行政班","class_code":"class_adm_14874858922166"},{"id":8,"class_grade":"高一年级","class_name":"高一8班","class_boss":"黄欢","class_type":"行政班","class_code":"class_adm_14874858922167"},{"id":9,"class_grade":"高一年级","class_name":"高一9班","class_boss":"庞琳","class_type":"行政班","class_code":"class_adm_14874858922168"},{"id":10,"class_grade":"高一年级","class_name":"高一10班","class_boss":"张子腾","class_type":"行政班","class_code":"class_adm_14874858922169"},{"id":11,"class_grade":"高一年级","class_name":"高一11班","class_boss":"姜春阳","class_type":"行政班","class_code":"class_adm_148748589221610"},{"id":12,"class_grade":"高一年级","class_name":"高一12班","class_boss":"刘冰若","class_type":"行政班","class_code":"class_adm_148748589221611"},{"id":13,"class_grade":"高一年级","class_name":"高一13班","class_boss":"何丽","class_type":"行政班","class_code":"class_adm_148748589221612"},{"id":14,"class_grade":"高一年级","class_name":"高一14班","class_boss":"王文 ","class_type":"行政班","class_code":"class_adm_148748589221613"},{"id":15,"class_grade":"高一年级","class_name":"高一15班","class_boss":"\u00A0陈佳敏","class_type":"行政班","class_code":"class_adm_148748589221614"}],"rtnCode":"0000000","ts":1487752675672}
             if (result.rtnCode == "0000000") {
                 $('#select-class option:gt(0)').remove();
                 var queryCourse = [];
@@ -151,6 +153,9 @@ ClassRoomTable.prototype = {
             "param": JSON.stringify(param)
         }, function (result) {
             //console.log(result);
+            var result = {"bizData":{"result":{"teachDate":"星期一|星期二|星期三|星期四|星期五","teachTime":"430","week":[["","","物理  胡书琴","生物  范志坚","","语文  \u00A0李璇 ","化学  任娟娟"],["语文  \u00A0李璇 ","","历史  许超丽","政治  谢文婷","","化学  任娟娟","数学  黄欢"],["","","","","英语  曹丽娜","","政治  谢文婷"],["地理  张琪","","数学  黄欢","政治  谢文婷","","英语  曹丽娜",""],["历史  许超丽","物理  胡书琴","","","生物  范志坚","政治  谢文婷","地理  张琪"]]}},"rtnCode":"0000000","ts":1487752474366}
+
+
             if (result.rtnCode == "0000000") {
                 var theadTemplate = Handlebars.compile($("#" + urlType + "-thead-list-template").html());
                 Handlebars.registerHelper("thead", function (res) {
@@ -304,8 +309,17 @@ var HashHandle = {
                     case 2:
                         break;
                     case 3:
-                        $('.btn-one-key').addClass('dh');
-                        that.scheduleTaskState();
+                        $('.btn-one-key,.arranging-course-tips').addClass('dh');
+                        if(parseInt(resValtaskId)==1){
+                            $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule').addClass('dh');
+                            $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
+                            ClassRoomTableIns.getAllQueryCourse();
+                            ClassRoomTableIns.getQueryCourse();
+                            ClassRoomTableIns.getQueryClass();
+                        }else if(parseInt(resValtaskId)==-1){
+                            $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips').addClass('dh');
+                            $('.scheduling-error').removeClass('dh');
+                        }
                         break;
                     default:
                         break;
@@ -341,6 +355,7 @@ var HashHandle = {
             if (res.rtnCode == "0000000") {
                 // 0:正在排课  1:排课成功   -1 ：排课失败
                 var dataNum = res.bizData;
+                Common.cookie.setCookie("resVal"+taskId, parseInt(dataNum));
                 switch (parseInt(dataNum)) {
                     case 0:
                         console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦");
@@ -354,8 +369,8 @@ var HashHandle = {
                     case 1:
                         console.log("排课成功");
                         clearInterval(that.items);
-                        $('.one-key-page,.arranging-course-tips,.btn-one-key').addClass('dh');
-                        $('#role-scheduling-tab,#control-jsp').removeClass('dh');
+                        $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule').addClass('dh');
+                        $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
                         ClassRoomTableIns.getAllQueryCourse();
                         ClassRoomTableIns.getQueryCourse();
                         ClassRoomTableIns.getQueryClass();
@@ -376,7 +391,7 @@ var HashHandle = {
 
 };
 HashHandle.init();
-
+ClassRoomTableIns.getQueryClass();
 
 
 
@@ -389,6 +404,16 @@ $(function () {
     // 点击一键排课
     $('.btn-one-key').on('click', function () {
         HashHandle.scheduleTaskTrigger();
+    });
+
+    // 重新排课
+    $('.retry-scheduling').on('click',function(){
+        HashHandle.scheduleTaskTrigger();
+    });
+
+    // 查看原课表
+    $('.look-origin-schedule').on('click',function(){
+
     });
 
     // 选择班级
