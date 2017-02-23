@@ -29,7 +29,6 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -137,7 +136,7 @@ public class ScheduleTaskController {
 
 
         if (initBool) {
-            String path = FileOperation.getParamsPath(taskId, tnId);
+            String path = FileOperation.getParamsPath(tnId, taskId);
             JwScheduleTask jwScheduleTask = new JwScheduleTask();
             jwScheduleTask.setId(taskId);
             jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
