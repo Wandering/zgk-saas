@@ -450,7 +450,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     String result = getSchduleResultStatus(taskId, tnId);
                     if (Integer.valueOf(result) == 1) {
                         updateScheduleTask(taskId, 4);
-                    } else if (Integer.valueOf(result) == -1)
+                    } else
                         updateScheduleTask(taskId, 2);
                 }
             });
