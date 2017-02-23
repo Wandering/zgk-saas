@@ -32,7 +32,8 @@ selectList
         status as status,
         del_status as delStatus,
         create_date as createDate,
-        tn_id as tnId
+        tn_id as tnId,
+        path as path
     </sql>
     <insert id="insert" parameterType="JwScheduleTask">
         INSERT INTO saas_jw_schedule_task (
@@ -43,7 +44,8 @@ selectList
         status,
         del_status,
         create_date,
-        tn_id
+        tn_id,
+        path
         ) VALUES (
         #{scheduleName},
         #{grade},
@@ -52,7 +54,8 @@ selectList
         #{status},
         #{delStatus},
         #{createDate},
-        #{tnId}
+        #{tnId},
+        #{path}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
         SELECT LAST_INSERT_ID() AS ID
@@ -87,6 +90,9 @@ selectList
             <if test="tnId!=null">
                 tn_id = #{tnId},
             </if>
+            <if test="path!=null">
+                path=#{path}
+            </if>
         </trim>
         WHERE
         id = #{id}
@@ -118,6 +124,9 @@ selectList
             </if>
             <if test="map.tnId!=null">
                 tn_id = #{map.tnId},
+            </if>
+            <if test="map.path!=null">
+                path=#{map.path},
             </if>
         </trim>
         WHERE
@@ -151,6 +160,9 @@ selectList
             <if test="update.tnId!=null">
                 tn_id = #{update.tnId},
             </if>
+            <if test="update.path!=null">
+                path=#{update.path},
+            </if>
         </trim>
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -181,6 +193,9 @@ selectList
             <if test="condition.tnId!=null">
                 AND tn_id = #{condition.tnId}
             </if>
+            <if test="condition.path!=null">
+                AND path=#{condition.path}
+            </if>
         </trim>
     </update>
 
@@ -193,7 +208,8 @@ selectList
                 status,
                 del_status,
                 create_date,
-                tn_id
+                tn_id,
+                path
         ) VALUES (
                     #{map.scheduleName},
                     #{map.grade},
@@ -202,7 +218,8 @@ selectList
                     #{map.status},
                     #{map.delStatus},
                     #{map.createDate},
-                    #{map.tnId}
+                    #{map.tnId},
+                    #{map.path}
         )
     </insert>
 
@@ -218,6 +235,7 @@ selectList
             del_status = #{delStatus},
             create_date = #{createDate},
             tn_id = #{tnId},
+            path=#{path}
         </trim>
         WHERE
         id = #{id} 
@@ -261,6 +279,9 @@ selectList
             </if>
             <if test="tnId!=null">
                 AND tn_id = #{tnId}
+            </if>
+            <if test="path!=null">
+                AND path=#{path}
             </if>
         </trim>
     </delete>
@@ -343,7 +364,9 @@ selectList
             <if test="condition.tnId!=null">
                 ${condition.groupOp}   tn_id  ${condition.tnId.op}  #{condition.tnId.data}
             </if>
-
+             <if test="condition.path!=null">
+                 ${condition.groupOp}   path  ${condition.path.op}  #{condition.path.data}
+             </if>
 
     </where>
 
@@ -387,6 +410,9 @@ selectList
             <if test="condition.tnId!=null">
                 AND tn_id like CONCAT('%', #{condition.tnId} , '%')
             </if>
+            <if test="condition.path!=null">
+                AND path like CONCAT('%', #{condition.path} , '%')
+            </if>
         </trim>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -426,6 +452,9 @@ selectList
             <if test="condition.tnId!=null">
                 AND tn_id = #{condition.tnId}
             </if>
+            <if test="condition.path!=null">
+                AND path = #{condition.path}
+            </if>
         </trim>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -464,6 +493,9 @@ selectList
             <if test="condition.tnId!=null">
                 AND tn_id = #{condition.tnId}
             </if>
+            <if test="condition.path!=null">
+                AND path = #{condition.path}
+            </if>
         </trim>
         limit 0,1
     </select>
@@ -498,7 +530,9 @@ selectList
            <if test="tnId!=null">
                ${groupOp} tn_id ${tnId.op}  #{tnId.data}
            </if>
-
+           <if test="path!=null">
+               ${groupOp} path ${path.op}  #{path.data}
+           </if>
        </where>
     <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}

@@ -21,6 +21,7 @@ import cn.thinkjoy.saas.enums.TermEnum;
 import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
+import cn.thinkjoy.saas.service.common.FileOperation;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.json.ParseException;
 import com.alibaba.fastjson.JSON;
@@ -126,11 +127,13 @@ public class ScheduleTaskController {
 
         boolean initBool = iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
 
+
         if (initBool) {
+            String path = FileOperation.getParamsPath(taskId, tnId);
             JwScheduleTask jwScheduleTask = new JwScheduleTask();
             jwScheduleTask.setId(taskId);
             jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
-
+            jwScheduleTask.setPath(path);
             initBool = jwScheduleTaskService.update(jwScheduleTask) > 0;
         }
         return initBool;
@@ -146,6 +149,30 @@ public class ScheduleTaskController {
     @RequestMapping("/state")
     public String scheduleResult(@RequestParam Integer taskId,@RequestParam Integer tnId) {
         return iexJwScheduleTaskService.getSchduleResultStatus(taskId, tnId);
+    }
+
+    /**
+     * 硬性规则
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/error/desc")
+    public String getSchduleErrorDesc(@RequestParam Integer taskId,@RequestParam Integer tnId){
+           return  iexJwScheduleTaskService.getSchduleErrorDesc(taskId,tnId);
+    }
+
+    /**
+     * 软性规则
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/pliable/rule")
+    public List<String> getNoNScheduleTaskPliableRule(@RequestParam Integer taskId,@RequestParam Integer tnId){
+        return  iexJwScheduleTaskService.getNoNScheduleTaskPliableRule(taskId, tnId);
     }
     /**
      * 修改排课任务
