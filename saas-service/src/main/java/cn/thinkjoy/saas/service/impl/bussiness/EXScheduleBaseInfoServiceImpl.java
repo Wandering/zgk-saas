@@ -201,7 +201,9 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
             teacher.setTeacherId(dto.getTeacherId());
             teacher.setTnId(tnId);
             int id = jwTeacherDAO.insert(teacher);
+
             dto.setId(id);
+            dto.setIsAttend(1);
 
             // 异步插入教师规则信息
             insert(dto.getTeacherId(),tnId,taskId,dto.getCourseName());
