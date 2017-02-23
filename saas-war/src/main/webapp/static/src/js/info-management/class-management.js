@@ -292,8 +292,8 @@ ClassManagement.prototype = {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData.grades;
                 var gradeListHtml = [];
-
                 GLOBAL_CONSTANT.clsType = data[0].classType;
+
                 if (data[0].grade) {
                     // 行政班|教学班说明：classType 1或3都为行政班  2教学班
                     var $classTypeToggle = $('#class-type-toggle').find('.tab')
@@ -430,10 +430,11 @@ AddClassManagement.prototype.getType = function (type) {
     //    }
     //});
     //改造添加班级获取班级类型select值
+
     types = ['行政班','教学班','文科班','理科班'];
 
     if (type == 'class_type') {
-        if (GLOBAL_CONSTANT.clsType === '1') {
+        if (GLOBAL_CONSTANT.clsType == '1') {
             $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
                 'cursor': 'not-allowed'
             }).attr('disabled', true);
@@ -614,7 +615,7 @@ UpdateClassManagement.prototype = {
         types = ['行政班','教学班','文科班','理科班'];
 
         if (type == 'class_type') {
-            if (GLOBAL_CONSTANT.clsType === '1') {
+            if (GLOBAL_CONSTANT.clsType == '1') {
                 $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
                     'cursor': 'not-allowed'
                 }).attr('disabled', true);

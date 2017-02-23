@@ -1,5 +1,6 @@
 package cn.thinkjoy.saas.controller.bussiness.scheduleRule;
 
+import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
@@ -10,6 +11,8 @@ import cn.thinkjoy.saas.enums.GradeEnum;
 import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
+import com.alibaba.dubbo.common.json.JSON;
+import com.alibaba.dubbo.common.json.ParseException;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.sun.tools.classfile.Attribute.Code;
 
 /**
  * Created by yangyongping on 2016/12/10.
@@ -30,13 +37,12 @@ public class BaseResultController {
     @Autowired
     private IJwScheduleTaskService jwScheduleTaskService;
 
-
     @Autowired
     EXITenantConfigInstanceService exiTenantConfigInstanceService;
     @Autowired
-    private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
-    @Autowired
     private IEXCourseManageService courseManageService;
+    @Autowired
+    private IEXTeacherService teacherService;
 
     /**
      * 获取教室名称
@@ -64,20 +70,13 @@ public class BaseResultController {
         }
         JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        String tableName = "saas"+Constant.TIME_INTERVAL+tnId+Constant.TIME_INTERVAL+Constant.TABLE_TYPE_TEACHER+Constant.TIME_INTERVAL+"excel";
-        List<Map<String,Object>> params = new ArrayList<>();
-        Map<String,Object> param;
-        param = new HashMap<>();
-        param.put("key","teacher_grade");
-        param.put("op","=");
-        param.put("value",GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())));
-        params.add(param);
-        param = new HashMap<>();
-        param.put("key","teacher_major_type");
-        param.put("op","=");
-        param.put("value",teacherCourse);
-        params.add(param);
-        List<LinkedHashMap<String,Object>> rtnList = exiTenantConfigInstanceService.likeTeacherByParams(tableName,params);
+        Map<String,Object> param = new HashMap<>();
+        param.put("teacher_grade",GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())));
+        param.put("teacher_major_type",teacherCourse);
+        List<LinkedHashMap<String,Object>> rtnList = teacherService.getScheduleTeacherByTnIdAndTaskId(tnId,taskId,param);
+        if (rtnList == null) {
+            throw new BizException("error","当前科目所查教师为空");
+        }
         return teacherBaseDtotoMap(rtnList);
     }
     List<Map<String,Object>> teacherBaseDtotoMap(List<LinkedHashMap<String,Object>> list){
@@ -111,8 +110,5 @@ public class BaseResultController {
 
         return maps;
     }
-
-
-
 
 }
