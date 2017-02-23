@@ -213,13 +213,22 @@
         select student_class as majorClass ,student_grade as grade from ${tableName} group by grade,student_class
     </select>
 
-    <select id="likeTeacherByParams" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+    <select id="likeTableByParams" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
         select * from ${tableName}
          <where>
              <foreach collection="list" item="domain">
                   and ${domain.key} ${domain.op} #{domain.value}
              </foreach>
          </where>
+    </select>
+
+    <select id="likeJwTeacherByParams" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+        select * from ${tableName} tb INNER JOIN saas_jw_teacher jw on jw.teacher_id = tb.id AND jw.tn_id = #{tnId} AND jw.task_id = #{taskId} AND jw.is_attend = 1
+        <where>
+            <foreach collection="list" item="domain">
+                and ${domain.key} ${domain.op} #{domain.value}
+            </foreach>
+        </where>
     </select>
 
 </mapper>

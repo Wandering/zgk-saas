@@ -1023,8 +1023,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             return JSON.parse(redis.get(redisKey).toString(), HashMap.class);
         }
     }
-
-    private Map<String,Object> getCourseTimeConfig(int tnId, int taskId){
+    @Override
+    public Map<String,Object> getCourseTimeConfig(int tnId, int taskId){
 
 
         LOGGER.info("************获取时间设置 S************");
@@ -1120,12 +1120,14 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return courseMap;
     }
 
+
+
     /**
      * 获取教师
      * @return
      */
     private String getTeacherByCourseAndClass(String course,String grade,String className,int tnId,int taskId){
-        String tableName = "saas"+Constant.TIME_INTERVAL+tnId+Constant.TIME_INTERVAL+Constant.TABLE_TYPE_TEACHER+Constant.TIME_INTERVAL+"excel";
+        String tableName = ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER,tnId);
         List<Map<String,Object>> params = new ArrayList<>();
         Map<String,Object> param = new HashMap<>();
         param = new HashMap<>();
@@ -1143,7 +1145,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         param.put("op","=");
         param.put("value",course);
         params.add(param);
-        List<Map<String,Object>> rtnList = exiTenantConfigInstanceService.likeTeacherByParams(tableName,params);
+        List<Map<String,Object>> rtnList = exiTenantConfigInstanceService.likeTableByParams(tableName,params);
         return rtnList.size()>0?rtnList.get(0).get("teacher_name").toString():null;
     }
 
@@ -1160,7 +1162,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         param.put("op","=");
         param.put("value",teacherId);
         params.add(param);
-        List<Map<String,Object>> rtnList = exiTenantConfigInstanceService.likeTeacherByParams(tableName,params);
+        List<Map<String,Object>> rtnList = exiTenantConfigInstanceService.likeTableByParams(tableName,params);
         return rtnList.size()>0?rtnList.get(0):null;
     }
 
@@ -1345,15 +1347,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return sb.toString();
     }
 
-    public static void main(String[] args) {
-        List<String> list = new ArrayList<>();
-        list.add("123");
-        list.add("456");
-        list.add("789");
-        list.set(2,"444");
-        System.out.println(list.size());
-    }
-
     private static String getScheduleRedisKey(int tnId,int taskId){
         String redisKey = new StringBuilder()
                 .append(Constant.COURSE_TABLE_REDIS_KEY)
@@ -1371,4 +1364,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         }
         return -1;
     }
+
+
 }

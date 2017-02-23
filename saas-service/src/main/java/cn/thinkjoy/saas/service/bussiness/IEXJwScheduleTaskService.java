@@ -46,4 +46,12 @@ public interface IEXJwScheduleTaskService {
      * @return
      */
     String getSchduleResultStatus(Integer taskId, Integer tnId);
+
+    /**
+     * 获取排课的课时信息
+     * @param tnId
+     * @param taskId
+     * @return
+     */
+    Map<String,Object> getCourseTimeConfig(int tnId, int taskId);
 }
