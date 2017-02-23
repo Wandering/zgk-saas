@@ -90,15 +90,16 @@
                                 </div>
 
                                 <%-- 排出课表 软性规则冲突 --%>
-                                <div class="info-modify dh">
+                                <div class="info-modify">
                                     <span class="retry-scheduling">重新排课</span>
-                                    <a target="_blank" href="/rules-page">请查看规则冲突列表</a>
+                                    <a target="_blank" class="rules-links" href="/rules-page">点击查看规则冲突列表</a>
                                 </div>
 
                                 <%-- 排课失败 规则提示 --%>
                                 <div class="scheduling-error">
                                     <i class="icon-cry-face"></i>
-                                    <p>排课失败!,请调整基础规则后，再<span class="retry-scheduling">重新排课</span></p>
+                                    <p>排课失败!,请调整基础规则&nbsp;&nbsp;&nbsp;&nbsp;<span class="retry-scheduling">重新排课</span></p>
+
                                     <ul class="error-box-list"></ul>
                                 </div>
                             </div>

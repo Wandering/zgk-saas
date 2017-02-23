@@ -111,6 +111,14 @@
         color: #fff;
       }
     }
+    .rules-links{
+      text-decoration: underline;
+      color: $mainColor;
+      &:hover {
+        color: $mainColor;
+      }
+    }
+
     .look-origin-schedule {
       color: #F6A623;
       border: 1px solid #F6A623;
@@ -127,8 +135,40 @@
       margin-bottom: 20px;
     }
     color: $mainColor;
+    .retry-scheduling {
+      color: $mainColor;
+      border: 1px solid $mainColor;
+      width: 100px;
+      height: 34px;
+      border-radius: 2px;
+      text-align: center;
+      line-height: 34px;
+      cursor: pointer;
+      display: inline-block;
+      transition: all .3s ease-out;
+      &:hover {
+        background: $mainColor;
+        color: #fff;
+      }
+    }
+  }
+
+  .rules-box-list{
+    text-align: left;
+    display: block;
+    line-height:28px;
+    color: $mainColor;
+  }
+  .error-box-list{
+    text-align: left;
+    width:70%;
+    margin: 0 auto;
+    display: block;
+    line-height:28px;
+    padding:20px 0;
   }
 }
+
 #role-scheduling-tab {
   .role-tab {
     height: 40px;

@@ -299,24 +299,45 @@ var HashHandle = {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
                 switch (parseInt(data)) {
-                    // 1. 没点过没排课  2.排课失败  3.已经点过
+                    // 1. 没点过没排课  2.排课失败  3.排课中 4.排课成功
                     case 1:
+                        console.log("点击排课");
                         $('.btn-one-key').removeClass('dh');
                         break;
                     case 2:
+                        console.log("排课失败");
+                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips').addClass('dh');
+                        $('.scheduling-error').removeClass('dh');
+                        that.scheduleTaskError();
                         break;
                     case 3:
-                        $('.btn-one-key,.arranging-course-tips').addClass('dh');
-                        if(parseInt(resValtaskId)==1){
-                            $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule').addClass('dh');
-                            $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
-                            ClassRoomTableIns.getAllQueryCourse();
-                            ClassRoomTableIns.getQueryCourse();
-                            ClassRoomTableIns.getQueryClass();
-                        }else if(parseInt(resValtaskId)==-1){
-                            $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips').addClass('dh');
-                            $('.scheduling-error').removeClass('dh');
-                        }
+                        console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦");
+                        $('.arranging-course-tips').removeClass('dh');
+                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.btn-one-key').addClass('dh');
+                        clearInterval(that.items);
+                        that.items = setInterval(function () {
+                            that.scheduleTaskState();
+                        }, 30000);
+                        //$('.btn-one-key,.arranging-course-tips').addClass('dh');
+                        //if(parseInt(resValtaskId)==1){
+                        //    $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule').addClass('dh');
+                        //    $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
+                        //    ClassRoomTableIns.getAllQueryCourse();
+                        //    ClassRoomTableIns.getQueryCourse();
+                        //    ClassRoomTableIns.getQueryClass();
+                        //}else if(parseInt(resValtaskId)==-1){
+                        //    $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips').addClass('dh');
+                        //    $('.scheduling-error').removeClass('dh');
+                        //}
+                        break;
+                    case 4:
+                        console.log("排课成功");
+                        clearInterval(that.items);
+                        $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule').addClass('dh');
+                        $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
+                        ClassRoomTableIns.getAllQueryCourse();
+                        ClassRoomTableIns.getQueryCourse();
+                        ClassRoomTableIns.getQueryClass();
                         break;
                     default:
                         break;
@@ -408,7 +429,7 @@ var HashHandle = {
 };
 HashHandle.init();
 
-
+HashHandle.scheduleTaskError();
 
 $(function () {
 
