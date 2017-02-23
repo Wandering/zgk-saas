@@ -12,6 +12,7 @@ import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.*;
 import cn.thinkjoy.saas.dao.bussiness.ICourseBaseInfoDAO;
 import cn.thinkjoy.saas.dao.bussiness.ICourseManageDAO;
+import cn.thinkjoy.saas.dao.bussiness.IEXJwScheduleTaskDAO;
 import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
 import cn.thinkjoy.saas.dao.bussiness.scheduleRule.MergeClassDAO;
 import cn.thinkjoy.saas.domain.*;
@@ -47,6 +48,8 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Service("EXJwScheduleTaskServiceImpl")
@@ -100,6 +103,10 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
     @Autowired
     IJwCourseGapRuleDAO iJwCourseGapRuleDAO;
+    @Autowired
+    IJwScheduleTaskDAO iJwScheduleTaskDAO;
+    @Autowired
+    IEXJwScheduleTaskDAO iexJwScheduleTaskDAO;
 //    @Autowired
 //    private
 
@@ -130,7 +137,19 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return getCourseResult(tnId,taskId);
     }
 
+    private String getScheduleTaskPath(Integer taskId, Integer tnId) {
+        String result = "";
+        Map map = new HashMap();
+        map.put("tnId", tnId);
+        map.put("id", taskId);
+        JwScheduleTask jwScheduleTask = selectScheduleTaskPath(map);
+        if (jwScheduleTask == null || StringUtils.isBlank(jwScheduleTask.getPath()))
+            result = FileOperation.getParamsPath(taskId, tnId);
+        else
+            result = jwScheduleTask.getPath();
 
+        return result;
+    }
     /**
      * 获取排课结果状态
      * @param taskId
@@ -139,13 +158,30 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      */
     @Override
     public String getSchduleResultStatus(Integer taskId, Integer tnId) {
-        return FileOperation.readerTxtString(taskId, tnId, FileOperation.SCHEDULE_RESULT);
+
+        String path=getScheduleTaskPath(taskId,tnId);
+
+        String result =FileOperation.readerTxtString(path, FileOperation.SCHEDULE_RESULT+".txt");
+
+        return result;
     }
+
+    /**
+     * 硬性规则违反描述
+     * @param taskId
+     * @param tnId
+     * @return
+     */
     @Override
     public String getSchduleErrorDesc(Integer taskId, Integer tnId) {
-        String filenPath = FileOperation.getParamsPath(tnId, taskId) + FileOperation.ERROR_TXT;
+
+        String path=getScheduleTaskPath(taskId,tnId);
+
+        String filenPath =path + FileOperation.ERROR_TXT;
+//        String filenPath ="/Users/douzy/0221_test/" + FileOperation.ERROR_TXT;
 
         File file = new File(filenPath);
+
         StringBuilder result = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
@@ -158,6 +194,162 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             e.printStackTrace();
         }
         return result.toString();
+    }
+
+    /**
+     * 软性规则违反描述
+     * @return
+     */
+    @Override
+    public List<String> getNoNScheduleTaskPliableRule(Integer taskId, Integer tnId) {
+
+        List<String> failMsg=new ArrayList<>();
+
+        String path = getScheduleTaskPath(taskId, tnId);
+
+//        String filenPath = "/Users/douzy/0221_test/" + FileOperation.FAIL_TXT;
+        String filenPath = path + FileOperation.FAIL_TXT;
+
+        File file = new File(filenPath);
+
+        StringBuilder result = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
+            String s = null;
+            while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
+
+                Map<String,String> map=JSON.parse(s,HashMap.class);
+
+                String regex="\"imperf\":\"(.*?)\",";//别忘了使用非贪婪模式！
+                Matcher matcher= Pattern.compile(regex).matcher(s);
+                while(matcher.find())
+                {
+                    String ret=matcher.group(1);
+                    failMsg.add(getPliableRuleMessage(map,ret,taskId,tnId));
+                }
+
+                result.append(s);
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return failMsg;
+    }
+
+    private String  getPliableRuleMessage(Map<String,String> map,String ret,Integer taskId,Integer tnId) {
+        String msg = "";
+        switch (ret) {
+            //合班失败  x天x班合班失败
+            case "11":
+                String courseId = map.get("course"),
+                        classStr = map.get("class"),
+                        week = map.get("week");
+
+                CourseBaseInfo courseBaseInfo = courseBaseInfoDAO.fetch(courseId);
+                String[] arr = classStr.split(",");
+                String cn = "";
+                for (String str : arr) {
+                    cn += getClassName(taskId, tnId, str) + "、";
+                }
+                msg = String.format(FileOperation.MERGE_CLASS_FAIL_MSG, week, cn, courseBaseInfo.getCourseName());
+                break;
+            //连堂  数目与设定数据不同
+            case "12":
+                String course12 = map.get("course"),
+                        class12 = map.get("class"),
+                        B1 = map.get("B1"),
+                        B2 = map.get("B2_set");
+                CourseBaseInfo courseBaseInfo12 = courseBaseInfoDAO.fetch(course12);
+                String className12 = getClassName(taskId, tnId, class12);
+                msg = String.format(FileOperation.CON_NUMBER_FAIL_MSG, className12, courseBaseInfo12.getCourseName(), B1, B2);
+                break;
+            //不连堂 x课程时段出现连堂
+            case "13":
+                String course13 = map.get("course");
+                msg = String.format(FileOperation.NON_CON_NUMBER_FAIL_MSG, course13);
+                break;
+            //老师连上  不满足连上规则
+            case "14":
+                String course14 = map.get("course"),
+                        week14 = map.get("week"),
+                        teacher14 = map.get("teacher");
+                CourseBaseInfo courseBaseInfo14 = courseBaseInfoDAO.fetch(course14);
+                String teacherName14 = getTeacherName(taskId, tnId, teacher14);
+                msg = String.format(FileOperation.CON_TEACHER_FAIL_MSG, week14, teacherName14, courseBaseInfo14.getCourseName());
+                break;
+            //教案平齐 x老师在x天不满足教案平齐
+            case "15":
+                String course15 = map.get("course"),
+                        week15= map.get("week"),
+                        teacher15 = map.get("teacher");
+                CourseBaseInfo courseBaseInfo15 = courseBaseInfoDAO.fetch(course15);
+                String teacherName15 = getTeacherName(taskId, tnId, teacher15);
+                msg = String.format(FileOperation.NO_JAPQ_FAIL_MSG, week15, teacherName15, courseBaseInfo15.getCourseName());
+                break;
+        }
+        return msg;
+    }
+
+    private String getTeacherName(Integer taskId,Integer tnId,String teacherId) {
+
+        String className =null;
+
+        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
+
+        String classGrade = ConvertUtil.converGradeByTag(jwScheduleTask.getGrade());
+
+        String tableName = ParamsUtils.combinationTableName("teacher", tnId);
+
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        map.put("searchKey", "id");
+        map.put("searchValue", teacherId);
+
+        List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.getTenantCustom(map);
+        for (int j = 0; j < linkedHashMaps.size(); j++) {
+            LinkedHashMap<String, Object> dataLinkedMap = linkedHashMaps.get(j);
+            for (Iterator iter = dataLinkedMap.entrySet().iterator(); iter.hasNext(); ) {
+                Map.Entry element = (Map.Entry) iter.next();
+                Object strKey = element.getKey();
+                Object strObj = element.getValue();
+                if (strKey.equals("teacher_name"))
+                    className = strObj.toString();
+            }
+        }
+        return className;
+    }
+    private String getClassName(Integer taskId,Integer tnId,String classId) {
+
+        String className =null;
+
+        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
+
+        String classGrade = ConvertUtil.converGradeByTag(jwScheduleTask.getGrade());
+
+        String tableName = ParamsUtils.combinationTableName("class_adm", tnId);
+
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        map.put("searchKey", "id");
+        map.put("searchValue", classId);
+
+        List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.getTenantCustom(map);
+        for (int j = 0; j < linkedHashMaps.size(); j++) {
+            LinkedHashMap<String, Object> dataLinkedMap = linkedHashMaps.get(j);
+            for (Iterator iter = dataLinkedMap.entrySet().iterator(); iter.hasNext(); ) {
+                Map.Entry element = (Map.Entry) iter.next();
+                Object strKey = element.getKey();
+                Object strObj = element.getValue();
+                if (strKey.equals("class_name"))
+                    className = strObj.toString();
+            }
+        }
+        return className;
+    }
+    @Override
+    public JwScheduleTask selectScheduleTaskPath(Map map) {
+        return iexJwScheduleTaskDAO.selectScheduleTaskPath(map);
     }
     /**
      * 初始化排课参数
@@ -993,7 +1185,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             List<String> allCourseList = null;
             Map<Integer,String> courses = getCourseByTnIdAndTaskId(tnId,taskId);
             try {
-                String path = FileOperation.getParamsPath(tnId, taskId) + Constant.PATH_SCHEDULE;
+                String path = getScheduleTaskPath(tnId, taskId) + Constant.PATH_SCHEDULE;
 //                String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
                 CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
                 allCourseList = main.readLines();

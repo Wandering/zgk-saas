@@ -7,10 +7,12 @@
 
 package cn.thinkjoy.saas.service.bussiness;
 
+import cn.thinkjoy.saas.domain.JwScheduleTask;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import com.alibaba.dubbo.common.json.ParseException;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public interface IEXJwScheduleTaskService {
@@ -55,4 +57,9 @@ public interface IEXJwScheduleTaskService {
      * @return
      */
     String getSchduleErrorDesc(Integer taskId, Integer tnId);
+
+
+    JwScheduleTask selectScheduleTaskPath(Map map);
+
+    List<String> getNoNScheduleTaskPliableRule(Integer taskId, Integer tnId);
 }
