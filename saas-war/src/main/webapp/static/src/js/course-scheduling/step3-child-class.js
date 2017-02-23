@@ -449,3 +449,12 @@ $(function () {
 
 
 
+
+//导出下载课表====临时
+
+$(document).on('click', '.output-tpl1', function () {
+    window.location.href = '/scheduleTask/class/course/export.do?taskId='+taskId;
+});
+$(document).on('click', '.output-tpl2', function () {
+    window.location.href = '/scheduleTask/teacher/course/export.do?taskId='+taskId;
+});
