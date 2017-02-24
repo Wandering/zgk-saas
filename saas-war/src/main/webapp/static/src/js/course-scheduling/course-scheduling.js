@@ -37,7 +37,7 @@ Schedule.prototype = {
                             result = '排课中';
                             break;
                         case 4: // 查看课表,重新排课
-                            result = '<a href="/course-scheduling-step3">查看课表</a><a href="/course-scheduling-step1" class="again-schedule-btn btn-split">重新排课</a>';
+                            result = '<a href="/course-scheduling-step3" class="look-course">查看课表</a><a href="/course-scheduling-step1" class="again-schedule-btn btn-split">重新排课</a>';
                             break;
                         default:
                             break;
@@ -302,4 +302,14 @@ $(function () {
         Common.cookie.setCookie('taskId', id);
         schedule.checkTaskBaseInfo(id);
     });
+
+    $('.look-course').on('click', function () {
+        var id = $(this).parent().attr('dataid');
+        var gradeName = $(this).parent().attr('gradeName');
+        var scheduleName = $(this).parent().attr('scheduleName');
+        Common.cookie.setCookie('gradeName', gradeName);
+        Common.cookie.setCookie('scheduleName', scheduleName);
+        Common.cookie.setCookie('taskId', id);
+    });
+
 });
