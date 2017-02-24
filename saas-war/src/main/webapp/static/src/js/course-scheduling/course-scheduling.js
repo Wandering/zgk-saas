@@ -30,6 +30,7 @@ Schedule.prototype = {
                             result = '<a href="javascript: void(0);" class="start-schedule-btn">开始排课</a>';
                             break;
                         case 2: // 排课失败,重新排课
+                        case 5: // 排课失败,重新排课
                             result = '排课失败&nbsp;&nbsp;<a href="javascript: void(0);" class="again-schedule-btn btn-split">重新排课</a>';
                             break;
                         case 3: // 排课中

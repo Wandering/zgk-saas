@@ -106,7 +106,7 @@
                                 <%-- 排课失败2 系统错误 规则提示 --%>
                                 <div class="scheduling-error2 dh">
                                     <i class="icon-cry-face"></i>
-                                    <p>排课失败!<span class="retry-scheduling">重新排课</span></p>
+                                    <p>排课失败!&nbsp;&nbsp;&nbsp;&nbsp;<span class="retry-scheduling">重新排课</span></p>
                                 </div>
 
                             </div>
