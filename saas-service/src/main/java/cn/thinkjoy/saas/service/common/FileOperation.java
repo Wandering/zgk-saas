@@ -95,6 +95,24 @@ public class FileOperation {
         return flag;
 
     }
+    public static boolean removeAllFile(File file) {
+        boolean flag = false;
+        try {
+            if (file.isFile() || file.list().length == 0) {
+                file.delete();
+            } else {
+                File[] files = file.listFiles();
+                for (int i = 0; i < files.length; i++) {
+                    removeAllFile(files[i]);
+                    files[i].delete();
+                }
+            }
+            flag = true;
+        } catch (Exception e) {
+            flag = false;
+        }
+        return flag;
+    }
     public static String readerTxtString(String filenPath,String name) {
 
         String f =filenPath + name;

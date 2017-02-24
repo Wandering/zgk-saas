@@ -70,4 +70,12 @@ public interface IEXJwScheduleTaskService {
      * @return
      */
     Map<String,Object> getCourseTimeConfig(int tnId, int taskId);
+
+    /**
+     * 获取路径
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    String getScheduleTaskPath(Integer taskId, Integer tnId);
 }
