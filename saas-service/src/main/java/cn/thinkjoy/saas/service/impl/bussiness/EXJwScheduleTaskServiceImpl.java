@@ -220,9 +220,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     case "-1":
                         failMsg.add("排课系统异常,请联系管理员!" + s);
                         break;
-                    case "-2":
-                        failMsg.add("排课系统异常,请联系管理员!" + s);
-                        break;
                 }
             }
             br.close();
@@ -468,11 +465,11 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 @Override
                 public void run() {
                     String path = FileOperation.getParamsPath(tnId, taskId);
-                    ReadCmdLine.run(path);
+                    Integer c = ReadCmdLine.run(path);
                     String result = getSchduleResultStatus(taskId, tnId);
                     if (result.equals("1")) {
                         updateScheduleTask(taskId, 4);
-                    } else if (result.equals("-1"))
+                    } else if (result.equals("-1") || result.equals("-2"))
                         updateScheduleTask(taskId, 2);
                 }
             });
