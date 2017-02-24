@@ -140,7 +140,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return getCourseResult(tnId,taskId);
     }
 
-    private String getScheduleTaskPath(Integer taskId, Integer tnId) {
+    @Override
+    public String getScheduleTaskPath(Integer taskId, Integer tnId) {
 
 //        String result = "/Users/dengshaofei/0221_test/";
         String result = "";

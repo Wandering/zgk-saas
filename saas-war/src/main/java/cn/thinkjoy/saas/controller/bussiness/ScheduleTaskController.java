@@ -145,6 +145,37 @@ public class ScheduleTaskController {
         }
         return initBool;
     }
+    /**
+     * 重新排课
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/reload/trigger")
+    public boolean reloadTrigger(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
+
+        String path = FileOperation.getParamsPath(tnId, taskId);
+
+        File file = new File(path);
+
+        boolean re = FileOperation.removeAllFile(file);
+
+        if (!re)
+            return false;
+
+        boolean initBool = iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+
+        if (initBool) {
+            JwScheduleTask jwScheduleTask = new JwScheduleTask();
+            jwScheduleTask.setId(taskId);
+            jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
+            jwScheduleTask.setPath(path);
+            initBool = jwScheduleTaskService.update(jwScheduleTask) > 0;
+        }
+
+        return initBool;
+    }
+
+
 
     /**
      * 排课结果查询
