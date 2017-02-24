@@ -164,9 +164,16 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     @Override
     public String getSchduleResultStatus(Integer taskId, Integer tnId) {
 
-        String path=getScheduleTaskPath(taskId,tnId);
+        String path = getScheduleTaskPath(taskId, tnId);
 
-        String result =FileOperation.readerTxtString(path, FileOperation.SCHEDULE_RESULT+".txt");
+        String result = FileOperation.readerTxtString(path, FileOperation.SCHEDULE_RESULT + ".txt");
+//
+//        if (result.equals("1")) {
+//            updateScheduleTask(taskId, 4);
+//        } else if (result.equals("-1"))
+//            updateScheduleTask(taskId, 2);
+//        else if (result.equals("0"))
+//            updateScheduleTask(taskId, 3);
 
         return result;
     }
@@ -192,15 +199,30 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
             String s = null;
+            Integer i=0;
+            String errMsg="",errTag="0";
             while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
-                if (!s.equals("0")) {
-                    Map<String, String> map = JSON.parse(s, HashMap.class);
-                    String regex = "\"data_error\":\"(.*?)\",";//别忘了使用非贪婪模式！
-                    Matcher matcher = Pattern.compile(regex).matcher(s);
-                    while (matcher.find()) {
-                        String ret = matcher.group(1);
-                        failMsg.add(getRuleMessage(map, ret, taskId, tnId));
-                    }
+                i++;
+                if (i == 1) {
+                    errTag = s;
+                    continue;
+                }
+                switch (errTag) {
+                    case "2":
+                        Map<String, String> map = JSON.parse(s, HashMap.class);
+                        String regex = "\"data_error\":\"(.*?)\",";//别忘了使用非贪婪模式！
+                        Matcher matcher = Pattern.compile(regex).matcher(s);
+                        while (matcher.find()) {
+                            String ret = matcher.group(1);
+                            failMsg.add(getRuleMessage(map, ret, taskId, tnId));
+                        }
+                        break;
+                    case "-1":
+                        failMsg.add("排课系统异常,请联系管理员!" + s);
+                        break;
+                    case "-2":
+                        failMsg.add("排课系统异常,请联系管理员!" + s);
+                        break;
                 }
             }
             br.close();
@@ -448,9 +470,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     String path = FileOperation.getParamsPath(tnId, taskId);
                     ReadCmdLine.run(path);
                     String result = getSchduleResultStatus(taskId, tnId);
-                    if (Integer.valueOf(result) == 1) {
+                    if (result.equals("1")) {
                         updateScheduleTask(taskId, 4);
-                    } else
+                    } else if (result.equals("-1"))
                         updateScheduleTask(taskId, 2);
                 }
             });
