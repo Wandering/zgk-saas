@@ -982,8 +982,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             Map courMap = new HashMap();
             courMap.put("tnId", tnId);
             courMap.put("gradeId", grade);
-            courMap.put("courseType", classType);
-            List<CourseManageVo> courseManageVos = iCourseManageDAO.selectCourseManageInfo(courMap);
+            courMap.put("courseType",classType==0?-1:(classType==1?2:1));
+            List<CourseManageVo> courseManageVos = iCourseManageDAO.selectCourseManageInfoPK(courMap);
 
             //行政班 文科班&理科班
             if (gradeObj.getClassType() == 1 || gradeObj.getClassType() == 3) {
