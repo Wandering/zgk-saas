@@ -339,7 +339,7 @@ var HashHandle = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        });
     },
     // 一键排课触发
     scheduleTaskTrigger: function () {
@@ -355,7 +355,7 @@ var HashHandle = {
             }
         }, function (res) {
             layer.msg(res.msg);
-        }, true);
+        });
     },
     // 一键排课结果
     scheduleTaskState: function () {
@@ -423,7 +423,7 @@ var HashHandle = {
             }
         }, function (res) {
             layer.msg(res.msg);
-        }, true);
+        });
     },
     // 错误接口 /scheduleTask/error/desc?taskId=37&tnId=10
     scheduleTaskError:function(){
@@ -441,8 +441,23 @@ var HashHandle = {
             }
         }, function (res) {
             layer.msg(res.msg);
-        }, true);
+        });
+    },
+    // 重新排课 /scheduleTask/reload/trigger.do
+    scheduleTaskReload:function(){
+        var that = this;
+        Common.ajaxFun('/scheduleTask/reload/trigger.do', 'GET', {
+            'taskId': taskId,
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                that.scheduleTaskState();
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
     }
+
 
 };
 HashHandle.init();
@@ -459,7 +474,7 @@ $(function () {
     // 重新排课
     $('.retry-scheduling').on('click',function(){
         $('.btn-one-key').addClass('dh');
-        HashHandle.scheduleTaskTrigger();
+        HashHandle.scheduleTaskReload();
     });
 
     // 查看原课表
