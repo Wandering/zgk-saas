@@ -306,14 +306,14 @@ var HashHandle = {
                         break;
                     case 2:
                         console.log("排课失败");
-                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips').addClass('dh');
+                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error2').addClass('dh');
                         $('.scheduling-error').removeClass('dh');
                         that.scheduleTaskError();
                         break;
                     case 3:
                         console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦");
                         $('.arranging-course-tips').removeClass('dh');
-                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.btn-one-key').addClass('dh');
+                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.btn-one-key,.scheduling-error,.scheduling-error2').addClass('dh');
                         clearInterval(that.items);
                         that.items = setInterval(function () {
                             that.scheduleTaskState();
@@ -322,11 +322,16 @@ var HashHandle = {
                     case 4:
                         console.log("排课成功");
                         clearInterval(that.items);
-                        $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule').addClass('dh');
+                        $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
                         $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
                         ClassRoomTableIns.getAllQueryCourse();
                         ClassRoomTableIns.getQueryCourse();
                         ClassRoomTableIns.getQueryClass();
+                        break;
+                    case 5:
+                        console.log("排课失败2");
+                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error').addClass('dh');
+                        $('.scheduling-error2').removeClass('dh');
                         break;
                     default:
                         break;
@@ -367,7 +372,7 @@ var HashHandle = {
                     case 0:
                         console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦0");
                         $('.arranging-course-tips').removeClass('dh');
-                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.btn-one-key,.scheduling-error').addClass('dh');
+                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.btn-one-key,.scheduling-error,.scheduling-error2').addClass('dh');
                         clearInterval(that.items);
                         that.items = setInterval(function () {
                             that.scheduleTaskState();
@@ -376,7 +381,7 @@ var HashHandle = {
                     case 1:
                         console.log("排课成功1");
                         clearInterval(that.items);
-                        $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error').addClass('dh');
+                        $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
                         $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
                         ClassRoomTableIns.getAllQueryCourse();
                         ClassRoomTableIns.getQueryCourse();
@@ -385,7 +390,7 @@ var HashHandle = {
                     case -1:
                         console.log("排课失败-1");
                         clearInterval(that.items);
-                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error').addClass('dh');
+                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error,.scheduling-error2').addClass('dh');
                         $('.scheduling-error').removeClass('dh');
                         that.scheduleTaskError();
                         break;
