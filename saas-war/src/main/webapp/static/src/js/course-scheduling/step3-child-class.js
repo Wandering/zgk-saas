@@ -367,8 +367,25 @@ var HashHandle = {
             if (res.rtnCode == "0000000") {
                 // 0:正在排课  1:排课成功   -1 ：排课失败
                 var dataNum = res.bizData;
+                var num=0;
                 Common.cookie.setCookie("resVal"+taskId, parseInt(dataNum));
                 switch (parseInt(dataNum)) {
+                    case "":
+                        console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦0");
+                        $('.arranging-course-tips').removeClass('dh');
+                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.btn-one-key,.scheduling-error,.scheduling-error2').addClass('dh');
+                        if(num==2){
+                            console.log("排课任务状态返回错误");
+                            clearInterval(that.items);
+                            $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error').addClass('dh');
+                            $('.scheduling-error2').removeClass('dh');
+                        }
+                        clearInterval(that.items);
+                        that.items = setInterval(function () {
+                            that.scheduleTaskState();
+                            num ++
+                        }, 30000);
+                        break;
                     case 0:
                         console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦0");
                         $('.arranging-course-tips').removeClass('dh');
