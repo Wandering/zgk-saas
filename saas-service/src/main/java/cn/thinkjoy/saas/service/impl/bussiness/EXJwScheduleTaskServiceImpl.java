@@ -468,6 +468,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     String path = FileOperation.getParamsPath(tnId, taskId);
                     Integer c = ReadCmdLine.run(path);
                     String result = getSchduleResultStatus(taskId, tnId);
+                    String redisKey = getScheduleRedisKey(tnId,taskId);
+                   if (redis.exists(redisKey))redis.del(redisKey);
+
                     if (result.equals("1")) {
                         updateScheduleTask(taskId, 4);
                     } else if (result.equals("-1"))
