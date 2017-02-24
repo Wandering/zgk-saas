@@ -373,11 +373,11 @@ var HashHandle = {
                     case "":
                         console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦0");
                         $('.arranging-course-tips').removeClass('dh');
-                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.btn-one-key,.scheduling-error,.scheduling-error2').addClass('dh');
+                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.btn-one-key,.scheduling-error,.scheduling-error2,.info-modify').addClass('dh');
                         if(num==2){
                             console.log("排课任务状态返回错误");
                             clearInterval(that.items);
-                            $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error').addClass('dh');
+                            $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error,.info-modify').addClass('dh');
                             $('.scheduling-error2').removeClass('dh');
                         }
                         clearInterval(that.items);
@@ -389,7 +389,7 @@ var HashHandle = {
                     case "0":
                         console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦0");
                         $('.arranging-course-tips').removeClass('dh');
-                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.btn-one-key,.scheduling-error,.scheduling-error2').addClass('dh');
+                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.btn-one-key,.scheduling-error,.scheduling-error2,.info-modify').addClass('dh');
                         clearInterval(that.items);
                         that.items = setInterval(function () {
                             that.scheduleTaskState();
@@ -407,14 +407,14 @@ var HashHandle = {
                     case "-1":
                         console.log("排课失败-1");
                         clearInterval(that.items);
-                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error,.scheduling-error2').addClass('dh');
+                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error,.scheduling-error2,.info-modify').addClass('dh');
                         $('.scheduling-error').removeClass('dh');
                         that.scheduleTaskError();
                         break;
                     case "-2":
                         console.log("排课失败-2");
                         clearInterval(that.items);
-                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error').addClass('dh');
+                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error,.info-modify').addClass('dh');
                         $('.scheduling-error2').removeClass('dh');
                         break;
                     default:
