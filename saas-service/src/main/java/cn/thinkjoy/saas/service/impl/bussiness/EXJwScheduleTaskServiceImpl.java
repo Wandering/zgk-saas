@@ -830,11 +830,17 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             jwCourseMap.put("taskId", taskId);
             JwCourse jwCourse = jwCourseDAO.queryOne(jwCourseMap, "id", "asc");
 
-            stringBuffer.append(converCourseHour(jwCourse.getCourseHour(), 0));
-            stringBuffer.append(FileOperation.STR_SPLIT);
-            stringBuffer.append(converCourseHour(jwCourse.getCourseHour(), 1));
-            stringBuffer.append(FileOperation.STR_SPLIT);
-
+            if(jwCourse==null){
+                stringBuffer.append(0);
+                stringBuffer.append(FileOperation.STR_SPLIT);
+                stringBuffer.append(0);
+                stringBuffer.append(FileOperation.STR_SPLIT);
+            }else {
+                stringBuffer.append(converCourseHour(jwCourse.getCourseHour(), 0));
+                stringBuffer.append(FileOperation.STR_SPLIT);
+                stringBuffer.append(converCourseHour(jwCourse.getCourseHour(), 1));
+                stringBuffer.append(FileOperation.STR_SPLIT);
+            }
             stringBuffer.append(ConvertUtil.converCourseType(courseManageVo.getCourseType()));
             stringBuffer.append(FileOperation.STR_SPLIT);
 
@@ -867,7 +873,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return str.split(",");
     }
 
-    private String converCourseHour(String hour,Integer index) {
+    private  String converCourseHour(String hour,Integer index) {
 
         String result = "0";
 
@@ -882,6 +888,11 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return result;
     }
 
+//    public static void main(String[] args) {
+//
+//         System.out.print( converCourseHour("2",0));
+//        System.out.print( converCourseHour("2",1));
+//    }
     /**
      * 基础信息设置
      * @param taskId
@@ -971,7 +982,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             Map courMap = new HashMap();
             courMap.put("tnId", tnId);
             courMap.put("gradeId", grade);
-            courMap.put("classType", classType);
+            courMap.put("courseType", classType);
             List<CourseManageVo> courseManageVos = iCourseManageDAO.selectCourseManageInfo(courMap);
 
             //行政班 文科班&理科班
