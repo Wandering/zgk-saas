@@ -44,7 +44,6 @@ public class EXTeacherServiceImpl implements IEXTeacherService {
     @Override
     public List<LinkedHashMap<String, Object>> getScheduleTeacherByTnIdAndTaskId(int tnId, int taskId, Map<String, Object> params) {
         String tableName = ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER, tnId);
-        if (exiTenantConfigInstanceDAO.existTable(tableName) <= 0) {
             List<Map<String,Object>> maps = new ArrayList<>();
             Map<String,Object> map;
             Iterator<Map.Entry<String,Object>> $i =params.entrySet().iterator();
@@ -57,9 +56,7 @@ public class EXTeacherServiceImpl implements IEXTeacherService {
                 maps.add(map);
             }
             return iexTeantCustomDAO.likeJwTeacherByParams(tableName,tnId,taskId,maps);
-        }else {
-            throw new BizException("error","教师数据为空,请先上传教师数据");
-        }
+
     }
 
 }

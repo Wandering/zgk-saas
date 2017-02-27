@@ -29,7 +29,6 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -137,7 +136,7 @@ public class ScheduleTaskController {
 
 
         if (initBool) {
-            String path = FileOperation.getParamsPath(taskId, tnId);
+            String path = FileOperation.getParamsPath(tnId, taskId);
             JwScheduleTask jwScheduleTask = new JwScheduleTask();
             jwScheduleTask.setId(taskId);
             jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
@@ -146,6 +145,37 @@ public class ScheduleTaskController {
         }
         return initBool;
     }
+    /**
+     * 重新排课
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/reload/trigger")
+    public boolean reloadTrigger(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
+
+        String path = FileOperation.getParamsPath(tnId, taskId);
+
+        File file = new File(path);
+
+        boolean re = FileOperation.removeAllFile(file);
+
+        if (!re)
+            return false;
+
+        boolean initBool = iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+
+        if (initBool) {
+            JwScheduleTask jwScheduleTask = new JwScheduleTask();
+            jwScheduleTask.setId(taskId);
+            jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
+            jwScheduleTask.setPath(path);
+            initBool = jwScheduleTaskService.update(jwScheduleTask) > 0;
+        }
+
+        return initBool;
+    }
+
+
 
     /**
      * 排课结果查询
@@ -167,7 +197,7 @@ public class ScheduleTaskController {
      */
     @ResponseBody
     @RequestMapping("/error/desc")
-    public String getSchduleErrorDesc(@RequestParam Integer taskId,@RequestParam Integer tnId){
+    public List<String> getSchduleErrorDesc(@RequestParam Integer taskId,@RequestParam Integer tnId){
            return  iexJwScheduleTaskService.getSchduleErrorDesc(taskId,tnId);
     }
 
