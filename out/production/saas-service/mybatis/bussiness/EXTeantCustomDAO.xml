@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO">
+
+    <insert id="insertTenantCustom" useGeneratedKeys="true">
+
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+
+        INSERT INTO ${tableName} (
+            <foreach collection="teantCustomList" item="item" index="index" separator="," >
+                ${item.key}
+            </foreach>
+        )VALUES
+            (
+                <foreach collection="teantCustomList" item="item" index="index" separator=",">
+                    #{item.value}
+                </foreach>
+            )
+    </insert>
+
+    <update id="updateTenantCustom">
+        update ${tableName}
+            <set>
+                <foreach collection="teantCustomList" item="item" index="index"  separator=",">
+                    ${item.key}=#{item.value}
+                </foreach>
+            </set>
+        where id = ${pri}
+    </update>
+
+    <delete id="removeTenantCustom">
+         DELETE FROM ${tableName} where id=#{pri}
+    </delete>
+
+    <select id="getTenantCustom" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+         select * from ${tableName}
+        <where>
+            <if test="searchKey!=null and searchValue!=null">
+                ${searchKey}=#{searchValue}
+            </if>
+        </where>
+        order by id asc
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+    <select id="getTenantCustomCount" parameterType="java.util.Map" resultType="Integer">
+        select count(1) from ${tableName}
+        <where>
+            <if test="searchKey!=null and searchValue!=null">
+                ${searchKey}=#{searchValue}
+            </if>
+        </where>
+        order by id asc
+    </select>
+
+    <!-- 查询学生数据 -->
+    <select id="getStuInfo" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+        select * from ${tableName}
+        <where>
+            <if test="type == 1">
+                and student_check_major1 is null
+            </if>
+            <if test="type == 0">
+                and student_check_major1 is not null
+            </if>
+            <if test="grade != null and grade != ''">
+                and student_grade = #{grade}
+            </if>
+        </where>
+        order by id asc
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+    <select id="getStuInfoCount" parameterType="java.util.Map" resultType="Integer">
+        select count(1) from ${tableName}
+        <where>
+            <if test="type == 1">
+                and student_check_major1 is null
+            </if>
+            <if test="type == 0">
+                and student_check_major1 is not null
+            </if>
+            <if test="grade != null and grade != ''">
+                and student_grade = #{grade}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询教师数据 -->
+    <select id="getTeacherInfos" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.TeacherBaseDto">
+        select
+             id as teacherId,
+             teacher_name as teacherName,
+             teacher_major_type as courseName,
+             teacher_grade as grade,
+             teacher_class as classes,
+             teacher_max_take_class as classNum
+        from ${tableName}
+        <where>
+            <if test="id != null and id != -1">
+                and id = #{id}
+            </if>
+            <if test="grade != null and grade != ''">
+                and teacher_grade like  CONCAT("%",#{grade},"%")
+            </if>
+        </where>
+        order by id asc
+        <if test="id != null and id != -1">
+            limit 1
+        </if>
+    </select>
+
+    <!-- 查询行政班级数据 -->
+    <select id="getClassAdmInfos" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.ClassBaseDto">
+        select
+            id as classId,
+            class_grade as classGrade,
+            class_name  as className,
+            class_boss as classBoss,
+            class_type as classType
+        from ${tableName}
+        <where>
+            <if test="grade != null and grade != ''">
+                and class_grade like  CONCAT("%",#{grade},"%")
+            </if>
+        </where>
+        order by id asc
+    </select>
+
+    <!-- 查询教学班级数据 -->
+    <select id="getClassEduInfos" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.ClassBaseDto">
+        select
+            id as classId,
+            class_grade as classGrade,
+            class_name  as className,
+            class_major_type as course,
+            class_type as classType
+        from ${tableName}
+        <where>
+            <if test="course != null and course != ''">
+                and class_major_type = #{course}
+            </if>
+        </where>
+        order by id asc
+    </select>
+
+    <select id="getTenantCustomColsCount" parameterType="java.util.Map" resultType="Integer">
+        select count(1) from ${tableName}
+        <where>
+            <foreach collection="searchKeys" item="item" index="index" separator="," >
+                ${item.key} = #{item.value}
+            </foreach>
+        </where>
+    </select>
+
+    <delete id="removeTenantCustomList" >
+
+        DELETE FROM ${tableName} where id in
+
+        <foreach item="idItem" collection="ids" open="(" separator="," close=")">
+            #{idItem}
+        </foreach>
+
+    </delete>
+    <!--判断表中列是否存在数据-->
+    <select id="existDataCount" resultType="java.util.Map">
+        SELECT
+        <foreach item="column" collection="columns" separator=",">
+            count(${column}) as ${column}
+        </foreach>
+        from ${tableName}
+        <where>
+            <if test="searchKey!=null and searchValue!=null">
+                ${searchKey}=#{searchValue}
+            </if>
+        </where>
+    </select>
+    <select id="selectExistByCloumn" parameterType="java.util.Map"  resultType="java.util.LinkedHashMap">
+        SELECT * from  ${tableName}
+        <where>
+            <if test="key1!=null and value1!=null">
+                and ${key1}=#{value1}
+            </if>
+            <if test="key2!=null and value2!=null">
+                and ${key2}=#{value2}
+            </if>
+        </where>
+    </select>
+    <select id="selectCourseGroup" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.domain.bussiness.SyncCourse">
+        select major,grade from (select student_check_major1 as major,student_grade as grade from ${tableName} group by grade,major
+        union all
+        select student_check_major2 as major,student_grade as grade from ${tableName} group by grade,major
+        union all
+        select student_check_major3 as major,student_grade as grade from ${tableName} group by grade,major
+        )t group by major,grade
+    </select>
+    <select id="selectClassGroup" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.domain.bussiness.SyncClass">
+        select majorClass,grade from (
+        select student_check_major_class1 as majorClass ,student_grade as grade from ${tableName} group by grade,student_check_major_class1
+        union all
+        select student_check_major_class2 as majorClass ,student_grade as grade from ${tableName} group by grade,student_check_major_class2
+        union all
+        select student_check_major_class3 as majorClass ,student_grade as grade from ${tableName} group by grade,student_check_major_class3
+        )t group by majorClass,grade
+    </select>
+    <select id="selectExecutiveClassGroup" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.domain.bussiness.SyncClass">
+        select student_class as majorClass ,student_grade as grade from ${tableName} group by grade,student_class
+    </select>
+
+    <select id="likeTableByParams" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+        select * from ${tableName}
+         <where>
+             <foreach collection="list" item="domain">
+                  and ${domain.key} ${domain.op} #{domain.value}
+             </foreach>
+         </where>
+    </select>
+
+    <select id="likeJwTeacherByParams" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+        select * from ${tableName} tb INNER JOIN saas_jw_teacher jw on jw.teacher_id = tb.id AND jw.tn_id = #{tnId} AND jw.task_id = #{taskId} AND jw.is_attend = 1
+        <where>
+            <foreach collection="list" item="domain">
+                and ${domain.key} ${domain.op} #{domain.value}
+            </foreach>
+        </where>
+    </select>
+
+</mapper>
