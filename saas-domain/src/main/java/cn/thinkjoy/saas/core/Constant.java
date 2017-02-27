@@ -86,11 +86,20 @@ public class Constant {
     public static final String COURSE_TABLE_REDIS_KEY = "course_key_";
     public static final String COURSE_TABLE_REDIS_SPLIT = "_";
     /**课程表redis相关end**/
-
+    /**课程解析相关**/
     public static final java.lang.String COURSE_LINE_TABLE_SPLIT_T = "\t";
     public static final java.lang.String COURSE_TABLE_LINE_SPLIT_CHAR = "  ";
     public static final java.lang.String COURSE_TABLE_LINE_SPLIT_CLASS = "     ";
     public static final java.lang.String PATH_SCHEDULE = "admin_course_0.txt";
+    /**课程解析相关**/
+    /**课程表生成相关**/
+    public static final String GEN_COURSE_TABLE_BASE_SPLIT = " ";
+    public static final String GEN_COURSE_TABLE_TEACHER_AROUND_S = "(";
+    public static final String GEN_COURSE_TABLE_TEACHER_AROUND_E = ")";
+    public static final String GEN_COURSE_TABLE_CLASS_SPLIT = "-";
+    public static final String GEN_COURSE_TABLE_WRAP_SPLIT = "-";
+    /**课程表生成相关**/
+
     //redis缓存时间30天
     public static final long SCHEDULE_REDIS_TIME = 1 * 30;
     public static final Integer COURSE_STATUS_Y = 1;

@@ -1,117 +1,83 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkjoy.saas.dao.bussiness.EXIClassRoomDAO">
-    <sql id="Base_Column_List">
-        id,
-        tn_id as tnId,
-        grade_id as gradeId,
-        executive_number as executiveNumber,
-        day_number as dayNumber,
-        room_order as roomOrder,
-        create_date as createDate
-    </sql>
-    <sql id="ClassRoomColumnList">
-        classRoom.id,
-        classRoom.tn_id as tnId,
-        classRoom.grade_id as gradeId,
-        grade.grade,
-        classRoom.executive_number as executiveNumber,
-        classRoom.day_number as dayNumber,
-        classRoom.room_order,
-        classRoom.create_date as createDate
-    </sql>
-    <select id="selectClassRoomByTnId" parameterType="java.util.Map" resultType="ClassRoomView">
+    <!--<sql id="Base_Column_List">-->
+        <!--id,-->
+        <!--tn_id as tnId,-->
+        <!--grade_id as gradeId,-->
+        <!--executive_number as executiveNumber,-->
+        <!--day_number as dayNumber,-->
+        <!--room_order as roomOrder,-->
+        <!--create_date as createDate-->
+    <!--</sql>-->
+    <select id="queryList" resultType="map" parameterType="cn.thinkjoy.saas.dto.JwCourseTableDTO">
         SELECT
-
-        <include refid="ClassRoomColumnList" />
-
-        FROM saas_class_rooms as classRoom
-
-        inner join saas_grade as grade
-
-        on classRoom.grade_id=grade.gradeCode AND classRoom.tn_id = grade.tnId
-
-        <trim prefix="WHERE" prefixOverrides="AND | OR">
-            <if test="id!=null">
-                AND classRoom.id = #{id}
-            </if>
-            <if test="tnId!=null">
-                AND classRoom.tn_id = #{tnId}
-            </if>
-            <if test="gradeId!=null">
-                AND classRoom.grade_id = #{gradeId}
-            </if>
-            <if test="executiveNumber!=null">
-                AND classRoom.executive_number = #{executiveNumber}
-            </if>
-            <if test="dayNumber!=null">
-                AND classRoom.day_number = #{dayNumber}
-            </if>
-            <if test="createDate!=null">
-                AND classRoom.create_date = #{createDate}
-            </if>
-        </trim>
-        ORDER BY classRoom.room_order asc
+        tb.*, teacher.teacher_name AS teacherName,
+        class.class_name AS className,
+        course.course_name AS courseName
+        from saas_jw_course_table tb
+        LEFT JOIN ${teacherTableName} teacher on teacher.id = tb.teacherId
+        LEFT join ${classTableName} class on class.id = tb.classId
+        LEFT JOIN saas_course_base_info course on course.id = tb.courseId
+        where tb.`status` = 1
+        <if test="params.teacherId">
+            and teacherId = #{params.teacherId}
+        </if>
+        <if test="params.classId">
+            and teacherId = #{params.classId}
+        </if>
+        <if test="params.courseId">
+            and teacherId = #{params.courseId}
+        </if>
+        <if test="params.gradeId">
+            and teacherId = #{params.gradeId}
+        </if>
+        <if test="params.week">
+            and teacherId = #{params.week}
+        </if>
+        <if test="params.sort">
+            and teacherId = #{params.sort}
+        </if>
+        <if test="params.tnId">
+            and teacherId = #{params.tnId}
+        </if>
+        <if test="params.taskId">
+            and teacherId = #{params.taskId}
+        </if>
+        UNION ALL
+        SELECT
+        tb.*, '' AS teacherName,
+        class.class_name AS className,
+        '' AS courseName
+        from saas_jw_course_table tb
+        LEFT JOIN ${teacherTableName} teacher on teacher.id = tb.teacherId
+        LEFT join ${classTableName} class on class.id = tb.classId
+        LEFT JOIN saas_course_base_info course on course.id = tb.courseId
+        where tb.`status` = 0
+        <if test="params.teacherId">
+            and teacherId = #{params.teacherId}
+        </if>
+        <if test="params.classId">
+            and teacherId = #{params.classId}
+        </if>
+        <if test="params.courseId">
+            and teacherId = #{params.courseId}
+        </if>
+        <if test="params.gradeId">
+            and teacherId = #{params.gradeId}
+        </if>
+        <if test="params.week">
+            and teacherId = #{params.week}
+        </if>
+        <if test="params.sort">
+            and teacherId = #{params.sort}
+        </if>
+        <if test="params.tnId">
+            and teacherId = #{params.tnId}
+        </if>
+        <if test="params.taskId">
+            and teacherId = #{params.taskId}
+        </if>
+        ORDER BY classId,week,sort asc
     </select>
-
-    <insert id="addClassRoom" useGeneratedKeys="true" parameterType="java.util.List">
-        <selectKey resultType="long" keyProperty="id" order="AFTER">
-            SELECT
-            LAST_INSERT_ID()
-        </selectKey>
-        insert into saas_class_rooms(
-            tn_id,
-            grade_id,
-            executive_number,
-            day_number,
-            create_date
-        )
-        values
-        <foreach collection="ClassRoomsList" item="item" index="index" separator="," >
-            (#{item.tnId},#{item.gradeId},#{item.executiveNumber},#{item.dayNumber},#{item.createDate})
-        </foreach>
-    </insert>
-
-    <delete id="removeClassRooms" parameterType="java.util.List">
-
-        DELETE FROM saas_class_rooms where id in
-
-        <foreach item="idItem" collection="list" open="(" separator="," close=")">
-            #{idItem}
-        </foreach>
-
-    </delete>
-
-    <insert id="insertClassRoom" parameterType="ClassRooms">
-        INSERT INTO saas_class_rooms (
-        tn_id,
-        grade_id,
-        executive_number,
-        day_number,
-        room_order,
-        create_date
-        ) VALUES (
-        #{tnId},
-        #{gradeId},
-        #{executiveNumber},
-        #{dayNumber},
-        #{roomOrder},
-        #{createDate}
-        )
-        <selectKey resultType="java.lang.Long" keyProperty="id">
-            SELECT LAST_INSERT_ID() AS ID
-        </selectKey>
-    </insert>
-
-    <update id="sortRoomOrderUpdate"  parameterType="java.util.List">
-
-        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
-            update saas_class_rooms
-            <set>
-                room_order=${item.roomOrder}
-            </set>
-            where id = ${item.id}
-        </foreach>
-
-    </update>
 </mapper>

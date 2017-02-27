@@ -5,11 +5,13 @@
  * $Id:  CityService.java 2016-10-26 10:18:20 $
  */
 
-package cn.thinkjoy.saas.service;
+package cn.thinkjoy.saas.service.bussiness;
 
+
+import java.util.Map;
 
 public interface ISyllabusService{
 
-        
+    Map<String,Object> getAllSyllabus(int tnId, int taskId);
 
 }
