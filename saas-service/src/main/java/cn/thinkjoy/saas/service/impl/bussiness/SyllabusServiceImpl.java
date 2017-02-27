@@ -6,7 +6,9 @@ import cn.thinkjoy.saas.dao.IJwCourseTableDAO;
 import cn.thinkjoy.saas.dao.IJwScheduleTaskDAO;
 import cn.thinkjoy.saas.dao.bussiness.ISyllabusDAO;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
+import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.dto.JwCourseTableDTO;
+import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
 import cn.thinkjoy.saas.service.bussiness.ISyllabusService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.sun.tools.jdi.LinkedHashMap;
@@ -25,15 +27,75 @@ public class SyllabusServiceImpl implements ISyllabusService {
     private ISyllabusDAO syllabusDAO;
     @Autowired
     private IJwScheduleTaskDAO jwScheduleTaskDAO;
+    @Autowired
+    private IEXJwScheduleTaskService iexJwScheduleTaskService;
+
     @Override
     public Map<String,Object> getAllSyllabus(int tnId,int taskId){
-        Map<String,Object> params = new HashMap<>();
-        JwScheduleTask jwScheduleTask = this.getTaskByTaskIdAndTnId(tnId,taskId);
-        int grade =  Integer.valueOf(jwScheduleTask.getGrade());
-        String teacherTableName = ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER,tnId);
-        String classTableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM,tnId);
-        List<JwCourseTableDTO> jwCourseTableDTOs = syllabusDAO.queryList(params,teacherTableName,classTableName);
-        if (jwCourseTableDTOs.size() == 0)throw new BizException("error","当前租户下排课任务"+taskId+"课表为空,请稍后再试");
+        /**变量声明**/
+        Map<String, Object> rtnMap;
+        List<JwCourseTableDTO> jwCourseTableDTOs;
+        Map<String, Object> timeConfigMap;
+
+        Map<String, Object> params = new HashMap<>();
+        /**变量声明**/
+
+        jwCourseTableDTOs = this.queryList(tnId,taskId,params);
+
+        if (jwCourseTableDTOs.size() == 0)
+            throw new BizException("error", "当前租户下排课任务" + taskId + "课表为空,请稍后再试");
+        timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
+        rtnMap = treeListByTree(jwCourseTableDTOs);
+
+        rtnMap.put("teachDate", timeConfigMap.get("teachDate").toString());
+        rtnMap.put("teachTime", timeConfigMap.get("time").toString());
+        return rtnMap;
+    }
+
+    /**
+     * 获取某个老师课程表
+     *
+     * @param tnId
+     * @param taskId
+     * @param teacherId
+     * @return
+     */
+    @Override
+    public CourseResultView getTeacherSyllabus(int tnId, int taskId, int teacherId) {
+
+        List<JwCourseTableDTO> jwCourseTableDTOs;
+        Map<String, Object> timeConfigMap;
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("teacherId",teacherId);
+        jwCourseTableDTOs = this.queryList(tnId,taskId,params);
+        if (jwCourseTableDTOs.size() == 0)
+            throw new BizException("error", "当前租户下排课任务" + taskId + "==老师ID"+teacherId+"课表为空,请稍后再试");
+        timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
+
+        return null;
+    }
+
+    /**
+     * 获取某个班级课程表
+     *
+     * @param tnId
+     * @param taskId
+     * @param classId
+     * @return
+     */
+    @Override
+    public CourseResultView getClassSyllabus(int tnId, int taskId, int classId) {
+
+        List<JwCourseTableDTO> jwCourseTableDTOs;
+        Map<String, Object> timeConfigMap;
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("classId",classId);
+        jwCourseTableDTOs = this.queryList(tnId,taskId,params);
+        if (jwCourseTableDTOs.size() == 0)
+            throw new BizException("error", "当前租户下排课任务" + taskId + "==班级ID"+classId+"课表为空,请稍后再试");
+        timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
 
         return null;
     }
@@ -53,18 +115,40 @@ public class SyllabusServiceImpl implements ISyllabusService {
         return jwScheduleTask;
     }
 
-    private List<List<List<String>>> treeListByTree(List<JwCourseTableDTO> jwCourseTableDTOs){
+
+
+    private List<JwCourseTableDTO> queryList(int tnId,int taskId,Map<String,Object> params){
+        String teacherTableName;
+        String classTableName;
+        List<JwCourseTableDTO> jwCourseTableDTOs;
+
+        teacherTableName = ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER, tnId);
+        classTableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM, tnId);
+        jwCourseTableDTOs = syllabusDAO.queryList(params, teacherTableName, classTableName);
+        return jwCourseTableDTOs;
+    }
+
+
+    private Map<String,Object> treeListByTree(List<JwCourseTableDTO> jwCourseTableDTOs){
         /**变量声明**/
+        Map<String,Object> rtnMap = new HashMap<>();
+        StringBuilder builder = new StringBuilder();
         Map<Integer,Map<String,Object>> treeMap = allCourseTreeByList(jwCourseTableDTOs);
         List<List<List<String>>> listArrayList = new ArrayList<>();
+
         List<List<String>> lists;
         List<String> list;
         Map.Entry<Integer,Map<String,Object>> classEntry;
+        Map.Entry<Integer,Object> weekEntry;
+        Map.Entry<Integer,JwCourseTableDTO> dayEntry;
         JwCourseTableDTO jwCourseTableDTO;
         Iterator<Map.Entry<Integer,Object>> weekIterator;
         Iterator<Map.Entry<Integer,JwCourseTableDTO>> dayIterator;
+        Map<String,Object> classMap;
         Map<Integer,Object> weekMap;
         Map<Integer,JwCourseTableDTO> dayMap;
+        Integer builderLength;
+        String className;
         /**变量声明**/
 
         Iterator<Map.Entry<Integer,Map<String,Object>>> entryIterator = treeMap.entrySet().iterator();
@@ -72,22 +156,33 @@ public class SyllabusServiceImpl implements ISyllabusService {
             lists = new ArrayList<>();
             //班级课表层
             classEntry = entryIterator.next();
-            weekMap = (Map<Integer,Object>) classEntry.getValue().get("week");
+            classMap = classEntry.getValue();
+            weekMap = (Map<Integer,Object>)classMap.get("week");
+            className = (String) classMap.get("className");
             weekIterator = weekMap.entrySet().iterator();
-
+            builder.append(className).append("|");
             while (weekIterator.hasNext()){
                 list = new ArrayList<>();
 
-                dayMap = (Map<Integer,JwCourseTableDTO>) weekIterator.next();
+                weekEntry = weekIterator.next();
+                dayMap = (Map<Integer,JwCourseTableDTO>) weekEntry.getValue();
                 dayIterator = dayMap.entrySet().iterator();
                 while (dayIterator.hasNext()){
-                    dayIterator.next();
+                    dayEntry = dayIterator.next();
+                    jwCourseTableDTO = dayEntry.getValue();
+                    list.add(genStringByDTO(Constant.COURSE_TABLE_ALL,jwCourseTableDTO));
                 }
                 lists.add(list);
             }
+            builderLength = builder.length();
+            if (builderLength > 0){
+                builder.delete(builderLength-1,builderLength);
+            }
             listArrayList.add(lists);
         }
-       return null;
+        rtnMap.put("roomData",listArrayList);
+        rtnMap.put("room",builder.toString());
+       return rtnMap;
     }
 
 
@@ -144,6 +239,14 @@ public class SyllabusServiceImpl implements ISyllabusService {
                 rtnStrBf.append(jwCourseTableDTO.getCourseName())
                         .append(Constant.GEN_COURSE_TABLE_CLASS_SPLIT)
                         .append(jwCourseTableDTO.getClassName())
+                        .append(Constant.GEN_COURSE_TABLE_BASE_SPLIT)
+                        .append(Constant.GEN_COURSE_TABLE_WRAP_SPLIT)
+                        .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_S)
+                        .append(jwCourseTableDTO.getClassName())
+                        .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_E);
+                break;
+            case Constant.COURSE_TABLE_ALL:
+                rtnStrBf.append(jwCourseTableDTO.getCourseName())
                         .append(Constant.GEN_COURSE_TABLE_BASE_SPLIT)
                         .append(Constant.GEN_COURSE_TABLE_WRAP_SPLIT)
                         .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_S)
