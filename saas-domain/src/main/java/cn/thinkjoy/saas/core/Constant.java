@@ -1,5 +1,8 @@
 package cn.thinkjoy.saas.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by yangguorong on 16/10/17.
  *
@@ -7,7 +10,11 @@ package cn.thinkjoy.saas.core;
  */
 public class Constant {
 
-    public static final String [] NoFilter_Pages = {"/account/login","/account/forgetPwd","/account/sendSmsCode","/account/loginOut"};
+    public static final String [] NoFilter_Pages = {"/account/login","/account/forgetPwd","/account/sendSmsCode","/account/loginOut","/scheduleTask/trigger","/scheduleTask/state"};
+
+    public static final String [] GRADES = {"高一","高二","高三"};
+
+    public static final List<String> COURSEES = new ArrayList<String>(){{add("物理"); add("化学");add("生物");add("政治");add("地理");add("历史");add("通用技术");}};
 
     public static final String ID = "id";
 
@@ -39,7 +46,15 @@ public class Constant {
 
     public static final String TIME_INTERVAL = "_";
 
-    public static final String TABLE_TYPE_STUDENT = "student";
+    public static final String STUDENT = "student";
+
+    public static final String TABLE_TYPE_TEACHER = "teacher";
+
+
+
+    public static final String TABLE_TYPE_CLASS = "class";
+
+    public static final String TABLE_TYPE_ALL = "all";
 
     public static final String STUDENT_GRADE = "student_grade";
 
@@ -54,10 +69,28 @@ public class Constant {
             "student_check_major_class3"
             };
 
+    // 走读班级学生特有属性
+    public static final String ZDBJ_COLUMNS_KEY = "student_check_major1,student_check_major_class1,student_check_major2,student_check_major_class2,student_check_major3,student_check_major_class3";
+    public static final String ZDBJ_COLUMNS_VALUE = "选考科目一,科目一所在班级,选考科目二,科目二所在班级,选考科目三,科目三所在班级";
+
     public static final String DEFULT_TEACH_DATE= "星期一|星期二|星期三|星期四|星期五";
     public static final String DEFULT_TEACH_TIME= "430";
     public static final Integer DEFULT_CLASS_TYPE= 1;
     public static final Integer SUBJECT_CLASS_TYPE= 2;
     public static final Integer DEFULT_CLASS_NUM= 2;
     public static final Integer TASK_SUCCESS = 3;
+    public static final String CLASS_ADM = "class_adm";
+    public static final String CLASS_EDU = "class_edu";
+    public static final String CREATE_TABLE_TYPE_TEACHER_IDS = "9-26-28-42-59";
+    /**课程表redis相关start**/
+    public static final String COURSE_TABLE_REDIS_KEY = "course_key_";
+    public static final String COURSE_TABLE_REDIS_SPLIT = "_";
+    /**课程表redis相关end**/
+
+    public static final java.lang.String COURSE_LINE_TABLE_SPLIT_T = "\t";
+    public static final java.lang.String COURSE_TABLE_LINE_SPLIT_CHAR = "  ";
+    public static final java.lang.String COURSE_TABLE_LINE_SPLIT_CLASS = "     ";
+    public static final java.lang.String PATH_SCHEDULE = "admin_course_0.txt";
+    //redis缓存时间30天
+    public static final long SCHEDULE_REDIS_TIME = 1 * 30;
 }

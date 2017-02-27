@@ -1,7 +1,7 @@
 var tnId = Common.cookie.getCookie('tnId');
 var provinceId = Common.cookie.getCookie('provinceId');
 
-function CoursePlan () {
+function CoursePlan() {
     this.years = [];
     this.datas = [];
     this.subjectCourseBar = null;
@@ -101,120 +101,137 @@ CoursePlan.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
-                that.datas[0] = {
-                    name:'通用技术',
-                    type:'bar',
-                    barWidth: 44,
-                    stack: '科目',
-                    data:[]
-                };
-                that.datas[1] = {
-                    name:'政治',
-                    type:'bar',
-                    barWidth: 44,
-                    stack: '科目',
-                    data:[]
-                };
-                that.datas[2] = {
-                    name:'历史',
-                    type:'bar',
-                    barWidth: 44,
-                    stack: '科目',
-                    data:[]
-                };
-                that.datas[3] = {
-                    name:'地理',
-                    type:'bar',
-                    barWidth: 44,
-                    stack: '科目',
-                    data:[]
-                };
-                that.datas[4] = {
-                    name:'生物',
-                    type:'bar',
-                    barWidth: 44,
-                    stack: '科目',
-                    data:[]
-                };
-                that.datas[5] = {
-                    name:'化学',
-                    type:'bar',
-                    barWidth: 44,
-                    stack: '科目',
-                    data:[]
-                };
-                that.datas[6] = {
-                    name:'物理',
-                    type:'bar',
-                    barWidth: 44,
-                    stack: '科目',
-                    data:[]
-                };
-                $.each(data.data, function (i, k) {
-                    //alert(i + ', ' + k['通用技术']);
-                    that.years.push(i + '届');
-                    $.each(k, function (n, m) {
-                        switch(n) {
-                            case '通用技术':
-                                that.datas[0].data.push(m);
-                                break;
-                            case '政治':
-                                that.datas[1].data.push(m);
-                                break;
-                            case '历史':
-                                that.datas[2].data.push(m);
-                                break;
-                            case '地理':
-                                that.datas[3].data.push(m);
-                                break;
-                            case '生物':
-                                that.datas[4].data.push(m);
-                                break;
-                            case '化学':
-                                that.datas[5].data.push(m);
-                                break;
-                            case '物理':
-                                that.datas[6].data.push(m);
-                                break;
-                        }
-                    });
-                });
-                $('#maxYear').html(data.maxYear);
-                var coursePercent = data.coursePercent;
-                if (coursePercent) {
-                    $('#percent-wuli').html(coursePercent['物理'] * 100 + '%');
-                    $('#percent-huaxue').html(Number(coursePercent['化学'] * 100).toFixed(0) + '%');
-                    $('#percent-shengwu').html(coursePercent['生物'] * 100 + '%');
-                    $('#percent-zhengzhi').html(coursePercent['政治'] * 100 + '%');
-                    $('#percent-lishi').html(coursePercent['历史'] * 100 + '%');
-                    $('#percent-dili').html(coursePercent['地理'] * 100 + '%');
-                    $('#percent-jishu').html(coursePercent['通用技术'] * 100 + '%');
-                } else {
-                    $('.course-bar-analyse, .course-bar-analyse-results').hide();
-                }
-
-                that.renderSingleCourseChart(that.years, that.datas);
-
-                $('.subject-chk').css({'display': 'inline-block'});
-
-                if (provinceId != '330000') {
-                    that.course.delete('通用技术');
-                    console.info(that.course);
-                    that.selectedCount = 6;
-                    that.status = {
-                        '通用技术': false,
-                        '政治': true,
-                        '历史': true,
-                        '地理': true,
-                        '生物': true,
-                        '化学': true,
-                        '物理': true
+                if (!!res.bizData.data) {
+                    that.datas[0] = {
+                        name: '通用技术',
+                        type: 'bar',
+                        barWidth: 44,
+                        stack: '科目',
+                        data: []
                     };
-                    that.subjectCourseOption.legend.selected = that.status;
-                    that.subjectCourseBar.setOption(that.subjectCourseOption);
-                    $('#jishu-show').attr('name', 'single-course-none');
-                    $('#jishu-show').parent().hide();
-                    $('#percent-jishu').parent().hide();
+                    that.datas[1] = {
+                        name: '政治',
+                        type: 'bar',
+                        barWidth: 44,
+                        stack: '科目',
+                        data: []
+                    };
+                    that.datas[2] = {
+                        name: '历史',
+                        type: 'bar',
+                        barWidth: 44,
+                        stack: '科目',
+                        data: []
+                    };
+                    that.datas[3] = {
+                        name: '地理',
+                        type: 'bar',
+                        barWidth: 44,
+                        stack: '科目',
+                        data: []
+                    };
+                    that.datas[4] = {
+                        name: '生物',
+                        type: 'bar',
+                        barWidth: 44,
+                        stack: '科目',
+                        data: []
+                    };
+                    that.datas[5] = {
+                        name: '化学',
+                        type: 'bar',
+                        barWidth: 44,
+                        stack: '科目',
+                        data: []
+                    };
+                    that.datas[6] = {
+                        name: '物理',
+                        type: 'bar',
+                        barWidth: 44,
+                        stack: '科目',
+                        data: []
+                    };
+                    var yearsFoo = [];
+                    $.each(data.data, function (i, k) {
+                        that.years.push(i + '届');
+                        yearsFoo.push(Number(i));
+                        $.each(k, function (n, m) {
+                            switch (n) {
+                                case '通用技术':
+                                    that.datas[0].data.push(m);
+                                    break;
+                                case '政治':
+                                    that.datas[1].data.push(m);
+                                    break;
+                                case '历史':
+                                    that.datas[2].data.push(m);
+                                    break;
+                                case '地理':
+                                    that.datas[3].data.push(m);
+                                    break;
+                                case '生物':
+                                    that.datas[4].data.push(m);
+                                    break;
+                                case '化学':
+                                    that.datas[5].data.push(m);
+                                    break;
+                                case '物理':
+                                    that.datas[6].data.push(m);
+                                    break;
+                            }
+                        });
+                    });
+                    for (var i = 0; i < that.years.length; i++) {
+                        var tempYear = that.years[i].substr(0, 4);
+                        if (data.undergraduateEnrollingNumberList.length != 0) {
+                            $.each(data.undergraduateEnrollingNumberList, function (n, m) {
+                                var tempInnerYear = m.year;
+                                var tempNumber = m.number;
+                                if (tempInnerYear == tempYear) {
+                                    that.years[i] = tempInnerYear + "届(录取人数" + tempNumber + ')';
+                                }
+                            });
+                        }
+                    }
+                    $('#maxYear').html(data.maxYear);
+                    var coursePercent = data.coursePercent;
+                    if (coursePercent) {
+                        $('#percent-wuli').html(Number(coursePercent['物理'] * 100).toFixed(0) + '%');
+                        $('#percent-huaxue').html(Number(coursePercent['化学'] * 100).toFixed(0) + '%');
+                        $('#percent-shengwu').html(Number(coursePercent['生物'] * 100).toFixed(0) + '%');
+                        $('#percent-zhengzhi').html(Number(coursePercent['政治'] * 100).toFixed(0) + '%');
+                        $('#percent-lishi').html(Number(coursePercent['历史'] * 100).toFixed(0) + '%');
+                        $('#percent-dili').html(Number(coursePercent['地理'] * 100).toFixed(0) + '%');
+                        $('#percent-jishu').html(Number(coursePercent['通用技术'] * 100).toFixed(0) + '%');
+                    } else {
+                        $('.course-bar-analyse, .course-bar-analyse-results').hide();
+                    }
+
+                    that.renderSingleCourseChart(that.years, that.datas);
+
+                    $('.subject-chk').css({'display': 'inline-block'});
+
+                    if (provinceId != '330000') {
+                        that.course.delete('通用技术');
+                        that.selectedCount = 6;
+                        that.status = {
+                            '通用技术': false,
+                            '政治': true,
+                            '历史': true,
+                            '地理': true,
+                            '生物': true,
+                            '化学': true,
+                            '物理': true
+                        };
+                        that.subjectCourseOption.legend.selected = that.status;
+                        that.subjectCourseBar.setOption(that.subjectCourseOption);
+                        $('#jishu-show').attr('name', 'single-course-none');
+                        $('#jishu-show').parent().hide();
+                        $('#percent-jishu').parent().hide();
+                    }
+                }else{
+                    $('#history-single-course').hide();
+                    $('.no-data-tips-single').show();
                 }
 
             } else {
@@ -237,11 +254,11 @@ CoursePlan.prototype = {
                     fontWeight: 'normal'
                 }
             },
-            tooltip : {
+            tooltip: {
                 trigger: 'axis',
                 showContent: true,
-                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                 }
             },
             legend: {
@@ -261,10 +278,10 @@ CoursePlan.prototype = {
                 bottom: '3%',
                 containLabel: true
             },
-            xAxis : [
+            xAxis: [
                 {
-                    type : 'category',
-                    data : years, //['2017届','2018届','2019届','2020届','2021届'],
+                    type: 'category',
+                    data: years, //['2017届','2018届','2019届','2020届','2021届'],
                     boundaryGap: [0, 0.01],
                     axisTick: {
                         show: false
@@ -282,9 +299,9 @@ CoursePlan.prototype = {
                     }
                 }
             ],
-            yAxis : [
+            yAxis: [
                 {
-                    type : 'value',
+                    type: 'value',
                     boundaryGap: [0, 0.01],
                     axisTick: {
                         show: false
@@ -353,6 +370,7 @@ CoursePlan.prototype = {
                             } else if (i == 2) {
                                 dataHtml.push('<td><i class="rank-top3"></i>Top' + (i + 1) + '</td>');
                             }
+
                             dataHtml.push('<td>' + tempName + '</td>');
                             dataHtml.push('<td>' + k.schoolNumber + '个学校' + k.majorNumber + '个专业可选</td>');
                             dataHtml.push('</tr>');
@@ -365,6 +383,9 @@ CoursePlan.prototype = {
                         });
                     });
                     $('#select-course-enrolling-plan-list').html(dataHtml.join(''));
+                }else{
+                    $('#admission-plan').hide();
+                    $('.no-data-tips-results').show();
                 }
             }
         }, function (res) {
@@ -433,7 +454,7 @@ CoursePlan.prototype = {
 
                 var template = Handlebars.compile($("#teacher-config-list-data-template").html());
                 $.each(data, function (i, k) {
-                    k.index = i +1;
+                    k.index = i + 1;
                     var tempIndex = k.index;
                     tempTeachers[tempIndex] = new Array();
                     $.each(k.teachers, function (n, m) {
@@ -472,10 +493,10 @@ CoursePlan.prototype = {
         teacherSubjectHtml.push('<table>');
         teacherSubjectHtml.push('<thead>');
         teacherSubjectHtml.push('<tr>');
-        teacherSubjectHtml.push('<th>排名</th>');
-        teacherSubjectHtml.push('<th>组合</th>');
-        teacherSubjectHtml.push('<th>组合</th>');
-        teacherSubjectHtml.push('<th>组合</th>');
+        teacherSubjectHtml.push('<th>老师名称</th>');
+        teacherSubjectHtml.push('<th>所教科目</th>');
+        teacherSubjectHtml.push('<th>所教年级</th>');
+        teacherSubjectHtml.push('<th>所带班级</th>');
         teacherSubjectHtml.push('</tr>');
         teacherSubjectHtml.push('</thead>');
         teacherSubjectHtml.push('<tbody>');
@@ -531,7 +552,7 @@ $(function () {
             },
             padding: [20, 60, 20, 60]
         },
-        tooltip : {
+        tooltip: {
             trigger: 'item',
             formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
@@ -543,7 +564,7 @@ $(function () {
                 selectedOffset: 0,
                 legendHoverLink: false,
                 hoverAnimation: false,
-                radius : [0, '70%'],
+                radius: [0, '70%'],
                 center: ['50%', '55%'],
                 avoidLabelOverlap: false,
                 color: ['#64A3AD', '#91D8E4', '#87B3E7', '#A2D86A', '#FFB789', '#F5A623', '#A25E51'],
@@ -560,7 +581,7 @@ $(function () {
                     }
                 },
                 //data: batchs
-                data:[
+                data: [
                     {value: 253, name: '通用技术'},
                     {value: 357, name: '政治'},
                     {value: 321, name: '历史'},
@@ -597,3 +618,14 @@ Array.prototype.delete = function (varElement) {
     }
     return numDeleteIndex;
 };
+
+
+Array.prototype.delete = function (delIndex) {
+    var temArray = [];
+    for (var i = 0; i < this.length; i++) {
+        if (i != delIndex) {
+            temArray.push(this[i]);
+        }
+    }
+    return temArray;
+}

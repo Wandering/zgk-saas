@@ -1,10 +1,15 @@
 var tnId = Common.cookie.getCookie('tnId');
 var taskId = Common.cookie.getCookie('taskId');
 var scheduleName = Common.cookie.getCookie('scheduleName');
-
-
-
+//var resValtaskId = Common.cookie.getCookie('resVal' + taskId);
 $('.scheduleName').text(scheduleName);
+
+
+/**
+ * 地址Hash处理
+ */
+
+
 function ClassRoomTable() {
     this.init();
     this.courseTxt = '';
@@ -18,37 +23,15 @@ function ClassRoomTable() {
 ClassRoomTable.prototype = {
     constructor: ClassRoomTable,
     init: function () {
-        // 拉取教室
-        this.getClassRoom();
+        //// 拉取教室
+        //this.getClassRoom();
         // 拉取科目
-        this.getQueryCourse();
+        //this.getQueryCourse();
         // 拉取班级
-        this.getQueryClass();
-    },
-    // 拉取教室
-    getClassRoom: function () {
-        var that = this;
-        Common.ajaxFun('/baseResult/queryRoom.do', 'GET', {
-            "taskId": taskId
-        }, function (result) {
-            if (result.rtnCode == "0000000") {
-                $('#select-class option:gt(0)').remove();
-                var classRoom = [];
-                $.each(result.bizData, function (i, v) {
-                    classRoom.push('<option value="' + v.id + '">' + v.roomName + '</option>')
-                });
-                $('#select-class').append(classRoom);
-                $('#select-class option:eq(1)').attr('selected', 'selected');
-                var selectedV = $('#select-class option:eq(1):selected').val();
-                var selectedTxt = $('#select-class option:eq(1):selected').text();
-                $('.scheduling-name').show().text(selectedTxt);
-                that.getClassRoomTable('room', {'room': selectedV});
-            } else {
-                layer.msg(result.msg);
-            }
-        }, function (result) {
-            layer.msg(result.msg);
-        });
+        //this.getQueryClass();
+        //$('.one-key-page').addClass('dh');
+        //$('#role-scheduling-tab,#control-jsp').removeClass('dh');
+
     },
     // 拉取科目
     getQueryCourse: function () {
@@ -60,7 +43,7 @@ ClassRoomTable.prototype = {
                 $('#select-queryCourse option:gt(0)').remove();
                 var queryCourse = [];
                 $.each(result.bizData, function (i, v) {
-                    queryCourse.push('<option value="' + v.id + '">' + v.courseName + '</option>')
+                    queryCourse.push('<option value="' + v.courseBaseId + '">' + v.courseBaseName + '</option>')
                 });
                 $('#select-queryCourse').append(queryCourse);
                 $('#select-queryCourse option:eq(1)').attr('selected', 'selected');
@@ -111,17 +94,18 @@ ClassRoomTable.prototype = {
             "taskId": taskId
         }, function (result) {
             if (result.rtnCode == "0000000") {
-                $('#select-classes option:gt(0)').remove();
+                $('#select-class option:gt(0)').remove();
                 var queryCourse = [];
                 $.each(result.bizData, function (i, v) {
-                    queryCourse.push('<option value="' + v.id + '">' + v.className + '</option>')
+                    console.log(v.id + "==" + v.class_name)
+                    queryCourse.push('<option value="' + v.id + '">' + v.class_name + '</option>')
                 });
-                $('#select-classes').append(queryCourse);
-                $('#select-classes option:eq(1)').attr('selected', 'selected');
-                var selectedV = $('#select-classes option:eq(1):selected').val()
-                var selectedTxt = $('#select-classes option:eq(1):selected').text();
+                $('#select-class').append(queryCourse);
+                $('#select-class option:eq(1)').attr('selected', 'selected');
+                var selectedV = $('#select-class option:eq(1):selected').val()
+                var selectedTxt = $('#select-class option:eq(1):selected').text();
                 $('.classes-label').text(selectedTxt);
-                that.getQueryStudent(selectedV)
+                that.getClassRoomTable('class', {'classId': selectedV}, selectedV);
             } else {
                 layer.msg(result.msg);
             }
@@ -164,42 +148,42 @@ ClassRoomTable.prototype = {
             "taskId": taskId,
             "param": JSON.stringify(param)
         }, function (result) {
-            //console.log(result);
+            console.log(result);
             if (result.rtnCode == "0000000") {
-                var theadTemplate = Handlebars.compile($("#"+ urlType +"-thead-list-template").html());
+                var theadTemplate = Handlebars.compile($("#" + urlType + "-thead-list-template").html());
                 Handlebars.registerHelper("thead", function (res) {
                     var resData = res.split('|');
                     var str = '<td></td>';
                     for (var i = 0; i < resData.length; i++) {
-                        str += '<td class="center">'+ resData[i] +'</td>';
+                        str += '<td class="center">' + resData[i] + '</td>';
                     }
                     return str;
                 });
-                $("#"+ urlType +"-thead-list").html(theadTemplate(result));
-                var tbodyTemplate = Handlebars.compile($("#"+ urlType +"-tbody-list-template").html());
+                $("#" + urlType + "-thead-list").html(theadTemplate(result));
+                var tbodyTemplate = Handlebars.compile($("#" + urlType + "-tbody-list-template").html());
                 Handlebars.registerHelper("week", function (res) {
                     var wkDate = res.teachTime;
-                    var Num1 = parseInt(wkDate.substr(0,1));
-                    var Num2 = parseInt(wkDate.substr(1,1));
-                    var Num3 = parseInt(wkDate.substr(2,1));
+                    var Num1 = parseInt(wkDate.substr(0, 1));
+                    var Num2 = parseInt(wkDate.substr(1, 1));
+                    var Num3 = parseInt(wkDate.substr(2, 1));
                     var itemCount = Num1 + Num2 + Num3;
                     var wkList = res.week;
                     var trHtml = '';
-                    for(var i=0;i<itemCount;i++){
+                    for (var i = 0; i < itemCount; i++) {
                         trHtml += '<tr>';
-                        trHtml += '<td class="center">'+ (i+1) +'</td>';
-                        for(var j=0;j<wkList.length;j++){
-                            if(wkList[j][i]==null || wkList[j][i]==""){
+                        trHtml += '<td class="center">' + (i + 1) + '</td>';
+                        for (var j = 0; j < wkList.length; j++) {
+                            if (wkList[j][i] == null || wkList[j][i] == "") {
                                 trHtml += '<td class="center"></td>';
-                            }else{
-                                trHtml += '<td class="center">'+ wkList[j][i] +'</td>';
+                            } else {
+                                trHtml += '<td class="center">' + wkList[j][i] + '</td>';
                             }
                         }
                         trHtml += '</tr>';
                     }
                     return trHtml;
                 });
-                $("#"+ urlType +"-tbody-list").html(tbodyTemplate(result));
+                $("#" + urlType + "-tbody-list").html(tbodyTemplate(result));
             } else {
                 layer.msg(result.msg);
             }
@@ -214,8 +198,8 @@ ClassRoomTable.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 $('.all-time-date-container').css({
-                    'width':$(window).width()-190-40,
-                    'overflow':'auto'
+                    'width': $(window).width() - 190 - 40,
+                    'overflow': 'auto'
                 });
                 var theadTemplate = Handlebars.compile($("#all-thead-list-template").html());
                 Handlebars.registerHelper("thead", function (res) {
@@ -256,8 +240,6 @@ ClassRoomTable.prototype = {
                 $("#all-tbody-list").html(tbodyTemplate(res));
 
 
-
-
             } else {
                 layer.msg(res.msg);
             }
@@ -269,15 +251,239 @@ ClassRoomTable.prototype = {
 
 
 
-$(function () {
-    var ClassRoomTableIns = new ClassRoomTable();
+var ClassRoomTableIns = new ClassRoomTable();
 
-    // 选择教室
+
+
+
+
+
+var HashHandle = {
+    init: function () {
+        this.hashArr = ['#all','#class','#teacher'];
+        this.addEvent();
+        this.hashOperate();
+        this.initStatus();
+    },
+    addEvent: function () {
+        $('#role-scheduling-tab .role-tab li').click(function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            var index = $(this).index();
+            $('#control-jsp .bottom-page').eq(index).removeClass('dh').siblings().addClass('dh');
+            window.location.hash = HashHandle.hashArr[index];
+        });
+    },
+    hashOperate: function () {
+        // 防止刷新|hash处理
+        window.onhashchange = function () {
+            if (window.location.hash === '') {
+                window.location.reload();
+            }
+        };
+        for (var i = 0; i < HashHandle.hashArr.length; i++) {
+            if (window.location.hash === HashHandle.hashArr[i]) {
+                $('#role-scheduling-tab .role-tab li').eq(i).addClass('active').siblings().removeClass('active');
+                $('#control-jsp .bottom-page').eq(i).removeClass('dh').siblings().addClass('dh');
+            }
+        }
+    },
+    initStatus: function () {
+        var that = this;
+        Common.ajaxFun('/scheduleTask/queryScheduleTaskStatus', 'GET', {
+            'taskId': taskId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var data = res.bizData;
+                switch (parseInt(data)) {
+                    // 1. 没点过没排课  2.排课失败  3.排课中 4.排课成功
+                    case 1:
+                        console.log("点击排课");
+                        $('.btn-one-key').removeClass('dh');
+                        break;
+                    case 2:
+                        console.log("排课失败");
+                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error2').addClass('dh');
+                        $('.scheduling-error').removeClass('dh');
+                        that.scheduleTaskError();
+                        break;
+                    case 3:
+                        console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦");
+                        $('.arranging-course-tips').removeClass('dh');
+                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.btn-one-key,.scheduling-error,.scheduling-error2').addClass('dh');
+                        clearInterval(that.items);
+                        that.items = setInterval(function () {
+                            that.scheduleTaskState();
+                        }, 30000);
+                        break;
+                    case 4:
+                        console.log("排课成功");
+                        clearInterval(that.items);
+                        $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
+                        $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
+                        ClassRoomTableIns.getAllQueryCourse();
+                        ClassRoomTableIns.getQueryCourse();
+                        ClassRoomTableIns.getQueryClass();
+                        break;
+                    case 5:
+                        console.log("排课失败2");
+                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error').addClass('dh');
+                        $('.scheduling-error2').removeClass('dh');
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }, function (res) {
+            layer.msg("出错了");
+        });
+    },
+    // 一键排课触发
+    scheduleTaskTrigger: function () {
+        var that = this;
+        Common.ajaxFun('/scheduleTask/trigger.do', 'GET', {
+            'taskId': taskId,
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                if (res.bizData == true) {
+                    that.scheduleTaskState();
+                }
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
+    // 一键排课结果
+    scheduleTaskState: function () {
+        var that = this;
+        Common.ajaxFun('/scheduleTask/state.do', 'GET', {
+            'taskId': taskId,
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                // 0:正在排课  1:排课成功   -1 ：排课失败
+                var dataNum = res.bizData;
+                var num=0;
+                Common.cookie.setCookie("resVal"+taskId, parseInt(dataNum));
+                switch (dataNum) {
+                    case "":
+                        console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦0");
+                        $('.arranging-course-tips').removeClass('dh');
+                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.btn-one-key,.scheduling-error,.scheduling-error2,.info-modify').addClass('dh');
+                        if(num==2){
+                            console.log("排课任务状态返回错误");
+                            clearInterval(that.items);
+                            $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error,.info-modify').addClass('dh');
+                            $('.scheduling-error2').removeClass('dh');
+                        }
+                        clearInterval(that.items);
+                        that.items = setInterval(function () {
+                            that.scheduleTaskState();
+                            num ++
+                        }, 30000);
+                        break;
+                    case "0":
+                        console.log("正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦0");
+                        $('.arranging-course-tips').removeClass('dh');
+                        $('.scheduling-error,#role-scheduling-tab,#control-jsp,.btn-one-key,.scheduling-error,.scheduling-error2,.info-modify').addClass('dh');
+                        clearInterval(that.items);
+                        that.items = setInterval(function () {
+                            that.scheduleTaskState();
+                        }, 30000);
+                        break;
+                    case "1":
+                        console.log("排课成功1");
+                        clearInterval(that.items);
+                        $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
+                        $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
+                        ClassRoomTableIns.getAllQueryCourse();
+                        ClassRoomTableIns.getQueryCourse();
+                        ClassRoomTableIns.getQueryClass();
+                        break;
+                    case "-1":
+                        console.log("排课失败-1");
+                        clearInterval(that.items);
+                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error,.scheduling-error2,.info-modify').addClass('dh');
+                        $('.scheduling-error').removeClass('dh');
+                        that.scheduleTaskError();
+                        break;
+                    case "-2":
+                        console.log("排课失败-2");
+                        clearInterval(that.items);
+                        $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error,.info-modify').addClass('dh');
+                        $('.scheduling-error2').removeClass('dh');
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
+    // 错误接口 /scheduleTask/error/desc?taskId=37&tnId=10
+    scheduleTaskError:function(){
+        var that = this;
+        Common.ajaxFun('/scheduleTask/error/desc', 'GET', {
+            'taskId': taskId,
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                var errorBoxList = [];
+                for(var i=0;i<res.bizData.length;i++){
+                    errorBoxList.push('<li>'+res.bizData[i]+'</li>');
+                }
+                $('.error-box-list').append(errorBoxList);
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
+    // 重新排课 /scheduleTask/reload/trigger.do
+    scheduleTaskReload:function(){
+        var that = this;
+        Common.ajaxFun('/scheduleTask/reload/trigger.do', 'GET', {
+            'taskId': taskId,
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                that.scheduleTaskState();
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    }
+
+
+};
+HashHandle.init();
+
+$(function () {
+
+
+    // 点击一键排课
+    $('.btn-one-key').on('click', function () {
+        $('.btn-one-key').addClass('dh');
+        HashHandle.scheduleTaskTrigger();
+    });
+
+    // 重新排课
+    $('.retry-scheduling').on('click',function(){
+        $('.btn-one-key').addClass('dh');
+        HashHandle.scheduleTaskReload();
+    });
+
+    // 查看原课表
+    $('.look-origin-schedule').on('click',function(){
+
+    });
+
+    // 选择班级
     $("#select-class").change(function () {
         var selectedTxt = $(this).children('option:selected').text();
         var selectedV = $(this).children('option:selected').val();
         $('.scheduling-name').text(selectedTxt);
-        ClassRoomTableIns.getClassRoomTable('room', {'room': selectedV}, selectedV);
+        ClassRoomTableIns.getClassRoomTable('class', {'classId': selectedV}, selectedV);
     });
 
 
@@ -300,33 +506,42 @@ $(function () {
         });
     });
 
-    // 选择班级
-    $("#select-classes").change(function () {
-        ClassRoomTableIns.className = $(this).children('option:selected').text();
-        ClassRoomTableIns.classId = $(this).children('option:selected').val();
-        $('.classes-label').text(ClassRoomTableIns.className);
-        ClassRoomTableIns.getQueryStudent(ClassRoomTableIns.classId);
-    });
+    //// 选择班级
+    //$("#select-classes").change(function () {
+    //    ClassRoomTableIns.className = $(this).children('option:selected').text();
+    //    ClassRoomTableIns.classId = $(this).children('option:selected').val();
+    //    $('.classes-label').text(ClassRoomTableIns.className);
+    //    ClassRoomTableIns.getQueryStudent(ClassRoomTableIns.classId);
+    //});
 
     // 选择学生
-    $("#select-student").change(function () {
-        ClassRoomTableIns.studentName = $(this).children('option:selected').text();
-        ClassRoomTableIns.studentId = $(this).children('option:selected').val();
-        $('.student-label').text(ClassRoomTableIns.studentName + "学生");
-        ClassRoomTableIns.getClassRoomTable('student', {
-            'classId': ClassRoomTableIns.classId,
-            'studentId': ClassRoomTableIns.studentId
-        });
-    });
+    //$("#select-student").change(function () {
+    //    ClassRoomTableIns.studentName = $(this).children('option:selected').text();
+    //    ClassRoomTableIns.studentId = $(this).children('option:selected').val();
+    //    $('.student-label').text(ClassRoomTableIns.studentName + "学生");
+    //    ClassRoomTableIns.getClassRoomTable('student', {
+    //        'classId': ClassRoomTableIns.classId,
+    //        'studentId': ClassRoomTableIns.studentId
+    //    });
+    //});
 
     // 拉取所有课表
-    $("#role-scheduling-tab li").eq(3).click(function () {
+    $("#role-scheduling-tab li").eq(0).click(function () {
         ClassRoomTableIns.getAllQueryCourse();
     });
-    if(window.location.hash == '#all'){
+    if (window.location.hash == '#all') {
         ClassRoomTableIns.getAllQueryCourse();
     }
 });
 
 
 
+
+//导出下载课表====临时
+
+$(document).on('click', '.output-tpl1', function () {
+    window.location.href = '/scheduleTask/class/course/export.do?taskId='+taskId;
+});
+$(document).on('click', '.output-tpl2', function () {
+    window.location.href = '/scheduleTask/teacher/course/export.do?taskId='+taskId;
+});

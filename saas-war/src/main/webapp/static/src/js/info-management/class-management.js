@@ -6,7 +6,11 @@ var tnId = Common.cookie.getCookie('tnId');
  * 班级类及其原型
  * @constructor
  */
-function ClassManagement () {
+var GLOBAL_CONSTANT = {
+    cType: 'class_adm',   //type:class_adm（行政班）、class_edu（教学班）
+    clsType: null     //班级类型
+}
+function ClassManagement() {
     this.tnId = tnId;
     this.type = 'class';
     this.classOffset = 0;
@@ -19,13 +23,105 @@ function ClassManagement () {
 ClassManagement.prototype = {
     constructor: ClassManagement,
     init: function () {
-        this.getItem();
+        this.getGrade();
+
+        this.initTable('class_adm');  //行政班初始化
+        this.initTable('class_edu');  //教学班初始化
+        this.chargeCheckClass();
+
+        this.getItem(GLOBAL_CONSTANT.cType);
+    },
+    //判断判断当前用户班级类型是否存在教学班
+    chargeCheckClass: function () {
+        Common.ajaxFun('/grade/checkClass.do', 'GET', {
+            "tnId": tnId
+        }, function (res) {
+            if (res.rtnCode == "0000000") {
+                if(res.bizData.result){
+                    $('#jx-template-download').removeClass('hide');
+                }else{
+                    $('#jx-template-download').addClass('hide')
+                    $('#xz-template-download').html('模板下载');
+                }
+            }
+        })
+    },
+    //初始化表头
+    initTable: function (classType) {
+        var that = this;
+        // classType:class_adm（行政班）、class_edu（教学班）
+        Common.ajaxFun('/config/retain/' + classType + '/' + tnId + '.do', 'POST', {
+            'tnId': tnId
+        }, function (res) {
+            if (res.rtnCode === '0000000') {
+
+            }
+        }, function (res) {
+            layer.msg("初始化失败");
+        }, true, 'true');
     },
     getItem: function () {//获取用户自定义班级表头
         var that = this;
-        Common.ajaxFun('/config/get/' + that.type + '/' + tnId + '.do', 'GET', {
+        that.columnArr.splice(0, that.columnArr.length);
+        Common.ajaxFun('/config/get/' + GLOBAL_CONSTANT.cType + '/' + tnId + '.do', 'GET', {
             'tnId': tnId
         }, function (res) {
+            // res = {
+            //     "bizData": {
+            //         "configList": [{
+            //             "checkRule": "/^\\s*[\\s\\S]{1,12}\\s*$/",
+            //             "configKey": "48",
+            //             "configOrder": 1,
+            //             "createDate": 1485051058661,
+            //             "dataType": "select",
+            //             "dataUrl": "/config/grade/get/{tnId}.do",
+            //             "domain": "class_edu",
+            //             "enName": "class_grade",
+            //             "id": 1776,
+            //             "isRetain": 1,
+            //             "name": "所属年级",
+            //             "tnId": 13
+            //         }, {
+            //             "checkRule": "/^\\s*[\\s\\S]{1,12}\\s*$/",
+            //             "configKey": "44",
+            //             "configOrder": 2,
+            //             "createDate": 1485051058661,
+            //             "dataType": "text",
+            //             "domain": "class_edu",
+            //             "enName": "class_name",
+            //             "id": 1777,
+            //             "isRetain": 1,
+            //             "name": "班级名称",
+            //             "tnId": 13
+            //         }, {
+            //             "checkRule": "/^\\s*[\\s\\S]{1,10}\\s*$/",
+            //             "configKey": "49",
+            //             "configOrder": 4,
+            //             "createDate": 1485051058661,
+            //             "dataType": "select",
+            //             "domain": "class_edu",
+            //             "enName": "class_major_type",
+            //             "dataUrl":'"/config/grade/get/{tnId}.do"',
+            //             "id": 1779,
+            //             "isRetain": 1,
+            //             "name": "教学科目",
+            //             "tnId": 13
+            //         }, {
+            //             "checkRule": "/^\\s*[\\s\\S]{1,12}\\s*$/",
+            //             "configKey": "45",
+            //             "configOrder": 6,
+            //             "createDate": 1485051058661,
+            //             "dataType": "select",
+            //             "domain": "class_edu",
+            //             "enName": "class_type",
+            //             "dataValue":"行政班-教学班-文科班-理科班",
+            //             "id": 1780,
+            //             "isRetain": 1,
+            //             "name": "班级类型",
+            //             "tnId": 13
+            //         }]
+            //     }, "rtnCode": "0000000", "ts": 1487399105353
+            // }
             if (res.rtnCode == "0000000") {
                 var data = res.bizData.configList;
                 if (data.length != 0) {
@@ -47,7 +143,6 @@ ClassManagement.prototype = {
                     columnHtml.push('</tr>');
                     $("#class-manage-table thead").html(columnHtml.join(''));
                 }
-                that.getGrade();
             } else {
                 layer.msg(res.bizData.result);
             }
@@ -55,45 +150,45 @@ ClassManagement.prototype = {
             layer.msg("出错了");
         }, true);
     },
-    getClassData: function () {//获取全部班级数据
-        var that = this;
-        Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
-            'tnId': tnId
-        }, function (res) {
-            if (res.rtnCode == "0000000") {
-                var classDataHtml = [];
-                var data = res.bizData.result;
-                $.each(data, function (m, n) {
-                    var obj = data[m];
-                    classDataHtml.push('<tr rowid="' + obj['id'] + '">');
-                    classDataHtml.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
-                    classDataHtml.push('<th class="center">序号</th>');
-                    $.each(that.columnArr, function (i, k) {
-                        var tempObj = that.columnArr[i];
-                        var tempColumnName = tempObj.enName;
-                        if (obj[tempColumnName]) {
-                            classDataHtml.push('<td class="center">' + obj[tempColumnName] + '</td>');
-                        } else {
-                            classDataHtml.push('<td class="center">-</td>');
-                        }
-                    });
-                    classDataHtml.push('</tr>');
-                });
-                $("#class-manage-table tbody").html(classDataHtml.join(''));
-            } else {
-                layer.msg(res.bizData.result);
-            }
-        }, function (res) {
-            layer.msg("出错了");
-        }, true);
-    },
+    // getClassData: function () {//获取全部班级数据
+    //     var that = this;
+    //     Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.cType + '/' + tnId + '/getTenantCustomData.do', 'GET', {
+    //         'tnId': tnId
+    //     }, function (res) {
+    //         if (res.rtnCode == "0000000") {
+    //             var classDataHtml = [];
+    //             var data = res.bizData.result;
+    //             $.each(data, function (m, n) {
+    //                 var obj = data[m];
+    //                 classDataHtml.push('<tr rowid="' + obj['id'] + '">');
+    //                 classDataHtml.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
+    //                 classDataHtml.push('<th class="center">序号</th>');
+    //                 $.each(that.columnArr, function (i, k) {
+    //                     var tempObj = that.columnArr[i];
+    //                     var tempColumnName = tempObj.enName;
+    //                     if (obj[tempColumnName]) {
+    //                         classDataHtml.push('<td class="center">' + obj[tempColumnName] + '</td>');
+    //                     } else {
+    //                         classDataHtml.push('<td class="center">-</td>');
+    //                     }
+    //                 });
+    //                 classDataHtml.push('</tr>');
+    //             });
+    //             $("#class-manage-table tbody").html(classDataHtml.join(''));
+    //         } else {
+    //             layer.msg(res.bizData.result);
+    //         }
+    //     }, function (res) {
+    //         layer.msg("出错了");
+    //     }, true);
+    // },
     loadPage: function (offset, rows) {
         var that = this;
         this.classOffset = offset;
         this.classRows = rows;
         //var index = layer.load(2);
         //layer.load(1, {shade: [0.3,'#000']});
-        Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/getTenantCustomData.do', 'GET', {
+        Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.cType + '/' + tnId + '/getTenantCustomData.do', 'GET', {
             's': that.classOffset,
             'r': that.classRows,
             'g': that.gradeName
@@ -104,7 +199,7 @@ ClassManagement.prototype = {
                 var data = res.bizData;
                 that.showData(data);
             } else {
-                layer.msg(res.bizData.result);
+                layer.msg(res.msg);
             }
         }, function (res) {
             layer.msg("出错了");
@@ -121,7 +216,7 @@ ClassManagement.prototype = {
             var obj = data[m];
             classDataHtml.push('<tr rowid="' + obj['id'] + '">');
             classDataHtml.push('<td class="center"><label><input type="checkbox" cid="' + obj['id'] + '" class="ace" /><span class="lbl"></span></label></td>');
-            classDataHtml.push('<th class="center">' + (m + 1)+ '</th>');
+            classDataHtml.push('<th class="center">' + (m + 1) + '</th>');
             $.each(that.columnArr, function (i, k) {
                 var tempObj = that.columnArr[i];
                 var tempColumnName = tempObj.enName;
@@ -134,7 +229,6 @@ ClassManagement.prototype = {
             classDataHtml.push('</tr>');
         });
         $("#class-manage-table tbody").html(classDataHtml.join(''));
-
         this.pagination();
     },
     pagination: function () {
@@ -152,7 +246,7 @@ ClassManagement.prototype = {
     removeClass: function () {//删除某一行班级数据
         var that = this;
         var checkedLen = $("#class-manage-list input[type='checkbox']:checked").size();
-        if(checkedLen == "0"){
+        if (checkedLen == "0") {
             layer.tips('至少选择一项', $('#deleteClassBtn'));
             return false;
         }
@@ -167,14 +261,18 @@ ClassManagement.prototype = {
         layer.confirm('确定删除?', {
             btn: ['确定', '关闭'] //按钮
         }, function () {
-            Common.ajaxFun('/manage/' + that.type + '/' + tnId + '/' + ids + '/remove.do', 'POST', {}, function (res) {
+            Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.cType + '/' + tnId + '/' + ids + '/remove.do', 'POST', {}, function (res) {
                 if (res.rtnCode == "0000000") {
-                    if(res.bizData.result="SUCCESS"){
+                    if (res.bizData.result = "SUCCESS") {
                         $('#class-change-list').html('');
                         $('#checkAll').prop('checked', false);
                         layer.msg('删除成功', {time: 1000});
-                        var classManagement = new ClassManagement();
-                        classManagement.init();
+                        // var classManagement = new ClassManagement();
+                        // classManagement.init();
+
+                        var checkedGrade = $('input[name="high-school"]:checked').next().text();
+                        classManagement.gradeName = checkedGrade;
+                        classManagement.loadPage(0, classManagement.classRows);
                     }
                 } else {
                     layer.msg(res.bizData.result);
@@ -194,15 +292,31 @@ ClassManagement.prototype = {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData.grades;
                 var gradeListHtml = [];
+                GLOBAL_CONSTANT.clsType = data[0].classType;
+
+                if (data[0].grade) {
+                    // 行政班|教学班说明：classType 1或3都为行政班  2教学班
+                    var $classTypeToggle = $('#class-type-toggle').find('.tab')
+                    if (data[0].classType == 2) {
+                        $classTypeToggle.eq(0).removeClass('hide').addClass('active');
+                        $classTypeToggle.eq(0).removeClass('hide');
+                    } else if (data[0].classType == 3) {
+                        $classTypeToggle.eq(0).addClass('hide');
+                        $classTypeToggle.eq(1).addClass('hide');
+                    } else {
+                        $classTypeToggle.eq(0).addClass('hide');
+                        $classTypeToggle.eq(1).addClass('hide');
+                    }
+                }
                 $.each(data, function (i, k) {
                     if (i != 0) {
                         gradeListHtml.push('<span class="grade-item">');
-                        gradeListHtml.push('<input type="radio" name="high-school" id="senior' + k.id + '" />');
+                        gradeListHtml.push('<input type="radio" name="high-school" id="senior' + k.id + '" classtype="' + k.classType + '" />');
                         gradeListHtml.push('<label for="senior' + k.id + '">' + k.grade + '</label>');
                         gradeListHtml.push('</span>');
                     } else {
                         gradeListHtml.push('<span class="grade-item">');
-                        gradeListHtml.push('<input type="radio" name="high-school" checked="checked" id="senior' + k.id + '" />');
+                        gradeListHtml.push('<input type="radio" name="high-school" checked="checked" id="senior' + k.id + '"  classtype="' + k.classType + '" />');
                         gradeListHtml.push('<label for="senior' + k.id + '">' + k.grade + '</label>');
                         gradeListHtml.push('</span>');
                     }
@@ -216,7 +330,7 @@ ClassManagement.prototype = {
             }
         }, function (res) {
             layer.msg("出错了");
-        }, true);
+        }, true,'true');
     }
 };
 
@@ -225,7 +339,7 @@ ClassManagement.prototype = {
  * @param type
  * @constructor
  */
-function AddClassManagement () {
+function AddClassManagement() {
     ClassManagement.call(this);
 }
 AddClassManagement.prototype = new ClassManagement();
@@ -289,25 +403,60 @@ AddClassManagement.prototype.renderGradeSelect = function (data) {
         $("#class_grade").append(gradeHtml.join(''));
         var checkedGrade = $('input[name="high-school"]:checked').next().text();
         $("#class_grade").val(checkedGrade);
-        $("#class_grade").css({'cursor':'not-allowed'});
+        $("#class_grade").css({'cursor': 'not-allowed'});
         $("#class_grade").prop('disabled', true);
     } else {
         layer.msg(data.bizData.result);
     }
 };
+AddClassManagement.prototype.getUrl = function(url,name){
+    Common.ajaxFun(url, 'GET',{}, function (res) {
+       if(res.rtnCode == '0000000'){
+           var tpl = '';
+            $.each(res.bizData.courses,function(i,v){
+                tpl += '<option value="'+v.courseName+'">'+v.courseName+'</option>'
+            })
+           $('#'+name).html(tpl);
+       }
+    },function(res){},'true')
+},
 AddClassManagement.prototype.getType = function (type) {
     var that = this;
     var typeHtml = [];
     var types = null;
-    $.each(this.columnArr, function (i, k) {
-        if (k.enName == type) {
-            types = k.dataValue.split('-');
+    //$.each(this.columnArr, function (i, k) {
+    //    if (k.enName == type) {
+    //        types = k.dataValue.split('-');
+    //    }
+    //});
+    //改造添加班级获取班级类型select值
+
+    types = ['行政班','教学班','文科班','理科班'];
+
+    if (type == 'class_type') {
+        if (GLOBAL_CONSTANT.clsType == '1') {
+            $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
+                'cursor': 'not-allowed'
+            }).attr('disabled', true);
+        } else if (GLOBAL_CONSTANT.clsType == '2') {
+            if(GLOBAL_CONSTANT.cType == 'class_adm'){
+                $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
+                    'cursor': 'not-allowed'
+                }).attr('disabled', true);
+            }else{
+                $('#class_type').html('<option value="' + types[1] + '">' + types[1] + '</option>').css({
+                    'cursor': 'not-allowed'
+                }).attr('disabled', true);
+            }
+        } else {
+            $('#class_type').html('<option value="' + types[3] + '">' + types[3] + '</option><option value="' + types[2] + '">' + types[2] + '</option>')
         }
-    });
-    if (types != null) {
-        $.each(types, function (i, k) {
-            typeHtml.push('<option value="' + k + '">' + k + '</option>');
-        });
+    } else {
+        if (types != null) {
+            $.each(types, function (i, k) {
+                typeHtml.push('<option value="' + k + '">' + k + '</option>');
+            });
+        }
     }
     $('#' + type).append(typeHtml.join(''));
 };
@@ -329,7 +478,7 @@ AddClassManagement.prototype.addClass = function (title) {
     //contentHtml.push('</div>');
     contentHtml.push('<div class="add-class-box">');
     contentHtml.push('<ul>');
-    $.each(that.columnArr, function (i, k) {
+    $.each(classManagement.columnArr, function (i, k) {
         if (k.dataType != 'select') {
             if (k.enName != 'class_boss') {
                 contentHtml.push('<li><i>*</i><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
@@ -352,13 +501,17 @@ AddClassManagement.prototype.addClass = function (title) {
     });
     that.getYear();
     that.getGrade();
-    $.each(that.columnArr, function (i, k) {
+
+    $.each(classManagement.columnArr, function (i, k) {
         if (k.dataType == 'select') {
             if (k.dataValue) {
                 that.getType(k.enName);
             }
             if (k.dataUrl) {
-
+                if(k.enName == 'class_major_type'){
+                    var class_major_type_url = '/course/get/course/'+tnId+'/'+classManagement.gradeName+'.do'
+                    that.getUrl(class_major_type_url,'class_major_type');
+                }
             }
         }
     });
@@ -369,7 +522,7 @@ AddClassManagement.prototype.addClass = function (title) {
  * @param type
  * @constructor
  */
-function UpdateClassManagement () {
+function UpdateClassManagement() {
     ClassManagement.call(this);
 }
 UpdateClassManagement.prototype = {
@@ -433,34 +586,67 @@ UpdateClassManagement.prototype = {
             $("#class_grade").append(gradeHtml.join(''));
             var checkedGrade = $('input[name="high-school"]:checked').next().text();
             $("#class_grade").val(checkedGrade);
-            $("#class_grade").css({'cursor':'not-allowed'});
+            $("#class_grade").css({'cursor': 'not-allowed'});
             $("#class_grade").prop('disabled', true);
         } else {
             layer.msg(data.bizData.result);
         }
     },
+    getUrl:function(url,name){
+        Common.ajaxFun(url, 'GET',{}, function (res) {
+            if(res.rtnCode == '0000000'){
+                var tpl = '';
+                $.each(res.bizData.courses,function(i,v){
+                    tpl += '<option value="'+v.courseName+'">'+v.courseName+'</option>'
+                })
+                $('#'+name).html(tpl);
+            }
+        },function(res){},'true')
+    },
     getType: function (type) {
         var that = this;
         var typeHtml = [];
         var types = null;
-        $.each(this.columnArr, function (i, k) {
-            if (k.enName == type) {
-                types = k.dataValue.split('-');
+        //$.each(this.columnArr, function (i, k) {
+        //    if (k.enName == type) {
+        //        types = k.dataValue.split('-');
+        //    }
+        //});
+        types = ['行政班','教学班','文科班','理科班'];
+
+        if (type == 'class_type') {
+            if (GLOBAL_CONSTANT.clsType == '1') {
+                $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
+                    'cursor': 'not-allowed'
+                }).attr('disabled', true);
+            } else if (GLOBAL_CONSTANT.clsType == '2') {
+                if(GLOBAL_CONSTANT.cType == 'class_adm'){
+                    $('#class_type').html('<option value="' + types[0] + '">' + types[0] + '</option>').css({
+                        'cursor': 'not-allowed'
+                    }).attr('disabled', true);
+                }else{
+                    $('#class_type').html('<option value="' + types[1] + '">' + types[1] + '</option>').css({
+                        'cursor': 'not-allowed'
+                    }).attr('disabled', true);
+                }
+            } else {
+                $('#class_type').html('<option value="' + types[3] + '">' + types[3] + '</option><option value="' + types[2] + '">' + types[2] + '</option>')
             }
-        });
-        if (types != null) {
-            $.each(types, function (i, k) {
-                typeHtml.push('<option value="' + k + '">' + k + '</option>');
-            });
+        } else {
+            if (types != null) {
+                $.each(types, function (i, k) {
+                    typeHtml.push('<option value="' + k + '">' + k + '</option>');
+                });
+            }
+            $('#' + type).append(typeHtml.join(''));
         }
-        $('#' + type).append(typeHtml.join(''));
     },
     updateClass: function (title) {//更新某一行班级数据
         var that = this;
         var contentHtml = [];
         contentHtml.push('<div class="add-class-box">');
         contentHtml.push('<ul>');
-        $.each(that.columnArr, function (i, k) {
+        $.each(classManagement.columnArr, function (i, k) {
             if (k.dataType != 'select') {
                 if (k.enName != 'class_boss') {
                     contentHtml.push('<li><i>*</i><span>' + k.name + '</span><input type="text" id="' + k.enName + '" /></li>');
@@ -483,20 +669,23 @@ UpdateClassManagement.prototype = {
         });
         that.getYear();
         that.getGrade();
-        $.each(that.columnArr, function (i, k) {
+        $.each(classManagement.columnArr, function (i, k) {
             if (k.dataType == 'select') {
                 if (k.dataValue) {
                     that.getType(k.enName);
                 }
                 if (k.dataUrl) {
-
+                    if(k.enName == 'class_major_type'){
+                        var class_major_type_url = '/course/get/course/'+tnId+'/'+classManagement.gradeName+'.do'
+                        that.getUrl(class_major_type_url,'class_major_type');
+                    }
                 }
             }
         });
         var rowid = $(".check-template :checkbox:checked").attr('cid');
         var rowItem = $('#class-manage-list tr[rowid="' + rowid + '"]').find('td');
-        $.each(that.columnArr, function (i, k) {
-            if (rowItem.eq(i+1).html() != '-') {
+        $.each(classManagement.columnArr, function (i, k) {
+            if (rowItem.eq(i + 1).html() != '-') {
                 $('#' + k.enName).val(rowItem.eq(i + 1).html());
             }
         });
@@ -504,7 +693,7 @@ UpdateClassManagement.prototype = {
 };
 
 //上传数据类及其原型
-function UploadData () {
+function UploadData() {
 
 }
 UploadData.prototype = {
@@ -512,14 +701,22 @@ UploadData.prototype = {
     init: function () {
 
     },
-    showUploadBox: function (title) {
+    showUploadBox: function (title, hideOrShow,textTip) {
         var that = this;
         var uploadDataHtml = [];
         uploadDataHtml.push('<div class="upload-box">');
         uploadDataHtml.push('<span id="uploader-demo">');
+
         uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
-        uploadDataHtml.push('<button class="btn btn-info btn-import" id="btn-import">导入班级数据Excel</button>');
+        uploadDataHtml.push('<button class="btn btn-info btn-import" id="xz-btn-import">'+textTip+'</button>');
         uploadDataHtml.push('</span>');
+
+        uploadDataHtml.push('<span id="uploader-demo">');
+        uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
+        uploadDataHtml.push('<button class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">教学班模板上传</button>');
+        uploadDataHtml.push('</span>');
+
+
         uploadDataHtml.push('<a href="javascript: void(0);" id="downloadBtn" class="download-link">请先导出Excel模板，进行填写</a>');
         uploadDataHtml.push('<button class="btn btn-cancel cancel-btn" id="cancel-download-btn">取消</button>');
         uploadDataHtml.push('</div>');
@@ -530,7 +727,8 @@ UploadData.prototype = {
             area: ['460px', '300px'],
             content: uploadDataHtml.join('')
         });
-        upload();
+        upload('class_adm');
+        upload('class_edu');
     }
 };
 
@@ -551,27 +749,53 @@ var updateClassManagement = new UpdateClassManagement();
 $(document).on("click", "#updateRole-btn", function () {
     var that = $(this);
     var chknum = $(".check-template :checkbox:checked").size();
-    if(chknum!='1'){
+    if (chknum != '1') {
         layer.tips('修改只能选择一项!', that, {time: 1000});
         return false;
     }
+
     updateClassManagement = new UpdateClassManagement();
     updateClassManagement.init(classManagement.columnArr);
     updateClassManagement.updateClass('更新班级');
 });
 
+
+//切换班级管理
 $(document).on('change', 'input[name="high-school"]', function () {
     $('#checkAll').prop('checked', false);
     var checkedGrade = $('input[name="high-school"]:checked').next().text();
+
+    GLOBAL_CONSTANT.cType = 'class_adm';
+    GLOBAL_CONSTANT.clsType = $(this).attr('classType');
+
+
+    // 行政班|教学班说明：classType 1或3都为行政班  2教学班
+    var $classTypeToggle = $('#class-type-toggle').find('.tab');
+    $classTypeToggle.eq(1).removeClass('active');
+
+    if ($(this).attr('classType') == 2) {
+        $classTypeToggle.eq(0).removeClass('hide').addClass('active');
+        $classTypeToggle.eq(1).removeClass('hide');
+    } else if ($(this).attr('classType') == 3) {
+        $classTypeToggle.eq(0).addClass('hide');
+        $classTypeToggle.eq(1).addClass('hide');
+    } else {
+        $classTypeToggle.eq(0).addClass('hide');
+        $classTypeToggle.eq(1).addClass('hide');
+    }
+
+    classManagement.getItem();
+
     classManagement.gradeName = checkedGrade;
     classManagement.loadPage(0, classManagement.classRows);
 });
 
+
 //确认更新操作按钮
 $(document).on("click", "#update-btn", function () {
     var postData = [];
-    for (var i = 0; i < updateClassManagement.columnArr.length; i++) {
-        var tempObj = addClassManagement.columnArr[i];
+    for (var i = 0; i < classManagement.columnArr.length; i++) {
+        var tempObj = classManagement.columnArr[i];
         //if (tempObj.dataType == 'text') {
         //    if ($('#' + tempObj.enName).val() == '') {
         //        layer.msg(tempObj.name + '不能为空!', {time: 1000});
@@ -590,7 +814,8 @@ $(document).on("click", "#update-btn", function () {
                 var tempType = eval(tempObj.checkRule);
                 var typeResult = tempType.test($('#' + tempObj.enName).val());
                 if (typeResult === false) {
-                    layer.msg(tempObj.name + '长度为1~12个字符!', {time: 1000});
+                    layer.msg(tempObj.name + '长度为6个字符!', {time: 1000});
+                    // layer.msg(tempObj.name + '长度为1~12个字符!', {time: 1000});
                     $('#' + tempObj.enName).focus();
                     return;
                 }
@@ -630,7 +855,7 @@ $(document).on("click", "#update-btn", function () {
         "clientInfo": {},
         "style": "",
         "data": {
-            "type": updateClassManagement.type,
+            "type": GLOBAL_CONSTANT.cType,
             "tnId": tnId,
             "pri": rowid,//记录的id
             "teantCustomList": postData
@@ -643,25 +868,26 @@ $(document).on("click", "#update-btn", function () {
             classManagement.gradeName = checkedGrade;
             classManagement.loadPage(0, classManagement.classRows);
         } else {
-            layer.msg(res.bizData.result);
+            layer.msg(res.msg);
         }
     }, function (res) {
         layer.msg("出错了");
-    }, null,true);
+    }, null, true);
 });
 
 //确认添加操作按钮
 $(document).on("click", "#add-btn", function () {
     var postData = [];
-    for (var i = 0; i < addClassManagement.columnArr.length; i++) {
-        var tempObj = addClassManagement.columnArr[i];
+    for (var i = 0; i < classManagement.columnArr.length; i++) {
+        var tempObj = classManagement.columnArr[i];
         if (tempObj.dataType == 'text') {
             //alert('text: ' + eval(tempObj.checkRule) + ', ' + $('#' + tempObj.enName).val());
             if (tempObj.checkRule) {
                 var tempType = eval(tempObj.checkRule);
                 var typeResult = tempType.test($('#' + tempObj.enName).val());
                 if (typeResult === false) {
-                    layer.msg(tempObj.name + '长度为1~12个字符!', {time: 1000});
+                    layer.msg(tempObj.name + '长度为6个字符!', {time: 1000});
+                    // layer.msg(tempObj.name + '长度为1~12个字符!', {time: 1000});
                     $('#' + tempObj.enName).focus();
                     return;
                 }
@@ -700,11 +926,12 @@ $(document).on("click", "#add-btn", function () {
         "clientInfo": {},
         "style": "",
         "data": {
-            "type": addClassManagement.type,
+            "type": GLOBAL_CONSTANT.cType,
             "tnId": tnId,
             "teantCustomList": postData
         }
     };
+
     Common.ajaxFun('/manage/teant/custom/data/add.do', 'POST', JSON.stringify(datas), function (res) {
         if (res.rtnCode == "0000000") {
             layer.closeAll();
@@ -712,11 +939,11 @@ $(document).on("click", "#add-btn", function () {
             classManagement.gradeName = checkedGrade;
             classManagement.loadPage(0, classManagement.classRows);
         } else {
-            layer.msg(res.bizData.result);
+            layer.msg(res.msg);
         }
     }, function (res) {
         layer.msg("出错了");
-    }, null,true);
+    }, null, true);
 });
 //取消操作按钮(关闭对话框)
 $(document).on("click", ".cancel-btn", function () {
@@ -727,16 +954,42 @@ $(document).on('click', '#deleteClassBtn', function () {
     classManagement.removeClass();
 });
 
-//模板下载
-$(document).on('click', '#downloadBtn', function () {
-    window.location.href = '/manage/' + classManagement.type + '/export/' + tnId + '.do';
+
+/**
+ * 模板下载
+ * 行政班模板|教学班模板
+ */
+$(document).on('click', '#xz-template-download', function () {
+    window.location.href = '/manage/class_adm/export/' + tnId + '.do';
+});
+$(document).on('click', '#jx-template-download', function () {
+    window.location.href = '/manage/class_edu/export/' + tnId + '.do';
 });
 
-//上传
+
+/**
+ * 模板上传
+ * 行政班模板|教学班模板
+ */
 $(document).on('click', '#uploadBtn', function () {
+    var hideOrShow = 'hide',textTip = '模板上传'
     var upload = new UploadData();
-    upload.showUploadBox('导入班级数据');
+    if ($('#jx-template-download').is(":visible")) {
+        hideOrShow = '';
+        textTip = '行政班&文理科班模板上传';
+    }
+    upload.showUploadBox('导入班级数据', hideOrShow,textTip);
 });
+
+
+//
+// $(document).on('click', '#xz-btn-import', function () {
+//     upload('class_adm');
+// });
+// $(document).on('click', '#jx-btn-import', function () {
+//     upload('class_edu');
+// });
+
 
 //班级设置操作
 $(document).on('click', '#class-settings-btn', function () {
@@ -755,11 +1008,21 @@ $(document).on('click', '#class-settings-btn', function () {
     });
 });
 
+//新增行政班和教学班切换
+$(document).on('click', '#class-type-toggle .tab', function () {
+    $(this).addClass('active').siblings().removeClass('active');
+    GLOBAL_CONSTANT.cType = $(this).attr('type');
+    classManagement.getItem();  //拉取table-head
+    classManagement.loadPage(classManagement.classOffset, classManagement.classRows);     //拉取table-body
+    classManagement.pagination();  //分页
+    console.info(classManagement.columnArr);
+});
 
-function upload () {
+
+function upload(whichBtn) {
     var $ = jQuery,
         $list = $('#fileList'),
-    // Web Uploader实例
+        // Web Uploader实例
         uploader;
     // 初始化Web Uploader
     uploader = WebUploader.create({
@@ -771,11 +1034,12 @@ function upload () {
         swf: BASE_URL + '/webuploader-0.1.5 2/Uploader.swf',
 
         // 文件接收服务端。
-        server: rootPath + '/config/upload/class/' + tnId + '.do',
+        server: rootPath + '/config/upload/' + whichBtn + '/' + tnId + '.do',
 
         // 选择文件的按钮。可选。
         // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-        pick: '#btn-import',
+        // pick: '#btn-import',
+        pick: whichBtn == 'class_adm' ? '#xz-btn-import' : '#jx-btn-import',
 
         // 只允许选择文件，可选。
         accept: {
@@ -793,7 +1057,7 @@ function upload () {
         //return;
         var $li = $(
             '<div id="' + file.id + '" class="file-item thumbnail">' +
-                //'<img>' +
+            //'<img>' +
             '<div class="info">' + file.name + '</div>' +
             '</div>'
         );
@@ -817,7 +1081,7 @@ function upload () {
     });
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-    uploader.on('uploadSuccess', function (file, response) {console.info(response);
+    uploader.on('uploadSuccess', function (file, response) {
         if (classManagement != null) {
             var checkedGrade = $('input[name="high-school"]:checked').next().text();
             classManagement.gradeName = checkedGrade;

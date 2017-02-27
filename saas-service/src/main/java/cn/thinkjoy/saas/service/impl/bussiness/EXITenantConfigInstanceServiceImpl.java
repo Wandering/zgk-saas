@@ -2,15 +2,13 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 
 import cn.thinkjoy.common.dao.IBaseDAO;
 import cn.thinkjoy.common.service.impl.AbstractPageService;
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.*;
 import cn.thinkjoy.saas.dao.bussiness.*;
 import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.domain.bussiness.ClassView;
-import cn.thinkjoy.saas.domain.bussiness.SyncClass;
-import cn.thinkjoy.saas.domain.bussiness.SyncCourse;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
-import cn.thinkjoy.saas.service.common.ConvertUtil;
 import cn.thinkjoy.saas.service.common.EnumUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import cn.thinkjoy.saas.service.common.ReadExcel;
@@ -29,9 +27,9 @@ import java.util.*;
  * Created by douzy on 16/10/13.
  */
 @Service("EXITenantConfigInstanceServiceImpl")
-public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBaseDAO<TenantConfigInstance>, TenantConfigInstance> implements EXITenantConfigInstanceService<IBaseDAO<TenantConfigInstance>,TenantConfigInstance> {
+public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBaseDAO<TenantConfigInstance>, TenantConfigInstance> implements EXITenantConfigInstanceService<IBaseDAO<TenantConfigInstance>, TenantConfigInstance> {
 
-    private static final Logger LOGGER= LoggerFactory.getLogger(EXITenantConfigInstanceServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EXITenantConfigInstanceServiceImpl.class);
 
     @Autowired
     EXITenantConfigInstanceDAO exiTenantConfigInstanceDAO;
@@ -45,13 +43,9 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
     @Resource
     IEXJwTeacherBaseInfoDAO iexJwTeacherBaseInfoDAO;
     @Resource
-    IJwTeacherBaseInfoDAO iJwTeacherBaseInfoDAO;
-    @Resource
     IEXTeantCustomDAO iexTeantCustomDAO;
     @Resource
     IEXCourseBaseInfoDAO iexCourseBaseInfoDAO;
-    @Resource
-    IJwCourseBaseInfoDAO iJwCourseBaseInfoDAO;
     @Resource
     IJwCourseDAO iJwCourseDAO;
     @Resource
@@ -59,8 +53,6 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
     @Resource
     IEXClassBaseInfoDAO iexClassBaseInfoDAO;
-    @Resource
-    IJwClassBaseInfoDAO jwClassBaseInfoDAO;
 
     @Resource
     IJwBaseConRuleDAO iJwBaseConRuleDAO;
@@ -199,13 +191,20 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      */
     @Override
     public List<TenantConfigInstanceView> getTenantConfigListByTnIdAndType(String type, Integer tnId) {
+        return this.getTenantConfigListByTnIdAndType(type,tnId,null);
+    }
 
+    @Override
+    public List<TenantConfigInstanceView> getTenantConfigListByTnIdAndType(String type, Integer tnId,String isShow) {
         if (StringUtils.isBlank(type) || tnId <= 0)
             return null;
 
         Map map = new HashMap();
         map.put("domain", type);
         map.put("tnId", tnId);
+        if(org.apache.commons.lang3.StringUtils.isNotBlank(isShow)) {
+            map.put("isShow", isShow);
+        }
         List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceDAO.selectTeanConfigList(map);
 
         return tenantConfigInstances;
@@ -219,7 +218,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      */
     @Override
     public String[] getTenantConfigListArrByTnIdAndType(String type, Integer tnId) {
-        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId,"0");
         String[] configArr = new String[tenantConfigInstanceViews.size()];
         for (int i = 0; i < tenantConfigInstanceViews.size(); i++) {
             TenantConfigInstanceView tenantConfigInstanceView = tenantConfigInstanceViews.get(i);
@@ -259,7 +258,8 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             return EnumUtil.ErrorCode.getDesc(EnumUtil.IMPORTCONFIG_TEANTCUSTOM_EXCEL);
         }
 
-        if (isExistConfigDataByTnId(type,tnId)) {
+        // 学生模板直接添加，不需要删除以前的字段
+        if (isExistConfigDataByTnId(type, tnId) && !type.equals(Constant.STUDENT)) {
             LOGGER.info("tnId:" + tnId + "=[该租户存在历史表头数据.]");
             boolean removeResult = removeConfigDataByTnId(type,tnId);
             LOGGER.info("removeResult:" + removeResult);
@@ -494,10 +494,11 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * 解析excel 且将对应的值插入动态表
      * @param type
      * @param tnId
+     * @param classType 0：教学班  1：行政班
      * @return
      */
     @Override
-    public String  uploadExcel(String type,Integer tnId,String excelPath) {
+    public String uploadExcel(String type,Integer tnId,String excelPath,int classType) {
         LOGGER.info("===========解析excel S===========");
         LOGGER.info("type:" + type);
         LOGGER.info("tnId:" + tnId);
@@ -505,20 +506,32 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
         Map map = new HashMap();
         map.put("domain", type);
         map.put("tnId", tnId);
+        map.put("isShow",0);
         List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceDAO.selectTeanConfigList(map);
 
         if(tenantConfigInstances==null||tenantConfigInstances.size()<=0)
             return "系统错误";
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId,"0");
+        if (tenantConfigInstanceViews == null)
+            return "系统错误";
 
-        Integer columnLen=tenantConfigInstances.size();
+        // 上传学生数据 行政班去除教学班属性
+        if(Constant.STUDENT.equals(type) && classType == 1){
+            List<TenantConfigInstanceView> tempList = Lists.newArrayList();
+            for(TenantConfigInstanceView view : tenantConfigInstances){
+                if(Constant.ZDBJ_COLUMNS_KEY.indexOf(view.getEnName()) == -1){
+                    tempList.add(view);
+                }
+            }
+            tenantConfigInstanceViews = tempList;
+        }
+
+        Integer columnLen=tenantConfigInstanceViews.size();
 
         List<LinkedHashMap<String, String>> configTeantComList = readExcel.readExcelFile(excelPath,columnLen);
         if (configTeantComList == null||configTeantComList.size()<=0)
             return "输入的数据不完整，请完善数据后再上传";
         LOGGER.info("excel序列化 总数:" + configTeantComList.size());
-        List<TenantConfigInstanceView> tenantConfigInstanceViews = this.getTenantConfigListByTnIdAndType(type, tnId);
-        if (tenantConfigInstanceViews == null)
-            return "系统错误";
 
         String excelValid = ParamsUtils.excelValueValid(configTeantComList, tenantConfigInstanceViews);
 
@@ -544,13 +557,21 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
             if(removeIds!=null&&removeIds.size()>0)
                 iexTeantCustomDAO.removeTenantCustomList(tableName,removeIds);
-
-
+            //针对行政班和教学班的特殊业务处理
+            if(type.equals("class_edu")||type.equals("class_adm")) {
+                TenantConfigInstanceView tenantConfigInstanceView = new TenantConfigInstanceView();
+                tenantConfigInstanceView.setEnName("class_code");
+                tenantConfigInstanceViews.add(tenantConfigInstanceView);
+                for(int i=0;i<configTeantComList.size();i++) {
+                    LinkedHashMap<String, String> map1=configTeantComList.get(i);
+                    map1.put(map1.size() + "", type + "_" + System.currentTimeMillis()+i);
+                }
+            }
             Integer insertResult = exiTenantConfigInstanceDAO.insertTenantConfigCom(tableName, tenantConfigInstanceViews, configTeantComList);
 
             if (insertResult > 0) {
-                reuslt =(removeIds!=null&&removeIds.size()>0)?"存在重复数据，已经覆盖更新": "SUCCESS";
-                syncProcedureData(type, tnId);
+                reuslt = (removeIds != null && removeIds.size() > 0) ? "存在重复数据，已经覆盖更新" : "SUCCESS";
+//                syncProcedureData(type, tnId);
             }
         } else
             reuslt = excelValid;
@@ -667,7 +688,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
             Iterator iter = rowsMap.entrySet().iterator();
 
             int y = 0;
-            String key1 = null, key2 = null, value1 = null, value2 = null,id=null;
+            String key1 = null, key2 = null, value1 = null, value2 = null, id = null;
             boolean repeat = false;
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
@@ -685,6 +706,8 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
                 switch (type) {
                     case "class":
+                    case "class_adm":
+                    case "class_edu":
                         if (configuration.getEnName().equals("class_grade")) {
                             key1 = "class_grade";
                             value1 = val;
@@ -744,112 +767,112 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * @param type
      * @return
      */
-    @Override
-    public void syncProcedureData(String type,Integer tnId) {
-        String tableName = ParamsUtils.combinationTableName(type, tnId);
-        Map map=new HashMap();
-        map.put("tableName",tableName);
-        List<LinkedHashMap<String,Object>> linkedHashMaps=iexTeantCustomDAO.getTenantCustom(map);
-
-        Map removeMap=new HashMap();
-        removeMap.put("tnId",tnId);
-        switch (type){
-            case "teacher":
-                if(linkedHashMaps!=null&& linkedHashMaps.size()>0) {
-
-                    List<JwTeacherBaseInfo> jwTeacherBaseInfos=new ArrayList<>();
-                    for(LinkedHashMap<String,Object> linkedHashMap:linkedHashMaps) {
-                        JwTeacherBaseInfo jwTeacherBaseInfo = new JwTeacherBaseInfo();
-                        jwTeacherBaseInfo.setTnId(tnId);
-                        jwTeacherBaseInfo.setGrade(ConvertUtil.converGrade(linkedHashMap.get("teacher_grade").toString()));
-                        jwTeacherBaseInfo.setTeacherName(linkedHashMap.get("teacher_name").toString());
-                        jwTeacherBaseInfo.setTeacherClass(linkedHashMap.get("teacher_class").toString());
-                        jwTeacherBaseInfo.setTeacherCourse(linkedHashMap.get("teacher_major_type").toString());
-                        jwTeacherBaseInfos.add(jwTeacherBaseInfo);
-                    }
-                    iJwTeacherBaseInfoDAO.deleteByCondition(removeMap);
-                    // 清除教师排课信息
-                    iJwTeacherDAO.deleteByProperty("tn_id",tnId);
-                    // 清除教案齐平规则信息
-                    iJwBaseJaqpRuleDAO.deleteByProperty("tn_id",tnId);
-                    // 清除周任课规则
-                    iJwBaseWeekRuleDAO.deleteByProperty("tn_id",tnId);
-                    // 清除日任课规则
-                    iJwBaseDayRuleDAO.deleteByProperty("tn_id",tnId);
-                    // 清除连上规则
-                    iJwBaseConRuleDAO.deleteByProperty("tn_id",tnId);
-
-                    iexJwTeacherBaseInfoDAO.syncTeacherInfo(jwTeacherBaseInfos);
-                }
-                break;
-            case "student":
-                if(linkedHashMaps!=null&& linkedHashMaps.size()>0) {
-                    //同步课程
-                    List<SyncCourse> syncCourses = iexTeantCustomDAO.selectCourseGroup(map);
-                    if (syncCourses != null) {
-                        List<JwCourseBaseInfo> jwCourseBaseInfos = new ArrayList<>();
-                        List<Integer> grades = Lists.newArrayList();
-                        for (SyncCourse syncCourse : syncCourses) {
-                            JwCourseBaseInfo jwCourseBaseInfo = new JwCourseBaseInfo();
-                            jwCourseBaseInfo.setTnId(tnId);
-                            jwCourseBaseInfo.setCourseName(syncCourse.getMajor());
-                            Integer grade = ConvertUtil.converGrade(syncCourse.getGrade());
-                            jwCourseBaseInfo.setGrade(grade.toString());
-                            jwCourseBaseInfo.setCourseType(2);
-                            jwCourseBaseInfos.add(jwCourseBaseInfo);
-
-                            if(!grades.contains(grade)){
-                                grades.add(grade);
-                            }
-
-                        }
-                        iJwCourseBaseInfoDAO.deleteByCondition(removeMap);
-                        iJwCourseDAO.deleteByProperty("tn_id",tnId);
-                        for(Integer grade : grades){
-                            jwCourseBaseInfos.addAll(convertCourseList(tnId,grade.toString()));
-                        }
-                        iexCourseBaseInfoDAO.syncCourseInfo(jwCourseBaseInfos);
-                    }
-                    List<SyncClass> syncClasses = iexTeantCustomDAO.selectClassGroup(map);
-                    List<JwClassBaseInfo> dayJwClassBaseInfos = new ArrayList<>();
-                    //同步走读、行政班级
-                    if (syncClasses != null) {
-
-                        for (SyncClass syncClass : syncClasses) {
-                            JwClassBaseInfo jwClassBaseInfo = new JwClassBaseInfo();
-                            jwClassBaseInfo.setTnId(tnId);
-                            jwClassBaseInfo.setClassName(syncClass.getMajorClass());
-                            jwClassBaseInfo.setClassType(2);
-                            jwClassBaseInfo.setGrade(ConvertUtil.converGrade(syncClass.getGrade()));
-                            dayJwClassBaseInfos.add(jwClassBaseInfo);
-                        }
-
-                    }
-                    List<SyncClass> syncExecutiveClasses = iexTeantCustomDAO.selectExecutiveClassGroup(map);
-                    List<JwClassBaseInfo> executiveJwClassBaseInfos = new ArrayList<>();
-                    if (syncExecutiveClasses != null) {
-                        for (SyncClass syncClass : syncExecutiveClasses) {
-                            JwClassBaseInfo jwClassBaseInfo = new JwClassBaseInfo();
-                            jwClassBaseInfo.setTnId(tnId);
-                            jwClassBaseInfo.setClassName(syncClass.getMajorClass());
-                            jwClassBaseInfo.setClassType(1);
-                            jwClassBaseInfo.setGrade(ConvertUtil.converGrade(syncClass.getGrade()));
-                            executiveJwClassBaseInfos.add(jwClassBaseInfo);
-                        }
-                    }
-                    if (dayJwClassBaseInfos != null || executiveJwClassBaseInfos != null)
-                        jwClassBaseInfoDAO.deleteByCondition(removeMap);
-
-                    if (dayJwClassBaseInfos != null && dayJwClassBaseInfos.size() > 0)
-                        iexClassBaseInfoDAO.syncClassInfo(dayJwClassBaseInfos);
-
-                    if (executiveJwClassBaseInfos != null && executiveJwClassBaseInfos.size() > 0)
-                        iexClassBaseInfoDAO.syncClassInfo(executiveJwClassBaseInfos);
-
-                }
-                break;
-        }
-    }
+//    @Override
+//    public void syncProcedureData(String type, Integer tnId) {
+//        String tableName = ParamsUtils.combinationTableName(type, tnId);
+//        Map map = new HashMap();
+//        map.put("tableName", tableName);
+//        List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.getTenantCustom(map);
+//
+//        Map removeMap = new HashMap();
+//        removeMap.put("tnId", tnId);
+//        switch (type) {
+//            case "teacher":
+//                if (linkedHashMaps != null && linkedHashMaps.size() > 0) {
+//
+//                    List<JwTeacherBaseInfo> jwTeacherBaseInfos = new ArrayList<>();
+//                    for (LinkedHashMap<String, Object> linkedHashMap : linkedHashMaps) {
+//                        JwTeacherBaseInfo jwTeacherBaseInfo = new JwTeacherBaseInfo();
+//                        jwTeacherBaseInfo.setTnId(tnId);
+//                        jwTeacherBaseInfo.setGrade(ConvertUtil.converGrade(linkedHashMap.get("teacher_grade").toString()));
+//                        jwTeacherBaseInfo.setTeacherName(linkedHashMap.get("teacher_name").toString());
+//                        jwTeacherBaseInfo.setTeacherClass(linkedHashMap.get("teacher_class").toString());
+//                        jwTeacherBaseInfo.setTeacherCourse(linkedHashMap.get("teacher_major_type").toString());
+//                        jwTeacherBaseInfos.add(jwTeacherBaseInfo);
+//                    }
+//                    iJwTeacherBaseInfoDAO.deleteByCondition(removeMap);
+//                    // 清除教师排课信息
+//                    iJwTeacherDAO.deleteByProperty("tn_id", tnId);
+//                    // 清除教案齐平规则信息
+//                    iJwBaseJaqpRuleDAO.deleteByProperty("tn_id", tnId);
+//                    // 清除周任课规则
+//                    iJwBaseWeekRuleDAO.deleteByProperty("tn_id", tnId);
+//                    // 清除日任课规则
+//                    iJwBaseDayRuleDAO.deleteByProperty("tn_id", tnId);
+//                    // 清除连上规则
+//                    iJwBaseConRuleDAO.deleteByProperty("tn_id", tnId);
+//
+//                    iexJwTeacherBaseInfoDAO.syncTeacherInfo(jwTeacherBaseInfos);
+//                }
+//                break;
+//            case "student":
+//                if (linkedHashMaps != null && linkedHashMaps.size() > 0) {
+//                    //同步课程
+//                    List<SyncCourse> syncCourses = iexTeantCustomDAO.selectCourseGroup(map);
+//                    if (syncCourses != null) {
+//                        List<JwCourseBaseInfo> jwCourseBaseInfos = new ArrayList<>();
+//                        List<Integer> grades = Lists.newArrayList();
+//                        for (SyncCourse syncCourse : syncCourses) {
+//                            JwCourseBaseInfo jwCourseBaseInfo = new JwCourseBaseInfo();
+//                            jwCourseBaseInfo.setTnId(tnId);
+//                            jwCourseBaseInfo.setCourseName(syncCourse.getMajor());
+//                            Integer grade = ConvertUtil.converGrade(syncCourse.getGrade());
+//                            jwCourseBaseInfo.setGrade(grade.toString());
+//                            jwCourseBaseInfo.setCourseType(2);
+//                            jwCourseBaseInfos.add(jwCourseBaseInfo);
+//
+//                            if (!grades.contains(grade)) {
+//                                grades.add(grade);
+//                            }
+//
+//                        }
+//                        iJwCourseBaseInfoDAO.deleteByCondition(removeMap);
+//                        iJwCourseDAO.deleteByProperty("tn_id", tnId);
+//                        for (Integer grade : grades) {
+//                            jwCourseBaseInfos.addAll(convertCourseList(tnId, grade.toString()));
+//                        }
+//                        iexCourseBaseInfoDAO.syncCourseInfo(jwCourseBaseInfos);
+//                    }
+//                    List<SyncClass> syncClasses = iexTeantCustomDAO.selectClassGroup(map);
+//                    List<JwClassBaseInfo> dayJwClassBaseInfos = new ArrayList<>();
+//                    //同步走读、行政班级
+//                    if (syncClasses != null) {
+//
+//                        for (SyncClass syncClass : syncClasses) {
+//                            JwClassBaseInfo jwClassBaseInfo = new JwClassBaseInfo();
+//                            jwClassBaseInfo.setTnId(tnId);
+//                            jwClassBaseInfo.setClassName(syncClass.getMajorClass());
+//                            jwClassBaseInfo.setClassType(2);
+//                            jwClassBaseInfo.setGrade(ConvertUtil.converGrade(syncClass.getGrade()));
+//                            dayJwClassBaseInfos.add(jwClassBaseInfo);
+//                        }
+//
+//                    }
+//                    List<SyncClass> syncExecutiveClasses = iexTeantCustomDAO.selectExecutiveClassGroup(map);
+//                    List<JwClassBaseInfo> executiveJwClassBaseInfos = new ArrayList<>();
+//                    if (syncExecutiveClasses != null) {
+//                        for (SyncClass syncClass : syncExecutiveClasses) {
+//                            JwClassBaseInfo jwClassBaseInfo = new JwClassBaseInfo();
+//                            jwClassBaseInfo.setTnId(tnId);
+//                            jwClassBaseInfo.setClassName(syncClass.getMajorClass());
+//                            jwClassBaseInfo.setClassType(1);
+//                            jwClassBaseInfo.setGrade(ConvertUtil.converGrade(syncClass.getGrade()));
+//                            executiveJwClassBaseInfos.add(jwClassBaseInfo);
+//                        }
+//                    }
+//                    if (dayJwClassBaseInfos != null || executiveJwClassBaseInfos != null)
+//                        jwClassBaseInfoDAO.deleteByCondition(removeMap);
+//
+//                    if (dayJwClassBaseInfos != null && dayJwClassBaseInfos.size() > 0)
+//                        iexClassBaseInfoDAO.syncClassInfo(dayJwClassBaseInfos);
+//
+//                    if (executiveJwClassBaseInfos != null && executiveJwClassBaseInfos.size() > 0)
+//                        iexClassBaseInfoDAO.syncClassInfo(executiveJwClassBaseInfos);
+//
+//                }
+//                break;
+//        }
+//    }
 
     /**
      * 组装基本课程信息(语,数,外)
@@ -858,13 +881,13 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * @param grade
      * @return
      */
-    private List<JwCourseBaseInfo> convertCourseList(int tnId,String grade){
-        List<JwCourseBaseInfo> infos = Lists.newArrayList();
-        infos.add(convertCourse(tnId,grade,"语文"));
-        infos.add(convertCourse(tnId,grade,"数学"));
-        infos.add(convertCourse(tnId,grade,"英语"));
-        return infos;
-    }
+//    private List<JwCourseBaseInfo> convertCourseList(int tnId, String grade) {
+//        List<JwCourseBaseInfo> infos = Lists.newArrayList();
+//        infos.add(convertCourse(tnId, grade, "语文"));
+//        infos.add(convertCourse(tnId, grade, "数学"));
+//        infos.add(convertCourse(tnId, grade, "英语"));
+//        return infos;
+//    }
 
     /**
      * 组装单个课程信息
@@ -874,14 +897,15 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
      * @param courseName
      * @return
      */
-    private JwCourseBaseInfo convertCourse(int tnId,String grade,String courseName){
-        JwCourseBaseInfo info = new JwCourseBaseInfo();
-        info.setTnId(tnId);
-        info.setCourseName(courseName);
-        info.setCourseType(1);
-        info.setGrade(grade);
-        return info;
-    }
+//    private JwCourseBaseInfo convertCourse(int tnId, String grade, String courseName) {
+//        JwCourseBaseInfo info = new JwCourseBaseInfo();
+//        info.setTnId(tnId);
+//        info.setCourseName(courseName);
+//        info.setCourseType(1);
+//        info.setGrade(grade);
+//        return info;
+//    }
+
 
     /**
      * 租户动态表名校验  -表级别校验  存在则删除
@@ -955,7 +979,7 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 
         List<String> configViews = new ArrayList<>();
 
-        List<TenantConfigInstanceView> tenantConfigInstanceViews = getTenantConfigListByTnIdAndType(type, tnId);
+        List<TenantConfigInstanceView> tenantConfigInstanceViews = getTenantConfigListByTnIdAndType(type, tnId,"0");
 
         for (TenantConfigInstanceView tenantConfigInstanceView : tenantConfigInstanceViews) {
             configViews.add(tenantConfigInstanceView.getConfigKey());
@@ -1052,4 +1076,97 @@ public class EXITenantConfigInstanceServiceImpl extends AbstractPageService<IBas
 //        return iexTeantCustomDAO.selectExistByCloumn(map)>0;
 //    }
 
+
+    @Override
+    public int countBySubjectAndGrade(int tnId, String grade, String subject, String classType) {
+        String tableName = ParamsUtils.combinationTableName(classType, tnId);
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        int count = 0;
+        Map<String, Object> params;
+        List<Map<String, Object>> paramsList;
+        switch (classType) {
+            case Constant.CLASS_EDU:
+                params = new HashMap<>();
+                paramsList = new ArrayList<>();
+                params.put("key", "class_grade");
+                params.put("value", grade);
+                paramsList.add(params);
+                params = new HashMap<>();
+                paramsList = new ArrayList<>();
+                params.put("key", "class_major_type");
+                params.put("value", subject);
+                paramsList.add(params);
+                map.put("searchKeys", paramsList);
+                count = iexTeantCustomDAO.getTenantCustomColsCount(map);
+                break;
+            case Constant.CLASS_ADM:
+                params = new HashMap<>();
+                paramsList = new ArrayList<>();
+                params.put("key", "class_grade");
+                params.put("value", grade);
+                paramsList.add(params);
+                map.put("searchKeys", paramsList);
+                count = iexTeantCustomDAO.getTenantCustomColsCount(map);
+                break;
+            default:
+                break;
+        }
+        return count;
+    }
+
+    @Override
+    public List getBySubjectAndGrade(int tnId, String grade, String subject, String classType) {
+        String tableName = ParamsUtils.combinationTableName(classType, tnId);
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        List list = new ArrayList();
+        switch (classType) {
+            case Constant.CLASS_EDU:
+
+                map.put("key1", "class_grade");
+                map.put("value1", grade);
+                map.put("key2", "class_major_type");
+                map.put("value2", subject);
+                list = iexTeantCustomDAO.selectExistByCloumn(map);
+                break;
+            case Constant.CLASS_ADM:
+                map.put("key1", "class_grade");
+                map.put("value1", grade);
+                list = iexTeantCustomDAO.selectExistByCloumn(map);
+                break;
+            default:
+                break;
+        }
+        return list;
+    }
+
+    @Override
+    public List<LinkedHashMap<String,Object>> getClassByTnIdAndGrade(int tnId, String grade, String classType) {
+        String tableName = ParamsUtils.combinationTableName(classType, tnId);
+        Map map = new HashMap();
+        map.put("tableName", tableName);
+        List<LinkedHashMap<String,Object>> list = new ArrayList();
+        switch (classType) {
+            case "class_adm":
+                map.put("searchKey", "class_grade");
+                map.put("searchValue", grade);
+                list = iexTeantCustomDAO.getTenantCustom(map);
+                break;
+            case "class_edu":
+                map.put("searchKey", "class_grade");
+                map.put("searchValue", grade);
+                list = iexTeantCustomDAO.getTenantCustom(map);
+                break;
+            default:
+                break;
+        }
+        return list;
+    }
+
+
+    @Override
+    public List<LinkedHashMap<String, Object>> likeTableByParams(String tableName,List<Map<String,Object>> list) {
+        return iexTeantCustomDAO.likeTableByParams(tableName,list);
+    }
 }

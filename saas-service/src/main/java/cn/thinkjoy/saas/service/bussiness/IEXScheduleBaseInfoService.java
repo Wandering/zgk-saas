@@ -29,12 +29,12 @@ public interface IEXScheduleBaseInfoService {
      */
     int getTnIdByTaskId(int taskId);
 
-    /**
-     * 根据任务和课程获取老师列表
-     * @param map
-     * @return
-     */
-    public List<TeacherBaseDto> queryTeacherByTaskId(Map<String,Object> map);
+//    /**
+//     * 根据任务和课程获取老师列表
+//     * @param map
+//     * @return
+//     */
+//    public List<TeacherBaseDto> queryTeacherByTaskId(Map<String,Object> map);
 
     /**
      * 根据任务ID获取教师信息
@@ -45,13 +45,23 @@ public interface IEXScheduleBaseInfoService {
     List<TeacherBaseDto> queryTeacherByTaskId(int taskId);
 
     /**
+     * 根据年级和课程名获取班级信息
+     *
+     * @param tnId
+     * @param grade
+     * @param course
+     * @return
+     */
+    List<Map<String,Object>> getClassBaseDtosByCourse(int tnId,int grade,String course);
+
+    /**
      * 根据关键词搜索教师信息
      *
      * @param taskId
      * @param keyword
      * @return
      */
-    List<TeacherBaseDto> queryTeacherByKeyWord(int taskId,String keyword);
+//    List<TeacherBaseDto> queryTeacherByKeyWord(int taskId,String keyword);
 
     /**
      * 新增或修改教师信息
@@ -62,5 +72,13 @@ public interface IEXScheduleBaseInfoService {
      * @param course
      * @param classId
      */
-    void saveOrUpdateTeacher(int taskId, int teacherId,int classNum,String course, String classId);
+//    void saveOrUpdateTeacher(int taskId, int teacherId,int classNum,String course, String classId);
+
+    /**
+     * 同步基本规则数据
+     *
+     * @param recordId 教师排课记录ID
+     * @param isAttend 0：不排课，1：排课
+     */
+    void insertBaseRule(int recordId,int isAttend);
 }

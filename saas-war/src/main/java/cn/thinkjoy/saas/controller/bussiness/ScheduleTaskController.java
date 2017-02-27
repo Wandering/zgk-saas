@@ -5,7 +5,11 @@ import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
-import cn.thinkjoy.saas.domain.*;
+import cn.thinkjoy.saas.domain.JwCourse;
+import cn.thinkjoy.saas.domain.JwScheduleTask;
+import cn.thinkjoy.saas.domain.JwTeachDate;
+import cn.thinkjoy.saas.domain.JwTeacher;
+import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.JwScheduleTaskDto;
@@ -16,19 +20,26 @@ import cn.thinkjoy.saas.enums.StatusEnum;
 import cn.thinkjoy.saas.enums.TermEnum;
 import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.*;
+import cn.thinkjoy.saas.service.common.ExcelUtils;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
+import cn.thinkjoy.saas.service.common.FileOperation;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
+import com.alibaba.dubbo.common.json.ParseException;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -43,7 +54,7 @@ public class ScheduleTaskController {
     private static final Logger logger = LoggerFactory.getLogger(ScheduleTaskController.class);
 
     @Autowired
-    IJwScheduleTaskService jwScheduleTaskService;
+    private IJwScheduleTaskService jwScheduleTaskService;
 
     @Autowired
     private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
@@ -58,19 +69,22 @@ public class ScheduleTaskController {
     private IEXTenantCustomService iexTenantCustomService;
 
     @Autowired
-    private EXIConfigurationService exiConfigurationService;
-
-    @Autowired
     private IJwTeachDateService jwTeachDateService;
-
-    @Autowired
-    private IJwCourseBaseInfoService jwCourseBaseInfoService;
 
     @Resource
     private IEXJwScheduleTaskService iexJwScheduleTaskService;
 
     @Autowired
+    private ICourseBaseInfoService courseBaseInfoService;
+
+    @Autowired
     IExTeachTimeService teachTimeService;
+
+    @Autowired
+    IEXTeacherService iexTeacherService;
+
+    @Autowired
+    EXITenantConfigInstanceService exiTenantConfigInstanceService;
     /**
      * 新建排课任务
      * @return
@@ -111,16 +125,92 @@ public class ScheduleTaskController {
         return jwScheduleTask.getStatus();
     }
     /**
-     * 修改拍客任务状态
+     * 一键排课
      * @return
      */
     @ResponseBody
-    @RequestMapping("/updateScheduleTaskStatus")
-    public boolean updateScheduleTaskStatus(@RequestParam Integer taskId){
-        JwScheduleTask jwScheduleTask = new JwScheduleTask();
-        jwScheduleTask.setId(taskId);
-        jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
-        return jwScheduleTaskService.update(jwScheduleTask)>0;
+    @RequestMapping("/trigger")
+    public boolean updateScheduleTaskStatus(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
+
+        boolean initBool = iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+
+
+        if (initBool) {
+            String path = FileOperation.getParamsPath(tnId, taskId);
+            JwScheduleTask jwScheduleTask = new JwScheduleTask();
+            jwScheduleTask.setId(taskId);
+            jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
+            jwScheduleTask.setPath(path);
+            initBool = jwScheduleTaskService.update(jwScheduleTask) > 0;
+        }
+        return initBool;
+    }
+    /**
+     * 重新排课
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/reload/trigger")
+    public boolean reloadTrigger(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
+
+        String path = FileOperation.getParamsPath(tnId, taskId);
+
+        File file = new File(path);
+
+        boolean re = FileOperation.removeAllFile(file);
+
+        if (!re)
+            return false;
+
+        boolean initBool = iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+
+        if (initBool) {
+            JwScheduleTask jwScheduleTask = new JwScheduleTask();
+            jwScheduleTask.setId(taskId);
+            jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
+            jwScheduleTask.setPath(path);
+            initBool = jwScheduleTaskService.update(jwScheduleTask) > 0;
+        }
+
+        return initBool;
+    }
+
+
+
+    /**
+     * 排课结果查询
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/state")
+    public String scheduleResult(@RequestParam Integer taskId,@RequestParam Integer tnId) {
+        return iexJwScheduleTaskService.getSchduleResultStatus(taskId, tnId);
+    }
+
+    /**
+     * 硬性规则
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/error/desc")
+    public List<String> getSchduleErrorDesc(@RequestParam Integer taskId,@RequestParam Integer tnId){
+           return  iexJwScheduleTaskService.getSchduleErrorDesc(taskId,tnId);
+    }
+
+    /**
+     * 软性规则
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/pliable/rule")
+    public List<String> getNoNScheduleTaskPliableRule(@RequestParam Integer taskId,@RequestParam Integer tnId){
+        return  iexJwScheduleTaskService.getNoNScheduleTaskPliableRule(taskId, tnId);
     }
     /**
      * 修改排课任务
@@ -236,31 +326,31 @@ public class ScheduleTaskController {
         try {
             map = iexTenantCustomService.existDataCount(params);
         }catch (Exception e){
-            throw new BizException(ErrorCode.TASK_ERROR.getCode(),"您还未完善学生信息，请至学生管理中完善!");
+            throw new BizException(ErrorCode.TASK_ERROR.getCode(),"您还未上传学生信息，请至学生管理中完善!");
         }
 
-        Iterator<String> iterator = map.keySet().iterator();
-        List<String> emptyColumns = new ArrayList<>();
-        while (iterator.hasNext()){
-            String key = iterator.next();
-            if ("0".equals(map.get(key)==null?null:map.get(key).toString())) {
-                emptyColumns.add(key);
-            }
-        }
-        if (emptyColumns.size()>0) {
-            StringBuffer buffer = new StringBuffer();
-            buffer.append("您还未填写");
-            for (String s : emptyColumns) {
-                Map<String, Object> queryMap = Maps.newHashMap();
-                queryMap.put("domain", Constant.TABLE_TYPE_STUDENT);
-                queryMap.put("enName", s);
-                String cnName = exiConfigurationService.selectColumnName(queryMap);
-                buffer.append(cnName).append("、");
-            }
-            buffer.delete(buffer.length()-1,buffer.length());
-            buffer.append("字段信息，请至学生管理中完善");
-            throw new BizException(ErrorCode.TASK_ERROR.getCode(), buffer.toString());
-        }
+//        Iterator<String> iterator = map.keySet().iterator();
+//        List<String> emptyColumns = new ArrayList<>();
+//        while (iterator.hasNext()){
+//            String key = iterator.next();
+//            if ("0".equals(map.get(key)==null?null:map.get(key).toString())) {
+//                emptyColumns.add(key);
+//            }
+//        }
+//        if (emptyColumns.size()>0) {
+//            StringBuffer buffer = new StringBuffer();
+//            buffer.append("您还未填写");
+//            for (String s : emptyColumns) {
+//                Map<String, Object> queryMap = Maps.newHashMap();
+//                queryMap.put("domain", Constant.STUDENT);
+//                queryMap.put("enName", s);
+//                String cnName = exiConfigurationService.selectColumnName(queryMap);
+//                buffer.append(cnName).append("、");
+//            }
+//            buffer.delete(buffer.length()-1,buffer.length());
+//            buffer.append("字段信息，请至学生管理中完善");
+//            throw new BizException(ErrorCode.TASK_ERROR.getCode(), buffer.toString());
+//        }
         return true;
     }
 
@@ -341,45 +431,70 @@ public class ScheduleTaskController {
     }
 
     @ResponseBody
-    @ApiDesc(value = "自动补全教师姓名",owner = "gryang")
-    @RequestMapping(value = "/queryTeacherByKeyWord",method = RequestMethod.GET)
-    public List<TeacherBaseDto> queryTeacherByKeyWord(@RequestParam int taskId,@RequestParam String keyWord){
-        List<TeacherBaseDto> dtos = iexScheduleBaseInfoService.queryTeacherByKeyWord(taskId,keyWord);
-        return dtos;
-    }
+    @ApiDesc(value = "保存教师排课设置",owner = "gryang")
+    @RequestMapping(value = "/saveTeacherSchedule",method = RequestMethod.POST)
+    public Map saveTeacherSchedule(@RequestParam String str){
+        // str 传输规则 : 记录ID-设置（0：不排课，1：排课）多个逗号隔开，eg:1-1,2-0,3-1
+        String [] strArr = str.split(",");
+        for(int i=0;i<strArr.length;i++){
+            Integer id = Integer.valueOf(StringUtils.substringBefore(strArr[i],"-"));
+            Integer isAttend = Integer.valueOf(StringUtils.substringAfter(strArr[i],"-"));
 
-    @ResponseBody
-    @ApiDesc(value = "保存或修改教师配置信息",owner = "gryang")
-    @RequestMapping(value = "/saveOrUpdateTeacher",method = RequestMethod.POST)
-    public Map saveOrUpdateTeacher(@RequestParam int taskId,
-                                   @RequestParam int teacherId,
-                                   @RequestParam int classNum,
-                                   @RequestParam String course,
-                                   @RequestParam String classId){
+            JwTeacher jwTeacher = new JwTeacher();
+            jwTeacher.setIsAttend(isAttend);
+            jwTeacher.setId(id);
+            jwTeacherService.update(jwTeacher);
 
-        iexScheduleBaseInfoService.saveOrUpdateTeacher(
-                taskId,
-                teacherId,
-                classNum,
-                course,
-                classId
-        );
+            // 如果对教师排课，则异步插入教师规则数据
+            if(isAttend == 1){
+                iexScheduleBaseInfoService.insertBaseRule(id,isAttend);
+            }
+        }
 
         return Maps.newHashMap();
     }
 
-    @ResponseBody
-    @ApiDesc(value = "删除教师配置信息",owner = "gryang")
-    @RequestMapping(value = "/deleteTeacher",method = RequestMethod.GET)
-    public Map deleteTeacher(@RequestParam int taskId,@RequestParam int teacherId){
 
-        Map<String,Object> paramMap = Maps.newHashMap();
-        paramMap.put("teacherId",teacherId);
-        paramMap.put("taskId",taskId);
-        jwTeacherService.deleteByCondition(paramMap);
+//    @ResponseBody
+//    @ApiDesc(value = "自动补全教师姓名",owner = "gryang")
+//    @RequestMapping(value = "/queryTeacherByKeyWord",method = RequestMethod.GET)
+//    public List<TeacherBaseDto> queryTeacherByKeyWord(@RequestParam int taskId,@RequestParam String keyWord){
+//        List<TeacherBaseDto> dtos = iexScheduleBaseInfoService.queryTeacherByKeyWord(taskId,keyWord);
+//        return dtos;
+//    }
 
-        return Maps.newHashMap();
-    }
+//    @ResponseBody
+//    @ApiDesc(value = "保存或修改教师配置信息",owner = "gryang")
+//    @RequestMapping(value = "/saveOrUpdateTeacher",method = RequestMethod.POST)
+//    public Map saveOrUpdateTeacher(@RequestParam int taskId,
+//                                   @RequestParam int teacherId,
+//                                   @RequestParam int classNum,
+//                                   @RequestParam String course,
+//                                   @RequestParam String classId){
+//
+//        iexScheduleBaseInfoService.saveOrUpdateTeacher(
+//                taskId,
+//                teacherId,
+//                classNum,
+//                course,
+//                classId
+//        );
+//
+//        return Maps.newHashMap();
+//    }
+
+//    @ResponseBody
+//    @ApiDesc(value = "删除教师配置信息",owner = "gryang")
+//    @RequestMapping(value = "/deleteTeacher",method = RequestMethod.GET)
+//    public Map deleteTeacher(@RequestParam int taskId,@RequestParam int teacherId){
+//
+//        Map<String,Object> paramMap = Maps.newHashMap();
+//        paramMap.put("teacherId",teacherId);
+//        paramMap.put("taskId",taskId);
+//        jwTeacherService.deleteByCondition(paramMap);
+//
+//        return Maps.newHashMap();
+//    }
 
     @ResponseBody
     @ApiDesc(value = "根据任务ID检测基础信息是否完善",owner = "gryang")
@@ -406,14 +521,18 @@ public class ScheduleTaskController {
         }
 
         // 检测教师信息是否填写
-        List<JwTeacher> teachers = jwTeacherService.findList("task_id",taskId);
+        Map<String,Object> paramMap = Maps.newHashMap();
+        paramMap.put("taskId",taskId);
+        paramMap.put("isAttend",1);
+        List<JwTeacher> teachers = jwTeacherService.queryList(paramMap,null,null);
         if(teachers.size() == 0){
             ExceptionUtil.throwException(ErrorCode.TEACHER_INFO_ERROR);
         }
 
         // 检测教师信息是否填写完整(给所有课程是否已经设置教师)
+        Map<Integer,String> map = Maps.newHashMap(); // 存放教师ID与课程名
         for(JwCourse course : courses){
-            JwCourseBaseInfo info = (JwCourseBaseInfo) jwCourseBaseInfoService.fetch(course.getCourseId());
+            CourseBaseInfo info = (CourseBaseInfo) courseBaseInfoService.fetch(course.getCourseId());
 
             if(info == null){
                 continue;
@@ -421,9 +540,22 @@ public class ScheduleTaskController {
 
             boolean flag = false;
             for(JwTeacher teacher : teachers){
-                if(teacher.getCourse().equals(info.getCourseName())){
+
+                String teachCourse = "";
+                if(map.get(teacher.getTeacherId()) != null){
+                    teachCourse = map.get(teacher.getTeacherId());
+                }else {
+                    TeacherBaseDto dto = iexTenantCustomService.getTeacherInfo(
+                            teacher.getTnId(),
+                            teacher.getTeacherId()
+                    );
+                    map.put(dto.getTeacherId(),dto.getCourseName());
+                    teachCourse = dto.getCourseName();
+                }
+
+                if(teachCourse.equals(info.getCourseName())){
                     flag = true;
-                    continue;
+                    break;
                 }
             }
 
@@ -441,7 +573,7 @@ public class ScheduleTaskController {
      */
     @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
     @ResponseBody
-    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) {
+    public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) throws IOException, ParseException {
         Map<String,Object> paramsMap  = null;
         if (param!=null) {
             try {
@@ -452,20 +584,139 @@ public class ScheduleTaskController {
         }
         Map resultMap = new HashMap();
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        if ("all".equals(type)){
+        if (Constant.TABLE_TYPE_ALL.equals(type)){
             resultMap.put("result",iexJwScheduleTaskService.getAllCourseResult(taskId, tnId));
             return resultMap;
         }
-        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap);
+        Map<String, Object> courseTimeConfig = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
+        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap,courseTimeConfig);
 
 
         resultMap.put("result",courseResultView);
         return resultMap;
     }
-    public static void main(String[] args) {
-        String param = "{\"course\":\"外语\",\"teacherId\":\"\"}";
-        Map<String,Object>  map = JSON.parseObject(param);
-        System.out.println(map.size());
 
+    /**
+     * 排课结果
+     * @return
+     */
+    @RequestMapping(value = "/{type}/course/export",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getCourseExport(@PathVariable String type, @RequestParam Integer taskId, HttpServletResponse response) throws IOException {
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        Map<String, Object> param;
+        Map<String, Object> courseParam;
+        String[] sheetNames;
+        String[] strings;
+        Workbook workbook;
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        //参数校验
+        param = Maps.newHashMap();
+        param.put("id", taskId);
+        param.put("delStatus", StatusEnum.Y.getCode());
+        JwScheduleTask jwScheduleTask = (JwScheduleTask) jwScheduleTaskService.queryOne(param);
+        List<List<List<String>>> courseLists = new ArrayList<>();
+        Map<String, Object> courseTimeConfig = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
+        int count = ((List) courseTimeConfig.get("list")).size();
+        strings = new String[count];
+        for (int i = 0; i < count; i++) {
+            strings[i] = getWeek(i);
+        }
+
+        switch (type) {
+            case Constant.TABLE_TYPE_TEACHER:
+                //获取本次排课所有教师
+                logger.info("***********导出教师课表 S***********");
+                param = new HashMap<>();
+                param.put("teacher_grade", GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())));
+                List<LinkedHashMap<String, Object>> list = iexTeacherService.getScheduleTeacherByTnIdAndTaskId(tnId, taskId, param);
+                sheetNames = new String[list.size()];
+                for (int i = 0; i < list.size(); i++) {
+                    LinkedHashMap<String, Object> map = list.get(i);
+                    courseParam = new HashMap<>();
+                    sheetNames[i] = map.get("teacher_name").toString();
+                    courseParam.put("teacherId", map.get("id"));
+                    CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(Constant.TABLE_TYPE_TEACHER, taskId, tnId, courseParam,courseTimeConfig);
+                    courseLists.add(courseResultView.getWeek());
+                }
+
+                workbook = ExcelUtils.createWorkBook(strings, sheetNames, courseLists);
+                workbook.write(os);
+                logger.info("***********导出教师课表 E***********");
+                break;
+            case Constant.TABLE_TYPE_CLASS:
+                logger.info("***********导出班级课表 S***********");
+                //获取本次排课所有班级
+                //获取行政班班级列表
+                List<LinkedHashMap<String, Object>> classList = exiTenantConfigInstanceService.getClassByTnIdAndGrade(tnId, GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())), Constant.CLASS_ADM);
+                sheetNames = new String[classList.size()];
+                for (int i = 0; i < classList.size(); i++) {
+                    LinkedHashMap<String, Object> map = classList.get(i);
+                    courseParam = new HashMap<>();
+                    sheetNames[i] = map.get("class_name").toString();
+                    courseParam.put("classId", map.get("id"));
+                    CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(Constant.TABLE_TYPE_CLASS, taskId, tnId, courseParam,courseTimeConfig);
+                    courseLists.add(courseResultView.getWeek());
+                }
+                workbook = ExcelUtils.createWorkBook(strings, sheetNames, courseLists);
+                workbook.write(os);
+                logger.info("***********导出班级课表 E***********");
+                break;
+        }
+        logger.info("===============导出租户课程表 S================");
+        byte[] content = os.toByteArray();
+        InputStream is = new ByteArrayInputStream(content);
+        // 设置response参数，可以打开下载页面
+        response.reset();
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String((ExcelUtils.getFileName(type, tnId) + ".xls").getBytes(), "iso-8859-1"));
+        ServletOutputStream out = response.getOutputStream();
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        try {
+            bis = new BufferedInputStream(is);
+            bos = new BufferedOutputStream(out);
+            byte[] buff = new byte[20480];
+            int bytesRead;
+            // Simple read/write loop.
+            while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+                bos.write(buff, 0, bytesRead);
+            }
+            logger.info("Excel文件流导出完成");
+        } catch (final IOException e) {
+            logger.info("Excel文件流导出失败![" + e.getMessage() + "]");
+            throw e;
+        } finally {
+            if (bis != null)
+                bis.close();
+            if (bos != null)
+                bos.close();
+            if (out != null)
+                out.close();
+            logger.info("===============导出租户课程表 E================");
+        }
+        return null;
+    }
+
+
+    private static String getWeek(int i){
+        switch (i){
+            case 0:
+                return "星期一";
+            case 1:
+                return "星期二";
+            case 2:
+                return "星期三";
+            case 3:
+                return "星期四";
+            case 4:
+                return "星期五";
+            case 5:
+                return "星期六";
+            case 6:
+                return "星期日";
+            default:
+                return null;
+        }
     }
 }

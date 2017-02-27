@@ -23,315 +23,261 @@ updateOrSave
 selectOne
 selectList
 -->
-<sql id="Base_Column_List">
-    id as id,
-    teach_num as teachNum,
-    tn_id as tnId,
-    course as course,
-    teacher_id as teacherId,
-    task_id as taskId,
-    class_id as classId
-        </sql>
-<insert id="insert" parameterType="JwTeacher">
-INSERT INTO saas_jw_teacher (
-teach_num,
-tn_id,
-course,
-teacher_id,
-task_id,
-class_id
+    <sql id="Base_Column_List">
+        id,
+        tn_id as tnId,
+        teacher_id as teacherId,
+        task_id as taskId,
+        is_attend as isAttend
+    </sql>
+    <insert id="insert" parameterType="JwTeacher">
+        INSERT INTO saas_jw_teacher (
+        tn_id,
+        teacher_id,
+        task_id,
+        is_attend
         ) VALUES (
-#{teachNum},
-#{tnId},
-#{course},
-#{teacherId},
-#{taskId},
-#{classId}
+        #{tnId},
+        #{teacherId},
+        #{taskId},
+        #{isAttend}
         )
-<selectKey resultType="java.lang.Long" keyProperty="id">
-SELECT LAST_INSERT_ID() AS ID
-</selectKey>
-        </insert>
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
 
-        <!-- 更新 -->
-<update id="update" parameterType="JwTeacher">
-UPDATE saas_jw_teacher
-<trim prefix="SET" suffixOverrides=",">
-    <if test="teachNum!=null">
-        teach_num = #{teachNum},
-    </if>
-    <if test="tnId!=null">
-        tn_id = #{tnId},
-    </if>
-    <if test="course!=null">
-        course = #{course},
-    </if>
-    <if test="teacherId!=null">
-        teacher_id = #{teacherId},
-    </if>
-    <if test="taskId!=null">
-        task_id = #{taskId},
-    </if>
-    <if test="classId!=null">
-        class_id = #{classId},
-    </if>
-</trim>
+    <!-- 更新 -->
+    <update id="update" parameterType="JwTeacher">
+        UPDATE saas_jw_teacher
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tnId!=null">
+                tn_id = #{tnId},
+            </if>
+            <if test="teacherId!=null">
+                teacher_id = #{teacherId},
+            </if>
+            <if test="taskId!=null">
+                task_id = #{taskId},
+            </if>
+            <if test="isAttend!=null">
+                is_attend = #{isAttend},
+            </if>
+        </trim>
         WHERE
         id = #{id}
-        </update>
+    </update>
 
-<update id="updateMap">
-UPDATE saas_jw_teacher
-<trim prefix="SET" suffixOverrides=",">
-    <if test="map.teachNum!=null">
-        teach_num = #{map.teachNum},
-    </if>
-    <if test="map.tnId!=null">
-        tn_id = #{map.tnId},
-    </if>
-    <if test="map.course!=null">
-        course = #{map.course},
-    </if>
-    <if test="map.teacherId!=null">
-        teacher_id = #{map.teacherId},
-    </if>
-    <if test="map.taskId!=null">
-        task_id = #{map.taskId},
-    </if>
-    <if test="map.classId!=null">
-        class_id = #{map.classId},
-    </if>
-</trim>
+    <update id="updateMap">
+        UPDATE saas_jw_teacher
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.tnId!=null">
+                tn_id = #{map.tnId},
+            </if>
+            <if test="map.teacherId!=null">
+                teacher_id = #{map.teacherId},
+            </if>
+            <if test="map.taskId!=null">
+                task_id = #{map.taskId},
+            </if>
+            <if test="map.isAttend!=null">
+                is_attend = #{map.isAttend},
+            </if>
+        </trim>
         WHERE
         id = #{map.id}
-        </update>
+    </update>
 
-<update id="updateByCondition">
-UPDATE saas_jw_teacher
-<trim prefix="SET" suffixOverrides=",">
-    <if test="update.teachNum!=null">
-        teach_num = #{update.teachNum},
-    </if>
-    <if test="update.tnId!=null">
-        tn_id = #{update.tnId},
-    </if>
-    <if test="update.course!=null">
-        course = #{update.course},
-    </if>
-    <if test="update.teacherId!=null">
-        teacher_id = #{update.teacherId},
-    </if>
-    <if test="update.taskId!=null">
-        task_id = #{update.taskId},
-    </if>
-    <if test="update.classId!=null">
-        class_id = #{update.classId},
-    </if>
-</trim>
-
-<trim prefix="WHERE" prefixOverrides="AND | OR">
-<if test="condition.id!=null">
-    AND id = #{condition.id}
-</if>
-<if test="condition.teachNum!=null">
-    AND teach_num = #{condition.teachNum}
-</if>
-<if test="condition.tnId!=null">
-    AND tn_id = #{condition.tnId}
-</if>
-<if test="condition.course!=null">
-    AND course = #{condition.course}
-</if>
-<if test="condition.teacherId!=null">
-    AND teacher_id = #{condition.teacherId}
-</if>
-<if test="condition.taskId!=null">
-    AND task_id = #{condition.taskId}
-</if>
-<if test="condition.classId!=null">
-    AND class_id = #{condition.classId}
-</if>
+    <update id="updateByCondition">
+        UPDATE saas_jw_teacher
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.tnId!=null">
+                tn_id = #{update.tnId},
+            </if>
+            <if test="update.teacherId!=null">
+                teacher_id = #{update.teacherId},
+            </if>
+            <if test="update.taskId!=null">
+                task_id = #{update.taskId},
+            </if>
+            <if test="update.isAttend!=null">
+                is_attend = #{update.isAttend},
+            </if>
         </trim>
-        </update>
 
-<insert id="insertMap" >
-INSERT INTO saas_jw_teacher (
-teach_num,
-tn_id,
-course,
-teacher_id,
-task_id,
-class_id
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.teacherId!=null">
+                AND teacher_id = #{condition.teacherId}
+            </if>
+            <if test="condition.taskId!=null">
+                AND task_id = #{condition.taskId}
+            </if>
+            <if test="condition.isAttend!=null">
+                AND is_attend = #{condition.isAttend}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_jw_teacher (
+                tn_id,
+                teacher_id,
+                task_id,
+                is_attend
         ) VALUES (
-#{map.teachNum},
-#{map.tnId},
-#{map.course},
-#{map.teacherId},
-#{map.taskId},
-#{map.classId}
+                    #{map.tnId},
+                    #{map.teacherId},
+                    #{map.taskId},
+                    #{map.isAttend}
         )
-        </insert>
+    </insert>
 
 
-<update id="updateNull" parameterType="JwTeacher">
-UPDATE saas_jw_teacher
-<trim prefix="SET" suffixOverrides=",">
-    teach_num = #{teachNum},
-    tn_id = #{tnId},
-    course = #{course},
-    teacher_id = #{teacherId},
-    task_id = #{taskId},
-    class_id = #{classId},
-</trim>
+    <update id="updateNull" parameterType="JwTeacher">
+        UPDATE saas_jw_teacher
+        <trim prefix="SET" suffixOverrides=",">
+            tn_id = #{tnId},
+            teacher_id = #{teacherId},
+            task_id = #{taskId},
+            is_attend = #{isAttend},
+        </trim>
         WHERE
-        id = #{id}
-        </update>
+        id = #{id} 
+    </update>
 
-        <!-- 按Id删除 -->
-<delete id="deleteById" parameterType="java.lang.Integer">
-DELETE FROM saas_jw_teacher
-<trim prefix="WHERE" prefixOverrides="AND | OR">
-    AND id = #{id}
-</trim>
-        </delete>
-
-
-<delete id="deleteByCondition" parameterType="java.util.Map">
-DELETE FROM saas_jw_teacher
-<trim prefix="WHERE" prefixOverrides="AND | OR">
-    <if test="id!=null">
-        AND id = #{id}
-    </if>
-    <if test="teachNum!=null">
-        AND teach_num = #{teachNum}
-    </if>
-    <if test="tnId!=null">
-        AND tn_id = #{tnId}
-    </if>
-    <if test="course!=null">
-        AND course = #{course}
-    </if>
-    <if test="teacherId!=null">
-        AND teacher_id = #{teacherId}
-    </if>
-    <if test="taskId!=null">
-        AND task_id = #{taskId}
-    </if>
-    <if test="classId!=null">
-        AND class_id = #{classId}
-    </if>
-</trim>
-        </delete>
-
-<delete id="deleteByProperty" parameterType="java.util.Map">
-DELETE FROM saas_jw_teacher WHERE
-${property} = #{value}
-</delete>
-
-<select id="fetch" parameterType="java.lang.Integer" resultType="JwTeacher">
-SELECT
-<include refid="Base_Column_List" />
-FROM saas_jw_teacher
-<trim prefix="WHERE" prefixOverrides="AND | OR">
-    AND id = #{id}
-</trim>
-        </select>
-
-<select id="findOne" parameterType="java.util.Map" resultType="JwTeacher">
-SELECT
-<include refid="Base_Column_List" />
-FROM saas_jw_teacher WHERE
-${property} = #{value}
-LIMIT 0,1
-</select>
-
-<select id="findList" parameterType="java.util.Map" resultType="JwTeacher">
-SELECT
-<include refid="Base_Column_List" />
-FROM saas_jw_teacher WHERE
-${property} = #{value}
-<if test="orderBy!=null">
-    ORDER BY ${orderBy} ${sortBy}
-</if>
-</select>
-
-<select id="findAll" resultType="JwTeacher">
-SELECT
-<include refid="Base_Column_List" />
-FROM saas_jw_teacher
-<if test="orderBy!=null">
-    ORDER BY ${orderBy} ${sortBy}
-</if>
-</select>
-
-<select id="queryPage" resultType="JwTeacher">
-SELECT
-<include refid="Base_Column_List" />
-FROM saas_jw_teacher
-<where>
-
-    <if test="condition.whereSql != null">
-        and id in (#{condition.whereSql})
-    </if>
-
-    <if test="condition.id!=null">
-        ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
-    </if>
-    <if test="condition.teachNum!=null">
-        ${condition.groupOp}   teach_num  ${condition.teachNum.op}  #{condition.teachNum.data}
-    </if>
-    <if test="condition.tnId!=null">
-        ${condition.groupOp}   tn_id  ${condition.tnId.op}  #{condition.tnId.data}
-    </if>
-    <if test="condition.course!=null">
-        ${condition.groupOp}   course  ${condition.course.op}  #{condition.course.data}
-    </if>
-    <if test="condition.teacherId!=null">
-        ${condition.groupOp}   teacher_id  ${condition.teacherId.op}  #{condition.teacherId.data}
-    </if>
-    <if test="condition.taskId!=null">
-        ${condition.groupOp}   task_id  ${condition.taskId.op}  #{condition.taskId.data}
-    </if>
-    <if test="condition.classId!=null">
-        ${condition.groupOp}   class_id  ${condition.classId.op}  #{condition.classId.data}
-    </if>
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_jw_teacher
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
 
 
-</where>
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_jw_teacher
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="tnId!=null">
+                AND tn_id = #{tnId}
+            </if>
+            <if test="teacherId!=null">
+                AND teacher_id = #{teacherId}
+            </if>
+            <if test="taskId!=null">
+                AND task_id = #{taskId}
+            </if>
+            <if test="isAttend!=null">
+                AND is_attend = #{isAttend}
+            </if>
+        </trim>
+    </delete>
 
-<if test="orderBy!=null">
-ORDER BY ${orderBy} ${sortBy}
-</if>
-<if test="offset != null">
-limit ${offset}, ${rows}
-</if>
-        </select>
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_jw_teacher WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="JwTeacher">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teacher
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="JwTeacher">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teacher WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="JwTeacher">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teacher WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="JwTeacher">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teacher
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="JwTeacher">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teacher
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+            </if>
+            <if test="condition.teacherId!=null">
+                ${condition.groupOp}   teacher_id  ${condition.teacher_id.op}  #{condition.teacher_id.data}
+            </if>
+            <if test="condition.taskId!=null">
+                ${condition.groupOp}   task_id  ${condition.task_id.op}  #{condition.task_id.data}
+            </if>
+            <if test="condition.isAttend!=null">
+                ${condition.groupOp}   is_attend  ${condition.is_attend.op}  #{condition.is_attend.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
 
     <select id="like" parameterType="java.util.Map" resultType="JwTeacher">
         SELECT
         <include refid="Base_Column_List" />
         FROM saas_jw_teacher
         <trim prefix="WHERE" prefixOverrides="AND | OR">
-            <if test="condition.id!=null">
-                AND id like CONCAT('%', #{condition.id} , '%')
+            <if test="id!=null">
+                AND id like CONCAT('%', #{id} , '%')
             </if>
-            <if test="condition.teachNum!=null">
-                AND teach_num like CONCAT('%', #{condition.teachNum} , '%')
+            <if test="tnId!=null">
+                AND tn_id like CONCAT('%', #{tnId} , '%')
             </if>
-            <if test="condition.tnId!=null">
-                AND tn_id like CONCAT('%', #{condition.tnId} , '%')
+            <if test="teacherId!=null">
+                AND teacher_id like CONCAT('%', #{teacherId} , '%')
             </if>
-            <if test="course!=null">
-                AND course like CONCAT('%', #{course} , '%')
+            <if test="taskId!=null">
+                AND task_id like CONCAT('%', #{taskId} , '%')
             </if>
-            <if test="condition.teacherId!=null">
-                AND teacher_id like CONCAT('%', #{condition.teacherId} , '%')
-            </if>
-            <if test="condition.taskId!=null">
-                AND task_id like CONCAT('%', #{condition.taskId} , '%')
-            </if>
-            <if test="condition.classId!=null">
-                AND class_id like CONCAT('%', #{condition.classId} , '%')
+            <if test="isAttend!=null">
+                AND is_attend like CONCAT('%', #{isAttend} , '%')
             </if>
         </trim>
         <if test="orderBy!=null">
@@ -340,104 +286,86 @@ limit ${offset}, ${rows}
     </select>
 
 
-<select id="queryList" parameterType="java.util.Map" resultType="JwTeacher">
-SELECT
-<include refid="Base_Column_List" />
-FROM saas_jw_teacher
-<trim prefix="WHERE" prefixOverrides="AND | OR">
-    <if test="condition.id!=null">
-        AND id = #{condition.id}
-    </if>
-    <if test="condition.teachNum!=null">
-        AND teach_num = #{condition.teachNum}
-    </if>
-    <if test="condition.tnId!=null">
-        AND tn_id = #{condition.tnId}
-    </if>
-    <if test="condition.course!=null">
-        AND course = #{condition.course}
-    </if>
-    <if test="condition.teacherId!=null">
-        AND teacher_id = #{condition.teacherId}
-    </if>
-    <if test="condition.taskId!=null">
-        AND task_id = #{condition.taskId}
-    </if>
-    <if test="condition.classId!=null">
-        AND class_id = #{condition.classId}
-    </if>
-</trim>
-<if test="orderBy!=null">
-ORDER BY ${orderBy} ${sortBy}
-</if>
-        </select>
+    <select id="queryList" parameterType="java.util.Map" resultType="JwTeacher">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teacher
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.teacherId!=null">
+                AND teacher_id = #{condition.teacherId}
+            </if>
+            <if test="condition.taskId!=null">
+                AND task_id = #{condition.taskId}
+            </if>
+            <if test="condition.isAttend!=null">
+                AND is_attend = #{condition.isAttend}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
 
-<select id="queryOne" parameterType="java.util.Map" resultType="JwTeacher">
-SELECT
-<include refid="Base_Column_List" />
-FROM saas_jw_teacher
-<trim prefix="WHERE" prefixOverrides="AND | OR">
-    <if test="condition.id!=null">
-        AND id = #{condition.id}
-    </if>
-    <if test="condition.teachNum!=null">
-        AND teach_num = #{condition.teachNum}
-    </if>
-    <if test="condition.tnId!=null">
-        AND tn_id = #{condition.tnId}
-    </if>
-    <if test="condition.course!=null">
-        AND course = #{condition.course}
-    </if>
-    <if test="condition.teacherId!=null">
-        AND teacher_id = #{condition.teacherId}
-    </if>
-    <if test="condition.taskId!=null">
-        AND task_id = #{condition.taskId}
-    </if>
-    <if test="condition.classId!=null">
-        AND class_id = #{condition.classId}
-    </if>
-</trim>
+    <select id="queryOne" parameterType="java.util.Map" resultType="JwTeacher">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_teacher
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.teacherId!=null">
+                AND teacher_id = #{condition.teacherId}
+            </if>
+            <if test="condition.taskId!=null">
+                AND task_id = #{condition.taskId}
+            </if>
+            <if test="condition.isAttend!=null">
+                AND is_attend = #{condition.isAttend}
+            </if>
+        </trim>
         limit 0,1
-        </select>
+    </select>
 
-<select id="count" resultType="java.lang.Integer">
-SELECT count(id) FROM saas_jw_teacher
-<where>
-    <if test="id!=null">
-        ${groupOp} id ${id.op}  #{id.data}
-    </if>
-    <if test="teachNum!=null">
-        ${groupOp} teach_num ${teachNum.op}  #{teachNum.data}
-    </if>
-    <if test="tnId!=null">
-        ${groupOp} tn_id ${tnId.op}  #{tnId.data}
-    </if>
-    <if test="course!=null">
-        ${groupOp} course ${course.op}  #{course.data}
-    </if>
-    <if test="teacherId!=null">
-        ${groupOp} teacher_id ${teacherId.op}  #{teacherId.data}
-    </if>
-    <if test="taskId!=null">
-        ${groupOp} task_id ${taskId.op}  #{taskId.data}
-    </if>
-    <if test="classId!=null">
-        ${groupOp} class_id ${classId.op}  #{classId.data}
-    </if>
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_jw_teacher
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="tnId!=null">
+               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+           </if>
+           <if test="teacherId!=null">
+               ${groupOp} teacher_id ${teacher_id.op}  #{teacher_id.data}
+           </if>
+           <if test="taskId!=null">
+               ${groupOp} task_id ${task_id.op}  #{task_id.data}
+           </if>
+           <if test="isAttend!=null">
+               ${groupOp} is_attend ${is_attend.op}  #{is_attend.data}
+           </if>
 
-</where>
-<if test="orderBy!=null">
-ORDER BY ${orderBy} ${sortBy}
-</if>
-        </select>
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
 
-<select id="selectMaxId" resultType="java.lang.Integer">
-SELECT
-MAX(id)
-FROM saas_jw_teacher
-</select>
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_jw_teacher
+    </select>
 
-        </mapper>
+</mapper>
 

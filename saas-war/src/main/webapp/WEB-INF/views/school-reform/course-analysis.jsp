@@ -79,11 +79,11 @@
                                     <ul class="single-course-analysis-list">
                                         <li>
                                             <input type="radio" name="senior-analysis" id="senior-two" checked />
-                                            <label for="senior-two">高二</label>
+                                            <label for="senior-two">高二年级</label>
                                         </li>
                                         <li>
                                             <input type="radio" name="senior-analysis" id="senior-three" />
-                                            <label for="senior-three">高三</label>
+                                            <label for="senior-three">高三年级</label>
                                         </li>
                                     </ul>
                                     <div class="single-course-info"></div>
@@ -96,7 +96,10 @@
                                     <div class="analysis-ratio">
                                         <span class="total-student">高二共计考生数量<span class="stu-count">0</span>人</span>
                                         <div class="ratio-detail">
-                                            <span class="ratio-left reach-line">预计0人上线</span>
+                                            <span class="ratio-left reach-line">
+                                                <i></i>
+                                            </span>
+
                                             <span class="ratio-right"></span>
                                         </div>
                                         <div id="partCourseAnalysisChart" style="width: 100%;height: 361px;margin-bottom: 35px;"></div>

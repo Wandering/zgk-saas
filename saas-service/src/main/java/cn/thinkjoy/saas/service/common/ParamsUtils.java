@@ -56,7 +56,9 @@ public  class ParamsUtils {
      */
     public static String getGradeKey(String type) {
         Map map = new HashMap();
-        map.put("class", "class_grade");
+        map.put("class","class_grade");
+        map.put("class_adm", "class_grade");
+        map.put("class_edu", "class_grade");
         map.put("student", "student_grade");
         map.put("teacher", "teacher_grade");
         return map.get(type).toString();
@@ -129,15 +131,27 @@ public  class ParamsUtils {
                 String regularStr = getConverReg(checkRuleStr);
                 LOGGER.info("转换正则:" + regularStr);
 
-                LOGGER.info(x + "行-" + key + "列 value:" + val + "");
+                LOGGER.info((x+1+1) + "行-" + (key+1) + "列 value:" + val + "");
                 boolean isNoth = isNothing(val);
                 if (isNoth)
                     return "输入的数据不完整，请完善数据后再上传";
 
                 boolean valid = (StringUtils.isBlank(regularStr) ? true : isRegValid(regularStr, val));
+                //select 类型校验
+                if (valid) {
+                    if (tenantConfigInstanceView.getDataType().equals("select")&&StringUtils.isNotBlank(tenantConfigInstanceView.getDataValue())) {
+                        valid = false;
+                        for (String data : tenantConfigInstanceView.getDataValue().split("-")) {
+                            if (data.equals(val)) {
+                                valid = true;
+                                break;
+                            }
+                        }
+                    }
+                }
                 LOGGER.info("校验结果:" + valid);
                 if (!valid) {
-                    return (x+1)+ "行-" + key + "列,数据校验失败,请检查!";
+                    return (x+1+1)+ "行-" + (key+1) + "列,数据校验失败,请检查!";
                 }
                 y++;
             }
@@ -155,6 +169,14 @@ public  class ParamsUtils {
 
         switch (type) {
             case "class":
+                key1 = "class_grade";
+                key2 = "class_name";
+                break;
+            case "class_adm":
+                key1 = "class_grade";
+                key2 = "class_name";
+                break;
+            case "class_edu":
                 key1 = "class_grade";
                 key2 = "class_name";
                 break;
@@ -199,9 +221,9 @@ public  class ParamsUtils {
 
         String stuNo = "";
         for (int i = 0; i < excelValues.size() - 1; i++) {
-            stuNo = excelValues.get(i).get("1");
+            stuNo = excelValues.get(i).get("2");
             for (int j = i + 1; j < excelValues.size(); j++) {
-                if (stuNo.equals(excelValues.get(j).get("1"))) {
+                if (stuNo.equals(excelValues.get(j).get("2"))) {
                     result = "第" + (i + 1) + "行学号信息与第" + (j + 1) + "行学号信息重复";
                     return result;
                 }

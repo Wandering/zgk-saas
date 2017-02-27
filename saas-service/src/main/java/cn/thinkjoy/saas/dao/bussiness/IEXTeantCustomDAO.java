@@ -3,6 +3,8 @@ package cn.thinkjoy.saas.dao.bussiness;
 import cn.thinkjoy.saas.domain.bussiness.SyncClass;
 import cn.thinkjoy.saas.domain.bussiness.SyncCourse;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
+import cn.thinkjoy.saas.dto.ClassBaseDto;
+import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
@@ -55,7 +57,48 @@ public interface IEXTeantCustomDAO {
      */
     List<LinkedHashMap<String, Object>> getTenantCustom(Map map);
 
+    /**
+     * 查询学生数据集合
+     *
+     * @param map
+     * @return
+     */
+    List<LinkedHashMap<String, Object>> getStuInfo(Map map);
+
+    /**
+     * 查询教师数据集合
+     *
+     * @param map
+     * @return
+     */
+    List<TeacherBaseDto> getTeacherInfos(Map map);
+
+    /**
+     * 查询行政班级数据集合
+     *
+     * @param map
+     * @return
+     */
+    List<ClassBaseDto> getClassAdmInfos(Map map);
+
+    /**
+     * 查询教学班级数据集合
+     *
+     * @param map
+     * @return
+     */
+    List<ClassBaseDto> getClassEduInfos(Map map);
+
+    /**
+     * 查询学生总数
+     *
+     * @param map
+     * @return
+     */
+    Integer getStuInfoCount(Map map);
+
     Integer getTenantCustomCount(Map map);
+    Integer getTenantCustomColsCount(Map map);
 
     /**
      * 批量删除
@@ -108,4 +151,7 @@ public interface IEXTeantCustomDAO {
      */
     List<LinkedHashMap<String, Object>> selectExistByCloumn(Map map);
 
+    List<LinkedHashMap<String,Object>> likeTableByParams(@Param("tableName")String tableName,@Param("list")List<Map<String, Object>> list);
+
+    List<LinkedHashMap<String,Object>> likeJwTeacherByParams(@Param("tableName")String tableName,@Param("tnId")Integer tnId,@Param("taskId")Integer taskId,@Param("list")List<Map<String, Object>> list);
 }

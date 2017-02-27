@@ -153,6 +153,14 @@ public class WebCotroller {
     public ModelAndView studentManagement() {
         return new ModelAndView("/info-management/student-management");
     }
+    /**
+     * course-management
+     * 课程管理
+     */
+    @RequestMapping("/course-management")
+    public ModelAndView courseManagement() {
+        return new ModelAndView("/base-info/course-management");
+    }
 
     /**
      * student-management
@@ -381,6 +389,15 @@ public class WebCotroller {
     @RequestMapping("/course-scheduling-step3")
     public ModelAndView courseSchedulingStep3() {
         return new ModelAndView("/course-scheduling/course-scheduling-step3");
+    }
+
+    /**
+     * course-scheduling-step3
+     * 排课任务--排课第三步骤，自动排课
+     */
+    @RequestMapping("/rules-page")
+    public ModelAndView rulesPage() {
+        return new ModelAndView("/course-scheduling/rules-page");
     }
 
 

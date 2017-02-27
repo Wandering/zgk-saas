@@ -4,16 +4,28 @@
 
     <insert id="insertMergeInfo" parameterType="java.util.Map">
         insert into saas_jw_merge_class_info
-        (tn_id,course_id,class_ids,task_id,create_date)
+        (tn_id,course_id,class_ids,task_id,create_date,class_type)
         VALUES
         (
           #{tnId},
           #{courseId},
           #{classIds},
           #{taskId},
-          now()
+          now(),
+          #{classType}
         )
     </insert>
+
+    <select id="checkIsRepeat" parameterType="java.util.Map" resultType="Integer">
+        SELECT
+            count(*)
+        FROM
+            saas_jw_merge_class_info
+        WHERE
+            task_id = #{taskId}
+        AND class_ids = #{classIds}
+        AND course_id = #{courseId}
+    </select>
 
     <select id="selectMergeInfo" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.dto.MergeClassInfoDto">
         select
@@ -23,18 +35,16 @@
         cc.course_name as courseName,
         ii.class_ids as classIds,
         ii.task_id as taskId,
-        ii.create_date as createDate
+        ii.create_date as createDate,
+        ii.class_type as classType
         from saas_jw_merge_class_info ii
-        left join saas_jw_course_base_info cc on ii.course_id = cc.id
+        left join saas_course_base_info cc on ii.course_id = cc.id
         where 1=1
         <if test="tnId!=null">
           and ii.tn_id=#{tnId}
         </if>
         <if test="taskId!=null">
           and ii.task_id=#{taskId}
-        </if>
-        <if test="grade!=null">
-          and cc.grade=#{grade}
         </if>
         <if test="courseId!=null">
           and cc.id=#{courseId}
@@ -44,5 +54,20 @@
     <delete id="deleteMergeInfo" parameterType="java.util.Map">
         delete from saas_jw_merge_class_info where id=#{id}
     </delete>
+    <select id="selectMergeClassInfo" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.domain.bussiness.MergeClassInfoVo">
+        select course_id as courseId, class_ids as classIds,task_id as taskId,class_type as classType
+        from saas_jw_merge_class_info
+        <where>
+            <if test="tnId!=null">
+                and tn_id=#{tnId}
+            </if>
+            <if test="taskId!=null">
+                and task_id=#{taskId}
+            </if>
+            <if test="courseId!=null">
+                and course_id=#{courseId}
+            </if>
+        </where>
+    </select>
 
 </mapper>

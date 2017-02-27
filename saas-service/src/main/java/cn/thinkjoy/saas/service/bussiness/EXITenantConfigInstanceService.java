@@ -9,6 +9,7 @@ import cn.thinkjoy.saas.domain.TenantConfigInstance;
 import cn.thinkjoy.saas.domain.bussiness.ClassView;
 import cn.thinkjoy.saas.domain.bussiness.TenantConfigInstanceView;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,6 +98,7 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      * @return
      */
     List<TenantConfigInstanceView> getTenantConfigListByTnIdAndType(String type, Integer tnId);
+    List<TenantConfigInstanceView> getTenantConfigListByTnIdAndType(String type, Integer tnId,String isShow);
 
     /**
      * 获取当前租户表头 数组 - 用于导出表头excel
@@ -130,9 +132,10 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      * @param type
      * @param tnId
      * @param excelPath
+     * @param classType 0：教学班  1：行政班
      * @return
      */
-    String  uploadExcel(String type,Integer tnId,String excelPath);
+    String uploadExcel(String type,Integer tnId,String excelPath,int classType);
 
 
     /**
@@ -145,7 +148,7 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
 
     public Configuration queryConfigurationOne(Map map);
 
-    public void syncProcedureData(String type,Integer tnId);
+//    public void syncProcedureData(String type,Integer tnId);
 
     /**
      * 是否存在当前列
@@ -186,5 +189,14 @@ public interface EXITenantConfigInstanceService<D extends IBaseDAO<T>, T extends
      */
     Integer selectCountByStudentNo(String type,Integer tnId,String studentNo);
 
-    public Integer removeTenantCustomList(String tableName,List<String> removeIds);
+    Integer removeTenantCustomList(String tableName,List<String> removeIds);
+
+    int countBySubjectAndGrade(int tnId, String grade, String subject, String classEdu);
+
+
+    List<LinkedHashMap<String,Object>> getBySubjectAndGrade(int tnId, String grade, String subject, String classEdu);
+
+    List<LinkedHashMap<String,Object>> getClassByTnIdAndGrade(int tnId, String grade, String classEdu);
+
+    List<LinkedHashMap<String,Object>> likeTableByParams(String tableName,List<Map<String,Object>> list);
 }

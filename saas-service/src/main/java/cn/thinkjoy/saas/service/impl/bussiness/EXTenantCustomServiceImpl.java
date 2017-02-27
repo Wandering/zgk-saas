@@ -1,21 +1,28 @@
 package cn.thinkjoy.saas.service.impl.bussiness;
 
-import cn.thinkjoy.saas.dao.IJwTeacherBaseInfoDAO;
+import cn.thinkjoy.common.exception.BizException;
+import cn.thinkjoy.common.utils.UserContext;
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO;
 import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
 import cn.thinkjoy.saas.domain.Grade;
-import cn.thinkjoy.saas.domain.JwTeacherBaseInfo;
+import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.SyncClass;
 import cn.thinkjoy.saas.domain.bussiness.SyncCourse;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
+import cn.thinkjoy.saas.dto.ClassBaseDto;
+import cn.thinkjoy.saas.dto.CourseManageDto;
+import cn.thinkjoy.saas.dto.TeacherBaseDto;
+import cn.thinkjoy.saas.enums.ErrorCode;
+import cn.thinkjoy.saas.service.ICourseBaseInfoService;
+import cn.thinkjoy.saas.service.bussiness.IEXCourseManageService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
-import cn.thinkjoy.saas.service.common.ConvertUtil;
 import cn.thinkjoy.saas.service.common.EnumUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
-import com.alibaba.fastjson.JSONArray;
-import com.google.common.collect.Maps;
+import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -34,10 +41,10 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
     EXIGradeDAO exiGradeDAO;
 
     @Resource
-    IJwTeacherBaseInfoDAO iJwTeacherBaseInfoDAO;
-
-    @Resource
     EXITenantConfigInstanceDAO exiTenantConfigInstanceDAO;
+
+    @Autowired
+    IEXCourseManageService courseManageService;
 
 
     /**
@@ -58,30 +65,37 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         if (StringUtils.isBlank(tableName))
             return false;
 
+        if(type.equals("class_edu")||type.equals("class_adm")) {
+            TeantCustom teantCustom = new TeantCustom();
+            teantCustom.setKey("class_code");
+            teantCustom.setValue(type + "_" + System.currentTimeMillis()+0);
+            teantCustoms.add(teantCustom);
+        }
+
         Integer result = iexTeantCustomDAO.insertTenantCustom(tableName, teantCustoms);
 
         boolean flag = result > 0;
 
-        if(flag) {
-            switch (type) {
-                case "teacher":
-                    List<TeantCustom> customs = JSONArray.parseArray(teantCustoms.toString(), TeantCustom.class);
-                    Map<String, Object> map = Maps.newHashMap();
-                    for (TeantCustom custom : customs) {
-                        map.put(custom.getKey(), custom.getValue());
-                    }
-
-                    JwTeacherBaseInfo info = new JwTeacherBaseInfo();
-                    info.setTnId(tnId);
-                    info.setGrade(ConvertUtil.converGrade(map.get("teacher_grade").toString()));
-                    info.setTeacherName(map.get("teacher_name").toString());
-                    info.setTeacherClass(map.get("teacher_class").toString());
-                    info.setTeacherCourse(map.get("teacher_major_type").toString());
-                    iJwTeacherBaseInfoDAO.insert(info);
-                    break;
-            }
-
-        }
+//        if(flag) {
+//            switch (type) {
+//                case "teacher":
+//                    List<TeantCustom> customs = JSONArray.parseArray(teantCustoms.toString(), TeantCustom.class);
+//                    Map<String, Object> map = Maps.newHashMap();
+//                    for (TeantCustom custom : customs) {
+//                        map.put(custom.getKey(), custom.getValue());
+//                    }
+//
+//                    JwTeacherBaseInfo info = new JwTeacherBaseInfo();
+//                    info.setTnId(tnId);
+//                    info.setGrade(ConvertUtil.converGrade(map.get("teacher_grade").toString()));
+//                    info.setTeacherName(map.get("teacher_name").toString());
+//                    info.setTeacherClass(map.get("teacher_class").toString());
+//                    info.setTeacherCourse(map.get("teacher_major_type").toString());
+//                    iJwTeacherBaseInfoDAO.insert(info);
+//                    break;
+//            }
+//
+//        }
 
 
         return flag;
@@ -167,6 +181,109 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         return tenantCustoms;
     }
 
+    @Override
+    public List<LinkedHashMap<String, Object>> getStuInfo(Integer type, Integer tnId, String g, Integer s, Integer r) {
+        if (tnId <= 0) {
+            return null;
+        }
+        String tableName = ParamsUtils.combinationTableName(Constant.STUDENT, tnId);
+
+        if (StringUtils.isBlank(tableName)) {
+            return null;
+        }
+        Map map=new HashMap();
+        map.put("tableName",tableName);
+        map.put("type",type);
+        map.put("grade",g);
+        map.put("offset",s);
+        map.put("rows",r);
+        List<LinkedHashMap<String, Object>> tenantCustoms = iexTeantCustomDAO.getStuInfo(map);
+
+        return tenantCustoms;
+    }
+
+    @Override
+    public List<TeacherBaseDto> getTeacherInfos(Integer tnId, String grade) {
+        if (tnId <= 0) {
+            return null;
+        }
+        String tableName = ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER, tnId);
+
+        if (StringUtils.isBlank(tableName)) {
+            return null;
+        }
+        Map map=new HashMap();
+        map.put("tableName",tableName);
+        map.put("grade",grade);
+        map.put("id",null);
+        List<TeacherBaseDto> teacherBaseDtos = iexTeantCustomDAO.getTeacherInfos(map);
+
+        return teacherBaseDtos;
+    }
+
+    @Override
+    public TeacherBaseDto getTeacherInfo(Integer tnId, Integer id) {
+        if (tnId <= 0) {
+            return null;
+        }
+        String tableName = ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER, tnId);
+
+        if (StringUtils.isBlank(tableName)) {
+            return null;
+        }
+        Map map=new HashMap();
+        map.put("tableName",tableName);
+        map.put("grade",null);
+        map.put("id",id);
+        return iexTeantCustomDAO.getTeacherInfos(map).get(0);
+    }
+
+    @Override
+    public List<ClassBaseDto> getClassInfos(String type, Integer tnId, String course, String grade) {
+        if (tnId <= 0) {
+            return null;
+        }
+        String tableName = ParamsUtils.combinationTableName(type, tnId);
+
+        if (StringUtils.isBlank(tableName)) {
+            return null;
+        }
+        Map map=new HashMap();
+        map.put("tableName",tableName);
+        map.put("grade",grade);
+        map.put("course",course);
+
+        List<ClassBaseDto> classBaseDtos = Lists.newArrayList();
+        if(grade != null && course == null){
+            classBaseDtos = iexTeantCustomDAO.getClassAdmInfos(map);
+        }
+
+        if(grade == null && course != null){
+            classBaseDtos = iexTeantCustomDAO.getClassEduInfos(map);
+        }
+
+        return classBaseDtos;
+    }
+
+    @Override
+    public Integer getStuInfoCount(Integer type, Integer tnId, String g) {
+        if (tnId <= 0) {
+            return null;
+        }
+        String tableName = ParamsUtils.combinationTableName(Constant.STUDENT, tnId);
+
+        if (StringUtils.isBlank(tableName)) {
+            return null;
+        }
+        Map map=new HashMap();
+        map.put("tableName",tableName);
+        map.put("type",type);
+        map.put("grade",g);
+        Integer count = iexTeantCustomDAO.getStuInfoCount(map);
+
+        return count;
+    }
+
     /**
      * 查询租户自定义表头数据
      * @param type 模块分类
@@ -210,13 +327,14 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
         map.put("searchValue", g);
         return iexTeantCustomDAO.getTenantCustomCount(map);
     }
+
     /**
      * excel内添加select
      * @param columnNames
      * @return
      */
     @Override
-    public List<Map<Integer, Object>>   isExcelAddSelect(String type,Integer tnId ,String[] columnNames) {
+    public List<Map<Integer, Object>> isExcelAddSelect(String type,Integer tnId ,String[] columnNames) {
         List<Map<Integer,Object>> lockSelectList = new ArrayList<>();
         if (columnNames.length > 0) {
             int i = 0;
@@ -226,7 +344,13 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
                 Object value = null;
                 switch (str) {
                     case EnumUtil.CLASS_MAJOR_TYPE: //班级类型
-                        value = EnumUtil.CLASS_TYPE_ARR;
+                        if(type.equals("class_adm")){
+                            value = EnumUtil.CLASS_ADM;
+                        }else if(type.equals("class_edu")){
+                            value = EnumUtil.CLASS_EDU;
+                        }else {
+                            value = EnumUtil.CLASS_TYPE_ARR;
+                        }
                         break;
                     case EnumUtil.CLASS_GRADE://所属年级
                         Map gradeMap = new HashMap();
@@ -246,15 +370,25 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
                         List<Grade> gradeList = exiGradeDAO.selectGradeByTnId(gradeYear);
                         value = converGradesArr(gradeList);
                         break;
-                    case EnumUtil.TEACHER_EDUCATION_CLASS://教师-所教班级
-                        String tableName = ParamsUtils.combinationTableName("class", tnId);
-                        Map maplin = new HashMap();
-                        maplin.put("tableName", tableName);
-                        List<LinkedHashMap<String, Object>> linkedHashMapList = iexTeantCustomDAO.getTenantCustom(maplin);
-                        value = converClassName(linkedHashMapList);
-                        break;
+//                    case EnumUtil.TEACHER_EDUCATION_CLASS://教师-所教班级
+//                        String tableName = ParamsUtils.combinationTableName("class", tnId);
+//                        Map maplin = new HashMap();
+//                        maplin.put("tableName", tableName);
+//                        List<LinkedHashMap<String, Object>> linkedHashMapList = iexTeantCustomDAO.getTenantCustom(maplin);
+//                        value = converClassName(linkedHashMapList);
+//                        break;
                     case EnumUtil.TEACHER_EDUCATION_MAJOYTYPE://教师-所教科目
-                        value = EnumUtil.TEACHER_EDUCATION_MAJOYTYPE_ARR;
+                        List<CourseManageDto> courseManageDtos = courseManageService.getCourseByTnId(tnId);
+                        Set<String> subjects = new HashSet<>();
+                        for (CourseManageDto courseManageDto : courseManageDtos) {
+                            subjects.add(courseManageDto.getCourseBaseName());
+                        }
+                        String[] strs = new String[subjects.size()];
+                        Object[] objects = subjects.toArray();
+                        for (int t = 0; t < subjects.size(); t++) {
+                            strs[t] = String.valueOf(objects[t]);
+                        }
+                        value = strs;
                         break;
                     case EnumUtil.STUDENT_EDUCATION_MAJOYTYPE://学生-选择科目
                         value = EnumUtil.STUDENT_EDUCATION_MAJOYTYPE_ARR;
@@ -265,15 +399,15 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
                         List<Grade> stuGradeList = exiGradeDAO.selectGradeByTnId(stuGradeYear);
                         value = converGradesArr(stuGradeList);
                         break;
-                    case EnumUtil.STUDENT_CLASS_NAME ://学生-班级名称
-                          if( type.equals("student")) {
-                              String stuTableName = ParamsUtils.combinationTableName("class", tnId);
-                              Map mapStu = new HashMap();
-                              mapStu.put("tableName", stuTableName);
-                              List<LinkedHashMap<String, Object>> stuLinkedHashMapList = iexTeantCustomDAO.getTenantCustom(mapStu);
-                              value = converClassName(stuLinkedHashMapList);
-                          }
-                        break;
+//                    case EnumUtil.STUDENT_CLASS_NAME ://学生-班级名称
+//                          if(type.equals("student")) {
+//                              String stuTableName = ParamsUtils.combinationTableName("class", tnId);
+//                              Map mapStu = new HashMap();
+//                              mapStu.put("tableName", stuTableName);
+//                              List<LinkedHashMap<String, Object>> stuLinkedHashMapList = iexTeantCustomDAO.getTenantCustom(mapStu);
+//                              value = converClassName(stuLinkedHashMapList);
+//                          }
+//                        break;
                     case EnumUtil.STUDENT_CHECK_MAJOYTYPE1:
                         value = EnumUtil.STUDENT_EDUCATION_MAJOYTYPE_ARR;
                         break;
@@ -384,6 +518,14 @@ public class EXTenantCustomServiceImpl implements IEXTenantCustomService {
 
         switch (type) {
             case "class":
+                key1 = "class_grade";
+                key2 = "class_name";
+                break;
+            case "class_adm":
+                key1 = "class_grade";
+                key2 = "class_name";
+                break;
+            case "class_edu":
                 key1 = "class_grade";
                 key2 = "class_name";
                 break;

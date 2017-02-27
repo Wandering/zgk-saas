@@ -1,6 +1,7 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.saas.common.Env;
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.Configuration;
 import cn.thinkjoy.saas.domain.EnrollingRatio;
 import cn.thinkjoy.saas.domain.Grade;
@@ -16,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +27,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -209,9 +212,13 @@ public class ConfigurationController {
     @ResponseBody
     public Map getTeantConfigList(@PathVariable String type, @PathVariable Integer tnId) {
 
-        List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceService.getTenantConfigListByTnIdAndType(type, tnId);
+        List<TenantConfigInstanceView> tenantConfigInstances = exiTenantConfigInstanceService.getTenantConfigListByTnIdAndType(type, tnId,"0");
 
         Map resultMap = new HashMap();
+        if (tenantConfigInstances.size() == 0){
+            this.initTable(type,tnId);
+            tenantConfigInstances = exiTenantConfigInstanceService.getTenantConfigListByTnIdAndType(type, tnId);
+        }
 
         resultMap.put("configList", tenantConfigInstances);
 
@@ -333,21 +340,21 @@ public class ConfigurationController {
      *
      * @return
      */
-    @RequestMapping("/testCourse")
-    @ResponseBody
-    public Map importConfig(
-                            HttpServletRequest request,
-                            HttpServletResponse response) {
-
-//        boolean result = exiTenantConfigInstanceService.createTenantCombinationTable(type, tnId);
-
-//        iexTenantCustomService
-
-        exiTenantConfigInstanceService.syncProcedureData("teacher",4);
-        Map resultMap = new HashMap();
-//        resultMap.put("result", result ? "SUCCESS" : "FAIL");
-        return resultMap;
-    }
+//    @RequestMapping("/testCourse")
+//    @ResponseBody
+//    public Map importConfig(
+//                            HttpServletRequest request,
+//                            HttpServletResponse response) {
+//
+////        boolean result = exiTenantConfigInstanceService.createTenantCombinationTable(type, tnId);
+//
+////        iexTenantCustomService
+//
+//        exiTenantConfigInstanceService.syncProcedureData("teacher",4);
+//        Map resultMap = new HashMap();
+////        resultMap.put("result", result ? "SUCCESS" : "FAIL");
+//        return resultMap;
+//    }
 
     /**
      * excel模板上传
@@ -374,7 +381,7 @@ public class ConfigurationController {
             LOGGER.info("文件原名: " + myfile.getOriginalFilename());
             String realPath = env.getProp("configuration.excel.upload.url");
             FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(realPath, myfile.getOriginalFilename()));
-            result = exiTenantConfigInstanceService.uploadExcel(type, tnId, realPath + myfile.getOriginalFilename());
+            result = exiTenantConfigInstanceService.uploadExcel(type, tnId, realPath + myfile.getOriginalFilename(),0);
             if (result.equals("SUCCESS") && iexTenantService.getStep(tnId) != 0)
                 iexTenantService.stepSetting(tnId, (type.equals("teacher") ? true : false));
         }
@@ -410,15 +417,14 @@ public class ConfigurationController {
     @ResponseBody
     public Map getInSchoolYear() {
 
-        Integer end = 2020, start = 2012;
+        Integer start = Calendar.getInstance().get(Calendar.YEAR);
 
-        Integer size = end - start;
 
-        String[] arr = new String[size + 1];
+        String[] arr = new String[10];
 
-        for (int i = 0; i <= size; i++) {
+        for (int i = 0; i <= 9; i++) {
             arr[i] = start + "";
-            start++;
+            start--;
         }
 
         Map resultMap = new HashMap();
@@ -426,5 +432,17 @@ public class ConfigurationController {
         return resultMap;
     }
 
+
+    private void initTable(String type,int tnId){
+        switch (type) {
+            case Constant.TABLE_TYPE_TEACHER:
+
+                exiTenantConfigInstanceService.createConfig(Constant.TABLE_TYPE_TEACHER,Constant.CREATE_TABLE_TYPE_TEACHER_IDS,tnId);
+                exiTenantConfigInstanceService.createTenantCombinationTable(Constant.TABLE_TYPE_TEACHER,tnId);
+                break;
+            default:
+                break;
+        }
+    }
 }
 

@@ -20,13 +20,20 @@ public interface EXIConfigurationService<D extends IBaseDAO<T>, T extends BaseDo
      */
     public List<Configuration> selectListBydomain(String type);
 
+    /**
+     * 根据租户ID查询未添加的表头字段
+     * @param tnId
+     * @param type
+     * @return
+     */
+    List<Configuration> selectNotAddHeaderByTnId(Integer tnId,String type);
 
     /**
      * 初始化必选字段
      * @param type
      * @return
      */
-    public boolean selectListRetain(String type,Integer tnid);
+    boolean selectListRetain(String type,Integer tnid);
 
     /**
      * 中英文列名互转

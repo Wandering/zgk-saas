@@ -28,4 +28,12 @@ public interface EXIConfigurationDAO extends IBaseDAO<Configuration> {
 
 
     String selectColumnName(Map map);
+
+    /**
+     * 根据租户ID查询未添加的表头字段
+     *
+     * @param map
+     * @return
+     */
+    List<Configuration> selectNotAddHeaderByTnId(Map map);
 }

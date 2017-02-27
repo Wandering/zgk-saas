@@ -54,31 +54,15 @@
                                                 </label>
                                             </th>
                                             <th class="center">序号</th>
-                                            <th class="center">年份</th>
+                                            <th class="center">高考年份</th>
                                             <th class="center">高三考生数量</th>
                                             <th class="center">一本上线人数</th>
                                             <th class="center">二本上线人数</th>
-                                            <%--<th class="center">三本上线人数</th>--%>
+                                            <th class="center">三本上线人数</th>
                                             <th class="center">高职上线人数</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="ratio-manage-list" class="check-template">
-                                        <%--<tr>--%>
-                                            <%--<td class="center">--%>
-                                                <%--<label>--%>
-                                                    <%--<input type="checkbox" class="ace" />--%>
-                                                    <%--<span class="lbl"></span>--%>
-                                                <%--</label>--%>
-                                            <%--</td>--%>
-                                            <%--<td class="center">1</td>--%>
-                                            <%--<td class="center">1</td>--%>
-                                            <%--<td class="center">1</td>--%>
-                                            <%--<td class="center">1</td>--%>
-                                            <%--<td class="center">1</td>--%>
-                                            <%--<td class="center">1</td>--%>
-                                            <%--<td class="center">1</td>--%>
-                                        <%--</tr>--%>
-                                    </tbody>
+                                    <tbody id="ratio-manage-list" class="check-template"></tbody>
                                 </table>
                             </div>
                         </div>

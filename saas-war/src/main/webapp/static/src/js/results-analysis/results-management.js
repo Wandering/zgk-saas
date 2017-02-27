@@ -417,7 +417,8 @@ $(function () {
             var flg = false;
             Common.ajaxFun('/scoreAnalyse/checkExamName', 'GET', {
                 'grade': radioV,
-                'examName': examName
+                'examName': examName,
+                'tnId': tnId
             }, function (res) {
                 if (res.rtnCode == "0000000") {
                     if (res.bizData == true) {

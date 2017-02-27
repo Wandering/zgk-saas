@@ -57,8 +57,8 @@
                     <div class="school-main-content">
                         <div class="col-xs-12">
                             <div class="grade3-t"><h5 class="h5 p-t"><span class="line"></span>本科线成绩分析：</h5></div>
-                            <div class="grade3-main" style="display: none;">
-                                <div id="lineNumberByDate-chart" style="width: 100%;height: 250px;"></div>
+                            <div class="grade3-main echartsShow">
+                                <div id="lineNumberByDate-chart" style="width:1024px;height: 250px;"></div>
                             </div>
                             <p><h5 class="h5 p-t"><span class="line"></span>各班上线人数统计：</h5><span class="p-t2">根据去年上线比例：一本全校位次线<span
                                 class="batchOne"></span>名，二本位次线<span class="batchTwo"></span>名</p>

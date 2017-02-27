@@ -4,6 +4,7 @@ import cn.thinkjoy.saas.domain.Grade;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by douzy on 16/10/24.
@@ -64,4 +65,30 @@ public interface EXIGradeService {
      * @return
      */
     boolean updateGrade(Integer tnId,String gradeName,Integer gid);
+
+    void updateGrade(List<Grade> grades);
+
+    /**
+     * 初始化年级信息
+     * @param tnId
+     * @return
+     */
+    List<Grade> init(int tnId);
+
+    /**
+     * 根据tnId和年级code查询年级
+     * @param tnId
+     * @param gradeCodes
+     * @return
+     */
+    List<Grade> getGradeByTnIdAndGradeCode(int tnId, Set<Integer> gradeCodes);
+
+    /**
+     * 查询年级类型
+     * @param tnId
+     * @param gradeCode
+     * @return
+     */
+    Integer getGradeType(Integer tnId,Integer gradeCode);
+    Integer getGradeType(Integer tnId,String grade);
 }

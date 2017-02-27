@@ -7,17 +7,12 @@ import java.io.Serializable;
  */
 public class ClassBaseDto implements Serializable {
 
-    private int classId; // 所带班级ID
-    private String className; // 所带班级名称
-    private String isMerge;
-
-    public String getIsMerge() {
-        return isMerge;
-    }
-
-    public void setIsMerge(String isMerge) {
-        this.isMerge = isMerge;
-    }
+    private int classId; // 班级ID
+    private String className; // 名称
+    private String classGrade; // 年级
+    private String classBoss; // 班主任
+    private String classType; // 班级类型 教学班，行政班，文科班，理科班
+    private String course; // 班级课程
 
     public int getClassId() {
         return classId;
@@ -35,11 +30,47 @@ public class ClassBaseDto implements Serializable {
         this.className = className;
     }
 
+    public String getClassGrade() {
+        return classGrade;
+    }
+
+    public void setClassGrade(String classGrade) {
+        this.classGrade = classGrade;
+    }
+
+    public String getClassBoss() {
+        return classBoss;
+    }
+
+    public void setClassBoss(String classBoss) {
+        this.classBoss = classBoss;
+    }
+
+    public String getClassType() {
+        return classType;
+    }
+
+    public void setClassType(String classType) {
+        this.classType = classType;
+    }
+
+    public String getCourse() {
+        return course;
+    }
+
+    public void setCourse(String course) {
+        this.course = course;
+    }
+
     @Override
     public String toString() {
         return "ClassBaseDto{" +
                 "classId=" + classId +
                 ", className='" + className + '\'' +
+                ", classGrade='" + classGrade + '\'' +
+                ", classBoss='" + classBoss + '\'' +
+                ", classType='" + classType + '\'' +
+                ", course='" + course + '\'' +
                 '}';
     }
 }

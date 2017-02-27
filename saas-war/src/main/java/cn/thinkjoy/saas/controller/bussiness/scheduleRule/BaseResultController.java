@@ -1,19 +1,17 @@
 package cn.thinkjoy.saas.controller.bussiness.scheduleRule;
 
+import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
-import cn.thinkjoy.saas.dao.IJwTeacherDAO;
-import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
-import cn.thinkjoy.saas.domain.JwClassBaseInfo;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
-import cn.thinkjoy.saas.dto.TeacherBaseDto;
+import cn.thinkjoy.saas.dto.CourseManageDto;
 import cn.thinkjoy.saas.enums.ErrorCode;
-import cn.thinkjoy.saas.service.*;
-import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
-import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
+import cn.thinkjoy.saas.enums.GradeEnum;
+import cn.thinkjoy.saas.service.IJwScheduleTaskService;
+import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
+import cn.thinkjoy.saas.service.bussiness.IEXCourseManageService;
+import cn.thinkjoy.saas.service.bussiness.IEXTeacherService;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
-import cn.thinkjoy.saas.service.common.ParamsUtils;
-import cn.thinkjoy.zgk.common.StringUtil;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,10 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by yangyongping on 2016/12/10.
@@ -35,33 +30,26 @@ import java.util.Map;
 @RequestMapping("/baseResult")
 public class BaseResultController {
     @Autowired
-    private IJwRoomService jwRoomService;
-    @Autowired
     private IJwScheduleTaskService jwScheduleTaskService;
-    @Autowired
-    private IJwCourseBaseInfoService jwCourseBaseInfoService;
-    @Autowired
-    private IJwClassBaseInfoService jwClassBaseInfoService;
-    @Autowired
-    private IEXTenantCustomService iexTenantCustomService;
 
     @Autowired
-    private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
+    EXITenantConfigInstanceService exiTenantConfigInstanceService;
+    @Autowired
+    private IEXCourseManageService courseManageService;
+    @Autowired
+    private IEXTeacherService teacherService;
 
     /**
      * 获取教室名称
      * @return
      */
-    @RequestMapping(value = "/queryRoom",method = RequestMethod.GET)
+    @RequestMapping(value = "/queryClass",method = RequestMethod.GET)
     @ResponseBody
     public List getCourseResult(@RequestParam Integer taskId) {
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
-        Map<String,Object>  map = Maps.newHashMap();
-        map.put("tnId",tnId);
-        map.put("taskId",taskId);
-        map.put("grade",jwScheduleTask.getGrade());
-        List list = jwRoomService.queryList(map,"id","desc");
+        //获取行政班班级列表
+        List list = exiTenantConfigInstanceService.getClassByTnIdAndGrade(tnId, GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())),Constant.CLASS_ADM);
         return list;
     }
 
@@ -75,21 +63,24 @@ public class BaseResultController {
         if (StringUtils.isEmpty(teacherCourse)){
             ExceptionUtil.throwException(ErrorCode.PARAN_NULL);
         }
+        JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        Map<String,Object>  map = Maps.newHashMap();
-        map.put("tnId",tnId);
-        map.put("taskId",taskId);
-        map.put("course",teacherCourse);
-        List<TeacherBaseDto> list = iexScheduleBaseInfoService.queryTeacherByTaskId(map);
-        return teacherBaseDtotoMap(list);
+        Map<String,Object> param = new HashMap<>();
+        param.put("teacher_grade",GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())));
+        param.put("teacher_major_type",teacherCourse);
+        List<LinkedHashMap<String,Object>> rtnList = teacherService.getScheduleTeacherByTnIdAndTaskId(tnId,taskId,param);
+        if (rtnList == null) {
+            throw new BizException("error","当前科目所查教师为空");
+        }
+        return teacherBaseDtotoMap(rtnList);
     }
-    List<Map<String,Object>> teacherBaseDtotoMap(List<TeacherBaseDto> list){
+    List<Map<String,Object>> teacherBaseDtotoMap(List<LinkedHashMap<String,Object>> list){
         Map<String,Object> map ;
         List<Map<String,Object> >  maps = new ArrayList<>();
-        for (TeacherBaseDto teacherBaseDto:list){
+        for (LinkedHashMap<String,Object> teacherBaseDto:list){
             map = Maps.newHashMap();
-            map.put("id",teacherBaseDto.getTeacherId());
-            map.put("teacherName",teacherBaseDto.getTeacherName());
+            map.put("id",teacherBaseDto.get("id"));
+            map.put("teacherName",teacherBaseDto.get("teacher_name"));
             maps.add(map);
         }
         return maps;
@@ -100,59 +91,19 @@ public class BaseResultController {
      */
     @RequestMapping(value = "/queryCourse",method = RequestMethod.GET)
     @ResponseBody
-    public List queryCourse(@RequestParam Integer taskId) {
+    public Set<Map<String,Object>> queryCourse(@RequestParam Integer taskId) {
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        Map<String,Object>  map = Maps.newHashMap();
-        JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
-        map.put("tnId",tnId);
-        map.put("grade",jwScheduleTask.getGrade());
-        map.put("taskId",taskId);
-        List list = jwCourseBaseInfoService.queryList(map,"id","desc");
-        return list;
+        List<CourseManageDto> courseManageDtos = courseManageService.getCourseByTnId(tnId);
+        Map<String,Object> map;
+        Set<Map<String,Object>> maps = new HashSet<>();
+        for (CourseManageDto courseManageDto : courseManageDtos) {
+            map = new HashMap<>();
+            map.put("courseBaseId",courseManageDto.getCourseBaseId());
+            map.put("courseBaseName",courseManageDto.getCourseBaseName());
+            maps.add(map);
+        }
+
+        return maps;
     }
 
-
-
-    /**
-     * 获取教室
-     * @return
-     */
-    @RequestMapping(value = "/queryClass",method = RequestMethod.GET)
-    @ResponseBody
-    public List queryClass(@RequestParam Integer taskId) {
-        Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
-        Map<String,Object>  map = Maps.newHashMap();
-        map.put("tnId",tnId);
-        map.put("grade",jwScheduleTask.getGrade());
-        map.put("classType", Constant.DEFULT_CLASS_TYPE);
-        List list = jwClassBaseInfoService.queryList(map,"id","desc");
-        return list;
-    }
-    /**
-     * 获取学生
-     * @return
-     */
-    @RequestMapping(value = "/queryStudent",method = RequestMethod.GET)
-    @ResponseBody
-    public List queryStudent(@RequestParam Integer taskId,@RequestParam Integer classId) {
-        if (classId==null)return new ArrayList();
-        Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        JwClassBaseInfo jwClassBaseInfo = (JwClassBaseInfo)jwClassBaseInfoService.fetch(classId);
-        if (jwClassBaseInfo == null) return new ArrayList();
-        List<LinkedHashMap<String,Object>> list = iexTenantCustomService.getTenantCustom("student",tnId,"student_class",jwClassBaseInfo.getClassName(),0,1000);
-        return listToMaps(list);
-    }
-
-    private List<Map<String,Object>> listToMaps(List<LinkedHashMap<String,Object>> linkedHashMaps){
-        List<Map<String,Object>> maps = new ArrayList<>();
-            Map<String,Object> rtnMap;
-           for (Map<String,Object> map : linkedHashMaps){
-               rtnMap = Maps.newHashMap();
-               rtnMap.put("id",map.get("id"));
-               rtnMap.put("studentName",map.get("student_name"));
-               maps.add(rtnMap);
-           }
-           return maps;
-    }
 }

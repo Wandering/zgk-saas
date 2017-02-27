@@ -1,5 +1,7 @@
 package cn.thinkjoy.saas.service.impl.bussiness.reform;
 
+import cn.thinkjoy.common.exception.BizException;
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.bussiness.reform.SelectClassesGuideDAO;
 import cn.thinkjoy.saas.dto.*;
 import cn.thinkjoy.saas.enums.ErrorCode;
@@ -131,10 +133,12 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
 //            ExceptionUtil.throwException(ErrorCode.TABLE_NOT_EXIST);
 //        }
         String tableName = "saas_"+tnId+"_student_excel";
-        String classTableName = "saas_"+tnId+"_class_excel";
+        String classTableName1 = "saas_"+tnId+"_class_adm_excel";
+        String classTableName2 = "saas_"+tnId+"_class_edu_excel";
         List<Map<String,String>> mapList = Lists.newArrayList();
         map.put("tableName",tableName);
-        map.put("classTableName",classTableName);
+        map.put("classTableName1",classTableName1);
+        map.put("classTableName2",classTableName2);
         try{
             mapList = selectClassesGuideDAO.selectStudentExcel(map);
         }catch (Exception e){
@@ -145,6 +149,10 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         Map<String,Integer> yearCountMap=new HashMap<>();
         for (Map<String,String> map1:mapList){
             String year=String.valueOf(Integer.valueOf(String.valueOf(map1.get("class_in_year")))+3);
+            String[] types=map1.get("student_major_type") == null ? null : map1.get("student_major_type").split("-");
+            if (types == null){
+                continue;
+            }
             if(!yearMap.containsKey(year)){
                 Map<String,Integer> map2=new HashMap<String, Integer>();
                 map2.put("物理",0);
@@ -156,7 +164,6 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
                 map2.put("通用技术",0);
                 yearMap.put(year,map2);
             }
-            String[] types=map1.get("student_major_type").split("-");
             for(String type:types){
                 if(!yearMap.get(year).containsKey(type)){
                     yearMap.get(year).put(type, 0);
@@ -189,6 +196,9 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         map.put("grade",studentGrade);
         //从saas_enrolling_ratio中获取上线率
         String t=selectClassesGuideDAO.getEnrollingPercent(map);
+        if (t == null) {
+            throw new BizException("error","请先设置升学率");
+        }
         map.put("examId",selectClassesGuideDAO.selectExamId(map));
         List<String> selectCoursesAll=selectClassesGuideDAO.selectLimitStudent(map);
         Map<String, Integer> typeMap=new HashMap<>();
@@ -253,6 +263,11 @@ public class SelectClassesGuideServiceImpl implements ISelectClassesGuideService
         // [2] 按科目重新组装教师带班信息
         Map<String,CourseAndTeacherDto> ctMap = Maps.newHashMap();
         for(TeacherAndClassDto tcDto : tcDtos){
+
+            // 只展示可选课的科目
+            if(!Constant.COURSEES.contains(tcDto.getCourseName())){
+                continue;
+            }
 
             CourseAndTeacherDto ctDtoTmp = ctMap.get(tcDto.getCourseName().trim());
             if(ctDtoTmp != null){

@@ -7,8 +7,12 @@
 
 package cn.thinkjoy.saas.service.bussiness;
 
+import cn.thinkjoy.saas.domain.JwScheduleTask;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
+import com.alibaba.dubbo.common.json.ParseException;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public interface IEXJwScheduleTaskService {
@@ -17,7 +21,7 @@ public interface IEXJwScheduleTaskService {
      * @param type
      * @return
      */
-    public CourseResultView getCourseResult(String type,Integer taskId, Integer tnId, Map<String,Object> paramsMap);
+    public CourseResultView getCourseResult(String type,Integer taskId, Integer tnId, Map<String,Object> paramsMap,Map<String, Object> courseTimeConfig);
 
     /**
      * 总课表
@@ -25,5 +29,53 @@ public interface IEXJwScheduleTaskService {
      * @param tnId
      * @return
      */
-    Map<String,Object> getAllCourseResult(Integer taskId, Integer tnId);
+    Map<String,Object> getAllCourseResult(Integer taskId, Integer tnId) throws IOException, ParseException;
+
+
+    /**
+     * 初始化排课参数
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    boolean InitParmasFile(Integer taskId, Integer tnId) throws IOException;
+
+
+    /**
+     * 排课结果状态   0:正在排课  1:排课成功   -1:排课失败
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    String getSchduleResultStatus(Integer taskId, Integer tnId);
+
+
+    /**
+     * 排课失败
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    List<String> getSchduleErrorDesc(Integer taskId, Integer tnId);
+
+
+    JwScheduleTask selectScheduleTaskPath(Map map);
+
+    List<String> getNoNScheduleTaskPliableRule(Integer taskId, Integer tnId);
+
+    /**
+     * 获取排课的课时信息
+     * @param tnId
+     * @param taskId
+     * @return
+     */
+    Map<String,Object> getCourseTimeConfig(int tnId, int taskId);
+
+    /**
+     * 获取路径
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    String getScheduleTaskPath(Integer taskId, Integer tnId);
 }

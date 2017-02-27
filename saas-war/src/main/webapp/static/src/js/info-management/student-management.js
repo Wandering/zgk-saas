@@ -5,6 +5,14 @@
  * @api:http://wiki.qtonecloud.cn/pages/viewpage.action?pageId=44436387
  * */
 //layer.load(1, {shade: [0.3,'#000']});
+
+// 学生基础信息管理
+//
+// 年级接口参数说明：
+// type：0（教学班）、1（行政班）
+// calssType : 1（行政班）行政班、2（行政班+教学班）教学班、3（文科班+理科班） 行政班
+
+
 /**
  * 全局常量
  * @type {{tnId: *, typ: string}}
@@ -12,6 +20,7 @@
 var GLOBAL_CONSTANT = {
     tnId: Common.cookie.getCookie('tnId'), //租户ID
     type: 'student',   //角色
+    cType: null   // classType通过fetchGrade接口获取
 }
 
 
@@ -31,11 +40,15 @@ var App = {
         this.fetchGrade();
         this.renderTableHeader();
         this.addEvent();
+        this.chargeCheckClass();
     },
     renderTableHeader: function () {
-        Common.ajaxFun('/config/get/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/student/getStuExcelHeader.do', 'GET', {
+            'type': GLOBAL_CONSTANT.cType == 2 ? 0 :1,
+            'tnId': GLOBAL_CONSTANT.tnId
+        }, function (res) {
             if (res.rtnCode == "0000000") {
-                var data = res.bizData.configList;
+                var data = res.bizData;
                 if (data.length == 0) {
                     App.layerAlertInit();
                     return false;
@@ -68,10 +81,13 @@ var App = {
     },
     renderTableBody: function (data) {
         var that = this
-        Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {
-            's': App.page.offset,
-            'r': App.page.rows,
-            'g': App.checkGradeName
+        // 行政班|教学班说明：classType 1或3都为行政班  2教学班
+        Common.ajaxFun('/student/getStuInfo.do', 'GET', {
+            'star': App.page.offset,
+            'row': App.page.rows,
+            'grade': App.checkGradeName,
+            'type': GLOBAL_CONSTANT.cType,
+            'tnId': GLOBAL_CONSTANT.tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var tpl = [];
@@ -127,23 +143,47 @@ var App = {
                 });
         })
     },
-    //所属年级
-    fetchGrade: function () {
-        Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
+    //判断判断当前用户班级类型是否存在教学班
+    chargeCheckClass: function () {
+        Common.ajaxFun('/grade/checkClass.do', 'GET', {
+            "tnId": GLOBAL_CONSTANT.tnId
+        }, function (res) {
             if (res.rtnCode == "0000000") {
-                var dataJson = res.bizData.grades;
+                if(res.bizData.result){
+                    $('#jx-template-download').removeClass('hide');
+                }else{
+                    $('#jx-template-download').addClass('hide')
+                    $('#xz-template-download').html('模板下载');
+                }
+            }
+        })
+    },
+    //动态渲染所属年级
+    fetchGrade: function () {
+        // Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/grade/getGrade.do', 'GET', {}, function (res) {
+            if (res.rtnCode == "0000000") {
+                var dataJson = res.bizData;
                 //初始页面table-header渲染
                 var template = Handlebars.compile($('#grade-list-tpl').html());
                 $('#grade-list').html(template(dataJson));
-                //弹层渲染
-                // var tpl = '';
-                // $.each(dataJson, function (i, v) {
-                //     tpl += v.grade + '-';
-                // })
-                // tpl = tpl.substr(0, tpl.length - 1);
-                // CRUDStd.CRUDStdData.gradeData = tpl;
                 if (dataJson[0].grade) {
+
+                    // 行政班|教学班说明：classType 1或3都为行政班  2教学班
+                    // var $classTypeToggle = $('#class-type-toggle').find('.tab')
+                    // if (dataJson[0].classType == 2) {
+                    //     $classTypeToggle.eq(0).removeClass('hide').addClass('active');
+                    //     $classTypeToggle.eq(0).removeClass('hide');
+                    // } else if (dataJson[0].classType == 3) {
+                    //     $classTypeToggle.eq(0).addClass('hide');
+                    //     $classTypeToggle.eq(1).addClass('hide');
+                    // } else {
+                    //     // $classTypeToggle.eq(0).addClass('active');
+                    //     $classTypeToggle.eq(0).addClass('hide');
+                    //     $classTypeToggle.eq(1).addClass('hide');
+                    // }
                     App.checkGradeName = dataJson[0].grade;
+                    GLOBAL_CONSTANT.cType = dataJson[0].classType;
                 }
             }
             setTimeout(function () {
@@ -156,10 +196,12 @@ var App = {
     loadPage: function () {
         var that = this;
         //layer.load(1, {shade: [0.3,'#000']});
-        Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/getTenantCustomData.do', 'GET', {
-            's': App.page.offset,
-            'r': App.page.rows,
-            'g': App.checkGradeName
+        Common.ajaxFun('/student/getStuInfo.do', 'GET', {
+            'star': App.page.offset,
+            'row': App.page.rows,
+            'grade': App.checkGradeName,
+            'type': GLOBAL_CONSTANT.cType,
+            'tnId': GLOBAL_CONSTANT.tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var tpl = [];
@@ -208,11 +250,41 @@ var App = {
                 'rows': 30,
                 'count': ''
             }
-            App.checkGradeName = $('input[name="grade-li"]:checked').next().text();
+            var $checkedInputDom = $('input[name="grade-li"]:checked');
+
+
+            App.checkGradeName = $checkedInputDom.next().text();
+            GLOBAL_CONSTANT.cType = $(this).attr('classType');
+            // $('#class-type-toggle').find('.tab').eq(1).removeClass('active');
+
+
+            // 行政班|教学班说明：classType 1或3都为行政班  2教学班
+            // var $classTypeToggle = $('#class-type-toggle').find('.tab');
+            // if ($checkedInputDom.attr('classType') == 2) {
+            //     $classTypeToggle.eq(0).removeClass('hide').addClass('active');
+            //     $classTypeToggle.eq(1).removeClass('hide');
+            // } else if ($checkedInputDom.attr('classType') == 3) {
+            //     $classTypeToggle.eq(0).addClass('hide');
+            //     $classTypeToggle.eq(1).addClass('hide');
+            // } else {
+            //     $classTypeToggle.eq(0).addClass('hide');
+            //     // $classTypeToggle.eq(0).addClass('active');
+            //     $classTypeToggle.eq(1).addClass('hide');
+            // }
+
+            App.renderTableHeader();
             App.loadPage();
             App.pagination();
             $('#student-table').find('#stdCheckAll').prop('checked', false);
         })
+        //新增行政班和教学班切换
+        // $(document).on('click', '#class-type-toggle .tab', function () {
+        //     GLOBAL_CONSTANT.cType = $(this).attr('type');
+        //     App.renderTableHeader();
+        //     App.loadPage();
+        //     App.pagination();
+        //     $(this).addClass('active').siblings().removeClass('active');
+        // });
     }
 }
 App.init();
@@ -233,29 +305,7 @@ var CRUDStd = {
         };
         // this.fetchGrade(); //拉取渲染grade 12.7
     },
-    // //所属年级
-    // fetchGrade: function () {
-    //     Common.ajaxFun('/config/grade/get/' + GLOBAL_CONSTANT.tnId + '.do', 'GET', {}, function (res) {
-    //         if (res.rtnCode == "0000000") {
-    //             var dataJson = res.bizData.grades;
-    //             //初始页面table-header渲染
-    //
-    //             var template = Handlebars.compile($('#grade-list-tpl').html());
-    //             $('#grade-list').html(template(dataJson));
-    //
-    //             //弹层渲染
-    //             // var tpl = '';
-    //             // $.each(dataJson, function (i, v) {
-    //             //     tpl += v.grade + '-';
-    //             // })
-    //             // tpl = tpl.substr(0, tpl.length - 1);
-    //             // CRUDStd.CRUDStdData.gradeData = tpl;
-    //             CRUDStd.CRUDStdData.gradeData = dataJson[0].grade;
-    //         }
-    //     }, function (res) {
-    //         layer.msg("出错了");
-    //     }, true);
-    // },
+
     //入学年份
     fetchEntranceYear: function () {
         Common.ajaxFun('/config/get/school/year.do', 'GET', {}, function (res) {
@@ -318,6 +368,72 @@ var CRUDStd = {
             CRUDStd.CRUDStdData.renderEleData.push(eleData);
         })
         /**
+         * 动态拉取班级名称
+         */
+
+        var GetClassByGrade = function (dynGarade) {
+            var tpl = '';
+            Common.ajaxFun('/class/getClassByGrade.do', 'GET', {
+                'tnId': GLOBAL_CONSTANT.tnId,
+                'grade': dynGarade
+            }, function (res) {
+                if (res.rtnCode == "0000000") {
+                    $.each(res.bizData, function (i, v) {
+                        tpl += '<option value="' + v.name + '">' + v.name + '</option>'
+                    })
+                    return tpl;
+                }
+            }, function (res) {
+                layer.msg("出错了");
+            }, true, 'true');
+            return tpl;
+        }
+
+        /**
+         * 动态拉取选考科目名称【行政班】
+         */
+        var GetClassByGrade = function (dynGarade) {
+            var tpl = '';
+            Common.ajaxFun('/class/getClassByGrade.do', 'GET', {
+                'tnId': GLOBAL_CONSTANT.tnId,
+                'grade': dynGarade
+            }, function (res) {
+                if (res.rtnCode == "0000000") {
+                    $.each(res.bizData, function (i, v) {
+                        tpl += '<option value="' + v.name + '">' + v.name + '</option>'
+                    })
+                    return tpl;
+                }
+            }, function (res) {
+                layer.msg("出错了");
+            }, true, 'true');
+            return tpl;
+        }
+
+
+        /**
+         * 动态拉取选考科目名称【教学班】
+         */
+        CRUDStd.GetClassByCourse = function (dynCourse) {
+            var tpl = '';
+            Common.ajaxFun('/class/getClassByCourse.do', 'GET', {
+                'tnId': GLOBAL_CONSTANT.tnId,
+                'course': dynCourse
+            }, function (res) {
+                if (res.rtnCode == "0000000") {
+                    $.each(res.bizData, function (i, v) {
+                        tpl += '<option value="' + v.name + '">' + v.name + '</option>'
+                    })
+                    return tpl;
+                }
+            }, function (res) {
+                layer.msg("出错了");
+            }, true, 'true');
+            return tpl;
+        }
+
+
+        /**
          * 渲染Radio
          * @param v
          * @returns {string}
@@ -334,9 +450,9 @@ var CRUDStd = {
                         '<span class="lbl">' + radioLen[i] + '</span></label>'
                 }
             }
-            // var foo = '';
-            // v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
-            return '<li><span class="f20">' + v.name + '</span>' +
+            var foo = '';
+            v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
+            return '<li><span class="f20">' + foo + '</span>' +
                 '<div id="' + v.enName + '" class="sex-type f70">' + radioTpl +
                 '</label>' +
                 '</div></li>'
@@ -349,6 +465,8 @@ var CRUDStd = {
         var renderCheckBox = function (v) {
             var checkBoxLen = (v.dataValue).split('-'),
                 checkBoxTpl = '';
+            var foo = '';
+            v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
             for (var i = 0; i < checkBoxLen.length; i++) {
                 //if (i == 0) {
                 //checkBoxTpl += '<label>' +
@@ -363,7 +481,7 @@ var CRUDStd = {
                 //}
 
             }
-            return '<li><span class="f20">' + v.name + '</span><div id="' + v.enName + '" class="subject-list f70">' + checkBoxTpl + '</div></li>'
+            return '<li><span class="f20">' + foo + '</span><div id="' + v.enName + '" class="subject-list f70">' + checkBoxTpl + '</div></li>'
         }
         /**
          * 渲染Select
@@ -371,28 +489,38 @@ var CRUDStd = {
          * @returns {string}
          */
         var renderSelect = function (v) {
-            // var foo = '';
-            // v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
 
-
-            var foo = v.name;
-            if (v.enName == 'student_class') {
-                foo = '<b class="red-icon">*</b>' + v.name
-            }
+            var foo = '';
+            v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
             if (v.enName == "student_grade") {
                 return '<li><span>' + foo + '</span><select id="' + v.enName + '" readonly disabled style="cursor: not-allowed;background-color: #eee;"><option>' + App.checkGradeName + '</option></select></li>'
             } else {
-                var selectLen = (v.dataValue).split('-'),
-                    selectTpl = '';
+                var selectTpl = '', selectLen;
+                if (v.dataValue) {
+                    selectLen = (v.dataValue).split('-');
+                } else {
+                    selectLen = [];
+                }
                 if (v.enName == 'student_check_major1'
                     || v.enName == 'student_check_major2'
                     || v.enName == 'student_check_major3') {
-                    selectTpl = '<option>请选择科目</option>'
+                    selectTpl = '<option value="00">请选择选考科目</option>'
                 }
+
                 for (var i = 0; i < selectLen.length; i++) {
                     selectTpl += '<option>' + selectLen[i] + '</option>'
                 }
-                return '<li><span>' + foo + '</span><select id="' + v.enName + '">' + selectTpl + '</select></li>'
+
+                if (v.enName == 'student_class') {
+                    selectTpl = '<option value="00">请选择班级</option>'
+                    return '<li><span>' + foo + '</span><select id="' + v.enName + '">' + selectTpl + GetClassByGrade(App.checkGradeName) + '</select></li>'
+                } else if (v.enName == 'student_check_major_class1' || v.enName == 'student_check_major_class2' || v.enName == 'student_check_major_class3') {
+                    selectTpl = '<option value="00">请选择选考科目班级</option>'
+                    return '<li><span>' + foo + '</span><select id="' + v.enName + '">' + selectTpl + '</select></li>'
+                    // return '<li><span>' + foo + '</span><select id="' + v.enName + '">' + selectTpl + GetClassByCourse('化学')+ '</select></li>'
+                } else {
+                    return '<li><span>' + foo + '</span><select id="' + v.enName + '">' + selectTpl + '</select></li>'
+                }
             }
         }
         /**
@@ -401,13 +529,8 @@ var CRUDStd = {
          * @returns {string}
          */
         var renderText = function (v) {
-            // var foo = '';
-            // v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
-
-            var foo = v.name;
-            if (v.enName == 'student_no' || v.enName == 'student_name') {
-                foo = '<b class="red-icon">*</b>' + v.name
-            }
+            var foo = '';
+            v.isRetain == 1 ? foo = '<b class="red-icon">*</b>' + v.name : foo = v.name
             return '<li><span>' + foo + '</span><input type="text" placeholder="请输入' + v.name + '" id="' + v.enName + '" checkRule="' + v.checkRule + '" class="input-common-w"/></li>'
         }
         $.each(CRUDStd.CRUDStdData.renderEleData, function (i, v) {
@@ -476,7 +599,24 @@ var CRUDStd = {
                 rowData.push(childData);
             }
             parent.attr('rowData', JSON.stringify(rowData));
+        });
+
+
+        //选考科目所在班级动态获取
+        $(document).on('change', '#student_check_major1', function () {
+            var classCourse = CRUDStd.GetClassByCourse($(this).val());
+            $('#student_check_major_class1').append(classCourse);
         })
+        $(document).on('change', '#student_check_major2', function () {
+            var classCourse = CRUDStd.GetClassByCourse($(this).val());
+            $('#student_check_major_class2').append(classCourse);
+        })
+        $(document).on('change', '#student_check_major3', function () {
+            var classCourse = CRUDStd.GetClassByCourse($(this).val());
+            $('#student_check_major_class3').append(classCourse);
+        })
+
+
     },
     //添加
     addStd: function () {
@@ -493,7 +633,7 @@ var CRUDStd = {
     },
     //更新
     updateStd: function () {
-        var checkboxN = $("#student-table :checkbox:checked").size();
+        var checkboxN = $("#student-table .check-template :checkbox:checked").size();
         if (checkboxN != '1') {
             layer.tips('修改只能选择一项', $('#student-modify'), {time: 1000});
             return false;
@@ -553,7 +693,11 @@ var CRUDStd = {
         layer.confirm('确定删除?', {
             btn: ['确定', '关闭'] //按钮
         }, function () {
-            Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/' + ids + '/remove.do', 'POST', {}, function (res) {
+            Common.ajaxFun('/student/removeStuInfo.do', 'POST', {
+                "tnId": GLOBAL_CONSTANT.tnId,
+                "ids": ids
+            }, function (res) {
+                // Common.ajaxFun('/manage/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '/' + ids + '/remove.do', 'POST', {}, function (res) {
                 if (res.rtnCode == "0000000") {
                     if (res.bizData.result = "SUCCESS") {
                         $('#class-change-list').html('');
@@ -573,37 +717,14 @@ var CRUDStd = {
         var postData = [];
         var lock = 0;
         $.each(App.tableData, function (i, v) {
+            if (v.dataType === "select") {
+                if ($('#' + v.enName).val() == '00') {
+                    layer.msg(v.name + '没有选择', {time: 1000});
+                    lock = 1;
+                    return false;
+                }
+            }
             if (v.dataType === "text") {
-                // if(v.enName != 'student_check_major_class1'
-                //     || v.enName != 'student_check_major_class2'
-                //     || v.enName != 'student_check_major_class3'){
-                //     return false;
-                // }
-                // if (v.enName == 'student_check_major_class1') {
-                //     var a = $('#student_check_major1').val()
-                //     var b = $('#student_check_major_class1').val()
-                //     // alert(a);
-                //     // alert($.trim(b));
-                //     if (a == '请选择科目' && $.trim(b) != '' || a != '请选择科目' && $.trim(b) == '') {
-                //         layer.msg('选考科目不能填写不完整');
-                //         return false;
-                //     }
-                // }
-                // if (v.enName == 'student_check_major_class2') {
-                //     var a = $('#student_check_major2').val()
-                //     var b = $('#student_check_major_class2').val()
-                //     console.info('a', a);
-                // }
-                // if (v.enName == 'student_check_major_class3') {
-                //     var a = $('#student_check_major3').val()
-                //     var b = $('#student_check_major_class3').val()
-                //     console.info('a', a);
-                // }
-                // if (v.enName == 'student_check_major_class1' ||
-                //     v.enName == 'student_check_major_class2' ||
-                //     v.enName == 'student_check_major_class3') {
-                //
-                // }
                 if ($('#' + v.enName).val() == '') {
                     if (v.enName == 'student_check_major_class1' ||
                         v.enName == 'student_check_major_class2' ||
@@ -670,29 +791,88 @@ var CRUDStd = {
                 });
             }
         })
-        //选考科目3个非必填|入填一个则所有都必填
-        if (postData[3].value != '') {
-            if (postData[3].value == postData[5].value || postData[5].value == postData[7].value || postData[7].value == postData[3].value) {
-                layer.msg('选考科目1,2,3不能相同');
+
+
+
+        if (GLOBAL_CONSTANT.cType == 0) {
+            if ($('#student_check_major1').val() == $('#student_check_major2').val()) {
+                layer.msg('选考科目不能重复');
+                return false;
+            }
+
+            if ($('#student_check_major2').val() == $('#student_check_major3').val()) {
+                layer.msg('选考科目不能重复');
+                return false;
+            }
+
+            if ($('#student_check_major3').val() == $('#student_check_major1').val()) {
+                layer.msg('选考科目不能重复');
                 return false;
             }
         }
+
+
+
+        //10个必填字段验证[暂时排除所在年级、班级名称]
+        // if (GLOBAL_CONSTANT.cType == 0) {
+        //
+        //     var tagName = ['所在年级', '班级名称', '学号', '学生名称', '选考科目一', '选考科目一所在班级', '选考科目二', '选考科目二所在班级', '选考科目三', '选考科目三所在班级'];
+        //     if ($('#student_check_major1').val() == $('#student_check_major2').val()) {
+        //         layer.msg('选考科目不能重复');
+        //         return false;
+        //     }
+        //
+        //     if ($('#student_check_major2').val() == $('#student_check_major2').val()) {
+        //         layer.msg('选考科目不能重复');
+        //         return false;
+        //     }
+        //
+        //     if ($('#student_check_major3').val() == $('#student_check_major2').val()) {
+        //         layer.msg('选考科目不能重复');
+        //         return false;
+        //     }
+        //
+        //
+        //     for (var i = 2; i < tagName.length; i++) {
+        //         if (postData[i].value == '') {
+        //             layer.msg(tagName[i] + '为必填字段不能为空');
+        //             return false;
+        //         }
+        //     }
+        // }
+
+
+        //选考科目3个非必填|入填一个则所有都必填
+        // if (GLOBAL_CONSTANT.cType == 0) {
+        //     if (postData[4].value == '' || postData[6].value == '' || postData[8].value == '') {
+        //         layer.msg('请选择选考科目');
+        //         return false;
+        //     }
+        //     // if (postData[5].value != '') {
+        //     if (postData[5].value == postData[7].value || postData[5].value == postData[8].value || postData[7].value == postData[8].value) {
+        //         layer.msg('选考科目1,2,3不能相同');
+        //         return false;
+        //     }
+        //     // }
+        // }
+
+
         if (type == 'add') {
             return {
                 "clientInfo": {},
                 "style": "",
                 "data": {
-                    "type": GLOBAL_CONSTANT.type,
+                    "type": GLOBAL_CONSTANT.cType,
                     "tnId": GLOBAL_CONSTANT.tnId,
                     "teantCustomList": postData
                 }
             };
         } else {
-            return  {
+            return {
                 "clientInfo": {},
                 "style": "",
                 "data": {
-                    "type": GLOBAL_CONSTANT.type,
+                    "type": GLOBAL_CONSTANT.cType,
                     "tnId": GLOBAL_CONSTANT.tnId,
                     "pri": CRUDStd.pid,
                     "teantCustomList": postData
@@ -701,7 +881,7 @@ var CRUDStd = {
         }
     },
     addStdEvent: function (data) {
-        Common.ajaxFun('/manage/teant/custom/data/add.do', 'POST', JSON.stringify(data), function (res) {
+        Common.ajaxFun('/student/addStuInfo.do', 'POST', JSON.stringify(data), function (res) {
             if (res.rtnCode == "0000000" && res.bizData.result === 'SUCCESS') {
                 layer.closeAll();
                 layer.msg('添加成功');
@@ -712,7 +892,7 @@ var CRUDStd = {
         }, null, true);
     },
     updateStdEvent: function (data) {
-        Common.ajaxFun('/manage/teant/custom/data/modify.do', 'POST', JSON.stringify(data), function (res) {
+        Common.ajaxFun('/student/updateStuInfo.do', 'POST', JSON.stringify(data), function (res) {
             if (res.rtnCode == "0000000") {
                 layer.closeAll();
                 App.renderTableHeader();
@@ -727,6 +907,7 @@ CRUDStd.init();
 
 /**
  * 模板上传|下载
+ * 模板下载细分：行政班模块下载和教学班模板下载
  * @type {{init: TplHandler.init, tplDownload: TplHandler.tplDownload, tplUpload: TplHandler.tplUpload}}
  */
 var TplHandler = {
@@ -735,19 +916,29 @@ var TplHandler = {
         this.tplUpload();
     },
     tplDownload: function () {
-        //模板下载
-        $(document).on('click', '#student-template-download', function () {
-            window.location.href = '/manage/' + GLOBAL_CONSTANT.type + '/export/' + GLOBAL_CONSTANT.tnId + '.do';
+        //行政模板下载type = 1
+        $(document).on('click', '#xz-template-download', function () {
+            window.location.href = '/student/downloadStuMould.do?type=' + 1 + '&tnId=' + GLOBAL_CONSTANT.tnId;
+        });
+        //教学模板下载type = 0
+        $(document).on('click', '#jx-template-download', function () {
+            window.location.href = '/student/downloadStuMould.do?type=' + 0 + '&tnId=' + GLOBAL_CONSTANT.tnId;
         });
     },
     tplUpload: function () {
         //上传
         $(document).on('click', '#student-upload', function () {
-            var tpl = [];
+            var tpl = [], hideOrShow = 'hide',toggleText = '导入学生数据';
+            if ($('#jx-template-download').is(":visible")) {
+                hideOrShow = '';
+                toggleText = '导入无教学班年级学生数据Excel';
+            }
+            // "type":"0：教学班模板  1：行政班模板",
             tpl.push('<div class="upload-box">');
             tpl.push('<span id="uploader-demo">');
             tpl.push('<span id="fileList" class="uploader-list dh"></span>');
-            tpl.push('<button class="btn btn-info btn-import" id="btn-import">导入学生数据Excel</button>');
+            tpl.push('<button class="btn btn-info btn-import" id="xz-btn-import">'+toggleText+'</button>');
+            tpl.push('<button class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">导入有教学班年级学生数据Excel</button>');
             tpl.push('</span>');
             tpl.push('<a href="javascript: void(0);" id="student-template-download" class="download-link">请先导出Excel模板，进行填写</a>');
             tpl.push('<button class="btn btn-cancel cancel-btn" id="cancel-download-btn">取消</button>');
@@ -759,9 +950,12 @@ var TplHandler = {
                 area: ['460px', '280px'],
                 content: tpl.join('')
             });
-            upload();
+            //初始化下载
+            // "type":"0：教学班模板  1：行政班模板",
+            upload(0);
+            upload(1);
         });
-        var upload = function () {
+        var upload = function (whichBtn) {
             var $ = jQuery,
                 $list = $('#fileList'),
                 // Web Uploader实例
@@ -773,10 +967,11 @@ var TplHandler = {
                 // swf文件路径
                 swf: BASE_URL + '/webuploader-0.1.5 2/Uploader.swf',
                 // 文件接收服务端。
-                server: rootPath + '/config/upload/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do',
+                // server: rootPath + '/config/upload/' + GLOBAL_CONSTANT.type + '/' + GLOBAL_CONSTANT.tnId + '.do',
+                server: rootPath + '/student/uploadStuExcel.do?tnId=' + GLOBAL_CONSTANT.tnId + '&classType=' + whichBtn,
                 // 选择文件的按钮。可选。
                 // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-                pick: '#btn-import',
+                pick: whichBtn == 1 ? '#xz-btn-import' : '#jx-btn-import',
                 // 只允许选择文件，可选。
                 accept: {
                     title: 'excel',
@@ -810,8 +1005,6 @@ var TplHandler = {
             });
             // 文件上传成功，给item添加成功class, 用样式标记上传成功。
             uploader.on('uploadSuccess', function (file, response) {
-                console.info('file', file)
-                console.info('response', response)
                 if (response.msg) {
                     layer.msg(response.msg);
                     return false;
@@ -824,7 +1017,12 @@ var TplHandler = {
                     layer.msg(response.bizData.result);
                     return false;
                 }
-                layer.closeAll();
+                if (response.bizData.result == 'SUCCESS') {
+                        layer.msg('数据上传成功');
+                        setTimeout(function(){
+                            layer.closeAll();
+                        },2000)
+                }
                 if (App != null) {
                     App.renderTableHeader();
                 }
@@ -973,17 +1171,17 @@ var StdSet = {
                     that.fetchTableHeader();
                     layer.closeAll();
                     // layer.full(
-                        layer.open({
-                            type: 1,
-                            content: $("#sub-student-setting"),
-                            // area: ['100%', '100%'],
-                            area: ['800px', '600px'],
-                            maxmin: false,
-                            cancel: function () {
-                                $('#field').html(''); //清空
-                                window.location.reload();
-                            }
-                        })
+                    layer.open({
+                        type: 1,
+                        content: $("#sub-student-setting"),
+                        // area: ['100%', '100%'],
+                        area: ['800px', '600px'],
+                        maxmin: false,
+                        cancel: function () {
+                            $('#field').html(''); //清空
+                            window.location.reload();
+                        }
+                    })
                     // )
                 }
             }, function (res) {
@@ -1068,17 +1266,17 @@ StdSet.init();
 
 
 /*
-* 全选
-* */
-var checkAllFun = function(tableParent){
-    $(document).on('click', tableParent+' '+'#stdCheckAll', function () {
+ * 全选
+ * */
+var checkAllFun = function (tableParent) {
+    $(document).on('click', tableParent + ' ' + '#stdCheckAll', function () {
         if ($(this).is(':checked')) {
             $(tableParent).find('.check-template :checkbox').prop('checked', true);
         } else {
             $(tableParent).find('.check-template :checkbox').prop('checked', false);
         }
     });
-    $(tableParent+' '+".check-template").on('click', ':checkbox', function () {
+    $(tableParent + ' ' + ".check-template").on('click', ':checkbox', function () {
         var chknum = $(tableParent).find(".check-template :checkbox").size();//选项总个数
         var chk = 0;
         $(tableParent).find(".check-template :checkbox").each(function () {
@@ -1087,9 +1285,9 @@ var checkAllFun = function(tableParent){
             }
         });
         if (chknum == chk) {//全选
-            $(tableParent+' '+'#stdCheckAll').prop("checked", true);
+            $(tableParent + ' ' + '#stdCheckAll').prop("checked", true);
         } else {//不全选
-            $(tableParent+' '+'#stdCheckAll').prop("checked", false);
+            $(tableParent + ' ' + '#stdCheckAll').prop("checked", false);
         }
     });
 }

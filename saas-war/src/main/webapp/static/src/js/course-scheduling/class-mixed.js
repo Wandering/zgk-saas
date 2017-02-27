@@ -20,7 +20,7 @@ $(document).ready(function () {
                     gradeId = '2';
                     break;
                 case '高三年级':
-                    gradeId = '2';
+                    gradeId = '3';
                     break;
             }
             return gradeId;
@@ -129,6 +129,7 @@ $(document).ready(function () {
                 'taskId': GLOBAL_CONSTANT.taskId,
                 'courseId': $('#course-select').val(),
                 'classIds': classIds.substr(0, classIds.length - 1),//班级Id，多个班级有英文逗号分隔
+                'classType':$('input[name="merge-class"]:checked').attr('cType')
             }, function (res) {
                 if (res.rtnCode === '0000000') {
                     that.fetchResult();
