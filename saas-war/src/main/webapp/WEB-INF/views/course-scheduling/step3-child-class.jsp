@@ -8,7 +8,7 @@
     </div>
     <div class="scheduling-info">
         <div class="fl scheduling-name"></div>
-        <button class="fr btn btn-warning output-tpl" id="output-tpl"><i class="icon-output-down"></i>导出所有班级课程表</button>
+        <button class="fr btn btn-warning output-tpl1" id="output-tpl"><i class="icon-output-down"></i>导出所有班级课程表</button>
     </div>
     <table class="table" id="test1">
         <thead id="class-thead-list"></thead>

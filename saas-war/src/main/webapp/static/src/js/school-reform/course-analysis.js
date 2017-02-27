@@ -711,7 +711,7 @@ function groupCourseAnalysis(groups, stuNumbers) {
     groupCourseAnalysisBar.setOption(groupCourseAnalysisOption);
 }
 
-selectTypeAnalysis('25', '高二年级');
+//selectTypeAnalysis(tnId, '高二年级');
 //单科选课情况分析
 function selectTypeAnalysis(tnId, studentGrade) {
     Common.ajaxFun('/selectClassesGuide/selectTypeAnalysis.do', 'GET', {

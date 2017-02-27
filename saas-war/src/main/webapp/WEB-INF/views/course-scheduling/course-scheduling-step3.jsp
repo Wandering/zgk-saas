@@ -76,7 +76,10 @@
                                 </div>
                             </div>
                             <div id="one-key-page" class="">
+
                                 <div class="btn-one-key dh">一键生成课表</div>
+
+                                <%-- 正在排课 --%>
                                 <div class="arranging-course-tips dh">
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
@@ -86,29 +89,26 @@
                                     <p>正在努力排课中,预计3-10分钟,请耐心等待哦</p>
                                 </div>
 
-
-
-                                <%--<div class="wrapper">--%>
-                                    <%--<div class="load-bar">--%>
-                                        <%--<div class="load-bar-inner" data-loading="0"> <span id="counter"></span> </div>--%>
-                                    <%--</div>--%>
-                                    <%--<h1>正在努力排课中,预计需要等待5-10分钟才能排出课表,请耐心等待哦</h1>--%>
-                                <%--</div>--%>
-
-
-
-
-
+                                <%-- 排出课表 软性规则冲突 --%>
                                 <div class="info-modify dh">
-                                    <p>基础信息/排课规则已更改，是否重新排课</p>
-                                    <div class="retry-scheduling">重新排课</div>
-                                    <div class="look-origin-schedule">查看原课表</div>
+                                    <span class="retry-scheduling">重新排课</span>
+                                    <a target="_blank" class="rules-links" href="/rules-page">点击查看规则冲突列表</a>
                                 </div>
+
+                                <%-- 排课失败 规则提示 --%>
                                 <div class="scheduling-error dh">
                                     <i class="icon-cry-face"></i>
-                                    <%--<p>排课失败~ 因为*******，所以无法排出课表。请调整**规则/信息后，再进行排课</p>--%>
-                                    <p>排课失败!,请调整基础规则后，再重新排课</p>
+                                    <p>排课失败!,请调整基础规则&nbsp;&nbsp;&nbsp;&nbsp;<span class="retry-scheduling">重新排课</span></p>
+
+                                    <ul class="error-box-list"></ul>
                                 </div>
+
+                                <%-- 排课失败2 系统错误 规则提示 --%>
+                                <div class="scheduling-error2 dh">
+                                    <i class="icon-cry-face"></i>
+                                    <p>排课失败!&nbsp;&nbsp;&nbsp;&nbsp;<span class="retry-scheduling">重新排课</span></p>
+                                </div>
+
                             </div>
                             <%--教室课表|教师课表|学生课表|总课表--%>
                             <div id="role-scheduling-tab" class="dh">
