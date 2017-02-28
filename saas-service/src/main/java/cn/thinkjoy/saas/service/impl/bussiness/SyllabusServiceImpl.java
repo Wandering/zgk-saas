@@ -2,8 +2,10 @@ package cn.thinkjoy.saas.service.impl.bussiness;
 
 import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.core.Constant;
+import cn.thinkjoy.saas.dao.IJwCourseTableDAO;
 import cn.thinkjoy.saas.dao.IJwScheduleTaskDAO;
 import cn.thinkjoy.saas.dao.bussiness.ISyllabusDAO;
+import cn.thinkjoy.saas.domain.JwCourseTable;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.dto.JwCourseTableDTO;
@@ -24,6 +26,8 @@ import java.util.*;
 public class SyllabusServiceImpl implements ISyllabusService {
     @Autowired
     private ISyllabusDAO syllabusDAO;
+    @Autowired
+    private IJwCourseTableDAO jwCourseTableDAO;
     @Autowired
     private IJwScheduleTaskDAO jwScheduleTaskDAO;
     @Autowired
@@ -87,6 +91,101 @@ public class SyllabusServiceImpl implements ISyllabusService {
         return this.genSyllabus(tnId,taskId,Constant.TABLE_TYPE_CLASS,params);
     }
 
+    /**
+     * 交换班级
+     * @param tnId
+     * @param taskId
+     * @param classId
+     * @param source
+     * @param target
+     * @return
+     */
+    @Override
+    public boolean classExchange(int tnId,int taskId,int classId,int[] source, int[] target) {
+        List<JwCourseTable> sourceList = this.getSyllabusByCoordinate(tnId,taskId,classId,source,Constant.TABLE_TYPE_CLASS);
+        List<JwCourseTable> targetList = this.getSyllabusByCoordinate(tnId,taskId,classId,target,Constant.TABLE_TYPE_CLASS);
+        return updateExchange(sourceList,targetList);
+    }
+
+    /**
+     * 老师交换课表
+     * @param tnId
+     * @param taskId
+     * @param teacherId
+     * @param source
+     * @param target
+     * @return
+     */
+    @Override
+    public boolean teacherExchange(int tnId,int taskId,int teacherId,int[] source, int[] target) {
+        List<JwCourseTable> sourceList = this.getSyllabusByCoordinate(tnId,taskId,teacherId,source,Constant.TABLE_TYPE_TEACHER);
+        List<JwCourseTable> targetList = this.getSyllabusByCoordinate(tnId,taskId,teacherId,target,Constant.TABLE_TYPE_TEACHER);
+        return updateExchange(sourceList,targetList);
+    }
+
+    /**
+     * 更新交换
+     * @param sourceList
+     * @param targetList
+     * @return
+     */
+    private boolean updateExchange(List<JwCourseTable> sourceList,List<JwCourseTable> targetList){
+        //缓存二维坐标
+        int[] sourceTemp = new int[2];
+        sourceTemp[0] = sourceList.get(0).getWeek();
+        sourceTemp[1] = sourceList.get(0).getSort();
+        int[] targetTemp = new int[2];
+        targetTemp[0] = targetList.get(0).getWeek();
+        targetTemp[1] = targetList.get(0).getSort();
+
+        for (JwCourseTable  jwCourseTable: targetList){
+            jwCourseTableDAO.deleteById(jwCourseTable.getId());
+        }
+
+        for (JwCourseTable  jwCourseTable: targetList){
+            jwCourseTableDAO.deleteById(jwCourseTable.getId());
+        }
+
+        for (JwCourseTable  jwCourseTable: targetList){
+            jwCourseTable.setWeek(sourceTemp[0]);
+            jwCourseTable.setSort(sourceTemp[1]);
+            jwCourseTableDAO.insert(jwCourseTable);
+        }
+        for (JwCourseTable  jwCourseTable: targetList){
+            jwCourseTable.setWeek(targetTemp[0]);
+            jwCourseTable.setSort(targetTemp[1]);
+            jwCourseTableDAO.insert(jwCourseTable);
+        }
+
+        return true;
+    }
+
+    /**
+     * 根据坐标查询课表记录
+     * @param tnId
+     * @param taskId
+     * @param id
+     * @param coordinate
+     * @param type
+     * @return
+     */
+    private List<JwCourseTable> getSyllabusByCoordinate(int tnId,int taskId,int id,int[] coordinate,String type){
+        Map<String, Object> params = new HashMap<>();
+        switch (type){
+            case Constant.TABLE_TYPE_TEACHER:
+                params.put("teacherId", id);
+                break;
+            case Constant.TABLE_TYPE_CLASS:
+                params.put("classId", id);
+            default:
+                break;
+        }
+        params.put("week",coordinate[0]);
+        params.put("sort",coordinate[1]);
+        //
+        List<JwCourseTable> jwCourseTables = jwCourseTableDAO.queryList(params,"id","desc");
+        return jwCourseTables;
+    }
 
     /**
      * 抽取租户任务信息

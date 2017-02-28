@@ -64,6 +64,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     private IGradeService gradeService;
 
     @Autowired
+    private IJwCourseTableDAO courseTableDAO;
+
+    @Autowired
     private EXITenantConfigInstanceService exiTenantConfigInstanceService;
 
     @Autowired
@@ -1223,136 +1226,140 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      * @return
      */
     private Map<String,Object> getCourseResult(int tnId, int taskId){
-            List<JwCourseTable> jwCourseTables = new ArrayList<>();
-            Map<String,Object> resultMap = Maps.newHashMap();
-            List<List<List<String>>> courseTables = new ArrayList<>();
-            ;
-            LOGGER.info("************获取时间设置 S************");
-            Map<String,Object> timeConfigMap = this.getCourseTimeConfig(tnId,taskId);
-            resultMap.put("teachDate",timeConfigMap.get("teachDate").toString());
-            resultMap.put("teachTime",timeConfigMap.get("time").toString());
+        Map<String, Object> params = new HashMap<>();
+        params.put("tnId", tnId);
+        params.put("taskId", taskId);
+        courseTableDAO.deleteByCondition(params);
+        List<JwCourseTable> jwCourseTables = new ArrayList<>();
+        Map<String, Object> resultMap = Maps.newHashMap();
+        List<List<List<String>>> courseTables = new ArrayList<>();
+        ;
+        LOGGER.info("************获取时间设置 S************");
+        Map<String, Object> timeConfigMap = this.getCourseTimeConfig(tnId, taskId);
+        resultMap.put("teachDate", timeConfigMap.get("teachDate").toString());
+        resultMap.put("teachTime", timeConfigMap.get("time").toString());
 
 
-            int everyDaySection = Integer.valueOf(timeConfigMap.get("count").toString());
-            LOGGER.info("************获取时间设置 E************");
+        int everyDaySection = Integer.valueOf(timeConfigMap.get("count").toString());
+        LOGGER.info("************获取时间设置 E************");
 
-            LOGGER.info("************获取时间设置 S************");
-            Map<Integer,String> classMap = this.getClassByTnIdAndTaskId(tnId,taskId);
-            StringBuffer classBf = new StringBuffer();
-            StringBuffer classIdBf = new StringBuffer();
-            LOGGER.info("************获取时间设置 E************");
+        LOGGER.info("************获取时间设置 S************");
+        Map<Integer, String> classMap = this.getClassByTnIdAndTaskId(tnId, taskId);
+        StringBuffer classBf = new StringBuffer();
+        StringBuffer classIdBf = new StringBuffer();
+        LOGGER.info("************获取时间设置 E************");
 
-            LOGGER.info("************获取年级信息设置 S************");
-            JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
-            List<LinkedHashMap<String, Object>> classes = new ArrayList();
-            Map<String, Object> param = new HashMap<>();
-            param.put("gradeCode", jwScheduleTask.getGrade());
-            param.put("tnId", tnId);
-            Grade gradeServiceOne = (Grade) gradeService.queryOne(param);
-            String grade = gradeServiceOne.getGrade();
-            LOGGER.info("************获取年级信息设置 E************");
+        LOGGER.info("************获取年级信息设置 S************");
+        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
+        List<LinkedHashMap<String, Object>> classes = new ArrayList();
+        Map<String, Object> param = new HashMap<>();
+        param.put("gradeCode", jwScheduleTask.getGrade());
+        param.put("tnId", tnId);
+        Grade gradeServiceOne = (Grade) gradeService.queryOne(param);
+        String grade = gradeServiceOne.getGrade();
+        LOGGER.info("************获取年级信息设置 E************");
 
-            LOGGER.info("************获取课表 S************");
-            List<String> allCourseList = null;
-            Map<Integer,String> courses = getCourseByTnIdAndTaskId(tnId,taskId);
-            try {
-                String path = getScheduleTaskPath(tnId, taskId) + Constant.PATH_SCHEDULE;
+        LOGGER.info("************获取课表 S************");
+        List<String> allCourseList = null;
+        Map<Integer, String> courses = getCourseByTnIdAndTaskId(tnId, taskId);
+        try {
+            String path = getScheduleTaskPath(tnId, taskId) + Constant.PATH_SCHEDULE;
 //                String path = "/Users/dengshaofei/Documents/git/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
-                CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
-                allCourseList = main.readLines();
-            }catch (Exception e){
-                throw new BizException("error","排课数据获取失败");
-            }
-            List<List<String>> weekCourseList;
-            List<String> dayCourseList;
-            Map<String,Object> teachers = this.getTeacherByCourse(tnId,taskId,grade);
-            for (String courseLine : allCourseList){
-                String[] courseInfo = courseLine.split(Constant.COURSE_TABLE_LINE_SPLIT_CLASS);
-                String courseStr = courseInfo[1];
-                Integer classId = null;
-                try {
-                    classId = Integer.valueOf(courseInfo[0]);
-                }catch (Exception e){
-                    throw new BizException("error","班级不存在");
-                }
-                String className = classMap.get(classId);
-
-                classBf.append(className).append("|");
-                classIdBf.append(classId).append("|");
-
-                List<List<String>> weekTempCourses = spiltDay(everyDaySection,courseStr);
-                weekCourseList = new LinkedList<>();
-
-                for ( int i = 0;i < weekTempCourses.size() ; i ++ ){
-                    List<String> dayCourseTempList = weekTempCourses.get(i);
-                    dayCourseList = new LinkedList<>();
-
-                    for ( int j = 0 ; j < dayCourseTempList.size() ; j++ ){
-                        String dayCourse = dayCourseTempList.get(j);
-                        String course = courses.get(Integer.valueOf(dayCourse));
-                        String teacherName = null;
-                        if (course == ""){
-                            teacherName = "";
-                            JwCourseTable jwCourseTable = new JwCourseTable();
-                            jwCourseTable.setTnId(tnId);
-                            jwCourseTable.setTaskId(taskId);
-                            jwCourseTable.setGradeId(Integer.valueOf(jwScheduleTask.getGrade()));
-                            jwCourseTable.setClassId(classId);
-                            jwCourseTable.setCourseId(Integer.valueOf(dayCourse));
-                            jwCourseTable.setTeacherId(0);
-                            jwCourseTable.setStatus(0);
-                            jwCourseTable.setWeek(i);
-                            jwCourseTable.setSort(j);
-                            jwCourseTables.add(jwCourseTable);
-                        }else {
-//
-                            Map<String,Object> teacherMap = (Map<String,Object>)teachers.get(getTeacherKey(course,className));
-                            teacherName = teacherMap.get("teacher_name").toString();
-                            //teacherId teacherMap.get("id")
-                            //gradeId jwScheduleTask.getGrade()
-                            //classId classId
-                            //courseId Integer.valueOf(dayCourse)
-                            //week i
-                            //sort j
-                            JwCourseTable jwCourseTable = new JwCourseTable();
-                            jwCourseTable.setTnId(tnId);
-                            jwCourseTable.setTaskId(taskId);
-                            jwCourseTable.setGradeId(Integer.valueOf(jwScheduleTask.getGrade()));
-                            jwCourseTable.setClassId(classId);
-                            jwCourseTable.setCourseId(Integer.valueOf(dayCourse));
-                            jwCourseTable.setTeacherId(Integer.valueOf(teacherMap.get("id").toString()));
-                            jwCourseTable.setWeek(i);
-                            jwCourseTable.setSort(j);
-                            jwCourseTable.setStatus(Constant.COURSE_STATUS_Y);
-                            jwCourseTables.add(jwCourseTable);
-
-                        }
-                        //课程转换
-                        dayCourseList.add(mergeTeacherAndCourse(course,teacherName));
-                    }
-                    weekCourseList.add(dayCourseList);
-                }
-                courseTables.add(weekCourseList);
-            }
-            if (classBf.length() > 0) {
-                classBf.delete(classBf.length() - 1, classBf.length());
-            }
-            if (classIdBf.length() > 0) {
-                classIdBf.delete(classIdBf.length() - 1, classIdBf.length());
-            }
-            resultMap.put("room",classBf.toString());
-            resultMap.put("classId",classIdBf.toString());
-            resultMap.put("roomData",courseTables);
-            LOGGER.info("************获取课表 E************");
-
-            LOGGER.info("************存redis S************");
-            LOGGER.info("************存redis E************");
+            CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
+            allCourseList = main.readLines();
+        } catch (Exception e) {
+            throw new BizException("error", "排课数据获取失败");
+        }
+        List<List<String>> weekCourseList;
+        List<String> dayCourseList;
+        Map<String, Object> teachers = this.getTeacherByCourse(tnId, taskId, grade);
+        for (String courseLine : allCourseList) {
+            String[] courseInfo = courseLine.split(Constant.COURSE_TABLE_LINE_SPLIT_CLASS);
+            String courseStr = courseInfo[1];
+            Integer classId = null;
             try {
-                iexJwCourseTableDAO.insertList(jwCourseTables);
-            }catch (Exception e){
-                LOGGER.info("************存数据库失败*************");
+                classId = Integer.valueOf(courseInfo[0]);
+            } catch (Exception e) {
+                throw new BizException("error", "班级不存在");
             }
-            return resultMap;
+            String className = classMap.get(classId);
+
+            classBf.append(className).append("|");
+            classIdBf.append(classId).append("|");
+
+            List<List<String>> weekTempCourses = spiltDay(everyDaySection, courseStr);
+            weekCourseList = new LinkedList<>();
+
+            for (int i = 0; i < weekTempCourses.size(); i++) {
+                List<String> dayCourseTempList = weekTempCourses.get(i);
+                dayCourseList = new LinkedList<>();
+
+                for (int j = 0; j < dayCourseTempList.size(); j++) {
+                    String dayCourse = dayCourseTempList.get(j);
+                    String course = courses.get(Integer.valueOf(dayCourse));
+                    String teacherName = null;
+                    if (course == "") {
+                        teacherName = "";
+                        JwCourseTable jwCourseTable = new JwCourseTable();
+                        jwCourseTable.setTnId(tnId);
+                        jwCourseTable.setTaskId(taskId);
+                        jwCourseTable.setGradeId(Integer.valueOf(jwScheduleTask.getGrade()));
+                        jwCourseTable.setClassId(classId);
+                        jwCourseTable.setCourseId(Integer.valueOf(dayCourse));
+                        jwCourseTable.setTeacherId(0);
+                        jwCourseTable.setStatus(0);
+                        jwCourseTable.setWeek(i);
+                        jwCourseTable.setSort(j);
+                        jwCourseTables.add(jwCourseTable);
+                    } else {
+//
+                        Map<String, Object> teacherMap = (Map<String, Object>) teachers.get(getTeacherKey(course, className));
+                        teacherName = teacherMap.get("teacher_name").toString();
+                        //teacherId teacherMap.get("id")
+                        //gradeId jwScheduleTask.getGrade()
+                        //classId classId
+                        //courseId Integer.valueOf(dayCourse)
+                        //week i
+                        //sort j
+                        JwCourseTable jwCourseTable = new JwCourseTable();
+                        jwCourseTable.setTnId(tnId);
+                        jwCourseTable.setTaskId(taskId);
+                        jwCourseTable.setGradeId(Integer.valueOf(jwScheduleTask.getGrade()));
+                        jwCourseTable.setClassId(classId);
+                        jwCourseTable.setCourseId(Integer.valueOf(dayCourse));
+                        jwCourseTable.setTeacherId(Integer.valueOf(teacherMap.get("id").toString()));
+                        jwCourseTable.setWeek(i);
+                        jwCourseTable.setSort(j);
+                        jwCourseTable.setStatus(Constant.COURSE_STATUS_Y);
+                        jwCourseTables.add(jwCourseTable);
+
+                    }
+                    //课程转换
+                    dayCourseList.add(mergeTeacherAndCourse(course, teacherName));
+                }
+                weekCourseList.add(dayCourseList);
+            }
+            courseTables.add(weekCourseList);
+        }
+        if (classBf.length() > 0) {
+            classBf.delete(classBf.length() - 1, classBf.length());
+        }
+        if (classIdBf.length() > 0) {
+            classIdBf.delete(classIdBf.length() - 1, classIdBf.length());
+        }
+        resultMap.put("room", classBf.toString());
+        resultMap.put("classId", classIdBf.toString());
+        resultMap.put("roomData", courseTables);
+        LOGGER.info("************获取课表 E************");
+
+        LOGGER.info("************存redis S************");
+        LOGGER.info("************存redis E************");
+        try {
+            iexJwCourseTableDAO.insertList(jwCourseTables);
+        } catch (Exception e) {
+            LOGGER.info("************存数据库失败*************");
+        }
+        return resultMap;
     }
     @Override
     public Map<String,Object> getCourseTimeConfig(int tnId, int taskId){
