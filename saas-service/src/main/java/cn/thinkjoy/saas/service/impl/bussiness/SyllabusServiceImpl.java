@@ -44,8 +44,6 @@ public class SyllabusServiceImpl implements ISyllabusService {
 
         Map<String, Object> params = new HashMap<>();
         /**变量声明**/
-        params.put("tnId",tnId);
-        params.put("taskId",taskId);
 
         jwCourseTableDTOs = this.queryList(tnId,taskId,params);
 
@@ -71,8 +69,6 @@ public class SyllabusServiceImpl implements ISyllabusService {
     public CourseResultView getTeacherSyllabus(int tnId, int taskId, int teacherId) {
         Map<String, Object> params = new HashMap<>();
         params.put("teacherId",teacherId);
-        params.put("tnId",tnId);
-        params.put("taskId",taskId);
         return this.genSyllabus(tnId,taskId,Constant.TABLE_TYPE_TEACHER,params);
     }
 
@@ -88,8 +84,6 @@ public class SyllabusServiceImpl implements ISyllabusService {
     public CourseResultView getClassSyllabus(int tnId, int taskId, int classId) {
         Map<String, Object> params = new HashMap<>();
         params.put("classId",classId);
-        params.put("tnId",tnId);
-        params.put("taskId",taskId);
         return this.genSyllabus(tnId,taskId,Constant.TABLE_TYPE_CLASS,params);
     }
 
@@ -120,7 +114,8 @@ public class SyllabusServiceImpl implements ISyllabusService {
         String teacherTableName;
         String classTableName;
         List<JwCourseTableDTO> jwCourseTableDTOs;
-
+        params.put("tnId",tnId);
+        params.put("taskId",taskId);
         teacherTableName = ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER, tnId);
         classTableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM, tnId);
         jwCourseTableDTOs = syllabusDAO.queryList(params, teacherTableName, classTableName);
