@@ -13,5 +13,15 @@
         select count(*) from ${tableName} t where t.student_no=#{studentNo} and t.student_name=#{studentName}
     </select>
 
+    <select id="getStudentInfo" parameterType="java.util.Map" resultType="java.util.Map">
+        select * from ${tableName} t where t.student_no=#{studentNo}
+    </select>
+
+    <select id="getSelectCourseInfo" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.domain.SelectCourseTask">
+        select tt.state,tt.startTime,tt.endTime
+        from saas_select_course_task tt
+        where tt.tnId=#{tnId} and status=0 and tt.grade=#{grade};
+    </select>
+
 </mapper>
 

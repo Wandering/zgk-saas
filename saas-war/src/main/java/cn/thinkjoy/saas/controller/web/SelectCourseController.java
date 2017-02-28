@@ -23,10 +23,18 @@ public class SelectCourseController {
 
     @RequestMapping("bindingSchool")
     @ResponseBody
-    public Map<String,Object> bindingSchool(@RequestParam(value = "schoolId",required = true)String schoolId,
+    public Map<String,Object> bindingSchool(@RequestParam(value = "userId",required = true)String userId,
+                                            @RequestParam(value = "schoolId",required = true)String schoolId,
                                             @RequestParam(value = "studentNo",required = true)String studentNo,
                                             @RequestParam(value = "studentName",required = true)String studentName){
 
-        return iSelectCourseService.bindingSchool(schoolId,studentNo,studentName);
+        return iSelectCourseService.bindingSchool(schoolId,studentNo,studentName,userId);
+    }
+
+    @RequestMapping("getSelectCourseInfo")
+    @ResponseBody
+    public Map<String,Object> getSelectCourseInfo(@RequestParam(value = "schoolId",required = true)String schoolId,
+                                                  @RequestParam(value = "studentNo",required = true)String studentNo) {
+        return iSelectCourseService.getSelectCourseInfo(schoolId, studentNo);
     }
 }
