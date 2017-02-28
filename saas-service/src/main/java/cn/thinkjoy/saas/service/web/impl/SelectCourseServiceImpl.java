@@ -7,6 +7,7 @@ import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.dto.StudentSelectCourseDto;
 import cn.thinkjoy.saas.service.IJwScheduleTaskService;
 import cn.thinkjoy.saas.service.web.ISelectCourseService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -124,12 +125,12 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
             List<SelectCourseSetting> selectCourseSettingList=null;
             //【3】选课开始前
             if (nowTime<startDate.getTime()){
-                getSelectCourseList(taskId);
+                selectCourseSettingList=getSelectCourseList(taskId);
                 flog=1;
             }
             //【4】选课中
             else if (startDate.getTime()<nowTime&&nowTime<endDate.getTime()){
-                result=hasSelectCourse(tableName,taskId,studentNo);
+                result=hasSelectCourse(taskId,studentNo);
                 //尚未选课
                 if (result==null) {
                     selectCourseSettingList=getSelectCourseList(taskId);
@@ -142,7 +143,7 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
             }
             //【5】选课结束后
             else {
-                result=hasSelectCourse(tableName,taskId,studentNo);
+                result=hasSelectCourse(taskId,studentNo);
                 //已选课
                 if (result!=null) {
                     isSelect=1;
@@ -196,34 +197,19 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
 
     /**
      * 已选课
-     * @param tableName
      * @param taskId
      * @param stuNo
      * @return
      */
-    private Object hasSelectCourse(String tableName,String taskId,String stuNo){
-        //高考科目
-        Map<String,Object> map=new HashMap<>();
-        map.put("tableName",tableName);
-        map.put("studentNo",stuNo);
-        Map studentMap=iSelectCourseDAO.getStudentInfo(map);
-        if (!(studentMap.containsKey("student_check_major1")&&studentMap.get("student_check_major1")!=null&&!studentMap.get("student_check_major1").equals("")
-                &&studentMap.containsKey("student_check_major2")&&studentMap.get("student_check_major2")!=null&&!studentMap.get("student_check_major2").equals("")
-                &&studentMap.containsKey("student_check_major3")&&studentMap.get("student_check_major3")!=null&&!studentMap.get("student_check_major3").equals(""))){
-            return null;
-        }
-        String selectCourseList=studentMap.get("student_check_major1").toString()+"-"+studentMap.get("student_check_major2")+"-"+studentMap.get("student_check_major3");
+    private Object hasSelectCourse(String taskId,String stuNo){
         StudentSelectCourseDto studentSelectCourseDto=new StudentSelectCourseDto();
-        studentSelectCourseDto.setSelectCourseList(selectCourseList);
-        //校本课
-        if (isSchoolCourse(taskId)) {
-            Map<String, Object> map1 = new HashMap<>();
-            map1.put("taskId", taskId);
-            map1.put("stuNo", stuNo);
-            map1.put("status", 0);
-            SelectCourseStuDetail selectCourseStuDetail = iSelectCourseStuDetailDAO.queryOne(map1, null, null);
-            studentSelectCourseDto.setSchoolCourseId(selectCourseStuDetail.getCourseId().toString());
-            studentSelectCourseDto.setSchoolCourse(selectCourseStuDetail.getCourseName());
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("taskId", taskId);
+        map1.put("stuNo", stuNo);
+        map1.put("status", 0);
+        List<SelectCourseStuDetail> selectCourseStuDetailList = iSelectCourseStuDetailDAO.queryList(map1, null, null);
+        if (selectCourseStuDetailList.size()<1){
+            return null;
         }
         return studentSelectCourseDto;
 
@@ -234,13 +220,13 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
      * @param taskId
      * @return
      */
-    private boolean isSchoolCourse(String taskId){
+    private boolean isSchoolCourse(String taskId,int type){
         Map<String,Object> map1=new HashMap<>();
         map1.put("status",0);
         map1.put("taskId",taskId);
-        map1.put("type",1);
+        map1.put("type",type);
         List<SelectCourseSetting> selectCourseSettingList=iSelectCourseSettingDAO.queryList(map1, null, null);
-        if (selectCourseSettingList.size()==1){
+        if (selectCourseSettingList.size()>0){
             return true;
         }
         return false;
@@ -264,6 +250,35 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         resultMap.put("studentName",studentMap.get("student_name"));
         resultMap.put("grade",studentMap.get("student_grade"));
         resultMap.put("class",studentMap.get("student_class"));
+        return resultMap;
+    }
+
+    @Override
+    public Map<String,Object> addSelectCourse(String schoolId,String studentNo,String majors,String schoolCourse){
+        Map<String,Object> resultMap=new HashMap<>();
+        Tenant tenant=iTenantDAO.findOne("gk_school_id", schoolId, null, null);
+        String tnId=tenant.getId().toString();
+        Map<String,Object> studentMap=getSaasStudentInfo(schoolId,studentNo);
+        int gradeCode=getGradeCode(tnId,studentMap.get("grade").toString());
+        //【1】保存高考课程
+        String[] majorListId=majors.split("-");
+        Map<String,Object> map=new HashMap<>();
+        map.put("createDate",System.currentTimeMillis());
+        map.put("modifyDate",System.currentTimeMillis());
+        map.put("status",0);
+        map.put("stuNo",studentNo);
+        map.put("majorList",majorListId);
+        map.put("taskId",getTaskId(tnId,gradeCode));
+        map.put("type",0);
+        iSelectCourseDAO.insertList(map);
+        //【2】保存校本课程
+        if (StringUtils.isNotBlank(schoolCourse)) {
+            String[] schoolCourseList = schoolCourse.split("-");
+            map.put("majorList",schoolCourseList);
+            map.put("type",1);
+            iSelectCourseDAO.insertList(map);
+        }
+        resultMap.put("result",true);
         return resultMap;
     }
 }

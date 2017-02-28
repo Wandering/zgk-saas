@@ -40,18 +40,18 @@ public class SelectCourseController {
 
     @RequestMapping("addSelectCourse")
     @ResponseBody
-    public Map<String,Object> addSelectCourse(@RequestParam(value = "major1",required = true)String major1,
-                                              @RequestParam(value = "major2",required = true)String major2,
-                                              @RequestParam(value = "major3",required = true)String major3,
+    public Map<String,Object> addSelectCourse(@RequestParam(value = "schoolId",required = true)String schoolId,
+                                              @RequestParam(value = "studentNo",required = true)String studentNo,
+                                              @RequestParam(value = "majorList",required = true)String majorList,
                                               @RequestParam(value = "schoolCourse",required = true)String schoolCourse) {
-        return null;
+        return iSelectCourseService.addSelectCourse(schoolId,studentNo,majorList,schoolCourse);
     }
 
     @RequestMapping("getSaasStudentInfo")
     @ResponseBody
     public Map<String,Object> getSaasStudentInfo(@RequestParam(value = "schoolId",required = true)String schoolId,
                                                  @RequestParam(value = "studentNo",required = true)String studentNo) {
-        return iSelectCourseService.getSaasStudentInfo(schoolId,studentNo);
+        return iSelectCourseService.getSaasStudentInfo(schoolId, studentNo);
     }
 
 }

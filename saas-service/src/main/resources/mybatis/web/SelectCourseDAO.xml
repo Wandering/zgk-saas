@@ -23,5 +23,30 @@
         where tt.tnId=#{tnId} and status=0 and tt.grade=#{grade};
     </select>
 
+    <insert id="insertList" parameterType="java.util.Map">
+        insert into saas_select_course_stu_detail(
+            createDate,
+            modifyDate,
+            status,
+            stuNo,
+            courseId,
+            courseName,
+            taskId,
+            type
+        ) VALUES
+        <foreach collection="majorList" item="courseId" index="index" separator=",">
+        (
+            #{createDate},
+            #{modifyDate},
+            #{status},
+            #{stuNo},
+            #{courseId},
+            (select course_name FROM saas_course_base_info ss where id=#{courseId}),
+            #{taskId},
+            #{type}
+        )
+        </foreach>
+    </insert>
+
 </mapper>
 

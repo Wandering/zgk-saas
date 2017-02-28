@@ -32,7 +32,17 @@ public class SelectCourseStuDetail extends CreateBaseDomain<Long> {
     /** 任务ID */
     private Integer taskId;
 
-	public SelectCourseStuDetail(){
+    private Integer type;
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public SelectCourseStuDetail(){
 	}
     public void setModifyDate(Long value) {
         this.modifyDate = value;

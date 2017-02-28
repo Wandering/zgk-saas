@@ -11,4 +11,6 @@ public interface ISelectCourseService {
     public Map<String,Object> getSelectCourseInfo(String schoolId,String studentNo);
 
     public Map<String,Object> getSaasStudentInfo(String schoolId,String studentNo);
+
+    public Map<String,Object> addSelectCourse(String schoolId,String studentNo,String majors,String schoolCourse);
 }

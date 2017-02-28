@@ -17,4 +17,6 @@ public interface ISelectCourseDAO {
     public Map getStudentInfo(Map map);
 
     public List<SelectCourseTask> getSelectCourseInfo(Map map);
+
+    public int insertList(Map map);
 }
