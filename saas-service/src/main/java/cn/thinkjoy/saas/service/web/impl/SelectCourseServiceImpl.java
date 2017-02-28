@@ -141,12 +141,8 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
             //【5】选课结束后
             else {
                 result=hasSelectCourse(tableName,taskId,studentNo);
-                //尚未选课
-                if (result==null) {
-                    selectCourseSettingList=getSelectCourseList(taskId);
-                }
                 //已选课
-                else {
+                if (result!=null) {
                     isSelect=1;
                 }
                 flog=3;

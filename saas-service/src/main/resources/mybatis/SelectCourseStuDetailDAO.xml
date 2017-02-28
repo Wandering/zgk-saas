@@ -467,37 +467,7 @@ selectList
 
     <select id="queryOne" parameterType="java.util.Map" resultType="SelectCourseStuDetail">
         SELECT
-        <if test="selector!=null">
-            <trim prefixOverrides=",">
-                    <if test="selector.id!=null">
-                        , id
-                    </if>
-                    <if test="selector.createDate!=null">
-                        , createDate
-                    </if>
-                    <if test="selector.modifyDate!=null">
-                        , modifyDate
-                    </if>
-                    <if test="selector.status!=null">
-                        , status
-                    </if>
-                    <if test="selector.stuNo!=null">
-                        , stuNo
-                    </if>
-                    <if test="selector.courseId!=null">
-                        , courseId
-                    </if>
-                    <if test="selector.courseName!=null">
-                        , courseName
-                    </if>
-                    <if test="selector.taskId!=null">
-                        , taskId
-                    </if>
-            </trim>
-        </if>
-        <if test="selector==null">
             <include refid="Base_Column_List" />
-        </if>
         FROM saas_select_course_stu_detail
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
