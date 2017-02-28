@@ -7,6 +7,7 @@
 
 package cn.thinkjoy.saas.service.bussiness;
 
+import cn.thinkjoy.saas.domain.JwCourseTable;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import com.alibaba.dubbo.common.json.ParseException;
@@ -80,4 +81,12 @@ public interface IEXJwScheduleTaskService {
      * @return
      */
     String getScheduleTaskPath(Integer taskId, Integer tnId);
+
+    /**
+     * 调课
+     * @param jwCourseTable   调课对象
+     * @param adjustmentType  0:老师 1:行政
+     * @return
+     */
+    boolean SerializableAdjustmentSchedule(JwCourseTable jwCourseTable, Integer adjustmentType);
 }
