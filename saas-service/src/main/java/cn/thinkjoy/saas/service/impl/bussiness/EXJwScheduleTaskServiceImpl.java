@@ -184,7 +184,52 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         return result;
     }
+    /**
+     * 获取调课结果状态
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    @Override
+    public String getAdjustmentSchduleResult(Integer taskId, Integer tnId) {
 
+        String path = getScheduleTaskPath(taskId, tnId);
+
+        String result = FileOperation.readerTxtString(path, FileOperation.AD_RESULT_TXT + ".txt");
+
+        return result;
+    }
+
+    @Override
+    public List<String> getAdjustmentInfo(Integer taskId, Integer tnId) {
+
+        List<String> failMsg = new ArrayList<>();
+
+        String path = getScheduleTaskPath(taskId, tnId);
+
+        String filenPath = path + FileOperation.ADJUSTMENT_TXT;
+
+        File file = new File(filenPath);
+        StringBuilder result = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
+            String s = null;
+            Integer i = 0;
+            String errMsg = "", errTag = "0";
+            while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
+                result.append(s);
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String[] arr = result.toString().split(FileOperation.STR_SPLIT);
+
+        failMsg = Arrays.asList(arr);
+
+        return failMsg;
+    }
     /**
      * 硬性规则违反描述
      * @param taskId

@@ -27,13 +27,20 @@ public class FileOperation {
 
     public static final String PARMETERS="parameters";
 
-    public static final String SCHEDULE_RESULT="result";
+    public static final String SCHEDULE_RESULT="result"; //排课结果
+    public static final String AD_RESULT_TXT="ad_result";//调课结果
 
     public static final String LINE_SPLIT="\r\n";
     public static final String STR_SPLIT="\t";
     public static final String CHAR_SPLIT=" ";
     public static final String ERROR_TXT="error.txt";
     public static final String FAIL_TXT="FAIL.txt";
+    public static final String AD_ERROR_TXT="ad_error.txt";
+
+
+    public static final String ADJUSTMENT_TXT="adjustment.txt";//调课颜色信息
+    public static final String EXCHANGE_TXT="exchanges.txt";//原因信息
+
 
     //硬性规则
     public static final String  NON_ADM_ERROR_MSG="不排课时间过多,行政班课时不足。班级:%s,课时:%s";
