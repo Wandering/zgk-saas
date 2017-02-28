@@ -124,6 +124,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
 
     @Override
+    @Deprecated
     public CourseResultView getCourseResult(String type,Integer taskId,Integer tnId,Map<String,Object> paramsMap,Map<String, Object> courseTimeConfig) {
         switch (type){
             case Constant.TABLE_TYPE_TEACHER:
@@ -139,6 +140,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     }
 
     @Override
+    @Deprecated
     public Map<String,Object> getAllCourseResult(Integer taskId,Integer tnId) throws IOException, ParseException {
 
         return getCourseResult(tnId,taskId);
@@ -478,8 +480,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     String shellCMD=ReadCmdLine.timetableShellCmd(path);
                     Integer c = ReadCmdLine.run(path,shellCMD);
                     String result = getSchduleResultStatus(taskId, tnId);
-                    String redisKey = getScheduleRedisKey(tnId,taskId);
-                   if (redis.exists(redisKey))redis.del(redisKey);
+                    //翻译课表并存入数据库
+                    getCourseResult(tnId,taskId);
 
                     if (result.equals("1")) {
                         updateScheduleTask(taskId, 4);
@@ -1199,15 +1201,11 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      * @param taskId
      * @return
      */
-    private Map<String,Object> getCourseResult(int tnId, int taskId)
-            throws ParseException, IOException {
-        List<JwCourseTable> jwCourseTables = new ArrayList<>();
-        String redisKey = getScheduleRedisKey(tnId,taskId);
-        if (!this.redis.exists(redisKey)) {
+    private Map<String,Object> getCourseResult(int tnId, int taskId){
+            List<JwCourseTable> jwCourseTables = new ArrayList<>();
             Map<String,Object> resultMap = Maps.newHashMap();
             List<List<List<String>>> courseTables = new ArrayList<>();
             ;
-            CourseResultView courseResultView = new CourseResultView();
             LOGGER.info("************获取时间设置 S************");
             Map<String,Object> timeConfigMap = this.getCourseTimeConfig(tnId,taskId);
             resultMap.put("teachDate",timeConfigMap.get("teachDate").toString());
@@ -1327,7 +1325,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             LOGGER.info("************获取课表 E************");
 
             LOGGER.info("************存redis S************");
-            this.redis.set(redisKey, JSON.json(resultMap),Constant.SCHEDULE_REDIS_TIME, TimeUnit.DAYS);
             LOGGER.info("************存redis E************");
             try {
                 iexJwCourseTableDAO.insertList(jwCourseTables);
@@ -1335,9 +1332,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 LOGGER.info("************存数据库失败*************");
             }
             return resultMap;
-        } else {
-            return JSON.parse(redis.get(redisKey).toString(), HashMap.class);
-        }
     }
     @Override
     public Map<String,Object> getCourseTimeConfig(int tnId, int taskId){

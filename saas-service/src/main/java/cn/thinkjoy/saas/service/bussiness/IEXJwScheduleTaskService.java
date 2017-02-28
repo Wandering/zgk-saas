@@ -21,7 +21,8 @@ public interface IEXJwScheduleTaskService {
      * @param type
      * @return
      */
-    public CourseResultView getCourseResult(String type,Integer taskId, Integer tnId, Map<String,Object> paramsMap,Map<String, Object> courseTimeConfig);
+    @Deprecated
+    CourseResultView getCourseResult(String type,Integer taskId, Integer tnId, Map<String,Object> paramsMap,Map<String, Object> courseTimeConfig);
 
     /**
      * 总课表
@@ -29,6 +30,7 @@ public interface IEXJwScheduleTaskService {
      * @param tnId
      * @return
      */
+    @Deprecated
     Map<String,Object> getAllCourseResult(Integer taskId, Integer tnId) throws IOException, ParseException;
 
 

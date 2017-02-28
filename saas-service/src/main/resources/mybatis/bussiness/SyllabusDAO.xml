@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.thinkjoy.saas.dao.bussiness.EXIClassRoomDAO">
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.ISyllabusDAO">
     <!--<sql id="Base_Column_List">-->
         <!--id,-->
         <!--tn_id as tnId,-->
@@ -10,7 +10,7 @@
         <!--room_order as roomOrder,-->
         <!--create_date as createDate-->
     <!--</sql>-->
-    <select id="queryList" resultType="map" parameterType="cn.thinkjoy.saas.dto.JwCourseTableDTO">
+    <select id="queryList" resultType="cn.thinkjoy.saas.dto.JwCourseTableDTO" parameterType="map">
         SELECT
         tb.*, teacher.teacher_name AS teacherName,
         class.class_name AS className,
@@ -21,28 +21,28 @@
         LEFT JOIN saas_course_base_info course on course.id = tb.courseId
         where tb.`status` = 1
         <if test="params.teacherId">
-            and teacherId = #{params.teacherId}
+            and tb.teacherId = #{params.teacherId}
         </if>
         <if test="params.classId">
-            and teacherId = #{params.classId}
+            and tb.classId = #{params.classId}
         </if>
         <if test="params.courseId">
-            and teacherId = #{params.courseId}
+            and tb.courseId = #{params.courseId}
         </if>
         <if test="params.gradeId">
-            and teacherId = #{params.gradeId}
+            and tb.gradeId = #{params.gradeId}
         </if>
         <if test="params.week">
-            and teacherId = #{params.week}
+            and tb.week = #{params.week}
         </if>
         <if test="params.sort">
-            and teacherId = #{params.sort}
+            and tb.sort = #{params.sort}
         </if>
         <if test="params.tnId">
-            and teacherId = #{params.tnId}
+            and tb.tnId = #{params.tnId}
         </if>
         <if test="params.taskId">
-            and teacherId = #{params.taskId}
+            and tb.taskId = #{params.taskId}
         </if>
         UNION ALL
         SELECT
@@ -55,28 +55,28 @@
         LEFT JOIN saas_course_base_info course on course.id = tb.courseId
         where tb.`status` = 0
         <if test="params.teacherId">
-            and teacherId = #{params.teacherId}
+            and tb.teacherId = #{params.teacherId}
         </if>
         <if test="params.classId">
-            and teacherId = #{params.classId}
+            and tb.classId = #{params.classId}
         </if>
         <if test="params.courseId">
-            and teacherId = #{params.courseId}
+            and tb.courseId = #{params.courseId}
         </if>
         <if test="params.gradeId">
-            and teacherId = #{params.gradeId}
+            and tb.gradeId = #{params.gradeId}
         </if>
         <if test="params.week">
-            and teacherId = #{params.week}
+            and tb.week = #{params.week}
         </if>
         <if test="params.sort">
-            and teacherId = #{params.sort}
+            and tb.sort = #{params.sort}
         </if>
         <if test="params.tnId">
-            and teacherId = #{params.tnId}
+            and tb.tnId = #{params.tnId}
         </if>
         <if test="params.taskId">
-            and teacherId = #{params.taskId}
+            and tb.taskId = #{params.taskId}
         </if>
         ORDER BY classId,week,sort asc
     </select>
