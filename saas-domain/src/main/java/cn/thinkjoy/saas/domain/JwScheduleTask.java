@@ -9,14 +9,11 @@
 
 package cn.thinkjoy.saas.domain;
 
-import cn.thinkjoy.saas.enums.StatusEnum;
+import cn.thinkjoy.common.domain.BaseDomain;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import cn.thinkjoy.common.domain.BaseDomain;
-
-import java.util.*;
 
 public class JwScheduleTask extends BaseDomain{
     private String scheduleName;
@@ -27,6 +24,7 @@ public class JwScheduleTask extends BaseDomain{
     private Integer tnId;
     private Integer status;
     private Integer delStatus;
+    private String path;
 
 	public JwScheduleTask(){
 
@@ -95,6 +93,7 @@ public class JwScheduleTask extends BaseDomain{
 			.append("CreateDate",getCreateDate())
 			.append("TnId",getTnId())
 			.append("delStatus",getDelStatus())
+            .append("Path",getPath())
 			.toString();
 	}
 
@@ -106,11 +105,20 @@ public class JwScheduleTask extends BaseDomain{
         this.delStatus = delStatus;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     public int hashCode() {
 		return new HashCodeBuilder()
 			.append(getId())
 			.toHashCode();
 	}
+
 
 	public boolean equals(Object obj) {
 		if(obj instanceof JwScheduleTask == false) return false;
