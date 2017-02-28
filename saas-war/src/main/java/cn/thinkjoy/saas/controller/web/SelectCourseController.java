@@ -37,4 +37,21 @@ public class SelectCourseController {
                                                   @RequestParam(value = "studentNo",required = true)String studentNo) {
         return iSelectCourseService.getSelectCourseInfo(schoolId, studentNo);
     }
+
+    @RequestMapping("addSelectCourse")
+    @ResponseBody
+    public Map<String,Object> addSelectCourse(@RequestParam(value = "major1",required = true)String major1,
+                                              @RequestParam(value = "major2",required = true)String major2,
+                                              @RequestParam(value = "major3",required = true)String major3,
+                                              @RequestParam(value = "schoolCourse",required = true)String schoolCourse) {
+        return null;
+    }
+
+    @RequestMapping("getSaasStudentInfo")
+    @ResponseBody
+    public Map<String,Object> getSaasStudentInfo(@RequestParam(value = "schoolId",required = true)String schoolId,
+                                                 @RequestParam(value = "studentNo",required = true)String studentNo) {
+        return iSelectCourseService.getSaasStudentInfo(schoolId,studentNo);
+    }
+
 }

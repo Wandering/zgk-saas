@@ -92,11 +92,13 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         map.put("tableName",tableName);
         map.put("studentNo",studentNo);
         Map<String,String> studentMap=iSelectCourseDAO.getStudentInfo(map);
+
+        Map<String,Object> map1=new HashMap<>();
         String gradeName=studentMap.get("student_grade");
         int gradeCode = getGradeCode(tnId, gradeName);
-        map.put("tnId",tnId);
-        map.put("grade",gradeCode);
-        List<SelectCourseTask> selectCourseTaskList=iSelectCourseDAO.getSelectCourseInfo(map);
+        map1.put("tnId",tnId);
+        map1.put("grade",gradeCode);
+        List<SelectCourseTask> selectCourseTaskList=iSelectCourseDAO.getSelectCourseInfo(map1);
         if (selectCourseTaskList.isEmpty()||selectCourseTaskList.size()<1){
             resultMap.put("msg","还未设置选课");
             return resultMap;
@@ -242,5 +244,26 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Map<String,Object> getSaasStudentInfo(String schoolId,String studentNo){
+        Map<String,Object> resultMap=new HashMap<>();
+        Tenant tenant=iTenantDAO.findOne("gk_school_id", schoolId, null, null);
+        if (tenant==null){//学校没有使用saas
+            resultMap.put("msg","学校没有使用saas，无法获取学生信息");
+            return resultMap;
+        }
+        String tnId=tenant.getId().toString();
+        String tableName="saas_"+tnId+"_student_excel";
+        Map<String,Object> map=new HashMap<>();
+        map.put("tableName",tableName);
+        map.put("studentNo",studentNo);
+        Map<String,String> studentMap=iSelectCourseDAO.getStudentInfo(map);
+        resultMap.put("studentNo",studentNo);
+        resultMap.put("studentName",studentMap.get("student_name"));
+        resultMap.put("grade",studentMap.get("student_grade"));
+        resultMap.put("class",studentMap.get("student_class"));
+        return resultMap;
     }
 }
