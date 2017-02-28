@@ -121,6 +121,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     @Autowired
     private RedisRepository<String,Object> redis;
 
+    protected static final ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+
 
 
     @Override
@@ -417,11 +419,32 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     public JwScheduleTask selectScheduleTaskPath(Map map) {
         return iexJwScheduleTaskDAO.selectScheduleTaskPath(map);
     }
-//
-//    @Override
-//    public void SerializableAdjustmentSchedule(){
-//
-//    }
+
+    /**
+     * 调课
+     * @param jwCourseTable
+     * @param adjustmentType 0:老师 1:行政
+     * @return
+     */
+    @Override
+    public boolean SerializableAdjustmentSchedule( JwCourseTable jwCourseTable, Integer adjustmentType) {
+        boolean flag = false;
+        if (jwCourseTable == null)
+            return flag;
+
+        final Integer tnId = jwCourseTable.getTnId(),
+                taskId = jwCourseTable.getTaskId();
+
+        String path = this.getScheduleTaskPath(tnId, taskId);
+
+        String shCmd = String.format(ReadCmdLine.SHELL_TIMETABLE_ADJUST, path, adjustmentType, jwCourseTable.getClassId(), jwCourseTable.getWeek(), jwCourseTable.getSort());
+
+        Integer r = ReadCmdLine.run(path, shCmd);
+
+        flag = r > 0;
+
+        return flag;
+    }
     /**
      * 初始化排课参数
      * @param taskId
@@ -469,8 +492,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         result = printBuffers(tnId, taskId, teacherSettingBuffers, FileOperation.TEACHERS_SETTING);
         LOGGER.info("===================参数序列化结果:" + result + "===================");
         if (result) {
-
-            ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
             cachedThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
