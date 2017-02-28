@@ -39,4 +39,27 @@ public interface ISyllabusService{
      */
     CourseResultView getClassSyllabus(int tnId, int taskId, int classId);
 
+
+    /**
+     * 班级交换课表
+     * @param tnId
+     * @param taskId
+     * @param classId
+     * @param source
+     * @param target
+     * @return
+     */
+    boolean classExchange(int tnId,int taskId,int classId,int[] source, int[] target);
+
+    /**
+     * 老师交换课表
+     * @param tnId
+     * @param taskId
+     * @param teacherId
+     * @param source
+     * @param target
+     * @return
+     */
+    boolean teacherExchange(int tnId,int taskId,int teacherId,int[] source, int[] target);
+
 }

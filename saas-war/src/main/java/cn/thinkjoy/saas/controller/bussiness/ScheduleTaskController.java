@@ -85,6 +85,9 @@ public class ScheduleTaskController {
 
     @Autowired
     EXITenantConfigInstanceService exiTenantConfigInstanceService;
+
+    @Autowired
+    private ISyllabusService syllabusService;
     /**
      * 新建排课任务
      * @return
@@ -606,21 +609,35 @@ public class ScheduleTaskController {
     @ResponseBody
     public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) throws IOException, ParseException {
         Map<String,Object> paramsMap  = null;
+        CourseResultView courseResultView = null;
+        int teacherId,classId;
         if (param!=null) {
             try {
                 paramsMap = JSON.parseObject(param);
             } catch (Exception e) {
-                paramsMap = Maps.newHashMap();
+                logger.info("request参数为空");
             }
         }
         Map resultMap = new HashMap();
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         if (Constant.TABLE_TYPE_ALL.equals(type)){
-            resultMap.put("result",iexJwScheduleTaskService.getAllCourseResult(taskId, tnId));
+//            resultMap.put("result",iexJwScheduleTaskService.getAllCourseResult(taskId, tnId));
+            resultMap.put("result",syllabusService.getAllSyllabus(tnId, taskId));
             return resultMap;
         }
-        Map<String, Object> courseTimeConfig = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
-        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap,courseTimeConfig);
+        switch (type){
+            case Constant.TABLE_TYPE_TEACHER:
+                teacherId = Integer.valueOf(paramsMap.get("teacherId").toString());
+                courseResultView = syllabusService.getTeacherSyllabus(tnId,taskId,teacherId);
+                break;
+            case Constant.TABLE_TYPE_CLASS:
+                classId = Integer.valueOf(paramsMap.get("classId").toString());
+                courseResultView = syllabusService.getClassSyllabus(tnId,taskId,classId);
+                break;
+            default:
+                break;
+        }
+//        CourseResultView courseResultView = syllabusService.get(type,taskId, tnId,paramsMap,courseTimeConfig);
 
 
         resultMap.put("result",courseResultView);
@@ -666,8 +683,8 @@ public class ScheduleTaskController {
                     LinkedHashMap<String, Object> map = list.get(i);
                     courseParam = new HashMap<>();
                     sheetNames[i] = map.get("teacher_name").toString();
-                    courseParam.put("teacherId", map.get("id"));
-                    CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(Constant.TABLE_TYPE_TEACHER, taskId, tnId, courseParam,courseTimeConfig);
+                    int teacherId = Integer.valueOf(map.get("id").toString());
+                    CourseResultView courseResultView = syllabusService.getTeacherSyllabus(tnId,taskId,teacherId);
                     courseLists.add(courseResultView.getWeek());
                 }
 
@@ -685,8 +702,8 @@ public class ScheduleTaskController {
                     LinkedHashMap<String, Object> map = classList.get(i);
                     courseParam = new HashMap<>();
                     sheetNames[i] = map.get("class_name").toString();
-                    courseParam.put("classId", map.get("id"));
-                    CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(Constant.TABLE_TYPE_CLASS, taskId, tnId, courseParam,courseTimeConfig);
+                    int classId = Integer.valueOf(map.get("id").toString());
+                    CourseResultView courseResultView = syllabusService.getClassSyllabus(tnId,taskId,classId);
                     courseLists.add(courseResultView.getWeek());
                 }
                 workbook = ExcelUtils.createWorkBook(strings, sheetNames, courseLists);
@@ -728,6 +745,7 @@ public class ScheduleTaskController {
         }
         return null;
     }
+
 
 
     private static String getWeek(int i){
