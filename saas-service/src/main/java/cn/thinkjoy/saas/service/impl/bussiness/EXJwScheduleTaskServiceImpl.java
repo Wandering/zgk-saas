@@ -417,6 +417,11 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     public JwScheduleTask selectScheduleTaskPath(Map map) {
         return iexJwScheduleTaskDAO.selectScheduleTaskPath(map);
     }
+//
+//    @Override
+//    public void SerializableAdjustmentSchedule(){
+//
+//    }
     /**
      * 初始化排课参数
      * @param taskId
@@ -470,7 +475,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 @Override
                 public void run() {
                     String path = FileOperation.getParamsPath(tnId, taskId);
-                    Integer c = ReadCmdLine.run(path);
+                    String shellCMD=ReadCmdLine.timetableShellCmd(path);
+                    Integer c = ReadCmdLine.run(path,shellCMD);
                     String result = getSchduleResultStatus(taskId, tnId);
                     String redisKey = getScheduleRedisKey(tnId,taskId);
                    if (redis.exists(redisKey))redis.del(redisKey);
