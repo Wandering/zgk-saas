@@ -202,7 +202,6 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
      * @return
      */
     private Object hasSelectCourse(String taskId,String stuNo){
-        StudentSelectCourseDto studentSelectCourseDto=new StudentSelectCourseDto();
         Map<String, Object> map1 = new HashMap<>();
         map1.put("taskId", taskId);
         map1.put("stuNo", stuNo);
@@ -211,7 +210,7 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         if (selectCourseStuDetailList.size()<1){
             return null;
         }
-        return studentSelectCourseDto;
+        return selectCourseStuDetailList;
 
     }
 
