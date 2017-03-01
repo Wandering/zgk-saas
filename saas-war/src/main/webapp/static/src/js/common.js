@@ -207,6 +207,8 @@ var Common = {
             pathName == '/class-mixed' ||
             pathName == '/base-rule-settings') {
             pathName = '/course-scheduling';
+        }else if(pathName == '/select-course-settings'){
+            pathName = '/select-course';
         }
 
 

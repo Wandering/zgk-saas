@@ -390,6 +390,20 @@ public class WebCotroller {
     public ModelAndView courseSchedulingStep3() {
         return new ModelAndView("/course-scheduling/course-scheduling-step3");
     }
-
-
+    /**
+     * select-course
+     * 选课任务
+     */
+    @RequestMapping("/select-course")
+    public ModelAndView selectCourse() {
+        return new ModelAndView("/course-scheduling/select-course");
+    }
+    /**
+     * select-course-settings
+     * 选课任务设置
+     */
+    @RequestMapping("/select-course-settings")
+    public ModelAndView selectCourseSettings() {
+        return new ModelAndView("/course-scheduling/select-course-settings");
+    }
 }
