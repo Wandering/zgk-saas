@@ -334,17 +334,6 @@ public class ScheduleTaskController {
     }
 
     /**
-     * 调课失败规则
-     * @param taskId
-     * @param tnId
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping("/adjustment/error/desc")
-    public List<String> getAdjustmentErrorDesc(@RequestParam Integer taskId,@RequestParam Integer tnId){
-        return  iexJwScheduleTaskService.getSchduleErrorDesc(taskId,tnId);
-    }
-    /**
      * 修改排课任务
      * @return
      */
