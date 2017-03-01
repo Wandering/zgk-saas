@@ -146,12 +146,12 @@ public class SyllabusServiceImpl implements ISyllabusService {
             jwCourseTableDAO.deleteById(jwCourseTable.getId());
         }
 
-        for (JwCourseTable  jwCourseTable: sourceList){
+        for (JwCourseTable  jwCourseTable: targetList){
             jwCourseTable.setWeek(sourceTemp[0]);
             jwCourseTable.setSort(sourceTemp[1]);
             jwCourseTableDAO.insert(jwCourseTable);
         }
-        for (JwCourseTable  jwCourseTable: targetList){
+        for (JwCourseTable  jwCourseTable: sourceList){
             jwCourseTable.setWeek(targetTemp[0]);
             jwCourseTable.setSort(targetTemp[1]);
             jwCourseTableDAO.insert(jwCourseTable);
