@@ -85,10 +85,10 @@ SelectCourse.prototype = {
         addSelectCourseContentHtml.push('<span class="labels"><i>*</i>年级：</span><select id="grade-list">' + that.queryGradeInfo() + '</select>');
         addSelectCourseContentHtml.push('</div>');
         addSelectCourseContentHtml.push('<div class="box-row">');
-        addSelectCourseContentHtml.push('<span class="labels"><i>*</i>设置选课开始时间：</span><input class="date-picker" id="start-date" type="text" data-date-format="yyyy-mm-dd" placeholder="设置选课开始时间"/>');
+        addSelectCourseContentHtml.push('<span class="labels"><i>*</i>设置选课开始时间：</span><input  class="date-picker" id="LAY_demorange_s" type="text" placeholder="设置选课开始时间"/>');
         addSelectCourseContentHtml.push('</div>');
         addSelectCourseContentHtml.push('<div class="box-row">');
-        addSelectCourseContentHtml.push('<span class="labels"><i>*</i>设置选课结束时间：</span><input class="date-picker" id="end-date" type="text" data-date-format="yyyy-mm-dd" placeholder="设置选课结束时间"/>');
+        addSelectCourseContentHtml.push('<span class="labels"><i>*</i>设置选课结束时间：</span><input class="date-picker" id="LAY_demorange_e" type="text"  placeholder="设置选课结束时间"/>');
         addSelectCourseContentHtml.push('</div>');
         addSelectCourseContentHtml.push('<br><div class="box-row">');
         addSelectCourseContentHtml.push('<button type="button" id="save-select-course-btn">保存</button>');
@@ -105,29 +105,44 @@ SelectCourse.prototype = {
                 that.getYears();
             }
         });
-        //$('.date-picker').datepicker({autoclose: true});
-        var nowTemp = new Date();
-        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
-        var checkin = $('#start-date').fdatepicker({
-            onRender: function (date) {
-                return date.valueOf() < now.valueOf() ? 'disabled' : '';
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+
+            var start = {
+                min: laydate.now()
+                ,max: '2099-06-16 23:59:59'
+                ,istoday: false
+                ,choose: function(datas){
+                    end.min = datas; //开始日选好后，重置结束日的最小日期
+                    end.start = datas //将结束日的初始值设定为开始日
+                },
+                elem: this,
+                istime: true,
+                format: 'YYYY-MM-DD hh:mm:ss'
+            };
+
+            var end = {
+                min: laydate.now()
+                ,max: '2099-06-16 23:59:59'
+                ,istoday: false
+                ,choose: function(datas){
+                    start.max = datas; //结束日选好后，重置开始日的最大日期
+                },
+                elem: this,
+                istime: true,
+                format: 'YYYY-MM-DD hh:mm:ss'
+            };
+
+            document.getElementById('LAY_demorange_s').onclick = function(){
+                start.elem = this;
+                laydate(start);
             }
-        }).on('changeDate', function (ev) {
-            if (ev.date.valueOf() > checkout.date.valueOf()) {
-                var newDate = new Date(ev.date)
-                newDate.setDate(newDate.getDate() + 1);
-                checkout.update(newDate);
+            document.getElementById('LAY_demorange_e').onclick = function(){
+                end.elem = this
+                laydate(end);
             }
-            checkin.hide();
-            $('#end-date')[0].focus();
-        }).data('datepicker');
-        var checkout = $('#end-date').fdatepicker({
-            onRender: function (date) {
-                return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
-            }
-        }).on('changeDate', function (ev) {
-            checkout.hide();
-        }).data('datepicker');
+
+        });
     },
     // 学期年份  当前年往前推5年
     getYears: function () {
