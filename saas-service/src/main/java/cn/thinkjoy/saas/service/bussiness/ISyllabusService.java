@@ -76,4 +76,22 @@ public interface ISyllabusService{
      */
     List<JwCourseTable> getSyllabusByCoordinate(int tnId, int taskId, int id, int[] coordinate, String type);
 
+    /**
+     * 生成并填充课表内容
+     * @param tnId
+     * @param taskId
+     * @param type
+     * @param params
+     * @return
+     */
+    CourseResultView genSyllabus(int tnId,int taskId,String type,Map<String, Object> params,List<List<String>> lists,Map<String, Object> timeConfigMap);
+
+    /**
+     * 生成默认课表
+     * @param dayCount
+     * @param courseCount
+     * @return
+     */
+    List<List<String>> genDefaultSyllabus(int dayCount,int courseCount);
+
 }
