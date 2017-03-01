@@ -26,14 +26,18 @@ Schedule.prototype = {
                     //console.log(v)
                     var result = '';
                     switch (v) {
-                        case 1:
+                        case 1: // 开始排课
                             result = '<a href="javascript: void(0);" class="start-schedule-btn">开始排课</a>';
                             break;
-                        case 2:
-                            result = '<a href="javascript: void(0);" class="fail-schedule-btn btn-split">排课失败</a><a href="javascript: void(0);" class="again-schedule-btn btn-split">重新排课</a>';
+                        case 2: // 排课失败,重新排课
+                        case 5: // 排课失败,重新排课
+                            result = '排课失败&nbsp;&nbsp;<a href="javascript: void(0);" class="again-schedule-btn btn-split">重新排课</a>';
                             break;
-                        case 3:
-                            result = '<a href="/course-scheduling-step3" class="timetable-btn btn-split">查看课表</a><a href="/course-scheduling-step1" class="again-schedule-btn btn-split">重新排课</a>';
+                        case 3: // 排课中
+                            result = '排课中';
+                            break;
+                        case 4: // 查看课表,重新排课
+                            result = '<a href="/course-scheduling-step3" class="look-course">查看课表</a><a href="/course-scheduling-step1" class="again-schedule-btn btn-split">重新排课</a>';
                             break;
                         default:
                             break;
@@ -297,6 +301,15 @@ $(function () {
         Common.cookie.setCookie('scheduleName', scheduleName);
         Common.cookie.setCookie('taskId', id);
         schedule.checkTaskBaseInfo(id);
-
     });
+
+    $('.look-course').on('click', function () {
+        var id = $(this).parent().attr('dataid');
+        var gradeName = $(this).parent().attr('gradeName');
+        var scheduleName = $(this).parent().attr('scheduleName');
+        Common.cookie.setCookie('gradeName', gradeName);
+        Common.cookie.setCookie('scheduleName', scheduleName);
+        Common.cookie.setCookie('taskId', id);
+    });
+
 });

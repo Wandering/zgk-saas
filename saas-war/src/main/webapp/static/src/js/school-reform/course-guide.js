@@ -101,7 +101,7 @@ CoursePlan.prototype = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
-                if (res.bizData.undergraduateEnrollingNumberList.length > 0) {
+                if (!!res.bizData.data) {
                     that.datas[0] = {
                         name: '通用技术',
                         type: 'bar',

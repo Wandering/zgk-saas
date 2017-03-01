@@ -136,9 +136,9 @@ ArrangeCourse.prototype = {
                 var contentHtml = [];
                 switch(type) {
                     case 'class':
-                        contentHtml.push('<li>');
-                        contentHtml.push('<a href="javascript: void(0);" class="active">全部班级</a>');
-                        contentHtml.push('</li>');
+                        //contentHtml.push('<li>');
+                        //contentHtml.push('<a href="javascript: void(0);" class="active">全部班级</a>');
+                        //contentHtml.push('</li>');
                         $.each(data, function (i, k) {
                             contentHtml.push('<li>');
                             contentHtml.push('<a href="javascript: void(0);" gradeid="' + k.grade + '" classid="' + k.id + '">' + k.name + '</a>');

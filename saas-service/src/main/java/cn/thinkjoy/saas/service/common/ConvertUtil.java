@@ -98,10 +98,10 @@ public class ConvertUtil {
                 t = 0;
                 break;
             case "文科班":
-                t = 2;
+                t = 1;
                 break;
             case "理科班":
-                t = 1;
+                t = 2;
                 break;
         }
         return t;
