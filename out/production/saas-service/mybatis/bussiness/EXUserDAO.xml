@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.IEXUserDAO">
+
+    <!-- 根据用户账号,密码查询用户信息 -->
+    <select id="queryUserInfoByAccount" parameterType="map" resultType="cn.thinkjoy.saas.dto.UserInfoDto">
+        SELECT
+            t0.tn_id AS tnId,
+            t1.tn_name AS tnName,
+            t1.tn_addr AS tnAddr,
+            t1.is_init AS isInit,
+            t1.county_id as countyId,
+            t0.id AS userId,
+            t0.user_name AS userName,
+            t0.user_account AS userAccount,
+            t0.is_super_manager AS isSuperManager,
+            t1.tn_extro_info AS indexUrl,
+            t0.status as status
+        FROM
+            saas_user_instance t0,
+            saas_tenant t1
+        WHERE
+            t0.tn_id = t1.id
+        AND t0.user_account = #{account}
+        AND t0.user_pass = #{pwd}
+        and t0.status != -1
+    </select>
+
+    <!-- 根据用户ID查找用户角色集合 -->
+    <select id="queryRolesByUserId" parameterType="long" resultType="string">
+        SELECT
+            t1.role_name
+        FROM
+            saas_relation_user_role t0,
+            saas_roles t1
+        WHERE
+            t0.role_id = t1.id
+        AND t0.user_id = #{userId}
+    </select>
+
+    <!-- 根据用户ID查询用户所对应的菜单集合 -->
+    <select id="queryResourcesByUserId" parameterType="long" resultType="cn.thinkjoy.saas.domain.Resources">
+        SELECT
+            t2.id AS id,
+            t2.res_name AS resName,
+            t2.res_url AS resUrl,
+            t2.parent_id AS parentId
+        FROM
+            saas_relation_user_role t0,
+            saas_relation_role_resource t1,
+            saas_resources t2
+        WHERE
+            t0.role_id = t1.role_id
+        AND t1.res_id = t2.id
+        AND t0.user_id = #{userId}
+    </select>
+
+    <!-- 根据关键词查询用户集合 -->
+    <select id="queryUserBaseInfoByKeyword" parameterType="map" resultType="cn.thinkjoy.saas.dto.UserBaseDto">
+        SELECT
+            t0.id AS userId,
+            t0.user_name AS userName,
+            t0.user_account AS userAccount,
+            t0.telephone AS telephone,
+            t0.create_date AS createDate,
+            t0. STATUS AS STATUS,
+            t2.id AS roleId,
+            t2.role_name AS role
+        FROM
+            saas_user_instance t0,
+            saas_relation_user_role t1,
+            saas_roles t2
+        WHERE
+            t0.id = t1.user_id
+        AND t1.role_id = t2.id
+        AND t0.tn_id = #{tnId}
+        <if test="keyword != null and keyword != '' and keyword != 'null'">
+            AND (t0.user_name LIKE CONCAT('%', #{keyword} , '%')
+            OR t0.telephone LIKE CONCAT('%', #{keyword} , '%'))
+        </if>
+    </select>
+
+</mapper>

@@ -131,6 +131,15 @@ var Common = {
             Common.cookie.delCookie('meuns');
             Common.cookie.delCookie('tnId');
             Common.cookie.delCookie('tnName');
+            Common.cookie.delCookie('taskId');
+            Common.cookie.delCookie('siderMenu');
+            Common.cookie.delCookie('userId');
+            Common.cookie.delCookie('scheduleName');
+            Common.cookie.delCookie('provinceId');
+            Common.cookie.delCookie('isSuperManager');
+            Common.cookie.delCookie('indexUrl');
+            Common.cookie.delCookie('gradeName');
+            Common.cookie.delCookie('countyId');
             window.location.href = '/login';
         });
     },

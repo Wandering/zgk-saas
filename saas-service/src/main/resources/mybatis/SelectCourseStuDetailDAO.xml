@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.ISelectCourseStuDetailDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+
+    <sql id="Base_Column_List">
+        id as id ,
+        createDate as createDate ,
+        modifyDate as modifyDate ,
+        status as status ,
+        stuNo as stuNo ,
+        courseId as courseId ,
+        courseName as courseName ,
+        taskId as taskId,
+        type as type
+    </sql>
+    <insert id="insert" parameterType="SelectCourseStuDetail">
+        INSERT INTO saas_select_course_stu_detail (
+        createDate,
+        modifyDate,
+        status,
+        stuNo,
+        courseId,
+        courseName,
+        taskId,
+        type
+        ) VALUES (
+        #{createDate},
+        #{modifyDate},
+        #{status},
+        #{stuNo},
+        #{courseId},
+        #{courseName},
+        #{taskId},
+        #{type}
+        )
+            <selectKey resultType="java.lang.Long" keyProperty="id">
+                SELECT LAST_INSERT_ID() AS ID
+            </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="SelectCourseStuDetail">
+        UPDATE saas_select_course_stu_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createDate!=null">
+                createDate = #{createDate},
+            </if>
+            <if test="modifyDate!=null">
+                modifyDate = #{modifyDate},
+            </if>
+            <if test="status!=null">
+                status = #{status},
+            </if>
+            <if test="stuNo!=null">
+                stuNo = #{stuNo},
+            </if>
+            <if test="courseId!=null">
+                courseId = #{courseId},
+            </if>
+            <if test="courseName!=null">
+                courseName = #{courseName},
+            </if>
+            <if test="taskId!=null">
+                taskId = #{taskId},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_select_course_stu_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.createDate!=null">
+                createDate = #{map.createDate},
+            </if>
+            <if test="map.modifyDate!=null">
+                modifyDate = #{map.modifyDate},
+            </if>
+            <if test="map.status!=null">
+                status = #{map.status},
+            </if>
+            <if test="map.stuNo!=null">
+                stuNo = #{map.stuNo},
+            </if>
+            <if test="map.courseId!=null">
+                courseId = #{map.courseId},
+            </if>
+            <if test="map.courseName!=null">
+                courseName = #{map.courseName},
+            </if>
+            <if test="map.taskId!=null">
+                taskId = #{map.taskId},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_select_course_stu_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.createDate!=null">
+                createDate = #{update.createDate},
+            </if>
+            <if test="update.modifyDate!=null">
+                modifyDate = #{update.modifyDate},
+            </if>
+            <if test="update.status!=null">
+                status = #{update.status},
+            </if>
+            <if test="update.stuNo!=null">
+                stuNo = #{update.stuNo},
+            </if>
+            <if test="update.courseId!=null">
+                courseId = #{update.courseId},
+            </if>
+            <if test="update.courseName!=null">
+                courseName = #{update.courseName},
+            </if>
+            <if test="update.taskId!=null">
+                taskId = #{update.taskId},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+            <if test="condition.modifyDate!=null">
+                AND modifyDate = #{condition.modifyDate}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+            <if test="condition.stuNo!=null">
+                AND stuNo = #{condition.stuNo}
+            </if>
+            <if test="condition.courseId!=null">
+                AND courseId = #{condition.courseId}
+            </if>
+            <if test="condition.courseName!=null">
+                AND courseName = #{condition.courseName}
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId = #{condition.taskId}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_select_course_stu_detail (
+                createDate,
+                modifyDate,
+                status,
+                stuNo,
+                courseId,
+                courseName,
+                taskId
+        ) VALUES (
+                    #{map.createDate},
+                    #{map.modifyDate},
+                    #{map.status},
+                    #{map.stuNo},
+                    #{map.courseId},
+                    #{map.courseName},
+                    #{map.taskId}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="SelectCourseStuDetail">
+        UPDATE saas_select_course_stu_detail
+        <trim prefix="SET" suffixOverrides=",">
+            createDate = #{createDate},
+            modifyDate = #{modifyDate},
+            status = #{status},
+            stuNo = #{stuNo},
+            courseId = #{courseId},
+            courseName = #{courseName},
+            taskId = #{taskId},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM saas_select_course_stu_detail
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_select_course_stu_detail
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="createDate!=null">
+                AND createDate = #{createDate}
+            </if>
+            <if test="modifyDate!=null">
+                AND modifyDate = #{modifyDate}
+            </if>
+            <if test="status!=null">
+                AND status = #{status}
+            </if>
+            <if test="stuNo!=null">
+                AND stuNo = #{stuNo}
+            </if>
+            <if test="courseId!=null">
+                AND courseId = #{courseId}
+            </if>
+            <if test="courseName!=null">
+                AND courseName = #{courseName}
+            </if>
+            <if test="taskId!=null">
+                AND taskId = #{taskId}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_select_course_stu_detail WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Long" resultType="SelectCourseStuDetail">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_select_course_stu_detail
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="SelectCourseStuDetail">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_select_course_stu_detail WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="SelectCourseStuDetail">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_select_course_stu_detail WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="SelectCourseStuDetail">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_select_course_stu_detail
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="SelectCourseStuDetail">
+        SELECT
+        <if test="selector!=null">
+            <trim prefixOverrides=",">
+                        <if test="selector.id!=null">
+                            , id
+                        </if>
+                        <if test="selector.createDate!=null">
+                            , createDate
+                        </if>
+                        <if test="selector.modifyDate!=null">
+                            , modifyDate
+                        </if>
+                        <if test="selector.status!=null">
+                            , status
+                        </if>
+                        <if test="selector.stuNo!=null">
+                            , stuNo
+                        </if>
+                        <if test="selector.courseId!=null">
+                            , courseId
+                        </if>
+                        <if test="selector.courseName!=null">
+                            , courseName
+                        </if>
+                        <if test="selector.taskId!=null">
+                            , taskId
+                        </if>
+            </trim>
+        </if>
+        <if test="selector==null">
+        <include refid="Base_Column_List" />
+        </if>
+        FROM saas_select_course_stu_detail
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   ${condition.id.field}  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.createDate!=null">
+                ${condition.groupOp}   ${condition.createDate.field}  ${condition.createDate.op}  #{condition.createDate.data}
+            </if>
+            <if test="condition.modifyDate!=null">
+                ${condition.groupOp}   ${condition.modifyDate.field}  ${condition.modifyDate.op}  #{condition.modifyDate.data}
+            </if>
+            <if test="condition.status!=null">
+                ${condition.groupOp}   ${condition.status.field}  ${condition.status.op}  #{condition.status.data}
+            </if>
+            <if test="condition.stuNo!=null">
+                ${condition.groupOp}   ${condition.stuNo.field}  ${condition.stuNo.op}  #{condition.stuNo.data}
+            </if>
+            <if test="condition.courseId!=null">
+                ${condition.groupOp}   ${condition.courseId.field}  ${condition.courseId.op}  #{condition.courseId.data}
+            </if>
+            <if test="condition.courseName!=null">
+                ${condition.groupOp}   ${condition.courseName.field}  ${condition.courseName.op}  #{condition.courseName.data}
+            </if>
+            <if test="condition.taskId!=null">
+                ${condition.groupOp}   ${condition.taskId.field}  ${condition.taskId.op}  #{condition.taskId.data}
+            </if>
+
+
+    </where>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="SelectCourseStuDetail">
+        SELECT
+        <if test="selector!=null">
+            <trim prefixOverrides=",">
+                    <if test="selector.id!=null">
+                        , id
+                    </if>
+                    <if test="selector.createDate!=null">
+                        , createDate
+                    </if>
+                    <if test="selector.modifyDate!=null">
+                        , modifyDate
+                    </if>
+                    <if test="selector.status!=null">
+                        , status
+                    </if>
+                    <if test="selector.stuNo!=null">
+                        , stuNo
+                    </if>
+                    <if test="selector.courseId!=null">
+                        , courseId
+                    </if>
+                    <if test="selector.courseName!=null">
+                        , courseName
+                    </if>
+                    <if test="selector.taskId!=null">
+                        , taskId
+                    </if>
+            </trim>
+        </if>
+        <if test="selector==null">
+            <include refid="Base_Column_List" />
+        </if>
+        FROM saas_select_course_stu_detail
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate like CONCAT('%', #{condition.createDate} , '%')
+            </if>
+            <if test="condition.modifyDate!=null">
+                AND modifyDate like CONCAT('%', #{condition.modifyDate} , '%')
+            </if>
+            <if test="condition.status!=null">
+                AND status like CONCAT('%', #{condition.status} , '%')
+            </if>
+            <if test="condition.stuNo!=null">
+                AND stuNo like CONCAT('%', #{condition.stuNo} , '%')
+            </if>
+            <if test="condition.courseId!=null">
+                AND courseId like CONCAT('%', #{condition.courseId} , '%')
+            </if>
+            <if test="condition.courseName!=null">
+                AND courseName like CONCAT('%', #{condition.courseName} , '%')
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId like CONCAT('%', #{condition.taskId} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="SelectCourseStuDetail">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM saas_select_course_stu_detail
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+            <if test="condition.modifyDate!=null">
+                AND modifyDate = #{condition.modifyDate}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+            <if test="condition.stuNo!=null">
+                AND stuNo = #{condition.stuNo}
+            </if>
+            <if test="condition.courseId!=null">
+                AND courseId = #{condition.courseId}
+            </if>
+            <if test="condition.courseName!=null">
+                AND courseName = #{condition.courseName}
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId = #{condition.taskId}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="SelectCourseStuDetail">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM saas_select_course_stu_detail
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+            <if test="condition.modifyDate!=null">
+                AND modifyDate = #{condition.modifyDate}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+            <if test="condition.stuNo!=null">
+                AND stuNo = #{condition.stuNo}
+            </if>
+            <if test="condition.courseId!=null">
+                AND courseId = #{condition.courseId}
+            </if>
+            <if test="condition.courseName!=null">
+                AND courseName = #{condition.courseName}
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId = #{condition.taskId}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_select_course_stu_detail
+       <where>
+           <if test="id!=null">
+               ${groupOp} ${id.field} ${id.op}  #{id.data}
+           </if>
+           <if test="createDate!=null">
+               ${groupOp} ${createDate.field} ${createDate.op}  #{createDate.data}
+           </if>
+           <if test="modifyDate!=null">
+               ${groupOp} ${modifyDate.field} ${modifyDate.op}  #{modifyDate.data}
+           </if>
+           <if test="status!=null">
+               ${groupOp} ${status.field} ${status.op}  #{status.data}
+           </if>
+           <if test="stuNo!=null">
+               ${groupOp} ${stuNo.field} ${stuNo.op}  #{stuNo.data}
+           </if>
+           <if test="courseId!=null">
+               ${groupOp} ${courseId.field} ${courseId.op}  #{courseId.data}
+           </if>
+           <if test="courseName!=null">
+               ${groupOp} ${courseName.field} ${courseName.op}  #{courseName.data}
+           </if>
+           <if test="taskId!=null">
+               ${groupOp} ${taskId.field} ${taskId.op}  #{taskId.data}
+           </if>
+
+       </where>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Long">
+        SELECT
+        MAX(id)
+        FROM saas_select_course_stu_detail
+    </select>
+
+</mapper>
+

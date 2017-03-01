@@ -406,4 +406,15 @@ public class WebCotroller {
     public ModelAndView selectCourseSettings() {
         return new ModelAndView("/course-scheduling/select-course-settings");
     }
+
+    /**
+     * course-scheduling-step3
+     * 排课任务--排课第三步骤，自动排课
+     */
+    @RequestMapping("/rules-page")
+    public ModelAndView rulesPage() {
+        return new ModelAndView("/course-scheduling/rules-page");
+    }
+
+
 }

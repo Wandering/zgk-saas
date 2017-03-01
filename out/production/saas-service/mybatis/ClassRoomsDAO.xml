@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IClassRoomsDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+    <sql id="Base_Column_List">
+        id,
+        tn_id as tnId,
+        grade_id as gradeId,
+        executive_number as executiveNumber,
+        day_number as dayNumber,
+        room_order as roomOrder,
+        create_date as createDate
+    </sql>
+    <insert id="insert" parameterType="ClassRooms">
+        INSERT INTO saas_class_rooms (
+        tn_id,
+        grade_id,
+        executive_number,
+        day_number,
+        room_order,
+        create_date
+        ) VALUES (
+        #{tnId},
+        #{gradeId},
+        #{executiveNumber},
+        #{dayNumber},
+        #{roomOrder},
+        #{createDate}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="ClassRooms">
+        UPDATE saas_class_rooms
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tnId!=null">
+                tn_id = #{tnId},
+            </if>
+            <if test="gradeId!=null">
+                grade_id = #{gradeId},
+            </if>
+            <if test="executiveNumber!=null">
+                executive_number = #{executiveNumber},
+            </if>
+            <if test="dayNumber!=null">
+                day_number = #{dayNumber},
+            </if>
+            <if test="roomOrder!=null">
+                room_order=#{roomOrder},
+            </if>
+            <if test="createDate!=null">
+                create_date = #{createDate},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_class_rooms
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.tnId!=null">
+                tn_id = #{map.tnId},
+            </if>
+            <if test="map.gradeId!=null">
+                grade_id = #{map.gradeId},
+            </if>
+            <if test="map.executiveNumber!=null">
+                executive_number = #{map.executiveNumber},
+            </if>
+            <if test="map.dayNumber!=null">
+                day_number = #{map.dayNumber},
+            </if>
+            <if test="map.roomOrder!=null">
+                room_order=#{map.roomOrder},
+            </if>
+            <if test="map.createDate!=null">
+                create_date = #{map.createDate},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_class_rooms
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.tnId!=null">
+                tn_id = #{update.tnId},
+            </if>
+            <if test="update.gradeId!=null">
+                grade_id = #{update.gradeId},
+            </if>
+            <if test="update.executiveNumber!=null">
+                executive_number = #{update.executiveNumber},
+            </if>
+            <if test="update.dayNumber!=null">
+                day_number = #{update.dayNumber},
+            </if>
+            <if test="update.roomOrder!=null">
+                room_order=#{update.roomOrder},
+            </if>
+            <if test="update.createDate!=null">
+                create_date = #{update.createDate},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.gradeId!=null">
+                AND grade_id = #{condition.gradeId}
+            </if>
+            <if test="condition.executiveNumber!=null">
+                AND executive_number = #{condition.executiveNumber}
+            </if>
+            <if test="condition.dayNumber!=null">
+                AND day_number = #{condition.dayNumber}
+            </if>
+            <if test="condition.roomOrder!=null">
+                AND room_order=#{condition.roomOrder}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_class_rooms (
+                tn_id,
+                grade_id,
+                executive_number,
+                day_number,
+                room_order,
+                create_date
+        ) VALUES (
+                    #{map.tnId},
+                    #{map.gradeId},
+                    #{map.executiveNumber},
+                    #{map.dayNumber},
+                    #{map.roomOrder},
+                    #{map.createDate}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="ClassRooms">
+        UPDATE saas_class_rooms
+        <trim prefix="SET" suffixOverrides=",">
+            tn_id = #{tnId},
+            grade_id = #{gradeId},
+            executive_number = #{executiveNumber},
+            day_number = #{dayNumber},
+            room_order=#{roomOrder},
+            create_date = #{createDate},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_class_rooms
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_class_rooms
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="tnId!=null">
+                AND tn_id = #{tnId}
+            </if>
+            <if test="gradeId!=null">
+                AND grade_id = #{gradeId}
+            </if>
+            <if test="executiveNumber!=null">
+                AND executive_number = #{executiveNumber}
+            </if>
+            <if test="dayNumber!=null">
+                AND day_number = #{dayNumber}
+            </if>
+            <if test="roomOrder!=null">
+                AND room_order=#{roomOrder}
+            </if>
+            <if test="createDate!=null">
+                AND create_date = #{createDate}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_class_rooms WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="ClassRooms">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_class_rooms
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="ClassRooms">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_class_rooms WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="ClassRooms">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_class_rooms WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="ClassRooms">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_class_rooms
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="ClassRooms">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_class_rooms
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+            </if>
+            <if test="condition.gradeId!=null">
+                ${condition.groupOp}   grade_id  ${condition.grade_id.op}  #{condition.grade_id.data}
+            </if>
+            <if test="condition.executiveNumber!=null">
+                ${condition.groupOp}   executive_number  ${condition.executive_number.op}  #{condition.executive_number.data}
+            </if>
+            <if test="condition.dayNumber!=null">
+                ${condition.groupOp}   day_number  ${condition.day_number.op}  #{condition.day_number.data}
+            </if>
+            <if test="condition.roomOrder!=null">
+                ${condition.groupOp}   room_order  ${condition.roomOrder.op}  #{condition.roomOrder.data}
+            </if>
+            <if test="condition.createDate!=null">
+                ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="ClassRooms">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_class_rooms
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id like CONCAT('%', #{id} , '%')
+            </if>
+            <if test="tnId!=null">
+                AND tn_id like CONCAT('%', #{tnId} , '%')
+            </if>
+            <if test="gradeId!=null">
+                AND grade_id like CONCAT('%', #{gradeId} , '%')
+            </if>
+            <if test="executiveNumber!=null">
+                AND executive_number like CONCAT('%', #{executiveNumber} , '%')
+            </if>
+            <if test="dayNumber!=null">
+                AND day_number like CONCAT('%', #{dayNumber} , '%')
+            </if>
+            <if test="roomOrder!=null">
+                AND room_order like CONCAT('%', #{roomOrder} , '%')
+            </if>
+            <if test="createDate!=null">
+                AND create_date like CONCAT('%', #{createDate} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="ClassRooms">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_class_rooms
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.gradeId!=null">
+                AND grade_id = #{condition.gradeId}
+            </if>
+            <if test="condition.executiveNumber!=null">
+                AND executive_number = #{condition.executiveNumber}
+            </if>
+            <if test="condition.dayNumber!=null">
+                AND day_number = #{condition.dayNumber}
+            </if>
+            <if test="condition.roomOrder!=null">
+                AND room_order = #{condition.roomOrder}
+            </if>
+
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="ClassRooms">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_class_rooms
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.gradeId!=null">
+                AND grade_id = #{condition.gradeId}
+            </if>
+            <if test="condition.executiveNumber!=null">
+                AND executive_number = #{condition.executiveNumber}
+            </if>
+            <if test="condition.dayNumber!=null">
+                AND day_number = #{condition.dayNumber}
+            </if>
+            <if test="condition.roomOrder!=null">
+                AND room_order = #{condition.roomOrder}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_class_rooms
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="tnId!=null">
+               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+           </if>
+           <if test="gradeId!=null">
+               ${groupOp} grade_id ${grade_id.op}  #{grade_id.data}
+           </if>
+           <if test="executiveNumber!=null">
+               ${groupOp} executive_number ${executiveNumber.op}  #{executiveNumber.data}
+           </if>
+           <if test="dayNumber!=null">
+               ${groupOp} day_number ${dayNumber.op}  #{dayNumber.data}
+           </if>
+           <if test="roomOrder!=null">
+               ${groupOp} room_order ${roomOrder.op}  #{roomOrder.data}
+           </if>
+           <if test="createDate!=null">
+               ${groupOp} create_date ${create_date.op}  #{create_date.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_class_rooms
+    </select>
+
+</mapper>
+

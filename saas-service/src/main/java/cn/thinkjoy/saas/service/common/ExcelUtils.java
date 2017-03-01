@@ -54,6 +54,7 @@ public class ExcelUtils {
         for (int i = 0; i < columnNames.length; i++) {
             sheet.setColumnWidth((short) i, (short) (35.7 * 150));
         }
+
         // 创建第一行
         Row row = sheet.createRow((short) 0);
         // 创建两种单元格格式
@@ -81,6 +82,82 @@ public class ExcelUtils {
             Cell cell = row.createCell(i);
             cell.setCellValue(columnNames[i]);
             cell.setCellStyle(cs);
+        }
+
+        LOGGER.info("===============创建excel文档 E===============");
+        return wb;
+    }
+
+    /**
+     * 创建excel文档，
+     *
+     * @param columnNames excel的列名
+     */
+    public static Workbook createWorkBook(String columnNames[],String[] sheetNames,List<List<List<String>>> datas) {
+        LOGGER.info("===============创建excel文档 S===============");
+        // 创建excel工作簿
+        Workbook wb = new HSSFWorkbook();
+        for (int m = 0 ;m < sheetNames.length ; m ++ ) {
+            String sheetName = sheetNames[m];
+            // 创建第一个sheet（页），并命名
+            Sheet sheet = wb.createSheet(sheetName);
+            List<List<String>> data = datas.get(m);
+
+            LOGGER.info("sheet创建:"+sheetName);
+            LOGGER.info("column总数:" + columnNames.length);
+            // 手动设置列宽。第一个参数表示要为第几列设；，第二个参数表示列的宽度，n为列高的像素数。
+            for (int i = 0; i < columnNames.length; i++) {
+                sheet.setColumnWidth((short) i, (short) (35.7 * 150));
+            }
+            // 创建第一行
+            Row row = sheet.createRow((short) 0);
+            // 创建两种单元格格式
+            CellStyle cs = wb.createCellStyle();
+            // 创建两种字体
+            Font f = wb.createFont();
+            // 创建第一种字体样式（用于列名）
+            f.setFontHeightInPoints((short) 10);
+            f.setColor(IndexedColors.BLACK.getIndex());
+            f.setBoldweight(Font.BOLDWEIGHT_BOLD);
+
+            // 设置第一种单元格的样式（用于列名）
+            cs.setFont(f);
+            cs.setBorderLeft(CellStyle.BORDER_THIN);
+            cs.setBorderRight(CellStyle.BORDER_THIN);
+            cs.setBorderTop(CellStyle.BORDER_THIN);
+            cs.setBorderBottom(CellStyle.BORDER_THIN);
+            cs.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            cs.setFillPattern(CellStyle.SOLID_FOREGROUND);
+
+            cs.setAlignment(CellStyle.ALIGN_CENTER);
+
+            //设置列名
+            for (int i = 0; i < columnNames.length; i++) {
+                Cell cell = row.createCell(i);
+                cell.setCellValue(columnNames[i]);
+                cell.setCellStyle(cs);
+            }
+            LOGGER.info("data总数："+data.size());
+            for(int j=0 ;j<data.get(0).size();j++) {
+                Row rowData = sheet.createRow((short) (j+1));
+//                List<String> lls=data.get(j);
+//                for(int n = 0 ; n < lls.size() ; n ++) {
+//
+//                    Cell cell = rowData.createCell(0);
+//                    cell.setCellValue(lls.get(n));
+//                }
+
+            }
+            for(int j=0 ;j<data.size();j++) {
+
+                List<String> lls=data.get(j);
+                for(int n = 0 ; n < lls.size() ; n ++) {
+                    Row rowData = sheet.getRow(n+1);
+                    Cell cell = rowData.createCell(j);
+                    cell.setCellValue(lls.get(n));
+                }
+
+            }
         }
         LOGGER.info("===============创建excel文档 E===============");
         return wb;

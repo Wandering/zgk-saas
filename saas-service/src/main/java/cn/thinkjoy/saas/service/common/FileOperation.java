@@ -32,10 +32,25 @@ public class FileOperation {
     public static final String LINE_SPLIT="\r\n";
     public static final String STR_SPLIT="\t";
     public static final String CHAR_SPLIT=" ";
+    public static final String ERROR_TXT="error.txt";
+    public static final String FAIL_TXT="FAIL.txt";
+
+    //硬性规则
+    public static final String  NON_ADM_ERROR_MSG="不排课时间过多,行政班课时不足。班级:%s,课时:%s";
+    public static final String  NON_TEACHER_ERROR_MSG="不排课时间过多,老师课时不足。老师:%s,课时:%s";
+    public static final String  NON_COURSE_ERROR_MSG="不排课时间过多,【%s-%s】课程课时不足。";
+
+    //软性规则
+    public static final String MERGE_CLASS_FAIL_MSG="合班失败!时间:周%s,班级:%s,课程:%s";
+    public static final String CON_NUMBER_FAIL_MSG="连堂数目违反规则。 班级:%s,课程:%s,预设规则连堂数目%s,课表连堂课程数目%s";
+    public static final String NON_CON_NUMBER_FAIL_MSG="不连堂违反规则。课程:%s";
+    public static final String CON_TEACHER_FAIL_MSG="老师连上违反规则。时间:周%s,老师:%s,课程:%s";
+    public static final String NO_JAPQ_FAIL_MSG="教案平齐违反规则。时间:周%s,老师:%s,课程:%s";
 
 
 
-//    private static String path = "C:\\timetable\\schedule\\task\\"; //windows server 文件保存路径设置
+
+    //    private static String path = "C:\\timetable\\schedule\\task\\"; //windows server 文件保存路径设置
 //    private static String path = "/Users/douzy/schedule/task/"; //本地 文件保存路径设置
     private static String path = "/home/ubuntu/tm/schedule/task/"; //线上 文件保存路径设置
 
@@ -80,11 +95,29 @@ public class FileOperation {
         return flag;
 
     }
-    public static String readerTxtString(Integer taskId,Integer tnId,String name) {
+    public static boolean removeAllFile(File file) {
+        boolean flag = false;
+        try {
+            if (file.isFile() || file.list().length == 0) {
+                file.delete();
+            } else {
+                File[] files = file.listFiles();
+                for (int i = 0; i < files.length; i++) {
+                    removeAllFile(files[i]);
+                    files[i].delete();
+                }
+            }
+            flag = true;
+        } catch (Exception e) {
+            flag = false;
+        }
+        return flag;
+    }
+    public static String readerTxtString(String filenPath,String name) {
 
-        String filenPath = getParamsPath(tnId, taskId) + name + ".txt";
+        String f =filenPath + name;
 
-        File file = new File(filenPath);
+        File file = new File(f);
         StringBuilder result = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
