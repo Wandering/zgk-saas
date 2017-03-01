@@ -54,6 +54,15 @@ public interface IEXJwScheduleTaskService {
 
 
     /**
+     * 调课结果  1:调课成功  -1:调课失败 -2 调课失败
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    String getAdjustmentSchduleResult(Integer taskId, Integer tnId);
+
+
+    /**
      * 排课失败
      * @param taskId
      * @param tnId
@@ -61,8 +70,12 @@ public interface IEXJwScheduleTaskService {
      */
     List<String> getSchduleErrorDesc(Integer taskId, Integer tnId);
 
+//    List<String>
+
 
     JwScheduleTask selectScheduleTaskPath(Map map);
+
+    List<String> getAdjustmentInfo(Integer taskId, Integer tnId);
 
     List<String> getNoNScheduleTaskPliableRule(Integer taskId, Integer tnId);
 

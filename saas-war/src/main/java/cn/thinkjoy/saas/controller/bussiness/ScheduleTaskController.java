@@ -216,6 +216,37 @@ public class ScheduleTaskController {
         return  iexJwScheduleTaskService.getNoNScheduleTaskPliableRule(taskId, tnId);
     }
     /**
+     * 调课结果查询
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/adjustment/schedule/result")
+    public String  adjustmentSchedule(@RequestParam Integer taskId,@RequestParam Integer tnId) {
+        return  iexJwScheduleTaskService.getAdjustmentSchduleResult(taskId,tnId);
+    }
+
+    /**
+     * 调课成功
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/adjustment/success")
+    public List<String> adjustmentScheduleSuccess(@RequestParam Integer taskId,@RequestParam Integer tnId){
+        return iexJwScheduleTaskService.getAdjustmentInfo(taskId,tnId);
+    }
+
+    /**
+     * 调课失败规则
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/adjustment/error/desc")
+    public List<String> getAdjustmentErrorDesc(@RequestParam Integer taskId,@RequestParam Integer tnId){
+        return  iexJwScheduleTaskService.getSchduleErrorDesc(taskId,tnId);
+    }
+    /**
      * 修改排课任务
      * @return
      */
