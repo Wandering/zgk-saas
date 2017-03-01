@@ -282,21 +282,4 @@
 .btn-save-base{
   margin-top:20px;
 }
-button, button:focus {
-  display: block;
-  width: 84px;
-  height: 26px;
-  margin: 0 auto;
-  background: #CB171D;
-  border: 1px solid #CB171D;
-  border-radius: 2px;
-  font-size: 14px;
-  color: #FFFFFF;
-  outline: 0;
-}
-button:hover {
-  -moz-opacity: 0.6;
-  -ms-opacity: 0.6;
-  opacity: 0.6;
-  filter: alpha(opacify=60);
-}
+

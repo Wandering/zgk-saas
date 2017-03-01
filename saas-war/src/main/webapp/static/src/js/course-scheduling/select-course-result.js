@@ -1,31 +1,39 @@
 var tnId = Common.cookie.getCookie('tnId');
-var taskId = Common.cookie.getCookie('taskId');
-function SelectCourseSettings() {
+function SelectCourseResult() {
     this.init();
 }
 
-SelectCourseSettings.prototype = {
-    constructor: SelectCourseSettings,
+SelectCourseResult.prototype = {
+    constructor: SelectCourseResult,
     init: function () {
 
     },
-    // 拉取课程集合  /saas/selectCourse/getSelectCourses.do
-    getSelectCourses: function () {
-        Common.ajaxFun('/saas/selectCourse/getSelectCourses.do', 'GET', {
-            "taskId": taskId
+    // 获取选课概况
+    getSelectCourseSurvey:function(){
+        Common.ajaxFun('/saas/selectCourse/getSelectCourseSurvey.do', 'GET', {
+            "taskId":taskId
         }, function (res) {
-           /* var res = {
-                "rtnCode": "0000000",
-                "msg": "",
-                bizData: [{
-
-                    "courses": "课程集合json，数据格式：[{"id":"1","name":"物理"},{"id":"2","name":"化学"}]",
-                    "selectCount": "可选门数",
-                    "type": "课程类型  0：高考科目  1：校本课程",
-                    "taskId": taskId
-                }]
-            }*/
             if (res.rtnCode == "0000000") {
+                /*
+
+                 bizData:{
+                 "name":"选课名称",
+                 "grade":年级编号 1：高一  2：高二  3：高三",
+                 "startTime":"开始时间：2017-02-28 13:00:00",
+                 "endTime":"结束时间：2017-02-28 13:00:00",
+                 "selectedCount":"已选学生数",
+                 "unSelectedCount":"未选学生数",
+                 "unSelectedList":[{  // 未选学生集合
+                 "className":"班级名称",
+                 "stuName":"学生名称",
+                 "stuNo":"学生学号"
+                 }]
+                 }
+
+                 */
+
+
+
                 $('#select-course-list').html('');
                 var myTemplate = Handlebars.compile($("#task-template").html());
                 Handlebars.registerHelper("addOne", function (index, options) {
@@ -64,18 +72,26 @@ SelectCourseSettings.prototype = {
         }, function (res) {
             layer.msg(res.msg);
         }, true);
-    },
-    // 提交选课信息  /saas/selectCourse/saveSelectCourse.do
-    saveSelectCourse: function () {
-
     }
+
+    // 单科选课结果
+
+    // 组合选课结果
+
+    // 查询学生高考课程选课详情（带分页）
+
+    // 修改学生选课信息
+
+    // 确认使用选课数据
+
 
 
 };
 
-var SelectCourseSettingsIns = new SelectCourseSettings();
+var SelectCourseResultIns = new SelectCourseResult();
 
 $(function () {
+
 
 
 });
