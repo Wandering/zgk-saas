@@ -51,7 +51,6 @@ public class Constant {
     public static final String TABLE_TYPE_TEACHER = "teacher";
 
 
-
     public static final String TABLE_TYPE_CLASS = "class";
 
     public static final String TABLE_TYPE_ALL = "all";

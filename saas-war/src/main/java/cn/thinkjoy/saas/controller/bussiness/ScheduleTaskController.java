@@ -5,10 +5,7 @@ import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
-import cn.thinkjoy.saas.domain.JwCourse;
-import cn.thinkjoy.saas.domain.JwScheduleTask;
-import cn.thinkjoy.saas.domain.JwTeachDate;
-import cn.thinkjoy.saas.domain.JwTeacher;
+import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
@@ -127,6 +124,107 @@ public class ScheduleTaskController {
         JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
         return jwScheduleTask.getStatus();
     }
+
+    /**
+     *
+     * @param type class:班级 teacher:老师
+     * @param taskId 任务Id
+     * @param id 班级/老师Id
+     * @param source 源坐标 坐标[1,6] 列号(周几),行号(第几节)
+     * @param target 目标坐标(要换到的坐标) 坐标[2,6] 列号(周几),行号(第几节)
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/{type}/exchange")
+    public boolean classExchange(@PathVariable String type,@RequestParam Integer taskId,@RequestParam Integer id,@RequestParam String source,@RequestParam String target){
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        int[] sourceCoord = this.getIntCoord(source);
+        int[] targetCoord = this.getIntCoord(target);
+        switch (type){
+            case Constant.TABLE_TYPE_CLASS:
+                return syllabusService.classExchange(tnId,taskId,id,sourceCoord,targetCoord);
+            case Constant.TABLE_TYPE_TEACHER:
+                return syllabusService.teacherExchange(tnId,taskId,id,sourceCoord,targetCoord);
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * 根据坐标获取调课所需班级课表
+     * @param taskId 任务ID
+     * @param id 老师Id
+     * @param coord 坐标[1,6] 列号(周几),行号(第几节)
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/teacher/queryClassByCoord")
+    public List<List<String>> queryClassByCoord(@RequestParam Integer taskId, @RequestParam Integer id,@RequestParam String coord){
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        Map<String,Object> params;
+        int[] currCoord = this.getIntCoord(coord);
+        CourseResultView courseResultView = null;
+
+        List<List<String>> lists;
+        Map<String, Object> timeConfigMap;
+        int courseCount,dayCount;
+        timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
+
+        if (timeConfigMap == null)
+            throw new BizException("error", "当前租户下排课任务课时设置为空,请设置后再试");
+
+        dayCount = ((List)timeConfigMap.get("list")).size();
+        courseCount = (int)timeConfigMap.get("count");
+        lists = syllabusService.genDefaultSyllabus(dayCount,courseCount);
+        List<JwCourseTable> jwCourseTables = syllabusService.getSyllabusByCoordinate(tnId,taskId,id,currCoord,Constant.TABLE_TYPE_TEACHER);
+        if (jwCourseTables.size() == 0){
+            throw new BizException("error","请检查坐标是否正确!");
+        }
+
+        for (JwCourseTable jwCourseTable : jwCourseTables){
+            params = new HashMap<>();
+            params.put("classId",jwCourseTable.getClassId());
+            courseResultView = syllabusService.genSyllabus(tnId,taskId,Constant.TABLE_TYPE_TEACHER,params,lists,timeConfigMap);
+        }
+
+        return courseResultView.getWeek();
+    }
+
+
+    /**
+     * 根据坐标获取调课状态
+     * @param type class:班级 teacher:老师
+     * @param taskId 任务ID
+     * @param id 班级/老师Id
+     * @param coord 坐标[1,6] 列号(周几),行号(第几节)
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/{type}/queryStatusByCoord")
+    public boolean queryStatusByCoord(@PathVariable String type, @RequestParam Integer taskId, @RequestParam Integer id,@RequestParam String coord){
+        int adjustmentType;
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        int[] currCoord = this.getIntCoord(coord);
+        switch (type){
+            case Constant.TABLE_TYPE_TEACHER:
+                adjustmentType = 0;
+                break;
+            case Constant.TABLE_TYPE_CLASS:
+                adjustmentType = 1;
+                break;
+            default:
+                adjustmentType = 0;
+                break;
+        }
+        List<JwCourseTable> list = syllabusService.getSyllabusByCoordinate(tnId,taskId,id,currCoord,type);
+        if (list.size() == 0){
+            throw new BizException("error","请检查坐标是否正确!");
+        }
+        JwCourseTable jwCourseTable = list.get(0);
+        iexJwScheduleTaskService.SerializableAdjustmentSchedule(jwCourseTable,adjustmentType);
+        return true;
+    }
+
     /**
      * 一键排课
      * @return
@@ -302,6 +400,7 @@ public class ScheduleTaskController {
         JwScheduleTask jwScheduleTask = (JwScheduleTask) jwScheduleTaskService.queryOne(map);
         return jwScheduleTask==null?new JwScheduleTask():jwScheduleTask;
     }
+
 
     @ResponseBody
     @RequestMapping("/queryGradeInfo")
@@ -766,6 +865,14 @@ public class ScheduleTaskController {
                 return "星期日";
             default:
                 return null;
+        }
+    }
+
+    private static int[] getIntCoord(String s){
+        try {
+            return JSON.parseObject(s, int[].class);
+        }catch (Exception e){
+            throw new BizException("error","格式化坐标失败!");
         }
     }
 }

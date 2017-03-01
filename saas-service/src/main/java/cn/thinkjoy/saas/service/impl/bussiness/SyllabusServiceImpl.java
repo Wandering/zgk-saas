@@ -138,7 +138,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
         targetTemp[0] = targetList.get(0).getWeek();
         targetTemp[1] = targetList.get(0).getSort();
 
-        for (JwCourseTable  jwCourseTable: targetList){
+        for (JwCourseTable  jwCourseTable: sourceList){
             jwCourseTableDAO.deleteById(jwCourseTable.getId());
         }
 
@@ -146,7 +146,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
             jwCourseTableDAO.deleteById(jwCourseTable.getId());
         }
 
-        for (JwCourseTable  jwCourseTable: targetList){
+        for (JwCourseTable  jwCourseTable: sourceList){
             jwCourseTable.setWeek(sourceTemp[0]);
             jwCourseTable.setSort(sourceTemp[1]);
             jwCourseTableDAO.insert(jwCourseTable);
@@ -373,9 +373,40 @@ public class SyllabusServiceImpl implements ISyllabusService {
                         .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_E);
                 break;
             default:
+                rtnStrBf.append(jwCourseTableDTO.getCourseName())
+                        .append(Constant.GEN_COURSE_TABLE_BASE_SPLIT)
+                        .append(Constant.GEN_COURSE_TABLE_WRAP_SPLIT)
+                        .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_S)
+                        .append(jwCourseTableDTO.getTeacherName())
+                        .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_E);
                 break;
         }
         return rtnStrBf.toString();
+    }
+
+
+    /**
+     * 生成并填充课表内容
+     * @param tnId
+     * @param taskId
+     * @param type
+     * @param params
+     * @return
+     */
+    public CourseResultView genSyllabus(int tnId,int taskId,String type,Map<String, Object> params){
+        List<List<String>> lists;
+        Map<String, Object> timeConfigMap;
+        int courseCount,dayCount;
+        timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
+
+        if (timeConfigMap == null)
+            throw new BizException("error", "当前租户下排课任务课时设置为空,请设置后再试");
+
+        dayCount = ((List)timeConfigMap.get("list")).size();
+        courseCount = (int)timeConfigMap.get("count");
+        lists = genDefaultSyllabus(dayCount,courseCount);
+
+        return this.genSyllabus(tnId,taskId,type,params,lists,timeConfigMap);
     }
 
     /**
@@ -386,24 +417,16 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @param params
      * @return
      */
-    private CourseResultView genSyllabus(int tnId,int taskId,String type,Map<String, Object> params){
+    @Override
+    public CourseResultView genSyllabus(int tnId,int taskId,String type,Map<String, Object> params,List<List<String>> lists,Map<String, Object> timeConfigMap){
         List<JwCourseTableDTO> jwCourseTableDTOs;
-        Map<String, Object> timeConfigMap;
-        List<List<String>> lists;
-        int courseCount,dayCount,week,day;
+        int week,day;
         String tempCourse;
         CourseResultView courseResultView = new CourseResultView();
 
         jwCourseTableDTOs = this.queryList(tnId,taskId,params);
         if (jwCourseTableDTOs.size() == 0)
             throw new BizException("error", "当前租户下排课任务"+type+"课表为空,请稍后再试");
-        timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
-        if (timeConfigMap == null)
-            throw new BizException("error", "当前租户下排课任务课时设置为空,请设置后再试");
-        dayCount = ((List)timeConfigMap.get("list")).size();
-        courseCount = (int)timeConfigMap.get("count");
-
-        lists = genDefaultSyllabus(dayCount,courseCount);
 
         for (JwCourseTableDTO jwCourseTableDTO : jwCourseTableDTOs){
             week = jwCourseTableDTO.getWeek();
@@ -429,7 +452,8 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @param courseCount
      * @return
      */
-    private List<List<String>> genDefaultSyllabus(int dayCount,int courseCount){
+    @Override
+    public List<List<String>> genDefaultSyllabus(int dayCount,int courseCount){
         List<List<String>> lists = new ArrayList<>();
         List<String> list;
         //构造一张课表
