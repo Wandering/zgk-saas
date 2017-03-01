@@ -169,7 +169,8 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @param type
      * @return
      */
-    private List<JwCourseTable> getSyllabusByCoordinate(int tnId,int taskId,int id,int[] coordinate,String type){
+    @Override
+    public List<JwCourseTable> getSyllabusByCoordinate(int tnId,int taskId,int id,int[] coordinate,String type){
         Map<String, Object> params = new HashMap<>();
         switch (type){
             case Constant.TABLE_TYPE_TEACHER:

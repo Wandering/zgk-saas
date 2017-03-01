@@ -8,8 +8,10 @@
 package cn.thinkjoy.saas.service.bussiness;
 
 
+import cn.thinkjoy.saas.domain.JwCourseTable;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 
+import java.util.List;
 import java.util.Map;
 
 public interface ISyllabusService{
@@ -61,5 +63,17 @@ public interface ISyllabusService{
      * @return
      */
     boolean teacherExchange(int tnId,int taskId,int teacherId,int[] source, int[] target);
+
+
+    /**
+     * 根据坐标查询课表记录
+     * @param tnId
+     * @param taskId
+     * @param id
+     * @param coordinate
+     * @param type
+     * @return
+     */
+    List<JwCourseTable> getSyllabusByCoordinate(int tnId, int taskId, int id, int[] coordinate, String type);
 
 }
