@@ -94,9 +94,8 @@
     {{/each}}
 </script>
 <%@ include file="./../common/footer.jsp"%>
-<link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/datepicker.css">
-<script src="<%=ctx%>/static/src/lib/assets/js/foundation-datepicker/foundation-datepicker.js"></script>
-<%--<script src="http://foundation-datepicker.peterbeno.com/js/locales/foundation-datepicker.vi.js"></script>--%>
+<link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/js/layui/css/layui.css"  media="all">
+<script src="<%=ctx%>/static/src/lib/assets/js/layui/layui.js" charset="utf-8"></script>
 <script src="<%=ctx%>/static/src/js/course-scheduling/select-course.js"></script>
 
 </body>
