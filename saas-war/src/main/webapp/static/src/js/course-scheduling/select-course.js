@@ -6,13 +6,12 @@ function SelectCourse() {
 SelectCourse.prototype = {
     constructor: SelectCourse,
     init: function () {
-        //this.querySelectCourseTask();
-        this.queryGradeInfo();
+        this.querySelectCourseTask();
     },
     // 任务列表
     querySelectCourseTask: function () {
         Common.ajaxFun('/saas/selectCourse/getSelectCourseTasks.do', 'GET', {
-            "tnId":"租户ID"
+            "tnId": tnId
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 $('#select-course-list').html('');
@@ -236,8 +235,8 @@ $(function () {
         var id = $(this).attr('dataid');
         var taskName = $.trim($('#task-name').val());
         var gradeV = $('#grade-list').val();
-        var startDate = $.trim($('#start-date').val());
-        var endDate = $.trim($('#end-date').val());
+        var startDate = $.trim($('#LAY_demorange_s').val());
+        var endDate = $.trim($('#LAY_demorange_e').val());
         if (taskName == '') {
             layer.tips('请输入任务名称!', '#task-name');
             return false;
