@@ -2,9 +2,11 @@ package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.common.protocol.Request;
 import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
+import cn.thinkjoy.gk.pojo.Page;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.SelectCourseSetting;
 import cn.thinkjoy.saas.domain.SelectCourseTask;
+import cn.thinkjoy.saas.dto.BaseStuDto;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.SelectCourseSurveyDto;
 import cn.thinkjoy.saas.enums.CourseStateEnum;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -222,6 +225,43 @@ public class SaasSelectCourseController {
     public List<CourseBaseDto> getGroupCourseSituation(@RequestParam Integer taskId){
 
         return iSelectCourseService.getGroupCourseSituation(taskId);
+    }
+
+    @ResponseBody
+    @ApiDesc(value = "查询学生高考课程选课详情（带分页）",owner = "gryang")
+    @RequestMapping(value = "/getStuCourseDetail",method = RequestMethod.GET)
+    public Page<BaseStuDto> getStuCourseDetail(@RequestParam Integer taskId,
+                                               @RequestParam Integer type,
+                                               @RequestParam Integer pageNo,
+                                               @RequestParam Integer pageSize){
+
+        return iSelectCourseService.getStuCourseDetail(taskId,type,pageNo,pageSize);
+    }
+
+    @ResponseBody
+    @ApiDesc(value = "修改学生选课信息",owner = "gryang")
+    @RequestMapping(value = "/updateStuCourse",method = RequestMethod.POST)
+    public Map<String,Object> updateStuCourse(@RequestBody Request request){
+
+        String stuNo = request.getDataString("stuNo");
+        Integer taskId = request.getDataInteger("taskId");
+        Integer type = request.getDataInteger("type");
+        String courseIds = request.getDataString("courseIds");
+
+        String [] courseIdArr = courseIds.split(",");
+        iSelectCourseService.updateStuCourse(stuNo, taskId,type,Arrays.asList(courseIdArr));
+
+        return Maps.newHashMap();
+    }
+
+    @ResponseBody
+    @ApiDesc(value = "确认使用选课数据",owner = "gryang")
+    @RequestMapping(value = "/confirmSelectCourse",method = RequestMethod.GET)
+    public Map<String,Object> confirmSelectCourse(@RequestParam Integer taskId){
+
+        iSelectCourseService.confirmSelectCourse(taskId);
+
+        return Maps.newHashMap();
     }
 
 }

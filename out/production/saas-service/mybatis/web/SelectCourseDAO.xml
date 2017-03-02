@@ -23,5 +23,95 @@
         where tt.tnId=#{tnId} and status=0 and tt.grade=#{grade};
     </select>
 
+    <insert id="insertList" parameterType="java.util.Map">
+        insert into saas_select_course_stu_detail(
+            createDate,
+            modifyDate,
+            status,
+            stuNo,
+            courseId,
+            courseName,
+            taskId,
+            type
+        ) VALUES
+        <foreach collection="majorList" item="courseId" index="index" separator=",">
+        (
+            #{createDate},
+            #{modifyDate},
+            #{status},
+            #{stuNo},
+            #{courseId},
+            (select course_name FROM saas_course_base_info ss where id=#{courseId}),
+            #{taskId},
+            #{type}
+        )
+        </foreach>
+    </insert>
+
+    <!-- 根据任务ID获取单科选课情况 -->
+    <select id="getSingleCourseSituation" parameterType="int" resultType="CourseBaseDto">
+        SELECT
+            courseName,
+            COUNT(courseName) AS stuCount
+        FROM
+            saas_select_course_stu_detail
+        WHERE
+            taskId = #{taskId}
+        GROUP BY
+            courseName
+    </select>
+
+    <!-- 根据条件查询学生学号集合 -->
+    <select id="getStuNoListByCondition" parameterType="map" resultType="java.lang.String">
+        SELECT
+            stuNo
+        FROM
+            saas_select_course_stu_detail
+        WHERE
+            taskId = #{taskId}
+        AND type =  #{type}
+        GROUP BY
+            stuNo
+        LIMIT  #{index}, #{pageSize}
+    </select>
+
+    <!-- 根据条件查询选课学生总数 -->
+    <select id="getStuNoListByCondition" parameterType="map" resultType="java.lang.String">
+        SELECT
+            count(stuNo)
+        FROM
+            saas_select_course_stu_detail
+        WHERE
+            taskId = #{taskId}
+        AND type =  #{type}
+        GROUP BY
+            stuNo
+    </select>
+
+    <!-- 根据学生学号集合查询学生选课详情 -->
+    <select id="getSelectDetailByStuNos" parameterType="map" resultType="SelectCourseStuDetail">
+        SELECT
+            stuNo,courseId,courseName
+        FROM
+            saas_select_course_stu_detail
+        WHERE
+            taskId = #{taskId}
+        AND type = #{type}
+        and stuNo in
+        <foreach collection="stuNos" item="item"  open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!-- 根据学号修改学生选课信息 -->
+    <update id="updateStuCourseByStuNo">
+        update ${tableName}
+        <set>
+            <foreach collection="teantCustomList" item="item" index="index"  separator=",">
+                ${item.key}=#{item.value}
+            </foreach>
+        </set>
+        where student_no = ${stuNo}
+    </update>
 </mapper>
 

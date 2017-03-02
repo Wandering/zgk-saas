@@ -1,15 +1,21 @@
 package cn.thinkjoy.saas.service.web.impl;
 
+import cn.thinkjoy.gk.pojo.Page;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.*;
 import cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO;
+import cn.thinkjoy.saas.dao.bussiness.ICourseBaseInfoDAO;
 import cn.thinkjoy.saas.dao.bussiness.IEXCourseManageDAO;
+import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
 import cn.thinkjoy.saas.dao.web.ISelectCourseDAO;
 import cn.thinkjoy.saas.domain.*;
+import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
+import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 import cn.thinkjoy.saas.dto.*;
 import cn.thinkjoy.saas.service.IJwScheduleTaskService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
+import cn.thinkjoy.saas.service.common.ParamsUtils;
 import cn.thinkjoy.saas.service.web.ISelectCourseService;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
@@ -54,6 +60,9 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
 
     @Autowired
     private IEXTenantCustomService iexTenantCustomService;
+
+    @Autowired
+    private ICourseBaseInfoDAO iCourseBaseInfoDAO;
 
 
     @Override
@@ -395,7 +404,9 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
                 null,
                 null
         );
-        Map<String,List<SelectCourseStuDetail>> selectedStuMap = getSelectedStuMap(taskId);
+
+        // 已选课总学生数
+        Map<String,List<SelectCourseStuDetail>> selectedStuMap = getSelectedStuMap(taskId,0);
         dto.setSelectedCount(selectedStuMap.size());
         dto.setUnSelectedCount(tenantCustom.size()-selectedStuMap.size());
 
@@ -419,13 +430,16 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
      * 查询学生选课信息（按学号分类）
      *
      * @param taskId
+     * @param type 课程类型  0：高考科目  1：校本课程
      * @return
      */
-    private Map<String,List<SelectCourseStuDetail>> getSelectedStuMap(int taskId){
+    private Map<String,List<SelectCourseStuDetail>> getSelectedStuMap(Integer taskId,Integer type){
 
-        List<SelectCourseStuDetail> allSelectedStus = iSelectCourseStuDetailDAO.findList(
-                "taskId",
-                taskId,
+        Map<String,Object> paramMap = Maps.newHashMap();
+        paramMap.put("taskId",taskId);
+        paramMap.put("type",type);
+        List<SelectCourseStuDetail> allSelectedStus = iSelectCourseStuDetailDAO.queryList(
+                paramMap,
                 Constant.ID,
                 Constant.DESC
         );
@@ -451,8 +465,145 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
 
     @Override
     public List<CourseBaseDto> getGroupCourseSituation(int taskId) {
-
+        // TODO
         return null;
+    }
+
+    @Override
+    public Page<BaseStuDto> getStuCourseDetail(int taskId, int type, int pageNo, int pageSize) {
+        Page<BaseStuDto> page = new Page<>();
+
+        // 根据条件查询选课学生学号集合
+        List<String> stuNos = iSelectCourseDAO.getStuNoListByCondition(
+                taskId,
+                type,
+                pageNo*pageSize,
+                pageSize
+        );
+
+        if(stuNos.size() == 0){
+            return page;
+        }
+
+        // 根据学生学号集合查询学生选课详情
+        List<SelectCourseStuDetail> details = iSelectCourseDAO.getSelectDetailByStuNos(
+                taskId,
+                type,
+                stuNos
+        );
+
+        // 组装学生课程信息
+        Map<String,List<CourseBaseDto>> selectedStuMap = Maps.newHashMap();
+        for(SelectCourseStuDetail detail : details){
+            List<CourseBaseDto> dtos = selectedStuMap.get(detail.getStuNo());
+            if(dtos == null){
+                dtos = Lists.newArrayList();
+            }
+            CourseBaseDto dto = new CourseBaseDto();
+            dto.setCourseId(detail.getCourseId());
+            dto.setCourseName(detail.getCourseName());
+            dtos.add(dto);
+
+            selectedStuMap.put(detail.getStuNo(),dtos);
+        }
+
+        SelectCourseTask task = iSelectCourseTaskDAO.findOne(
+                "id",
+                taskId,
+                null,
+                null
+        );
+
+        // 查询当前任务年级总学生信息
+        List<LinkedHashMap<String, Object>> tenantCustom = iexTenantCustomService.getStuInfo(
+                -1,
+                task.getTnId(),
+                Constant.GRADES[task.getGrade()-1],
+                null,
+                null
+        );
+
+
+        // 组装学生基本信息
+        List<BaseStuDto> stuDtos = Lists.newArrayList();
+        for(Map map : tenantCustom){
+            List<CourseBaseDto> baseDtos = selectedStuMap.get(map.get("student_no"));
+            if(baseDtos != null){
+                BaseStuDto stuDto = new BaseStuDto();
+                stuDto.setClassName(map.get("student_class").toString());
+                stuDto.setStuName(map.get("student_name").toString());
+                stuDto.setStuNo(map.get("student_no").toString());
+                stuDto.setCourses(baseDtos);
+                stuDtos.add(stuDto);
+            }
+        }
+
+        Integer count = iSelectCourseDAO.getStuNoCountByCondition(taskId,type);
+        page.setCount(count);
+        return page;
+    }
+
+    @Override
+    public void updateStuCourse(String stuNo, int taskId, int type, List<String> courseIds) {
+        Map<String,Object> map = Maps.newHashMap();
+        map.put("stuNo",stuNo);
+        map.put("taskId",taskId);
+        map.put("type",type);
+        iSelectCourseStuDetailDAO.deleteByCondition(map);
+
+        for(String courseId :courseIds){
+            SelectCourseStuDetail detail = new SelectCourseStuDetail();
+            detail.setTaskId(taskId);
+            CourseBaseInfo info = iCourseBaseInfoDAO.findOne("id",courseId,null,null);
+            detail.setCourseName(info.getCourseName());
+            detail.setCreateDate(System.currentTimeMillis());
+            detail.setModifyDate(System.currentTimeMillis());
+            detail.setCourseId(Integer.valueOf(courseId));
+            detail.setStuNo(stuNo);
+            iSelectCourseStuDetailDAO.insert(detail);
+        }
+    }
+
+    @Override
+    public void confirmSelectCourse(int taskId) {
+        String tableName = ParamsUtils.combinationTableName(Constant.STUDENT, getTnIdByTaskId(taskId));
+        Map<String,List<SelectCourseStuDetail>> stuMap = getSelectedStuMap(taskId,0);
+        for (String stuNo : stuMap.keySet()) {
+
+            List<TeantCustom> teantCustoms = Lists.newArrayList();
+            List<SelectCourseStuDetail> details = stuMap.get(stuNo);
+            for(int i=0;i<=details.size();i++){
+                TeantCustom teantCustom = new TeantCustom();
+                teantCustom.setKey("student_check_major"+(i+1));
+                teantCustom.setValue(details.get(i).getCourseName());
+                teantCustoms.add(teantCustom);
+            }
+
+            iSelectCourseDAO.updateStuCourseByStuNo(tableName, stuNo, teantCustoms);
+        }
+
+        Map<String,Object> updateMap = Maps.newHashMap();
+        updateMap.put("state",1);
+        updateMap.put("modifyDate",System.currentTimeMillis());
+        Map<String,Object> conditionMap = Maps.newHashMap();
+        conditionMap.put("id",taskId);
+        iSelectCourseTaskDAO.updateByCondition(updateMap,conditionMap);
+    }
+
+    /**
+     * 根据任务ID查询租户ID
+     *
+     * @param taskId
+     * @return
+     */
+    private Integer getTnIdByTaskId(int taskId){
+        SelectCourseTask task = iSelectCourseTaskDAO.findOne(
+                "id",
+                taskId,
+                null,
+                null
+        );
+        return Integer.valueOf(task.getId().toString());
     }
 
 }

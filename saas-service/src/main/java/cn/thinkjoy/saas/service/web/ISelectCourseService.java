@@ -1,6 +1,8 @@
 package cn.thinkjoy.saas.service.web;
 
+import cn.thinkjoy.gk.pojo.Page;
 import cn.thinkjoy.saas.domain.SelectCourseSetting;
+import cn.thinkjoy.saas.dto.BaseStuDto;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.SelectCourseSurveyDto;
 
@@ -50,4 +52,44 @@ public interface ISelectCourseService {
      * @return
      */
     List<CourseBaseDto> getGroupCourseSituation(int taskId);
+
+    /**
+     * 查询学生高考课程选课详情（带分页）
+     *
+     * @param taskId
+     * @param type
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    Page<BaseStuDto> getStuCourseDetail(
+            int taskId,
+            int type,
+            int pageNo,
+            int pageSize
+    );
+
+    /**
+     * 修改学生选课信息
+     *
+     * @param stuNo
+     * @param taskId
+     * @param type
+     * @param courseIds
+     */
+    void updateStuCourse(
+            String stuNo,
+            int taskId,
+            int type,
+            List<String> courseIds
+    );
+
+    /**
+     * 确认使用选课数据
+     *
+     * @param taskId
+     */
+    void confirmSelectCourse(
+            int taskId
+    );
 }

@@ -32,7 +32,8 @@ selectList
         stuNo as stuNo ,
         courseId as courseId ,
         courseName as courseName ,
-        taskId as taskId 
+        taskId as taskId,
+        type as type
     </sql>
     <insert id="insert" parameterType="SelectCourseStuDetail">
         INSERT INTO saas_select_course_stu_detail (
@@ -42,7 +43,8 @@ selectList
         stuNo,
         courseId,
         courseName,
-        taskId
+        taskId,
+        type
         ) VALUES (
         #{createDate},
         #{modifyDate},
@@ -50,7 +52,8 @@ selectList
         #{stuNo},
         #{courseId},
         #{courseName},
-        #{taskId}
+        #{taskId},
+        #{type}
         )
             <selectKey resultType="java.lang.Long" keyProperty="id">
                 SELECT LAST_INSERT_ID() AS ID
