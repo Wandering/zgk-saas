@@ -1,20 +1,26 @@
 package cn.thinkjoy.saas.service.web.impl;
 
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.*;
 import cn.thinkjoy.saas.dao.bussiness.EXITenantConfigInstanceDAO;
+import cn.thinkjoy.saas.dao.bussiness.IEXCourseManageDAO;
 import cn.thinkjoy.saas.dao.web.ISelectCourseDAO;
 import cn.thinkjoy.saas.domain.*;
-import cn.thinkjoy.saas.dto.StudentSelectCourseDto;
+import cn.thinkjoy.saas.dto.*;
 import cn.thinkjoy.saas.service.IJwScheduleTaskService;
+import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
+import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
 import cn.thinkjoy.saas.service.web.ISelectCourseService;
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * Created by zuohao on 17/2/22.
@@ -32,7 +38,7 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
     private ITenantDAO iTenantDAO;
 
     @Autowired
-    private IJwScheduleTaskDAO iJwScheduleTaskDAO;
+    private ISelectCourseTaskDAO iSelectCourseTaskDAO;
 
     @Autowired
     private ISelectCourseSettingDAO iSelectCourseSettingDAO;
@@ -42,6 +48,12 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
 
     @Autowired
     private IGradeDAO iGradeDAO;
+
+    @Autowired
+    private IEXCourseManageDAO iexCourseManageDAO;
+
+    @Autowired
+    private IEXTenantCustomService iexTenantCustomService;
 
 
     @Override
@@ -174,12 +186,12 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         Map<String,Object> map1=new HashMap<>();
         map1.put("tnId",tnId);
         map1.put("grade",grade);
-        JwScheduleTask jwScheduleTask=iJwScheduleTaskDAO.queryOne(map1, null, null);
-        if (jwScheduleTask==null) {
+        SelectCourseTask task=iSelectCourseTaskDAO.queryOne(map1, null, null);
+        if (task==null) {
             //对应租户的对应年级没有任务
             return "-1";
         }
-        return jwScheduleTask.getId().toString();
+        return task.getId().toString();
     }
 
     /**
@@ -280,4 +292,167 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         resultMap.put("result",true);
         return resultMap;
     }
+
+    @Override
+    public List<SelectCourseSetting> getSelectCourses(int taskId) {
+
+        List<SelectCourseSetting> settings = Lists.newArrayList();
+
+        SelectCourseTask task = iSelectCourseTaskDAO.findOne(
+                "id",
+                taskId,
+                null,
+                null
+        );
+
+        // TODO 需要优化实现思路
+        // 课程类型  0：高考课程（对应课程表 1：默认课程）  1：校本课程 （对应课程表 2：附加课程）
+
+        // 组装高考课程
+        Map<String,Object> paramMap = Maps.newHashMap();
+        paramMap.put("taskId",taskId);
+        paramMap.put("type",0);
+        SelectCourseSetting gkSetting = iSelectCourseSettingDAO.queryOne(
+                paramMap,
+                null,
+                null
+        );
+        if(gkSetting == null){
+            // 没有设置过，根据课程信息重新组装
+            List<SelectCourseBaseDto> gkCourses = iexCourseManageDAO.getSelectCourses(task.getTnId(),1);
+            List<SelectCourseBaseDto> tmpGkCourses = Lists.newArrayList();
+            for(SelectCourseBaseDto gkCourse : gkCourses){
+                if(!Constant.COURSEES.contains(gkCourse.getName())){
+                    continue;
+                }
+                gkCourse.setIsSelect(false);
+                tmpGkCourses.add(gkCourse);
+            }
+
+            gkSetting = new SelectCourseSetting();
+            gkSetting.setCourses(JSON.toJSONString(tmpGkCourses));
+            gkSetting.setType(0);
+            gkSetting.setSelectCount(3);
+            gkSetting.setTaskId(taskId);
+        }
+        settings.add(gkSetting);
+
+        // 组装校本课程
+        paramMap.put("type",1);
+        SelectCourseSetting xbSetting = iSelectCourseSettingDAO.queryOne(
+                paramMap,
+                null,
+                null
+        );
+
+        List<SelectCourseBaseDto> xbCourses = iexCourseManageDAO.getSelectCourses(task.getTnId(),2);
+        if(xbSetting == null){
+            // 没有设置过，根据课程信息重新组装
+            for(SelectCourseBaseDto xbCourse : xbCourses){
+                xbCourse.setIsSelect(false);
+            }
+
+            xbSetting = new SelectCourseSetting();
+            gkSetting.setCourses(JSON.toJSONString(xbSetting));
+            gkSetting.setType(1);
+            gkSetting.setSelectCount(0);
+            gkSetting.setTaskId(taskId);
+        }else {
+            // 设置过，填充选择过的校本课程
+            for(SelectCourseBaseDto xbCourse : xbCourses){
+                if(xbSetting.getCourses().indexOf(xbCourse.getName()) == -1){
+                    xbCourse.setIsSelect(false);
+                }
+            }
+        }
+        settings.add(xbSetting);
+
+        return settings;
+    }
+
+    @Override
+    public SelectCourseSurveyDto SelectCourseSurvey(int taskId) {
+
+        SelectCourseSurveyDto dto = new SelectCourseSurveyDto();
+
+        SelectCourseTask task = iSelectCourseTaskDAO.findOne(
+                "id",
+                taskId,
+                null,
+                null
+        );
+
+        dto.setName(task.getName());
+        dto.setGrade(task.getGrade());
+        dto.setStartTime(task.getStartTime());
+        dto.setEndTime(task.getEndTime());
+
+        // 查询当前任务年级总学生信息
+        List<LinkedHashMap<String, Object>> tenantCustom = iexTenantCustomService.getStuInfo(
+                -1,
+                task.getTnId(),
+                Constant.GRADES[task.getGrade()-1],
+                null,
+                null
+        );
+        Map<String,List<SelectCourseStuDetail>> selectedStuMap = getSelectedStuMap(taskId);
+        dto.setSelectedCount(selectedStuMap.size());
+        dto.setUnSelectedCount(tenantCustom.size()-selectedStuMap.size());
+
+        // 组装未选课学生集合
+        List<BaseStuDto> stuDtos = Lists.newArrayList();
+        for(Map map : tenantCustom){
+            if(selectedStuMap.containsKey(map.get("student_no"))){
+                BaseStuDto stuDto = new BaseStuDto();
+                stuDto.setClassName(map.get("student_class").toString());
+                stuDto.setStuName(map.get("student_name").toString());
+                stuDto.setStuNo(map.get("student_no").toString());
+                stuDtos.add(stuDto);
+            }
+        }
+        dto.setUnSelectedList(stuDtos);
+
+        return dto;
+    }
+
+    /**
+     * 查询学生选课信息（按学号分类）
+     *
+     * @param taskId
+     * @return
+     */
+    private Map<String,List<SelectCourseStuDetail>> getSelectedStuMap(int taskId){
+
+        List<SelectCourseStuDetail> allSelectedStus = iSelectCourseStuDetailDAO.findList(
+                "taskId",
+                taskId,
+                Constant.ID,
+                Constant.DESC
+        );
+
+        Map<String,List<SelectCourseStuDetail>> selectedStuMap = Maps.newHashMap();
+        for(SelectCourseStuDetail selectedStu : allSelectedStus){
+            List<SelectCourseStuDetail> singleSelectedStus = selectedStuMap.get(selectedStu.getStuNo());
+            if(singleSelectedStus == null){
+                singleSelectedStus = Lists.newArrayList();
+            }
+            singleSelectedStus.add(selectedStu);
+
+            selectedStuMap.put(selectedStu.getStuNo(),singleSelectedStus);
+        }
+
+        return selectedStuMap;
+    }
+
+    @Override
+    public List<CourseBaseDto> getSingleCourseSituation(int taskId) {
+        return iSelectCourseDAO.getSingleCourseSituation(taskId);
+    }
+
+    @Override
+    public List<CourseBaseDto> getGroupCourseSituation(int taskId) {
+
+        return null;
+    }
+
 }

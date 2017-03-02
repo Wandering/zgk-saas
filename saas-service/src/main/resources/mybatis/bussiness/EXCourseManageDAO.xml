@@ -77,5 +77,18 @@
             </if>
     </select>
 
+    <!-- 根据租户ID和类型查询课程信息 -->
+    <select id="getSelectCourses" parameterType="map" resultType="SelectCourseBaseDto">
+        SELECT
+            t0.id,t0.course_name as name
+        FROM
+            saas_course_base_info t0,
+            saas_course_manage t1
+        WHERE
+            t0.id = t1.course_base_id
+        AND t1.tn_id = #{tnId}
+        AND t0.`status` = #{type}
+    </select>
+
 </mapper>
 

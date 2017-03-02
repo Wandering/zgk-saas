@@ -48,5 +48,17 @@
         </foreach>
     </insert>
 
+    <!-- 根据任务ID获取单科选课情况 -->
+    <select id="getSingleCourseSituation" parameterType="int" resultType="CourseBaseDto">
+        SELECT
+            courseName,
+            COUNT(courseName) AS stuCount
+        FROM
+            saas_select_course_stu_detail
+        WHERE
+            taskId = #{taskId}
+        GROUP BY
+            courseName
+    </select>
 </mapper>
 

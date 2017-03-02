@@ -1,6 +1,7 @@
 package cn.thinkjoy.saas.dao.web;
 
 import cn.thinkjoy.saas.domain.SelectCourseTask;
+import cn.thinkjoy.saas.dto.CourseBaseDto;
 
 import java.util.List;
 import java.util.Map;
@@ -19,4 +20,12 @@ public interface ISelectCourseDAO {
     public List<SelectCourseTask> getSelectCourseInfo(Map map);
 
     public int insertList(Map map);
+
+    /**
+     * 根据任务ID获取单科选课情况
+     *
+     * @param taskId
+     * @return
+     */
+    List<CourseBaseDto> getSingleCourseSituation(int taskId);
 }
