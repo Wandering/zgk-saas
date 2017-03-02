@@ -88,6 +88,7 @@
             t0.id = t1.course_base_id
         AND t1.tn_id = #{tnId}
         AND t0.`status` = #{type}
+        AND t1.grade_id = #{grade}
     </select>
 
 </mapper>

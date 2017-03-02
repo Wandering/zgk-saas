@@ -65,6 +65,8 @@ public class SaasSelectCourseController {
 
         task.setCreateDate(System.currentTimeMillis());
         task.setModifyDate(System.currentTimeMillis());
+        task.setState(0);
+        task.setStatus(0);
         iSelectCourseTaskService.insert(task);
 
         return Maps.newHashMap();
@@ -111,7 +113,13 @@ public class SaasSelectCourseController {
             task.setStatus(-1);
             iSelectCourseTaskService.update(task);
 
-            // TODO 删除选课设置
+            // 删除选课设置
+            Map<String,Object> updateMap = Maps.newHashMap();
+            updateMap.put("status",-1);
+            updateMap.put("modifyDate",System.currentTimeMillis());
+            Map<String,Object> conditionMap = Maps.newHashMap();
+            conditionMap.put("taskId",idsArr[i]);
+            iSelectCourseSettingService.updateByCondition(updateMap,conditionMap);
         }
 
         return Maps.newHashMap();
@@ -175,7 +183,7 @@ public class SaasSelectCourseController {
     public Map<String,Object> saveOrUpdateSelectCourse(@RequestBody Request request){
 
         List<SelectCourseSetting> settings = JSONObject.parseArray(
-                JSON.toJSON(request.getData()).toString(),
+                JSON.toJSON(request.getData().get("settings")).toString(),
                 SelectCourseSetting.class
         );
 
@@ -187,7 +195,7 @@ public class SaasSelectCourseController {
         if(task == null){
             ExceptionUtil.throwException(ErrorCode.TASK_NOT_EXIST);
         }
-        if (task.getStartTime().after(new Date())){
+        if (task.getStartTime().before(new Date())){
             ExceptionUtil.throwException(ErrorCode.TASK_HAS_START);
         }
 

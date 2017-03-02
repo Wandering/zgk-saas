@@ -324,11 +324,16 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         SelectCourseSetting gkSetting = iSelectCourseSettingDAO.queryOne(
                 paramMap,
                 null,
+                null,
                 null
         );
         if(gkSetting == null){
             // 没有设置过，根据课程信息重新组装
-            List<SelectCourseBaseDto> gkCourses = iexCourseManageDAO.getSelectCourses(task.getTnId(),1);
+            List<SelectCourseBaseDto> gkCourses = iexCourseManageDAO.getSelectCourses(
+                    task.getTnId(),
+                    task.getGrade(),
+                    1
+            );
             List<SelectCourseBaseDto> tmpGkCourses = Lists.newArrayList();
             for(SelectCourseBaseDto gkCourse : gkCourses){
                 if(!Constant.COURSEES.contains(gkCourse.getName())){
@@ -351,10 +356,15 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         SelectCourseSetting xbSetting = iSelectCourseSettingDAO.queryOne(
                 paramMap,
                 null,
+                null,
                 null
         );
 
-        List<SelectCourseBaseDto> xbCourses = iexCourseManageDAO.getSelectCourses(task.getTnId(),2);
+        List<SelectCourseBaseDto> xbCourses = iexCourseManageDAO.getSelectCourses(
+                task.getTnId(),
+                task.getGrade(),
+                2
+        );
         if(xbSetting == null){
             // 没有设置过，根据课程信息重新组装
             for(SelectCourseBaseDto xbCourse : xbCourses){
@@ -362,10 +372,10 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
             }
 
             xbSetting = new SelectCourseSetting();
-            gkSetting.setCourses(JSON.toJSONString(xbSetting));
-            gkSetting.setType(1);
-            gkSetting.setSelectCount(0);
-            gkSetting.setTaskId(taskId);
+            xbSetting.setCourses(JSON.toJSONString(xbCourses));
+            xbSetting.setType(1);
+            xbSetting.setSelectCount(0);
+            xbSetting.setTaskId(taskId);
         }else {
             // 设置过，填充选择过的校本课程
             for(SelectCourseBaseDto xbCourse : xbCourses){
@@ -413,7 +423,7 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         // 组装未选课学生集合
         List<BaseStuDto> stuDtos = Lists.newArrayList();
         for(Map map : tenantCustom){
-            if(selectedStuMap.containsKey(map.get("student_no"))){
+            if(!selectedStuMap.containsKey(map.get("student_no"))){
                 BaseStuDto stuDto = new BaseStuDto();
                 stuDto.setClassName(map.get("student_class").toString());
                 stuDto.setStuName(map.get("student_name").toString());

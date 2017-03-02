@@ -76,7 +76,7 @@
     </select>
 
     <!-- 根据条件查询选课学生总数 -->
-    <select id="getStuNoListByCondition" parameterType="map" resultType="java.lang.String">
+    <select id="getStuNoCountByCondition" parameterType="map" resultType="java.lang.String">
         SELECT
             count(stuNo)
         FROM

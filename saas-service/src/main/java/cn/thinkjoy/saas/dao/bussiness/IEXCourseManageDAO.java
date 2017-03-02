@@ -34,6 +34,7 @@ public interface IEXCourseManageDAO extends IBaseDAO<CourseManage> {
      */
     List<SelectCourseBaseDto> getSelectCourses(
             @Param("tnId") Integer tnId,
+            @Param("grade") Integer grade,
             @Param("type") Integer type
     );
 }
