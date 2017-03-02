@@ -1439,6 +1439,15 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         if (list != null && list.size() > 0) {
             JwTeachDate jwTeachDate = list.get(0);
             count = StringUtils.remove(jwTeachDate.getTeachDetail(),Constant.TIME_INTERVAL).length();
+            String[] times = jwTeachDate.getTeachDetail().split(Constant.TIME_INTERVAL);
+            StringBuilder builder = new StringBuilder();
+            for (String ss : times){
+                builder.append(ss.length());
+            }
+            if (times.length<3){
+                builder.append(0);
+            }
+            time = builder.toString();
         }
 
         Map<String,Object > rtnMap = new HashMap<>();
