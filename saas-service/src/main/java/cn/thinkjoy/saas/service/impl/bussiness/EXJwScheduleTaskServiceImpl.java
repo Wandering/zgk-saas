@@ -498,7 +498,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return flag;
     }
     /**
-     * 初始化排课参数
+     * 初始化行政班排课参数
      * @param taskId
      * @param tnId
      * @return
