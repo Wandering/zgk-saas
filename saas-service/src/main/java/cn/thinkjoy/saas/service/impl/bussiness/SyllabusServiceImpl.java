@@ -4,19 +4,29 @@ import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.IJwCourseTableDAO;
 import cn.thinkjoy.saas.dao.IJwScheduleTaskDAO;
+import cn.thinkjoy.saas.dao.IJwSyllabusDAO;
 import cn.thinkjoy.saas.dao.bussiness.ISyllabusDAO;
 import cn.thinkjoy.saas.domain.JwCourseTable;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
+import cn.thinkjoy.saas.domain.JwSyllabus;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.dto.JwCourseTableDTO;
 import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
 import cn.thinkjoy.saas.service.bussiness.ISyllabusService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
+import com.google.common.io.CharSink;
+import com.google.common.io.CharSource;
+import com.google.common.io.FileWriteMode;
+import com.google.common.io.Files;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.*;
+
+import static com.google.common.io.Files.newReader;
 
 /**
  * 课程表增删改查业务
@@ -32,6 +42,8 @@ public class SyllabusServiceImpl implements ISyllabusService {
     private IJwScheduleTaskDAO jwScheduleTaskDAO;
     @Autowired
     private IEXJwScheduleTaskService iexJwScheduleTaskService;
+    @Autowired
+    private IJwSyllabusDAO jwSyllabusDAO;
 
     /**
      * 获得总课表
@@ -104,8 +116,11 @@ public class SyllabusServiceImpl implements ISyllabusService {
     public boolean classExchange(int tnId,int taskId,int classId,int[] source, int[] target) {
         List<JwCourseTable> sourceList = this.getSyllabusByCoordinate(tnId,taskId,classId,source,Constant.TABLE_TYPE_CLASS);
         List<JwCourseTable> targetList = this.getSyllabusByCoordinate(tnId,taskId,classId,target,Constant.TABLE_TYPE_CLASS);
-        return updateExchange(sourceList,targetList);
+        Map<String,Object> timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId,taskId);
+        int y = (int) timeConfigMap.get("count");
+        return  updateExchange(sourceList,targetList) && updateExchange(y,tnId,taskId,sourceList,targetList);
     }
+
 
     /**
      * 老师交换课表
@@ -120,7 +135,9 @@ public class SyllabusServiceImpl implements ISyllabusService {
     public boolean teacherExchange(int tnId,int taskId,int teacherId,int[] source, int[] target) {
         List<JwCourseTable> sourceList = this.getSyllabusByCoordinate(tnId,taskId,teacherId,source,Constant.TABLE_TYPE_TEACHER);
         List<JwCourseTable> targetList = this.getSyllabusByCoordinate(tnId,taskId,teacherId,target,Constant.TABLE_TYPE_TEACHER);
-        return updateExchange(sourceList,targetList);
+        Map<String,Object> timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId,taskId);
+        int y = (int) timeConfigMap.get("count");
+        return updateExchange(sourceList,targetList) && updateExchange(y,tnId,taskId,sourceList,targetList);
     }
 
     /**
@@ -343,7 +360,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @return
      */
     private static String genStringByDTO(String type,JwCourseTableDTO jwCourseTableDTO){
-        StringBuilder rtnStrBf = new StringBuilder();
+        StringBuffer rtnStrBf = new StringBuffer();
         if (jwCourseTableDTO.getStatus() == 0) return "";
         switch (type){
             case Constant.TABLE_TYPE_TEACHER:
@@ -464,5 +481,58 @@ public class SyllabusServiceImpl implements ISyllabusService {
             lists.add(list);
         }
         return lists;
+    }
+
+    private boolean updateExchange(int y,int tnId,int taskId,List<JwCourseTable> sourceList,List<JwCourseTable> targetList){
+        Map<String,Object> params = new HashMap<>();
+        params.put("taskId",taskId);
+        List<JwSyllabus> jwSyllabuses = jwSyllabusDAO.queryList(params,"id","asc");
+        Iterator<JwSyllabus> jwSyllabusIterator = jwSyllabuses.iterator();
+        Map<Integer,JwSyllabus> map = new LinkedHashMap<>();
+        while (jwSyllabusIterator.hasNext()){
+            JwSyllabus jwSyllabus = jwSyllabusIterator.next();
+            map.put(jwSyllabus.getClassId(),jwSyllabus);
+        }
+        for (JwCourseTable source : sourceList) {
+            JwCourseTable target = targetList.get(0);
+            JwSyllabus jwSyllabus = map.get(target.getClassId());
+            String info = replace(jwSyllabus.getInfo(),y,source, target);
+            jwSyllabus.setInfo(info);
+            jwSyllabusDAO.update(jwSyllabus);
+        }
+        for (JwCourseTable source : targetList) {
+            JwCourseTable target = sourceList.get(0);
+            JwSyllabus jwSyllabus = map.get(target.getClassId());
+            jwSyllabus.setInfo(replace(jwSyllabus.getInfo(),y,source, target));
+            jwSyllabusDAO.update(jwSyllabus);
+        }
+//        BufferedWriter bufferedWriter =null;
+        try {
+            List<String> list = new ArrayList<>();
+            for (JwSyllabus jwSyllabus : jwSyllabuses) {
+                list.add(this.toLine(jwSyllabus));
+            }
+//            bufferedWriter =  Files.newWriter(new File("/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_2.txt"), Charset.defaultCharset());
+            CharSink charSink = Files.asCharSink(new File(iexJwScheduleTaskService.getScheduleTaskPath(tnId, taskId) + Constant.PATH_SCHEDULE), Charset.defaultCharset());
+            charSink.writeLines(list);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return true;
+    }
+    private String replace(String s,int y,JwCourseTable source,JwCourseTable target){
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] strings = s.split(Constant.COURSE_TABLE_LINE_SPLIT_CHAR);
+        strings[source.getWeek()*y+source.getSort()] = target.getCourseId().toString();
+        for (String ss : strings){
+            stringBuilder.append(ss).append(Constant.COURSE_TABLE_LINE_SPLIT_CHAR);
+        }
+        return stringBuilder.toString();
+    }
+
+    private static String toLine(JwSyllabus jwSyllabus){
+        return new StringBuffer().append(jwSyllabus.getClassId()).append(Constant.COURSE_TABLE_LINE_SPLIT_CLASS).append(jwSyllabus.getInfo()).toString();
     }
 }

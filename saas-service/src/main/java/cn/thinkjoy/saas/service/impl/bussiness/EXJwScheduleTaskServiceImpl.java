@@ -118,6 +118,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
     @Autowired
     private IEXJwCourseTableDAO iexJwCourseTableDAO;
+
+    @Autowired
+    private IJwSyllabusDAO jwSyllabusDAO;
 //    @Autowired
 //    private
 
@@ -1275,6 +1278,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         params.put("tnId", tnId);
         params.put("taskId", taskId);
         courseTableDAO.deleteByCondition(params);
+        jwSyllabusDAO.deleteByCondition(params);
         List<JwCourseTable> jwCourseTables = new ArrayList<>();
         Map<String, Object> resultMap = Maps.newHashMap();
         List<List<List<String>>> courseTables = new ArrayList<>();
@@ -1309,7 +1313,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         Map<Integer, String> courses = getCourseByTnIdAndTaskId(tnId, taskId);
         try {
             String path = getScheduleTaskPath(tnId, taskId) + Constant.PATH_SCHEDULE;
-//                String path = "/Users/dengshaofei/Documents/git/zgk-saas/saas-service/src/main/resources/config/admin_course_0.txt";
+//                String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_1.txt";
             CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
             allCourseList = main.readLines();
         } catch (Exception e) {
@@ -1321,12 +1325,18 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         for (String courseLine : allCourseList) {
             String[] courseInfo = courseLine.split(Constant.COURSE_TABLE_LINE_SPLIT_CLASS);
             String courseStr = courseInfo[1];
+
             Integer classId = null;
             try {
                 classId = Integer.valueOf(courseInfo[0]);
             } catch (Exception e) {
                 throw new BizException("error", "班级不存在");
             }
+            JwSyllabus jwSyllabus = new JwSyllabus();
+            jwSyllabus.setInfo(courseStr);
+            jwSyllabus.setTaskId(taskId);
+            jwSyllabus.setClassId(classId);
+            jwSyllabusDAO.insert(jwSyllabus);
             String className = classMap.get(classId);
 
             classBf.append(className).append("|");
@@ -1740,7 +1750,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     }
 
     private static String getScheduleRedisKey(int tnId,int taskId){
-        String redisKey = new StringBuilder()
+        String redisKey = new StringBuffer()
                 .append(Constant.COURSE_TABLE_REDIS_KEY)
                 .append(tnId)
                 .append(Constant.COURSE_TABLE_REDIS_SPLIT)

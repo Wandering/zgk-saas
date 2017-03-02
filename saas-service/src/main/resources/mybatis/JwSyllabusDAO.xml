@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IJwSyllabusDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+    <sql id="Base_Column_List">
+        id as id,
+        taskId as taskId,
+        classId as classId,
+        info as info
+    </sql>
+    <insert id="insert" parameterType="JwSyllabus">
+        INSERT INTO saas_jw_syllabus (
+        taskId,
+        classId,
+        info
+        ) VALUES (
+        #{taskId},
+        #{classId},
+        #{info}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="JwSyllabus">
+        UPDATE saas_jw_syllabus
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId!=null">
+                taskId = #{taskId},
+            </if>
+            <if test="classId!=null">
+                classId = #{classId},
+            </if>
+            <if test="info!=null">
+                info = #{info},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_jw_syllabus
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.taskId!=null">
+                taskId = #{map.taskId},
+            </if>
+            <if test="map.classId!=null">
+                classId = #{map.classId},
+            </if>
+            <if test="map.info!=null">
+                info = #{map.info},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_jw_syllabus
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.taskId!=null">
+                taskId = #{update.taskId},
+            </if>
+            <if test="update.classId!=null">
+                classId = #{update.classId},
+            </if>
+            <if test="update.info!=null">
+                info = #{update.info},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId = #{condition.taskId}
+            </if>
+            <if test="condition.classId!=null">
+                AND classId = #{condition.classId}
+            </if>
+            <if test="condition.info!=null">
+                AND info = #{condition.info}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_jw_syllabus (
+                taskId,
+                classId,
+                info
+        ) VALUES (
+                    #{map.taskId},
+                    #{map.classId},
+                    #{map.info}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="JwSyllabus">
+        UPDATE saas_jw_syllabus
+        <trim prefix="SET" suffixOverrides=",">
+            taskId = #{taskId},
+            classId = #{classId},
+            info = #{info},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_jw_syllabus
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_jw_syllabus
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="taskId!=null">
+                AND taskId = #{taskId}
+            </if>
+            <if test="classId!=null">
+                AND classId = #{classId}
+            </if>
+            <if test="info!=null">
+                AND info = #{info}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_jw_syllabus WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="JwSyllabus">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_syllabus
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="JwSyllabus">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_syllabus WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="JwSyllabus">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_syllabus WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="JwSyllabus">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_syllabus
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="JwSyllabus">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_syllabus
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.taskId!=null">
+                ${condition.groupOp}   taskId  ${condition.taskId.op}  #{condition.taskId.data}
+            </if>
+            <if test="condition.classId!=null">
+                ${condition.groupOp}   classId  ${condition.classId.op}  #{condition.classId.data}
+            </if>
+            <if test="condition.info!=null">
+                ${condition.groupOp}   info  ${condition.info.op}  #{condition.info.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="JwSyllabus">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_syllabus
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId like CONCAT('%', #{condition.taskId} , '%')
+            </if>
+            <if test="condition.classId!=null">
+                AND classId like CONCAT('%', #{condition.classId} , '%')
+            </if>
+            <if test="condition.info!=null">
+                AND info like CONCAT('%', #{condition.info} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="JwSyllabus">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_syllabus
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId = #{condition.taskId}
+            </if>
+            <if test="condition.classId!=null">
+                AND classId = #{condition.classId}
+            </if>
+            <if test="condition.info!=null">
+                AND info = #{condition.info}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="JwSyllabus">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_syllabus
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId = #{condition.taskId}
+            </if>
+            <if test="condition.classId!=null">
+                AND classId = #{condition.classId}
+            </if>
+            <if test="condition.info!=null">
+                AND info = #{condition.info}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_jw_syllabus
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="taskId!=null">
+               ${groupOp} taskId ${taskId.op}  #{taskId.data}
+           </if>
+           <if test="classId!=null">
+               ${groupOp} classId ${classId.op}  #{classId.data}
+           </if>
+           <if test="info!=null">
+               ${groupOp} info ${info.op}  #{info.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_jw_syllabus
+    </select>
+
+</mapper>
+
