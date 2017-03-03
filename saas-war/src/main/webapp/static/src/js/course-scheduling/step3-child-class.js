@@ -569,8 +569,9 @@ var HashHandle = {
             'id': selectedV,
             'coord': JSON.stringify(coord)
         }, function (res) {
-            if (res.rtnCode=='0000000' && res.rtnCode == "true") {
+            if (res.rtnCode=='0000000' && res.bizData == true) {
                 console.log('请求成功');
+                that.colorScheduleResult();
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -578,6 +579,15 @@ var HashHandle = {
     },
     // 根据状态获取可调颜色类型 /scheduleTask/adjustment/schedule/result.do
     colorScheduleResult:function(){
+        var that = this;
+        Common.ajaxFun('/scheduleTask/adjustment/schedule/result.do', 'GET', {
+            'taskId': taskId,
+            'tnId': tnId
+        }, function (res) {
+            console.log(res);
+        }, function (res) {
+            layer.msg(res.msg);
+        });
 
     },
     // 提交两个可调课程坐标  /scheduleTask/{type}/exchange.do
