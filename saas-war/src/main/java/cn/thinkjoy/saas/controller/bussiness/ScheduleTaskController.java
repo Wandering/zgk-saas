@@ -714,7 +714,7 @@ public class ScheduleTaskController {
         Map resultMap = new HashMap();
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         if (Constant.TABLE_TYPE_ALL.equals(type)){
-            iexJwScheduleTaskService.getAllCourseResult(taskId, tnId);
+//            iexJwScheduleTaskService.getAllCourseResult(taskId, tnId);
             resultMap.put("result",syllabusService.getAllSyllabus(tnId, taskId));
             return resultMap;
         }

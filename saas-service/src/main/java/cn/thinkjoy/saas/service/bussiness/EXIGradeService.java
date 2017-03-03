@@ -91,4 +91,13 @@ public interface EXIGradeService {
      */
     Integer getGradeType(Integer tnId,Integer gradeCode);
     Integer getGradeType(Integer tnId,String grade);
+
+    /**
+     * 判断是该课程是否是走读班课程
+     * @param tnId
+     * @param gradeCode 年级
+     * @param subject 课程
+     * @return
+     */
+    boolean isTeachClass(int tnId,String gradeCode,String subject);
 }

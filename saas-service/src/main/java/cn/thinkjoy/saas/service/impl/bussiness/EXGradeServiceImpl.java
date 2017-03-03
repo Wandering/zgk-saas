@@ -1,13 +1,17 @@
 package cn.thinkjoy.saas.service.impl.bussiness;
 
+import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.dao.IDataDictDAO;
 import cn.thinkjoy.saas.dao.IGradeDAO;
 import cn.thinkjoy.saas.dao.bussiness.EXIGradeDAO;
 import cn.thinkjoy.saas.domain.DataDict;
 import cn.thinkjoy.saas.domain.Grade;
+import cn.thinkjoy.saas.enums.ErrorCode;
+import cn.thinkjoy.saas.enums.GradeTypeEnum;
 import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantService;
 import cn.thinkjoy.saas.core.GradeConstant;
+import cn.thinkjoy.saas.service.common.EduClassUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import org.slf4j.Logger;
@@ -38,6 +42,14 @@ public class EXGradeServiceImpl implements EXIGradeService {
     @Autowired
     IDataDictDAO dataDictDAO;
 
+    @Override
+    public boolean isTeachClass(int tnId,String gradeCode,String subject){
+        int gradeType = this.getGradeType(tnId, gradeCode);
+        //判定是否存在教学班
+        boolean isExistTeaching = GradeTypeEnum.Teaching.getCode().equals(gradeType);
+        boolean isMove = EduClassUtil.isEduSubject(subject);
+        return isExistTeaching&&isMove;
+    }
 
     /**
      * 年级设置
