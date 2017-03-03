@@ -595,8 +595,10 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         map.put("stuNo",stuNo);
         map.put("taskId",taskId);
         map.put("type",type);
-        iSelectCourseStuDetailDAO.deleteByCondition(map);
-
+        int result = iSelectCourseStuDetailDAO.deleteByCondition(map);
+        if(result == 0){
+            ExceptionUtil.throwException(ErrorCode.UPDATE_ERROR);
+        }
         for(String courseId :courseIds){
             SelectCourseStuDetail detail = new SelectCourseStuDetail();
             detail.setTaskId(taskId);
