@@ -21,38 +21,17 @@ var ChooseTaskAbout = {
         this.addEvent();
     },
     get: function () {
-        // Common.ajaxFun('/saas/selectCourse/getSelectCourseSurvey.do', 'GET', {
-        //         'taskId': GLOBAL_CONSTANT.taskId
-        //     },
-        //     function (res) {
-        res = {
-            "rtnCode": "0000000",
-            "msg": "",
-            bizData: {
-                "name": '选课名称',//"选课名称",
-                "grade": '高一',//年级编号 1：高一  2：高二  3：高三",
-                "startTime": '2017-02-28 13:00:00',//"开始时间：2017-02-28 13:00:00",
-                "endTime": '2017-02-28 13:00:00',//结束时间：2017-02-28 13:00:00",
-                "selectedCount": 200,//"已选学生数",
-                "unSelectedCount": 50,//"未选学生数",
-                "unSelectedList": [{  // 未选学生集合
-                    "className": '高一二班',//"班级名称",
-                    "stuName": '王小明',//"学生名称",
-                    "stuNo": 23232399 //"学生学号"
-                }, {  // 未选学生集合
-                    "className": '高一班',//"班级名称",
-                    "stuName": '李晓飞',//"学生名称",
-                    "stuNo": 99232 //"学生学号"
-                }]
-            }
-        }
+        Common.ajaxFun('/saas/selectCourse/getSelectCourseSurvey.do', 'GET', {
+                'taskId': GLOBAL_CONSTANT.taskId
+            },
+            function (res) {
         if (res.rtnCode == "0000000") {
             ChooseTaskAbout.unSelectedList = res.bizData.unSelectedList;
             ChooseTaskAbout.set(res.bizData);
         }
-        // }, function (res) {
-        //     console.info(res.msg)
-        // })
+        }, function (res) {
+            console.info(res.msg)
+        })
     },
     set: function (d) {
         var tpl = Handlebars.compile($("#choose-task-about-tpl").html());
@@ -88,33 +67,16 @@ var SingleChooseResult = {
         this.get();
     },
     get: function () {
-        // Common.ajaxFun('/saas/selectCourse/getSingleCourseSituation.do', 'GET', {
-        //         'taskId': GLOBAL_CONSTANT.taskId
-        //     },
-        //     function (res) {
-        res = {
-            "rtnCode": "0000000",
-            "msg": "",
-            bizData: [{
-                "courseName": '物理',//"单科组合名称",
-                "stuCount": 600//人数"
-            }, {
-                "courseName": '物理',//"单科组合名称",
-                "stuCount": 600//人数"
-            }, {
-                "courseName": '物理',//"单科组合名称",
-                "stuCount": 600//人数"
-            }, {
-                "courseName": '物理',//"单科组合名称",
-                "stuCount": 600//人数"
-            }]
-        }
+        Common.ajaxFun('/saas/selectCourse/getSingleCourseSituation.do', 'GET', {
+                'taskId': GLOBAL_CONSTANT.taskId
+            },
+            function (res) {
         if (res.rtnCode == "0000000") {
             SingleChooseResult.set(res.bizData);
         }
-        // }, function (res) {
-        //     console.info(res.msg)
-        // })
+        }, function (res) {
+            console.info(res.msg)
+        })
     },
     set: function (d) {
         var tpl = Handlebars.compile($("#sel-single-course-tpl").html());
@@ -133,42 +95,16 @@ var AssemblyChooseResult = {
         this.get();
     },
     get: function () {
-        // Common.ajaxFun('/saas/selectCourse/getGroupCourseSituation.do', 'GET', {
-        //         'taskId': GLOBAL_CONSTANT.taskId
-        //     },
-        //     function (res) {
-        res = {
-            "rtnCode": "0000000",
-            "msg": "",
-            bizData: [{
-                "courseName": '政治-历史-地理',//"单科组合名称",
-                "stuCount": 50//人数"
-            }, {
-                "courseName": '生物-化学-地理',//"单科组合名称",
-                "stuCount": 100//人数"
-            }, {
-                "courseName": '历史-通用技术-化学',//"单科组合名称",
-                "stuCount": 23//人数"
-            }, {
-                "courseName": '历史-通用技术-化学',//"单科组合名称",
-                "stuCount": 100//人数"
-            }, {
-                "courseName": '历史-通用技术-化学',//"单科组合名称",
-                "stuCount": 31//人数"
-            }, {
-                "courseName": '历史-通用技术-化学',//"单科组合名称",
-                "stuCount": 13//人数"
-            }, {
-                "courseName": '历史-生物-政治',//"单科组合名称",
-                "stuCount": 41//人数"
-            }]
-        }
+        Common.ajaxFun('/saas/selectCourse/getGroupCourseSituation.do', 'GET', {
+                'taskId': GLOBAL_CONSTANT.taskId
+            },
+            function (res) {
         if (res.rtnCode == "0000000") {
             AssemblyChooseResult.set(res.bizData);
         }
-        // }, function (res) {
-        //     console.info(res.msg)
-        // })
+        }, function (res) {
+            console.info(res.msg)
+        })
     },
     set: function (d) {
         var dataJson = {
@@ -328,20 +264,27 @@ var SelCourseTypeDetail = {
                 "type": this.type
             },
             function (d) {
-                if (res.rtnCode == "0000000") {
-                    var tpl = Handlebars.compile($("#student-subject-tpl").html());
-                    $('#student-subject').html(tpl(d));
+                if (d.rtnCode == "0000000") {
+                    var arrayFoo = [];
+                    var tag = ['', '一', '二', '三']
+                    for (var i = 1; i <= $('#header-li').val(); i++) {
+                        arrayFoo.push(tag[i]);
+                    }
+                    var dataJson = {
+                        data: d.bizData,
+                        subjectLength: arrayFoo   //选修课个数
+                    }
+                    var tpl = Handlebars.compile($("#modify-choose-layer-tpl").html());
+                    $('#modify-choose-layer').html(tpl(dataJson));
                 }
             }, function (res) {
                 console.info(res.msg)
-            })
+            }, 'true')
     },
     set: function (d) {
         // if(!$.isEmptyObject){
         //     return false;
         // }
-
-
         //动态设置表头
         Handlebars.registerHelper('addOne', function (v) {
             return ['', '一', '二', '三'][v + 1];
@@ -366,17 +309,21 @@ var SelCourseTypeDetail = {
             }
         });
     },
-    verifyModify:function(){
-
-        $('#table-list').find('input[type=checkbox]:checked').attr('data-attr');
-    },
-    modifyItem:function(){
-        this.verifyModify();
+    modifyItem: function () {
+        var that = this;
         var foo = $('#table-list').find('input[type=checkbox]:checked').attr('data-attr');
+        if (!foo) {
+            layer.msg('请选择一项进行修改');
+        }
+        this.getCourseBaseInfo();//拉取课程信息
         var $parentDom = $('#modify-choose-layer li');
         $parentDom.eq(0).find('input').val(foo.split('|')[0]);
         $parentDom.eq(1).find('input').val(foo.split('|')[1]);
         $parentDom.eq(2).find('input').val(foo.split('|')[2]);
+        var xkSubjectValArr = foo.split('|')[3].split('-').slice(0, 3);
+        for (var i = 0; i < xkSubjectValArr.length; i++) {
+            $parentDom.eq(i + 3).find('select').val(xkSubjectValArr[i]);
+        }
         layer.open({
             type: 1,
             title: '修改选课结果',
@@ -387,7 +334,52 @@ var SelCourseTypeDetail = {
                 layer.closeAll();
             }
         })
-        this.getCourseBaseInfo();//拉取课程信息
+
+        /**
+         * 修改提交
+         */
+        $(document).on('click', '#save-btn', function () {
+            //验证
+            var $parentDom = $('#modify-choose-layer li'),
+                $stdNum = $parentDom.eq(0).find('input').val(),
+                fooSubjectArr = [];
+            $parentDom.find('select').each(function () {
+                fooSubjectArr.push($(this).val())
+            });
+            if(fooSubjectArr.length>1){
+                if (fooSubjectArr[0] == fooSubjectArr[1] ||
+                    fooSubjectArr[0] == fooSubjectArr[2] ||
+                    fooSubjectArr[1] == fooSubjectArr[2]
+                ) {
+                    layer.msg('选择科目不能重复');
+                    return false;
+                }
+            }else{
+                if(fooSubjectArr[0] == '00'){
+                    layer.msg('选择科目没有选择');
+                    return false;
+                }
+            }
+            var data = {
+                "clientInfo": {},
+                "style": "",
+                "data": {
+                    "stuNo": $stdNum,
+                    "taskId": GLOBAL_CONSTANT.taskId,
+                    "type": that.type,
+                    "courseIds": fooSubjectArr.join(',')//"所选科目id集合,逗号拼接 eg:1,2,3"
+                }
+            }
+            Common.ajaxFun('/saas/selectCourse/updateStuCourse.do', 'post', JSON.stringify(data), function (d) {
+                if (d.rtnCode == "0000000") {
+                    layer.closeAll();
+                    layer.msg('修改成功');
+                    that.get();
+                }
+            }, function (res) {
+                    layer.msg(res.msg);
+            }, null, true)
+        });
     },
     addEvent: function () {
         var that = this;
@@ -402,13 +394,13 @@ var SelCourseTypeDetail = {
             that.get();
         });
         //修改
-        $('#select-modify').click(function(){
+        $('#select-modify').click(function () {
             that.modifyItem();
         });
         //勾选
-        $(document).on('change','.check-template :checkbox',function(){
+        $(document).on('change', '.check-template :checkbox', function () {
             $('.check-template :checkbox').prop('checked', false);
-            $(this).prop('checked',true);
+            $(this).prop('checked', true);
         })
     }
 }
