@@ -97,7 +97,7 @@ ClassRoomTable.prototype = {
                 $('#select-class option:gt(0)').remove();
                 var queryCourse = [];
                 $.each(result.bizData, function (i, v) {
-                    console.log(v.id + "==" + v.class_name)
+                    //console.log(v.id + "==" + v.class_name)
                     queryCourse.push('<option value="' + v.id + '">' + v.class_name + '</option>')
                 });
                 $('#select-class').append(queryCourse);
@@ -148,7 +148,7 @@ ClassRoomTable.prototype = {
             "taskId": taskId,
             "param": JSON.stringify(param)
         }, function (result) {
-            console.log(result);
+            //console.log(result);
             if (result.rtnCode == "0000000") {
                 var theadTemplate = Handlebars.compile($("#" + urlType + "-thead-list-template").html());
                 Handlebars.registerHelper("thead", function (res) {
@@ -221,13 +221,13 @@ ClassRoomTable.prototype = {
                 var tbodyTemplate = Handlebars.compile($("#all-tbody-list-template").html());
                 Handlebars.registerHelper("room", function (res) {
                     var rmWk = res.roomData;
-                    console.log(rmWk.length)
+                    //console.log(rmWk.length)
                     var rmList = res.room.split('|');
                     var trHtml = '';
                     for (var i = 0; i < rmList.length; i++) {
                         trHtml += '<tr>';
                         trHtml += '<td class="center"><div style="width:100px">' + rmList[i] + '</div></td>';
-                        console.log(rmWk[i])
+                        //console.log(rmWk[i])
                         for (var j = 0; j < rmWk[i].length; j++) {
                             for (var k = 0; k < rmWk[i][j].length; k++) {
                                 trHtml += '<td class="center" style="width:100px"><div style="width:100px">' + rmWk[i][j][k] + '</div></td>';
@@ -374,6 +374,66 @@ var HashHandle = {
                         console.log("排课失败2");
                         $('.btn-one-key,#role-scheduling-tab,#control-jsp,.arranging-course-tips,.scheduling-error').addClass('dh');
                         $('.scheduling-error2').removeClass('dh');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
+                        $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
+                        ClassRoomTableIns.getAllQueryCourse();
+                        ClassRoomTableIns.getQueryCourse();
+                        ClassRoomTableIns.getQueryClass();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         break;
                     default:
                         break;
@@ -502,15 +562,15 @@ var HashHandle = {
     // 根据坐标获取成功状态 /scheduleTask/{type}/queryStatusByCoord.do
     queryStatusByCoord:function(posX,posY,selectedV){
         var that = this;
+        var coord = [posY,posX];
+        console.log(JSON.stringify(coord));
         Common.ajaxFun('/scheduleTask/class/queryStatusByCoord.do', 'GET', {
-            'type': 'class',
             'taskId': taskId,
             'id': selectedV,
-            'coord': [posX,posY]
+            'coord': JSON.stringify(coord)
         }, function (res) {
-            console.log(res);
-            if (res.rtnCode == "true") {
-
+            if (res.rtnCode=='0000000' && res.rtnCode == "true") {
+                console.log('请求成功');
             }
         }, function (res) {
             layer.msg(res.msg);
