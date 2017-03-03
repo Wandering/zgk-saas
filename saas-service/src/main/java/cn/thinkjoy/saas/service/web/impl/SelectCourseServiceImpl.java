@@ -12,12 +12,15 @@ import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.TeantCustom;
 import cn.thinkjoy.saas.dto.*;
+import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.service.IJwScheduleTaskService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import cn.thinkjoy.saas.service.bussiness.IEXTenantCustomService;
+import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import cn.thinkjoy.saas.service.web.ISelectCourseService;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -619,4 +622,21 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         return Integer.valueOf(task.getId().toString());
     }
 
+    @Override
+    public List<BaseDto> getCourseBaseInfo(int taskId, int type) {
+        Map<String,Object> paramMap = Maps.newHashMap();
+        paramMap.put("taskId",taskId);
+        paramMap.put("type",type);
+        SelectCourseSetting setting = iSelectCourseSettingDAO.queryOne(
+                paramMap,
+                null,
+                null,
+                null
+        );
+        if(setting == null){
+            ExceptionUtil.throwException(ErrorCode.TASK_NOT_EXIST);
+        }
+        List<BaseDto> dtos = JSONObject.parseArray(setting.getCourses(),BaseDto.class);
+        return dtos;
+    }
 }
