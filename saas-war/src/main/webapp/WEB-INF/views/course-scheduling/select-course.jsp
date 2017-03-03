@@ -84,7 +84,7 @@
         </td>
         <td class="center">{{addOne @index}}</td>
         <td class="center" dataId="{{id}}" gradeName="{{grade}}" selectCourseName="{{name}}">{{name}}</td>
-        <td class="center">{{grade}}</td>
+        <td class="center">{{gradeTxt grade}}</td>
         <td class="center">{{FormatTime startTime}}</td>
         <td class="center">{{FormatTime endTime}}</td>
         <td class="center" gradeName="{{grade}}" selectCourseName="{{name}}" dataId="{{id}}">{{{reStatus state}}}</td>

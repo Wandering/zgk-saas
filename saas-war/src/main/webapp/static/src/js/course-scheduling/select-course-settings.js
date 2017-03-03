@@ -1,5 +1,6 @@
 var tnId = Common.cookie.getCookie('tnId');
 var taskId = Common.cookie.getCookie('taskId');
+var selCourseLoging = Common.cookie.getCookie('selCourseLoging');
 function SelectCourseSettings() {
     this.init();
 }
@@ -10,6 +11,15 @@ SelectCourseSettings.prototype = {
         this.getSelectCourses();
         this.selCourseMax();
         $('.select-course-num').find('option[value="'+ this.selectCount +'"]').attr('selected','selected');
+
+        if(selCourseLoging=='true'){
+            $('.fgk-course-list').find(':checkbox').remove();
+            $('#btn-save-base').remove();
+            $('.selCourseNum').text(this.selectCount);
+        }
+
+
+
     },
     // 拉取课程集合  /saas/selectCourse/getSelectCourses.do
     getSelectCourses: function () {

@@ -63,8 +63,8 @@
                             <div class="task-list">
                                 <h4 class="t-h4">非高考课程选课设置</h4>
                                 <div class="course-info">学生可选课程：<span class="fgk-course-list"></span></div>
-                                <div class="course-info select-course-max">设置学生选课数：<select
-                                        class="select-course-num"></select></div>
+                                <div class="course-info select-course-max">设置学生选课数：
+                                    <span class="selCourseNum"><select class="select-course-num"></select></span></div>
                             </div>
                         </div>
                         <div class="btn-box">
