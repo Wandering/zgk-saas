@@ -76,16 +76,14 @@
     </select>
 
     <!-- 根据条件查询选课学生总数 -->
-    <select id="getStuNoCountByCondition" parameterType="map" resultType="java.lang.String">
+    <select id="getStuNoCountByCondition" parameterType="map" resultType="java.lang.Integer">
         SELECT
-            count(stuNo)
+            count(DISTINCT stuNo)
         FROM
             saas_select_course_stu_detail
         WHERE
             taskId = #{taskId}
         AND type =  #{type}
-        GROUP BY
-            stuNo
     </select>
 
     <!-- 根据学生学号集合查询学生选课详情 -->

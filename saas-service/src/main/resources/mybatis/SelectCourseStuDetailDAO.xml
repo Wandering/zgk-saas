@@ -170,6 +170,9 @@ selectList
             <if test="condition.taskId!=null">
                 AND taskId = #{condition.taskId}
             </if>
+            <if test="condition.type!=null">
+                AND type = #{condition.type}
+            </if>
         </trim>
     </update>
 
@@ -244,6 +247,9 @@ selectList
             </if>
             <if test="taskId!=null">
                 AND taskId = #{taskId}
+            </if>
+            <if test="type!=null">
+                AND type = #{type}
             </if>
         </trim>
     </delete>
@@ -462,6 +468,9 @@ selectList
             <if test="condition.taskId!=null">
                 AND taskId = #{condition.taskId}
             </if>
+            <if test="condition.type!=null">
+                AND type = #{condition.type}
+            </if>
         </trim>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -497,6 +506,10 @@ selectList
             <if test="condition.taskId!=null">
                 AND taskId = #{condition.taskId}
             </if>
+            <if test="condition.type!=null">
+                AND type = #{condition.type}
+            </if>
+
         </trim>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
