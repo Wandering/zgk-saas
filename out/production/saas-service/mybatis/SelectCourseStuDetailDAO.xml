@@ -248,6 +248,9 @@ selectList
             <if test="taskId!=null">
                 AND taskId = #{taskId}
             </if>
+            <if test="type!=null">
+                AND type = #{type}
+            </if>
         </trim>
     </delete>
 
