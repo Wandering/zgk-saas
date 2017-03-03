@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 选课设置</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/select-course.css" />
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/select-course.css"/>
 </head>
 <body>
 <%@ include file="./../common/header.jsp" %>
@@ -57,16 +57,20 @@
                             <h3 class="title"><span class="line"></span>选课任务名称</h3>
                             <div class="task-list">
                                 <h4 class="t-h4">高考课程选课设置</h4>
-                                <p class="course-info">学生可选课程：<span></span></p>
-                                <p class="course-info">学生选课数：3门</p>
+                                <div class="course-info">学生可选课程：<span class="gk-course-list"></span></div>
+                                <div class="course-info">学生选课数：3门</div>
                             </div>
                             <div class="task-list">
                                 <h4 class="t-h4">非高考课程选课设置</h4>
-                                <p class="course-info">学生可选课程：<span></span></p>
-                                <p class="course-info">设置学生选课数：<select class="select-course-num"></select></p>
+                                <div class="course-info">学生可选课程：<span class="fgk-course-list"></span></div>
+                                <div class="course-info select-course-max">设置学生选课数：<select
+                                        class="select-course-num"></select></div>
                             </div>
                         </div>
-                        <button type="button" class="btn-save-base" id="btn-save-base">提交</button>
+                        <div class="btn-box">
+                            <button type="button" class="btn btn-info btn-save btn-save-base" id="btn-save-base">提交
+                            </button>
+                        </div>
                         <!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
 

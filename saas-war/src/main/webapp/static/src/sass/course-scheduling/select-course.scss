@@ -236,10 +236,8 @@
 }
 
 
-
 // 选课设置
 .settings-box{
-  font-weight: bold;
   display: block;
   .title{
     color: #CB171D;
@@ -282,4 +280,32 @@
 .btn-save-base{
   margin-top:20px;
 }
+
+.course-info{
+  margin:0 0 10px;
+
+  .gk-course-list,
+  .fgk-course-list{
+    .item{
+      margin:0 20px 0 0;
+    }
+  }
+}
+.select-course-max{
+  display: none;
+}
+.look-course{
+  color: #000;
+}
+
+a,
+a.look-course:link,
+a.look-course:visited,
+a.look-course:hover {
+  font-size: 12px;
+  color: #539fd0;
+  text-decoration: underline;
+  outline: 0;
+}
+
 
