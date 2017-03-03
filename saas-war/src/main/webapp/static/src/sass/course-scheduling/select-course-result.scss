@@ -429,13 +429,11 @@
 
 //底部处理操作按钮
 .handle-btns{
-  clear: both;
-  position: relative;
-  left: 50%;
-  margin-left: -250px;
+  margin-left: 250px;
   #confirm-this-data{
     margin-right: 40px;
   }
+
   #reset-task{
     border-color:#F6A623!important;
     color: #F6A623!important;
