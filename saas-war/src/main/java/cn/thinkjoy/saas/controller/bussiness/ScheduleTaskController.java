@@ -233,11 +233,12 @@ public class ScheduleTaskController {
     @RequestMapping("/trigger")
     public boolean updateScheduleTaskStatus(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
 
-        boolean initBool = iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+        boolean initBool = iexJwScheduleTaskService.initParmasFile(taskId, tnId);
 
 
         if (initBool) {
-            String path = FileOperation.getParamsPath(tnId, taskId);
+            String type= iexJwScheduleTaskService.getClsssTypeTagByTaskId(taskId, tnId);
+            String path = FileOperation.getParamsPath(tnId, taskId,type);
             JwScheduleTask jwScheduleTask = new JwScheduleTask();
             jwScheduleTask.setId(taskId);
             jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
@@ -254,7 +255,11 @@ public class ScheduleTaskController {
     @RequestMapping("/reload/trigger")
     public boolean reloadTrigger(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
 
-        String path = FileOperation.getParamsPath(tnId, taskId);
+        String path = iexJwScheduleTaskService.getScheduleTaskPath(taskId, tnId);
+
+//        String type= iexJwScheduleTaskService.getClsssTypeTagByTaskId(taskId, tnId);
+//
+//        String path = FileOperation.getParamsPath(tnId, taskId,type);
 
         File file = new File(path);
 
@@ -263,7 +268,7 @@ public class ScheduleTaskController {
         if (!re)
             return false;
 
-        boolean initBool = iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+        boolean initBool = iexJwScheduleTaskService.initParmasFile(taskId, tnId);
 
         if (initBool) {
             JwScheduleTask jwScheduleTask = new JwScheduleTask();

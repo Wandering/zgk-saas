@@ -35,13 +35,28 @@ public interface IEXJwScheduleTaskService {
     Map<String,Object> getAllCourseResult(Integer taskId, Integer tnId) throws IOException, ParseException;
 
 
+    String  getClsssTypeTagByTaskId(Integer taskId,  Integer tnId);
     /**
-     * 初始化排课参数
+     * 初始化参数
      * @param taskId
      * @param tnId
      * @return
      */
-    boolean InitParmasFile(Integer taskId, Integer tnId) throws IOException;
+    boolean initParmasFile(final Integer taskId, final Integer tnId) throws IOException;
+//    /**
+//     * 初始化教学班排课参数
+//     * @param taskId
+//     * @param tnId
+//     * @return
+//     */
+//    boolean eduParmas(Integer taskId, Integer tnId) throws IOException;
+//    /**
+//     * 初始化行政班排课参数
+//     * @param taskId
+//     * @param tnId
+//     * @return
+//     */
+//    boolean admParmas(Integer taskId, Integer tnId) throws IOException;
 
 
     /**

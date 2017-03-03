@@ -19,6 +19,7 @@ import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.domain.bussiness.MergeClassInfoVo;
 import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.service.IGradeService;
+import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
 import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
 import cn.thinkjoy.saas.service.bussiness.IEXTeacherService;
@@ -61,6 +62,10 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
     @Autowired
     private IGradeService gradeService;
+
+    @Resource
+    private EXIGradeService exiGradeService;
+
 
     @Autowired
     private IJwCourseTableDAO courseTableDAO;
@@ -162,8 +167,10 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         map.put("tnId", tnId);
         map.put("id", taskId);
         JwScheduleTask jwScheduleTask = selectScheduleTaskPath(map);
-        if (jwScheduleTask == null || StringUtils.isBlank(jwScheduleTask.getPath()))
-            result = FileOperation.getParamsPath(taskId, tnId);
+        if (jwScheduleTask == null || StringUtils.isBlank(jwScheduleTask.getPath())) {
+            String type=getClsssTypeTag(Integer.valueOf(jwScheduleTask.getGrade()),tnId);
+            result = FileOperation.getParamsPath(taskId, tnId,type);
+        }
         else
             result = jwScheduleTask.getPath();
 
@@ -497,57 +504,162 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         return flag;
     }
+
+    /**
+     * 初始化排课参数
+     * @param taskId   任务ID
+     * @param tnId     租户ID
+     * @return
+     * @throws IOException
+     */
+    @Override
+    public boolean initParmasFile(final Integer taskId, final Integer tnId) throws IOException {
+
+        boolean flag = false;
+
+        if (taskId <= 0 || tnId <= 0)
+            return false;
+
+        JwScheduleTask jwScheduleTask = iJwScheduleTaskDAO.fetch(taskId);
+        if (jwScheduleTask == null)
+            return false;
+
+        //1:行政班  2:行政班+教学班  3:文科+理科
+        Integer classType = exiGradeService.getGradeType(tnId, Integer.valueOf(jwScheduleTask.getGrade()));
+
+        String type="adm";
+
+        switch (classType) {
+            case 1://行政班
+                flag = admParmas(taskId, tnId,type);
+                break;
+            case 2://教学班
+                type="edu";
+                flag = eduParmas(taskId, tnId,type);
+                break;
+            case 3: //行政班
+                flag = admParmas(taskId, tnId,type);
+                break;
+        }
+        return flag;
+    }
+
+    /**
+     * 行政班||教学班标签
+     * @param grade
+     * @param tnId
+     * @return
+     */
+    private String getClsssTypeTag(Integer grade,Integer tnId) {
+
+        String type = "adm";
+
+        if (tnId <= 0 || grade<=0)
+            return null;
+
+        //1:行政班  2:行政班+教学班  3:文科+理科
+        Integer classType = exiGradeService.getGradeType(tnId, grade);
+
+        type = classType == 2 ? "edu" : type;
+
+        return type;
+    }
+    @Override
+    public String getClsssTypeTagByTaskId(Integer taskId,Integer tnId) {
+
+
+        String type = "adm";
+
+        if (tnId <= 0 || taskId <= 0)
+            return null;
+
+        Map map = new HashMap();
+        map.put("tnId", tnId);
+        map.put("id", taskId);
+        JwScheduleTask jwScheduleTask = selectScheduleTaskPath(map);
+
+        if (jwScheduleTask == null)
+            return null;
+
+        //1:行政班  2:行政班+教学班  3:文科+理科
+        Integer classType = exiGradeService.getGradeType(tnId, Integer.valueOf(jwScheduleTask.getGrade()));
+
+        type = classType == 2 ? "edu" : type;
+
+        return type;
+    }
+    /**
+     * 教学班排课参数
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    private boolean eduParmas(final Integer taskId, final Integer tnId,final String type) throws IOException {
+        boolean flag = false;
+
+        List<StringBuffer> parametersBuffers = getParameters();
+
+        flag = printBuffers(tnId, taskId, parametersBuffers, FileOperation.PARMETERS,type);
+
+        List<StringBuffer> admClassRuleBuffers = getClassRule(taskId, 0);//行政班 不排课
+
+        flag = printBuffers(tnId, taskId, admClassRuleBuffers, FileOperation.ADMIN_CLASS_NON_DISPACHING,type);
+
+
+
+        return flag;
+    }
+
     /**
      * 初始化行政班排课参数
      * @param taskId
      * @param tnId
      * @return
      */
-    @Override
-    public boolean InitParmasFile(final Integer taskId, final Integer tnId) throws IOException {
+    private boolean admParmas(final Integer taskId, final Integer tnId,final String type) throws IOException {
         boolean result = false;
 
         List<StringBuffer> parametersBuffers = getParameters();
 
-        result = printBuffers(tnId, taskId, parametersBuffers, FileOperation.PARMETERS);
+        result = printBuffers(tnId, taskId, parametersBuffers, FileOperation.PARMETERS,type);
 
         List<StringBuffer> admClassRuleBuffers = getClassRule(taskId, 1);//行政班 不排课
 
-        result = printBuffers(tnId, taskId, admClassRuleBuffers, FileOperation.ADMIN_CLASS_NON_DISPACHING);
+        result = printBuffers(tnId, taskId, admClassRuleBuffers, FileOperation.ADMIN_CLASS_NON_DISPACHING,type);
 
-        List<StringBuffer> eduClassRuleBuffers = getClassRule(taskId, 0);//走读班 不排课
+        List<StringBuffer> eduClassRuleBuffers = ObjIsNothing();//班级 不排课
 
-        result = printBuffers(tnId, taskId, eduClassRuleBuffers, FileOperation.CLASS_NON_DISPACHING);
+        result = printBuffers(tnId, taskId, eduClassRuleBuffers, FileOperation.CLASS_NON_DISPACHING,type);
 
         List<StringBuffer> admClassInfoBuffers = getClassInfo(taskId, tnId);//行政班基础信息
 
-        result = printBuffers(tnId, taskId, admClassInfoBuffers, FileOperation.CLASS_INFO);
+        result = printBuffers(tnId, taskId, admClassInfoBuffers, FileOperation.CLASS_INFO,type);
 
         List<StringBuffer> courseRuleBuffers = getCourseRule(taskId);//课程不排课
 
-        result = printBuffers(tnId, taskId, courseRuleBuffers, FileOperation.COURSE_NON_DISPACHING);
+        result = printBuffers(tnId, taskId, courseRuleBuffers, FileOperation.COURSE_NON_DISPACHING,type);
 
         List<StringBuffer> teachDataBuffers = getTeachDateInfo(taskId, tnId);//基础规则设置
 
-        result = printBuffers(tnId, taskId, teachDataBuffers, FileOperation.COURSE_TIMESLOTS);
+        result = printBuffers(tnId, taskId, teachDataBuffers, FileOperation.COURSE_TIMESLOTS,type);
 
         List<StringBuffer> gradeNonDisBuffers = getGradeNonDispaching(taskId, 1);//年级不排课
 
-        result = printBuffers(tnId, taskId, gradeNonDisBuffers, FileOperation.GRAD_NON_DISPACHING);
+        result = printBuffers(tnId, taskId, gradeNonDisBuffers, FileOperation.GRAD_NON_DISPACHING,type);
 
         List<StringBuffer> courseInfomationBuffers = courseInfomation(taskId, tnId);//课程信息
 
-        result = printBuffers(tnId, taskId, courseInfomationBuffers, FileOperation.COURSE_INFORMATION);
+        result = printBuffers(tnId, taskId, courseInfomationBuffers, FileOperation.COURSE_INFORMATION,type);
 
         List<StringBuffer> teacherSettingBuffers = teachersSetting(taskId, tnId);//教师设置
 
-        result = printBuffers(tnId, taskId, teacherSettingBuffers, FileOperation.TEACHERS_SETTING);
+        result = printBuffers(tnId, taskId, teacherSettingBuffers, FileOperation.TEACHERS_SETTING,type);
         LOGGER.info("===================参数序列化结果:" + result + "===================");
         if (result) {
             cachedThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
-                    String path = FileOperation.getParamsPath(tnId, taskId);
+                    String path = FileOperation.getParamsPath(tnId, taskId,type);
                     String shellCMD=ReadCmdLine.timetableShellCmd(path);
                     Integer c = ReadCmdLine.run(path,shellCMD);
                     String result = getSchduleResultStatus(taskId, tnId);
@@ -585,8 +697,18 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return str;
     }
 
-    private boolean printBuffers(Integer tnId,Integer taskId ,List<StringBuffer> classRuleBuffers,String fileName) throws IOException {
-        boolean flag = FileOperation.creatTxtFile(tnId,taskId,fileName);
+    /**
+     * 参数写入txt
+     * @param tnId 租户ID
+     * @param taskId  任务ID
+     * @param classRuleBuffers 数据集
+     * @param fileName 文件名
+     * @param type 班级类型   行政班||教学班
+     * @return
+     * @throws IOException
+     */
+    private boolean printBuffers(Integer tnId,Integer taskId ,List<StringBuffer> classRuleBuffers,String fileName,String type) throws IOException {
+        boolean flag = FileOperation.creatTxtFile(tnId,taskId,fileName,type);
         if (flag) {
             String str = "";
             for (StringBuffer stringBuffer : classRuleBuffers)
@@ -1215,8 +1337,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      */
     private List<StringBuffer> getClassRule(Integer taskId,Integer type) {
         List<StringBuffer> stringBuffers = new ArrayList<>();
-        if(type==0)
-            return ObjIsNothing();
+//        if(type==0)
+//            return ObjIsNothing();
 
         Map map=new HashMap();
         map.put("taskId",taskId);
