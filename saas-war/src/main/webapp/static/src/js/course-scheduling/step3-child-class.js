@@ -584,11 +584,74 @@ var HashHandle = {
             'taskId': taskId,
             'tnId': tnId
         }, function (res) {
-            console.log(res);
+            if(res.rtnCode=='0000000'){
+                var state = res.bizData;
+                /*
+                * 0:调课中
+                 1:调课成功
+                 -1:调课失败(数据异常)
+                 -2:调课失败(系统异常)
+                * */
+                console.log(res);
+                switch (state){
+                    case "0":
+                        console.log("调课中");
+                        clearInterval(that.items2);
+                        that.items2 = setInterval(function () {
+                            that.colorScheduleResult();
+                        }, 30000);
+                        break;
+                    case "1":
+                        console.log("调课中");
+                        clearInterval(that.items2);
+                        that.scheduleTaskSuccess();
+                        break;
+                    case "-1":
+                        console.log("调课中");
+                        clearInterval(that.items2);
+                        break;
+                    case "-2":
+                        console.log("调课中");
+                        clearInterval(that.items2);
+                        break;
+                    default:
+                        break;
+
+                }
+            }
+
+
+
+
         }, function (res) {
             layer.msg(res.msg);
         });
 
+    },
+    // 拉取颜色列表
+    scheduleTaskSuccess:function(){
+        var that = this;
+        Common.ajaxFun('/scheduleTask/adjustment/success.do', 'GET', {
+            'taskId': taskId,
+            'tnId': tnId
+        }, function (res) {
+            console.log(res);
+            // 0白色，1红色，2黄色，3绿色
+            if(res.rtnCode=='0000000'){
+                var datas = res.bizData;
+                $.each($('.classCourseTable'),function(i,v){
+                    var colorValue = datas[i];
+                    switch (){
+                        case :
+                    }
+                    $(v).attr('backgroundColor',colorValue);
+                })
+
+
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
     },
     // 提交两个可调课程坐标  /scheduleTask/{type}/exchange.do
     exchange:function(){
