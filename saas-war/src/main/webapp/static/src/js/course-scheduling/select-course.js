@@ -31,20 +31,20 @@ SelectCourse.prototype = {
                     var result = '';
                     switch (v) {
                         case 0: // 选课未设置
-                            result = '<a href="/select-course-settings" class="look-course start-schedule-btn">选课未设置</a>';
+                            result = '<a href="javascript:;" class="look-course">选课未设置</a>';
                             break;
                         case 1: // 选课未开始
-                            result = '<a href="/select-course-settings" class="look-course again-schedule-btn btn-split">选课未开始</a>';
+                            result = '<a href="javascript:;" class="look-course">选课未开始</a>';
                             break;
                         case 2: // 学生选课中
-                            result = '<a href="/select-course-settings" class="look-course again-schedule-btn btn-split">学生选课中</a>';
+                            result = '<a href="javascript:;" class="look-course">学生选课中</a>';
                             that.settingState = 2;
                             break;
                         case 3: // 选课结果待使用
-                            result = '<a href="/select-course-settings" class="look-course">选课结果待使用</a>';
+                            result = '<a href="javascript:;" class="look-course">选课结果待使用</a>';
                             break;
                         case 4: // 选课结果已使用
-                            result = '<a href="/select-course-settings" class="look-course">选课结果已使用</a>';
+                            result = '<a href="javascript:;" class="look-course">选课结果已使用</a>';
                             break;
                         default:
                             break;
@@ -53,6 +53,14 @@ SelectCourse.prototype = {
                     return result;
                 });
                 $('#select-course-list').html(myTemplate(res));
+
+                $('.look-course').on('click', function () {
+                    var id = $(this).parent().attr('dataid');
+                    var gradeName = $(this).parent().attr('gradeName');
+                    Common.cookie.setCookie('gradeName', gradeName);
+                    Common.cookie.setCookie('taskId', id);
+                    window.location.href='/select-course-settings';
+                });
             } else {
                 layer.msg(res.msg);
             }
@@ -322,10 +330,5 @@ $(function () {
         });
     });
 
-    $('.look-course').on('click', function () {
-        var id = $(this).parent().attr('dataid');
-        var gradeName = $(this).parent().attr('gradeName');
-        Common.cookie.setCookie('gradeName', gradeName);
-        Common.cookie.setCookie('taskId', id);
-    });
+
 });

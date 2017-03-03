@@ -93,6 +93,12 @@ $(function () {
             courses2.push({"id":$(v).attr('data-id'),"name":$(v).attr('data-name')});
         });
         var checkedLen = $('.select-course-num').children('option:selected').val();
+
+        if(checkedLen==undefined){
+            layer.tips('请设置非高考课程!', '.fgk-course-list');
+            return false;
+        }
+
         var datas = {
             "data": {
                 "settings": [
