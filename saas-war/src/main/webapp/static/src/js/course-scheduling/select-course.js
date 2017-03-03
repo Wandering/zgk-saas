@@ -24,27 +24,44 @@ SelectCourse.prototype = {
                 Handlebars.registerHelper('FormatTime', function (num) {
                     return Common.getFormatTime(num);
                 });
+                Handlebars.registerHelper('gradeTxt', function (v) {
+                    var gradeTxt = '';
+                    switch (v) {
+                        case 1:
+                            gradeTxt ="高一年级";
+                            break;
+                        case 2:
+                            gradeTxt ="高二年级";
+                            break;
+                        case 3:
+                            gradeTxt ="高三年级";
+                            break;
+                        default:
+                            break;
+                    }
+                    return gradeTxt;
+                });
                 Handlebars.registerHelper('reStatus', function (v) {
 
-                    //console.log(v)
+                    console.log(v)
                     // 0：选课未设置 1：选课未开始 2：学生选课中 3：选课结果待使用 4：选课结果已使用"
                     var result = '';
                     switch (v) {
                         case 0: // 选课未设置
-                            result = '<a href="javascript:;" class="look-course">选课未设置</a>';
+                            result = '<a href="javascript:;" state="'+ v +'" class="look-course">选课未设置</a>';
                             break;
                         case 1: // 选课未开始
-                            result = '<a href="javascript:;" class="look-course">选课未开始</a>';
+                            result = '<a href="javascript:;" state="'+ v +'" class="look-course">选课未开始</a>';
                             break;
                         case 2: // 学生选课中
-                            result = '<a href="javascript:;" class="look-course">学生选课中</a>';
+                            result = '<a href="javascript:;" state="'+ v +'"  selCourseLoging="true"  class="look-course">学生选课中</a>';
                             that.settingState = 2;
                             break;
                         case 3: // 选课结果待使用
-                            result = '<a href="javascript:;" class="look-course">选课结果待使用</a>';
+                            result = '<a href="javascript:;" state="'+ v +'" class="look-course-result">选课结果待使用</a>';
                             break;
                         case 4: // 选课结果已使用
-                            result = '<a href="javascript:;" class="look-course">选课结果已使用</a>';
+                            result = '<a href="javascript:;" state="'+ v +'" class="look-course-result">选课结果已使用</a>';
                             break;
                         default:
                             break;
@@ -57,9 +74,22 @@ SelectCourse.prototype = {
                 $('.look-course').on('click', function () {
                     var id = $(this).parent().attr('dataid');
                     var gradeName = $(this).parent().attr('gradeName');
+                    var state = $(this).attr('state');
+                    var selCourseLoging = $(this).attr('selCourseLoging');
                     Common.cookie.setCookie('gradeName', gradeName);
                     Common.cookie.setCookie('taskId', id);
+                    Common.cookie.setCookie('selectCourseState', state);
+                    Common.cookie.setCookie('selCourseLoging', selCourseLoging);
                     window.location.href='/select-course-settings';
+                });
+                $('.look-course-result').on('click', function () {
+                    var id = $(this).parent().attr('dataid');
+                    var gradeName = $(this).parent().attr('gradeName');
+                    var state = $(this).attr('state');
+                    Common.cookie.setCookie('gradeName', gradeName);
+                    Common.cookie.setCookie('taskId', id);
+                    Common.cookie.setCookie('selectCourseState', state);
+                    window.location.href='/select-course-result';
                 });
             } else {
                 layer.msg(res.msg);
@@ -72,11 +102,13 @@ SelectCourse.prototype = {
     queryGradeInfo: function () {
         var grade = [];
         grade.push('<option value="00">请选择年级</option>');
-        Common.ajaxFun('/scheduleTask/queryGradeInfo.do', 'GET', {}, function (res) {
+        Common.ajaxFun('/grade/getGrade.do', 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var resData = res.bizData;
                 $.each(resData, function (i, v) {
-                    grade.push('<option gradeV="' + v['value'] + '" value="' + v['key'] + '">' + v['value'] + '</option>');
+                    if(v['classType']==2){
+                        grade.push('<option gradeV="' + v['grade'] + '" value="' + v['gradeCode'] + '">' + v['grade'] + '</option>');
+                    }
                 });
             } else {
                 layer.msg(res.msg);
