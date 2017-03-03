@@ -6,8 +6,8 @@
  */
 var GLOBAL_CONSTANT = {
     tnId: Common.cookie.getCookie('tnId'), //租户ID
-    taskId: 2,
-    // taskId: Common.cookie.getCookie('taskId'),   //角色   2
+    // taskId: 2,
+    taskId: Common.cookie.getCookie('taskId'),   //角色   2
     sType: null   //课程类型  0：高考科目  1：校本课程"
 }
 
