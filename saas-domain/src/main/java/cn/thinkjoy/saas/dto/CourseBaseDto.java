@@ -13,6 +13,8 @@ public class CourseBaseDto implements Serializable {
 
     private String time; // 课时
 
+    private int stuCount; // 选课学生总数
+
     public int getCourseId() {
         return courseId;
     }
@@ -37,12 +39,21 @@ public class CourseBaseDto implements Serializable {
         this.time = time;
     }
 
+    public int getStuCount() {
+        return stuCount;
+    }
+
+    public void setStuCount(int stuCount) {
+        this.stuCount = stuCount;
+    }
+
     @Override
     public String toString() {
         return "CourseBaseDto{" +
                 "courseId=" + courseId +
                 ", courseName='" + courseName + '\'' +
                 ", time='" + time + '\'' +
+                ", stuCount=" + stuCount +
                 '}';
     }
 }

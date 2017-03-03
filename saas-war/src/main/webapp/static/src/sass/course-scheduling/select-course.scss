@@ -64,13 +64,12 @@
 }
 
 .datepicker {
-  display: none;
+  //display: none;
   position: absolute;
   padding: 4px;
   margin-top: 1px;
   direction: ltr
 }
-
 .datepicker.dropdown-menu {
   position: absolute;
   top: 100%;

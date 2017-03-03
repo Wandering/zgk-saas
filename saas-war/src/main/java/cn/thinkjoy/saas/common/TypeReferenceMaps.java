@@ -32,6 +32,11 @@ public class TypeReferenceMaps implements ITypeReference {
         typeReferenceMaps.put("/student/updateStuInfo.do",new TypeReference<Request>() {});
         typeReferenceMaps.put("/course/add/manager.do",new TypeReference<Request>() {});
         typeReferenceMaps.put("/course/upd/manager.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/saas/selectCourse/addSelectCourseTask.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/saas/selectCourse/updateSelectCourseTask.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/saas/selectCourse/deleteSelectCourseTask.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/saas/selectCourse/saveOrUpdateSelectCourse.do",new TypeReference<Request>() {});
+        typeReferenceMaps.put("/saas/selectCourse/updateStuCourse.do",new TypeReference<Request>() {});
 
     }
 

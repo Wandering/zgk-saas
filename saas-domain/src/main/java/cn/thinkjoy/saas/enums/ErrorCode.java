@@ -39,6 +39,10 @@ public enum ErrorCode {
 
     TASK_NOT_EXIST("0000013","任务不存在"),
 
+    TASK_REPEAT("0000013","同名的任务已经存在"),
+
+    TASK_HAS_START("0000013","任务已开始，不能修改"),
+
     TEACH_DATE_ERROR("0000014","教学时间信息未填写"),
 
     COURSE_INFO_ERROR("0000015","课程信息未填写"),
