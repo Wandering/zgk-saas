@@ -537,7 +537,7 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         // 组装学生基本信息
         List<BaseStuDto> stuDtos = Lists.newArrayList();
         for(Map map : tenantCustom){
-            List<CourseBaseDto> baseDtos = selectedStuMap.get(map.get("student_no"));
+            List<CourseBaseDto> baseDtos = selectedStuMap.get(map.get("student_no").toString());
             if(baseDtos != null){
                 BaseStuDto stuDto = new BaseStuDto();
                 stuDto.setClassName(map.get("student_class").toString());
@@ -547,6 +547,7 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
                 stuDtos.add(stuDto);
             }
         }
+        page.setList(stuDtos);
 
         Integer count = iSelectCourseDAO.getStuNoCountByCondition(taskId,type);
         page.setCount(count);
@@ -570,6 +571,8 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
             detail.setModifyDate(System.currentTimeMillis());
             detail.setCourseId(Integer.valueOf(courseId));
             detail.setStuNo(stuNo);
+            detail.setStatus(0);
+            detail.setType(type);
             iSelectCourseStuDetailDAO.insert(detail);
         }
     }
@@ -582,7 +585,7 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
 
             List<TeantCustom> teantCustoms = Lists.newArrayList();
             List<SelectCourseStuDetail> details = stuMap.get(stuNo);
-            for(int i=0;i<=details.size();i++){
+            for(int i=0;i<details.size();i++){
                 TeantCustom teantCustom = new TeantCustom();
                 teantCustom.setKey("student_check_major"+(i+1));
                 teantCustom.setValue(details.get(i).getCourseName());
