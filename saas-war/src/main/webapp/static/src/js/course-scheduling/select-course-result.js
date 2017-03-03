@@ -11,6 +11,16 @@ var GLOBAL_CONSTANT = {
     sType: null   //课程类型  0：高考科目  1：校本课程"
 }
 
+
+/**
+ * 根据type判断用户是否使用本次数据
+ * type包含五种状态，为4代表绑定
+ */
+if (Common.cookie.getCookie('selectCourseState') == 4) {
+    $('#select-modify,.handle-btns').remove();
+}
+
+
 /**
  * 选课任务名称
  * @type {{init: ChooseTaskAbout.init, get: ChooseTaskAbout.get, set: ChooseTaskAbout.set, addEvent: ChooseTaskAbout.addEvent}}
@@ -25,15 +35,21 @@ var ChooseTaskAbout = {
                 'taskId': GLOBAL_CONSTANT.taskId
             },
             function (res) {
-        if (res.rtnCode == "0000000") {
-            ChooseTaskAbout.unSelectedList = res.bizData.unSelectedList;
-            ChooseTaskAbout.set(res.bizData);
-        }
-        }, function (res) {
-            console.info(res.msg)
-        })
+                if (res.rtnCode == "0000000") {
+                    ChooseTaskAbout.unSelectedList = res.bizData.unSelectedList;
+                    ChooseTaskAbout.set(res.bizData);
+                }
+            }, function (res) {
+                console.info(res.msg)
+            })
     },
     set: function (d) {
+        Handlebars.registerHelper('formatTime', function (v) {
+            return Common.getFormatTime(v);
+        })
+        Handlebars.registerHelper('gradeFoo', function (v) {
+            return ['', '高一', '高二', '高三'][v];
+        })
         var tpl = Handlebars.compile($("#choose-task-about-tpl").html());
         $('#choose-task-about').html(tpl(d));
     },
@@ -71,12 +87,12 @@ var SingleChooseResult = {
                 'taskId': GLOBAL_CONSTANT.taskId
             },
             function (res) {
-        if (res.rtnCode == "0000000") {
-            SingleChooseResult.set(res.bizData);
-        }
-        }, function (res) {
-            console.info(res.msg)
-        })
+                if (res.rtnCode == "0000000") {
+                    SingleChooseResult.set(res.bizData);
+                }
+            }, function (res) {
+                console.info(res.msg)
+            })
     },
     set: function (d) {
         var tpl = Handlebars.compile($("#sel-single-course-tpl").html());
@@ -99,12 +115,12 @@ var AssemblyChooseResult = {
                 'taskId': GLOBAL_CONSTANT.taskId
             },
             function (res) {
-        if (res.rtnCode == "0000000") {
-            AssemblyChooseResult.set(res.bizData);
-        }
-        }, function (res) {
-            console.info(res.msg)
-        })
+                if (res.rtnCode == "0000000") {
+                    AssemblyChooseResult.set(res.bizData);
+                }
+            }, function (res) {
+                console.info(res.msg)
+            })
     },
     set: function (d) {
         var dataJson = {
@@ -235,7 +251,7 @@ var SelCourseTypeDetail = {
         this.type = 0; //高考课程
         this.page = {
             'offset': 0,
-            'rows': 3,
+            'rows': 20,
             'count': ''
         }
         this.get();
@@ -346,16 +362,16 @@ var SelCourseTypeDetail = {
             $parentDom.find('select').each(function () {
                 fooSubjectArr.push($(this).val())
             });
-            if(fooSubjectArr.length>1){
+            if (fooSubjectArr.length > 1) {
                 if (fooSubjectArr[0] == fooSubjectArr[1] ||
                     fooSubjectArr[0] == fooSubjectArr[2] ||
                     fooSubjectArr[1] == fooSubjectArr[2]
                 ) {
-                    layer.msg('选择科目不能重复');
+                    layer.msg('选择科目有重复，无法保存');
                     return false;
                 }
-            }else{
-                if(fooSubjectArr[0] == '00'){
+            } else {
+                if (fooSubjectArr[0] == '00') {
                     layer.msg('选择科目没有选择');
                     return false;
                 }
@@ -377,9 +393,20 @@ var SelCourseTypeDetail = {
                     that.get();
                 }
             }, function (res) {
-                    layer.msg(res.msg);
+                layer.msg(res.msg);
             }, null, true)
         });
+    },
+    useThisData: function () {
+        Common.ajaxFun('/saas/selectCourse/confirmSelectCourse.do', 'get', {
+            "taskId": GLOBAL_CONSTANT.taskId,
+        }, function (d) {
+            if (d.rtnCode == "0000000") {
+                layer.msg('本次数据使用成功');
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        })
     },
     addEvent: function () {
         var that = this;
@@ -388,7 +415,7 @@ var SelCourseTypeDetail = {
             that.type = $(this).val();
             that.page = {
                 'offset': 0,
-                'rows': 3,
+                'rows': 20,
                 'count': ''
             }
             that.get();
@@ -402,10 +429,16 @@ var SelCourseTypeDetail = {
             $('.check-template :checkbox').prop('checked', false);
             $(this).prop('checked', true);
         })
+        //确实使用本次数据
+        $('#confirm-this-data').click(function () {
+            that.useThisData();
+        })
+        $('#reset-task').click(function () {
+            window.location.href = "/select-course";
+        })
     }
 }
 SelCourseTypeDetail.init();
-
 
 
 
