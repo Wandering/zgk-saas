@@ -386,6 +386,8 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
                     xbCourse.setIsSelect(false);
                 }
             }
+
+            xbSetting.setCourses(JSON.toJSONString(xbCourses));
         }
         settings.add(xbSetting);
 
@@ -638,5 +640,19 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         }
         List<BaseDto> dtos = JSONObject.parseArray(setting.getCourses(),BaseDto.class);
         return dtos;
+    }
+
+    public static void main(String [] args){
+        System.out.println("物理".hashCode());
+        System.out.println("化学".hashCode());
+        System.out.println("生物".hashCode());
+        System.out.println("地理".hashCode());
+        System.out.println("历史".hashCode());
+        System.out.println("政治".hashCode());
+        System.out.println("通用技术".hashCode());
+
+        for(int i = 0;i<Constant.COURSEES.size();i++){
+
+        }
     }
 }
