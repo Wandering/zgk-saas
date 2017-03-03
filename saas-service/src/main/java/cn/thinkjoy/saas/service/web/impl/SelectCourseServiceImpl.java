@@ -653,7 +653,7 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
                 null,
                 null
         );
-        return Integer.valueOf(task.getId().toString());
+        return Integer.valueOf(task.getTnId().toString());
     }
 
     @Override
