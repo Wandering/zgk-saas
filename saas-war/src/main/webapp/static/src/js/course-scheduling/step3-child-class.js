@@ -174,9 +174,9 @@ ClassRoomTable.prototype = {
                         trHtml += '<td class="center">' + (i + 1) + '</td>';
                         for (var j = 0; j < wkList.length; j++) {
                             if (wkList[j][i] == null || wkList[j][i] == "") {
-                                trHtml += '<td class="center"></td>';
+                                trHtml += '<td class="center '+ urlType +'CourseTable" x="'+ i +'" y="'+ j +'"></td>';
                             } else {
-                                trHtml += '<td class="center">' + wkList[j][i] + '</td>';
+                                trHtml += '<td class="center '+ urlType +'CourseTable" x="'+ i +'" y="'+ j +'">' + wkList[j][i] + '</td>';
                             }
                         }
                         trHtml += '</tr>';
@@ -298,7 +298,53 @@ var HashHandle = {
                     // 1. 没点过没排课  2.排课失败  3.排课中 4.排课成功
                     case 1:
                         console.log("点击排课");
-                        $('.btn-one-key').removeClass('dh');
+                        //$('.btn-one-key').removeClass('dh');
+
+
+
+
+
+
+
+
+
+
+
+
+                        $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
+                        $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
+                        ClassRoomTableIns.getAllQueryCourse();
+                        ClassRoomTableIns.getQueryCourse();
+                        ClassRoomTableIns.getQueryClass();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         break;
                     case 2:
                         console.log("排课失败");
@@ -452,6 +498,36 @@ var HashHandle = {
         }, function (res) {
             layer.msg(res.msg);
         });
+    },
+    // 根据坐标获取成功状态 /scheduleTask/{type}/queryStatusByCoord.do
+    queryStatusByCoord:function(posX,posY,selectedV){
+        var that = this;
+        Common.ajaxFun('/scheduleTask/class/queryStatusByCoord.do', 'GET', {
+            'type': 'class',
+            'taskId': taskId,
+            'id': selectedV,
+            'coord': [posX,posY]
+        }, function (res) {
+            console.log(res);
+            if (res.rtnCode == "true") {
+
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        });
+    },
+    // 根据状态获取可调颜色类型 /scheduleTask/adjustment/schedule/result.do
+    colorScheduleResult:function(){
+
+    },
+    // 提交两个可调课程坐标  /scheduleTask/{type}/exchange.do
+    exchange:function(){
+
+    },
+    // 删除之前颜色状态
+    // 根据老师坐标填充空白部分 /scheduleTask/teacher/queryClassByCoord.do  老师课表
+    queryClassByCoord:function(){
+
     }
 
 
@@ -532,6 +608,17 @@ $(function () {
     if (window.location.hash == '#all') {
         ClassRoomTableIns.getAllQueryCourse();
     }
+
+    // 遍历坐标
+    $('body').on('click','.classCourseTable',function(){
+        var posX = $(this).attr('x'),
+            posY = $(this).attr('y'),
+            selectedV = $('#select-class').children('option:selected').val();
+        HashHandle.queryStatusByCoord(posX,posY,selectedV);
+
+    });
+    // 点击准备调课
+
 });
 
 
