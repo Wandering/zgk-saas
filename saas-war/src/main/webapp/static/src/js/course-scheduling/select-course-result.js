@@ -405,6 +405,7 @@ var SelCourseTypeDetail = {
         }, function (d) {
             if (d.rtnCode == "0000000") {
                 layer.msg('本次数据使用成功');
+                Common.cookie.setCookie('selectCourseState',4);
                 $('#select-modify,.handle-btns').remove();
             }
         }, function (res) {
