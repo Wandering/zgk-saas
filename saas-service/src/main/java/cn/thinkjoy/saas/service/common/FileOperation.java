@@ -69,17 +69,17 @@ public class FileOperation {
      * @param taskId
      * @return
      */
-    public static String getParamsPath(Integer tnId,Integer taskId) {
+    public static String getParamsPath(Integer tnId,Integer taskId,String type) {
         Calendar now = Calendar.getInstance();
-        return path + tnId + "/" + taskId + "/" + now.get(Calendar.YEAR) + "/" + (now.get(Calendar.MONTH) + 1) + "/" + now.get(Calendar.DAY_OF_MONTH) + "/";
+        return path + tnId + "/" + taskId + "/" + now.get(Calendar.YEAR) + "/" + (now.get(Calendar.MONTH) + 1) + "/" + now.get(Calendar.DAY_OF_MONTH) + "/" + type + "/";
 //        return path + tnId + "\\" + taskId + "\\" + now.get(Calendar.YEAR) + "\\" + (now.get(Calendar.MONTH) + 1) + "\\" + now.get(Calendar.DAY_OF_MONTH) + "\\";
     }
 
-    public static boolean creatTxtFile(Integer tnId,Integer taskId,String name) throws IOException {
+    public static boolean creatTxtFile(Integer tnId,Integer taskId,String name,String type) throws IOException {
 
         boolean flag = false;
 
-        filenameTemp = getParamsPath(tnId,taskId) + name + ".txt";
+        filenameTemp = getParamsPath(tnId,taskId,type) + name + ".txt";
 
         File filename = new File(filenameTemp);
 
@@ -260,7 +260,7 @@ public class FileOperation {
         System.out.print(d.length());
         System.out.print(d);
 
-        creatTxtFile(13,28,"20160725测试文件");
+        creatTxtFile(13,28,"20160725测试文件","");
 
         writeTxtFile("0,0,0,0,0,0\r\n0,2,1,3,4,2\r1,2,3,1,1,2\n1,2,3,4 1,2,3,22");
     }
