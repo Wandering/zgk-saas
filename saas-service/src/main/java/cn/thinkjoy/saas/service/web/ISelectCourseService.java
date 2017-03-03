@@ -2,6 +2,7 @@ package cn.thinkjoy.saas.service.web;
 
 import cn.thinkjoy.gk.pojo.Page;
 import cn.thinkjoy.saas.domain.SelectCourseSetting;
+import cn.thinkjoy.saas.dto.BaseDto;
 import cn.thinkjoy.saas.dto.BaseStuDto;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.SelectCourseSurveyDto;
@@ -91,5 +92,17 @@ public interface ISelectCourseService {
      */
     void confirmSelectCourse(
             int taskId
+    );
+
+    /**
+     * 根据任务ID和课程类型查询课程信息
+     *
+     * @param taskId
+     * @param type
+     * @return
+     */
+    List<BaseDto> getCourseBaseInfo(
+            int taskId,
+            int type
     );
 }

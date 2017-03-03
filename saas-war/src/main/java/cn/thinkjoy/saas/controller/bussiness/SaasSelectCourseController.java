@@ -6,6 +6,7 @@ import cn.thinkjoy.gk.pojo.Page;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.SelectCourseSetting;
 import cn.thinkjoy.saas.domain.SelectCourseTask;
+import cn.thinkjoy.saas.dto.BaseDto;
 import cn.thinkjoy.saas.dto.BaseStuDto;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.SelectCourseSurveyDto;
@@ -270,6 +271,16 @@ public class SaasSelectCourseController {
         iSelectCourseService.confirmSelectCourse(taskId);
 
         return Maps.newHashMap();
+    }
+
+    @ResponseBody
+    @ApiDesc(value = "根据任务ID和课程类型查询课程信息",owner = "gryang")
+    @RequestMapping(value = "/getCourseBaseInfo",method = RequestMethod.GET)
+    public List<BaseDto> getCourseBaseInfo(@RequestParam Integer taskId, @RequestParam Integer type){
+
+        List<BaseDto> dtos = iSelectCourseService.getCourseBaseInfo(taskId,type);
+
+        return dtos;
     }
 
 }

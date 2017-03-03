@@ -6,7 +6,8 @@
  */
 var GLOBAL_CONSTANT = {
     tnId: Common.cookie.getCookie('tnId'), //租户ID
-    taskId: Common.cookie.getCookie('taskId'),   //角色
+    taskId: 2,
+    // taskId: Common.cookie.getCookie('taskId'),   //角色   2
     sType: null   //课程类型  0：高考科目  1：校本课程"
 }
 
@@ -125,6 +126,7 @@ SingleChooseResult.init();
 
 /**
  * 组合选课结果
+ * @type {{init: AssemblyChooseResult.init, get: AssemblyChooseResult.get, set: AssemblyChooseResult.set}}
  */
 var AssemblyChooseResult = {
     init: function () {
@@ -285,4 +287,155 @@ var AssemblyChooseResult = {
     }
 }
 AssemblyChooseResult.init();
+
+
+/**
+ * 查询学生高考课程选课详情
+ * "type":"课程类型  0：高考科目  1：校本课程",
+ */
+
+var SelCourseTypeDetail = {
+    init: function () {
+        this.type = 0; //高考课程
+        this.page = {
+            'offset': 0,
+            'rows': 3,
+            'count': ''
+        }
+        this.get();
+        this.addEvent();
+    },
+    get: function () {
+        Common.ajaxFun('/saas/selectCourse/getStuCourseDetail.do', 'GET', {
+                "taskId": GLOBAL_CONSTANT.taskId,
+                "type": this.type,
+                "pageNo": this.page.offset,//"当前页 首次为 0 ",
+                "pageSize": this.page.rows//"页大小"
+            },
+            function (res) {
+                if (res.rtnCode == "0000000") {
+                    SelCourseTypeDetail.page.count = res.bizData.count;
+                    SelCourseTypeDetail.set(res.bizData);
+                }
+            }, function (res) {
+                console.info(res.msg)
+            })
+    },
+    //查询课程信息
+    getCourseBaseInfo: function () {
+        Common.ajaxFun('/saas/selectCourse/getCourseBaseInfo.do', 'GET', {
+                "taskId": GLOBAL_CONSTANT.taskId,
+                "type": this.type
+            },
+            function (d) {
+                if (res.rtnCode == "0000000") {
+                    var tpl = Handlebars.compile($("#student-subject-tpl").html());
+                    $('#student-subject').html(tpl(d));
+                }
+            }, function (res) {
+                console.info(res.msg)
+            })
+    },
+    set: function (d) {
+        // if(!$.isEmptyObject){
+        //     return false;
+        // }
+
+
+        //动态设置表头
+        Handlebars.registerHelper('addOne', function (v) {
+            return ['', '一', '二', '三'][v + 1];
+        });
+        var tpl = Handlebars.compile($("#table-header-tpl").html());
+        $('#table-header').html(tpl(d.list[0].courses));
+        //渲染table
+        var tpl = Handlebars.compile($("#table-list-tpl").html());
+        $('#table-list').html(tpl(d));
+        this.pagination(); //分页
+    },
+
+    pagination: function () {
+        var that = this;
+        $(".pagination").createPage({
+            pageCount: Math.ceil(that.page.count / that.page.rows),
+            current: Math.ceil(that.page.offset / that.page.rows) + 1,
+            backFn: function (p) {
+                $(".pagination-bar .current-page").html(p);
+                that.page.offset = (p - 1) * that.page.rows;
+                that.get();
+            }
+        });
+    },
+    verifyModify:function(){
+
+        $('#table-list').find('input[type=checkbox]:checked').attr('data-attr');
+    },
+    modifyItem:function(){
+        this.verifyModify();
+        var foo = $('#table-list').find('input[type=checkbox]:checked').attr('data-attr');
+        var $parentDom = $('#modify-choose-layer li');
+        $parentDom.eq(0).find('input').val(foo.split('|')[0]);
+        $parentDom.eq(1).find('input').val(foo.split('|')[1]);
+        $parentDom.eq(2).find('input').val(foo.split('|')[2]);
+        layer.open({
+            type: 1,
+            title: '修改选课结果',
+            offset: 'auto',
+            area: ['auto', 'auto'],
+            content: $('#modify-choose-layer'),
+            cancel: function () {
+                layer.closeAll();
+            }
+        })
+        this.getCourseBaseInfo();//拉取课程信息
+    },
+    addEvent: function () {
+        var that = this;
+        //切换高考课程和非高考课程
+        $(document).on('change', '[name="type-li"]', function () {
+            that.type = $(this).val();
+            that.page = {
+                'offset': 0,
+                'rows': 3,
+                'count': ''
+            }
+            that.get();
+        });
+        //修改
+        $('#select-modify').click(function(){
+            that.modifyItem();
+        });
+        //勾选
+        $(document).on('change','.check-template :checkbox',function(){
+            $('.check-template :checkbox').prop('checked', false);
+            $(this).prop('checked',true);
+        })
+    }
+}
+SelCourseTypeDetail.init();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
