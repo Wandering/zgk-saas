@@ -6,7 +6,8 @@
  */
 var GLOBAL_CONSTANT = {
     tnId: Common.cookie.getCookie('tnId'), //租户ID
-    taskId: Common.cookie.getCookie('taskId'),   //角色
+    taskId: 2,
+    // taskId: Common.cookie.getCookie('taskId'),   //角色   2
     sType: null   //课程类型  0：高考科目  1：校本课程"
 }
 
@@ -125,6 +126,7 @@ SingleChooseResult.init();
 
 /**
  * 组合选课结果
+ * @type {{init: AssemblyChooseResult.init, get: AssemblyChooseResult.get, set: AssemblyChooseResult.set}}
  */
 var AssemblyChooseResult = {
     init: function () {
@@ -285,4 +287,106 @@ var AssemblyChooseResult = {
     }
 }
 AssemblyChooseResult.init();
+
+
+/**
+ * 查询学生高考课程选课详情
+ * "type":"课程类型  0：高考科目  1：校本课程",
+ */
+
+var SelCourseTypeDetail = {
+    init: function () {
+        this.type = 0; //高考课程
+        this.get();
+        this.addEvent();
+    },
+    get: function () {
+        Common.ajaxFun('/saas/selectCourse/getStuCourseDetail.do', 'GET', {
+                "taskId":GLOBAL_CONSTANT.taskId,
+                "type":this.type,
+                "pageNo": 0,//"当前页 首次为 0 ",
+                "pageSize":20//"页大小"
+            },
+            function (res) {
+                res = {
+                    "rtnCode":"0000000",
+                    "msg":"",
+                    bizData:{
+                        "list":[{
+                            "stuNo":"23",
+                            "stuName":"张三",
+                            "className":"高二一班",
+                            "courses":[{
+                                "courseId":"12",
+                                "courseName":"美术"
+                            },{
+                                "courseId":"33",
+                                "courseName":"声乐"
+                            },{
+                                "courseId":"23",
+                                "courseName":"体育"
+                            }]
+                        },{
+                            "stuNo":"100",
+                            "stuName":"王五",
+                            "className":"高二一班",
+                            "courses":[{
+                                "courseId":"12",
+                                "courseName":"美术"
+                            },{
+                                "courseId":"33",
+                                "courseName":"声乐"
+                            },{
+                                "courseId":"23",
+                                "courseName":"体育"
+                            }]
+                        }],
+                        "count":"200"
+                    }
+                }
+        if (res.rtnCode == "0000000") {
+            SelCourseTypeDetail.set(res.bizData);
+        }
+        }, function (res) {
+            console.info(res.msg)
+        })
+    },
+    set: function (d) {
+        var tpl = Handlebars.compile($("#table-list-tpl").html());
+        $('#table-list').html(tpl(d));
+    },
+    addEvent:function(){
+        var that = this;
+        $(document).on('change','[name="type-li"]',function(){
+            that.type = $(this).val();
+            that.get();
+        });
+    }
+}
+SelCourseTypeDetail.init();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

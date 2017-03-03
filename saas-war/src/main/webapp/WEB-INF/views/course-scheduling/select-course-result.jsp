@@ -114,36 +114,19 @@
                             <span class="txt-t">
                                 <ul class="course-type-list" id="course-type-list">
                                         <li>
-                                            <input type="radio" name="type-li" id="grade-0"
-                                                   checked="">
-                                            <label for="grade-0">高考课程选课结果</label>
+                                            <input type="radio" name="type-li" id="type-0"
+                                                   checked value="0">
+                                            <label for="type-0">高考课程选课结果</label>
                                         </li>
                                         <li>
-                                            <input type="radio" name="type-li" id="grade-1">
-                                            <label for="grade-1">非高考课程选课结果</label>
+                                            <input type="radio" name="type-li" id="type-1" value="1">
+                                            <label for="type-1">非高考课程选课结果</label>
                                         </li>
                                 </ul>
-                                <script type="text/x-handlebars-template" id="grade-list-tpl">
-                                    {{#each this}}
-                                        {{#if @index}}
-                                        <li>
-                                            <input type="radio" name="grade-li" id="grade-{{@index}}" keyId="{{id}}"
-                                                   classType="{{classType}}">
-                                            <label for="grade-{{@index}}">{{grade}}</label>
-                                        </li>
-                                        {{else}}
-                                        <li>
-                                            <input type="radio" name="grade-li" id="grade-{{@index}}" keyId="{{id}}"
-                                                   classType="{{classType}}" checked>
-                                            <label for="grade-{{@index}}">{{grade}}</label>
-                                        </li>
-                                        {{/if}}
-                                    {{/each}}
-                                </script>
                             </span>
                             <div class="btns">
                                 <button class="btn btn-inverse" id="select-modify">修改</button>
-                                <button class="btn btn-success" id="look-sel-course">查看选课分析</button>
+                                <%--<button class="btn btn-success" id="look-sel-course">查看选课分析</button>--%>
                             </div>
                         </div>
 
@@ -154,7 +137,7 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th class="center"><label><input type="checkbox" id="stdCheckAll" class="ace"><span
+                                    <th class="center"><label><span
                                             class="lbl"></span></label></th>
                                     <th class="center">学号</th>
                                     <th class="center">学生名称</th>
@@ -164,28 +147,21 @@
                                     <th class="center">选择科目三</th>
                                 </tr>
                                 </thead>
-                                <tbody class="check-template">
-                                <tr>
-                                    <td class="center"><label><input type="checkbox" cid="496" class="ace"><span
-                                            class="lbl"></span></label></td>
-                                    <td>9232323</td>
-                                    <td class="center">李明浩</td>
-                                    <td class="center">高新一班</td>
-                                    <td class="center">物理</td>
-                                    <td class="center">化学</td>
-                                    <td class="center">生物</td>
-                                </tr>
-                                <tr>
-                                    <td class="center"><label><input type="checkbox" cid="496" class="ace"><span
-                                            class="lbl"></span></label></td>
-                                    <td>9232323</td>
-                                    <td class="center">韩寒</td>
-                                    <td class="center">高新二班</td>
-                                    <td class="center">物理</td>
-                                    <td class="center">化学</td>
-                                    <td class="center">生物</td>
-                                </tr>
-                                </tbody>
+                                <tbody class="check-template" id="table-list"></tbody>
+                                <script type="text/x-handlebars-template" id="table-list-tpl">
+                                    {{#each this.list}}
+                                    <tr>
+                                        <td class="center"><label><input type="checkbox" cid="496" class="ace"><span
+                                                class="lbl"></span></label></td>
+                                        <td>9232323</td>
+                                        <td class="center">{{stuNo}}</td>
+                                        <td class="center">{{className}}</td>
+                                        {{#each this.courses}}
+                                        <td class="center" courseId="{{courseId}}">{{courseName}}</td>
+                                        {{/each}}
+                                    </tr>
+                                    {{/each}}
+                                </script>
                             </table>
 
                             <%--<div class="pagination-bar">--%>
