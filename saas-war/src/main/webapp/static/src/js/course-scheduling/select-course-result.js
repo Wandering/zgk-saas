@@ -299,7 +299,7 @@ var SelCourseTypeDetail = {
         this.type = 0; //高考课程
         this.page = {
             'offset': 0,
-            'rows': 1,
+            'rows': 3,
             'count': ''
         }
         this.get();
@@ -316,6 +316,21 @@ var SelCourseTypeDetail = {
                 if (res.rtnCode == "0000000") {
                     SelCourseTypeDetail.page.count = res.bizData.count;
                     SelCourseTypeDetail.set(res.bizData);
+                }
+            }, function (res) {
+                console.info(res.msg)
+            })
+    },
+    //查询课程信息
+    getCourseBaseInfo: function () {
+        Common.ajaxFun('/saas/selectCourse/getCourseBaseInfo.do', 'GET', {
+                "taskId": GLOBAL_CONSTANT.taskId,
+                "type": this.type
+            },
+            function (d) {
+                if (res.rtnCode == "0000000") {
+                    var tpl = Handlebars.compile($("#student-subject-tpl").html());
+                    $('#student-subject').html(tpl(d));
                 }
             }, function (res) {
                 console.info(res.msg)
@@ -338,6 +353,7 @@ var SelCourseTypeDetail = {
         $('#table-list').html(tpl(d));
         this.pagination(); //分页
     },
+
     pagination: function () {
         var that = this;
         $(".pagination").createPage({
@@ -350,6 +366,29 @@ var SelCourseTypeDetail = {
             }
         });
     },
+    verifyModify:function(){
+
+        $('#table-list').find('input[type=checkbox]:checked').attr('data-attr');
+    },
+    modifyItem:function(){
+        this.verifyModify();
+        var foo = $('#table-list').find('input[type=checkbox]:checked').attr('data-attr');
+        var $parentDom = $('#modify-choose-layer li');
+        $parentDom.eq(0).find('input').val(foo.split('|')[0]);
+        $parentDom.eq(1).find('input').val(foo.split('|')[1]);
+        $parentDom.eq(2).find('input').val(foo.split('|')[2]);
+        layer.open({
+            type: 1,
+            title: '修改选课结果',
+            offset: 'auto',
+            area: ['auto', 'auto'],
+            content: $('#modify-choose-layer'),
+            cancel: function () {
+                layer.closeAll();
+            }
+        })
+        this.getCourseBaseInfo();//拉取课程信息
+    },
     addEvent: function () {
         var that = this;
         //切换高考课程和非高考课程
@@ -357,25 +396,20 @@ var SelCourseTypeDetail = {
             that.type = $(this).val();
             that.page = {
                 'offset': 0,
-                'rows': 1,
+                'rows': 3,
                 'count': ''
             }
             that.get();
         });
         //修改
         $('#select-modify').click(function(){
-            layer.open({
-                type: 1,
-                title: '修改选课结果',
-                offset: 'auto',
-                area: ['auto', 'auto'],
-                content: $('#modify-choose-layer'),
-                cancel: function () {
-                    layer.closeAll();
-                }
-            })
+            that.modifyItem();
         });
-
+        //勾选
+        $(document).on('change','.check-template :checkbox',function(){
+            $('.check-template :checkbox').prop('checked', false);
+            $(this).prop('checked',true);
+        })
     }
 }
 SelCourseTypeDetail.init();

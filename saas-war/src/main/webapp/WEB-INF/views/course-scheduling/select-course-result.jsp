@@ -142,8 +142,8 @@
 
                                 </tr>
                                 <script type="text/x-handlebars-template" id="table-header-tpl">
-                                    <th class="center"><label><span
-                                            class="lbl"></span></label></th>
+                                    <input type="hidden" id="headerLi" value="{{this.length}}">
+                                    <th class="center"></th>
                                     <th class="center">学号</th>
                                     <th class="center">学生名称</th>
                                     <th class="center">班级名称</th>
@@ -156,8 +156,7 @@
                                 <script type="text/x-handlebars-template" id="table-list-tpl">
                                     {{#each this.list}}
                                     <tr>
-                                        <td class="center"><label><input type="checkbox" cid="496" class="ace"><span
-                                                class="lbl"></span></label></td>
+                                        <td class="center"><label><input type="checkbox" class="ace" data-attr="{{stuNo}}|{{stuName}}|{{className}}"><span class="lbl"></span></label></td>
                                         <td>{{stuNo}}</td>
                                         <td class="center">{{stuName}}</td>
                                         <td class="center">{{className}}</td>
@@ -190,12 +189,15 @@
                             </li>
                             <li>
                                 <span>选择科目一</span>
-                                <select id="student_class">
-                                    <option value="00">请选择班级</option>
-                                    <option value="高一1班">高一1班</option>
-                                    <option value="高一2班">高一2班</option>
-                                    <option value="高一3班">高一3班</option>
+                                <select id="student-subject">
+
                                 </select>
+                                <script type="text/x-handlebars-template" id="student-subject-tpl">
+                                    <option value="00">请选择班级</option>
+                                    {{#each this}}
+                                    <option value="高一1班">高一1班</option>
+                                    {{/each}}
+                                </script>
                             </li>
                             <div class="opt-btn-box">
                                 <button class="btn btn-info save-btn" id="save-btn">保存</button>
