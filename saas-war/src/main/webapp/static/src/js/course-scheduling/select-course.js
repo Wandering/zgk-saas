@@ -1,7 +1,6 @@
 var tnId = Common.cookie.getCookie('tnId');
 function SelectCourse() {
     this.init();
-    this.settingState='';
 }
 
 SelectCourse.prototype = {
@@ -55,7 +54,6 @@ SelectCourse.prototype = {
                             break;
                         case 2: // 学生选课中
                             result = '<a href="javascript:;" state="'+ v +'"  selCourseLoging="true"  class="look-course">学生选课中</a>';
-                            that.settingState = 2;
                             break;
                         case 3: // 选课结果待使用
                             result = '<a href="javascript:;" state="'+ v +'" class="look-course-result">选课结果待使用</a>';
