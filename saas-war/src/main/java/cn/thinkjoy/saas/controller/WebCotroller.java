@@ -406,6 +406,14 @@ public class WebCotroller {
     public ModelAndView selectCourseSettings() {
         return new ModelAndView("/course-scheduling/select-course-settings");
     }
+    /**
+     * select-course-result
+     * 选课结果
+     */
+    @RequestMapping("/select-course-result")
+    public ModelAndView selectCourseResult() {
+        return new ModelAndView("/course-scheduling/select-course-result");
+    }
 
     /**
      * course-scheduling-step3
