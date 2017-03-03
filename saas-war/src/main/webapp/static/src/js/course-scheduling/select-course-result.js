@@ -306,7 +306,9 @@ var SelCourseTypeDetail = {
             return ['', '一', '二', '三'][v + 1];
         });
         var tpl = Handlebars.compile($("#table-header-tpl").html());
-        $('#table-header').html(tpl(d.list[0].courses));
+        if(d.list){
+            $('#table-header').html(tpl(d.list[0].courses));
+        }
         //渲染table
         var tpl = Handlebars.compile($("#table-list-tpl").html());
         $('#table-list').html(tpl(d));
