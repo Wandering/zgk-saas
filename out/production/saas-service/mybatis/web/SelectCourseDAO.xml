@@ -111,5 +111,15 @@
         </set>
         where student_no = ${stuNo}
     </update>
+
+    <!-- 组装学生选课组合情况 -->
+    <select id="getCourseHashByHash" parameterType="map" resultType="java.lang.String">
+        SELECT
+            course
+        FROM
+            saas_course_hash
+        WHERE
+            hashCode = #{hashCode}
+    </select>
 </mapper>
 

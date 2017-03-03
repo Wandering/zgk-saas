@@ -480,8 +480,38 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
 
     @Override
     public List<CourseBaseDto> getGroupCourseSituation(int taskId) {
-        // TODO
-        return null;
+        // 查询任务的所有选课学生情况
+        Map<String,List<SelectCourseStuDetail>> stuCourseMap = getSelectedStuMap(taskId,0);
+        // 存储课程组合的选课人数
+        Map<Integer,Integer> selectCountMap = Maps.newHashMap();
+        // 遍历所有学生选课信息
+        for(List<SelectCourseStuDetail> list : stuCourseMap.values()){
+            // 将每个学生的课程的hash相加，判断map中是否已存在此种组合
+            int courseHash = 0;
+            for(SelectCourseStuDetail detail : list){
+                courseHash += detail.getCourseName().hashCode();
+            }
+
+            Integer count = selectCountMap.get(courseHash);
+            if(count != null){
+                count++;
+            }else {
+                count = 1;
+            }
+            selectCountMap.put(courseHash,count);
+        }
+
+        // 组装学生选课组合情况
+        List<CourseBaseDto> dtos = Lists.newArrayList();
+        for(Integer key : selectCountMap.keySet()){
+            // 根据课程组合hash值获取课程组合名
+            String course = iSelectCourseDAO.getCourseHashByHash(key.toString());
+            CourseBaseDto dto = new CourseBaseDto();
+            dto.setCourseName(course);
+            dto.setStuCount(selectCountMap.get(key));
+            dtos.add(dto);
+        }
+        return dtos;
     }
 
     @Override
@@ -642,17 +672,4 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         return dtos;
     }
 
-    public static void main(String [] args){
-        System.out.println("物理".hashCode());
-        System.out.println("化学".hashCode());
-        System.out.println("生物".hashCode());
-        System.out.println("地理".hashCode());
-        System.out.println("历史".hashCode());
-        System.out.println("政治".hashCode());
-        System.out.println("通用技术".hashCode());
-
-        for(int i = 0;i<Constant.COURSEES.size();i++){
-
-        }
-    }
 }

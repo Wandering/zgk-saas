@@ -82,7 +82,19 @@ public interface ISelectCourseDAO {
      * @param teantCustoms 集合
      * @return
      */
-    void updateStuCourseByStuNo(@Param("tableName") String tableName,
-                               @Param("stuNo") String stuNo,
-                               @Param("teantCustomList") List<TeantCustom> teantCustoms);
+    void updateStuCourseByStuNo(
+            @Param("tableName") String tableName,
+            @Param("stuNo") String stuNo,
+            @Param("teantCustomList") List<TeantCustom> teantCustoms
+    );
+
+    /**
+     * 组装学生选课组合情况
+     *
+     * @param hashCode
+     * @return
+     */
+    String getCourseHashByHash(
+            @Param("hashCode") String hashCode
+    );
 }
