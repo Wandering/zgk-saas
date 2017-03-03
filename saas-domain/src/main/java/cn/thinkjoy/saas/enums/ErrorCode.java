@@ -59,7 +59,9 @@ public enum ErrorCode {
 
     GRADE_FORMAT_ERROR("2000002","年级数据不完整"),
 
-    MEEGE_CLASS_REPEAT("2000003","合班重复");
+    MEEGE_CLASS_REPEAT("2000003","合班重复"),
+
+    UPDATE_ERROR("2000004","修改失败");
 
     private final String code;
 

@@ -61,9 +61,9 @@
                             <h3 class="title"><span class="line"></span>选课任务名称</h3>
                             <p>{{name}}选课已结束，结果如下：</p>
                             <p class="sub-title">选课概况</p>
-                            <p>选课开始时间：{{startTime}}</p>
-                            <p>选课结束时间：{{endTime}}</p>
-                            <p>{{grade}}年级已选课学生{{selectedCount}}人 {{#if unSelectedCount}}<span class="no-choose-course">未选课学生{{unSelectedCount}}人</span>{{/if}}
+                            <p>选课开始时间：{{formatTime startTime}}</p>
+                            <p>选课结束时间：{{formatTime endTime}}</p>
+                            <p>{{gradeFoo grade}}年级已选课学生{{selectedCount}}人 {{#if unSelectedCount}}<span class="no-choose-course">未选课学生{{unSelectedCount}}人</span>{{/if}}
                             </p>
                         </script>
 
@@ -142,7 +142,7 @@
 
                                 </tr>
                                 <script type="text/x-handlebars-template" id="table-header-tpl">
-                                    <input type="hidden" id="headerLi" value="{{this.length}}">
+                                    <input type="hidden" id="header-li" value="{{this.length}}">
                                     <th class="center"></th>
                                     <th class="center">学号</th>
                                     <th class="center">学生名称</th>
@@ -156,7 +156,9 @@
                                 <script type="text/x-handlebars-template" id="table-list-tpl">
                                     {{#each this.list}}
                                     <tr>
-                                        <td class="center"><label><input type="checkbox" class="ace" data-attr="{{stuNo}}|{{stuName}}|{{className}}"><span class="lbl"></span></label></td>
+                                        <td class="center"><label><input type="checkbox" class="ace"
+                                                                         data-attr="{{stuNo}}|{{stuName}}|{{className}}|{{#each this.courses}}{{courseId}}-{{/each}}"><span
+                                                class="lbl"></span></label></td>
                                         <td>{{stuNo}}</td>
                                         <td class="center">{{stuName}}</td>
                                         <td class="center">{{className}}</td>
@@ -174,38 +176,43 @@
 
 
                         <%--修改选课--%>
-                        <ul id="modify-choose-layer" class="modify-choose-layer dh">
+                        <ul id="modify-choose-layer" class="modify-choose-layer dh"></ul>
+                        <script type="text/x-handlebars-template" id="modify-choose-layer-tpl">
                             <li>
                                 <span>学号</span>
-                                <input type="text" class="input-common-w">
+                                <input type="text" class="input-common-w" readonly>
                             </li>
                             <li>
                                 <span>学生名称</span>
-                                <input type="text" class="input-common-w">
+                                <input type="text" class="input-common-w"  readonly>
                             </li>
                             <li>
                                 <span>班级名称</span>
-                                <input type="text" class="input-common-w">
+                                <input type="text" class="input-common-w" readonly>
                             </li>
+                            {{#each this.subjectLength}}
                             <li>
-                                <span>选择科目一</span>
-                                <select id="student-subject">
-
-                                </select>
-                                <script type="text/x-handlebars-template" id="student-subject-tpl">
+                                <span>选择科目{{this}}</span>
+                                <select id="student-subject-{{@index}}">
                                     <option value="00">请选择班级</option>
-                                    {{#each this}}
-                                    <option value="高一1班">高一1班</option>
+                                    {{#each ../this.data}}
+                                    <option value="{{id}}">{{name}}</option>
                                     {{/each}}
-                                </script>
+                                </select>
                             </li>
+                            {{/each}}
                             <div class="opt-btn-box">
                                 <button class="btn btn-info save-btn" id="save-btn">保存</button>
                             </div>
-                        </ul>
+                        </script>
                         <!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
 
+                    <div class="handle-btns">
+                        <button class="btn btn-handle" id="confirm-this-data">确认使用此次选课数据</button>
+                        <button class="btn btn-handle" id="reset-task">重新创建选课任务</button>
+                        <p class="tips-text">确认使用后，本次选课额数据将用于分班排课，且不可更改</p>
+                    </div>
                 </div><!-- /.row -->
             </div><!-- /.page-content -->
         </div><!-- /.main-content -->
