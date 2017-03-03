@@ -112,14 +112,6 @@
                                     <div id="groupCourseAnalysisBar" style="width: 100%;height: 350px;margin: 20px auto 0;"></div>
                                 </div>
                             </div>
-
-                            <div class="select-course-confirm">
-                                <div class="">
-                                    <button>确认使用此次选课数据</button>
-                                    <button>重新创建选课任务</button>
-                                </div>
-                                <p>确认使用后，本次选课额数据将用于分班排课，且不可更改</p>
-                            </div>
                         </div>
                     </div>
                 </div>

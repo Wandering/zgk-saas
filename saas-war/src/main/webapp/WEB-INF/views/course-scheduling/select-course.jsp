@@ -58,7 +58,6 @@
                                     <th class="center" width="80px">序号</th>
                                     <th class="center" width="250px">名称</th>
                                     <th class="center">年级</th>
-                                    <th class="center">学期</th>
                                     <th class="center">开始时间</th>
                                     <th class="center">结束时间</th>
                                     <th class="center">状态</th>
@@ -79,15 +78,15 @@
     <tr>
         <td class="center">
             <label>
-                <input type="checkbox" dataId="{{id}}" selectCourseName="{{name}}" gradeName="{{grade}}" startTime="{{startTime}}" endTime="{{endTime}}" class="ace"/>
+                <input type="checkbox" dataId="{{id}}" selectCourseName="{{name}}" gradeName="{{grade}}" state = "{{state}}" startTime="{{FormatTime startTime}}" endTime="{{FormatTime endTime}}" class="ace"/>
                 <span class="lbl"></span>
             </label>
         </td>
         <td class="center">{{addOne @index}}</td>
-        <td class="center" dataId="{{id}}" gradeName="{{grade}}" selectCourseName="{{name}}"><a href="javascript:;" class="start-select-course-btn">{{name}}</a></td>
+        <td class="center" dataId="{{id}}" gradeName="{{grade}}" selectCourseName="{{name}}">{{name}}</td>
         <td class="center">{{grade}}</td>
-        <td class="center">{{startTime}}</td>
-        <td class="center">{{endTime}}</td>
+        <td class="center">{{FormatTime startTime}}</td>
+        <td class="center">{{FormatTime endTime}}</td>
         <td class="center" gradeName="{{grade}}" selectCourseName="{{name}}" dataId="{{id}}">{{{reStatus state}}}</td>
         </td>
     </tr>

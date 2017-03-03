@@ -1,6 +1,7 @@
 var tnId = Common.cookie.getCookie('tnId');
 function SelectCourse() {
     this.init();
+    this.settingState='';
 }
 
 SelectCourse.prototype = {
@@ -10,6 +11,7 @@ SelectCourse.prototype = {
     },
     // 任务列表
     querySelectCourseTask: function () {
+        var that = this;
         Common.ajaxFun('/saas/selectCourse/getSelectCourseTasks.do', 'GET', {
             "tnId": tnId
         }, function (res) {
@@ -19,25 +21,30 @@ SelectCourse.prototype = {
                 Handlebars.registerHelper("addOne", function (index, options) {
                     return parseInt(index) + 1;
                 });
+                Handlebars.registerHelper('FormatTime', function (num) {
+                    return Common.getFormatTime(num);
+                });
                 Handlebars.registerHelper('reStatus', function (v) {
+
                     //console.log(v)
                     // 0：选课未设置 1：选课未开始 2：学生选课中 3：选课结果待使用 4：选课结果已使用"
                     var result = '';
                     switch (v) {
                         case 0: // 选课未设置
-                            result = '<a href="javascript: void(0);" class="start-schedule-btn">选课未设置</a>';
+                            result = '<a href="javascript:;" class="look-course">选课未设置</a>';
                             break;
                         case 1: // 选课未开始
-                            result = '排课失败&nbsp;&nbsp;<a href="javascript: void(0);" class="again-schedule-btn btn-split">选课未开始</a>';
+                            result = '<a href="javascript:;" class="look-course">选课未开始</a>';
                             break;
                         case 2: // 学生选课中
-                            result = '学生选课中';
+                            result = '<a href="javascript:;" class="look-course">学生选课中</a>';
+                            that.settingState = 2;
                             break;
                         case 3: // 选课结果待使用
-                            result = '<a href="/course-scheduling-step3" class="look-course">选课结果待使用</a>';
+                            result = '<a href="javascript:;" class="look-course">选课结果待使用</a>';
                             break;
                         case 4: // 选课结果已使用
-                            result = '<a href="/course-scheduling-step3" class="look-course">选课结果已使用</a>';
+                            result = '<a href="javascript:;" class="look-course">选课结果已使用</a>';
                             break;
                         default:
                             break;
@@ -46,12 +53,20 @@ SelectCourse.prototype = {
                     return result;
                 });
                 $('#select-course-list').html(myTemplate(res));
+
+                $('.look-course').on('click', function () {
+                    var id = $(this).parent().attr('dataid');
+                    var gradeName = $(this).parent().attr('gradeName');
+                    Common.cookie.setCookie('gradeName', gradeName);
+                    Common.cookie.setCookie('taskId', id);
+                    window.location.href='/select-course-settings';
+                });
             } else {
                 layer.msg(res.msg);
             }
         }, function (res) {
             layer.msg(res.msg);
-        }, true);
+        });
     },
     // 查询年级信息
     queryGradeInfo: function () {
@@ -156,66 +171,64 @@ SelectCourse.prototype = {
     // 保存 更新
     addSelectCourseTask: function (id, selectCourseName, grade, startTime, endTime) {
         var that = this;
+        var datas = {
+            "data": {
+                "tnId": tnId,
+                "name": selectCourseName,
+                "grade": grade,
+                "startTime": startTime,
+                "endTime": endTime
+            }
+        };
         if (id) {
-            Common.ajaxFun('/saas/selectCourse/updateSelectCourseTask.do', 'POST', {
-                "data": {
-                    "id": id,
-                    "tnId": tnId,
-                    "name": selectCourseName,
-                    "grade": grade,
-                    "startTime": startTime,
-                    "endTime": endTime
-                }
-            }, function (res) {
-                if (res.rtnCode == "0000000" && res.bizData == true) {
-                    that.querySelectCourseTask();
+            datas.data.id = id;
+            Common.ajaxFun('/saas/selectCourse/updateSelectCourseTask.do', 'POST', JSON.stringify(datas), function (res) {
+                if (res.rtnCode == "0000000") {
                     layer.closeAll();
-                    layer.msg("保存成功");
+                    layer.msg("修改成功");
+                    that.querySelectCourseTask();
                 } else {
                     layer.msg(res.msg);
                 }
             }, function (res) {
                 layer.msg(res.msg);
-            });
+            },null,true);
         } else {
-            Common.ajaxFun('/saas/selectCourse/addSelectCourseTask.do', 'POST', {
-                "data": {
-                    "tnId": tnId,
-                    "name": selectCourseName,
-                    "grade": grade,
-                    "startTime": startTime,
-                    "endTime": endTime
-                }
-            }, function (res) {
-                if (res.rtnCode == "0000000" && res.bizData == true) {
-                    that.querySelectCourseTask();
+            console.log(JSON.stringify(datas))
+            Common.ajaxFun('/saas/selectCourse/addSelectCourseTask.do', 'POST', JSON.stringify(datas), function (res) {
+                if (res.rtnCode == "0000000") {
                     layer.closeAll();
                     layer.msg("保存成功");
-                    history.go(0);
+                    that.querySelectCourseTask();
                 } else {
                     layer.msg(res.msg);
                 }
             }, function (res) {
                 layer.msg(res.msg);
-            });
+            },null,true);
         }
     },
     // 删除任务
     deleteSelectCourseTask: function (id) {
         var that = this;
-        Common.ajaxFun('/saas/selectCourse/deleteSelectCourseTask.do', 'GET', {
-            'id': id
-        }, function (res) {
+        console.log(id);
+        var datas = {
+            "data":{
+                "ids":id
+            }
+        };
+        Common.ajaxFun('/saas/selectCourse/deleteSelectCourseTask.do', 'POST',JSON.stringify(datas), function (res) {
             if (res.rtnCode == "0000000") {
                 layer.closeAll();
                 layer.msg('删除成功!');
                 that.querySelectCourseTask();
+                $('#checkAll').attr('checked',false);
             } else {
                 layer.msg(res.msg);
             }
         }, function (res) {
             layer.msg(res.msg);
-        });
+        },null,true);
     }
 
 
@@ -251,11 +264,11 @@ $(function () {
         }
 
         if (startDate == "") {
-            layer.tips('请设置选课开始时间!', '#start-date');
+            layer.tips('请设置选课开始时间!', '#LAY_demorange_s');
             return false;
         }
         if (endDate == "") {
-            layer.tips('请设置选课结束时间!', '#end-date');
+            layer.tips('请设置选课结束时间!', '#LAY_demorange_e');
             return false;
         }
         SelectCourseIns.addSelectCourseTask(id, taskName, gradeV, startDate, endDate);
@@ -273,17 +286,28 @@ $(function () {
             layer.tips('修改只能选择一项', $(this));
             return false;
         }
-        schedule.addOrUpdateSelectCourse('更新选课任务', true);
         var id = selectCourseV.attr('dataid');
-        var schedulename = selectCourseV.attr('selectCourseName');
+        var schedulename = selectCourseV.attr('selectcoursename');
         var gradename = selectCourseV.attr('gradename');
-        var year = selectCourseV.attr('year');
+        var starttime = selectCourseV.attr('starttime');
+        var endtime = selectCourseV.attr('endtime');
         var termname = selectCourseV.attr('termname');
-        $('#task-name').val(schedulename);
-        $('#grade-list').children('option[gradeV="' + gradename + '"]').attr('selected', 'selected');
-        $('#term-year').val(year);
-        $('#term-list').children('option[termV="' + termname + '"]').attr('selected', 'selected');
+        var state = selectCourseV.attr('state');
         $('#save-schedule-btn').attr('dataId', id);
+        SelectCourseIns.addOrUpdateSelectCourse('更新选课任务');
+        $('#task-name').val(schedulename);
+        $('#grade-list').attr('disabled','disabled').children('option[value="' + gradename + '"]').attr('selected', 'selected');
+        $('#LAY_demorange_s').val(starttime);
+        $('#LAY_demorange_e').val(endtime);
+        if(state =='2'){
+            $('#task-name').attr('disabled','disabled');
+            $('#LAY_demorange_s').attr('disabled','disabled');
+        }else{
+            $('#task-name,#LAY_demorange_s').removeAttr('disabled');
+        }
+
+        $('#save-select-course-btn').attr('dataId', id);
+
     });
     // 删除选课任务
     $('#deleteTask-btn').on('click', function () {
@@ -292,18 +316,19 @@ $(function () {
             layer.tips('至少选择一项', $(this));
             return false;
         }
-        if (checkboxLen > 1) {
-            layer.tips('删除只能选择一项', $(this));
-            return false;
-        }
         layer.confirm('确定删除?', {
             btn: ['确定', '关闭'] //按钮
         }, function () {
-            var id = $('#select-course-list input:checked').attr('dataid');
-            SelectCourseIns.deleteSelectCourseTask(id);
+            var deleteIdArr = [];
+            $('#select-course-list input:checked').each(function(){
+                var id = $(this).attr('dataid');
+                deleteIdArr.push(id);
+            });
+            SelectCourseIns.deleteSelectCourseTask(deleteIdArr.join(','));
         }, function () {
             layer.closeAll();
         });
     });
+
 
 });

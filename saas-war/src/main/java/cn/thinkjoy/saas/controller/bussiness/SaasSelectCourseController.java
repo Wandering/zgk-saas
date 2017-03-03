@@ -89,7 +89,7 @@ public class SaasSelectCourseController {
         paramMap.put("status",0);
         SelectCourseTask tmpTask = (SelectCourseTask) iSelectCourseTaskService.queryOne(paramMap);
 
-        if(tmpTask != null && tmpTask.getId() != task.getId()){
+        if(tmpTask != null && !String.valueOf(tmpTask.getId()).equals(task.getId())){
             ExceptionUtil.throwException(ErrorCode.TASK_REPEAT);
         }
 
