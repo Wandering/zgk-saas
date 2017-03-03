@@ -294,14 +294,18 @@
 .select-course-max{
   display: none;
 }
-.look-course{
+.look-course,
+.look-course-result{
   color: #000;
 }
 
 a,
 a.look-course:link,
 a.look-course:visited,
-a.look-course:hover {
+a.look-course:hover,
+a.look-course-result:link,
+a.look-course-result:visited,
+a.look-course-result:hover {
   font-size: 12px;
   color: #539fd0;
   text-decoration: underline;
