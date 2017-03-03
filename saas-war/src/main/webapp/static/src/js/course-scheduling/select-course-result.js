@@ -297,70 +297,85 @@ AssemblyChooseResult.init();
 var SelCourseTypeDetail = {
     init: function () {
         this.type = 0; //高考课程
+        this.page = {
+            'offset': 0,
+            'rows': 1,
+            'count': ''
+        }
         this.get();
         this.addEvent();
     },
     get: function () {
         Common.ajaxFun('/saas/selectCourse/getStuCourseDetail.do', 'GET', {
-                "taskId":GLOBAL_CONSTANT.taskId,
-                "type":this.type,
-                "pageNo": 0,//"当前页 首次为 0 ",
-                "pageSize":20//"页大小"
+                "taskId": GLOBAL_CONSTANT.taskId,
+                "type": this.type,
+                "pageNo": this.page.offset,//"当前页 首次为 0 ",
+                "pageSize": this.page.rows//"页大小"
             },
             function (res) {
-                res = {
-                    "rtnCode":"0000000",
-                    "msg":"",
-                    bizData:{
-                        "list":[{
-                            "stuNo":"23",
-                            "stuName":"张三",
-                            "className":"高二一班",
-                            "courses":[{
-                                "courseId":"12",
-                                "courseName":"美术"
-                            },{
-                                "courseId":"33",
-                                "courseName":"声乐"
-                            },{
-                                "courseId":"23",
-                                "courseName":"体育"
-                            }]
-                        },{
-                            "stuNo":"100",
-                            "stuName":"王五",
-                            "className":"高二一班",
-                            "courses":[{
-                                "courseId":"12",
-                                "courseName":"美术"
-                            },{
-                                "courseId":"33",
-                                "courseName":"声乐"
-                            },{
-                                "courseId":"23",
-                                "courseName":"体育"
-                            }]
-                        }],
-                        "count":"200"
-                    }
+                if (res.rtnCode == "0000000") {
+                    SelCourseTypeDetail.page.count = res.bizData.count;
+                    SelCourseTypeDetail.set(res.bizData);
                 }
-        if (res.rtnCode == "0000000") {
-            SelCourseTypeDetail.set(res.bizData);
-        }
-        }, function (res) {
-            console.info(res.msg)
-        })
+            }, function (res) {
+                console.info(res.msg)
+            })
     },
     set: function (d) {
+        // if(!$.isEmptyObject){
+        //     return false;
+        // }
+
+
+        //动态设置表头
+        Handlebars.registerHelper('addOne', function (v) {
+            return ['', '一', '二', '三'][v + 1];
+        });
+        var tpl = Handlebars.compile($("#table-header-tpl").html());
+        $('#table-header').html(tpl(d.list[0].courses));
+        //渲染table
         var tpl = Handlebars.compile($("#table-list-tpl").html());
         $('#table-list').html(tpl(d));
+        this.pagination(); //分页
     },
-    addEvent:function(){
+    pagination: function () {
         var that = this;
-        $(document).on('change','[name="type-li"]',function(){
+        $(".pagination").createPage({
+            pageCount: Math.ceil(that.page.count / that.page.rows),
+            current: Math.ceil(that.page.offset / that.page.rows) + 1,
+            backFn: function (p) {
+                $(".pagination-bar .current-page").html(p);
+                that.page.offset = (p - 1) * that.page.rows;
+                that.get();
+            }
+        });
+    },
+    addEvent: function () {
+        var that = this;
+        //切换高考课程和非高考课程
+        $(document).on('change', '[name="type-li"]', function () {
             that.type = $(this).val();
+            that.page = {
+                'offset': 0,
+                'rows': 1,
+                'count': ''
+            }
             that.get();
         });
+        //修改
+        $('#select-modify').click(function(){
+            layer.open({
+                type: 1,
+                title: '修改选课结果',
+                offset: 'auto',
+                area: ['auto', 'auto'],
+                content: $('#modify-choose-layer'),
+                cancel: function () {
+                    layer.closeAll();
+                }
+            })
+        });
+
     }
 }
 SelCourseTypeDetail.init();
