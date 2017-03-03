@@ -95,42 +95,16 @@ var AssemblyChooseResult = {
         this.get();
     },
     get: function () {
-        // Common.ajaxFun('/saas/selectCourse/getGroupCourseSituation.do', 'GET', {
-        //         'taskId': GLOBAL_CONSTANT.taskId
-        //     },
-        //     function (res) {
-        res = {
-            "rtnCode": "0000000",
-            "msg": "",
-            bizData: [{
-                "courseName": '政治-历史-地理',//"单科组合名称",
-                "stuCount": 50//人数"
-            }, {
-                "courseName": '生物-化学-地理',//"单科组合名称",
-                "stuCount": 100//人数"
-            }, {
-                "courseName": '历史-通用技术-化学',//"单科组合名称",
-                "stuCount": 23//人数"
-            }, {
-                "courseName": '历史-通用技术-化学',//"单科组合名称",
-                "stuCount": 100//人数"
-            }, {
-                "courseName": '历史-通用技术-化学',//"单科组合名称",
-                "stuCount": 31//人数"
-            }, {
-                "courseName": '历史-通用技术-化学',//"单科组合名称",
-                "stuCount": 13//人数"
-            }, {
-                "courseName": '历史-生物-政治',//"单科组合名称",
-                "stuCount": 41//人数"
-            }]
-        }
+        Common.ajaxFun('/saas/selectCourse/getGroupCourseSituation.do', 'GET', {
+                'taskId': GLOBAL_CONSTANT.taskId
+            },
+            function (res) {
         if (res.rtnCode == "0000000") {
             AssemblyChooseResult.set(res.bizData);
         }
-        // }, function (res) {
-        //     console.info(res.msg)
-        // })
+        }, function (res) {
+            console.info(res.msg)
+        })
     },
     set: function (d) {
         var dataJson = {
@@ -290,7 +264,7 @@ var SelCourseTypeDetail = {
                 "type": this.type
             },
             function (d) {
-                if (res.rtnCode == "0000000") {
+                if (d.rtnCode == "0000000") {
                     var arrayFoo = [];
                     var tag = ['', '一', '二', '三']
                     for (var i = 1; i <= $('#header-li').val(); i++) {
@@ -372,7 +346,7 @@ var SelCourseTypeDetail = {
             $parentDom.find('select').each(function () {
                 fooSubjectArr.push($(this).val())
             });
-            if(fooSubjectArr>1){
+            if(fooSubjectArr.length>1){
                 if (fooSubjectArr[0] == fooSubjectArr[1] ||
                     fooSubjectArr[0] == fooSubjectArr[2] ||
                     fooSubjectArr[1] == fooSubjectArr[2]
@@ -397,7 +371,7 @@ var SelCourseTypeDetail = {
                 }
             }
             Common.ajaxFun('/saas/selectCourse/updateStuCourse.do', 'post', JSON.stringify(data), function (d) {
-                if (res.rtnCode == "0000000") {
+                if (d.rtnCode == "0000000") {
                     layer.closeAll();
                     layer.msg('修改成功');
                     that.get();
