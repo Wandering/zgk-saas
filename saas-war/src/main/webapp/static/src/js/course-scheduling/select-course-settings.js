@@ -8,9 +8,12 @@ SelectCourseSettings.prototype = {
     constructor: SelectCourseSettings,
     init: function () {
         this.getSelectCourses();
+        this.selCourseMax();
+        $('.select-course-num').find('option[value="'+ this.selectCount +'"]').attr('selected','selected');
     },
     // 拉取课程集合  /saas/selectCourse/getSelectCourses.do
     getSelectCourses: function () {
+        var that = this;
         Common.ajaxFun('/saas/selectCourse/getSelectCourses.do', 'GET', {
             "taskId": taskId
         }, function (res) {
@@ -30,9 +33,15 @@ SelectCourseSettings.prototype = {
                     } else if (datas[i].type == '1') {  // 非高考
                         var gkCourse = [];
                         $.each(coursesObj, function (j, k) {
-                            gkCourse.push('<label class="item"> <input type="checkbox" data-id="'+ coursesObj[j].id +'" data-name="'+ coursesObj[j].name +'" />' + coursesObj[j].name + '</label>');
+                            if(coursesObj[j].isSelect==true){
+                                gkCourse.push('<label class="item"> <input type="checkbox" checked="checked" data-id="'+ coursesObj[j].id +'" data-name="'+ coursesObj[j].name +'" />' + coursesObj[j].name + '</label>');
+                                that.selectCount = datas[i].selectCount;
+                            }else{
+                                gkCourse.push('<label class="item"> <input type="checkbox" data-id="'+ coursesObj[j].id +'" data-name="'+ coursesObj[j].name +'" />' + coursesObj[j].name + '</label>');
+                            }
                         });
                         $('.fgk-course-list').html(gkCourse.join(''));
+
                     }
                 })
             } else {
@@ -53,17 +62,9 @@ SelectCourseSettings.prototype = {
         }, function (res) {
             layer.msg(res.msg);
         },null,true);
-    }
-
-
-};
-
-var SelectCourseSettingsIns = new SelectCourseSettings();
-
-$(function () {
-    // 选择非高考课程
-    $('.fgk-course-list').on('click', ':checkbox', function () {
-        $('.select-course-num').html('');
+    },
+    // 费高考 最大选中科目
+    selCourseMax:function(){
         var chk = 0;
         $(".fgk-course-list").find(':checkbox').each(function () {
             if ($(this).prop("checked") == true) {
@@ -76,10 +77,23 @@ $(function () {
             $('.select-course-max').show();
             var selectCourseMaxArr = [];
             for (var i = 0; i < chk; i++) {
-                selectCourseMaxArr.push('<option>' + (i + 1) + '</option>');
+                selectCourseMaxArr.push('<option value="'+ (i + 1) +'">' + (i + 1) + '</option>');
             }
             $('.select-course-num').append(selectCourseMaxArr.join(''));
         }
+    }
+
+
+};
+
+var SelectCourseSettingsIns = new SelectCourseSettings();
+
+$(function () {
+    // 选择非高考课程
+    $('.fgk-course-list').on('click', ':checkbox', function () {
+        $('.select-course-num').html('');
+        SelectCourseSettingsIns.selCourseMax();
+        $('.select-course-num').find('option[value="'+ SelectCourseSettingsIns.selectCount +'"]').attr('selected','selected');
     });
 
     // 设置提交
