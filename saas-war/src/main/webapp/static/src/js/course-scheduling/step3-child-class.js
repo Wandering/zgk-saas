@@ -641,9 +641,12 @@ var HashHandle = {
                 var datas = res.bizData;
                 $.each($('.classCourseTable'),function(i,v){
                     var colorValue = datas[i];
-                    switch (){
-                        case :
-                    }
+                    //switch (){
+                    //    case :
+                    //        break;
+                    //    default;
+                    //        break;
+                    //}
                     $(v).attr('backgroundColor',colorValue);
                 })
 
