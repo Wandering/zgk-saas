@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>教师信息</title>
+    <title>教室信息</title>
     <%@ include file="./../common/meta.jsp"%>
     <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step1.css" />
 </head>
@@ -58,30 +58,19 @@
                                 <a href="/course-info">课程信息</a>
                             </li>
                             <li>
-                                <a href="/teacher-info" class="active">教师信息</a>
+                                <a href="/teacher-info">教师信息</a>
                             </li>
                             <li>
-                                <a href="/class-info">教室信息</a>
+                                <a href="/class-info" class="active">教室信息</a>
                             </li>
                         </ul>
                         <div class="base-content">
                             <div class="title-2">
                                 <span class="txt-t"></span>
-                                <%--<div class="btns">--%>
-                                    <%--<button class="btn btn-pink" id="add-teacher-btn">添加教师</button>--%>
-                                    <%--<button class="btn btn-inverse" id="modify-teacher-btn">修改</button>--%>
-                                    <%--<button class="btn btn-success del-btn" id="delete-teacher-btn">删除</button>--%>
-                                <%--</div>--%>
                             </div>
                             <table id="teacher-table" class="table">
                                 <thead>
                                     <tr>
-                                        <%--<th class="center" width="50px">--%>
-                                            <%--<label>--%>
-                                                <%--<input type="checkbox" id="checkAll" class="ace" />--%>
-                                                <%--<span class="lbl"></span>--%>
-                                            <%--</label>--%>
-                                        <%--</th>--%>
                                         <th class="center" width="80px">序号</th>
                                         <th class="center" width="200px">教师姓名</th>
                                         <th class="center" width="200px">所授课程</th>
@@ -163,6 +152,6 @@
 
 <%@ include file="./../common/footer.jsp"%>
 <script src="<%=ctx%>/static/src/lib/jquery.bigautocomplete/jquery.bigautocomplete.js"></script>
-<script src="<%=ctx%>/static/src/js/course-scheduling/teacher-info.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/class-info.js"></script>
 </body>
 </html>

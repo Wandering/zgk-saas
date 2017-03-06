@@ -117,4 +117,8 @@ public interface IEXJwScheduleTaskService {
      * @return
      */
     boolean SerializableAdjustmentSchedule(JwCourseTable jwCourseTable, Integer adjustmentType);
+
+    public Map<String,Object> getConfigRooms(String taskId);
+
+    public Map<String,Object> updateClassRoom(String classRoomId,int scheduleNumber);
 }

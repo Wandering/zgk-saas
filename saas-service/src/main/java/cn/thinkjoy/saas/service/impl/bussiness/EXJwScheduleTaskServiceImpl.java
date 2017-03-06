@@ -13,16 +13,10 @@ import cn.thinkjoy.saas.dao.*;
 import cn.thinkjoy.saas.dao.bussiness.*;
 import cn.thinkjoy.saas.dao.bussiness.scheduleRule.MergeClassDAO;
 import cn.thinkjoy.saas.domain.*;
-import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
-import cn.thinkjoy.saas.domain.bussiness.CourseManageVo;
-import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
-import cn.thinkjoy.saas.domain.bussiness.MergeClassInfoVo;
+import cn.thinkjoy.saas.domain.bussiness.*;
 import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.service.IGradeService;
-import cn.thinkjoy.saas.service.bussiness.EXIGradeService;
-import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
-import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
-import cn.thinkjoy.saas.service.bussiness.IEXTeacherService;
+import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ConvertUtil;
 import cn.thinkjoy.saas.service.common.FileOperation;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
@@ -125,6 +119,13 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
     @Autowired
     private IJwSyllabusDAO jwSyllabusDAO;
+
+
+    @Autowired
+    EXIClassRoomService exiClassRoomService;
+
+    @Autowired
+    IClassRoomsDAO iClassRoomsDAO;
 //    @Autowired
 //    private
 
@@ -1899,6 +1900,54 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
     private static String getTeacherKey(String course,String className){
         return course+Constant.TIME_INTERVAL+className;
+    }
+
+    @Override
+    public Map<String,Object> getConfigRooms(String taskId){
+        Map<String,Object> resultMap=new HashMap<>();
+        // 通过taskId获得年级信息，
+        JwScheduleTask task = scheduleTaskDAO.findOne("id",taskId,"id", Constant.DESC);
+        String grade=task.getGrade();
+        int tnId=task.getTnId();
+        // 根据年级信息判断是否是“行政班-教学班”，
+        Map<String, Object> map = new HashMap<>();
+        map.put("gradeCode", grade);
+        map.put("tnId", tnId);
+        Grade gradeObj = (Grade) iGradeDAO.queryOne(map,"id","asc");
+        if(gradeObj.getClassType()!=2){
+            resultMap.put("msg","年级类型非行政教学");
+            return resultMap;
+        }
+        // 如果是，返回行政班数量，及教室管理中总数量
+        String tableName= ParamsUtils.combinationTableName("class_adm", tnId);
+        Map<String,Object> map1=new HashMap<>();
+        map1.put("tableName",tableName);
+        map1.put("searchKey","class_grade");
+        map1.put("searchValue",gradeObj.getGrade());
+        int admNumber=iexTeantCustomDAO.getTenantCustomCount(map1);
+        map.put("gradeId",grade);
+        List<ClassRoomView> classRooms = exiClassRoomService.selectClassRoomByTnId(map);
+        if (classRooms==null||classRooms.size()!=1){
+            resultMap.put("msg","教室管理设置有误");
+            return resultMap;
+        }
+        int sum=classRooms.get(0).getExecutiveNumber()+classRooms.get(0).getDayNumber();
+        resultMap.put("admNumber",admNumber);
+        resultMap.put("sum",sum);
+        resultMap.put("classRoomId",classRooms.get(0).getId());
+        return resultMap;
+    }
+
+    @Override
+    public Map<String,Object> updateClassRoom(String classRoomId,int scheduleNumber){
+        Map<String,Object> update=new HashMap<>();
+        update.put("scheduleNumber",scheduleNumber);
+        Map<String,Object> condition=new HashMap<>();
+        condition.put("id",classRoomId);
+        iClassRoomsDAO.updateByCondition(update,condition);
+        Map<String,Object> resultMap=new HashMap<>();
+        resultMap.put("msg","success");
+        return resultMap;
     }
 
 }

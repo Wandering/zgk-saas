@@ -488,6 +488,9 @@
          left JOIN saas_course_base_info cbi on cm.course_base_id=cbi.id
          left join saas_grade gg on cm.grade_id=gg.gradeCode and cm.tn_id=gg.tnId
         where cm.tn_id=#{tnId} and gg.grade=#{gradeName}
+        <if test="courseType!=null">
+            and cm.course_type=#{courseType}
+        </if>
     </select>
 </mapper>
 

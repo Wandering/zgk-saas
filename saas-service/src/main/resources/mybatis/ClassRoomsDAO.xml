@@ -30,7 +30,8 @@ selectList
         executive_number as executiveNumber,
         day_number as dayNumber,
         room_order as roomOrder,
-        create_date as createDate
+        create_date as createDate,
+        schedule_number as scheduleNumber
     </sql>
     <insert id="insert" parameterType="ClassRooms">
         INSERT INTO saas_class_rooms (
@@ -46,7 +47,8 @@ selectList
         #{executiveNumber},
         #{dayNumber},
         #{roomOrder},
-        #{createDate}
+        #{createDate},
+        #{scheduleNumber}
         )
         <selectKey resultType="java.lang.Long" keyProperty="id">
         SELECT LAST_INSERT_ID() AS ID
@@ -75,6 +77,9 @@ selectList
             <if test="createDate!=null">
                 create_date = #{createDate},
             </if>
+            <if test="scheduleNumber!=null">
+                schedule_number = #{scheduleNumber},
+            </if>
         </trim>
         WHERE
         id = #{id}
@@ -100,6 +105,9 @@ selectList
             </if>
             <if test="map.createDate!=null">
                 create_date = #{map.createDate},
+            </if>
+            <if test="map.scheduleNumber!=null">
+                schedule_number = #{map.scheduleNumber},
             </if>
         </trim>
         WHERE
@@ -127,6 +135,9 @@ selectList
             <if test="update.createDate!=null">
                 create_date = #{update.createDate},
             </if>
+            <if test="update.scheduleNumber!=null">
+                schedule_number = #{update.scheduleNumber},
+            </if>
         </trim>
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -151,6 +162,9 @@ selectList
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
+            <if test="condition.scheduleNumber!=null">
+                AND schedule_number = #{condition.scheduleNumber}
+            </if>
         </trim>
     </update>
 
@@ -161,14 +175,16 @@ selectList
                 executive_number,
                 day_number,
                 room_order,
-                create_date
+                create_date,
+                schedule_number
         ) VALUES (
                     #{map.tnId},
                     #{map.gradeId},
                     #{map.executiveNumber},
                     #{map.dayNumber},
                     #{map.roomOrder},
-                    #{map.createDate}
+                    #{map.createDate},
+                    #{map.scheduleNumber}
         )
     </insert>
 
@@ -182,9 +198,10 @@ selectList
             day_number = #{dayNumber},
             room_order=#{roomOrder},
             create_date = #{createDate},
+            schedule_number = #{scheduleNumber},
         </trim>
         WHERE
-        id = #{id} 
+        id = #{id}
     </update>
 
     <!-- 按Id删除 -->
@@ -219,6 +236,9 @@ selectList
             </if>
             <if test="createDate!=null">
                 AND create_date = #{createDate}
+            </if>
+            <if test="scheduleNumber!=null">
+                AND schedule_number = #{scheduleNumber}
             </if>
         </trim>
     </delete>
@@ -298,6 +318,9 @@ selectList
             <if test="condition.createDate!=null">
                 ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
             </if>
+            <if test="condition.scheduleNumber!=null">
+                ${condition.groupOp}   schedule_number  ${condition.scheduleNumber.op}  #{condition.scheduleNumber.data}
+            </if>
 
 
     </where>
@@ -336,6 +359,9 @@ selectList
             <if test="createDate!=null">
                 AND create_date like CONCAT('%', #{createDate} , '%')
             </if>
+            <if test="scheduleNumber!=null">
+                AND schedule_number like CONCAT('%', #{scheduleNumber} , '%')
+            </if>
         </trim>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -371,6 +397,9 @@ selectList
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
+            <if test="condition.scheduleNumber!=null">
+                AND schedule_number = #{condition.scheduleNumber}
+            </if>
         </trim>
         <if test="orderBy!=null">
         ORDER BY ${orderBy} ${sortBy}
@@ -403,6 +432,9 @@ selectList
             <if test="condition.createDate!=null">
                 AND create_date = #{condition.createDate}
             </if>
+            <if test="condition.scheduleNumber!=null">
+                AND schedule_number = #{condition.scheduleNumber}
+            </if>
         </trim>
         limit 0,1
     </select>
@@ -430,6 +462,9 @@ selectList
            </if>
            <if test="createDate!=null">
                ${groupOp} create_date ${create_date.op}  #{create_date.data}
+           </if>
+           <if test="scheduleNumber!=null">
+               ${groupOp} schedule_number ${scheduleNumber.op}  #{scheduleNumber.data}
            </if>
 
        </where>
