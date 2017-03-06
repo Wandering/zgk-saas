@@ -351,6 +351,14 @@ public class WebCotroller {
         return new ModelAndView("/course-scheduling/teacher-info");
     }
     /**
+     * teaching-time
+     * 排课任务--基本信息设置--教室信息
+     */
+    @RequestMapping("/class-info")
+    public ModelAndView classInfo() {
+        return new ModelAndView("/course-scheduling/class-info");
+    }
+    /**
      * course-scheduling-step2
      * 排课任务--排课第二步骤，排课规则
      */
