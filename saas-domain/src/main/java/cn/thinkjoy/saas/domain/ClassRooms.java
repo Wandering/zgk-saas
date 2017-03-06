@@ -22,6 +22,15 @@ public class ClassRooms extends BaseDomain {
     private Integer dayNumber;
     private Integer roomOrder;
     private Long createDate;
+    private Integer scheduleNumber;
+
+    public Integer getScheduleNumber() {
+        return scheduleNumber;
+    }
+
+    public void setScheduleNumber(Integer scheduleNumber) {
+        this.scheduleNumber = scheduleNumber;
+    }
 
     public ClassRooms() {
     }
