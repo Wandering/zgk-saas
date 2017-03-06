@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IExamDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+
+    <sql id="Base_Column_List">
+        id as id ,
+        tnId as tnId ,
+        examName as examName ,
+        examTime as examTime ,
+        grade as grade ,
+        uploadFilePath as uploadFilePath ,
+        createDate as createDate,
+        originFileName  as originFileName
+    </sql>
+    <insert id="insert" parameterType="Exam">
+        INSERT INTO saas_exam (
+        tnId,
+        examName,
+        examTime,
+        grade,
+        uploadFilePath,
+        createDate,
+        originFileName
+        ) VALUES (
+        #{tnId},
+        #{examName},
+        #{examTime},
+        #{grade},
+        #{uploadFilePath},
+        #{createDate},
+        #{originFileName}
+        )
+            <selectKey resultType="java.lang.Long" keyProperty="id">
+                SELECT LAST_INSERT_ID() AS ID
+            </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="Exam">
+        UPDATE saas_exam
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="examName!=null">
+                examName = #{examName},
+            </if>
+            <if test="examTime!=null">
+                examTime = #{examTime},
+            </if>
+            <if test="grade!=null">
+                grade = #{grade},
+            </if>
+            <if test="uploadFilePath!=null">
+                uploadFilePath = #{uploadFilePath},
+            </if>
+            <if test="createDate!=null">
+                createDate = #{createDate},
+            </if>
+            <if test="originFileName!=null">
+                originFileName = #{originFileName},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_exam
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.examName!=null">
+                examName = #{map.examName},
+            </if>
+            <if test="map.examTime!=null">
+                examTime = #{map.examTime},
+            </if>
+            <if test="map.grade!=null">
+                grade = #{map.grade},
+            </if>
+            <if test="map.uploadFilePath!=null">
+                uploadFilePath = #{map.uploadFilePath},
+            </if>
+            <if test="map.createDate!=null">
+                createDate = #{map.createDate},
+            </if>
+            <if test="map.originFileName!=null">
+                originFileName = #{map.originFileName},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_exam
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.examName!=null">
+                examName = #{update.examName},
+            </if>
+            <if test="update.examTime!=null">
+                examTime = #{update.examTime},
+            </if>
+            <if test="update.grade!=null">
+                grade = #{update.grade},
+            </if>
+            <if test="update.uploadFilePath!=null">
+                uploadFilePath = #{update.uploadFilePath},
+            </if>
+            <if test="update.createDate!=null">
+                createDate = #{update.createDate},
+            </if>
+            <if test="update.originFileName!=null">
+                originFileName = #{update.originFileName},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.examName!=null">
+                AND examName = #{condition.examName}
+            </if>
+            <if test="condition.examTime!=null">
+                AND examTime = #{condition.examTime}
+            </if>
+            <if test="condition.grade!=null">
+                AND grade = #{condition.grade}
+            </if>
+            <if test="condition.uploadFilePath!=null">
+                AND uploadFilePath = #{condition.uploadFilePath}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+            <if test="condition.originFileName!=null">
+                AND originFileName = #{condition.originFileName}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_exam (
+                tnId,
+                examName,
+                examTime,
+                grade,
+                uploadFilePath,
+                createDate,
+                originFileName
+        ) VALUES (
+                    #{map.tnId},
+                    #{map.examName},
+                    #{map.examTime},
+                    #{map.grade},
+                    #{map.uploadFilePath},
+                    #{map.createDate},
+                    #{map.originFileName}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="Exam">
+        UPDATE saas_exam
+        <trim prefix="SET" suffixOverrides=",">
+            tnId = #{tnId},
+            examName = #{examName},
+            examTime = #{examTime},
+            grade = #{grade},
+            uploadFilePath = #{uploadFilePath},
+            createDate = #{createDate},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM saas_exam
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_exam
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="examName!=null">
+                AND examName = #{examName}
+            </if>
+            <if test="examTime!=null">
+                AND examTime = #{examTime}
+            </if>
+            <if test="grade!=null">
+                AND grade = #{grade}
+            </if>
+            <if test="uploadFilePath!=null">
+                AND uploadFilePath = #{uploadFilePath}
+            </if>
+            <if test="createDate!=null">
+                AND createDate = #{createDate}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_exam WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Long" resultType="Exam">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_exam
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="Exam">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_exam WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="Exam">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_exam WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="Exam">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_exam
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="Exam">
+        SELECT
+        <if test="selector!=null">
+            <trim prefixOverrides=",">
+                        <if test="selector.id!=null">
+                            , id
+                        </if>
+                        <if test="selector.examName!=null">
+                            , examName
+                        </if>
+                        <if test="selector.examTime!=null">
+                            , examTime
+                        </if>
+                        <if test="selector.grade!=null">
+                            , grade
+                        </if>
+                        <if test="selector.uploadFilePath!=null">
+                            , uploadFilePath
+                        </if>
+                        <if test="selector.createDate!=null">
+                            , createDate
+                        </if>
+            </trim>
+        </if>
+        <if test="selector==null">
+        <include refid="Base_Column_List" />
+        </if>
+        FROM saas_exam
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   ${condition.id.field}  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   ${condition.tnId.field}  ${condition.tnId.op}  #{condition.tnId.data}
+            </if>
+            <if test="condition.examName!=null">
+                ${condition.groupOp}   ${condition.examName.field}  ${condition.examName.op}  #{condition.examName.data}
+            </if>
+            <if test="condition.examTime!=null">
+                ${condition.groupOp}   ${condition.examTime.field}  ${condition.examTime.op}  #{condition.examTime.data}
+            </if>
+            <if test="condition.grade!=null">
+                ${condition.groupOp}   ${condition.grade.field}  ${condition.grade.op}  #{condition.grade.data}
+            </if>
+            <if test="condition.uploadFilePath!=null">
+                ${condition.groupOp}   ${condition.uploadFilePath.field}  ${condition.uploadFilePath.op}  #{condition.uploadFilePath.data}
+            </if>
+            <if test="condition.createDate!=null">
+                ${condition.groupOp}   ${condition.createDate.field}  ${condition.createDate.op}  #{condition.createDate.data}
+            </if>
+
+
+    </where>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="Exam">
+        SELECT
+        <if test="selector!=null">
+            <trim prefixOverrides=",">
+                    <if test="selector.id!=null">
+                        , id
+                    </if>
+                    <if test="selector.examName!=null">
+                        , examName
+                    </if>
+                    <if test="selector.examTime!=null">
+                        , examTime
+                    </if>
+                    <if test="selector.grade!=null">
+                        , grade
+                    </if>
+                    <if test="selector.uploadFilePath!=null">
+                        , uploadFilePath
+                    </if>
+                    <if test="selector.createDate!=null">
+                        , createDate
+                    </if>
+            </trim>
+        </if>
+        <if test="selector==null">
+            <include refid="Base_Column_List" />
+        </if>
+        FROM saas_exam
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
+            </if>
+            <if test="condition.examName!=null">
+                AND examName like CONCAT('%', #{condition.examName} , '%')
+            </if>
+            <if test="condition.examTime!=null">
+                AND examTime like CONCAT('%', #{condition.examTime} , '%')
+            </if>
+            <if test="condition.grade!=null">
+                AND grade like CONCAT('%', #{condition.grade} , '%')
+            </if>
+            <if test="condition.uploadFilePath!=null">
+                AND uploadFilePath like CONCAT('%', #{condition.uploadFilePath} , '%')
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate like CONCAT('%', #{condition.createDate} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="Exam">
+        SELECT
+        <if test="selector!=null">
+            <trim prefixOverrides=",">
+                <if test="selector.id!=null">
+                    , id
+                </if>
+                <if test="selector.tnId!=null">
+                    , tnId
+                </if>
+                <if test="selector.examName!=null">
+                    , examName
+                </if>
+                <if test="selector.examTime!=null">
+                    , examTime
+                </if>
+                <if test="selector.grade!=null">
+                    , grade
+                </if>
+                <if test="selector.uploadFilePath!=null">
+                    , uploadFilePath
+                </if>
+                <if test="selector.createDate!=null">
+                    , createDate
+                </if>
+        </trim>
+    </if>
+<if test="selector==null">
+<include refid="Base_Column_List" />
+</if>
+        FROM saas_exam
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tnId = #{condition.tnId}
+            </if>
+            <if test="condition.examName!=null">
+                AND examName = #{condition.examName}
+            </if>
+            <if test="condition.examTime!=null">
+                AND examTime = #{condition.examTime}
+            </if>
+            <if test="condition.grade!=null">
+                AND grade = #{condition.grade}
+            </if>
+            <if test="condition.uploadFilePath!=null">
+                AND uploadFilePath = #{condition.uploadFilePath}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="Exam">
+        SELECT
+        <if test="selector!=null">
+            <trim prefixOverrides=",">
+                    <if test="selector.id!=null">
+                        , id
+                    </if>
+                    <if test="selector.tnId!=null">
+                        , tnId
+                    </if>
+                    <if test="selector.examName!=null">
+                        , examName
+                    </if>
+                    <if test="selector.examTime!=null">
+                        , examTime
+                    </if>
+                    <if test="selector.grade!=null">
+                        , grade
+                    </if>
+                    <if test="selector.uploadFilePath!=null">
+                        , uploadFilePath
+                    </if>
+                    <if test="selector.createDate!=null">
+                        , createDate
+                    </if>
+            </trim>
+        </if>
+        <if test="selector==null">
+            <include refid="Base_Column_List" />
+        </if>
+        FROM saas_exam
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tnId = #{condition.tnId}
+            </if>
+            <if test="condition.examName!=null">
+                AND examName = #{condition.examName}
+            </if>
+            <if test="condition.examTime!=null">
+                AND examTime = #{condition.examTime}
+            </if>
+            <if test="condition.grade!=null">
+                AND grade = #{condition.grade}
+            </if>
+            <if test="condition.uploadFilePath!=null">
+                AND uploadFilePath = #{condition.uploadFilePath}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_exam
+       <where>
+           <if test="id!=null">
+               ${groupOp} ${id.field} ${id.op}  #{id.data}
+           </if>
+           <if test="tnId!=null">
+               ${groupOp} ${tnId.field} ${tnId.op}  #{tnId.data}
+           </if>
+           <if test="examName!=null">
+               ${groupOp} ${examName.field} ${examName.op}  #{examName.data}
+           </if>
+           <if test="examTime!=null">
+               ${groupOp} ${examTime.field} ${examTime.op}  #{examTime.data}
+           </if>
+           <if test="grade!=null">
+               ${groupOp} ${grade.field} ${grade.op}  #{grade.data}
+           </if>
+           <if test="uploadFilePath!=null">
+               ${groupOp} ${uploadFilePath.field} ${uploadFilePath.op}  #{uploadFilePath.data}
+           </if>
+           <if test="createDate!=null">
+               ${groupOp} ${createDate.field} ${createDate.op}  #{createDate.data}
+           </if>
+
+       </where>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Long">
+        SELECT
+        MAX(id)
+        FROM saas_exam
+    </select>
+
+    <insert id="batchInsertData" useGeneratedKeys="true">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO ${tableName} (
+        <foreach collection="columnList" item="columnName" index="index" separator="," >
+            ${columnName}
+        </foreach>
+        )VALUES
+        <foreach collection="valueList" item="item" index="index" separator="," >
+            (
+            <foreach collection="item.keys" item="key" index="index" separator=",">
+                #{item.${key}}
+            </foreach>
+            )
+        </foreach>
+    </insert>
+</mapper>
+
