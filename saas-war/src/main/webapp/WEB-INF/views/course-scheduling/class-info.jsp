@@ -66,14 +66,14 @@
                         </ul>
                         <div class="base-content">
                             <div class="title-2">
-                                <span class="txt-t">高二年级  教室信息</span>
+                                <span class="txt-t"><span class="grade-now"></span>教室信息</span>
                             </div>
                             <div class="scheduling-course">
-                                <p>高二年级行政班数量：16</p>
+                                <p><span class="grade-now"></span>行政班数量： <span id="class-number"></span></p>
                                 <label for="optional-class"> <em>*</em>可排课教室数量 <input type="text" id="optional-class"> </label>
                                 <p class="warm-tip">提醒：可排教室数量不能小于行政班的班级数量，请修改可排课教室数量。</p>
                             </div>
-                            <button class="btn-save-base" id="save-teacher" style="margin-top: 20px">保存</button>
+                            <button class="btn-save-base" id="save-class" style="margin-top: 20px">保存</button>
                         </div>
                     </div>
                 </div>
