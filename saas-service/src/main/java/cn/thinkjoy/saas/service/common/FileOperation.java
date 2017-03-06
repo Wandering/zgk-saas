@@ -27,13 +27,20 @@ public class FileOperation {
 
     public static final String PARMETERS="parameters";
 
-    public static final String SCHEDULE_RESULT="result";
+    public static final String SCHEDULE_RESULT="result"; //排课结果
+    public static final String AD_RESULT_TXT="ad_result";//调课结果
 
     public static final String LINE_SPLIT="\r\n";
     public static final String STR_SPLIT="\t";
     public static final String CHAR_SPLIT=" ";
     public static final String ERROR_TXT="error.txt";
     public static final String FAIL_TXT="FAIL.txt";
+    public static final String AD_ERROR_TXT="ad_error.txt";
+
+
+    public static final String ADJUSTMENT_TXT="adjustment.txt";//调课颜色信息
+    public static final String EXCHANGE_TXT="exchanges.txt";//原因信息
+
 
     //硬性规则
     public static final String  NON_ADM_ERROR_MSG="不排课时间过多,行政班课时不足。班级:%s,课时:%s";
@@ -51,7 +58,7 @@ public class FileOperation {
 
 
     //    private static String path = "C:\\timetable\\schedule\\task\\"; //windows server 文件保存路径设置
-//    private static String path = "/Users/douzy/schedule/task/"; //本地 文件保存路径设置
+//    private static String path = "/Users/dengshaofei/schedule/task/"; //本地 文件保存路径设置
     private static String path = "/home/ubuntu/tm/schedule/task/"; //线上 文件保存路径设置
 
     private static String filenameTemp;
@@ -62,17 +69,17 @@ public class FileOperation {
      * @param taskId
      * @return
      */
-    public static String getParamsPath(Integer tnId,Integer taskId) {
+    public static String getParamsPath(Integer tnId,Integer taskId,String type) {
         Calendar now = Calendar.getInstance();
-        return path + tnId + "/" + taskId + "/" + now.get(Calendar.YEAR) + "/" + (now.get(Calendar.MONTH) + 1) + "/" + now.get(Calendar.DAY_OF_MONTH) + "/";
+        return path + tnId + "/" + taskId + "/" + now.get(Calendar.YEAR) + "/" + (now.get(Calendar.MONTH) + 1) + "/" + now.get(Calendar.DAY_OF_MONTH) + "/" + type + "/";
 //        return path + tnId + "\\" + taskId + "\\" + now.get(Calendar.YEAR) + "\\" + (now.get(Calendar.MONTH) + 1) + "\\" + now.get(Calendar.DAY_OF_MONTH) + "\\";
     }
 
-    public static boolean creatTxtFile(Integer tnId,Integer taskId,String name) throws IOException {
+    public static boolean creatTxtFile(Integer tnId,Integer taskId,String name,String type) throws IOException {
 
         boolean flag = false;
 
-        filenameTemp = getParamsPath(tnId,taskId) + name + ".txt";
+        filenameTemp = getParamsPath(tnId,taskId,type) + name + ".txt";
 
         File filename = new File(filenameTemp);
 
@@ -253,7 +260,7 @@ public class FileOperation {
         System.out.print(d.length());
         System.out.print(d);
 
-        creatTxtFile(13,28,"20160725测试文件");
+        creatTxtFile(13,28,"20160725测试文件","");
 
         writeTxtFile("0,0,0,0,0,0\r\n0,2,1,3,4,2\r1,2,3,1,1,2\n1,2,3,4 1,2,3,22");
     }

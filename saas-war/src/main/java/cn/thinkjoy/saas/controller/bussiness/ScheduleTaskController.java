@@ -5,10 +5,7 @@ import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
-import cn.thinkjoy.saas.domain.JwCourse;
-import cn.thinkjoy.saas.domain.JwScheduleTask;
-import cn.thinkjoy.saas.domain.JwTeachDate;
-import cn.thinkjoy.saas.domain.JwTeacher;
+import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
@@ -85,6 +82,9 @@ public class ScheduleTaskController {
 
     @Autowired
     EXITenantConfigInstanceService exiTenantConfigInstanceService;
+
+    @Autowired
+    private ISyllabusService syllabusService;
     /**
      * 新建排课任务
      * @return
@@ -124,6 +124,107 @@ public class ScheduleTaskController {
         JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
         return jwScheduleTask.getStatus();
     }
+
+    /**
+     *
+     * @param type class:班级 teacher:老师
+     * @param taskId 任务Id
+     * @param id 班级/老师Id
+     * @param source 源坐标 坐标[1,6] 列号(周几),行号(第几节)
+     * @param target 目标坐标(要换到的坐标) 坐标[2,6] 列号(周几),行号(第几节)
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/{type}/exchange")
+    public boolean classExchange(@PathVariable String type,@RequestParam Integer taskId,@RequestParam Integer id,@RequestParam String source,@RequestParam String target){
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        int[] sourceCoord = this.getIntCoord(source);
+        int[] targetCoord = this.getIntCoord(target);
+        switch (type){
+            case Constant.TABLE_TYPE_CLASS:
+                return syllabusService.classExchange(tnId,taskId,id,sourceCoord,targetCoord);
+            case Constant.TABLE_TYPE_TEACHER:
+                return syllabusService.teacherExchange(tnId,taskId,id,sourceCoord,targetCoord);
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * 根据坐标获取调课所需班级课表
+     * @param taskId 任务ID
+     * @param id 老师Id
+     * @param coord 坐标[1,6] 列号(周几),行号(第几节)
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/teacher/queryClassByCoord")
+    public List<List<String>> queryClassByCoord(@RequestParam Integer taskId, @RequestParam Integer id,@RequestParam String coord){
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        Map<String,Object> params;
+        int[] currCoord = this.getIntCoord(coord);
+        CourseResultView courseResultView = null;
+
+        List<List<String>> lists;
+        Map<String, Object> timeConfigMap;
+        int courseCount,dayCount;
+        timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
+
+        if (timeConfigMap == null)
+            throw new BizException("error", "当前租户下排课任务课时设置为空,请设置后再试");
+
+        dayCount = ((List)timeConfigMap.get("list")).size();
+        courseCount = (int)timeConfigMap.get("count");
+        lists = syllabusService.genDefaultSyllabus(dayCount,courseCount);
+        List<JwCourseTable> jwCourseTables = syllabusService.getSyllabusByCoordinate(tnId,taskId,id,currCoord,Constant.TABLE_TYPE_TEACHER);
+        if (jwCourseTables.size() == 0){
+            throw new BizException("error","请检查坐标是否正确!");
+        }
+
+        for (JwCourseTable jwCourseTable : jwCourseTables){
+            params = new HashMap<>();
+            params.put("classId",jwCourseTable.getClassId());
+            courseResultView = syllabusService.genSyllabus(tnId,taskId,Constant.TABLE_TYPE_TEACHER,params,lists,timeConfigMap);
+        }
+
+        return courseResultView.getWeek();
+    }
+
+
+    /**
+     * 根据坐标获取调课状态
+     * @param type class:班级 teacher:老师
+     * @param taskId 任务ID
+     * @param id 班级/老师Id
+     * @param coord 坐标[1,6] 列号(周几),行号(第几节)
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/{type}/queryStatusByCoord")
+    public boolean queryStatusByCoord(@PathVariable String type, @RequestParam Integer taskId, @RequestParam Integer id,@RequestParam String coord){
+        int adjustmentType;
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        int[] currCoord = this.getIntCoord(coord);
+        switch (type){
+            case Constant.TABLE_TYPE_TEACHER:
+                adjustmentType = 0;
+                break;
+            case Constant.TABLE_TYPE_CLASS:
+                adjustmentType = 1;
+                break;
+            default:
+                adjustmentType = 0;
+                break;
+        }
+        List<JwCourseTable> list = syllabusService.getSyllabusByCoordinate(tnId,taskId,id,currCoord,type);
+        if (list.size() == 0){
+            throw new BizException("error","请检查坐标是否正确!");
+        }
+        JwCourseTable jwCourseTable = list.get(0);
+        iexJwScheduleTaskService.SerializableAdjustmentSchedule(jwCourseTable,adjustmentType);
+        return true;
+    }
+
     /**
      * 一键排课
      * @return
@@ -132,11 +233,12 @@ public class ScheduleTaskController {
     @RequestMapping("/trigger")
     public boolean updateScheduleTaskStatus(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
 
-        boolean initBool = iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+        boolean initBool = iexJwScheduleTaskService.initParmasFile(taskId, tnId);
 
 
         if (initBool) {
-            String path = FileOperation.getParamsPath(tnId, taskId);
+            String type= iexJwScheduleTaskService.getClsssTypeTagByTaskId(taskId, tnId);
+            String path = FileOperation.getParamsPath(tnId, taskId,type);
             JwScheduleTask jwScheduleTask = new JwScheduleTask();
             jwScheduleTask.setId(taskId);
             jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
@@ -153,7 +255,11 @@ public class ScheduleTaskController {
     @RequestMapping("/reload/trigger")
     public boolean reloadTrigger(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
 
-        String path = FileOperation.getParamsPath(tnId, taskId);
+        String path = iexJwScheduleTaskService.getScheduleTaskPath(taskId, tnId);
+
+//        String type= iexJwScheduleTaskService.getClsssTypeTagByTaskId(taskId, tnId);
+//
+//        String path = FileOperation.getParamsPath(tnId, taskId,type);
 
         File file = new File(path);
 
@@ -162,7 +268,7 @@ public class ScheduleTaskController {
         if (!re)
             return false;
 
-        boolean initBool = iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+        boolean initBool = iexJwScheduleTaskService.initParmasFile(taskId, tnId);
 
         if (initBool) {
             JwScheduleTask jwScheduleTask = new JwScheduleTask();
@@ -212,6 +318,26 @@ public class ScheduleTaskController {
     public List<String> getNoNScheduleTaskPliableRule(@RequestParam Integer taskId,@RequestParam Integer tnId){
         return  iexJwScheduleTaskService.getNoNScheduleTaskPliableRule(taskId, tnId);
     }
+    /**
+     * 调课结果查询
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/adjustment/schedule/result")
+    public String  adjustmentSchedule(@RequestParam Integer taskId,@RequestParam Integer tnId) {
+        return  iexJwScheduleTaskService.getAdjustmentSchduleResult(taskId,tnId);
+    }
+
+    /**
+     * 调课成功
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/adjustment/success")
+    public List<String> adjustmentScheduleSuccess(@RequestParam Integer taskId,@RequestParam Integer tnId){
+        return iexJwScheduleTaskService.getAdjustmentInfo(taskId,tnId);
+    }
+
     /**
      * 修改排课任务
      * @return
@@ -268,6 +394,7 @@ public class ScheduleTaskController {
         JwScheduleTask jwScheduleTask = (JwScheduleTask) jwScheduleTaskService.queryOne(map);
         return jwScheduleTask==null?new JwScheduleTask():jwScheduleTask;
     }
+
 
     @ResponseBody
     @RequestMapping("/queryGradeInfo")
@@ -575,21 +702,35 @@ public class ScheduleTaskController {
     @ResponseBody
     public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) throws IOException, ParseException {
         Map<String,Object> paramsMap  = null;
+        CourseResultView courseResultView = null;
+        int teacherId,classId;
         if (param!=null) {
             try {
                 paramsMap = JSON.parseObject(param);
             } catch (Exception e) {
-                paramsMap = Maps.newHashMap();
+                logger.info("request参数为空");
             }
         }
         Map resultMap = new HashMap();
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         if (Constant.TABLE_TYPE_ALL.equals(type)){
-            resultMap.put("result",iexJwScheduleTaskService.getAllCourseResult(taskId, tnId));
+//            iexJwScheduleTaskService.getAllCourseResult(taskId, tnId);
+            resultMap.put("result",syllabusService.getAllSyllabus(tnId, taskId));
             return resultMap;
         }
-        Map<String, Object> courseTimeConfig = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
-        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap,courseTimeConfig);
+        switch (type){
+            case Constant.TABLE_TYPE_TEACHER:
+                teacherId = Integer.valueOf(paramsMap.get("teacherId").toString());
+                courseResultView = syllabusService.getTeacherSyllabus(tnId,taskId,teacherId);
+                break;
+            case Constant.TABLE_TYPE_CLASS:
+                classId = Integer.valueOf(paramsMap.get("classId").toString());
+                courseResultView = syllabusService.getClassSyllabus(tnId,taskId,classId);
+                break;
+            default:
+                break;
+        }
+//        CourseResultView courseResultView = syllabusService.get(type,taskId, tnId,paramsMap,courseTimeConfig);
 
 
         resultMap.put("result",courseResultView);
@@ -635,8 +776,8 @@ public class ScheduleTaskController {
                     LinkedHashMap<String, Object> map = list.get(i);
                     courseParam = new HashMap<>();
                     sheetNames[i] = map.get("teacher_name").toString();
-                    courseParam.put("teacherId", map.get("id"));
-                    CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(Constant.TABLE_TYPE_TEACHER, taskId, tnId, courseParam,courseTimeConfig);
+                    int teacherId = Integer.valueOf(map.get("id").toString());
+                    CourseResultView courseResultView = syllabusService.getTeacherSyllabus(tnId,taskId,teacherId);
                     courseLists.add(courseResultView.getWeek());
                 }
 
@@ -654,8 +795,8 @@ public class ScheduleTaskController {
                     LinkedHashMap<String, Object> map = classList.get(i);
                     courseParam = new HashMap<>();
                     sheetNames[i] = map.get("class_name").toString();
-                    courseParam.put("classId", map.get("id"));
-                    CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(Constant.TABLE_TYPE_CLASS, taskId, tnId, courseParam,courseTimeConfig);
+                    int classId = Integer.valueOf(map.get("id").toString());
+                    CourseResultView courseResultView = syllabusService.getClassSyllabus(tnId,taskId,classId);
                     courseLists.add(courseResultView.getWeek());
                 }
                 workbook = ExcelUtils.createWorkBook(strings, sheetNames, courseLists);
@@ -699,6 +840,7 @@ public class ScheduleTaskController {
     }
 
 
+
     private static String getWeek(int i){
         switch (i){
             case 0:
@@ -718,5 +860,25 @@ public class ScheduleTaskController {
             default:
                 return null;
         }
+    }
+
+    private static int[] getIntCoord(String s){
+        try {
+            return JSON.parseObject(s, int[].class);
+        }catch (Exception e){
+            throw new BizException("error","格式化坐标失败!");
+        }
+    }
+
+    @RequestMapping("getConfigRooms")
+    @ResponseBody
+    public Map<String,Object> getConfigRooms(@RequestParam("taskId")String taskId){
+        return iexJwScheduleTaskService.getConfigRooms(taskId);
+    }
+
+    @RequestMapping("updateClassRoom")
+    @ResponseBody
+    public Map<String,Object> updateClassRoom(@RequestParam("classRoomId")String classRoomId,@RequestParam("scheduleNumber")int scheduleNumber){
+        return iexJwScheduleTaskService.updateClassRoom(classRoomId,scheduleNumber);
     }
 }

@@ -38,12 +38,13 @@ public class MergeClassImpl implements IMergeClass {
     }
 
     @Override
-    public List<MergeClassInfoDto> selectMergeInfo(String tnId,String courseId,String taskId) {
+    public List<MergeClassInfoDto> selectMergeInfo(String tnId,String courseId,String classType,String taskId) {
 
         Map<String,String> paramMap = Maps.newHashMap();
         paramMap.put("tnId",tnId);
         paramMap.put("taskId",taskId);
         paramMap.put("courseId",courseId);
+        paramMap.put("classType",classType);
         List<MergeClassInfoDto> dtos = mergeClassDAO.selectMergeInfo(paramMap);
 
         for (MergeClassInfoDto dto : dtos){
@@ -56,10 +57,9 @@ public class MergeClassImpl implements IMergeClass {
                         dto.getClassType()==1?Constant.CLASS_ADM:Constant.CLASS_EDU,
                         Integer.valueOf(tnId))
                 );
-                paramMap.put("searchKey","id");
-                paramMap.put("searchValue",classId);
+                paramMap.put("id",classId);
 
-                List<Map<String,Object>> maps = jwCourseGapRuleDAO.queryClassList(paramMap);
+                List<Map<String,Object>> maps = jwCourseGapRuleDAO.queryClassById(paramMap);
                 classNames = classNames + "、" + maps.get(0).get("name");
             }
             if (classNames.length()>0) {

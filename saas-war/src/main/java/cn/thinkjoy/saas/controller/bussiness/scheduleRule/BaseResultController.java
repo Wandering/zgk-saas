@@ -69,7 +69,7 @@ public class BaseResultController {
         param.put("teacher_grade",GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())));
         param.put("teacher_major_type",teacherCourse);
         List<LinkedHashMap<String,Object>> rtnList = teacherService.getScheduleTeacherByTnIdAndTaskId(tnId,taskId,param);
-        if (rtnList == null) {
+        if (rtnList == null || rtnList.size() == 0) {
             throw new BizException("error","当前科目所查教师为空");
         }
         return teacherBaseDtotoMap(rtnList);
