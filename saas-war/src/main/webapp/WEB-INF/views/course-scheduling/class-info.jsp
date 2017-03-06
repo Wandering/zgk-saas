@@ -66,61 +66,13 @@
                         </ul>
                         <div class="base-content">
                             <div class="title-2">
-                                <span class="txt-t"></span>
+                                <span class="txt-t">高二年级  教室信息</span>
                             </div>
-                            <table id="teacher-table" class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="center" width="80px">序号</th>
-                                        <th class="center" width="200px">教师姓名</th>
-                                        <th class="center" width="200px">所授课程</th>
-                                        <th class="center" width="100px">最大带班数</th>
-                                        <th class="center">所带班级</th>
-                                        <th class="center" width="120px">是否排课</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="teacher-list" class="check-template">
-                                    <%--<tr>--%>
-                                        <%--<td class="center">--%>
-                                            <%--<label>--%>
-                                                <%--<input type="checkbox" class="ace" />--%>
-                                                <%--<span class="lbl"></span>--%>
-                                            <%--</label>--%>
-                                        <%--</td>--%>
-                                        <%--<td class="center">1</td>--%>
-                                        <%--<td class="center">黎明</td>--%>
-                                        <%--<td class="center">语文</td>--%>
-                                        <%--<td class="center">2</td>--%>
-                                        <%--<td class="center">高一二班</td>--%>
-                                    <%--</tr>--%>
-                                    <%--<tr>--%>
-                                        <%--<td class="center">--%>
-                                            <%--<label>--%>
-                                                <%--<input type="checkbox" class="ace" />--%>
-                                                <%--<span class="lbl"></span>--%>
-                                            <%--</label>--%>
-                                        <%--</td>--%>
-                                        <%--<td class="center">2</td>--%>
-                                        <%--<td class="center">张华</td>--%>
-                                        <%--<td class="center">物理</td>--%>
-                                        <%--<td class="center">2</td>--%>
-                                        <%--<td class="center">高一三班</td>--%>
-                                    <%--</tr>--%>
-                                    <%--<tr>--%>
-                                        <%--<td class="center">--%>
-                                            <%--<label>--%>
-                                                <%--<input type="checkbox" class="ace" />--%>
-                                                <%--<span class="lbl"></span>--%>
-                                            <%--</label>--%>
-                                        <%--</td>--%>
-                                        <%--<td class="center">3</td>--%>
-                                        <%--<td class="center">张华</td>--%>
-                                        <%--<td class="center">化学</td>--%>
-                                        <%--<td class="center">3</td>--%>
-                                        <%--<td class="center">高一四班</td>--%>
-                                    <%--</tr>--%>
-                                </tbody>
-                            </table>
+                            <div class="scheduling-course">
+                                <p>高二年级行政班数量：16</p>
+                                <label for="optional-class"> <em>*</em>可排课教室数量 <input type="text" id="optional-class"> </label>
+                                <p class="warm-tip">提醒：可排教室数量不能小于行政班的班级数量，请修改可排课教室数量。</p>
+                            </div>
                             <button class="btn-save-base" id="save-teacher" style="margin-top: 20px">保存</button>
                         </div>
                     </div>
@@ -129,24 +81,6 @@
         </div>
     </div>
 </div>
-<script id="teacher-template" type="text/x-handlebars-template">
-    {{#each bizData}}
-    <tr>
-        <td class="center">{{addOne @index}}</td>
-        <td class="center">{{teacherName}}</td>
-        <td class="center">{{courseName}}</td>
-        <td class="center">{{classNum}}</td>
-        <td class="center">{{classes}}</td>
-        <td>
-            {{#if isAttend}}
-                <input type="checkbox" id="pai-{{@index}}" style="margin:0 10px"  tId="{{id}}" value="1" checked><label for="pai-{{@index}}">对其排课</label>
-            {{else}}
-                <input type="checkbox" id="pai-{{@index}}" style="margin:0 10px"  tId="{{id}}" value="1"><label for="pai-{{@index}}">对其排课</label>
-            {{/if}}
-        </td>
-    </tr>
-    {{/each}}
-</script>
 
 
 
