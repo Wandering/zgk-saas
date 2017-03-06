@@ -123,6 +123,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
     @Autowired
     EXIClassRoomService exiClassRoomService;
+
+    @Autowired
+    IClassRoomsDAO iClassRoomsDAO;
 //    @Autowired
 //    private
 
@@ -1931,6 +1934,19 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         int sum=classRooms.get(0).getExecutiveNumber()+classRooms.get(0).getDayNumber();
         resultMap.put("admNumber",admNumber);
         resultMap.put("sum",sum);
+        resultMap.put("classRoomId",classRooms.get(0).getId());
+        return resultMap;
+    }
+
+    @Override
+    public Map<String,Object> updateClassRoom(String classRoomId,int scheduleNumber){
+        Map<String,Object> update=new HashMap<>();
+        update.put("scheduleNumber",scheduleNumber);
+        Map<String,Object> condition=new HashMap<>();
+        condition.put("id",classRoomId);
+        iClassRoomsDAO.updateByCondition(update,condition);
+        Map<String,Object> resultMap=new HashMap<>();
+        resultMap.put("msg","success");
         return resultMap;
     }
 

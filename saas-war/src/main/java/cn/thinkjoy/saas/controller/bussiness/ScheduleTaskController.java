@@ -876,7 +876,9 @@ public class ScheduleTaskController {
         return iexJwScheduleTaskService.getConfigRooms(taskId);
     }
 
-    public Map<String,Object> updateClassRoom(){
-        return null;
+    @RequestMapping("updateClassRoom")
+    @ResponseBody
+    public Map<String,Object> updateClassRoom(@RequestParam("classRoomId")String classRoomId,@RequestParam("scheduleNumber")int scheduleNumber){
+        return iexJwScheduleTaskService.updateClassRoom(classRoomId,scheduleNumber);
     }
 }
