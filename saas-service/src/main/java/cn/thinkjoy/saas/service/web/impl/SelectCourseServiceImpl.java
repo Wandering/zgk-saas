@@ -428,7 +428,7 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         // 组装未选课学生集合
         List<BaseStuDto> stuDtos = Lists.newArrayList();
         for(Map map : tenantCustom){
-            if(!selectedStuMap.containsKey(map.get("student_no"))){
+            if(!selectedStuMap.containsKey(map.get("student_no").toString())){
                 BaseStuDto stuDto = new BaseStuDto();
                 stuDto.setClassName(map.get("student_class").toString());
                 stuDto.setStuName(map.get("student_name").toString());
