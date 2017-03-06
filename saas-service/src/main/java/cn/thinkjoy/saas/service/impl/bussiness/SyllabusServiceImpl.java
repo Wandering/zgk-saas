@@ -134,7 +134,15 @@ public class SyllabusServiceImpl implements ISyllabusService {
     @Override
     public boolean teacherExchange(int tnId,int taskId,int teacherId,int[] source, int[] target) {
         List<JwCourseTable> sourceList = this.getSyllabusByCoordinate(tnId,taskId,teacherId,source,Constant.TABLE_TYPE_TEACHER);
-        List<JwCourseTable> targetList = this.getSyllabusByCoordinate(tnId,taskId,teacherId,target,Constant.TABLE_TYPE_TEACHER);
+        if (sourceList.size() == 0){
+            throw new BizException("error","原坐标内容不能为空!");
+        }
+//        自己不能和自己调课
+//        List<JwCourseTable> targetList = this.getSyllabusByCoordinate(tnId,taskId,teacherId,target,Constant.TABLE_TYPE_TEACHER);
+        List<JwCourseTable> targetList = new ArrayList<>();
+        for (JwCourseTable jwCourseTable : sourceList){
+            targetList.addAll(this.getSyllabusByCoordinate(tnId,taskId,jwCourseTable.getClassId(),target,Constant.TABLE_TYPE_CLASS));
+        }
         Map<String,Object> timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId,taskId);
         int y = (int) timeConfigMap.get("count");
         return updateExchange(sourceList,targetList) && updateExchange(y,tnId,taskId,sourceList,targetList);
