@@ -18,6 +18,8 @@ public interface IJwCourseGapRuleDAO extends IBaseDAO<JwCourseGapRule>{
 
     List<Map<String, Object>> queryClassList(Map<String, String> map);
 
+    List<Map<String, Object>> queryClassById(Map<String, String> map);
+
     List<Map<String, Object>> queryCourseList(Map<String, Integer> map);
 
 }
