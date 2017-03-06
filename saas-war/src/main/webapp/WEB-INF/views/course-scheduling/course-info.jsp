@@ -60,6 +60,9 @@
                             <li>
                                 <a href="/teacher-info">教师信息</a>
                             </li>
+                            <li>
+                                <a href="/class-info">教室信息</a>
+                            </li>
                         </ul>
                         <div class="base-content">
                             <div class="title-2">
