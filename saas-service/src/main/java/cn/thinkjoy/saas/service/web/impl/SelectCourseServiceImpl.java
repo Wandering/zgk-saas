@@ -292,8 +292,15 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         map.put("status",0);
         map.put("stuNo",studentNo);
         map.put("majorList",majorListId);
-        map.put("taskId",getTaskId(tnId,gradeCode));
+        String taskId=getTaskId(tnId, gradeCode);
+        map.put("taskId",taskId);
         map.put("type",0);
+        //判断是否已有
+        if (hasSelectCourse(taskId,studentNo)!=null){
+            resultMap.put("result",false);
+            resultMap.put("msg","学生已选课程");
+            return resultMap;
+        }
         iSelectCourseDAO.insertList(map);
         //【2】保存校本课程
         if (StringUtils.isNotBlank(schoolCourse)) {
