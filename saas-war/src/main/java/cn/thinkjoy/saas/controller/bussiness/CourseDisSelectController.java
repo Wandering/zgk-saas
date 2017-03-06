@@ -53,12 +53,12 @@ public class CourseDisSelectController
 
     @RequestMapping(value = "/addOrUpdateRule/{taskId}/{type}", method = RequestMethod.POST)
     public int addOrUpdateRule(@PathVariable String taskId, @PathVariable String type,
-        @RequestParam(value = "ids", required = true) String ids, JwBaseRule jwBaseRule)
+        @RequestParam(value = "ids", required = true) String ids, JwBaseRule jwBaseRule,@RequestParam(value = "classType", required = false)String classType)
     {
         int result = 0;
         try
         {
-            List<Map<String, String>> ruleList = getRuleList(taskId, type, ids, jwBaseRule);
+            List<Map<String, String>> ruleList = getRuleList(taskId, type, ids, jwBaseRule,classType);
             if (ruleList.size() > 0)
             {
                 for (Map<String, String> map : ruleList)
@@ -84,13 +84,13 @@ public class CourseDisSelectController
         return result;
     }
 
-    private List<Map<String, String>> getRuleList(String taskId, String type, String ids, JwBaseRule jwBaseRule)
+    private List<Map<String, String>> getRuleList(String taskId, String type, String ids, JwBaseRule jwBaseRule,String classType)
     {
         String[] idArray = ids.split(",");
         List<Map<String, String>> ruleList = new ArrayList<>();
         for (String id : idArray)
         {
-            Map<String, String> rule = getDomainByType(taskId, type, id, jwBaseRule);
+            Map<String, String> rule = getDomainByType(taskId, type, id, jwBaseRule,classType);
             ruleList.add(rule);
         }
         return ruleList;
@@ -118,14 +118,18 @@ public class CourseDisSelectController
         return service;
     }
 
-    private Map<String, String> getDomainByType(String taskId, String type, String id, JwBaseRule jwBaseRule)
+    private Map<String, String> getDomainByType(String taskId, String type, String id, JwBaseRule jwBaseRule,String classType)
     {
         Map<String, String> rule = new LinkedHashMap<>();
         if ("class".equals(type))
         {
             rule.put("classId", id);
-            rule.put("classType","1");
-
+            if (classType.equals("行政班"))
+                rule.put("classType","1");
+            else if (classType.equals("教学班"))
+                rule.put("classType","0");
+            else
+                throw new BizException("1100222", "classType参数有误!");
         }
         else if ("course".equals(type))
         {

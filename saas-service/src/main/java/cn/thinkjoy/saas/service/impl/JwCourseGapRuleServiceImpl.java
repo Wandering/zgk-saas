@@ -19,6 +19,7 @@ import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,8 +54,11 @@ public class JwCourseGapRuleServiceImpl extends AbstractPageService<IBaseDAO<JwC
         map.put("tableName",ParamsUtils.combinationTableName(Constant.CLASS_ADM,tnId));
         map.put("searchKey","class_grade");
         map.put("searchValue",Constant.GRADES[Integer.valueOf(grade-1)]);
-
-        return jwCourseGapRuleDAO.queryClassList(map);
+        List<Map<String, Object>> resultMap=new ArrayList<>();
+        resultMap=jwCourseGapRuleDAO.queryClassList(map);
+        map.put("tableName",ParamsUtils.combinationTableName(Constant.CLASS_EDU,tnId));
+        resultMap.addAll(jwCourseGapRuleDAO.queryClassList(map));
+        return resultMap;
     }
 
     @Override

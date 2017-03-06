@@ -260,27 +260,30 @@ public class EXScheduleBaseInfoServiceImpl implements IEXScheduleBaseInfoService
 //    }
 
     @Override
-    public List<Map<String,Object>> getClassBaseDtosByCourse(int tnId,int grade,String course){
+    public List<Map<String,Object>> getClassBaseDtosByCourse(int tnId,int grade,String course,String classType){
 
         List<Map<String,Object>> returnMaps = Lists.newArrayList();
 
         Map<String,String> paramMap = Maps.newHashMap();
-        paramMap.put("tableName", ParamsUtils.combinationTableName(Constant.CLASS_EDU,tnId));
         paramMap.put("searchKey","class_grade");
         paramMap.put("searchValue",Constant.GRADES[Integer.valueOf(grade-1)]);
-        paramMap.put("classType","0");
+        //教学班
+        if (classType.equals("0")) {
+            paramMap.put("tableName", ParamsUtils.combinationTableName(Constant.CLASS_EDU, tnId));
+            paramMap.put("classType", "0");
 
-        List<Map<String,Object>> maps = jwCourseGapRuleDAO.queryClassList(paramMap);
+            List<Map<String, Object>> maps = jwCourseGapRuleDAO.queryClassList(paramMap);
 
-        // 根据课程名称和年纪查询班级信息
-        for(Map map : maps){
-            if(map.get("course").toString().indexOf(course) != -1){
-                returnMaps.add(map);
+            // 根据课程名称和年纪查询班级信息
+            for (Map map : maps) {
+                if (map.get("course").toString().indexOf(course) != -1) {
+                    returnMaps.add(map);
+                }
             }
         }
 
-        // 不存在则查询行政班级
-        if(returnMaps.size() == 0){
+        // 行政班级
+        if(classType.equals("1")){
             paramMap.put("classType","1");
             paramMap.put("tableName", ParamsUtils.combinationTableName(Constant.CLASS_ADM,tnId));
             returnMaps = jwCourseGapRuleDAO.queryClassList(paramMap);
