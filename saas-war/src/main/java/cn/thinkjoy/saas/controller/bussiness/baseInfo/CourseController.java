@@ -7,6 +7,7 @@ import cn.thinkjoy.saas.domain.bussiness.CourseManageMapperVo;
 import cn.thinkjoy.saas.service.ICourseManageService;
 import cn.thinkjoy.saas.service.bussiness.IEXCourseBaseInfoService;
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -124,11 +125,14 @@ public class CourseController {
      */
     @RequestMapping(value = "/get/course/{tnId}/{gradeName}",method = RequestMethod.GET)
     @ResponseBody
-    public Map getCourseManager(@PathVariable Integer tnId,@PathVariable String gradeName) {
+    public Map getCourseManager(@PathVariable Integer tnId,@PathVariable String gradeName,@RequestParam(value = "type",required = false)String type) {
         Map map = new HashMap();
         Map parMap=new HashMap();
         parMap.put("tnId",tnId);
         parMap.put("gradeName",gradeName);
+        if (StringUtils.isNotBlank(type)&&type.equals("2")){
+            parMap.put("courseType",5);
+        }
 
         map.put("courses", iCourseManageService.selectCourseList(parMap));
         return map;
