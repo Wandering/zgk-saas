@@ -297,15 +297,15 @@ var HashHandle = {
                     // 1. 没点过没排课  2.排课失败  3.排课中 4.排课成功
                     case 1:
                         console.log("点击排课");
-                        //$('.btn-one-key').removeClass('dh');
+                        $('.btn-one-key').removeClass('dh');
 
 
                         ///////////////////////////////////
-                        $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
-                        $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
-                        ClassRoomTableIns.getAllQueryCourse();
-                        ClassRoomTableIns.getQueryCourse();
-                        ClassRoomTableIns.getQueryClass();
+                        //$('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
+                        //$('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
+                        //ClassRoomTableIns.getAllQueryCourse();
+                        //ClassRoomTableIns.getQueryCourse();
+                        //ClassRoomTableIns.getQueryClass();
                         ///////////////////////////////////
 
                         break;
@@ -340,11 +340,11 @@ var HashHandle = {
 
 
                         ///////////////////////////////////
-                        $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
-                        $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
-                        ClassRoomTableIns.getAllQueryCourse();
-                        ClassRoomTableIns.getQueryCourse();
-                        ClassRoomTableIns.getQueryClass();
+                        //$('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
+                        //$('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
+                        //ClassRoomTableIns.getAllQueryCourse();
+                        //ClassRoomTableIns.getQueryCourse();
+                        //ClassRoomTableIns.getQueryClass();
                         ///////////////////////////////////
 
                         break;
@@ -722,7 +722,7 @@ $(function () {
     // 遍历坐标
     function courseTableEvent(obj){
         $('body').on('click', '.'+ obj +'CourseTable', function () {
-            if ($(this).attr('flag') == undefined) {
+            if ($(this).attr('flag') == undefined && $(this).text()!="") {
                 HashHandle.posX = $(this).attr('x');
                 HashHandle.posY = $(this).attr('y');
                 var selectedV = $('#select-'+obj).children('option:selected').val();
@@ -739,10 +739,10 @@ $(function () {
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').text('');
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
                 HashHandle.exchange(obj,HashHandle.posX, HashHandle.posY, selectedV, HashHandle.tarPosX, HashHandle.tarPosY);
-                var originalTxt = $('.classCourseTable[x="'+ HashHandle.posX +'"][y="'+ HashHandle.posY +'"]').text();
-                var newsTxt = $('.classCourseTable[x="'+ HashHandle.tarPosX +'"][y="'+ HashHandle.tarPosY +'"]').text();
-                $('.classCourseTable[x="'+ HashHandle.posX +'"][y="'+ HashHandle.posY +'"]').text(newsTxt);
-                $('.classCourseTable[x="'+ HashHandle.tarPosX +'"][y="'+ HashHandle.tarPosY +'"]').text(originalTxt);
+                var originalTxt = $('.'+ obj +'CourseTable[x="'+ HashHandle.posX +'"][y="'+ HashHandle.posY +'"]').text();
+                var newsTxt = $('.'+ obj +'CourseTable[x="'+ HashHandle.tarPosX +'"][y="'+ HashHandle.tarPosY +'"]').text();
+                $('.'+ obj +'CourseTable[x="'+ HashHandle.posX +'"][y="'+ HashHandle.posY +'"]').text(newsTxt);
+                $('.'+ obj +'CourseTable[x="'+ HashHandle.tarPosX +'"][y="'+ HashHandle.tarPosY +'"]').text(originalTxt);
             }
         });
     }
