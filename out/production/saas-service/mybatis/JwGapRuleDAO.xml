@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IJwGapRuleDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+    <sql id="Base_Column_List">
+        id as id,
+        seg1_2 as seg12,
+        seg2_3 as seg23,
+        seg3_4 as seg34,
+        seg4_5 as seg45,
+        seg5_6 as seg56,
+        seg6_7 as seg67,
+        seg7_8 as seg78,
+        task_id as taskId,
+        class_id as classId,
+        course_id as courseId
+    </sql>
+    <insert id="insert" parameterType="JwGapRule">
+        INSERT INTO saas_jw_gap_rule (
+        seg1_2,
+        seg2_3,
+        seg3_4,
+        seg4_5,
+        seg5_6,
+        seg6_7,
+        seg7_8,
+        task_id,
+        class_id,
+        course_id
+        ) VALUES (
+        #{seg12},
+        #{seg23},
+        #{seg34},
+        #{seg45},
+        #{seg56},
+        #{seg67},
+        #{seg78},
+        #{taskId},
+        #{classId},
+        #{courseId}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="JwGapRule">
+        UPDATE saas_jw_gap_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="seg12!=null">
+                seg1_2 = #{seg12},
+            </if>
+            <if test="seg23!=null">
+                seg2_3 = #{seg23},
+            </if>
+            <if test="seg34!=null">
+                seg3_4 = #{seg34},
+            </if>
+            <if test="seg45!=null">
+                seg4_5 = #{seg45},
+            </if>
+            <if test="seg56!=null">
+                seg5_6 = #{seg56},
+            </if>
+            <if test="seg67!=null">
+                seg6_7 = #{seg67},
+            </if>
+            <if test="seg78!=null">
+                seg7_8 = #{seg78},
+            </if>
+            <if test="taskId!=null">
+                task_id = #{taskId},
+            </if>
+            <if test="classId!=null">
+                class_id = #{classId},
+            </if>
+            <if test="courseId!=null">
+                course_id = #{courseId},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_jw_gap_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.seg12!=null">
+                seg1_2 = #{map.seg12},
+            </if>
+            <if test="map.seg23!=null">
+                seg2_3 = #{map.seg23},
+            </if>
+            <if test="map.seg34!=null">
+                seg3_4 = #{map.seg34},
+            </if>
+            <if test="map.seg45!=null">
+                seg4_5 = #{map.seg45},
+            </if>
+            <if test="map.seg56!=null">
+                seg5_6 = #{map.seg56},
+            </if>
+            <if test="map.seg67!=null">
+                seg6_7 = #{map.seg67},
+            </if>
+            <if test="map.seg78!=null">
+                seg7_8 = #{map.seg78},
+            </if>
+            <if test="map.taskId!=null">
+                task_id = #{map.taskId},
+            </if>
+            <if test="map.classId!=null">
+                class_id = #{map.classId},
+            </if>
+            <if test="map.courseId!=null">
+                course_id = #{map.courseId},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_jw_gap_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.seg12!=null">
+                seg1_2 = #{update.seg12},
+            </if>
+            <if test="update.seg23!=null">
+                seg2_3 = #{update.seg23},
+            </if>
+            <if test="update.seg34!=null">
+                seg3_4 = #{update.seg34},
+            </if>
+            <if test="update.seg45!=null">
+                seg4_5 = #{update.seg45},
+            </if>
+            <if test="update.seg56!=null">
+                seg5_6 = #{update.seg56},
+            </if>
+            <if test="update.seg67!=null">
+                seg6_7 = #{update.seg67},
+            </if>
+            <if test="update.seg78!=null">
+                seg7_8 = #{update.seg78},
+            </if>
+            <if test="update.taskId!=null">
+                task_id = #{update.taskId},
+            </if>
+            <if test="update.classId!=null">
+                class_id = #{update.classId},
+            </if>
+            <if test="update.courseId!=null">
+                course_id = #{update.courseId},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.seg12!=null">
+                AND seg1_2 = #{condition.seg12}
+            </if>
+            <if test="condition.seg23!=null">
+                AND seg2_3 = #{condition.seg23}
+            </if>
+            <if test="condition.seg34!=null">
+                AND seg3_4 = #{condition.seg34}
+            </if>
+            <if test="condition.seg45!=null">
+                AND seg4_5 = #{condition.seg45}
+            </if>
+            <if test="condition.seg56!=null">
+                AND seg5_6 = #{condition.seg56}
+            </if>
+            <if test="condition.seg67!=null">
+                AND seg6_7 = #{condition.seg67}
+            </if>
+            <if test="condition.seg78!=null">
+                AND seg7_8 = #{condition.seg78}
+            </if>
+            <if test="condition.taskId!=null">
+                AND task_id = #{condition.taskId}
+            </if>
+            <if test="condition.classId!=null">
+                AND class_id = #{condition.classId}
+            </if>
+            <if test="condition.courseId!=null">
+                AND course_id = #{condition.courseId}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_jw_gap_rule (
+                seg1_2,
+                seg2_3,
+                seg3_4,
+                seg4_5,
+                seg5_6,
+                seg6_7,
+                seg7_8,
+                task_id,
+                class_id,
+                course_id
+        ) VALUES (
+                    #{map.seg12},
+                    #{map.seg23},
+                    #{map.seg34},
+                    #{map.seg45},
+                    #{map.seg56},
+                    #{map.seg67},
+                    #{map.seg78},
+                    #{map.taskId},
+                    #{map.classId},
+                    #{map.courseId}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="JwGapRule">
+        UPDATE saas_jw_gap_rule
+        <trim prefix="SET" suffixOverrides=",">
+            seg1_2 = #{seg12},
+            seg2_3 = #{seg23},
+            seg3_4 = #{seg34},
+            seg4_5 = #{seg45},
+            seg5_6 = #{seg56},
+            seg6_7 = #{seg67},
+            seg7_8 = #{seg78},
+            task_id = #{taskId},
+            class_id = #{classId},
+            course_id = #{courseId},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_jw_gap_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_jw_gap_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="seg12!=null">
+                AND seg1_2 = #{seg12}
+            </if>
+            <if test="seg23!=null">
+                AND seg2_3 = #{seg23}
+            </if>
+            <if test="seg34!=null">
+                AND seg3_4 = #{seg34}
+            </if>
+            <if test="seg45!=null">
+                AND seg4_5 = #{seg45}
+            </if>
+            <if test="seg56!=null">
+                AND seg5_6 = #{seg56}
+            </if>
+            <if test="seg67!=null">
+                AND seg6_7 = #{seg67}
+            </if>
+            <if test="seg78!=null">
+                AND seg7_8 = #{seg78}
+            </if>
+            <if test="taskId!=null">
+                AND task_id = #{taskId}
+            </if>
+            <if test="classId!=null">
+                AND class_id = #{classId}
+            </if>
+            <if test="courseId!=null">
+                AND course_id = #{courseId}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_jw_gap_rule WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="JwGapRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_gap_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="JwGapRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_gap_rule WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="JwGapRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_gap_rule WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="JwGapRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_gap_rule
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="JwGapRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_gap_rule
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.seg12!=null">
+                ${condition.groupOp}   seg1_2  ${condition.seg12.op}  #{condition.seg12.data}
+            </if>
+            <if test="condition.seg23!=null">
+                ${condition.groupOp}   seg2_3  ${condition.seg23.op}  #{condition.seg23.data}
+            </if>
+            <if test="condition.seg34!=null">
+                ${condition.groupOp}   seg3_4  ${condition.seg34.op}  #{condition.seg34.data}
+            </if>
+            <if test="condition.seg45!=null">
+                ${condition.groupOp}   seg4_5  ${condition.seg45.op}  #{condition.seg45.data}
+            </if>
+            <if test="condition.seg56!=null">
+                ${condition.groupOp}   seg5_6  ${condition.seg56.op}  #{condition.seg56.data}
+            </if>
+            <if test="condition.seg67!=null">
+                ${condition.groupOp}   seg6_7  ${condition.seg67.op}  #{condition.seg67.data}
+            </if>
+            <if test="condition.seg78!=null">
+                ${condition.groupOp}   seg7_8  ${condition.seg78.op}  #{condition.seg78.data}
+            </if>
+            <if test="condition.taskId!=null">
+                ${condition.groupOp}   task_id  ${condition.taskId.op}  #{condition.taskId.data}
+            </if>
+            <if test="condition.classId!=null">
+                ${condition.groupOp}   class_id  ${condition.classId.op}  #{condition.classId.data}
+            </if>
+            <if test="condition.courseId!=null">
+                ${condition.groupOp}   course_id  ${condition.courseId.op}  #{condition.courseId.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="JwGapRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_gap_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
+            </if>
+            <if test="condition.seg12!=null">
+                AND seg1_2 like CONCAT('%', #{condition.seg12} , '%')
+            </if>
+            <if test="condition.seg23!=null">
+                AND seg2_3 like CONCAT('%', #{condition.seg23} , '%')
+            </if>
+            <if test="condition.seg34!=null">
+                AND seg3_4 like CONCAT('%', #{condition.seg34} , '%')
+            </if>
+            <if test="condition.seg45!=null">
+                AND seg4_5 like CONCAT('%', #{condition.seg45} , '%')
+            </if>
+            <if test="condition.seg56!=null">
+                AND seg5_6 like CONCAT('%', #{condition.seg56} , '%')
+            </if>
+            <if test="condition.seg67!=null">
+                AND seg6_7 like CONCAT('%', #{condition.seg67} , '%')
+            </if>
+            <if test="condition.seg78!=null">
+                AND seg7_8 like CONCAT('%', #{condition.seg78} , '%')
+            </if>
+            <if test="condition.taskId!=null">
+                AND task_id like CONCAT('%', #{condition.taskId} , '%')
+            </if>
+            <if test="condition.classId!=null">
+                AND class_id like CONCAT('%', #{condition.classId} , '%')
+            </if>
+            <if test="condition.courseId!=null">
+                AND course_id like CONCAT('%', #{condition.courseId} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="JwGapRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_gap_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.seg12!=null">
+                AND seg1_2 = #{condition.seg12}
+            </if>
+            <if test="condition.seg23!=null">
+                AND seg2_3 = #{condition.seg23}
+            </if>
+            <if test="condition.seg34!=null">
+                AND seg3_4 = #{condition.seg34}
+            </if>
+            <if test="condition.seg45!=null">
+                AND seg4_5 = #{condition.seg45}
+            </if>
+            <if test="condition.seg56!=null">
+                AND seg5_6 = #{condition.seg56}
+            </if>
+            <if test="condition.seg67!=null">
+                AND seg6_7 = #{condition.seg67}
+            </if>
+            <if test="condition.seg78!=null">
+                AND seg7_8 = #{condition.seg78}
+            </if>
+            <if test="condition.taskId!=null">
+                AND task_id = #{condition.taskId}
+            </if>
+            <if test="condition.classId!=null">
+                AND class_id = #{condition.classId}
+            </if>
+            <if test="condition.courseId!=null">
+                AND course_id = #{condition.courseId}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="JwGapRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_gap_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.seg12!=null">
+                AND seg1_2 = #{condition.seg12}
+            </if>
+            <if test="condition.seg23!=null">
+                AND seg2_3 = #{condition.seg23}
+            </if>
+            <if test="condition.seg34!=null">
+                AND seg3_4 = #{condition.seg34}
+            </if>
+            <if test="condition.seg45!=null">
+                AND seg4_5 = #{condition.seg45}
+            </if>
+            <if test="condition.seg56!=null">
+                AND seg5_6 = #{condition.seg56}
+            </if>
+            <if test="condition.seg67!=null">
+                AND seg6_7 = #{condition.seg67}
+            </if>
+            <if test="condition.seg78!=null">
+                AND seg7_8 = #{condition.seg78}
+            </if>
+            <if test="condition.taskId!=null">
+                AND task_id = #{condition.taskId}
+            </if>
+            <if test="condition.classId!=null">
+                AND class_id = #{condition.classId}
+            </if>
+            <if test="condition.courseId!=null">
+                AND course_id = #{condition.courseId}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_jw_gap_rule
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="seg12!=null">
+               ${groupOp} seg1_2 ${seg12.op}  #{seg12.data}
+           </if>
+           <if test="seg23!=null">
+               ${groupOp} seg2_3 ${seg23.op}  #{seg23.data}
+           </if>
+           <if test="seg34!=null">
+               ${groupOp} seg3_4 ${seg34.op}  #{seg34.data}
+           </if>
+           <if test="seg45!=null">
+               ${groupOp} seg4_5 ${seg45.op}  #{seg45.data}
+           </if>
+           <if test="seg56!=null">
+               ${groupOp} seg5_6 ${seg56.op}  #{seg56.data}
+           </if>
+           <if test="seg67!=null">
+               ${groupOp} seg6_7 ${seg67.op}  #{seg67.data}
+           </if>
+           <if test="seg78!=null">
+               ${groupOp} seg7_8 ${seg78.op}  #{seg78.data}
+           </if>
+           <if test="taskId!=null">
+               ${groupOp} task_id ${taskId.op}  #{taskId.data}
+           </if>
+           <if test="classId!=null">
+               ${groupOp} class_id ${classId.op}  #{classId.data}
+           </if>
+           <if test="courseId!=null">
+               ${groupOp} course_id ${courseId.op}  #{courseId.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_jw_gap_rule
+    </select>
+
+</mapper>
+

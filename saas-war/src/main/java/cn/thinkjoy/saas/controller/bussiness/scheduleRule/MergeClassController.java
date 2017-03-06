@@ -58,7 +58,7 @@ public class MergeClassController {
                                            @RequestParam("taskId")String taskId,
                                            @RequestParam("grade")String grade){
         Map<String,Object> resultMap=new HashMap<>();
-        resultMap.put("mergeClassInfoList",iMergeClass.selectMergeInfo(tnId,null,taskId));
+        resultMap.put("mergeClassInfoList",iMergeClass.selectMergeInfo(tnId,null,null,taskId));
         return resultMap;
     }
 
@@ -78,15 +78,16 @@ public class MergeClassController {
                                  @RequestParam("taskId") String taskId,
                                  @RequestParam("courseId") String courseId,
                                  @RequestParam("courseName") String courseName,
-                                 @RequestParam("grade") String grade){
+                                 @RequestParam("grade") String grade,
+                                 @RequestParam("classType")String classType){
 
         List<Map<String,Object>> maps = exScheduleBaseInfoService.getClassBaseDtosByCourse(
                 Integer.valueOf(tnId),
                 Integer.valueOf(grade),
-                courseName
+                courseName,classType
         );
 
-        List<MergeClassInfoDto> mergeClassInfoDtoList = iMergeClass.selectMergeInfo(tnId,courseId,taskId);
+        List<MergeClassInfoDto> mergeClassInfoDtoList = iMergeClass.selectMergeInfo(tnId,courseId,classType,taskId);
         for (Map map : maps){
             map.put("isMerge","0");
             for (MergeClassInfoDto mergeClassInfoDto:mergeClassInfoDtoList){
