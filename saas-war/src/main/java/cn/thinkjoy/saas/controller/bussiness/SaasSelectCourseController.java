@@ -56,12 +56,23 @@ public class SaasSelectCourseController {
 
         Map<String,Object> paramMap = Maps.newHashMap();
         paramMap.put("tnId",task.getTnId());
+        paramMap.put("grade",task.getGrade());
+        paramMap.put("status",0);
+        SelectCourseTask tmpGradeTask = (SelectCourseTask) iSelectCourseTaskService.queryOne(paramMap);
+        // 该年级已经存在选课任务
+        Date currentTime = new Date();
+        if(tmpGradeTask != null && currentTime.after(tmpGradeTask.getStartTime()) && currentTime.before(tmpGradeTask.getEndTime())){
+            ExceptionUtil.throwException(ErrorCode.TASK_GRADE_REPEAT);
+        }
+
+        paramMap.clear();
+        paramMap.put("tnId",task.getTnId());
         paramMap.put("name",task.getName());
         paramMap.put("status",0);
-        SelectCourseTask tmpTask = (SelectCourseTask) iSelectCourseTaskService.queryOne(paramMap);
-
-        if(tmpTask != null){
-            ExceptionUtil.throwException(ErrorCode.TASK_REPEAT);
+        SelectCourseTask tmpNameTask = (SelectCourseTask) iSelectCourseTaskService.queryOne(paramMap);
+        // 选课任务重复
+        if(tmpNameTask != null){
+            ExceptionUtil.throwException(ErrorCode.TASK_NAME_REPEAT);
         }
 
         task.setCreateDate(System.currentTimeMillis());
@@ -90,7 +101,7 @@ public class SaasSelectCourseController {
         SelectCourseTask tmpTask = (SelectCourseTask) iSelectCourseTaskService.queryOne(paramMap);
 
         if(tmpTask != null && !String.valueOf(tmpTask.getId()).equals(task.getId())){
-            ExceptionUtil.throwException(ErrorCode.TASK_REPEAT);
+            ExceptionUtil.throwException(ErrorCode.TASK_NAME_REPEAT);
         }
 
         task.setModifyDate(System.currentTimeMillis());
@@ -141,6 +152,7 @@ public class SaasSelectCourseController {
             SelectCourseSetting setting = (SelectCourseSetting) iSelectCourseSettingService.findOne("taskId",task.getId());
             if(setting == null){
                 task.setState(CourseStateEnum.WSZ.getCode());
+                continue;
             }
             // 1：选课未开始
             Date currentTime = new Date();
