@@ -74,9 +74,14 @@ $(document).ready(function () {
                 if (res.rtnCode == "0000000") {
                     // isMerge 1:已合过，置灰
                     if (res.bizData.classBaseDtoList.length === 0) {
-                        $('#choose-class-list').text('暂无匹配班级');
+                        var tipsTxt = courseName+'课程没有教学班，排课中无化学班，请核实'+ courseName +'是否属于教学班课程，如果不是请在基础信息中更改课程类型';
+                        $('#choose-class-list').text(tipsTxt);
+                        $('.mixed-class-btn').hide();
+
+
                         return false;
                     }
+                    $('.mixed-class-btn').show();
                     var tpl = Handlebars.compile($('#choose-class-list-tpl').html());
                     $('#choose-class-list').html(tpl(res.bizData.classBaseDtoList));
                 }

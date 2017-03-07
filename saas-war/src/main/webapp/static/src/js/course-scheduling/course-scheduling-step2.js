@@ -6,6 +6,16 @@ var scheduleName = Common.cookie.getCookie('scheduleName');
 var gradeName = Common.cookie.getCookie('gradeName');
 $('.scheduleName').text(scheduleName);
 $('.gradeName').text(gradeName);
+
+
+
+
+
+
+
+
+
+
 function ArrangeCourse () {
     this.types = ['class', 'teacher', 'course'];
     this.classids = [];

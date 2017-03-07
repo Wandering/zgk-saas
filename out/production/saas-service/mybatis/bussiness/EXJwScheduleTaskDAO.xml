@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.IEXJwScheduleTaskDAO">
+    <sql id="Base_Column_List">
+        id as id,
+        schedule_name as scheduleName,
+        grade as grade,
+        year as year,
+        term as term,
+        status as status,
+        del_status as delStatus,
+        create_date as createDate,
+        tn_id as tnId,
+        path as path
+    </sql>
+
+    <select id="selectScheduleTaskPath" parameterType="java.util.Map" resultType="JwScheduleTask">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_schedule_task
+        <where>
+           <if test="tnId!=null">
+               AND tn_id=#{tnId}
+           </if>
+            <if test="id!=null">
+                AND id=#{id}
+            </if>
+            AND status>1
+        </where>
+    </select>
+
+</mapper>

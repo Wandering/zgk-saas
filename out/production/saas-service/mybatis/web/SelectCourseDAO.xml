@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.web.ISelectCourseDAO">
+
+    <update id="bindingSchool" parameterType="java.util.Map" >
+        update zgk2.zgk_user_info
+        set isBinding=#{isBinding},studentNo=#{studentNo}
+        where id=#{id}
+    </update>
+
+    <select id="hasStudent" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*) from ${tableName} t where t.student_no=#{studentNo} and t.student_name=#{studentName}
+    </select>
+
+</mapper>
+

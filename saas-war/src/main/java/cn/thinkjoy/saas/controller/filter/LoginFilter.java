@@ -36,6 +36,11 @@ public class LoginFilter implements Filter {
 
         logger.info("user request path : " + path);
 
+        if (path.contains("/web/")){
+            chain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+
          for(int i=0;i<Constant.NoFilter_Pages.length;i++){
              if (path.indexOf(Constant.NoFilter_Pages[i]) != -1) {
                  chain.doFilter(servletRequest, servletResponse);

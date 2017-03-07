@@ -869,4 +869,16 @@ public class ScheduleTaskController {
             throw new BizException("error","格式化坐标失败!");
         }
     }
+
+    @RequestMapping("getConfigRooms")
+    @ResponseBody
+    public Map<String,Object> getConfigRooms(@RequestParam("taskId")String taskId){
+        return iexJwScheduleTaskService.getConfigRooms(taskId);
+    }
+
+    @RequestMapping(value = "updateClassRoom",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> updateClassRoom(@RequestParam("classRoomId")String classRoomId,@RequestParam("scheduleNumber")int scheduleNumber){
+        return iexJwScheduleTaskService.updateClassRoom(classRoomId,scheduleNumber);
+    }
 }

@@ -11,6 +11,15 @@ public class MergeClassInfo extends BaseDomain {
     private String classIds;
     private String taskId;
     private String createDate;
+    private String classType;
+
+    public String getClassType() {
+        return classType;
+    }
+
+    public void setClassType(String classType) {
+        this.classType = classType;
+    }
 
     public String getTnId() {
         return tnId;

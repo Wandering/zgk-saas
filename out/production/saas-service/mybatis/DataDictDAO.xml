@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IDataDictDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+    <sql id="Base_Column_List">
+        id as id,
+        name as name,
+        dictId as dictId,
+        type as type,
+        note as note
+    </sql>
+    <insert id="insert" parameterType="DataDict">
+        INSERT INTO sass_data_dict (
+        name,
+        dictId,
+        type,
+        note
+        ) VALUES (
+        #{name},
+        #{dictId},
+        #{type},
+        #{note}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="DataDict">
+        UPDATE sass_data_dict
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name!=null">
+                name = #{name},
+            </if>
+            <if test="dictId!=null">
+                dictId = #{dictId},
+            </if>
+            <if test="type!=null">
+                type = #{type},
+            </if>
+            <if test="note!=null">
+                note = #{note},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE sass_data_dict
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.name!=null">
+                name = #{map.name},
+            </if>
+            <if test="map.dictId!=null">
+                dictId = #{map.dictId},
+            </if>
+            <if test="map.type!=null">
+                type = #{map.type},
+            </if>
+            <if test="map.note!=null">
+                note = #{map.note},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE sass_data_dict
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.name!=null">
+                name = #{update.name},
+            </if>
+            <if test="update.dictId!=null">
+                dictId = #{update.dictId},
+            </if>
+            <if test="update.type!=null">
+                type = #{update.type},
+            </if>
+            <if test="update.note!=null">
+                note = #{update.note},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.name!=null">
+                AND name = #{condition.name}
+            </if>
+            <if test="condition.dictId!=null">
+                AND dictId = #{condition.dictId}
+            </if>
+            <if test="condition.type!=null">
+                AND type = #{condition.type}
+            </if>
+            <if test="condition.note!=null">
+                AND note = #{condition.note}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO sass_data_dict (
+                name,
+                dictId,
+                type,
+                note
+        ) VALUES (
+                    #{map.name},
+                    #{map.dictId},
+                    #{map.type},
+                    #{map.note}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="DataDict">
+        UPDATE sass_data_dict
+        <trim prefix="SET" suffixOverrides=",">
+            name = #{name},
+            dictId = #{dictId},
+            type = #{type},
+            note = #{note},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM sass_data_dict
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM sass_data_dict
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="name!=null">
+                AND name = #{name}
+            </if>
+            <if test="dictId!=null">
+                AND dictId = #{dictId}
+            </if>
+            <if test="type!=null">
+                AND type = #{type}
+            </if>
+            <if test="note!=null">
+                AND note = #{note}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM sass_data_dict WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Long" resultType="DataDict">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM sass_data_dict
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="DataDict">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM sass_data_dict WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="DataDict">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM sass_data_dict WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="DataDict">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM sass_data_dict
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="DataDict">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM sass_data_dict
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.name!=null">
+                ${condition.groupOp}   name  ${condition.name.op}  #{condition.name.data}
+            </if>
+            <if test="condition.dictId!=null">
+                ${condition.groupOp}   dictId  ${condition.dictId.op}  #{condition.dictId.data}
+            </if>
+            <if test="condition.type!=null">
+                ${condition.groupOp}   type  ${condition.type.op}  #{condition.type.data}
+            </if>
+            <if test="condition.note!=null">
+                ${condition.groupOp}   note  ${condition.note.op}  #{condition.note.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="DataDict">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM sass_data_dict
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id like CONCAT('%', #{condition.id} , '%')
+            </if>
+            <if test="condition.name!=null">
+                AND name like CONCAT('%', #{condition.name} , '%')
+            </if>
+            <if test="condition.dictId!=null">
+                AND dictId like CONCAT('%', #{condition.dictId} , '%')
+            </if>
+            <if test="condition.type!=null">
+                AND type like CONCAT('%', #{condition.type} , '%')
+            </if>
+            <if test="condition.note!=null">
+                AND note like CONCAT('%', #{condition.note} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="DataDict">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM sass_data_dict
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.name!=null">
+                AND name = #{condition.name}
+            </if>
+            <if test="condition.dictId!=null">
+                AND dictId = #{condition.dictId}
+            </if>
+            <if test="condition.type!=null">
+                AND type = #{condition.type}
+            </if>
+            <if test="condition.note!=null">
+                AND note = #{condition.note}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="DataDict">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM sass_data_dict
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.name!=null">
+                AND name = #{condition.name}
+            </if>
+            <if test="condition.dictId!=null">
+                AND dictId = #{condition.dictId}
+            </if>
+            <if test="condition.type!=null">
+                AND type = #{condition.type}
+            </if>
+            <if test="condition.note!=null">
+                AND note = #{condition.note}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM sass_data_dict
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="name!=null">
+               ${groupOp} name ${name.op}  #{name.data}
+           </if>
+           <if test="dictId!=null">
+               ${groupOp} dictId ${dictId.op}  #{dictId.data}
+           </if>
+           <if test="type!=null">
+               ${groupOp} type ${type.op}  #{type.data}
+           </if>
+           <if test="note!=null">
+               ${groupOp} note ${note.op}  #{note.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Long">
+        SELECT
+        MAX(id)
+        FROM sass_data_dict
+    </select>
+
+</mapper>
+

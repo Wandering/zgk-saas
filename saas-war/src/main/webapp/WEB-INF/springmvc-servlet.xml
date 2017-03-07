@@ -20,8 +20,7 @@
                      http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
 
 
-    <bean
-            class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
+    <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
         <property name="caseSensitive" value="true" />
     </bean>
 
@@ -32,6 +31,14 @@
             <ref bean="fastJsonHttpMessageConverter" />
         </mvc:message-converters>
     </mvc:annotation-driven>
+
+    <!-- 跨域处理 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="cn.thinkjoy.saas.controller.filter.CrossInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
 
     <!--启动Spring MVC的注解功能，完成请求和注解POJO的映射-->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" >
