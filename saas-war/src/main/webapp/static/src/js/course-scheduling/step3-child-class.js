@@ -443,6 +443,7 @@ var HashHandle = {
     // 错误接口 /scheduleTask/error/desc?taskId=37&tnId=10
     scheduleTaskError: function () {
         var that = this;
+        $('.error-box-list').html('');
         Common.ajaxFun('/scheduleTask/error/desc', 'GET', {
             'taskId': taskId,
             'tnId': tnId

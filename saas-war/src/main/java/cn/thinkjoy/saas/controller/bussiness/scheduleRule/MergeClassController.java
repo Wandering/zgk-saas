@@ -1,5 +1,7 @@
 package cn.thinkjoy.saas.controller.bussiness.scheduleRule;
 
+import cn.thinkjoy.saas.dao.bussiness.ICourseManageDAO;
+import cn.thinkjoy.saas.domain.bussiness.CourseManage;
 import cn.thinkjoy.saas.dto.MergeClassInfoDto;
 import cn.thinkjoy.saas.enums.ClassTypeEnum;
 import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
@@ -28,6 +30,9 @@ public class MergeClassController {
 
     @Autowired
     private IEXScheduleBaseInfoService exScheduleBaseInfoService;
+
+    @Autowired
+    private ICourseManageDAO iCourseManageDAO;
 
     @RequestMapping("addMergeInfo")
     @ResponseBody
@@ -78,8 +83,19 @@ public class MergeClassController {
                                  @RequestParam("taskId") String taskId,
                                  @RequestParam("courseId") String courseId,
                                  @RequestParam("courseName") String courseName,
-                                 @RequestParam("grade") String grade,
-                                 @RequestParam("classType")String classType){
+                                 @RequestParam("grade") String grade){
+        Map<String,Object> resultMap = new HashMap<>();
+        //根据tnId,courseId,gradeId查找classType
+        Map<String,Object> condition=new HashMap<>();
+        condition.put("tnId",tnId);
+        condition.put("courseBaseId",courseId);
+        condition.put("gradeId",grade);
+        CourseManage courseManage=iCourseManageDAO.queryOne(condition, null, null);
+        if (courseManage==null){
+            resultMap.put("msg","saas_course_manage中没有找到课程类型");
+            return resultMap;
+        }
+        String classType=courseManage.getCourseType();
 
         List<Map<String,Object>> maps = exScheduleBaseInfoService.getClassBaseDtosByCourse(
                 Integer.valueOf(tnId),
@@ -106,7 +122,6 @@ public class MergeClassController {
             }
         }
 
-        Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("classBaseDtoList",maps);
         return resultMap;
     }

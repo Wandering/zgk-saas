@@ -264,9 +264,9 @@ public class ScheduleTaskController {
         File file = new File(path);
 
         boolean re = FileOperation.removeAllFile(file);
-
-        if (!re)
-            return false;
+//
+//        if (!re)
+//            return false;
 
         boolean initBool = iexJwScheduleTaskService.initParmasFile(taskId, tnId);
 
@@ -888,7 +888,7 @@ public class ScheduleTaskController {
         return iexJwScheduleTaskService.getConfigRooms(taskId);
     }
 
-    @RequestMapping("updateClassRoom")
+    @RequestMapping(value = "updateClassRoom",method = RequestMethod.POST)
     @ResponseBody
     public Map<String,Object> updateClassRoom(@RequestParam("classRoomId")String classRoomId,@RequestParam("scheduleNumber")int scheduleNumber){
         return iexJwScheduleTaskService.updateClassRoom(classRoomId,scheduleNumber);

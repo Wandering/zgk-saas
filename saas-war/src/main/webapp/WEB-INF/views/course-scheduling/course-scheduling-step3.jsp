@@ -99,16 +99,13 @@
                                 <div class="scheduling-error dh">
                                     <i class="icon-cry-face"></i>
                                     <p>排课失败!,请调整基础规则&nbsp;&nbsp;&nbsp;&nbsp;<span class="retry-scheduling">重新排课</span></p>
-
                                     <ul class="error-box-list"></ul>
                                 </div>
-
                                 <%-- 排课失败2 系统错误 规则提示 --%>
                                 <div class="scheduling-error2 dh">
                                     <i class="icon-cry-face"></i>
                                     <p>排课失败!&nbsp;&nbsp;&nbsp;&nbsp;<span class="retry-scheduling">重新排课</span></p>
                                 </div>
-
                             </div>
                             <%--教室课表|教师课表|学生课表|总课表--%>
                             <div id="role-scheduling-tab" class="dh">

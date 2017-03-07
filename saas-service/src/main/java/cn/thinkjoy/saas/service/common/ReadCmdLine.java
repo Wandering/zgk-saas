@@ -10,10 +10,15 @@ public class ReadCmdLine {
 
     public static final String  SHELL_TIMETABLE_ADJUST="/opt/lib/timetable-adjust.sh %s %s %s %s %s ";
     public static final String  SHELL_TIMETABLE="/opt/lib/timetable.sh %s %s ";
+    public static final String  SHELL_TIMETABLE_EDU="/opt/lib/timetable_edu.sh %s %s ";
 
     public static String timetableShellCmd(String path) {
         return String.format(SHELL_TIMETABLE, path, path);
     }
+    public static String timetableEduShellCmd(String path) {
+        return String.format(SHELL_TIMETABLE_EDU, path, path);
+    }
+
 
     public static Integer run(String path,String shellCMD) {
         try {

@@ -509,7 +509,10 @@ AddClassManagement.prototype.addClass = function (title) {
             }
             if (k.dataUrl) {
                 if(k.enName == 'class_major_type'){
-                    var class_major_type_url = '/course/get/course/'+tnId+'/'+classManagement.gradeName+'.do'
+                    var class_major_type_url ;
+                        GLOBAL_CONSTANT.clsType != 2 ?
+                            class_major_type_url = '/course/get/course/'+tnId+'/'+classManagement.gradeName+'.do' :
+                            class_major_type_url = '/course/get/course/'+tnId+'/'+classManagement.gradeName+'.do?type=2'
                     that.getUrl(class_major_type_url,'class_major_type');
                 }
             }
@@ -708,12 +711,12 @@ UploadData.prototype = {
         uploadDataHtml.push('<span id="uploader-demo">');
 
         uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
-        uploadDataHtml.push('<button class="btn btn-info btn-import" id="xz-btn-import">'+textTip+'</button>');
+        uploadDataHtml.push('<div class="btn btn-info btn-import" id="xz-btn-import">'+textTip+'</div>');
         uploadDataHtml.push('</span>');
 
         uploadDataHtml.push('<span id="uploader-demo">');
         uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
-        uploadDataHtml.push('<button class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">教学班模板上传</button>');
+        uploadDataHtml.push('<div class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">教学班模板上传</div>');
         uploadDataHtml.push('</span>');
 
 
