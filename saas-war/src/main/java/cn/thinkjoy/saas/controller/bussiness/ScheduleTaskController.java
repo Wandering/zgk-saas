@@ -731,7 +731,7 @@ public class ScheduleTaskController {
                 }catch (Exception e){
                     throw new BizException("error","参数获取异常!");
                 }
-                courseResultView = syllabusService.getClassSyllabus(tnId,taskId,classType,classId);
+                courseResultView = syllabusService.getClassSyllabus(tnId,taskId,classId,classType);
                 break;
             case Constant.STUDENT:
                 studentNo = Long.valueOf(paramsMap.get("studentNo").toString());

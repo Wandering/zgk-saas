@@ -12,6 +12,7 @@ import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
 import cn.thinkjoy.saas.service.bussiness.IEXCourseManageService;
 import cn.thinkjoy.saas.service.bussiness.IEXTeacherService;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
+import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,20 +40,72 @@ public class BaseResultController {
     @Autowired
     private IEXTeacherService teacherService;
 
+
     /**
      * 获取教室名称
      * @return
      */
     @RequestMapping(value = "/queryClass",method = RequestMethod.GET)
     @ResponseBody
-    public List getCourseResult(@RequestParam Integer taskId) {
+    public List queryClass(@RequestParam Integer taskId) {
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
         //获取行政班班级列表
-        List list = exiTenantConfigInstanceService.getClassByTnIdAndGrade(tnId, GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())),Constant.CLASS_ADM);
+        List<Map<String,Object>> admList = exiTenantConfigInstanceService.getClassByTnIdAndGrade(tnId, GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())),Constant.CLASS_ADM);
+        List<Map<String,Object>> eduList = exiTenantConfigInstanceService.getClassByTnIdAndGrade(tnId, GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())),Constant.CLASS_EDU);
+        for (Map<String,Object> map : admList){
+            map.put("class_type",Constant.CLASS_ADM_CODE);
+        }
+        for (Map<String,Object> map : eduList){
+            map.put("class_type",Constant.CLASS_EDU_CODE);
+        }
+        List<Map<String,Object>> list = new ArrayList<>();
+        list.addAll(admList);
+        list.addAll(eduList);
         return list;
     }
 
+//    /**
+//     * 获取教室名称
+//     * @return
+//     */
+//    @RequestMapping(value = "/queryRoom",method = RequestMethod.GET)
+//    @ResponseBody
+//    public List queryRoom(@RequestParam Integer taskId) {
+//
+//        return list;
+//    }
+
+    /**
+     * 获取教室名称
+     * @return
+     */
+    @RequestMapping(value = "/queryStudent",method = RequestMethod.GET)
+    @ResponseBody
+    public List queryStudent(@RequestParam Integer taskId) {
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        //获取一个学生所在的班级列表
+        String tableName = ParamsUtils.combinationTableName(Constant.STUDENT, tnId);
+
+        if (com.alibaba.dubbo.common.utils.StringUtils.isBlank(tableName)) {
+            return null;
+        }
+        List<Map<String,Object>> params = new ArrayList<>();
+        List<LinkedHashMap<String, Object>> tenantCustoms = exiTenantConfigInstanceService.likeTableByParams(tableName,params);
+        return studentToRtnDomain(tenantCustoms);
+    }
+
+    private List<Map<String,Object>> studentToRtnDomain(List<LinkedHashMap<String, Object>> students){
+        List<Map<String,Object>> list = new ArrayList<>();
+        Map<String,Object> domain;
+        for (Map<String,Object> map : students){
+            domain = new HashMap<>();
+            domain.put("studentNo",map.get("student_no"));
+            domain.put("studentName",map.get("studentName"));
+            list.add(map);
+        }
+        return list;
+    }
     /**
      * 获取教室名称
      * @return
