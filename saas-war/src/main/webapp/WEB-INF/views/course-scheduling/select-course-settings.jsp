@@ -49,8 +49,8 @@
                         <div class="settings-box">
                             <h3 class="title"><span class="line"></span>选课相关信息</h3>
                             <ul class="info-list">
-                                <li>1.学生选课平台：智高考网站（www.zhigaokao.cn），注册登录后进入<a href="">选课程-我的选课</a>进行选课</li>
-                                <li>2.学生选课结束后，学校可在“选课分析”中查看选课结果</li>
+                                <li>1.学生选课平台：智高考网站（www.zhigaokao.cn），注册登录后进入<span style="color:#D70C18">选课程-我的选课</span>进行选课</li>
+                                <li>2.学生选课结束后，学校可查看调整选课结果</li>
                             </ul>
                         </div>
                         <div class="settings-box">
