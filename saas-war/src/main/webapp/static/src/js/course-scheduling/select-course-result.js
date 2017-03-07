@@ -181,7 +181,7 @@ var AssemblyChooseResult = {
                     },
                     axisLabel: {
                         interval: 0,
-                        rotate: dataJson.groups.length > 6 ? -20 : 0
+                        rotate: dataJson.groups.length > 6 ? -50 : 0
                         //formatter:function(val){
                         //    return val.split("").join("\n");
                         //}
@@ -318,11 +318,11 @@ var SelCourseTypeDetail = {
     pagination: function () {
         var that = this;
         $(".pagination").createPage({
-            pageCount: Math.ceil(that.page.count / that.page.rows),
-            current: Math.ceil(that.page.offset / that.page.rows) + 1,
+            pageCount: Math.ceil(that.page.count / that.page.rows),  //总页数
+            current: that.page.offset+1,
             backFn: function (p) {
                 $(".pagination-bar .current-page").html(p);
-                that.page.offset = (p - 1) * that.page.rows;
+                that.page.offset = p - 1;
                 that.get();
             }
         });
