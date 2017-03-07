@@ -509,7 +509,10 @@ AddClassManagement.prototype.addClass = function (title) {
             }
             if (k.dataUrl) {
                 if(k.enName == 'class_major_type'){
-                    var class_major_type_url = '/course/get/course/'+tnId+'/'+classManagement.gradeName+'.do'
+                    var class_major_type_url ;
+                        GLOBAL_CONSTANT.clsType != 2 ?
+                            class_major_type_url = '/course/get/course/'+tnId+'/'+classManagement.gradeName+'.do' :
+                            class_major_type_url = '/course/get/course/'+tnId+'/'+classManagement.gradeName+'.do?type=2'
                     that.getUrl(class_major_type_url,'class_major_type');
                 }
             }

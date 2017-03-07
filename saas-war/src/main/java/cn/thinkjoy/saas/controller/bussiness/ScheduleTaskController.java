@@ -264,9 +264,9 @@ public class ScheduleTaskController {
         File file = new File(path);
 
         boolean re = FileOperation.removeAllFile(file);
-
-        if (!re)
-            return false;
+//
+//        if (!re)
+//            return false;
 
         boolean initBool = iexJwScheduleTaskService.initParmasFile(taskId, tnId);
 

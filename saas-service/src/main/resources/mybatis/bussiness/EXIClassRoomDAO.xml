@@ -18,7 +18,8 @@
         classRoom.executive_number as executiveNumber,
         classRoom.day_number as dayNumber,
         classRoom.room_order,
-        classRoom.create_date as createDate
+        classRoom.create_date as createDate,
+        classRoom.schedule_number as scheduleNumber
     </sql>
     <select id="selectClassRoomByTnId" parameterType="java.util.Map" resultType="ClassRoomView">
         SELECT

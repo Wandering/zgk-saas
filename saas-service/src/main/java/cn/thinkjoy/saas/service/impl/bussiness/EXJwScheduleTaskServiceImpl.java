@@ -120,7 +120,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     @Autowired
     private IJwSyllabusDAO jwSyllabusDAO;
 
-
     @Autowired
     EXIClassRoomService exiClassRoomService;
 
@@ -170,7 +169,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         JwScheduleTask jwScheduleTask = selectScheduleTaskPath(map);
         if (jwScheduleTask == null || StringUtils.isBlank(jwScheduleTask.getPath())) {
             String type=getClsssTypeTag(Integer.valueOf(jwScheduleTask.getGrade()),tnId);
-            result = FileOperation.getParamsPath(taskId, tnId,type);
+            result = FileOperation.getParamsPath(tnId,taskId,type);
         }
         else
             result = jwScheduleTask.getPath();
@@ -598,7 +597,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     private boolean eduParmas(final Integer taskId, final Integer tnId,final String type) throws IOException {
         boolean flag = false;
 
-        List<StringBuffer> parametersBuffers = getParameters();
+        List<StringBuffer> parametersBuffers = getParameters("edu");
 
         flag = printBuffers(tnId, taskId, parametersBuffers, FileOperation.PARMETERS,type);
 
@@ -606,7 +605,62 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         flag = printBuffers(tnId, taskId, admClassRuleBuffers, FileOperation.ADMIN_CLASS_NON_DISPACHING,type);
 
+        List<StringBuffer> eduClassRuleBuffers = ObjIsNothing();//班级 不排课
 
+        flag = printBuffers(tnId, taskId, eduClassRuleBuffers, FileOperation.CLASS_NON_DISPACHING,type);
+
+        List<StringBuffer> admClassInfoBuffers = getClassInfo(taskId, tnId,"adm");//行政班基础信息
+
+        flag = printBuffers(tnId, taskId, admClassInfoBuffers, FileOperation.CLASS_INFO,type);
+
+        List<StringBuffer> courseRuleBuffers = getCourseRule(taskId);//课程不排课
+
+        flag = printBuffers(tnId, taskId, courseRuleBuffers, FileOperation.COURSE_NON_DISPACHING,type);
+
+        List<StringBuffer> teachDataBuffers = getTeachDateInfo(taskId, tnId);//基础规则设置
+
+        flag = printBuffers(tnId, taskId, teachDataBuffers, FileOperation.COURSE_TIMESLOTS,type);
+
+        List<StringBuffer> gradeNonDisBuffers = getGradeNonDispaching(taskId, 1);//年级不排课
+
+        flag = printBuffers(tnId, taskId, gradeNonDisBuffers, FileOperation.GRAD_NON_DISPACHING,type);
+
+        List<StringBuffer> courseInfomationBuffers = courseInfomation(taskId, tnId,type);//课程信息
+
+        flag = printBuffers(tnId, taskId, courseInfomationBuffers, FileOperation.COURSE_INFORMATION,type);
+
+        List<StringBuffer> teacherSettingBuffers = teachersSetting(taskId, tnId,"edu");//教师设置
+
+        flag = printBuffers(tnId, taskId, teacherSettingBuffers, FileOperation.TEACHERS_SETTING,type);
+
+        List<StringBuffer> studentSelectionBuffers = studentSelection(taskId, tnId);//学生设置
+
+        flag = printBuffers(tnId, taskId, studentSelectionBuffers, FileOperation.STUDENT_SELECTION,type);
+
+        List<StringBuffer> classRooms=getClassRoom(taskId, tnId);
+
+        flag = printBuffers(tnId, taskId, classRooms, FileOperation.CLASS_ROOM,type);
+
+        if (flag) {
+            cachedThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    String path = FileOperation.getParamsPath(tnId, taskId,type);
+                    String shellCMD=ReadCmdLine.timetableEduShellCmd(path);
+                    Integer c = ReadCmdLine.run(path,shellCMD);
+                    String result = getSchduleResultStatus(taskId, tnId);
+                    //翻译课表并存入数据库
+                    getCourseResult(tnId,taskId);
+
+                    if (result.equals("1")) {
+                        updateScheduleTask(taskId, 4);
+                    } else if (result.equals("-1"))
+                        updateScheduleTask(taskId, 2);//排课失败(规则异常)
+                    else if (result.equals("-2"))
+                        updateScheduleTask(taskId, 5);//排课失败(系统异常)
+                }
+            });
+        }
 
         return flag;
     }
@@ -620,7 +674,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     private boolean admParmas(final Integer taskId, final Integer tnId,final String type) throws IOException {
         boolean result = false;
 
-        List<StringBuffer> parametersBuffers = getParameters();
+        List<StringBuffer> parametersBuffers = getParameters("adm");
 
         result = printBuffers(tnId, taskId, parametersBuffers, FileOperation.PARMETERS,type);
 
@@ -632,7 +686,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         result = printBuffers(tnId, taskId, eduClassRuleBuffers, FileOperation.CLASS_NON_DISPACHING,type);
 
-        List<StringBuffer> admClassInfoBuffers = getClassInfo(taskId, tnId);//行政班基础信息
+        List<StringBuffer> admClassInfoBuffers = getClassInfo(taskId, tnId,type);//行政班基础信息
 
         result = printBuffers(tnId, taskId, admClassInfoBuffers, FileOperation.CLASS_INFO,type);
 
@@ -648,11 +702,11 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         result = printBuffers(tnId, taskId, gradeNonDisBuffers, FileOperation.GRAD_NON_DISPACHING,type);
 
-        List<StringBuffer> courseInfomationBuffers = courseInfomation(taskId, tnId);//课程信息
+        List<StringBuffer> courseInfomationBuffers = courseInfomation(taskId, tnId,type);//课程信息
 
         result = printBuffers(tnId, taskId, courseInfomationBuffers, FileOperation.COURSE_INFORMATION,type);
 
-        List<StringBuffer> teacherSettingBuffers = teachersSetting(taskId, tnId);//教师设置
+        List<StringBuffer> teacherSettingBuffers = teachersSetting(taskId, tnId,"adm");//教师设置
 
         result = printBuffers(tnId, taskId, teacherSettingBuffers, FileOperation.TEACHERS_SETTING,type);
         LOGGER.info("===================参数序列化结果:" + result + "===================");
@@ -723,10 +777,165 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     }
 
     /**
+     * 教室信息
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    private List<StringBuffer> getClassRoom(Integer taskId,Integer tnId) {
+
+        List<StringBuffer> stringBuffers = new ArrayList<>();
+
+        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
+
+        String grade = ConvertUtil.converGradeByTag(jwScheduleTask.getGrade());
+
+        Map map = new HashMap();
+        map.put("tnId", tnId);
+        map.put("gradeId", jwScheduleTask.getGrade());
+        ClassRooms classRooms = iClassRoomsDAO.queryOne(map, "id", "asc");
+
+        Integer maxRoomNumber = classRooms == null ? 0 : classRooms.getDayNumber() + classRooms.getExecutiveNumber();
+
+        if (maxRoomNumber > 0) {
+            Integer admNum=0;
+            StringBuffer stringBuffer1 = new StringBuffer();
+            stringBuffer1.append(maxRoomNumber);
+            stringBuffer1.append(FileOperation.LINE_SPLIT);
+            stringBuffers.add(stringBuffer1);
+
+            String tableName = ParamsUtils.combinationTableName("class_adm", tnId);
+
+            Map class_map = new HashMap();
+            class_map.put("tableName", tableName);
+            class_map.put("searchKey", "class_grade");
+            class_map.put("searchValue", grade);
+
+            List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.getTenantCustom(class_map);
+
+            for (int j = 0; j < linkedHashMaps.size(); j++) {
+
+                LinkedHashMap<String, Object> dataLinkedMap = linkedHashMaps.get(j);
+                StringBuffer stringBuffer = new StringBuffer();
+                for (Iterator iter = dataLinkedMap.entrySet().iterator(); iter.hasNext(); ) {
+
+                    Map.Entry element = (Map.Entry) iter.next();
+                    Object strKey = element.getKey();
+                    Object strObj = element.getValue();
+                    if (strKey.equals("id")) {
+                        stringBuffer.append(strObj);
+                        stringBuffer.append(FileOperation.LINE_SPLIT);
+                        admNum++;
+                    }
+                }
+                stringBuffers.add(stringBuffer);
+            }
+            if(admNum<maxRoomNumber){
+                StringBuffer stringBuffer2 = new StringBuffer();
+                for(int i=0;i<(maxRoomNumber-admNum);i++){
+                    stringBuffer2.append("-"+(i+1));
+                    stringBuffer2.append(FileOperation.LINE_SPLIT);
+                }
+                stringBuffers.add(stringBuffer2);
+            }
+        }
+        return stringBuffers;
+    }
+
+    /**
+     * 学生信息
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    private List<StringBuffer> studentSelection(Integer taskId,Integer tnId){
+        List<StringBuffer> stringBuffers = new ArrayList<>();
+
+        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
+
+        String studentGrade = ConvertUtil.converGradeByTag(jwScheduleTask.getGrade());
+
+        String tableName = ParamsUtils.combinationTableName("student", tnId);
+
+
+        Map map = new HashMap();
+        map.put("tableName",tableName);
+        map.put("searchKey", "student_grade");
+        map.put("searchValue", studentGrade);
+
+        List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.getTenantCustom(map);
+
+        StringBuffer stringBuffer1 = new StringBuffer();
+        stringBuffer1.append(linkedHashMaps.size());
+        stringBuffer1.append(FileOperation.STR_SPLIT);
+        stringBuffer1.append(3);
+        stringBuffer1.append(FileOperation.LINE_SPLIT);
+        stringBuffers.add(stringBuffer1);
+
+        for (int j = 0; j < linkedHashMaps.size(); j++) {
+            LinkedHashMap<String, Object> dataLinkedMap = linkedHashMaps.get(j);
+            StringBuffer stringBuffer = new StringBuffer();
+            Integer studentId = 0, courseId = 0;
+            for (Iterator iter = dataLinkedMap.entrySet().iterator(); iter.hasNext(); ) {
+                Map.Entry element = (Map.Entry) iter.next();
+                Object strKey = element.getKey();
+                Object strObj = element.getValue();
+                if (strKey.equals("id")) {
+                    studentId=Integer.valueOf(strObj.toString());
+                    stringBuffer.append(studentId);//ID
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+                if(strKey.equals("student_class")) {
+                    String[] classStr = strObj.toString().split("、");
+
+                    for (String str : classStr) {
+                        stringBuffer.append(getClassId(tnId, str.toString(), studentGrade,"adm"));//指定所带班级
+                        stringBuffer.append(FileOperation.STR_SPLIT);
+                    }
+                }
+                if (strKey.equals("student_no")) {
+                    stringBuffer.append(strObj.toString());//ID
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+                if(strKey.equals("student_check_major1")) {
+
+                    stringBuffer.append(getCourseID(strObj.toString()));//ID
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+                if(strKey.equals("student_check_major_class1")) {
+                    stringBuffer.append(getClassId(tnId, strObj.toString(), studentGrade,"edu"));//指定所带班级
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+                if(strKey.equals("student_check_major2")) {
+                    stringBuffer.append(getCourseID(strObj.toString()));//ID
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+                if(strKey.equals("student_check_major_class2")) {
+                    stringBuffer.append(getClassId(tnId, strObj.toString(), studentGrade,"edu"));//指定所带班级
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+                if(strKey.equals("student_check_major3")) {
+                    stringBuffer.append(getCourseID(strObj.toString()));//ID
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+                if(strKey.equals("student_check_major_class3")) {
+                    stringBuffer.append(getClassId(tnId, strObj.toString(), studentGrade,"edu"));//指定所带班级
+                    stringBuffer.append(FileOperation.STR_SPLIT);
+                }
+            }
+            stringBuffer.append(FileOperation.LINE_SPLIT);
+
+            stringBuffers.add(stringBuffer);
+        }
+
+        return stringBuffers;
+    }
+
+    /**
      * 教师设置
      * @return
      */
-    private List<StringBuffer> teachersSetting(Integer taskId,Integer tnId) {
+    private List<StringBuffer> teachersSetting(Integer taskId,Integer tnId,String type) {
 
         List<StringBuffer> stringBuffers = new ArrayList<>();
 
@@ -784,7 +993,10 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     stringBuffer.append(FileOperation.STR_SPLIT);
 
                     for(String str:classStr) {
-                        stringBuffer.append(getClassId(tnId, str.toString(), teacherGrade));//指定所带班级
+                        Integer ci= getClassId(tnId, str.toString(), teacherGrade,"adm");
+                        if(ci<=0)
+                            ci=getClassId(tnId, str.toString(), teacherGrade,"edu");
+                        stringBuffer.append(ci);//指定所带班级
                         stringBuffer.append(FileOperation.STR_SPLIT);
                     }
 
@@ -861,10 +1073,10 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     conRuleMap.put("teacherId",teacherId);
                     JwBaseConRule jwBaseConRule=iJwBaseConRuleDAO.queryOne(conRuleMap,"id","asc");
 
-                    stringBuffer.append((jwBaseConRule.getDayConType()==1?3:4)); //连上节数
+                    stringBuffer.append(jwBaseConRule==null?0:(jwBaseConRule.getDayConType()==1?3:4)); //连上节数
                     stringBuffer.append(FileOperation.STR_SPLIT);
 
-                    stringBuffer.append(jwBaseConRule.getImportantType()); //连上规则权重
+                    stringBuffer.append(jwBaseConRule==null?0:jwBaseConRule.getImportantType()); //连上规则权重
                     stringBuffer.append(FileOperation.STR_SPLIT);
 
                     stringBuffer.append(1); //教案平齐 都是1
@@ -872,22 +1084,22 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
                     JwBaseJaqpRule jwBaseJaqpRule=iJwBaseJaqpRuleDAO.queryOne(conRuleMap,"id","asc");
 
-                    stringBuffer.append(jwBaseJaqpRule.getImportantType()); //教案平齐权重
+                    stringBuffer.append(jwBaseJaqpRule==null?0:jwBaseJaqpRule.getImportantType()); //教案平齐权重
                     stringBuffer.append(FileOperation.STR_SPLIT);
 
                     JwBaseWeekRule jwBaseWeekRule=iJwBaseWeekRuleDAO.queryOne(conRuleMap,"id","asc");
 
-                    stringBuffer.append(jwBaseWeekRule.getWeekType()); //周任课规则
+                    stringBuffer.append(jwBaseWeekRule==null?0:jwBaseWeekRule.getWeekType()); //周任课规则
                     stringBuffer.append(FileOperation.STR_SPLIT);
 
-                    stringBuffer.append(jwBaseWeekRule.getImportantType()); //周任课规则权重
+                    stringBuffer.append(jwBaseWeekRule==null?0:jwBaseWeekRule.getImportantType()); //周任课规则权重
                     stringBuffer.append(FileOperation.STR_SPLIT);
 
                     JwBaseDayRule jwBaseDayRule=iJwBaseDayRuleDAO.queryOne(conRuleMap,"id","asc");
-                    stringBuffer.append(jwBaseDayRule.getDayType()); //日任课规则
+                    stringBuffer.append(jwBaseDayRule==null?0:jwBaseDayRule.getDayType()); //日任课规则
                     stringBuffer.append(FileOperation.STR_SPLIT);
 
-                    stringBuffer.append(jwBaseDayRule.getImportantType()); //日任课规则权重
+                    stringBuffer.append(jwBaseDayRule==null?0:jwBaseDayRule.getImportantType()); //日任课规则权重
                     stringBuffer.append(FileOperation.STR_SPLIT);
                 }
             }
@@ -898,6 +1110,15 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
 
         return stringBuffers;
+    }
+
+
+
+    private Integer getCourseID(String courseName) {
+        Map courseMap = new HashMap();
+        courseMap.put("courseName", courseName);
+        CourseBaseInfo courseBaseInfo = iCourseBaseInfoDAO.queryOne(courseMap, "id", "asc");
+        return courseBaseInfo == null ? 0 : Integer.valueOf(courseBaseInfo.getId().toString());
     }
 
     private String getWeekNonAndDayNon(String str,Integer week) {
@@ -923,11 +1144,11 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return courseId;
     }
 
-    private Integer getClassId(Integer tnId,String className,String grade) {
+    private Integer getClassId(Integer tnId,String className,String grade,String type) {
 
         Integer classId = 0;
 
-        String tableName = ParamsUtils.combinationTableName("class_adm", tnId);
+        String tableName = ParamsUtils.combinationTableName("class_"+type, tnId);
 
 
         Map map = new HashMap();
@@ -1006,7 +1227,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     }
 
 
-    private List<StringBuffer> courseInfomation(Integer taskId,Integer tnId){
+    private List<StringBuffer> courseInfomation(Integer taskId,Integer tnId,String type){
 
         List<StringBuffer> stringBuffers = new ArrayList<>();
 
@@ -1050,7 +1271,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 stringBuffer.append(converCourseHour(jwCourse.getCourseHour(), 1));
                 stringBuffer.append(FileOperation.STR_SPLIT);
             }
-            stringBuffer.append(ConvertUtil.converCourseType(courseManageVo.getCourseType()));
+            String cType=courseManageVo.getCourseType();
+            stringBuffer.append(type=="adm"?ConvertUtil.converCourseType(cType):(Integer.valueOf(cType)>0?1:0));//行政班分文理  教学班 0：行政课 1：走班课程
             stringBuffer.append(FileOperation.STR_SPLIT);
 
             Map mergeMap = new HashMap();
@@ -1191,7 +1413,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             Map courMap = new HashMap();
             courMap.put("tnId", tnId);
             courMap.put("gradeId", grade);
-            courMap.put("courseType",classType==0?-1:(classType==1?2:1));
+            courMap.put("courseType", classType == 0 ? -1 : (classType == 1 ? 2 : 1));
             List<CourseManageVo> courseManageVos = iCourseManageDAO.selectCourseManageInfoPK(courMap);
 
             //行政班 文科班&理科班
@@ -1204,6 +1426,17 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 }
             } else if (gradeObj.getClassType() == 2) {   //走读班
 
+                String couId = "";
+                int i = 0;
+                for (CourseManageVo courseManageVo : courseManageVos) {
+                    if (courseManageVo.getCourseType().equals("0")) {
+                        i++;
+                        couId += courseManageVo.getCourseId() + FileOperation.CHAR_SPLIT;
+                    }
+                }
+                stringBuffer.append((i ));
+                stringBuffer.append(FileOperation.STR_SPLIT);
+                stringBuffer.append(couId);
             }
         }
         return stringBuffer;
@@ -1254,7 +1487,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      * @param tnId
      * @return
      */
-    private List<StringBuffer> getClassInfo(Integer taskId,Integer tnId) {
+    private List<StringBuffer> getClassInfo(Integer taskId,Integer tnId,String type) {
 
         List<StringBuffer> stringBuffers = new ArrayList<>();
 
@@ -1262,7 +1495,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         String classGrade = ConvertUtil.converGradeByTag(jwScheduleTask.getGrade());
 
-        String tableName = ParamsUtils.combinationTableName("class_adm", tnId);
+        String tableName = ParamsUtils.combinationTableName("class_"+type, tnId);
 
         Map map = new HashMap();
         map.put("tableName",tableName);
@@ -1316,7 +1549,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return stringBuffers;
     }
 
-    private List<StringBuffer> getParameters() {
+    private List<StringBuffer> getParameters(String type ) {
         List<StringBuffer> stringBuffers = new ArrayList<>();
         StringBuffer stringBuffer1 = new StringBuffer();
         stringBuffer1.append(101);
@@ -1325,7 +1558,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         stringBuffer1.append(FileOperation.LINE_SPLIT);
         stringBuffer1.append(200);
         stringBuffer1.append(FileOperation.LINE_SPLIT);
-        stringBuffer1.append(10);
+        stringBuffer1.append(type.equals("adm")?10:20);
         stringBuffer1.append(FileOperation.LINE_SPLIT);
         stringBuffers.add(stringBuffer1);
         return stringBuffers;
@@ -1932,6 +2165,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             return resultMap;
         }
         int sum=classRooms.get(0).getExecutiveNumber()+classRooms.get(0).getDayNumber();
+        if (classRooms.get(0).getScheduleNumber()!=0){
+            sum=classRooms.get(0).getScheduleNumber();
+        }
         resultMap.put("admNumber",admNumber);
         resultMap.put("sum",sum);
         resultMap.put("classRoomId",classRooms.get(0).getId());
