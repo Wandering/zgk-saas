@@ -74,7 +74,8 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         //【1】根据学校code查询tnId
         Tenant tenant=iTenantDAO.findOne("gk_school_id", schoolId, null, null);
         if (tenant==null){//学校没有使用saas
-            resultMap.put("msg","学校没有使用saas");
+            resultMap.put("msg","暂时没有使用智高考教务系统 \n" +
+                    "无法绑定选课哦");
             return resultMap;
         }
         String tnId=tenant.getId().toString();
@@ -128,10 +129,10 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
             resultMap.put("msg","还未设置选课");
             return resultMap;
         }
-        if (selectCourseTaskList.size()>1){
-            resultMap.put("msg","统一租户同一年级选课出现多个");
-            return resultMap;
-        }
+//        if (selectCourseTaskList.size()>1){
+//            resultMap.put("msg","统一租户同一年级选课出现多个");
+//            return resultMap;
+//        }
         SelectCourseTask selectCourseTask=selectCourseTaskList.get(0);
         //【2】获取选课信息
         Date startDate=selectCourseTask.getStartTime();
