@@ -169,7 +169,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         JwScheduleTask jwScheduleTask = selectScheduleTaskPath(map);
         if (jwScheduleTask == null || StringUtils.isBlank(jwScheduleTask.getPath())) {
             String type=getClsssTypeTag(Integer.valueOf(jwScheduleTask.getGrade()),tnId);
-            result = FileOperation.getParamsPath(taskId, tnId,type);
+            result = FileOperation.getParamsPath(tnId,taskId,type);
         }
         else
             result = jwScheduleTask.getPath();
