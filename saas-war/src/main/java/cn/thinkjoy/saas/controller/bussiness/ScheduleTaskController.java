@@ -703,7 +703,8 @@ public class ScheduleTaskController {
     public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) throws IOException, ParseException {
         Map<String,Object> paramsMap  = null;
         CourseResultView courseResultView = null;
-        int teacherId,classId;
+        int teacherId,classId,classType,roomId;
+        long studentNo;
         if (param!=null) {
             try {
                 paramsMap = JSON.parseObject(param);
@@ -724,14 +725,25 @@ public class ScheduleTaskController {
                 courseResultView = syllabusService.getTeacherSyllabus(tnId,taskId,teacherId);
                 break;
             case Constant.TABLE_TYPE_CLASS:
-                classId = Integer.valueOf(paramsMap.get("classId").toString());
-                courseResultView = syllabusService.getClassSyllabus(tnId,taskId,classId);
+                try {
+                    classId = Integer.valueOf(paramsMap.get("classId").toString());
+                    classType = Integer.valueOf(paramsMap.get("classType").toString());
+                }catch (Exception e){
+                    throw new BizException("error","参数获取异常!");
+                }
+                courseResultView = syllabusService.getClassSyllabus(tnId,taskId,classType,classId);
+                break;
+            case Constant.STUDENT:
+                studentNo = Long.valueOf(paramsMap.get("studentNo").toString());
+                courseResultView = syllabusService.getStudentSyllabus(tnId,taskId,studentNo);
+                break;
+            case Constant.TABLE_TYPE_ROOM:
+                roomId = Integer.valueOf(paramsMap.get("roomId").toString());
+                courseResultView = syllabusService.getRoomSyllabus(tnId,taskId,roomId);
                 break;
             default:
                 break;
         }
-//        CourseResultView courseResultView = syllabusService.get(type,taskId, tnId,paramsMap,courseTimeConfig);
-
 
         resultMap.put("result",courseResultView);
         return resultMap;
@@ -796,7 +808,7 @@ public class ScheduleTaskController {
                     courseParam = new HashMap<>();
                     sheetNames[i] = map.get("class_name").toString();
                     int classId = Integer.valueOf(map.get("id").toString());
-                    CourseResultView courseResultView = syllabusService.getClassSyllabus(tnId,taskId,classId);
+                    CourseResultView courseResultView = syllabusService.getClassSyllabus(tnId,taskId,Constant.CLASS_ADM_CODE,classId);
                     courseLists.add(courseResultView.getWeek());
                 }
                 workbook = ExcelUtils.createWorkBook(strings, sheetNames, courseLists);
@@ -881,4 +893,13 @@ public class ScheduleTaskController {
     public Map<String,Object> updateClassRoom(@RequestParam("classRoomId")String classRoomId,@RequestParam("scheduleNumber")int scheduleNumber){
         return iexJwScheduleTaskService.updateClassRoom(classRoomId,scheduleNumber);
     }
+
+    @RequestMapping("initTable")
+    @ResponseBody
+    public boolean initTable(int taskId){
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        iexJwScheduleTaskService.getCourseResult(tnId,taskId);
+        return true;
+    }
+
 }

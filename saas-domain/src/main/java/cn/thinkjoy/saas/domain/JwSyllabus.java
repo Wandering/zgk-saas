@@ -20,6 +20,7 @@ import java.util.*;
 public class JwSyllabus extends BaseDomain{
     private Integer taskId;
     private Integer classId;
+    private Integer classType;
     private String info;
 
 	public JwSyllabus(){
@@ -42,7 +43,15 @@ public class JwSyllabus extends BaseDomain{
         this.info = value;
     }
 
-    public String getInfo() {
+	public Integer getClassType() {
+		return classType;
+	}
+
+	public void setClassType(Integer classType) {
+		this.classType = classType;
+	}
+
+	public String getInfo() {
         return this.info;
     }
 
@@ -52,6 +61,7 @@ public class JwSyllabus extends BaseDomain{
 			.append("TaskId",getTaskId())
 			.append("ClassId",getClassId())
 			.append("Info",getInfo())
+			.append("ClassType",getClassType())
 			.toString();
 	}
 	

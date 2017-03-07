@@ -5,6 +5,7 @@ import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.dao.IJwCourseTableDAO;
 import cn.thinkjoy.saas.dao.IJwScheduleTaskDAO;
 import cn.thinkjoy.saas.dao.IJwSyllabusDAO;
+import cn.thinkjoy.saas.dao.bussiness.IEXTeantCustomDAO;
 import cn.thinkjoy.saas.dao.bussiness.ISyllabusDAO;
 import cn.thinkjoy.saas.domain.JwCourseTable;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
@@ -44,6 +45,8 @@ public class SyllabusServiceImpl implements ISyllabusService {
     private IEXJwScheduleTaskService iexJwScheduleTaskService;
     @Autowired
     private IJwSyllabusDAO jwSyllabusDAO;
+    @Autowired
+    private IEXTeantCustomDAO iexTeantCustomDAO;
 
     /**
      * 获得总课表
@@ -61,7 +64,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
         Map<String, Object> params = new HashMap<>();
         /**变量声明**/
 
-        jwCourseTableDTOs = this.queryList(tnId,taskId,params);
+        jwCourseTableDTOs = this.queryList(tnId,taskId,true,params);
 
         if (jwCourseTableDTOs.size() == 0)
             throw new BizException("error", "当前租户下排课任务" + taskId + "课表为空,请稍后再试");
@@ -97,10 +100,121 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @return
      */
     @Override
-    public CourseResultView getClassSyllabus(int tnId, int taskId, int classId) {
+    public CourseResultView getClassSyllabus(int tnId, int taskId, int classId,int classType) {
         Map<String, Object> params = new HashMap<>();
         params.put("classId",classId);
-        return this.genSyllabus(tnId,taskId,Constant.TABLE_TYPE_CLASS,params);
+        params.put("classType",classType);
+        return this.genSyllabus(tnId,taskId,Constant.TABLE_TYPE_CLASS,false,params);
+    }
+
+
+    /**
+     * 获取某个教室
+     *
+     * @param tnId
+     * @param taskId
+     * @param roomId
+     * @return
+     */
+    @Override
+    public CourseResultView getRoomSyllabus(int tnId, int taskId, int roomId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("roomId",roomId);
+        return this.genSyllabus(tnId,taskId,Constant.TABLE_TYPE_CLASS,true,params);
+    }
+
+    /**
+     * 获取某个学生课程表
+     * @param tnId
+     * @param taskId
+     * @param studentNo
+     * @return
+     */
+    @Override
+    public CourseResultView getStudentSyllabus(int tnId, int taskId, long studentNo) {
+
+        Map<String,Object> timeConfigMap;
+
+        timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
+
+
+        //根据学生所在班级课表获取组成学生课表
+        return getStudentSyllabus(tnId,taskId,studentNo,timeConfigMap);
+    }
+
+    public CourseResultView getStudentSyllabus(int tnId, int taskId, long studentNo,Map<String,Object> timeConfigMap) {
+        Map<String,Object> student = queryOneStudent(tnId, studentNo);
+        List<Map<String,Object>> classList = this.getClassList(tnId,student);
+        CourseResultView courseResultView = null;
+        int courseCount,dayCount;
+        if (timeConfigMap == null)
+            throw new BizException("error", "当前租户下排课任务课时设置为空,请设置后再试");
+
+        dayCount = ((List)timeConfigMap.get("list")).size();
+        courseCount = (int)timeConfigMap.get("count");
+        List<List<String>> lists = this.genDefaultSyllabus(dayCount,courseCount);
+        Iterator<Map<String,Object>> classIterator = classList.iterator();
+        Map<String,Object> objectMap;
+        Map<String,Object> params;
+        while (classIterator.hasNext()){
+            objectMap = classIterator.next();
+            params = new HashMap<>();
+            params.put("classId",objectMap.get("id"));
+            params.put("classType",objectMap.get("classType"));
+            courseResultView = this.genSyllabus(tnId,taskId,true,Constant.TABLE_TYPE_CLASS,params,lists,timeConfigMap);
+        }
+        //根据学生所在班级课表获取组成学生课表
+        return courseResultView;
+    }
+
+    private List<Map<String,Object>> getClassList(int tnId,Map<String,Object> student){
+        List<Map<String,Object>> classList = new ArrayList<>();
+        Map<String,Object> rtnMap;
+        String grade = (String) student.get("student_grade");
+        Map<String,Integer> admClassMap = iexJwScheduleTaskService.getClassMapByTnId(tnId,Constant.CLASS_ADM_CODE,grade);
+        Map<String,Integer> eduClassMap = iexJwScheduleTaskService.getClassMapByTnId(tnId,Constant.CLASS_EDU_CODE,grade);
+
+        //行政班
+        rtnMap = new HashMap<>();
+        String className = (String) student.get("student_class");
+        int admId = admClassMap.get(className);
+        rtnMap.put("classType",Constant.CLASS_ADM_CODE);
+        rtnMap.put("id",admId);
+        rtnMap.put("name",className);
+        classList.add(rtnMap);
+        //教学班 //不忽略教学班可能为空的情况
+        int eduId = 0;
+        for (int i = 1 ; i <=3 ; i++) {
+            className = (String) student.get("student_check_major_class"+i);
+            if (!StringUtils.isEmpty(className)) {
+                eduId = eduClassMap.get(className);
+                rtnMap.put("classType", Constant.CLASS_EDU_CODE);
+                rtnMap.put("id", eduId);
+                rtnMap.put("name", className);
+                classList.add(rtnMap);
+            }
+        }
+        return classList;
+    }
+
+    private Map<String,Object> queryOneStudent(int tnId,long studentNo){
+        //获取一个学生所在的班级列表
+        String tableName = ParamsUtils.combinationTableName(Constant.STUDENT, tnId);
+
+        if (com.alibaba.dubbo.common.utils.StringUtils.isBlank(tableName)) {
+            return null;
+        }
+        List<Map<String,Object>> params = new ArrayList<>();
+        Map<String,Object> param = new HashMap<>();
+        param.put("key","student_no");
+        param.put("op","=");
+        param.put("value",studentNo);
+        params.add(param);
+        List<LinkedHashMap<String, Object>> tenantCustoms = iexTeantCustomDAO.likeTableByParams(tableName,params);
+        if (tenantCustoms == null || tenantCustoms.size()==0 || tenantCustoms.size()>1){
+            throw new BizException("error","学生不存在或存在多个学生!");
+        }
+        return tenantCustoms.get(0);
     }
 
     /**
@@ -236,17 +350,33 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @return
      */
     private List<JwCourseTableDTO> queryList(int tnId,int taskId,Map<String,Object> params){
+        return this.queryList(tnId,taskId,false,params);
+    }
+
+    /**
+     * 获取课表列表
+     * @param tnId
+     * @param taskId
+     * @param params
+     * @return
+     */
+    private List<JwCourseTableDTO> queryList(int tnId,int taskId,boolean hasRoom,Map<String,Object> params){
         String teacherTableName;
-        String classTableName;
+        String roomTableName = null;
+        String admClassTableName = null;
+        String eduClassTableName = null;
         List<JwCourseTableDTO> jwCourseTableDTOs;
         params.put("tnId",tnId);
         params.put("taskId",taskId);
         teacherTableName = ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER, tnId);
-        classTableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM, tnId);
-        jwCourseTableDTOs = syllabusDAO.queryList(params, teacherTableName, classTableName);
+        admClassTableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM, tnId);
+        eduClassTableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, tnId);
+        if (hasRoom){
+            roomTableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM, tnId);
+        }
+        jwCourseTableDTOs = syllabusDAO.queryList(params, teacherTableName,admClassTableName,eduClassTableName,roomTableName);
         return jwCourseTableDTOs;
     }
-
 
     /**
      * 将树化课表转换为返回格式
@@ -387,7 +517,9 @@ public class SyllabusServiceImpl implements ISyllabusService {
                         .append(Constant.GEN_COURSE_TABLE_WRAP_SPLIT)
                         .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_S)
                         .append(jwCourseTableDTO.getTeacherName())
-                        .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_E);
+                        .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_E)
+                        .append(Constant.GEN_COURSE_TABLE_WRAP_SPLIT)
+                        .append(jwCourseTableDTO.getRoomName());
                 break;
             case Constant.TABLE_TYPE_CLASS:
                 rtnStrBf.append(jwCourseTableDTO.getCourseName())
@@ -419,6 +551,17 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @return
      */
     public CourseResultView genSyllabus(int tnId,int taskId,String type,Map<String, Object> params){
+        return this.genSyllabus(tnId,taskId,type,false,params);
+    }
+    /**
+     * 生成并填充课表内容
+     * @param tnId
+     * @param taskId
+     * @param type
+     * @param params
+     * @return
+     */
+    public CourseResultView genSyllabus(int tnId,int taskId,String type,boolean hasRoom,Map<String, Object> params){
         List<List<String>> lists;
         Map<String, Object> timeConfigMap;
         int courseCount,dayCount;
@@ -431,7 +574,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
         courseCount = (int)timeConfigMap.get("count");
         lists = genDefaultSyllabus(dayCount,courseCount);
 
-        return this.genSyllabus(tnId,taskId,type,params,lists,timeConfigMap);
+        return this.genSyllabus(tnId,taskId,hasRoom,type,params,lists,timeConfigMap);
     }
 
     /**
@@ -444,12 +587,25 @@ public class SyllabusServiceImpl implements ISyllabusService {
      */
     @Override
     public CourseResultView genSyllabus(int tnId,int taskId,String type,Map<String, Object> params,List<List<String>> lists,Map<String, Object> timeConfigMap){
+        return this.genSyllabus(tnId,taskId,false,type,params,lists,timeConfigMap);
+    }
+
+    /**
+     * 生成并填充课表内容
+     * @param tnId
+     * @param taskId
+     * @param type
+     * @param params
+     * @return
+     */
+    @Override
+    public CourseResultView genSyllabus(int tnId,int taskId,boolean hasRoom,String type,Map<String, Object> params,List<List<String>> lists,Map<String, Object> timeConfigMap){
         List<JwCourseTableDTO> jwCourseTableDTOs;
         int week,day;
         String tempCourse;
         CourseResultView courseResultView = new CourseResultView();
 
-        jwCourseTableDTOs = this.queryList(tnId,taskId,params);
+        jwCourseTableDTOs = this.queryList(tnId,taskId,hasRoom,params);
         if (jwCourseTableDTOs.size() == 0)
             throw new BizException("error", "当前租户下排课任务"+type+"课表为空,请稍后再试");
 
@@ -520,8 +676,9 @@ public class SyllabusServiceImpl implements ISyllabusService {
             for (JwSyllabus jwSyllabus : jwSyllabuses) {
                 list.add(this.toLine(jwSyllabus));
             }
+            //复写数据
 //            bufferedWriter =  Files.newWriter(new File("/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_2.txt"), Charset.defaultCharset());
-            CharSink charSink = Files.asCharSink(new File(iexJwScheduleTaskService.getScheduleTaskPath(taskId, tnId) + Constant.PATH_SCHEDULE), Charset.defaultCharset());
+            CharSink charSink = Files.asCharSink(new File(iexJwScheduleTaskService.getScheduleTaskPath(taskId, tnId) + Constant.PATH_SCHEDULE_ADM), Charset.defaultCharset());
             charSink.writeLines(list);
         }catch (IOException e) {
             e.printStackTrace();
