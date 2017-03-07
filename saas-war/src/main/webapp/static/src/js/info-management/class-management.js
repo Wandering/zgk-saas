@@ -708,12 +708,12 @@ UploadData.prototype = {
         uploadDataHtml.push('<span id="uploader-demo">');
 
         uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
-        uploadDataHtml.push('<button class="btn btn-info btn-import" id="xz-btn-import">'+textTip+'</button>');
+        uploadDataHtml.push('<div class="btn btn-info btn-import" id="xz-btn-import">'+textTip+'</div>');
         uploadDataHtml.push('</span>');
 
         uploadDataHtml.push('<span id="uploader-demo">');
         uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
-        uploadDataHtml.push('<button class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">教学班模板上传</button>');
+        uploadDataHtml.push('<div class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">教学班模板上传</div>');
         uploadDataHtml.push('</span>');
 
 

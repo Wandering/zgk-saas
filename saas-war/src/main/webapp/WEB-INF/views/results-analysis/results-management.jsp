@@ -259,6 +259,12 @@
     {{/each}}
 </script>
 
+
+
+
+
+
+
 <%@ include file="./../common/footer.jsp" %>
 <script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
 <link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/datepicker.css">
