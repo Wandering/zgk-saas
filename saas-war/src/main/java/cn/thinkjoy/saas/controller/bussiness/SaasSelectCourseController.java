@@ -59,9 +59,8 @@ public class SaasSelectCourseController {
         paramMap.put("grade",task.getGrade());
         paramMap.put("status",0);
         SelectCourseTask tmpGradeTask = (SelectCourseTask) iSelectCourseTaskService.queryOne(paramMap);
-        // 该年级已经存在选课任务
-        Date currentTime = new Date();
-        if(tmpGradeTask != null && currentTime.after(tmpGradeTask.getStartTime()) && currentTime.before(tmpGradeTask.getEndTime())){
+        // 该年级已经存在未结束的选课任务
+        if(tmpGradeTask != null && task.getStartTime().before(tmpGradeTask.getEndTime())){
             ExceptionUtil.throwException(ErrorCode.TASK_GRADE_REPEAT);
         }
 
