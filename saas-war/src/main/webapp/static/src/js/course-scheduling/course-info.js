@@ -6,6 +6,27 @@
 var taskId = Common.cookie.getCookie('taskId');
 var scheduleName = Common.cookie.getCookie('scheduleName');
 $('.scheduleName').text(scheduleName);
+
+
+
+//判断教室信息模块是否展示
+Common.ajaxFun('/scheduleTask/getConfigRooms.do', 'GET', {
+    'taskId': taskId
+}, function (res) {
+    if (res.rtnCode == "0000000") {
+        var d = res.bizData;
+        if (typeof d.msg != 'undefined') {
+            $('.base-item-tab').find('li').eq(3).fadeOut().remove();
+        }
+    }
+});
+
+
+
+
+
+
+
 function CourseInfo() {
     this.init();
 }
