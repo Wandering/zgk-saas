@@ -12,6 +12,15 @@ public class ClassRoomView {
     private Integer dayNumber;
     private Integer roomOrder;
     private Long createDate;
+    private int scheduleNumber;
+
+    public int getScheduleNumber() {
+        return scheduleNumber;
+    }
+
+    public void setScheduleNumber(int scheduleNumber) {
+        this.scheduleNumber = scheduleNumber;
+    }
 
     public Long getId() {
         return id;

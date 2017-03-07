@@ -1932,6 +1932,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
             return resultMap;
         }
         int sum=classRooms.get(0).getExecutiveNumber()+classRooms.get(0).getDayNumber();
+        if (classRooms.get(0).getScheduleNumber()!=0){
+            sum=classRooms.get(0).getScheduleNumber();
+        }
         resultMap.put("admNumber",admNumber);
         resultMap.put("sum",sum);
         resultMap.put("classRoomId",classRooms.get(0).getId());
