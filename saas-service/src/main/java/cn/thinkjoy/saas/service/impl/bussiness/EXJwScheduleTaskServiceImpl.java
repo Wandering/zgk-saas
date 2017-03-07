@@ -649,7 +649,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 @Override
                 public void run() {
                     String path = FileOperation.getParamsPath(tnId, taskId,type);
-                    String shellCMD=ReadCmdLine.timetableShellCmd(path);
+                    String shellCMD=ReadCmdLine.timetableEduShellCmd(path);
                     Integer c = ReadCmdLine.run(path,shellCMD);
                     String result = getSchduleResultStatus(taskId, tnId);
                     //翻译课表并存入数据库
