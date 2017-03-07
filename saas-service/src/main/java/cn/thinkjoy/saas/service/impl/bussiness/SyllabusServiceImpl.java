@@ -521,7 +521,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
                 list.add(this.toLine(jwSyllabus));
             }
 //            bufferedWriter =  Files.newWriter(new File("/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_2.txt"), Charset.defaultCharset());
-            CharSink charSink = Files.asCharSink(new File(iexJwScheduleTaskService.getScheduleTaskPath(tnId, taskId) + Constant.PATH_SCHEDULE), Charset.defaultCharset());
+            CharSink charSink = Files.asCharSink(new File(iexJwScheduleTaskService.getScheduleTaskPath(taskId, tnId) + Constant.PATH_SCHEDULE), Charset.defaultCharset());
             charSink.writeLines(list);
         }catch (IOException e) {
             e.printStackTrace();

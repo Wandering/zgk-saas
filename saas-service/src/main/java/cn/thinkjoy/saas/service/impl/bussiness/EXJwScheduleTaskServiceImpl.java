@@ -495,7 +495,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         final Integer tnId = jwCourseTable.getTnId(),
                 taskId = jwCourseTable.getTaskId();
 
-        String path = this.getScheduleTaskPath(tnId, taskId);
+        String path = this.getScheduleTaskPath(taskId, tnId);
 
         String shCmd = String.format(ReadCmdLine.SHELL_TIMETABLE_ADJUST, path, adjustmentType, jwCourseTable.getClassId(), jwCourseTable.getWeek(), jwCourseTable.getSort());
 
@@ -1434,7 +1434,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         List<String> allCourseList = null;
         Map<Integer, String> courses = getCourseByTnIdAndTaskId(tnId, taskId);
         try {
-            String path = getScheduleTaskPath(tnId, taskId) + Constant.PATH_SCHEDULE;
+            String path = getScheduleTaskPath(taskId, tnId) + Constant.PATH_SCHEDULE;
 //                String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_1.txt";
             CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
             allCourseList = main.readLines();
