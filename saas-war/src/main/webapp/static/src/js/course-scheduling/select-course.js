@@ -42,7 +42,6 @@ SelectCourse.prototype = {
                 });
 
                 Handlebars.registerHelper('reStatusClass', function (v) {
-                    console.log(v)
                     // 0：选课未设置 1：选课未开始 2：学生选课中 3：选课结果待使用 4：选课结果已使用"
                     var resultClass = '';
                     switch (v) {
@@ -73,7 +72,6 @@ SelectCourse.prototype = {
 
                 Handlebars.registerHelper('reStatus', function (v) {
 
-                    console.log(v)
                     // 0：选课未设置 1：选课未开始 2：学生选课中 3：选课结果待使用 4：选课结果已使用"
                     var result = '';
                     switch (v) {
@@ -148,7 +146,7 @@ SelectCourse.prototype = {
         return grade.join('');
     },
     // 弹层
-    addOrUpdateSelectCourse: function (title, isUpdate) {
+    addOrUpdateSelectCourse: function (title, starttime) {
         var that = this;
         var addSelectCourseContentHtml = [];
         addSelectCourseContentHtml.push('<div class="add-select-course-box">');
@@ -178,46 +176,60 @@ SelectCourse.prototype = {
             content: addSelectCourseContentHtml.join(''),
             success: function () {
                 that.getYears();
+
+                layui.use('laydate', function(){
+                    var laydate = layui.laydate;
+                    var minV = '';
+                    if(starttime){
+                        minV = starttime;
+                    }else{
+                        minV = laydate.now();
+                    }
+                    var start = {
+                        min: minV
+                        ,max: '2099-06-16 23:59:59'
+                        ,istoday: false
+                        ,choose: function(datas){
+                            console.log(datas)
+                            end.min = datas; //开始日选好后，重置结束日的最小日期
+                            end.start = datas //将结束日的初始值设定为开始日
+                        },
+                        elem: this,
+                        istime: true,
+                        format: 'YYYY-MM-DD hh:mm:ss'
+                    };
+
+                    var end = {
+                        min: minV
+                        ,max: '2099-06-16 23:59:59'
+                        ,istoday: false
+                        ,choose: function(datas){
+                            start.max = datas; //结束日选好后，重置开始日的最大日期
+                        },
+                        elem: this,
+                        istime: true,
+                        format: 'YYYY-MM-DD hh:mm:ss'
+                    };
+
+                    document.getElementById('LAY_demorange_s').onclick = function(){
+                        start.elem = this;
+                        laydate(start);
+                    }
+                    document.getElementById('LAY_demorange_e').onclick = function(){
+                        end.elem = this
+                        laydate(end);
+                    }
+
+                });
+
+
+
+
+
+
             }
         });
-        layui.use('laydate', function(){
-            var laydate = layui.laydate;
 
-            var start = {
-                min: laydate.now()
-                ,max: '2099-06-16 23:59:59'
-                ,istoday: false
-                ,choose: function(datas){
-                    end.min = datas; //开始日选好后，重置结束日的最小日期
-                    end.start = datas //将结束日的初始值设定为开始日
-                },
-                elem: this,
-                istime: true,
-                format: 'YYYY-MM-DD hh:mm:ss'
-            };
-
-            var end = {
-                min: laydate.now()
-                ,max: '2099-06-16 23:59:59'
-                ,istoday: false
-                ,choose: function(datas){
-                    start.max = datas; //结束日选好后，重置开始日的最大日期
-                },
-                elem: this,
-                istime: true,
-                format: 'YYYY-MM-DD hh:mm:ss'
-            };
-
-            document.getElementById('LAY_demorange_s').onclick = function(){
-                start.elem = this;
-                laydate(start);
-            }
-            document.getElementById('LAY_demorange_e').onclick = function(){
-                end.elem = this
-                laydate(end);
-            }
-
-        });
     },
     // 学期年份  当前年往前推5年
     getYears: function () {
@@ -332,6 +344,15 @@ $(function () {
             layer.tips('请设置选课结束时间!', '#LAY_demorange_e');
             return false;
         }
+        var startDataNum = Date.parse(new Date(startDate))/1000;
+        var endDateNum = Date.parse(new Date(endDate))/1000;
+        //console.log(startDataNum);
+        //console.log(endDateNum);
+        if (startDate == endDate || startDataNum > endDateNum) {
+            layer.tips('选课结束时间必须晚于选课开始时间', '#LAY_demorange_e');
+            return false;
+        }
+
         SelectCourseIns.addSelectCourseTask(id, taskName, gradeV, startDate, endDate);
     });
 
@@ -355,7 +376,7 @@ $(function () {
         var termname = selectCourseV.attr('termname');
         var state = selectCourseV.attr('state');
         $('#save-schedule-btn').attr('dataId', id);
-        SelectCourseIns.addOrUpdateSelectCourse('更新选课任务');
+        SelectCourseIns.addOrUpdateSelectCourse('更新选课任务',starttime,endtime);
         $('#task-name').val(schedulename);
         $('#grade-list').attr('disabled','disabled').children('option[value="' + gradename + '"]').attr('selected', 'selected');
         $('#LAY_demorange_s').val(starttime);
