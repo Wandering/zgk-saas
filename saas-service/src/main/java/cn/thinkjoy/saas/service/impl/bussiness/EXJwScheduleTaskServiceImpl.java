@@ -782,7 +782,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
      * @param tnId
      * @return
      */
-    private List<StringBuffer> getClassRoom(Integer taskId,Integer tnId) {
+       @Override
+    public List<StringBuffer> getClassRoom(Integer taskId,Integer tnId) {
 
         List<StringBuffer> stringBuffers = new ArrayList<>();
 

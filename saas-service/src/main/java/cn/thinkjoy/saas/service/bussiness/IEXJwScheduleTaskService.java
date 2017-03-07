@@ -103,6 +103,13 @@ public interface IEXJwScheduleTaskService {
     Map<String,Object> getCourseTimeConfig(int tnId, int taskId);
 
     /**
+     * 获取教室信息
+     * @param taskId
+     * @param tnId
+     * @return
+     */
+    List<StringBuffer> getClassRoom(Integer taskId,Integer tnId);
+    /**
      * 获取路径
      * @param taskId
      * @param tnId
