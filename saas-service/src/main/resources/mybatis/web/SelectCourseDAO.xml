@@ -20,7 +20,8 @@
     <select id="getSelectCourseInfo" parameterType="java.util.Map" resultType="cn.thinkjoy.saas.domain.SelectCourseTask">
         select tt.state,tt.startTime,tt.endTime
         from saas_select_course_task tt
-        where tt.tnId=#{tnId} and status=0 and tt.grade=#{grade};
+        where tt.tnId=#{tnId} and status=0 and tt.grade=#{grade}
+        order by tt.startTime desc
     </select>
 
     <insert id="insertList" parameterType="java.util.Map">
