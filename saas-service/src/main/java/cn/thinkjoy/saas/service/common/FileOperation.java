@@ -22,8 +22,15 @@ public class FileOperation {
     public static final String COURSE_TIMESLOTS="course_timeslots";
     //年级不排课
     public static final String GRAD_NON_DISPACHING="grad_non_dispaching";
+
+    //学生信息
+    public static final String STUDENT_SELECTION="student_selection";
+
+    //教室信息
+    public static final String CLASS_ROOM="room";
     //教师设置
     public static final String TEACHERS_SETTING="teachers_setting_preference";
+
 
     public static final String PARMETERS="parameters";
 
