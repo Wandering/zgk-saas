@@ -40,6 +40,37 @@ SelectCourse.prototype = {
                     }
                     return gradeTxt;
                 });
+
+                Handlebars.registerHelper('reStatusClass', function (v) {
+                    console.log(v)
+                    // 0：选课未设置 1：选课未开始 2：学生选课中 3：选课结果待使用 4：选课结果已使用"
+                    var resultClass = '';
+                    switch (v) {
+                        case 0: // 选课未设置
+                            resultClass = 'class="look-course"';
+                            break;
+                        case 1: // 选课未开始
+                            resultClass = 'class="look-course"';
+                            break;
+                        case 2: // 学生选课中
+                            resultClass = 'class="look-course" selCourseLoging="true"';
+                            break;
+                        case 3: // 选课结果待使用
+                            resultClass = 'class="look-course-result"';
+                            break;
+                        case 4: // 选课结果已使用
+                            resultClass = 'class="look-course-result"';
+                            break;
+                        default:
+                            break;
+                    }
+                    return resultClass;
+                });
+
+
+
+
+
                 Handlebars.registerHelper('reStatus', function (v) {
 
                     console.log(v)
@@ -47,7 +78,7 @@ SelectCourse.prototype = {
                     var result = '';
                     switch (v) {
                         case 0: // 选课未设置
-                            result = '<a href="javascript:;" state="'+ v +'" class="look-course">选课未设置</a>';
+                            result = '<a href="javascript:;" class="look-course">选课未设置</a>';
                             break;
                         case 1: // 选课未开始
                             result = '<a href="javascript:;" state="'+ v +'" class="look-course">选课未开始</a>';
