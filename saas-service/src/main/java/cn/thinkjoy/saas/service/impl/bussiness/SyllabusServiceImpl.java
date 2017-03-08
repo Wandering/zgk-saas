@@ -188,6 +188,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
             className = (String) student.get("student_check_major_class"+i);
             if (!StringUtils.isEmpty(className)) {
                 eduId = eduClassMap.get(className);
+                rtnMap = new HashMap<>();
                 rtnMap.put("classType", Constant.CLASS_EDU_CODE);
                 rtnMap.put("id", eduId);
                 rtnMap.put("name", className);
@@ -606,19 +607,20 @@ public class SyllabusServiceImpl implements ISyllabusService {
         CourseResultView courseResultView = new CourseResultView();
 
         jwCourseTableDTOs = this.queryList(tnId,taskId,hasRoom,params);
-        if (jwCourseTableDTOs.size() == 0)
-            throw new BizException("error", "当前租户下排课任务"+type+"课表为空,请稍后再试");
+        if (jwCourseTableDTOs.size() != 0) {
+//            throw new BizException("error", "当前租户下排课任务"+type+"课表为空,请稍后再试");
 
-        for (JwCourseTableDTO jwCourseTableDTO : jwCourseTableDTOs){
-            week = jwCourseTableDTO.getWeek();
-            day = jwCourseTableDTO.getSort();
-            tempCourse = lists.get(week).get(day);
-            //判定是否已经被插入过课程
-            if (StringUtils.isEmpty(tempCourse))
-                //没有插入过课程
-                lists.get(week).set(day,this.genStringByDTO(type,jwCourseTableDTO));
-            else
-                lists.get(week).set(day,tempCourse+ Constant.GEN_COURSE_TABLE_WRAP_SPLIT + this.genStringByDTO(type,jwCourseTableDTO));
+            for (JwCourseTableDTO jwCourseTableDTO : jwCourseTableDTOs) {
+                week = jwCourseTableDTO.getWeek();
+                day = jwCourseTableDTO.getSort();
+                tempCourse = lists.get(week).get(day);
+                //判定是否已经被插入过课程
+                if (StringUtils.isEmpty(tempCourse))
+                    //没有插入过课程
+                    lists.get(week).set(day, this.genStringByDTO(type, jwCourseTableDTO));
+                else
+                    lists.get(week).set(day, tempCourse + Constant.GEN_COURSE_TABLE_WRAP_SPLIT + this.genStringByDTO(type, jwCourseTableDTO));
+            }
         }
 
         courseResultView.setWeek(lists);
