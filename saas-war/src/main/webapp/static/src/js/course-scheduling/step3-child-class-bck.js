@@ -28,14 +28,6 @@ $('.scheduleName').text(scheduleName);
  // 行政班调课 根据老师坐标填充空白部分
  * @constructor
  */
-
-
-
-
-
-
-
-
 // 课表
 function CourseTable(){
     this.init();
@@ -52,6 +44,7 @@ function CourseTable(){
     this.posY = '';
     this.tarPosX = '';
     this.tarPosY = '';
+    this.flagClassType = null;
 }
 
 CourseTable.prototype = {
@@ -70,8 +63,17 @@ CourseTable.prototype = {
         this.selectClassesEvent(); // 选择学生班级
         this.selectStudentEvent(); // 选择学生
         this.selectRoomEvent(); // 选择教师
-        this.courseTableEvent('class');
-        this.courseTableEvent('teacher');
+        this.queryGradeClassType(); // 获取年级班级类型
+        // 2：教学班走读 ，2以外：行政
+        console.log(this.flagClassType)
+        if(this.flagClassType!='2'){
+            $('.student-tab,.room-tab').addClass('dh');
+            this.courseTableEvent('class');
+            this.courseTableEvent('teacher');
+        }else{
+            $('.student-tab,.room-tab').removeClass('dh');
+        }
+
     },
     // 课表切换
     tabEvent:function(){
@@ -500,16 +502,11 @@ CourseTable.prototype = {
         }, function (res) {
             //console.log(res);
             if (res.rtnCode == '0000000') {
-                // 2:行政  2以外:走读
-                if(res.bizData=='2'){
-                    $('.student-tab,.room-tab').addClass('dh');
-                }else{
-                    $('.student-tab,.room-tab').removeClass('dh');
-                }
+                that.flagClassType = res.bizData;
             }
         }, function (res) {
             layer.msg(res.msg);
-        });
+        },true);
     },
     // 拉取学生
     getQueryStudent: function (classId,classType) {
@@ -735,8 +732,6 @@ CourseTable.prototype = {
 
                 }
             }
-
-
         }, function (res) {
             layer.msg(res.msg);
         });
@@ -840,9 +835,7 @@ CourseTable.prototype = {
         }, function (res) {
             layer.msg(res.msg);
         });
-    },
-
-
+    }
 };
 
-var CourseTableIns = new CourseTable();
+new CourseTable();
