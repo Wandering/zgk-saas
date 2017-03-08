@@ -2064,7 +2064,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                         jwCourseTables.add(jwCourseTable);
                     } else {
                         Map<String,Object> classObj = classObjMap.get(classId);
-                        String course = classObj.get("class_type").toString();
+                        String course = classObj.get("class_major_type").toString();
                         Map<String, Object> teacherMap = (Map<String, Object>) teachers.get(getTeacherKey(course, className));
                         courseId = courses.get(course);
                         //teacherId teacherMap.get("id")
