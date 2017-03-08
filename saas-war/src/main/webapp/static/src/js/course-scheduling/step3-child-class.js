@@ -89,6 +89,33 @@ ClassRoomTable.prototype = {
             layer.msg(result);
         });
     },
+    // 拉取教室
+    getQueryRoom: function () {
+        var that = this;
+        Common.ajaxFun('/baseResult/queryRoom.do', 'GET', {
+            "taskId": taskId
+        }, function (result) {
+            if (result.rtnCode == "0000000") {
+                $('#select-room option').remove();
+                var queryCourse = [];
+                $.each(result.bizData, function (i, v) {
+                    queryCourse.push('<option value="' + v.roomId + '">' + v.roomName + '</option>')
+                });
+                $('#select-room').append(queryCourse);
+                $('#select-room option:eq(0)').attr('selected', 'selected');
+                var selectedV = $('#select-room option:eq(0):selected').val()
+                var selectedTxt = $('#select-room option:eq(0):selected').text()
+                that.getClassRoomTable('room', {
+                    'roomId': selectedV
+                });
+                $('.room-name').text(selectedTxt);
+            } else {
+                layer.msg(result.msg);
+            }
+        }, function (result) {
+            layer.msg(result);
+        });
+    },
     // 拉取班级
     getQueryClass: function (classType) {
         var that = this;
@@ -110,7 +137,8 @@ ClassRoomTable.prototype = {
                     $('.scheduling-name').text(selectedTxt);
                     that.getClassRoomTable('class', {'classId': selectedV,'classType':selectClassType}, selectedV);
                 }else if(classType=='select-classes'){
-                    $('.classes-label').text(selectedTxt);
+                    ClassRoomTableIns.studentClassId = selectedV;
+                    $('.classes-label').text(selectedTxt + '-');
                     that.getQueryStudent(selectedV,selectClassType);
                 }
 
@@ -140,7 +168,7 @@ ClassRoomTable.prototype = {
                 $('#select-student option:eq(0)').attr('selected', 'selected');
                 var selectedV = $('#select-student option:eq(0):selected').val()
                 var selectedTxt = $('#select-student option:eq(0):selected').text();
-                $('.student-label').text(selectedTxt + " - ");
+                $('.student-label').text(selectedTxt);
                 that.getClassRoomTable('student', {
                     'classId': classId,
                     'studentNo': selectedV
@@ -162,6 +190,7 @@ ClassRoomTable.prototype = {
             if (result.rtnCode == "0000000") {
                 var theadTemplate = Handlebars.compile($("#" + urlType + "-thead-list-template").html());
                 Handlebars.registerHelper("thead", function (res) {
+                    console.log(res);
                     var resData = res.split('|');
                     var str = '<td></td>';
                     for (var i = 0; i < resData.length; i++) {
@@ -266,7 +295,7 @@ var ClassRoomTableIns = new ClassRoomTable();
 
 var HashHandle = {
     init: function () {
-        this.hashArr = ['#all', '#class', '#teacher','#student'];
+        this.hashArr = ['#all', '#class', '#teacher','#student','#room'];
         this.addEvent();
         this.hashOperate();
         this.initStatus();
@@ -345,6 +374,7 @@ var HashHandle = {
                         ClassRoomTableIns.getQueryCourse();
                         ClassRoomTableIns.getQueryClass("select-class");
                         ClassRoomTableIns.getQueryClass("select-classes");
+                        ClassRoomTableIns.getQueryRoom();
                         break;
                     case 5:
                         console.log("排课失败2");
@@ -432,6 +462,7 @@ var HashHandle = {
                         ClassRoomTableIns.getQueryCourse();
                         ClassRoomTableIns.getQueryClass("select-class");
                         ClassRoomTableIns.getQueryClass("select-classes");
+                        ClassRoomTableIns.getQueryRoom();
                         break;
                     case "-1":
                         console.log("排课失败-1");
@@ -491,14 +522,13 @@ var HashHandle = {
     queryStatusByCoord: function (type,posX, posY, selectedV) {
         var that = this;
         var coord = [posY, posX];
-        console.log(JSON.stringify(coord));
         Common.ajaxFun('/scheduleTask/'+ type +'/queryStatusByCoord.do', 'GET', {
             'taskId': taskId,
             'id': selectedV,
             'coord': JSON.stringify(coord)
         }, function (res) {
             if (res.rtnCode == '0000000' && res.bizData == true) {
-                console.log('请求成功');
+                console.log('根据坐标获取成功状态请求成功');
                 that.colorScheduleResult(type);
             }
         }, function (res) {
@@ -612,7 +642,7 @@ var HashHandle = {
             //console.log(res);
             if (res.rtnCode == '0000000') {
                 var datas = res.bizData;
-                console.log(datas);
+                //console.log(datas);
                 if(res.bizData==true){
                     layer.msg("调课成功!");
                 }
@@ -631,7 +661,7 @@ var HashHandle = {
             'id': selectedV,
             'coord': JSON.stringify([posY, posX])
         }, function (res) {
-            console.log(res);
+            //console.log(res);
             var datas = res.bizData;
             if (res.rtnCode == '0000000') {
                 //console.log(datas.length)
@@ -640,10 +670,10 @@ var HashHandle = {
                     //console.log(datas[i])
                     // 一天节数
                     for(var j=0;j<datas[i].length;j++){
-                        console.log(datas[i][j])
+                        //console.log(datas[i][j])
                         //$('.teacherCourseTable[x="'+ j +'"][y="'+ i +'"]').text();
                         var defaultDatas = $('.'+ type +'CourseTable[x="'+ j +'"][y="'+ i +'"]').text();
-                        console.log('x='+j +",y="+i +"=="+ defaultDatas);
+                        //console.log('x='+j +",y="+i +"=="+ defaultDatas);
                         if(defaultDatas==""){
                             $('.'+ type +'CourseTable[x="'+ j +'"][y="'+ i +'"]').text(datas[i][j]).attr('flag-txt','true');
                         }
@@ -660,14 +690,13 @@ var HashHandle = {
         Common.ajaxFun('/baseResult/queryGradeClassType.do', 'GET', {
             'taskId': taskId
         }, function (res) {
-            console.log(res);
+            //console.log(res);
             if (res.rtnCode == '0000000') {
                 // 2:行政  2以外:走读
                 if(res.bizData=='2'){
-                    $('.student-tab').removeClass('dh');
-                    //$('.student-tab').addClass('dh');
+                    $('.student-tab,.room-tab').addClass('dh');
                 }else{
-                    $('.student-tab').removeClass('dh');
+                    $('.student-tab,.room-tab').removeClass('dh');
                 }
             }
         }, function (res) {
@@ -728,6 +757,16 @@ $(function () {
         });
     });
 
+    // 选择教室
+    $("#select-room").change(function () {
+        var roomTxt = $(this).children('option:selected').text()
+            ,roomId = $(this).children('option:selected').val();
+        $('.room-name').text(roomTxt);
+        ClassRoomTableIns.getClassRoomTable('room', {
+            'roomId': roomId
+        });
+    });
+
     //// 选择学生班级
     $("#select-classes").change(function () {
         ClassRoomTableIns.className = $(this).children('option:selected').text();
@@ -741,9 +780,9 @@ $(function () {
     $("#select-student").change(function () {
         ClassRoomTableIns.studentName = $(this).children('option:selected').text();
         ClassRoomTableIns.studentId = $(this).children('option:selected').val();
-        $('.student-label').text(ClassRoomTableIns.studentName + "学生");
+        $('.student-label').text(ClassRoomTableIns.studentName);
         ClassRoomTableIns.getClassRoomTable('student', {
-            'classId': ClassRoomTableIns.classId,
+            'classId': ClassRoomTableIns.studentClassId,
             'studentNo': ClassRoomTableIns.studentId
         });
     });
