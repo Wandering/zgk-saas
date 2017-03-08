@@ -13,8 +13,10 @@ import cn.thinkjoy.saas.dao.*;
 import cn.thinkjoy.saas.dao.bussiness.*;
 import cn.thinkjoy.saas.dao.bussiness.scheduleRule.MergeClassDAO;
 import cn.thinkjoy.saas.domain.*;
-import cn.thinkjoy.saas.domain.bussiness.*;
-import cn.thinkjoy.saas.enums.ErrorCode;
+import cn.thinkjoy.saas.domain.bussiness.ClassRoomView;
+import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
+import cn.thinkjoy.saas.domain.bussiness.CourseManageVo;
+import cn.thinkjoy.saas.domain.bussiness.MergeClassInfoVo;
 import cn.thinkjoy.saas.enums.GradeTypeEnum;
 import cn.thinkjoy.saas.service.IGradeService;
 import cn.thinkjoy.saas.service.bussiness.*;
@@ -23,7 +25,6 @@ import cn.thinkjoy.saas.service.common.FileOperation;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import cn.thinkjoy.saas.service.common.ReadCmdLine;
 import com.alibaba.dubbo.common.json.JSON;
-import com.alibaba.dubbo.common.json.ParseException;
 import com.google.common.collect.Maps;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
@@ -132,7 +133,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     @Autowired
     private RedisRepository<String,Object> redis;
 
-    protected static final ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
 
     @Override
@@ -553,7 +553,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         Map map = new HashMap();
         map.put("tnId", tnId);
         map.put("id", taskId);
-        JwScheduleTask jwScheduleTask = selectScheduleTaskPath(map);
+//        JwScheduleTask jwScheduleTask = selectScheduleTaskPath(map);
+        JwScheduleTask jwScheduleTask = iJwScheduleTaskDAO.queryOne(map,"id","asc");
 
         if (jwScheduleTask == null)
             return null;
@@ -619,6 +620,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         flag = printBuffers(tnId, taskId, classRooms, FileOperation.CLASS_ROOM,type);
 
         if (flag) {
+            ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
             cachedThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -688,6 +690,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         result = printBuffers(tnId, taskId, teacherSettingBuffers, FileOperation.TEACHERS_SETTING,type);
         LOGGER.info("===================参数序列化结果:" + result + "===================");
         if (result) {
+            ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
             cachedThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
