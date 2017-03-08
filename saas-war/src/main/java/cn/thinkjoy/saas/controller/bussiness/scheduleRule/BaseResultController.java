@@ -128,6 +128,8 @@ public class BaseResultController {
     /**
      * 获取学生列表(支持模糊查询)
      * @param taskId
+     * @param classId 班级ID
+     * @param classType 行政班(0)/教学班(1)
      * @param studentName 可选模糊查询参数(如果不为空会模糊匹配学生)
      * @return
      */
