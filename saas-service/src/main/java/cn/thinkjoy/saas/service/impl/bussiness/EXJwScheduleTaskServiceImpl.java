@@ -1914,8 +1914,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         List<String> allCourseList = null;
         Map<Integer, String> courses = this.getCourseByTnIdAndTaskId();
         try {
-//            String path = getScheduleTaskPath(taskId, tnId) + Constant.PATH_SCHEDULE_ADM;
-                String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0(1).txt";
+            String path = getScheduleTaskPath(taskId, tnId) + Constant.PATH_SCHEDULE_ADM;
+//                String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_0(1).txt";
             CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
             allCourseList = main.readLines();
         } catch (Exception e) {
@@ -2014,8 +2014,8 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         List<String> allCourseList = null;
         Map<String, Integer> courses = this.getCourseIdByTnIdAndTaskId();
         try {
-//            String path = getScheduleTaskPath(taskId, tnId) + Constant.PATH_SCHEDULE_EDU;
-                String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/edu_course_0(1).txt";
+            String path = getScheduleTaskPath(taskId, tnId) + Constant.PATH_SCHEDULE_EDU;
+//                String path = "/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/edu_course_0(1).txt";
             CharSource main = Files.asCharSource(new File(path), Charset.defaultCharset());
             allCourseList = main.readLines();
         } catch (Exception e) {
