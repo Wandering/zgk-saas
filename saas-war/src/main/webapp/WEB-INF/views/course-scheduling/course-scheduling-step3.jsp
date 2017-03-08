@@ -118,22 +118,31 @@
                                         <li><i class="icon-step3-teacher-yes"></i><i class="icon-step3-teacher-no"></i>教师课表
                                         </li>
                                         <li class="student-tab dh"><i class="icon-step3-std-yes dh"></i><i class="icon-step3-std-no"></i>学生课表</li>
+                                        <li class="room-tab dh"><i class="icon-step3-std-yes dh"></i><i class="icon-step3-std-no"></i>教室课表</li>
                                     </ul>
                                 </div>
                             </div>
                             <div id="control-jsp" class="dh">
+                                 <%--总课表--%>
                                 <div class="bottom-page">
                                     <%@ include file="../course-scheduling/step3-child-all.jsp"%>
                                 </div>
+                                     <%--班级课表--%>
                                 <div class="bottom-page dh">
                                     <%@ include file="../course-scheduling/step3-child-class.jsp"%>
                                 </div>
+                                     <%--教师课表--%>
                                 <div class="bottom-page dh">
                                     <%@ include file="../course-scheduling/step3-child-teacher.jsp"%>
                                 </div>
+                                     <%--学生课表--%>
                                 <div class="bottom-page dh">
                                     <%@ include file="../course-scheduling/step3-child-student.jsp"%>
                                 </div>
+                                     <%--教师课表--%>
+                                     <div class="bottom-page dh">
+                                         <%@ include file="../course-scheduling/step3-child-room.jsp"%>
+                                     </div>
                             </div>
                         </div>
                     </div>
