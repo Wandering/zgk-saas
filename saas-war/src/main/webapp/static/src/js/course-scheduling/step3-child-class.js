@@ -137,7 +137,8 @@ ClassRoomTable.prototype = {
                     $('.scheduling-name').text(selectedTxt);
                     that.getClassRoomTable('class', {'classId': selectedV,'classType':selectClassType}, selectedV);
                 }else if(classType=='select-classes'){
-                    $('.classes-label').text(selectedTxt);
+                    ClassRoomTableIns.studentClassId = selectedV;
+                    $('.classes-label').text(selectedTxt + '-');
                     that.getQueryStudent(selectedV,selectClassType);
                 }
 
@@ -167,7 +168,7 @@ ClassRoomTable.prototype = {
                 $('#select-student option:eq(0)').attr('selected', 'selected');
                 var selectedV = $('#select-student option:eq(0):selected').val()
                 var selectedTxt = $('#select-student option:eq(0):selected').text();
-                $('.student-label').text(selectedTxt + " - ");
+                $('.student-label').text(selectedTxt);
                 that.getClassRoomTable('student', {
                     'classId': classId,
                     'studentNo': selectedV
@@ -693,12 +694,9 @@ var HashHandle = {
             if (res.rtnCode == '0000000') {
                 // 2:行政  2以外:走读
                 if(res.bizData=='2'){
-                    $('.student-tab,.room-tab').removeClass('dh');
-                    //$('.student-tab').addClass('dh');
-                    //$('.room-tab').addClass('dh');
+                    $('.student-tab,.room-tab').addClass('dh');
                 }else{
-                    $('.student-tab').removeClass('dh');
-                    $('.room-tab').removeClass('dh');
+                    $('.student-tab,.room-tab').removeClass('dh');
                 }
             }
         }, function (res) {
@@ -782,9 +780,9 @@ $(function () {
     $("#select-student").change(function () {
         ClassRoomTableIns.studentName = $(this).children('option:selected').text();
         ClassRoomTableIns.studentId = $(this).children('option:selected').val();
-        $('.student-label').text(ClassRoomTableIns.studentName + "学生");
+        $('.student-label').text(ClassRoomTableIns.studentName);
         ClassRoomTableIns.getClassRoomTable('student', {
-            'classId': ClassRoomTableIns.classId,
+            'classId': ClassRoomTableIns.studentClassId,
             'studentNo': ClassRoomTableIns.studentId
         });
     });
