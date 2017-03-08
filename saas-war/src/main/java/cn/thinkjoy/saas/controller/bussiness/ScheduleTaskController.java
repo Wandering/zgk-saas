@@ -695,8 +695,14 @@ public class ScheduleTaskController {
     }
 
     /**
-     * 排课结果
+     *
+     * @param type 类型分为: room:教室 class:班级  student:学生 all:总课表 teacher:总课表
+     * @param taskId
+     * @param param 根据type不同而组合的参数 room:{"roomId":1} class:{"classId":1,"classType":0}(classType:0:行政班,1:教学班)
+     *              student:{"studentNo":1111111} teacher:{"teacherId":1}
      * @return
+     * @throws IOException
+     * @throws ParseException
      */
     @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
     @ResponseBody

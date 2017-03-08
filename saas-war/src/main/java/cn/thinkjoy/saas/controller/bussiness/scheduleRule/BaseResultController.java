@@ -3,17 +3,18 @@ package cn.thinkjoy.saas.controller.bussiness.scheduleRule;
 import cn.thinkjoy.common.exception.BizException;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
+import cn.thinkjoy.saas.domain.Grade;
 import cn.thinkjoy.saas.domain.JwScheduleTask;
 import cn.thinkjoy.saas.dto.CourseManageDto;
 import cn.thinkjoy.saas.enums.ErrorCode;
 import cn.thinkjoy.saas.enums.GradeEnum;
+import cn.thinkjoy.saas.service.IGradeService;
 import cn.thinkjoy.saas.service.IJwScheduleTaskService;
-import cn.thinkjoy.saas.service.bussiness.EXITenantConfigInstanceService;
-import cn.thinkjoy.saas.service.bussiness.IEXCourseManageService;
-import cn.thinkjoy.saas.service.bussiness.IEXTeacherService;
+import cn.thinkjoy.saas.service.bussiness.*;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.google.common.collect.Maps;
+import freemarker.ext.beans.HashAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -32,17 +33,23 @@ import java.util.*;
 public class BaseResultController {
     @Autowired
     private IJwScheduleTaskService jwScheduleTaskService;
-
+    @Autowired
+    private IEXJwScheduleTaskService iexJwScheduleTaskService;
     @Autowired
     EXITenantConfigInstanceService exiTenantConfigInstanceService;
     @Autowired
     private IEXCourseManageService courseManageService;
+    @Autowired
+    private EXIGradeService exiGradeService;
+    @Autowired
+    private IGradeService gradeService;
     @Autowired
     private IEXTeacherService teacherService;
 
 
     /**
      * 获取教室名称
+     * @param taskId
      * @return
      */
     @RequestMapping(value = "/queryClass",method = RequestMethod.GET)
@@ -65,24 +72,67 @@ public class BaseResultController {
         return list;
     }
 
-//    /**
-//     * 获取教室名称
-//     * @return
-//     */
-//    @RequestMapping(value = "/queryRoom",method = RequestMethod.GET)
-//    @ResponseBody
-//    public List queryRoom(@RequestParam Integer taskId) {
-//
-//        return list;
-//    }
+    /**
+     * 获取教室名称列表
+     * @param taskId
+     * @return
+     */
+    @RequestMapping(value = "/queryRoom",method = RequestMethod.GET)
+    @ResponseBody
+    public List queryRoom(@RequestParam Integer taskId) {
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
+        Map<String,Object> param = new HashMap<>();
+        param.put("tnId",tnId);
+        param.put("gradeCode",jwScheduleTask.getGrade());
+        Grade grade = (Grade) gradeService.queryOne(param);
+        Map<Integer,LinkedHashMap<String,Object>> classMap = iexJwScheduleTaskService.getClassMapByTnIdAndTaskId(tnId,Constant.CLASS_ADM_CODE,grade.getGrade());
+        List<String> list = new ArrayList<>();
+        List<Map<String,Object> > rtnList = new ArrayList<>();
+        Map<String,Object> room;
+        List<StringBuffer> buffers = iexJwScheduleTaskService.getClassRoom(taskId,tnId);
+        for (StringBuffer ss : buffers){
+            room = new HashMap<>();
+            int roomId = Integer.valueOf(ss.toString());
+            if (roomId>0){
+                Map<String,Object> classObj = classMap.get(roomId);
+                room.put("roomId",classObj.get("id"));
+                room.put("roomName",classObj.get("class_name")+"教室");
+                rtnList.add(room);
+            }else {
+                Map<String,Object> classObj = classMap.get(roomId);
+                room.put("roomId",roomId);
+                room.put("roomName","教室"+Math.abs(roomId));
+                rtnList.add(room);
+            }
+
+
+        }
+        return rtnList;
+    }
 
     /**
-     * 获取教室名称
+     * 获取年级班级类型classType classType=2 不开启调课
+     * @param taskId
+     * @return
+     */
+    @RequestMapping(value = "/queryGradeClassType",method = RequestMethod.GET)
+    @ResponseBody
+    public Integer queryGradeClassType(@RequestParam Integer taskId) {
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
+        return exiGradeService.getGradeType(tnId,Integer.valueOf(jwScheduleTask.getGrade()));
+    }
+
+    /**
+     * 获取学生列表(支持模糊查询)
+     * @param taskId
+     * @param studentName 可选模糊查询参数(如果不为空会模糊匹配学生)
      * @return
      */
     @RequestMapping(value = "/queryStudent",method = RequestMethod.GET)
     @ResponseBody
-    public List queryStudent(@RequestParam Integer taskId) {
+    public List queryStudent(@RequestParam Integer taskId,String studentName) {
         int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         //获取一个学生所在的班级列表
         String tableName = ParamsUtils.combinationTableName(Constant.STUDENT, tnId);
@@ -91,6 +141,13 @@ public class BaseResultController {
             return null;
         }
         List<Map<String,Object>> params = new ArrayList<>();
+        if (!StringUtils.isEmpty(studentName)) {
+            Map<String, Object> param = new HashMap<>();
+            param.put("key", "student_name");
+            param.put("op", "like");
+            param.put("value", "%" + studentName + "%");
+            params.add(param);
+        }
         List<LinkedHashMap<String, Object>> tenantCustoms = exiTenantConfigInstanceService.likeTableByParams(tableName,params);
         return studentToRtnDomain(tenantCustoms);
     }
@@ -101,8 +158,8 @@ public class BaseResultController {
         for (Map<String,Object> map : students){
             domain = new HashMap<>();
             domain.put("studentNo",map.get("student_no"));
-            domain.put("studentName",map.get("studentName"));
-            list.add(map);
+            domain.put("studentName",map.get("student_name"));
+            list.add(domain);
         }
         return list;
     }
