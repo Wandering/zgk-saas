@@ -9,6 +9,7 @@ public class JwCourseTableDTO extends JwCourseTable {
     private String teacherName;
     private String className;
     private String courseName;
+    private String roomName;
 
     public String getTeacherName() {
         return teacherName;
@@ -32,5 +33,13 @@ public class JwCourseTableDTO extends JwCourseTable {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 }

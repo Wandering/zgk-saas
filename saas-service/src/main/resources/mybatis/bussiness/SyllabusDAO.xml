@@ -13,11 +13,20 @@
     <select id="queryList" resultType="cn.thinkjoy.saas.dto.JwCourseTableDTO" parameterType="map">
         SELECT
         tb.*, teacher.teacher_name AS teacherName,
-        class.class_name AS className,
+        (IF(admClass.class_name IS NOT NULL,admClass.class_name,eduClass.class_name)) AS className,
         course.course_name AS courseName
+        <if test="roomTableName != null">,
+            (CASE WHEN tb.roomId>0 THEN CONCAT(room.class_name,'教室')
+            WHEN tb.roomId &lt;0 THEN CONCAT('教室',ABS(tb.roomId))
+            ELSE '' END ) AS roomName
+        </if>
         from saas_jw_course_table tb
         LEFT JOIN ${teacherTableName} teacher on teacher.id = tb.teacherId
-        LEFT join ${classTableName} class on class.id = tb.classId
+        LEFT join ${admClassTableName} admClass on admClass.id = tb.classId and tb.classType = 0
+        LEFT join ${eduClassTableName} eduClass on eduClass.id = tb.classId and tb.classType = 1
+        <if test="roomTableName != null">
+            LEFT join ${roomTableName} room on room.id = tb.roomId
+        </if>
         LEFT JOIN saas_course_base_info course on course.id = tb.courseId
         where tb.`status` = 1
         <if test="params.teacherId">
@@ -44,14 +53,24 @@
         <if test="params.taskId">
             and tb.taskId = #{params.taskId}
         </if>
+        <if test="params.classType">
+            and tb.classType = #{params.classType}
+        </if>
+        <if test="params.roomId">
+            and tb.roomId = #{params.roomId}
+        </if>
         UNION ALL
         SELECT
         tb.*, '' AS teacherName,
-        class.class_name AS className,
+        (IF(admClass.class_name IS NOT NULL,admClass.class_name,eduClass.class_name)) AS className,
         '' AS courseName
+        <if test="roomTableName != null">,
+        '' AS roomName
+        </if>
         from saas_jw_course_table tb
         LEFT JOIN ${teacherTableName} teacher on teacher.id = tb.teacherId
-        LEFT join ${classTableName} class on class.id = tb.classId
+        LEFT join ${admClassTableName} admClass on admClass.id = tb.classId and tb.classType = 0
+        LEFT join ${eduClassTableName} eduClass on eduClass.id = tb.classId and tb.classType = 1
         LEFT JOIN saas_course_base_info course on course.id = tb.courseId
         where tb.`status` = 0
         <if test="params.teacherId">
@@ -77,6 +96,12 @@
         </if>
         <if test="params.taskId">
             and tb.taskId = #{params.taskId}
+        </if>
+        <if test="params.classType">
+            and tb.classType = #{params.classType}
+        </if>
+        <if test="params.roomId">
+            and tb.roomId = #{params.roomId}
         </if>
         ORDER BY classId,week,sort asc
     </select>

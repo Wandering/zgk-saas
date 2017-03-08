@@ -39,8 +39,25 @@ public interface ISyllabusService{
      * @param classId
      * @return
      */
-    CourseResultView getClassSyllabus(int tnId, int taskId, int classId);
+    CourseResultView getClassSyllabus(int tnId, int taskId, int classId,int classType);
 
+    /**
+     * 获取某个班级课程表
+     * @param tnId
+     * @param taskId
+     * @param roomId
+     * @return
+     */
+    CourseResultView getRoomSyllabus(int tnId, int taskId, int roomId);
+
+    /**
+     * 获取某个学生课程表
+     * @param tnId
+     * @param taskId
+     * @param studentNo
+     * @return
+     */
+    CourseResultView getStudentSyllabus(int tnId, int taskId, long studentNo);
 
     /**
      * 班级交换课表
@@ -85,6 +102,7 @@ public interface ISyllabusService{
      * @return
      */
     CourseResultView genSyllabus(int tnId,int taskId,String type,Map<String, Object> params,List<List<String>> lists,Map<String, Object> timeConfigMap);
+    CourseResultView genSyllabus(int tnId,int taskId,boolean hasRoom,String type,Map<String, Object> params,List<List<String>> lists,Map<String, Object> timeConfigMap);
 
     /**
      * 生成默认课表

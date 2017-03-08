@@ -13,27 +13,11 @@ import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import com.alibaba.dubbo.common.json.ParseException;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public interface IEXJwScheduleTaskService {
-    /**
-     * 排课结果
-     * @param type
-     * @return
-     */
-    @Deprecated
-    CourseResultView getCourseResult(String type,Integer taskId, Integer tnId, Map<String,Object> paramsMap,Map<String, Object> courseTimeConfig);
-
-    /**
-     * 总课表
-     * @param taskId
-     * @param tnId
-     * @return
-     */
-    @Deprecated
-    Map<String,Object> getAllCourseResult(Integer taskId, Integer tnId) throws IOException, ParseException;
-
 
     String  getClsssTypeTagByTaskId(Integer taskId,  Integer tnId);
     /**
@@ -125,7 +109,19 @@ public interface IEXJwScheduleTaskService {
      */
     boolean SerializableAdjustmentSchedule(JwCourseTable jwCourseTable, Integer adjustmentType);
 
+    /**
+     * 获取班级列表
+     * @param tnId
+     * @param classType
+     * @param grade
+     * @return
+     */
+    Map<Integer,LinkedHashMap<String, Object>> getClassMapByTnIdAndTaskId(int tnId, int classType, String grade);
+    Map<String,Integer> getClassMapByTnId(int tnId, int classType, String grade);
+
     public Map<String,Object> getConfigRooms(String taskId);
 
     public Map<String,Object> updateClassRoom(String classRoomId,int scheduleNumber);
+
+    void getCourseResult(int tnId, int taskId);
 }

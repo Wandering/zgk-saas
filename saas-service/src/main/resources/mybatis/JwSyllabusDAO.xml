@@ -26,16 +26,19 @@ selectList
     <sql id="Base_Column_List">
         id as id,
         taskId as taskId,
+        classType as classType,
         classId as classId,
         info as info
     </sql>
     <insert id="insert" parameterType="JwSyllabus">
         INSERT INTO saas_jw_syllabus (
         taskId,
+        classType,
         classId,
         info
         ) VALUES (
         #{taskId},
+        #{classType},
         #{classId},
         #{info}
         )
@@ -50,6 +53,9 @@ selectList
         <trim prefix="SET" suffixOverrides=",">
             <if test="taskId!=null">
                 taskId = #{taskId},
+            </if>
+            <if test="classType!=null">
+                classType = #{classType},
             </if>
             <if test="classId!=null">
                 classId = #{classId},
@@ -68,6 +74,9 @@ selectList
             <if test="map.taskId!=null">
                 taskId = #{map.taskId},
             </if>
+            <if test="map.classType!=null">
+                classType = #{map.classType},
+            </if>
             <if test="map.classId!=null">
                 classId = #{map.classId},
             </if>
@@ -85,6 +94,9 @@ selectList
             <if test="update.taskId!=null">
                 taskId = #{update.taskId},
             </if>
+            <if test="update.classType!=null">
+                classType = #{update.classType},
+            </if>
             <if test="update.classId!=null">
                 classId = #{update.classId},
             </if>
@@ -100,6 +112,9 @@ selectList
             <if test="condition.taskId!=null">
                 AND taskId = #{condition.taskId}
             </if>
+            <if test="condition.classType!=null">
+                AND classType = #{condition.classType}
+            </if>
             <if test="condition.classId!=null">
                 AND classId = #{condition.classId}
             </if>
@@ -112,10 +127,12 @@ selectList
     <insert id="insertMap" >
         INSERT INTO saas_jw_syllabus (
                 taskId,
+                classType,
                 classId,
                 info
         ) VALUES (
                     #{map.taskId},
+                    #{map.classType},
                     #{map.classId},
                     #{map.info}
         )
@@ -126,6 +143,7 @@ selectList
         UPDATE saas_jw_syllabus
         <trim prefix="SET" suffixOverrides=",">
             taskId = #{taskId},
+            classType = #{classType},
             classId = #{classId},
             info = #{info},
         </trim>
@@ -150,6 +168,9 @@ selectList
             </if>
             <if test="taskId!=null">
                 AND taskId = #{taskId}
+            </if>
+            <if test="classType!=null">
+                AND classType = #{classType}
             </if>
             <if test="classId!=null">
                 AND classId = #{classId}
@@ -217,6 +238,9 @@ selectList
             <if test="condition.taskId!=null">
                 ${condition.groupOp}   taskId  ${condition.taskId.op}  #{condition.taskId.data}
             </if>
+            <if test="condition.classType!=null">
+                ${condition.groupOp}   classType  ${condition.classType.op}  #{condition.classType.data}
+            </if>
             <if test="condition.classId!=null">
                 ${condition.groupOp}   classId  ${condition.classId.op}  #{condition.classId.data}
             </if>
@@ -246,6 +270,9 @@ selectList
             <if test="condition.taskId!=null">
                 AND taskId like CONCAT('%', #{condition.taskId} , '%')
             </if>
+            <if test="condition.classType!=null">
+                AND classType like CONCAT('%', #{condition.classType} , '%')
+            </if>
             <if test="condition.classId!=null">
                 AND classId like CONCAT('%', #{condition.classId} , '%')
             </if>
@@ -270,6 +297,9 @@ selectList
             <if test="condition.taskId!=null">
                 AND taskId = #{condition.taskId}
             </if>
+            <if test="condition.classType!=null">
+                AND classType = #{condition.classType}
+            </if>
             <if test="condition.classId!=null">
                 AND classId = #{condition.classId}
             </if>
@@ -293,6 +323,9 @@ selectList
             <if test="condition.taskId!=null">
                 AND taskId = #{condition.taskId}
             </if>
+            <if test="condition.classType!=null">
+                AND classType = #{condition.classType}
+            </if>
             <if test="condition.classId!=null">
                 AND classId = #{condition.classId}
             </if>
@@ -311,6 +344,9 @@ selectList
            </if>
            <if test="taskId!=null">
                ${groupOp} taskId ${taskId.op}  #{taskId.data}
+           </if>
+           <if test="classType!=null">
+               ${groupOp} classType ${classType.op}  #{classType.data}
            </if>
            <if test="classId!=null">
                ${groupOp} classId ${classId.op}  #{classId.data}

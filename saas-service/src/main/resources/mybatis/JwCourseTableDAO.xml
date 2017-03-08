@@ -30,6 +30,8 @@ selectList
         gradeId as gradeId,
         week as week,
         sort as sort,
+        classType as classType,
+        roomId as roomId,
         classId as classId,
         teacherId as teacherId,
         courseId as courseId,
@@ -42,6 +44,8 @@ selectList
         gradeId,
         week,
         sort,
+        classType,
+        roomId,
         classId,
         teacherId,
         courseId,
@@ -52,6 +56,8 @@ selectList
         #{gradeId},
         #{week},
         #{sort},
+        #{classType},
+        #{roomId},
         #{classId},
         #{teacherId},
         #{courseId},
@@ -80,6 +86,12 @@ selectList
             </if>
             <if test="sort!=null">
                 sort = #{sort},
+            </if>
+            <if test="classType!=null">
+                classType = #{classType},
+            </if>
+            <if test="roomId!=null">
+                roomId = #{roomId},
             </if>
             <if test="classId!=null">
                 classId = #{classId},
@@ -116,6 +128,12 @@ selectList
             <if test="map.sort!=null">
                 sort = #{map.sort},
             </if>
+            <if test="map.classType!=null">
+                classType = #{map.classType},
+            </if>
+            <if test="map.roomId!=null">
+                roomId = #{map.roomId},
+            </if>
             <if test="map.classId!=null">
                 classId = #{map.classId},
             </if>
@@ -151,6 +169,12 @@ selectList
             <if test="update.sort!=null">
                 sort = #{update.sort},
             </if>
+            <if test="update.classType!=null">
+                classType = #{update.classType},
+            </if>
+            <if test="update.roomId!=null">
+                roomId = #{update.roomId},
+            </if>
             <if test="update.classId!=null">
                 classId = #{update.classId},
             </if>
@@ -184,6 +208,12 @@ selectList
             <if test="condition.sort!=null">
                 AND sort = #{condition.sort}
             </if>
+            <if test="condition.classType!=null">
+                AND classType = #{condition.classType}
+            </if>
+            <if test="condition.roomId!=null">
+                AND roomId = #{condition.roomId}
+            </if>
             <if test="condition.classId!=null">
                 AND classId = #{condition.classId}
             </if>
@@ -206,6 +236,8 @@ selectList
                 gradeId,
                 week,
                 sort,
+                classType,
+                roomId,
                 classId,
                 teacherId,
                 courseId,
@@ -216,6 +248,8 @@ selectList
                     #{map.gradeId},
                     #{map.week},
                     #{map.sort},
+                    #{map.classType},
+                    #{map.roomId},
                     #{map.classId},
                     #{map.teacherId},
                     #{map.courseId},
@@ -232,6 +266,8 @@ selectList
             gradeId = #{gradeId},
             week = #{week},
             sort = #{sort},
+            classType = #{classType},
+            roomId = #{roomId},
             classId = #{classId},
             teacherId = #{teacherId},
             courseId = #{courseId},
@@ -270,6 +306,12 @@ selectList
             </if>
             <if test="sort!=null">
                 AND sort = #{sort}
+            </if>
+            <if test="classType!=null">
+                AND classType = #{classType}
+            </if>
+            <if test="roomId!=null">
+                AND roomId = #{roomId}
             </if>
             <if test="classId!=null">
                 AND classId = #{classId}
@@ -355,6 +397,12 @@ selectList
             <if test="condition.sort!=null">
                 ${condition.groupOp}   sort  ${condition.sort.op}  #{condition.sort.data}
             </if>
+            <if test="condition.classType!=null">
+                ${condition.groupOp}   classType  ${condition.classType.op}  #{condition.classType.data}
+            </if>
+            <if test="condition.roomId!=null">
+                ${condition.groupOp}   roomId  ${condition.roomId.op}  #{condition.roomId.data}
+            </if>
             <if test="condition.classId!=null">
                 ${condition.groupOp}   classId  ${condition.classId.op}  #{condition.classId.data}
             </if>
@@ -402,6 +450,12 @@ selectList
             <if test="condition.sort!=null">
                 AND sort like CONCAT('%', #{condition.sort} , '%')
             </if>
+            <if test="condition.classType!=null">
+                AND classType like CONCAT('%', #{condition.classType} , '%')
+            </if>
+            <if test="condition.roomId!=null">
+                AND roomId like CONCAT('%', #{condition.roomId} , '%')
+            </if>
             <if test="condition.classId!=null">
                 AND classId like CONCAT('%', #{condition.classId} , '%')
             </if>
@@ -444,6 +498,12 @@ selectList
             <if test="condition.sort!=null">
                 AND sort = #{condition.sort}
             </if>
+            <if test="condition.classType!=null">
+                AND classType = #{condition.classType}
+            </if>
+            <if test="condition.roomId!=null">
+                AND roomId = #{condition.roomId}
+            </if>
             <if test="condition.classId!=null">
                 AND classId = #{condition.classId}
             </if>
@@ -485,6 +545,12 @@ selectList
             <if test="condition.sort!=null">
                 AND sort = #{condition.sort}
             </if>
+            <if test="condition.classType!=null">
+                AND classType = #{condition.classType}
+            </if>
+            <if test="condition.roomId!=null">
+                AND roomId = #{condition.roomId}
+            </if>
             <if test="condition.classId!=null">
                 AND classId = #{condition.classId}
             </if>
@@ -521,6 +587,12 @@ selectList
            </if>
            <if test="sort!=null">
                ${groupOp} sort ${sort.op}  #{sort.data}
+           </if>
+           <if test="classType!=null">
+               ${groupOp} classType ${classType.op}  #{classType.data}
+           </if>
+           <if test="roomId!=null">
+               ${groupOp} roomId ${roomId.op}  #{roomId.data}
            </if>
            <if test="classId!=null">
                ${groupOp} classId ${classId.op}  #{classId.data}
