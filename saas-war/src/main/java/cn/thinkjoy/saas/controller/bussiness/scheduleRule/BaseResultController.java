@@ -87,13 +87,14 @@ public class BaseResultController {
         param.put("gradeCode",jwScheduleTask.getGrade());
         Grade grade = (Grade) gradeService.queryOne(param);
         Map<Integer,LinkedHashMap<String,Object>> classMap = iexJwScheduleTaskService.getClassMapByTnIdAndTaskId(tnId,Constant.CLASS_ADM_CODE,grade.getGrade());
-        List<String> list = new ArrayList<>();
+
         List<Map<String,Object> > rtnList = new ArrayList<>();
         Map<String,Object> room;
         List<StringBuffer> buffers = iexJwScheduleTaskService.getClassRoom(taskId,tnId);
+        buffers.remove(0);
         for (StringBuffer ss : buffers){
             room = new HashMap<>();
-            int roomId = Integer.valueOf(ss.toString());
+            int roomId = Integer.valueOf(ss.toString().replace("\r\n",""));
             if (roomId>0){
                 Map<String,Object> classObj = classMap.get(roomId);
                 room.put("roomId",classObj.get("id"));
@@ -127,12 +128,14 @@ public class BaseResultController {
     /**
      * 获取学生列表(支持模糊查询)
      * @param taskId
+     * @param classId 班级ID
+     * @param classType 行政班(0)/教学班(1)
      * @param studentName 可选模糊查询参数(如果不为空会模糊匹配学生)
      * @return
      */
     @RequestMapping(value = "/queryStudent",method = RequestMethod.GET)
     @ResponseBody
-    public List queryStudent(@RequestParam Integer taskId,String studentName) {
+    public List queryStudent(@RequestParam Integer taskId,@RequestParam Integer classId,@RequestParam Integer classType,String studentName) {
         int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         //获取一个学生所在的班级列表
         String tableName = ParamsUtils.combinationTableName(Constant.STUDENT, tnId);
@@ -140,13 +143,32 @@ public class BaseResultController {
         if (com.alibaba.dubbo.common.utils.StringUtils.isBlank(tableName)) {
             return null;
         }
+        String className = getClssNameByIdAndType(tnId,taskId,classId,classType);
         List<Map<String,Object>> params = new ArrayList<>();
+        Map<String, Object> param;
         if (!StringUtils.isEmpty(studentName)) {
-            Map<String, Object> param = new HashMap<>();
+            param = new HashMap<>();
             param.put("key", "student_name");
             param.put("op", "like");
             param.put("value", "%" + studentName + "%");
             params.add(param);
+
+        }
+        if (classType == Constant.CLASS_ADM_CODE) {
+            param = new HashMap<>();
+            param.put("key", "student_class");
+            param.put("op", "=");
+            param.put("value", className);
+            params.add(param);
+        }else {
+            for (int i = 1 ; i <=3 ; i++) {
+                param = new HashMap<>();
+                param.put("groupOp", "or");
+                param.put("key", "student_check_major_class"+i);
+                param.put("op", "=");
+                param.put("value",className);
+                params.add(param);
+            }
         }
         List<LinkedHashMap<String, Object>> tenantCustoms = exiTenantConfigInstanceService.likeTableByParams(tableName,params);
         return studentToRtnDomain(tenantCustoms);
@@ -162,6 +184,32 @@ public class BaseResultController {
             list.add(domain);
         }
         return list;
+    }
+
+    private String getClssNameByIdAndType(int tnId,int taskId,int classId,int classType){
+        JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
+        if (classType ==Constant.CLASS_ADM_CODE) {
+            String tableName = ParamsUtils.combinationTableName(Constant.CLASS_ADM, tnId);
+            List<Map<String,Object>> params = new ArrayList<>();
+            Map<String, Object> param = new HashMap<>();
+            param.put("key", "id");
+            param.put("op", "=");
+            param.put("value", classId);
+            params.add(param);
+            List<Map<String, Object>> admList = exiTenantConfigInstanceService.likeTableByParams(tableName,params);
+            return admList.get(0).get("class_name").toString();
+        }
+        else {
+            String tableName = ParamsUtils.combinationTableName(Constant.CLASS_EDU, tnId);
+            List<Map<String,Object>> params = new ArrayList<>();
+            Map<String, Object> param = new HashMap<>();
+            param.put("key", "id");
+            param.put("op", "=");
+            param.put("value", classId);
+            params.add(param);
+            List<Map<String, Object>> admList = exiTenantConfigInstanceService.likeTableByParams(tableName,params);
+            return admList.get(0).get("class_name").toString();
+        }
     }
     /**
      * 获取教室名称

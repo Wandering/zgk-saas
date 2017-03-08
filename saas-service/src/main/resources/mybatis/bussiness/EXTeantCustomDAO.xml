@@ -217,7 +217,7 @@
         select * from ${tableName}
          <where>
              <foreach collection="list" item="domain">
-                  and ${domain.key} ${domain.op} #{domain.value}
+                 <if test="domain.groupOp != null">${domain.groupOp}</if> <if test="domain.groupOp == null">AND</if> ${domain.key} ${domain.op} #{domain.value}
              </foreach>
          </where>
     </select>
