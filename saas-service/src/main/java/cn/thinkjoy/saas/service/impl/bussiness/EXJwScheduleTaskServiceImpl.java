@@ -832,12 +832,14 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 stringBuffers.add(stringBuffer);
             }
             if(admNum<maxRoomNumber){
-                StringBuffer stringBuffer2 = new StringBuffer();
+
                 for(int i=0;i<(maxRoomNumber-admNum);i++){
+                    StringBuffer stringBuffer2 = new StringBuffer();
                     stringBuffer2.append("-"+(i+1));
                     stringBuffer2.append(FileOperation.LINE_SPLIT);
+                    stringBuffers.add(stringBuffer2);
                 }
-                stringBuffers.add(stringBuffer2);
+
             }
         }
         return stringBuffers;
