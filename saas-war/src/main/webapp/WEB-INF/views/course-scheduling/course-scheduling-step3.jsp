@@ -117,8 +117,7 @@
                                         </li>
                                         <li><i class="icon-step3-teacher-yes"></i><i class="icon-step3-teacher-no"></i>教师课表
                                         </li>
-                                        <%--<li><i class="icon-step3-std-yes dh"></i><i class="icon-step3-std-no"></i>学生课表</li>--%>
-
+                                        <li class="student-tab dh"><i class="icon-step3-std-yes dh"></i><i class="icon-step3-std-no"></i>学生课表</li>
                                     </ul>
                                 </div>
                             </div>
@@ -132,9 +131,9 @@
                                 <div class="bottom-page dh">
                                     <%@ include file="../course-scheduling/step3-child-teacher.jsp"%>
                                 </div>
-                                <%--<div class="bottom-page dh">--%>
-                                    <%--<%@ include file="../course-scheduling/step3-child-student.jsp"%>--%>
-                                <%--</div>--%>
+                                <div class="bottom-page dh">
+                                    <%@ include file="../course-scheduling/step3-child-student.jsp"%>
+                                </div>
                             </div>
                         </div>
                     </div>
