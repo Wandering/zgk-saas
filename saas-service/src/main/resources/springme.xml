@@ -61,8 +61,8 @@
 
         <!-- 开发环境 -->
         <!--<property name="url" value="jdbc:mysql://10.136.53.129:33065/zgk_saas_old?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true"/>-->
-        <!--<property name="url" value="jdbc:mysql://10.136.53.129:33065/zgk_saas_tmp?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true"/>-->
-        <property name="url" value="${jdbc_url}"/>
+        <property name="url" value="jdbc:mysql://10.136.53.129:33065/zgk_saas_tmp?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true"/>
+        <!--<property name="url" value="${jdbc_url}"/>-->
         <property name="username" value="${jdbc_user}"/>
         <property name="password" value="${jdbc_password}"/>
 
