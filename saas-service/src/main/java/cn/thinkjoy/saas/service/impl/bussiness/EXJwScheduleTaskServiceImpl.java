@@ -976,9 +976,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                     stringBuffer.append(FileOperation.STR_SPLIT);
 
                     for(String str:classStr) {
-                        Integer ci= getClassId(tnId, str.toString(), teacherGrade,"adm");
-//                        if(ci<=0)
-//                            ci=getClassId(tnId, str.toString(), teacherGrade,"edu");
+                        Integer ci = getClassId(tnId, str.toString(), teacherGrade, "adm");
+                        if (ci <= 0 && type.equals("edu"))
+                            ci = getClassId(tnId, str.toString(), teacherGrade, "edu");
                         stringBuffer.append(ci);//指定所带班级
                         stringBuffer.append(FileOperation.STR_SPLIT);
                     }
