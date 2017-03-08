@@ -204,11 +204,11 @@ CourseTable.prototype = {
 
 
                         ///////////////////////////////////
-                        //$('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
-                        //$('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
-                        //ClassRoomTableIns.getAllQueryCourse();
-                        //ClassRoomTableIns.getQueryCourse();
-                        //ClassRoomTableIns.getQueryClass();
+                        $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
+                        $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
+                        ClassRoomTableIns.getAllQueryCourse();
+                        ClassRoomTableIns.getQueryCourse();
+                        ClassRoomTableIns.getQueryClass();
                         ///////////////////////////////////
 
                         break;
@@ -245,11 +245,11 @@ CourseTable.prototype = {
 
 
                         ///////////////////////////////////
-                        //$('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
-                        //$('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
-                        //ClassRoomTableIns.getAllQueryCourse();
-                        //ClassRoomTableIns.getQueryCourse();
-                        //ClassRoomTableIns.getQueryClass();
+                        $('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
+                        $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
+                        ClassRoomTableIns.getAllQueryCourse();
+                        ClassRoomTableIns.getQueryCourse();
+                        ClassRoomTableIns.getQueryClass();
                         ///////////////////////////////////
 
                         break;
