@@ -87,13 +87,14 @@ public class BaseResultController {
         param.put("gradeCode",jwScheduleTask.getGrade());
         Grade grade = (Grade) gradeService.queryOne(param);
         Map<Integer,LinkedHashMap<String,Object>> classMap = iexJwScheduleTaskService.getClassMapByTnIdAndTaskId(tnId,Constant.CLASS_ADM_CODE,grade.getGrade());
-        List<String> list = new ArrayList<>();
+
         List<Map<String,Object> > rtnList = new ArrayList<>();
         Map<String,Object> room;
         List<StringBuffer> buffers = iexJwScheduleTaskService.getClassRoom(taskId,tnId);
+        buffers.remove(0);
         for (StringBuffer ss : buffers){
             room = new HashMap<>();
-            int roomId = Integer.valueOf(ss.toString());
+            int roomId = Integer.valueOf(ss.toString().replace("\r\n",""));
             if (roomId>0){
                 Map<String,Object> classObj = classMap.get(roomId);
                 room.put("roomId",classObj.get("id"));
