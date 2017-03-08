@@ -208,7 +208,9 @@ CourseTable.prototype = {
                         $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
                         that.getAllQueryCourse();
                         that.getQueryCourse();
-                        that.getQueryClass();
+                        that.getQueryClass("select-class");
+                        that.getQueryClass("select-classes");
+                        that.getQueryRoom();
                         ///////////////////////////////////
 
                         break;
@@ -249,7 +251,9 @@ CourseTable.prototype = {
                         $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
                         that.getAllQueryCourse();
                         that.getQueryCourse();
-                        that.getQueryClass();
+                        that.getQueryClass("select-class");
+                        that.getQueryClass("select-classes");
+                        that.getQueryRoom();
                         ///////////////////////////////////
 
                         break;
