@@ -180,18 +180,21 @@
     .active {
       color: $mainColor;
       .icon-step3-class-yes,
+      .icon-step3-classes-yes,
       .icon-step3-std-yes,
       .icon-step3-teacher-yes,
       .icon-step3-all-yes {
         display: inline-block;
       }
       .icon-step3-class-no,
+      .icon-step3-classes-no,
       .icon-step3-std-no,
       .icon-step3-teacher-no,
       .icon-step3-all-no {
         display: none;
       }
     }
+
     li {
       cursor: pointer;
       float: left;
@@ -208,6 +211,7 @@
         margin-right: 5px;
       }
       .icon-step3-class-yes,
+      .icon-step3-classes-yes,
       .icon-step3-std-yes,
       .icon-step3-teacher-yes,
       .icon-step3-all-yes {
