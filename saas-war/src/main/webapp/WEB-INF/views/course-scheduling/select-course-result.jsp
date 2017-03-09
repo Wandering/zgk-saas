@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 选课结果</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/select-course-result.css"/>
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/select-course-result.css?v=20170309"/>
 </head>
 <body>
 <%@ include file="./../common/header.jsp" %>
@@ -221,6 +221,6 @@
 
 <%@ include file="./../common/footer.jsp" %>
 <script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
-<script src="<%=ctx%>/static/src/js/course-scheduling/select-course-result.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/select-course-result.js?v=20170309"></script>
 </body>
 </html>

@@ -44,8 +44,7 @@ function CourseTable(){
     this.posY = '';
     this.tarPosX = '';
     this.tarPosY = '';
-    this.flagClassType = null;
-    this.colorScheduleResultState = '';
+
 }
 
 CourseTable.prototype = {
@@ -66,7 +65,6 @@ CourseTable.prototype = {
         this.selectRoomEvent(); // 选择教师
         this.queryGradeClassType(); // 获取年级班级类型
         // 2：教学班走读 ，2以外：行政
-        console.log(this.flagClassType)
         if(this.flagClassType!='2'){
             $('.student-tab,.room-tab').addClass('dh');
             this.courseTableEvent('class');
@@ -92,7 +90,7 @@ CourseTable.prototype = {
     // 防止刷新|hash处理
     hashOperate: function () {
         var that = this;
-        console.log(that.hashArr)
+        //console.log(that.hashArr)
         // 防止刷新|hash处理
         window.onhashchange = function () {
             if (window.location.hash === '') {
@@ -240,10 +238,13 @@ CourseTable.prototype = {
                         $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
                         that.getAllQueryCourse();
                         that.getQueryCourse();
-                        that.getQueryClass("select-class");
-                        if(this.flagClassType=='2'){
+                        //console.log("flagClassType="+that.flagClassType)
+                        // 2 走读, 2以外 行政
+                        if(that.flagClassType=='2'){
                             that.getQueryClass("select-classes");
                             that.getQueryRoom();
+                        }else{
+                            that.getQueryClass("select-class");
                         }
                         break;
                     case 5:
@@ -332,10 +333,13 @@ CourseTable.prototype = {
                         $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
                         that.getAllQueryCourse();
                         that.getQueryCourse();
-                        that.getQueryClass("select-class");
-                        if(this.flagClassType=='2'){
+                        //console.log("flagClassType="+that.flagClassType)
+                        // 2 走读, 2以外 行政
+                        if(that.flagClassType=='2'){
                             that.getQueryClass("select-classes");
                             that.getQueryRoom();
+                        }else{
+                            that.getQueryClass("select-class");
                         }
                         break;
                     case "-1":
@@ -509,6 +513,7 @@ CourseTable.prototype = {
     // 获取年级班级类型
     queryGradeClassType:function(){
         var that = this;
+        that.flagClassType = '';
         Common.ajaxFun('/baseResult/queryGradeClassType.do', 'GET', {
             'taskId': taskId
         }, function (res) {
@@ -519,6 +524,7 @@ CourseTable.prototype = {
         }, function (res) {
             layer.msg(res.msg);
         },true);
+        return that.flagClassType;
     },
     // 拉取学生
     getQueryStudent: function (classId,classType) {
@@ -561,7 +567,7 @@ CourseTable.prototype = {
             if (result.rtnCode == "0000000") {
                 var theadTemplate = Handlebars.compile($("#" + urlType + "-thead-list-template").html());
                 Handlebars.registerHelper("thead", function (res) {
-                    console.log(res);
+                    //console.log(res);
                     var resData = res.split('|');
                     var str = '<td class="center">节次</td>';
                     for (var i = 0; i < resData.length; i++) {

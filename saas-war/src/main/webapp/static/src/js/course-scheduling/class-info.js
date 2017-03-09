@@ -40,7 +40,7 @@ var ClassInfo = {
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 if (res.bizData.msg == "success") {
-                    layer.msg('教学信息保存成功');
+                    layer.msg('教室信息保存成功');
                 }
             }
         });

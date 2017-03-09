@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>课程信息</title>
     <%@ include file="./../common/meta.jsp"%>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step1.css" />
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step1.css?v=20170309" />
 </head>
 <body>
 <%@ include file="./../common/header.jsp"%>
@@ -113,6 +113,6 @@
     {{/each}}
 </script>
 <%@ include file="./../common/footer.jsp"%>
-<script src="<%=ctx%>/static/src/js/course-scheduling/course-info.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/course-info.js?v=20170309"></script>
 </body>
 </html>

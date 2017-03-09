@@ -135,6 +135,6 @@
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp"%>
-<script src="<%=ctx%>/static/src/js/base-info/class-management.js"></script>
+<script src="<%=ctx%>/static/src/js/base-info/class-management.js?v=20170309"></script>
 </body>
 </html>

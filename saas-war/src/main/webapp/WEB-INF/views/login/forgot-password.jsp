@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 找回密码</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/login/forgot-password.css">
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/login/forgot-password.css?v=20170309">
 </head>
 <body>
 <div class="navbar navbar-default" id="navbar">
@@ -82,6 +82,6 @@
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp" %>
 <script src="<%=ctx%>/static/src/lib/md5/jQuery.md5.js"></script>
-<script src="<%=ctx%>/static/src/js/login/forgot-password.js" charset="utf-8"></script>
+<script src="<%=ctx%>/static/src/js/login/forgot-password.js?v=20170309" charset="utf-8"></script>
 </body>
 </html>
