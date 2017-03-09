@@ -1,24 +1,23 @@
 /**
  * Created by machengcheng on 16/12/6.
  */
+var taskId = Common.cookie.getCookie('taskId');
 var scheduleName = Common.cookie.getCookie('scheduleName');
 var gradeName = Common.cookie.getCookie('gradeName');
 $('.scheduleName').text(scheduleName);
 $('.gradeName').text(gradeName);
 
 
-/**
- * 公用全局变量
- * @type {{taskId: *, cType: number}}
- */
-var GLOBAL_PARAMS = {
-    taskId: Common.cookie.getCookie('taskId'),
-    cType: -1  //【年级排课、班级排课】-1、0;
-}
 
 
-function ArrangeCourse() {
-    this.types = ['class', 'teacher', 'course', 'grade'];  //类型：班级|教师|课程|年级
+
+
+
+
+
+
+function ArrangeCourse () {
+    this.types = ['class', 'teacher', 'course'];
     this.classids = [];
     this.init();
 }
@@ -27,15 +26,11 @@ ArrangeCourse.prototype = {
     init: function () {
         this.getNoArrangeCourseList(this.types[0], '');
     },
-    /**
-     * 拉取数据填充表格
-     * @param type
-     * @param id
-     */
+    //获取不排课信息
     getNoArrangeCourseInfo: function (type, id) {
         var that = this;
         if (id != undefined) {
-            Common.ajaxFun('/disSelectRule/getRule/' + GLOBAL_PARAMS.taskId + '/' + type + '/' + id + '.do', 'GET', {}, function (res) {
+            Common.ajaxFun('/disSelectRule/getRule/' + taskId + '/' + type + '/' + id + '.do', 'GET', {}, function (res) {
                 if (res.rtnCode == "0000000") {
                     var data = res.bizData;
                     if (data.length != 0) {
@@ -94,11 +89,6 @@ ArrangeCourse.prototype = {
                         weekHtml.push('</tr>');
                         $('#no-assign-table thead').html(weekHtml.join(''));
 
-
-
-
-
-
                         for (var i = 0; i < classCount; i++) {
                             if (i != 0) {
                                 classesHtml.push('<tr>');
@@ -131,56 +121,6 @@ ArrangeCourse.prototype = {
                             }
                             classesHtml.push('</tr>');
                         }
-
-                        console.info('classCount',classCount)
-                        console.info('weeks',weeks)
-
-
-
-
-
-
-
-
-
-
-
-
-                        /**
-                         * 再拉取年级不排课数据进行比对
-                         * 确定最后展示的信息
-                         */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         $('#no-assign-table tbody').html(classesHtml.join(''));
                     } else {
                         that.getTeachTime();
@@ -190,7 +130,7 @@ ArrangeCourse.prototype = {
                 layer.msg("出错了", {time: 1000});
             }, true);
         } else {
-            // that.getTeachTime();
+            that.getTeachTime();
         }
     },
     //不排课列表查询
@@ -200,73 +140,55 @@ ArrangeCourse.prototype = {
         if (type == 'teacher') {
             paramsObj['teacherCourse'] = teacherCourse;
         }
-        /**
-         * ===================
-         * 渲染年级下面的所有班级
-         * ===================
-         */
-        Common.ajaxFun('/disSelectRule/list/' + type + '/' + GLOBAL_PARAMS.taskId, 'GET', paramsObj, function (res) {
+        Common.ajaxFun('/disSelectRule/list/' + type + '/' + taskId, 'GET', paramsObj, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
-                var tpl = [];
-                switch (type) {
+                var contentHtml = [];
+                switch(type) {
                     case 'class':
-                        tpl.push('<li>');
-                        tpl.push('<a href="javascript: void(0);" class="active">年级排课</a>');
-                        tpl.push('</li>');
+                        contentHtml.push('<li>');
+                        contentHtml.push('<a href="javascript: void(0);" class="active">全部班级</a>');
+                        contentHtml.push('</li>');
                         $.each(data, function (i, k) {
-                            tpl.push('<li>');
-                            tpl.push('<a href="javascript: void(0);" gradeid="' + k.grade + '" classid="' + k.id + '">' + k.name + '</a>');
-                            tpl.push('</li>');
+                            contentHtml.push('<li>');
+                            contentHtml.push('<a href="javascript: void(0);" gradeid="' + k.grade + '" classid="' + k.id + '">' + k.name + '</a>');
+                            contentHtml.push('</li>');
                             that.classids.push(k.id);
                         });
-                        $('#class-list').html(tpl.join(''));
-
-
-                        /**
-                         * 初始化渲染
-                         * 1、渲染空表格
-                         * 2、拉取年级数据填充表格
-                         */
-                        // that.getTeachTime();  //初始化渲染默认年级课表
-                        that.getNoArrangeCourseInfo('class', -1);
-
-
-                        /**
-                         * 年级-年级所在班级【切换】
-                         */
-                        $('.class-list li').click(function () {
-                            var _this = $(this);
-                            _this.find('a').addClass('active').parent().siblings().find('a').removeClass('active');
-                            //年级排课、班级排课切换
-                            if (!_this.find('a').attr('classid')) {
-                                //年级
-                                GLOBAL_PARAMS.cType = -1
-                                that.getNoArrangeCourseInfo('class', -1);
-                            } else {
-                                //班级
-                                GLOBAL_PARAMS.cType = 0
-                                that.getNoArrangeCourseInfo('class', _this.find('a').attr('classid'));
+                        $('#class-list').html(contentHtml.join(''));
+                        var classId = $('#class-list a[class="active"]').attr('classid');
+                        if (classId == '' || classId == undefined || classId == null) {
+                            classId = $('#class-list a[class="active"]').parent().next().find('a').attr('classid');
+                        }
+                        that.getNoArrangeCourseInfo('class', classId);
+                        $('.class-list li').click(function(){
+                            if(!$(this).hasClass('on')){
+                                $('.class-list li a').removeClass('active').eq($(this).index()).addClass('active');
                             }
+                            var classId = $('#class-list a[class="active"]').attr('classid');
+                            if (classId == '' || classId == undefined || classId == null) {
+                                classId = null;
+                            }
+                            that.getNoArrangeCourseInfo('class', classId);
                         });
                         break;
                     case 'teacher':
                         $.each(data, function (i, k) {
                             if (i != 0) {
-                                tpl.push('<li>');
-                                tpl.push('<a href="javascript: void(0);" gradeid="' + k.grade + '" teacherid="' + k.id + '">' + k.name + '</a>');
-                                tpl.push('</li>');
+                                contentHtml.push('<li>');
+                                contentHtml.push('<a href="javascript: void(0);" gradeid="' + k.grade + '" teacherid="' + k.id + '">' + k.name + '</a>');
+                                contentHtml.push('</li>');
                             } else {
-                                tpl.push('<li>');
-                                tpl.push('<a href="javascript: void(0);" class="active" gradeid="' + k.grade + '" teacherid="' + k.id + '">' + k.name + '</a>');
-                                tpl.push('</li>');
+                                contentHtml.push('<li>');
+                                contentHtml.push('<a href="javascript: void(0);" class="active" gradeid="' + k.grade + '" teacherid="' + k.id + '">' + k.name + '</a>');
+                                contentHtml.push('</li>');
                             }
                         });
-                        $('#teacher-list').html(tpl.join(''));
+                        $('#teacher-list').html(contentHtml.join(''));
                         var teacherId = $('#teacher-list a[class="active"]').attr('teacherid');
                         that.getNoArrangeCourseInfo('teacher', teacherId);
-                        $('.teacher-list li').click(function () {
-                            if (!$(this).hasClass('on')) {
+                        $('.teacher-list li').click(function(){
+                            if(!$(this).hasClass('on')){
                                 $('.teacher-list li a').removeClass('active').eq($(this).index()).addClass('active');
                             }
                             var teacherId = $('#teacher-list a[class="active"]').attr('teacherid');
@@ -276,20 +198,20 @@ ArrangeCourse.prototype = {
                     case 'course':
                         $.each(data, function (i, k) {
                             if (i != 0) {
-                                tpl.push('<li>');
-                                tpl.push('<a href="javascript: void(0);" gradeid="' + k.grade + '" courseid="' + k.id + '">' + k.name + '</a>');
-                                tpl.push('</li>');
+                                contentHtml.push('<li>');
+                                contentHtml.push('<a href="javascript: void(0);" gradeid="' + k.grade + '" courseid="' + k.id + '">' + k.name + '</a>');
+                                contentHtml.push('</li>');
                             } else {
-                                tpl.push('<li>');
-                                tpl.push('<a href="javascript: void(0);" class="active" gradeid="' + k.grade + '" courseid="' + k.id + '">' + k.name + '</a>');
-                                tpl.push('</li>');
+                                contentHtml.push('<li>');
+                                contentHtml.push('<a href="javascript: void(0);" class="active" gradeid="' + k.grade + '" courseid="' + k.id + '">' + k.name + '</a>');
+                                contentHtml.push('</li>');
                             }
                         });
-                        $('#course-list').html(tpl.join(''));
+                        $('#course-list').html(contentHtml.join(''));
                         var courseId = $('#course-list a[class="active"]').attr('courseid');
                         that.getNoArrangeCourseInfo('course', courseId);
-                        $('.course-list li').click(function () {
-                            if (!$(this).hasClass('on')) {
+                        $('.course-list li').click(function(){
+                            if(!$(this).hasClass('on')){
                                 $('.course-list li a').removeClass('active').eq($(this).index()).addClass('active');
                             }
                             var courseId = $('#course-list a[class="active"]').attr('courseid');
@@ -336,7 +258,7 @@ ArrangeCourse.prototype = {
             //alert(i + ', ' + $('td[week=' + ('"' + "week" + i + '"') + ']').length);
             for (var j = 0; j < $('td[week=' + ('"' + "week" + i + '"') + ']').length; j++) {
                 var weekItem = $('td[week=' + ('"' + "week" + i + '"') + ']').eq(j).text();
-                switch (i) {
+                switch(i) {
                     case 0:
                         if (weekItem == '排课') {
                             week0.push(1);
@@ -391,15 +313,15 @@ ArrangeCourse.prototype = {
                 }
             }
         }
-        // console.info('ids: ' + ids);
-        // console.info('week0: ' + week0.join(''));
-        // console.info('week1: ' + week1);
-        // console.info('week2: ' + week2);
-        // console.info('week3: ' + week3);
-        // console.info('week4: ' + week4);
-        // console.info('week5: ' + week5);
-        // console.info('week6: ' + week6);
-        Common.ajaxFun('/disSelectRule/addOrUpdateRule/' + GLOBAL_PARAMS.taskId + '/' + type, 'POST', {
+        console.info('ids: ' + ids);
+        console.info('week0: ' + week0.join(''));
+        console.info('week1: ' + week1);
+        console.info('week2: ' + week2);
+        console.info('week3: ' + week3);
+        console.info('week4: ' + week4);
+        console.info('week5: ' + week5);
+        console.info('week6: ' + week6);
+        Common.ajaxFun('/disSelectRule/addOrUpdateRule/' + taskId + '/' + type, 'POST', {
             ids: ids,
             mon: week0.join(''),
             tues: week1.join(''),
@@ -410,7 +332,7 @@ ArrangeCourse.prototype = {
             sun: week6.join(''),
 
 
-            classType: ''
+            classType:''
         }, function (res) {
             if (res.rtnCode == "0000000") {
 
@@ -419,14 +341,10 @@ ArrangeCourse.prototype = {
             layer.msg("出错了", {time: 1000});
         }, false);
     },
-
-    /**
-     * 拉取课表的规格：一天几节、一周几天
-     * 【空表格未填充数据】
-     */
+    //查询学习时间
     getTeachTime: function () {
         Common.ajaxFun('/teachTime/queryTeachTime.do', 'GET', {
-            taskId: GLOBAL_PARAMS.taskId
+            taskId: taskId
         }, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
@@ -436,15 +354,15 @@ ArrangeCourse.prototype = {
                 weekHtml.push('<tr>');
                 weekHtml.push('<th width="135px">&nbsp;</th>');
                 $.each(weeks, function (i, k) {
-                    weekHtml.push('<th style="min-width: 110px">' + k + '</th>');
+                    weekHtml.push('<th>' + k + '</th>');
                 });
                 weekHtml.push('</tr>');
                 $('#no-assign-table thead').html(weekHtml.join(''));
 
                 var classes = parseInt(data.teachTime);
-                var a = parseInt(classes - ((Math.floor(classes / 10)) * 10));//个位
-                var b = parseInt((classes - ((Math.floor(classes / 100)) * 100) - a) / 10);//十位数
-                var c = parseInt((classes - ((Math.floor(classes / 1000)) * 1000) - (b * 10) - a) / 100);//百位上的数字
+                var a = parseInt(classes - ((Math.floor(classes/10))*10));//个位
+                var b = parseInt((classes - ((Math.floor(classes/100))*100) - a)/10);//十位数
+                var c = parseInt((classes - ((Math.floor(classes/1000))*1000)-(b*10)-a)/100);//百位上的数字
                 for (var i = 0; i < a + b + c; i++) {
                     if (i != 0) {
                         classesHtml.push('<tr>');
@@ -475,7 +393,7 @@ ArrangeCourse.prototype = {
     }, //不排课教师课程列表
     getTeacherCourseList: function () {
         var that = this;
-        Common.ajaxFun('disSelectRule/teacherCourseList/' + GLOBAL_PARAMS.taskId, 'GET', {}, function (res) {
+        Common.ajaxFun('disSelectRule/teacherCourseList/' + taskId, 'GET', {}, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
                 if (data.length != 0) {
@@ -496,7 +414,9 @@ ArrangeCourse.prototype = {
 
 $(function () {
 
-    var flag = Common.checkInfoIsPerfect(GLOBAL_PARAMS.taskId);
+
+
+    var flag = Common.checkInfoIsPerfect(taskId);
     if (!flag) {
         window.location.href = '/course-scheduling-step1';
     }
@@ -505,7 +425,7 @@ $(function () {
 
     $(document).on('change', '#no-course-time', function () {
         var itemVal = $(this).val().trim();
-        switch (itemVal) {
+        switch(itemVal) {
             case 'class':
                 $('#class-no-array').show();
                 $('#teacher-no-array').hide();
@@ -534,22 +454,12 @@ $(function () {
         arrangeCourse.getNoArrangeCourseList('teacher', teacherCourse);
     });
 
-
-    /**
-     * 触发排课or不开课事件
-     */
     $(document).on('click', '.no-assign-table tr td:not(.order)', function () {
-        var curText = $(this).text().trim(), foo = ['不排课', '排课'];
-        //年级不排课
-        console.info(GLOBAL_PARAMS.cType);
-        if ($('#no-course-time').val() == 'class' && GLOBAL_PARAMS.cType == -1) {
-            foo = [gradeName + '年级不排课', '排课']
-        }
-
+        var curText = $(this).text().trim();
         if (curText == '排课') {
-            $(this).html('<span class="no-assign-course">' + foo[0] + '</span>');
+            $(this).html('<span class="no-assign-course">不排课</span>');
         } else {
-            $(this).html('<span class="assign-course">' + foo[1] + '</span>');
+            $(this).html('<span class="assign-course">排课</span>');
         }
         arrangeCourse.updateNoArrangeCourse();
     });
