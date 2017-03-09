@@ -27,6 +27,8 @@ public class JwCourseTable extends BaseDomain{
     private Integer teacherId;
     private Integer courseId;
     private Integer status;
+    private Integer roomId;
+    private Integer classType;
 
 	public JwCourseTable(){
 	}
@@ -95,6 +97,22 @@ public class JwCourseTable extends BaseDomain{
         this.status = status;
     }
 
+    public Integer getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Integer roomId) {
+        this.roomId = roomId;
+    }
+
+    public Integer getClassType() {
+        return classType;
+    }
+
+    public void setClassType(Integer classType) {
+        this.classType = classType;
+    }
+
     public String toString() {
 		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
 			.append("Id",getId())
@@ -107,6 +125,8 @@ public class JwCourseTable extends BaseDomain{
 			.append("TeacherId",getTeacherId())
 			.append("CourseId",getCourseId())
 			.append("Status",getStatus())
+			.append("ClassType",getClassType())
+			.append("RoomId",getRoomId())
 			.toString();
 	}
 

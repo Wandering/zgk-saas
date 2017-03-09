@@ -39,6 +39,7 @@ ArrangeCourse.prototype = {
                 if (res.rtnCode == "0000000") {
                     var data = res.bizData;
                     if (data.length != 0) {
+                        //调用渲染比对table
                         data = res.bizData[0];
                         var weeks = [],
                             weeksData = [],
@@ -95,92 +96,42 @@ ArrangeCourse.prototype = {
                         $('#no-assign-table thead').html(weekHtml.join(''));
 
 
-
-
-
-
-                        for (var i = 0; i < classCount; i++) {
-                            if (i != 0) {
-                                classesHtml.push('<tr>');
-                                classesHtml.push('<td class="order">' + (i + 1) + '</td>');
-                                if (weeks.length != 0) {
-                                    for (var j = 0; j < weeks.length; j++) {
-                                        var curIndex = "week" + j;
-                                        var tempCourse = weeksData[j].split('')[i] == 1 ? '排课' : '不排课';
-                                        if (tempCourse === '不排课') {
-                                            classesHtml.push('<td week=' + curIndex + ' class="no-assign-course">' + tempCourse + '</td>');
-                                        } else {
-                                            classesHtml.push('<td week=' + curIndex + '>' + tempCourse + '</td>');
-                                        }
-                                    }
-                                }
-                            } else {
-                                classesHtml.push('<tr>');
-                                classesHtml.push('<td class="order">' + (i + 1) + '</td>');
-                                if (weeks.length != 0) {
-                                    for (var j = 0; j < weeks.length; j++) {
-                                        var curIndex = "week" + j;
-                                        var tempCourse = weeksData[j].split('')[i] == 1 ? '排课' : '不排课';
-                                        if (tempCourse === '不排课') {
-                                            classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + ' class="no-assign-course">' + tempCourse + '</td>');
-                                        } else {
-                                            classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + '>' + tempCourse + '</td>');
-                                        }
-                                    }
-                                }
-                            }
-                            classesHtml.push('</tr>');
+                        var fooTag = ['排课', '不排课']
+                        if (type === 'grade') {
+                            fooTag = ['排课', gradeName + '不排课'];
                         }
-
-                        console.info('classCount',classCount)
-                        console.info('weeks',weeks)
-
-
-
-
-
-
-
-
-
-
-
-
-                        /**
-                         * 再拉取年级不排课数据进行比对
-                         * 确定最后展示的信息
-                         */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                            for (var i = 0; i < classCount; i++) {
+                                if (i != 0) {
+                                    classesHtml.push('<tr>');
+                                    classesHtml.push('<td class="order">' + (i + 1) + '</td>');
+                                    if (weeks.length != 0) {
+                                        for (var j = 0; j < weeks.length; j++) {
+                                            var curIndex = "week" + j;
+                                            var tempCourse = weeksData[j].split('')[i] == 1 ? fooTag[0] : fooTag[1];
+                                            if (tempCourse !== '排课') {
+                                                classesHtml.push('<td week=' + curIndex + ' class="no-assign-course">' + tempCourse + '</td>');
+                                            } else {
+                                                classesHtml.push('<td week=' + curIndex + '>' + tempCourse + '</td>');
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    classesHtml.push('<tr>');
+                                    classesHtml.push('<td class="order">' + (i + 1) + '</td>');
+                                    if (weeks.length != 0) {
+                                        for (var j = 0; j < weeks.length; j++) {
+                                            var curIndex = "week" + j;
+                                            var tempCourse = weeksData[j].split('')[i] == 1 ? fooTag[0] : fooTag[1];
+                                            if (tempCourse !== '排课') {
+                                                classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + ' class="no-assign-course">' + tempCourse + '</td>');
+                                            } else {
+                                                classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + '>' + tempCourse + '</td>');
+                                            }
+                                        }
+                                    }
+                                }
+                                classesHtml.push('</tr>');
+                            }
                         $('#no-assign-table tbody').html(classesHtml.join(''));
                     } else {
                         that.getTeachTime();
@@ -192,6 +143,193 @@ ArrangeCourse.prototype = {
         } else {
             // that.getTeachTime();
         }
+    },
+    getCompareTableBody:function(type,id){
+        var that = this;
+        if (id != undefined) {
+            Common.ajaxFun('/disSelectRule/getRule/' + GLOBAL_PARAMS.taskId + '/' + type + '/' + id + '.do', 'GET', {}, function (res) {
+                if (res.rtnCode == "0000000") {
+                    var data = res.bizData;
+                    if (data.length != 0) {
+                        that.compareRenderTableBody(type, res.bizData[0])
+                    } else {
+                        that.getTeachTime();
+                    }
+                }
+            }, function (res) {
+                layer.msg("出错了", {time: 1000});
+            }, true);
+        } else {
+            // that.getTeachTime();
+        }
+    },
+    //比较渲染table主体
+    compareRenderTableBody: function (type, data) {
+        console.info('我来自自定义接口');
+
+        console.info('data',data)
+
+
+
+        var weeks = [],
+            weeksData = [],
+            week0 = data.mon, //周一
+            week1 = data.tues, //周二
+            week2 = data.wed, //周三
+            week3 = data.thur, //周四
+            week4 = data.fri, //周五
+            week5 = data.sut, //周六
+            week6 = data.sun,  //周日
+            classCount = week0.split('').length ||
+                week1.split('').length ||
+                week2.split('').length ||
+                week3.split('').length ||
+                week4.split('').length ||
+                week5.split('').length ||
+                week6.split('').length;
+        if (week0 != '') {
+            weeks.push('星期一');
+            weeksData.push(week0);
+        }
+        if (week1 != '') {
+            weeks.push('星期二');
+            weeksData.push(week1);
+        }
+        if (week2 != '') {
+            weeks.push('星期三');
+            weeksData.push(week2);
+        }
+        if (week3 != '') {
+            weeks.push('星期四');
+            weeksData.push(week3);
+        }
+        if (week4 != '') {
+            weeks.push('星期五');
+            weeksData.push(week4);
+        }
+        if (week5 != '') {
+            weeks.push('星期六');
+            weeksData.push(week5);
+        }
+        if (week6 != '') {
+            weeks.push('星期日');
+            weeksData.push(week6);
+        }
+        var weekHtml = [],//表头
+            classesHtml = [];//表内容
+        weekHtml.push('<tr>');
+        weekHtml.push('<th width="135px">&nbsp;</th>');
+        $.each(weeks, function (i, k) {
+            weekHtml.push('<th>' + k + '</th>');
+        });
+        weekHtml.push('</tr>');
+        $('#no-assign-table thead').html(weekHtml.join(''));
+
+
+        var fooTag = ['排课', '不排课']
+        if (type === 'grade') {
+            fooTag = ['排课', gradeName + '不排课'];
+        }
+        /**
+         * 再拉取年级不排课数据进行比对
+         * 确定最后展示的信息
+         * type == grad 说明是年级不排课【全局】
+         * type != grad 说明是班级不排课【局部】
+         * 局部服从全局
+         */
+        if (type == 'grade') {
+            console.info('年级不排课')
+            for (var i = 0; i < classCount; i++) {
+                if (i != 0) {
+                    classesHtml.push('<tr>');
+                    classesHtml.push('<td class="order">' + (i + 1) + '</td>');
+                    if (weeks.length != 0) {
+                        for (var j = 0; j < weeks.length; j++) {
+                            var curIndex = "week" + j;
+                            var tempCourse = weeksData[j].split('')[i] == 1 ? fooTag[0] : fooTag[1];
+                            if (tempCourse !== '排课') {
+                                classesHtml.push('<td week=' + curIndex + ' class="no-assign-course">' + tempCourse + '</td>');
+                            } else {
+                                classesHtml.push('<td week=' + curIndex + '>' + tempCourse + '</td>');
+                            }
+                        }
+                    }
+                } else {
+                    classesHtml.push('<tr>');
+                    classesHtml.push('<td class="order">' + (i + 1) + '</td>');
+                    if (weeks.length != 0) {
+                        for (var j = 0; j < weeks.length; j++) {
+                            var curIndex = "week" + j;
+                            var tempCourse = weeksData[j].split('')[i] == 1 ? fooTag[0] : fooTag[1];
+                            if (tempCourse !== '排课') {
+                                classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + ' class="no-assign-course">' + tempCourse + '</td>');
+                            } else {
+                                classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + '>' + tempCourse + '</td>');
+                            }
+                        }
+                    }
+                }
+                classesHtml.push('</tr>');
+            }
+        } else {
+            console.info('班级不排课')
+            for (var i = 0; i < classCount; i++) {
+                if (i != 0) {
+                    classesHtml.push('<tr>');
+                    classesHtml.push('<td class="order">' + (i + 1) + '</td>');
+                    if (weeks.length != 0) {
+                        for (var j = 0; j < weeks.length; j++) {
+                            var curIndex = "week" + j;
+                            var tempCourse = weeksData[j].split('')[i] == 1 ? fooTag[0] : fooTag[1];
+                            if (tempCourse !== '排课') {
+                                classesHtml.push('<td week=' + curIndex + ' class="no-assign-course">' + tempCourse + '</td>');
+                            } else {
+                                classesHtml.push('<td week=' + curIndex + '>' + tempCourse + '</td>');
+                            }
+                        }
+                    }
+                } else {
+                    classesHtml.push('<tr>');
+                    classesHtml.push('<td class="order">' + (i + 1) + '</td>');
+                    if (weeks.length != 0) {
+                        for (var j = 0; j < weeks.length; j++) {
+                            var curIndex = "week" + j;
+                            var tempCourse = weeksData[j].split('')[i] == 1 ? fooTag[0] : fooTag[1];
+                            if (tempCourse !== '排课') {
+                                classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + ' class="no-assign-course">' + tempCourse + '</td>');
+                            } else {
+                                classesHtml.push('<td weekcourse="weekcourse" week=' + curIndex + '>' + tempCourse + '</td>');
+                            }
+                        }
+                    }
+                }
+                classesHtml.push('</tr>');
+            }
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $('#no-assign-table tbody').html(classesHtml.join(''));
     },
     //不排课列表查询
     getNoArrangeCourseList: function (type, teacherCourse) {
@@ -216,7 +354,7 @@ ArrangeCourse.prototype = {
                         tpl.push('</li>');
                         $.each(data, function (i, k) {
                             tpl.push('<li>');
-                            tpl.push('<a href="javascript: void(0);" gradeid="' + k.grade + '" classid="' + k.id + '">' + k.name + '</a>');
+                            tpl.push('<a href="javascript: void(0);" classType="' + k.classType + '" gradeid="' + k.grade + '" classid="' + k.id + '">' + k.name + '</a>');
                             tpl.push('</li>');
                             that.classids.push(k.id);
                         });
@@ -229,25 +367,55 @@ ArrangeCourse.prototype = {
                          * 2、拉取年级数据填充表格
                          */
                         // that.getTeachTime();  //初始化渲染默认年级课表
-                        that.getNoArrangeCourseInfo('class', -1);
+                        that.getNoArrangeCourseInfo('grade', -1);
 
 
                         /**
+                         * =====================
                          * 年级-年级所在班级【切换】
+                         * =====================
                          */
                         $('.class-list li').click(function () {
+
+
+
+
+                            // var _this = $(this);
+                            // _this.find('a').addClass('active').parent().siblings().find('a').removeClass('active');
+                            // //年级排课、班级排课切换
+                            // if (!_this.find('a').attr('classid')) {
+                            //     //年级
+                            //     GLOBAL_PARAMS.cType = -1
+                            //     that.getNoArrangeCourseInfo('grade', -1);
+                            // } else {
+                            //     //班级
+                            //     GLOBAL_PARAMS.cType = 0
+                            //     that.getNoArrangeCourseInfo('class', _this.find('a').attr('classid'));
+                            // }
+
+
+
+
+
+
+
+
+
                             var _this = $(this);
                             _this.find('a').addClass('active').parent().siblings().find('a').removeClass('active');
                             //年级排课、班级排课切换
-                            if (!_this.find('a').attr('classid')) {
-                                //年级
-                                GLOBAL_PARAMS.cType = -1
-                                that.getNoArrangeCourseInfo('class', -1);
-                            } else {
-                                //班级
-                                GLOBAL_PARAMS.cType = 0
-                                that.getNoArrangeCourseInfo('class', _this.find('a').attr('classid'));
-                            }
+                            !_this.find('a').attr('classid') ? GLOBAL_PARAMS.cType = -1 : GLOBAL_PARAMS.cType = 0;
+                            that.getCompareTableBody('grade', -1)
+                            that.getCompareTableBody('class', _this.find('a').attr('classid'));
+
+
+
+
+
+
+
+
+
                         });
                         break;
                     case 'teacher':
@@ -308,6 +476,7 @@ ArrangeCourse.prototype = {
         var that = this;
         var type = $('#no-course-time').val();
         var ids = '',
+            classType = '',
             week0 = [], //周一
             week1 = [], //周二
             week2 = [], //周三
@@ -317,6 +486,7 @@ ArrangeCourse.prototype = {
             week6 = [];  //周日
         switch (type) {
             case 'class':
+                classType = $('#class-list a[class="active"]').attr('classType');
                 ids = $('#class-list a[class="active"]').attr('classid');
                 if (ids == '' || ids == undefined || ids == null) {
                     ids = that.classids.join(',');
@@ -391,15 +561,9 @@ ArrangeCourse.prototype = {
                 }
             }
         }
-        // console.info('ids: ' + ids);
-        // console.info('week0: ' + week0.join(''));
-        // console.info('week1: ' + week1);
-        // console.info('week2: ' + week2);
-        // console.info('week3: ' + week3);
-        // console.info('week4: ' + week4);
-        // console.info('week5: ' + week5);
-        // console.info('week6: ' + week6);
-        Common.ajaxFun('/disSelectRule/addOrUpdateRule/' + GLOBAL_PARAMS.taskId + '/' + type, 'POST', {
+
+        var whichType = GLOBAL_PARAMS.cType == -1 ? 'grade' : type  //年级排课于非年级排课
+        Common.ajaxFun('/disSelectRule/addOrUpdateRule/' + GLOBAL_PARAMS.taskId + '/' + whichType, 'POST', {
             ids: ids,
             mon: week0.join(''),
             tues: week1.join(''),
@@ -409,8 +573,7 @@ ArrangeCourse.prototype = {
             sut: week5.join(''),
             sun: week6.join(''),
 
-
-            classType: ''
+            classType: classType
         }, function (res) {
             if (res.rtnCode == "0000000") {
 
@@ -495,11 +658,11 @@ ArrangeCourse.prototype = {
 };
 
 $(function () {
-
-    var flag = Common.checkInfoIsPerfect(GLOBAL_PARAMS.taskId);
-    if (!flag) {
-        window.location.href = '/course-scheduling-step1';
-    }
+    //开发暂时注释
+    // var flag = Common.checkInfoIsPerfect(GLOBAL_PARAMS.taskId);
+    // if (!flag) {
+    //     window.location.href = '/course-scheduling-step1';
+    // }
 
     var arrangeCourse = new ArrangeCourse();
 
@@ -541,9 +704,8 @@ $(function () {
     $(document).on('click', '.no-assign-table tr td:not(.order)', function () {
         var curText = $(this).text().trim(), foo = ['不排课', '排课'];
         //年级不排课
-        console.info(GLOBAL_PARAMS.cType);
         if ($('#no-course-time').val() == 'class' && GLOBAL_PARAMS.cType == -1) {
-            foo = [gradeName + '年级不排课', '排课']
+            foo = [gradeName + '不排课', '排课']
         }
 
         if (curText == '排课') {
@@ -558,4 +720,12 @@ $(function () {
 
     });
 
+
+    /**
+     * 班级不排课|教师不排课|课程不排课
+     * select-change
+     */
+    $(document).on('change', '#no-course-time', function () {
+        GLOBAL_PARAMS.cType = 0;
+    })
 });

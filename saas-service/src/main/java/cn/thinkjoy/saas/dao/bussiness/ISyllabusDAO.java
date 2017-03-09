@@ -10,5 +10,5 @@ import java.util.Map;
  * Created by yangyongping on 2017/2/27.
  */
 public interface ISyllabusDAO {
-    List<JwCourseTableDTO> queryList(@Param("params") Map<String,Object> map,@Param("teacherTableName")String teacherTableName,@Param("classTableName")String classTableName);
+    List<JwCourseTableDTO> queryList(@Param("params") Map<String,Object> map,@Param("teacherTableName")String teacherTableName,@Param("admClassTableName")String admClassTableName,@Param("eduClassTableName")String eduClassTableName,@Param("roomTableName")String roomTableName);
 }

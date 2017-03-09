@@ -39,8 +39,26 @@ public interface ISyllabusService{
      * @param classId
      * @return
      */
-    CourseResultView getClassSyllabus(int tnId, int taskId, int classId);
+    CourseResultView getClassSyllabus(int tnId, int taskId, int classId,int classType);
 
+    /**
+     * 获取某个班级课程表
+     * @param tnId
+     * @param taskId
+     * @param roomId
+     * @return
+     */
+    CourseResultView getRoomSyllabus(int tnId, int taskId, int roomId);
+
+    /**
+     * 获取某个学生课程表
+     * @param tnId
+     * @param taskId
+     * @param studentNo
+     * @return
+     */
+    CourseResultView getStudentSyllabus(int tnId, int taskId, long studentNo);
+    CourseResultView getStudentSyllabus(int tnId, int taskId,Map<String,Object> timeConfigMap,List<Map<String,Object>> classList);
 
     /**
      * 班级交换课表
@@ -85,6 +103,7 @@ public interface ISyllabusService{
      * @return
      */
     CourseResultView genSyllabus(int tnId,int taskId,String type,Map<String, Object> params,List<List<String>> lists,Map<String, Object> timeConfigMap);
+    CourseResultView genSyllabus(int tnId,int taskId,boolean hasRoom,String type,Map<String, Object> params,List<List<String>> lists,Map<String, Object> timeConfigMap);
 
     /**
      * 生成默认课表
@@ -93,5 +112,20 @@ public interface ISyllabusService{
      * @return
      */
     List<List<String>> genDefaultSyllabus(int dayCount,int courseCount);
+
+    /**
+     * 获取学生默认班级列表
+     * @param student
+     * @param admClassMap
+     * @param eduClassMap
+     * @return
+     */
+    List<Map<String,Object>> getClassList(Map<String,Object> student,Map<String,Integer> admClassMap,Map<String,Integer> eduClassMap);
+
+    /**
+     * 获取教师教授科目数量
+     * @return
+     */
+    int getTeacherClassNum(int tnId,int teacherId);
 
 }

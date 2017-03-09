@@ -99,45 +99,48 @@
                                 <div class="scheduling-error dh">
                                     <i class="icon-cry-face"></i>
                                     <p>排课失败!,请调整基础规则&nbsp;&nbsp;&nbsp;&nbsp;<span class="retry-scheduling">重新排课</span></p>
-
                                     <ul class="error-box-list"></ul>
                                 </div>
-
                                 <%-- 排课失败2 系统错误 规则提示 --%>
                                 <div class="scheduling-error2 dh">
                                     <i class="icon-cry-face"></i>
                                     <p>排课失败!&nbsp;&nbsp;&nbsp;&nbsp;<span class="retry-scheduling">重新排课</span></p>
                                 </div>
-
                             </div>
                             <%--教室课表|教师课表|学生课表|总课表--%>
                             <div id="role-scheduling-tab" class="dh">
                                 <div class="role-tab">
                                     <ul>
                                         <li class="no-before active"><i class="icon-step3-all-yes"></i><i class="icon-step3-all-no"></i>总课表</li>
-                                        <li><i class="icon-step3-class-yes"></i><i
-                                                class="icon-step3-class-no"></i>班级课表
-                                        </li>
-                                        <li><i class="icon-step3-teacher-yes"></i><i class="icon-step3-teacher-no"></i>教师课表
-                                        </li>
-                                        <%--<li><i class="icon-step3-std-yes dh"></i><i class="icon-step3-std-no"></i>学生课表</li>--%>
-
+                                        <li class="class-tab dh"><i class="icon-step3-classes-yes"></i><i class="icon-step3-classes-no"></i>班级课表</li>
+                                        <li><i class="icon-step3-teacher-yes"></i><i class="icon-step3-teacher-no"></i>教师课表</li>
+                                        <li class="student-tab dh"><i class="icon-step3-std-yes dh"></i><i class="icon-step3-std-no"></i>学生课表</li>
+                                        <li class="room-tab dh"><i class="icon-step3-class-yes"></i><i class="icon-step3-class-no"></i>教室课表</li>
                                     </ul>
                                 </div>
                             </div>
+
                             <div id="control-jsp" class="dh">
+                                 <%--总课表--%>
                                 <div class="bottom-page">
                                     <%@ include file="../course-scheduling/step3-child-all.jsp"%>
                                 </div>
+                                     <%--班级课表--%>
                                 <div class="bottom-page dh">
                                     <%@ include file="../course-scheduling/step3-child-class.jsp"%>
                                 </div>
+                                     <%--教师课表--%>
                                 <div class="bottom-page dh">
                                     <%@ include file="../course-scheduling/step3-child-teacher.jsp"%>
                                 </div>
-                                <%--<div class="bottom-page dh">--%>
-                                    <%--<%@ include file="../course-scheduling/step3-child-student.jsp"%>--%>
-                                <%--</div>--%>
+                                     <%--学生课表--%>
+                                <div class="bottom-page dh">
+                                    <%@ include file="../course-scheduling/step3-child-student.jsp"%>
+                                </div>
+                                     <%--教师课表--%>
+                                 <div class="bottom-page dh">
+                                     <%@ include file="../course-scheduling/step3-child-room.jsp"%>
+                                 </div>
                             </div>
                         </div>
                     </div>
@@ -148,6 +151,7 @@
 </div>
 
 <%--<script src="<%=ctx%>/static/src/js/course-scheduling/step3-common.js"></script>--%>
+<%--<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>--%>
 <script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>
 </body>
 </html>

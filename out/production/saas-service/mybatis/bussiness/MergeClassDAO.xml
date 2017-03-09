@@ -49,6 +49,9 @@
         <if test="courseId!=null">
           and cc.id=#{courseId}
         </if>
+        <if test="classType!=null">
+          and ii.class_type=#{classType}
+        </if>
     </select>
 
     <delete id="deleteMergeInfo" parameterType="java.util.Map">

@@ -69,7 +69,7 @@
                 and student_check_major1 is not null
             </if>
             <if test="grade != null and grade != ''">
-                and student_grade = #{grade}
+                and student_grade like  CONCAT("%",#{grade},"%")
             </if>
         </where>
         order by id asc
@@ -87,7 +87,7 @@
                 and student_check_major1 is not null
             </if>
             <if test="grade != null and grade != ''">
-                and student_grade = #{grade}
+                and student_grade like  CONCAT("%",#{grade},"%")
             </if>
         </where>
     </select>
@@ -217,7 +217,7 @@
         select * from ${tableName}
          <where>
              <foreach collection="list" item="domain">
-                  and ${domain.key} ${domain.op} #{domain.value}
+                 <if test="domain.groupOp != null">${domain.groupOp}</if> <if test="domain.groupOp == null">AND</if> ${domain.key} ${domain.op} #{domain.value}
              </foreach>
          </where>
     </select>
