@@ -240,8 +240,6 @@
   .scheduling-info {
     margin-bottom: 10px;
     overflow: hidden;
-    height: 28px;
-    line-height: 28px;
     .scheduling-name {
       font-size: 14px;
       font-weight: bold;
@@ -251,6 +249,8 @@
       background: #B085B9 !important;
       border-color: #B085B9 !important;
       outline: none;
+      position: relative;
+      top:130px;
     }
     .icon-output-down {
       display: inline-block !important;
@@ -385,4 +385,36 @@ p.tbody-item{
 }
 
 
+.colors-box{
+  padding:20px 0 0;
+  .colors-info{
+    font-size:14px;
+    color: #4A4A4A;
+  }
+  .colors-tips{
+    color: #868686;
+    font-size:12px;
+  }
+}
 
+.color1,
+.color2,
+.color3{
+  width:14px;
+  height:14px;
+  display: inline-block;
+  border-radius: 2px;
+  vertical-align: middle;
+  position: relative;
+  top:-1px;
+  margin-right:8px;
+}
+.color1{
+  background: #8EC0FA;
+}
+.color2{
+  background: #F7C572;
+}
+.color3{
+  background: #F98F90;
+}

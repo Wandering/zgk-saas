@@ -695,6 +695,10 @@ CourseTable.prototype = {
                 var newsTxt = $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').text();
                 $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').text(newsTxt);
                 $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').text(originalTxt);
+            }else if ($(this).attr('flag')=='true'){
+                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').text('');
+                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
+                $(this).attr('flag')=='false';
             }
         });
     },
@@ -765,15 +769,15 @@ CourseTable.prototype = {
                             //0 白色
                             break;
                         case "1":
-                            colorValue = "#f00";
+                            colorValue = "#8EC0FA";
                             //1红色
                             break;
                         case "2":
-                            colorValue = "#ff0";
+                            colorValue = "#F7C572";
                             //2黄色
                             break;
                         case "3":
-                            colorValue = "#0f0";
+                            colorValue = "#F98F90";
                             //3绿色
                             break;
                         default:
