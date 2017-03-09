@@ -15,6 +15,9 @@ import cn.thinkjoy.saas.dto.JwCourseTableDTO;
 import cn.thinkjoy.saas.service.bussiness.IEXJwScheduleTaskService;
 import cn.thinkjoy.saas.service.bussiness.ISyllabusService;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.io.CharSink;
 import com.google.common.io.CharSource;
 import com.google.common.io.FileWriteMode;
@@ -26,6 +29,7 @@ import org.springframework.util.StringUtils;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static com.google.common.io.Files.newReader;
 
@@ -48,6 +52,16 @@ public class SyllabusServiceImpl implements ISyllabusService {
     @Autowired
     private IEXTeantCustomDAO iexTeantCustomDAO;
 
+//    LoadingCache<String, List<JwCourseTableDTO>> jwCourseTableDTOCache = CacheBuilder.newBuilder()
+//            .maximumSize(1000)
+//            .expireAfterWrite(10, TimeUnit.MINUTES)
+//            .build(
+//                    new CacheLoader<String, List<JwCourseTableDTO>>() {
+//                        public List<JwCourseTableDTO> load(String key){
+//
+//                            return createExpensiveGraph(key);
+//                        }
+//                    } );
     /**
      * 获得总课表
      * @param tnId
@@ -77,6 +91,39 @@ public class SyllabusServiceImpl implements ISyllabusService {
     }
 
     /**
+     * 获取教师教授科目数量
+     *
+     * @param tnId
+     * @param teacherId
+     * @return
+     */
+    @Override
+    public int getTeacherClassNum(int tnId, int teacherId) {
+        //获取一个学生所在的班级列表
+        String tableName = ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER, tnId);
+
+        if (com.alibaba.dubbo.common.utils.StringUtils.isBlank(tableName)) {
+            return 0;
+        }
+        List<Map<String,Object>> params = new ArrayList<>();
+        Map<String,Object> param = new HashMap<>();
+        param.put("key","id");
+        param.put("op","=");
+        param.put("value",teacherId);
+        params.add(param);
+
+        List<LinkedHashMap<String, Object>> tenantCustoms = iexTeantCustomDAO.likeTableByParams(tableName,params);
+        if (tenantCustoms == null || tenantCustoms.size()==0 ){
+            throw new BizException("error","老师不存在!");
+        }
+        Map<String, Object> map = tenantCustoms.get(0);
+        String classStr = map.get("teacher_class").toString();
+        String[] classes = classStr.split(Constant.ClASS_INTERVAL);
+        return classes.length;
+    }
+
+
+    /**
      * 获取某个老师课程表
      *
      * @param tnId
@@ -88,7 +135,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
     public CourseResultView getTeacherSyllabus(int tnId, int taskId, int teacherId) {
         Map<String, Object> params = new HashMap<>();
         params.put("teacherId",teacherId);
-        return this.genSyllabus(tnId,taskId,Constant.TABLE_TYPE_TEACHER,params);
+        return this.genSyllabus(tnId,taskId,Constant.TABLE_TYPE_TEACHER,true,params);
     }
 
     /**
@@ -136,15 +183,15 @@ public class SyllabusServiceImpl implements ISyllabusService {
         Map<String,Object> timeConfigMap;
 
         timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
-
-
-        //根据学生所在班级课表获取组成学生课表
-        return getStudentSyllabus(tnId,taskId,studentNo,timeConfigMap);
-    }
-
-    public CourseResultView getStudentSyllabus(int tnId, int taskId, long studentNo,Map<String,Object> timeConfigMap) {
         Map<String,Object> student = queryOneStudent(tnId, studentNo);
         List<Map<String,Object>> classList = this.getClassList(tnId,student);
+
+        //根据学生所在班级课表获取组成学生课表
+        return getStudentSyllabus(tnId,taskId,timeConfigMap,classList);
+    }
+    @Override
+    public CourseResultView getStudentSyllabus(int tnId, int taskId,Map<String,Object> timeConfigMap,List<Map<String,Object>> classList) {
+
         CourseResultView courseResultView = null;
         int courseCount,dayCount;
         if (timeConfigMap == null)
@@ -168,12 +215,15 @@ public class SyllabusServiceImpl implements ISyllabusService {
     }
 
     private List<Map<String,Object>> getClassList(int tnId,Map<String,Object> student){
-        List<Map<String,Object>> classList = new ArrayList<>();
-        Map<String,Object> rtnMap;
         String grade = (String) student.get("student_grade");
         Map<String,Integer> admClassMap = iexJwScheduleTaskService.getClassMapByTnId(tnId,Constant.CLASS_ADM_CODE,grade);
         Map<String,Integer> eduClassMap = iexJwScheduleTaskService.getClassMapByTnId(tnId,Constant.CLASS_EDU_CODE,grade);
-
+        return this.getClassList(student,admClassMap,eduClassMap);
+    }
+    @Override
+    public List<Map<String,Object>> getClassList(Map<String,Object> student,Map<String,Integer> admClassMap,Map<String,Integer> eduClassMap){
+        List<Map<String,Object>> classList = new ArrayList<>();
+        Map<String,Object> rtnMap;
         //行政班
         rtnMap = new HashMap<>();
         String className = (String) student.get("student_class");
@@ -197,6 +247,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
         }
         return classList;
     }
+
 
     private Map<String,Object> queryOneStudent(int tnId,long studentNo){
         //获取一个学生所在的班级列表
@@ -277,24 +328,15 @@ public class SyllabusServiceImpl implements ISyllabusService {
         int[] targetTemp = new int[2];
         targetTemp[0] = targetList.get(0).getWeek();
         targetTemp[1] = targetList.get(0).getSort();
-
-        for (JwCourseTable  jwCourseTable: sourceList){
-            jwCourseTableDAO.deleteById(jwCourseTable.getId());
-        }
-
-        for (JwCourseTable  jwCourseTable: targetList){
-            jwCourseTableDAO.deleteById(jwCourseTable.getId());
-        }
-
         for (JwCourseTable  jwCourseTable: targetList){
             jwCourseTable.setWeek(sourceTemp[0]);
             jwCourseTable.setSort(sourceTemp[1]);
-            jwCourseTableDAO.insert(jwCourseTable);
+            jwCourseTableDAO.update(jwCourseTable);
         }
         for (JwCourseTable  jwCourseTable: sourceList){
             jwCourseTable.setWeek(targetTemp[0]);
             jwCourseTable.setSort(targetTemp[1]);
-            jwCourseTableDAO.insert(jwCourseTable);
+            jwCourseTableDAO.update(jwCourseTable);
         }
 
         return true;
@@ -362,6 +404,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @return
      */
     private List<JwCourseTableDTO> queryList(int tnId,int taskId,boolean hasRoom,Map<String,Object> params){
+
         String teacherTableName;
         String roomTableName = null;
         String admClassTableName = null;
@@ -510,7 +553,9 @@ public class SyllabusServiceImpl implements ISyllabusService {
                         .append(Constant.GEN_COURSE_TABLE_WRAP_SPLIT)
                         .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_S)
                         .append(jwCourseTableDTO.getTeacherName())
-                        .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_E);
+                        .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_E)
+                        .append(Constant.GEN_COURSE_TABLE_WRAP_SPLIT)
+                        .append(jwCourseTableDTO.getRoomName());;
                 break;
             case Constant.COURSE_TABLE_ALL:
                 rtnStrBf.append(jwCourseTableDTO.getCourseName())
@@ -536,7 +581,9 @@ public class SyllabusServiceImpl implements ISyllabusService {
                         .append(Constant.GEN_COURSE_TABLE_WRAP_SPLIT)
                         .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_S)
                         .append(jwCourseTableDTO.getTeacherName())
-                        .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_E);
+                        .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_E)
+                        .append(Constant.GEN_COURSE_TABLE_WRAP_SPLIT)
+                        .append(jwCourseTableDTO.getRoomName());;
                 break;
         }
         return rtnStrBf.toString();

@@ -45,6 +45,8 @@ public class BaseResultController {
     private IGradeService gradeService;
     @Autowired
     private IEXTeacherService teacherService;
+    @Autowired
+    private ISyllabusService syllabusService;
 
 
     /**
@@ -73,6 +75,18 @@ public class BaseResultController {
     }
 
     /**
+     * 获取老师教课班级数量
+     * @param teacherId 老师ID
+     * @return
+     */
+    @RequestMapping(value = "/queryTeacherClassNum",method = RequestMethod.GET)
+    @ResponseBody
+    public int queryTeacherClassNum(@RequestParam Integer teacherId) {
+        Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        return syllabusService.getTeacherClassNum(tnId,teacherId);
+    }
+
+    /**
      * 获取教室名称列表
      * @param taskId
      * @return
@@ -81,35 +95,8 @@ public class BaseResultController {
     @ResponseBody
     public List queryRoom(@RequestParam Integer taskId) {
         int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
-        Map<String,Object> param = new HashMap<>();
-        param.put("tnId",tnId);
-        param.put("gradeCode",jwScheduleTask.getGrade());
-        Grade grade = (Grade) gradeService.queryOne(param);
-        Map<Integer,LinkedHashMap<String,Object>> classMap = iexJwScheduleTaskService.getClassMapByTnIdAndTaskId(tnId,Constant.CLASS_ADM_CODE,grade.getGrade());
 
-        List<Map<String,Object> > rtnList = new ArrayList<>();
-        Map<String,Object> room;
-        List<StringBuffer> buffers = iexJwScheduleTaskService.getClassRoom(taskId,tnId);
-        buffers.remove(0);
-        for (StringBuffer ss : buffers){
-            room = new HashMap<>();
-            int roomId = Integer.valueOf(ss.toString().replace("\r\n",""));
-            if (roomId>0){
-                Map<String,Object> classObj = classMap.get(roomId);
-                room.put("roomId",classObj.get("id"));
-                room.put("roomName",classObj.get("class_name")+"教室");
-                rtnList.add(room);
-            }else {
-                Map<String,Object> classObj = classMap.get(roomId);
-                room.put("roomId",roomId);
-                room.put("roomName","教室"+Math.abs(roomId));
-                rtnList.add(room);
-            }
-
-
-        }
-        return rtnList;
+        return iexJwScheduleTaskService.queryRoom(taskId,tnId);
     }
 
     /**
@@ -146,6 +133,15 @@ public class BaseResultController {
         String className = getClssNameByIdAndType(tnId,taskId,classId,classType);
         List<Map<String,Object>> params = new ArrayList<>();
         Map<String, Object> param;
+        JwScheduleTask jwScheduleTask =(JwScheduleTask) jwScheduleTaskService.fetch(taskId);
+        Set<Integer> gradeCodeSet = new HashSet<>();
+        gradeCodeSet.add(Integer.valueOf(jwScheduleTask.getGrade()));
+        List<Grade> gradeList = exiGradeService.getGradeByTnIdAndGradeCode(tnId,gradeCodeSet);
+        param = new HashMap<>();
+        param.put("key", "student_grade");
+        param.put("op", "=");
+        param.put("value", gradeList.get(0).getGrade());
+        params.add(param);
         if (!StringUtils.isEmpty(studentName)) {
             param = new HashMap<>();
             param.put("key", "student_name");

@@ -58,6 +58,7 @@ public interface ISyllabusService{
      * @return
      */
     CourseResultView getStudentSyllabus(int tnId, int taskId, long studentNo);
+    CourseResultView getStudentSyllabus(int tnId, int taskId,Map<String,Object> timeConfigMap,List<Map<String,Object>> classList);
 
     /**
      * 班级交换课表
@@ -111,5 +112,20 @@ public interface ISyllabusService{
      * @return
      */
     List<List<String>> genDefaultSyllabus(int dayCount,int courseCount);
+
+    /**
+     * 获取学生默认班级列表
+     * @param student
+     * @param admClassMap
+     * @param eduClassMap
+     * @return
+     */
+    List<Map<String,Object>> getClassList(Map<String,Object> student,Map<String,Integer> admClassMap,Map<String,Integer> eduClassMap);
+
+    /**
+     * 获取教师教授科目数量
+     * @return
+     */
+    int getTeacherClassNum(int tnId,int teacherId);
 
 }
