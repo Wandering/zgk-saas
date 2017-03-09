@@ -588,7 +588,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @return
      */
     public CourseResultView genSyllabus(int tnId,int taskId,String type,Map<String, Object> params){
-        return this.genSyllabus(tnId,taskId,type,false,params);
+        return this.genSyllabus(tnId,taskId,type,true,params);
     }
     /**
      * 生成并填充课表内容
