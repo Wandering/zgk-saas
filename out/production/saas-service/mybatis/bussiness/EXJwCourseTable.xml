@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkjoy.saas.dao.bussiness.IEXJwCourseTableDAO">
+
+
+    <update id="insertList" parameterType="java.util.Map">
+        INSERT INTO saas_jw_course_table (
+        tnId,
+        taskId,
+        gradeId,
+        week,
+        sort,
+        classType,
+        roomId,
+        classId,
+        teacherId,
+        courseId,
+        status
+        ) VALUES
+        <foreach collection="list" item="jwCourseTable" separator=",">
+            (
+            #{jwCourseTable.tnId},
+            #{jwCourseTable.taskId},
+            #{jwCourseTable.gradeId},
+            #{jwCourseTable.week},
+            #{jwCourseTable.sort},
+            #{jwCourseTable.classType},
+            #{jwCourseTable.roomId},
+            #{jwCourseTable.classId},
+            #{jwCourseTable.teacherId},
+            #{jwCourseTable.courseId},
+            #{jwCourseTable.status}
+            )
+        </foreach>
+
+    </update>
+
+</mapper>

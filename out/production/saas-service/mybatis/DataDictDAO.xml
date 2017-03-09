@@ -31,7 +31,7 @@ selectList
         note as note
     </sql>
     <insert id="insert" parameterType="DataDict">
-        INSERT INTO sass_data_dict (
+        INSERT INTO saas_data_dict (
         name,
         dictId,
         type,
@@ -49,7 +49,7 @@ selectList
 
     <!-- 更新 -->
     <update id="update" parameterType="DataDict">
-        UPDATE sass_data_dict
+        UPDATE saas_data_dict
         <trim prefix="SET" suffixOverrides=",">
             <if test="name!=null">
                 name = #{name},
@@ -69,7 +69,7 @@ selectList
     </update>
 
     <update id="updateMap">
-        UPDATE sass_data_dict
+        UPDATE saas_data_dict
         <trim prefix="SET" suffixOverrides=",">
             <if test="map.name!=null">
                 name = #{map.name},
@@ -89,7 +89,7 @@ selectList
     </update>
 
     <update id="updateByCondition">
-        UPDATE sass_data_dict
+        UPDATE saas_data_dict
         <trim prefix="SET" suffixOverrides=",">
             <if test="update.name!=null">
                 name = #{update.name},
@@ -125,7 +125,7 @@ selectList
     </update>
 
     <insert id="insertMap" >
-        INSERT INTO sass_data_dict (
+        INSERT INTO saas_data_dict (
                 name,
                 dictId,
                 type,
@@ -140,7 +140,7 @@ selectList
 
 
     <update id="updateNull" parameterType="DataDict">
-        UPDATE sass_data_dict
+        UPDATE saas_data_dict
         <trim prefix="SET" suffixOverrides=",">
             name = #{name},
             dictId = #{dictId},
@@ -148,12 +148,12 @@ selectList
             note = #{note},
         </trim>
         WHERE
-        id = #{id} 
+        id = #{id}
     </update>
 
     <!-- 按Id删除 -->
     <delete id="deleteById" parameterType="java.lang.Long">
-        DELETE FROM sass_data_dict
+        DELETE FROM saas_data_dict
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND id = #{id}
         </trim>
@@ -161,7 +161,7 @@ selectList
 
 
     <delete id="deleteByCondition" parameterType="java.util.Map">
-        DELETE FROM sass_data_dict
+        DELETE FROM saas_data_dict
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="id!=null">
                 AND id = #{id}
@@ -182,14 +182,14 @@ selectList
     </delete>
 
     <delete id="deleteByProperty" parameterType="java.util.Map">
-        DELETE FROM sass_data_dict WHERE
+        DELETE FROM saas_data_dict WHERE
         ${property} = #{value}
     </delete>
 
     <select id="fetch" parameterType="java.lang.Long" resultType="DataDict">
         SELECT
         <include refid="Base_Column_List" />
-        FROM sass_data_dict
+        FROM saas_data_dict
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND id = #{id}
         </trim>
@@ -198,7 +198,7 @@ selectList
     <select id="findOne" parameterType="java.util.Map" resultType="DataDict">
         SELECT
         <include refid="Base_Column_List" />
-        FROM sass_data_dict WHERE
+        FROM saas_data_dict WHERE
         ${property} = #{value}
         LIMIT 0,1
     </select>
@@ -206,7 +206,7 @@ selectList
     <select id="findList" parameterType="java.util.Map" resultType="DataDict">
         SELECT
         <include refid="Base_Column_List" />
-        FROM sass_data_dict WHERE
+        FROM saas_data_dict WHERE
         ${property} = #{value}
         <if test="orderBy!=null">
             ORDER BY ${orderBy} ${sortBy}
@@ -216,7 +216,7 @@ selectList
     <select id="findAll" resultType="DataDict">
         SELECT
         <include refid="Base_Column_List" />
-        FROM sass_data_dict
+        FROM saas_data_dict
         <if test="orderBy!=null">
             ORDER BY ${orderBy} ${sortBy}
         </if>
@@ -225,7 +225,7 @@ selectList
     <select id="queryPage" resultType="DataDict">
         SELECT
         <include refid="Base_Column_List" />
-        FROM sass_data_dict
+        FROM saas_data_dict
         <where>
 
             <if test="condition.whereSql != null">
@@ -262,7 +262,7 @@ selectList
     <select id="like" parameterType="java.util.Map" resultType="DataDict">
         SELECT
         <include refid="Base_Column_List" />
-        FROM sass_data_dict
+        FROM saas_data_dict
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
                 AND id like CONCAT('%', #{condition.id} , '%')
@@ -289,7 +289,7 @@ selectList
     <select id="queryList" parameterType="java.util.Map" resultType="DataDict">
         SELECT
         <include refid="Base_Column_List" />
-        FROM sass_data_dict
+        FROM saas_data_dict
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
                 AND id = #{condition.id}
@@ -315,7 +315,7 @@ selectList
     <select id="queryOne" parameterType="java.util.Map" resultType="DataDict">
         SELECT
         <include refid="Base_Column_List" />
-        FROM sass_data_dict
+        FROM saas_data_dict
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="condition.id!=null">
                 AND id = #{condition.id}
@@ -337,7 +337,7 @@ selectList
     </select>
 
     <select id="count" resultType="java.lang.Integer">
-        SELECT count(id) FROM sass_data_dict
+        SELECT count(id) FROM saas_data_dict
        <where>
            <if test="id!=null">
                ${groupOp} id ${id.op}  #{id.data}
@@ -364,7 +364,7 @@ selectList
     <select id="selectMaxId" resultType="java.lang.Long">
         SELECT
         MAX(id)
-        FROM sass_data_dict
+        FROM saas_data_dict
     </select>
 
 </mapper>

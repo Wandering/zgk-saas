@@ -421,6 +421,21 @@ selectList
             ${searchKey} like CONCAT("%",#{searchValue},"%")
     </select>
 
+    <select id="queryClassById" resultType="java.util.HashMap" >
+        SELECT
+        id,
+        class_name AS name,
+        class_grade as grade,
+        <if test="classType == 0">
+            class_major_type as course,
+        </if>
+        class_type as classType
+        FROM
+        ${tableName}
+        where
+        id = #{id}
+    </select>
+
     <select id="queryCourseList" resultType="java.util.HashMap" >
         SELECT
             c.id,
