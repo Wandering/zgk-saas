@@ -46,6 +46,8 @@ public class Constant {
 
     public static final String TIME_INTERVAL = "_";
 
+    public static final String ClASS_INTERVAL = "、";
+
     public static final String STUDENT = "student";
 
     public static final String TABLE_TYPE_TEACHER = "teacher";
@@ -101,7 +103,7 @@ public class Constant {
     public static final String GEN_COURSE_TABLE_TEACHER_AROUND_S = "(";
     public static final String GEN_COURSE_TABLE_TEACHER_AROUND_E = ")";
     public static final String GEN_COURSE_TABLE_CLASS_SPLIT = "-";
-    public static final String GEN_COURSE_TABLE_WRAP_SPLIT = "\n\r";
+    public static final String GEN_COURSE_TABLE_WRAP_SPLIT = "<br>";
     public static final String COURSE_TABLE_ALL = "all";
     public static final String COURSE_TABLE_DEFAULT_VALUE = "";
     /**课程表生成相关**/

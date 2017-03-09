@@ -91,6 +91,39 @@ public class SyllabusServiceImpl implements ISyllabusService {
     }
 
     /**
+     * 获取教师教授科目数量
+     *
+     * @param tnId
+     * @param teacherId
+     * @return
+     */
+    @Override
+    public int getTeacherClassNum(int tnId, int teacherId) {
+        //获取一个学生所在的班级列表
+        String tableName = ParamsUtils.combinationTableName(Constant.TABLE_TYPE_TEACHER, tnId);
+
+        if (com.alibaba.dubbo.common.utils.StringUtils.isBlank(tableName)) {
+            return 0;
+        }
+        List<Map<String,Object>> params = new ArrayList<>();
+        Map<String,Object> param = new HashMap<>();
+        param.put("key","id");
+        param.put("op","=");
+        param.put("value",teacherId);
+        params.add(param);
+
+        List<LinkedHashMap<String, Object>> tenantCustoms = iexTeantCustomDAO.likeTableByParams(tableName,params);
+        if (tenantCustoms == null || tenantCustoms.size()==0 ){
+            throw new BizException("error","老师不存在!");
+        }
+        Map<String, Object> map = tenantCustoms.get(0);
+        String classStr = map.get("teacher_class").toString();
+        String[] classes = classStr.split(Constant.ClASS_INTERVAL);
+        return classes.length;
+    }
+
+
+    /**
      * 获取某个老师课程表
      *
      * @param tnId
@@ -102,7 +135,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
     public CourseResultView getTeacherSyllabus(int tnId, int taskId, int teacherId) {
         Map<String, Object> params = new HashMap<>();
         params.put("teacherId",teacherId);
-        return this.genSyllabus(tnId,taskId,Constant.TABLE_TYPE_TEACHER,params);
+        return this.genSyllabus(tnId,taskId,Constant.TABLE_TYPE_TEACHER,true,params);
     }
 
     /**
@@ -215,6 +248,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
         return classList;
     }
 
+
     private Map<String,Object> queryOneStudent(int tnId,long studentNo){
         //获取一个学生所在的班级列表
         String tableName = ParamsUtils.combinationTableName(Constant.STUDENT, tnId);
@@ -294,24 +328,15 @@ public class SyllabusServiceImpl implements ISyllabusService {
         int[] targetTemp = new int[2];
         targetTemp[0] = targetList.get(0).getWeek();
         targetTemp[1] = targetList.get(0).getSort();
-
-        for (JwCourseTable  jwCourseTable: sourceList){
-            jwCourseTableDAO.deleteById(jwCourseTable.getId());
-        }
-
-        for (JwCourseTable  jwCourseTable: targetList){
-            jwCourseTableDAO.deleteById(jwCourseTable.getId());
-        }
-
         for (JwCourseTable  jwCourseTable: targetList){
             jwCourseTable.setWeek(sourceTemp[0]);
             jwCourseTable.setSort(sourceTemp[1]);
-            jwCourseTableDAO.insert(jwCourseTable);
+            jwCourseTableDAO.update(jwCourseTable);
         }
         for (JwCourseTable  jwCourseTable: sourceList){
             jwCourseTable.setWeek(targetTemp[0]);
             jwCourseTable.setSort(targetTemp[1]);
-            jwCourseTableDAO.insert(jwCourseTable);
+            jwCourseTableDAO.update(jwCourseTable);
         }
 
         return true;

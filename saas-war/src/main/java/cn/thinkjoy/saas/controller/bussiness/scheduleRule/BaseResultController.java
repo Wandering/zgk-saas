@@ -45,6 +45,8 @@ public class BaseResultController {
     private IGradeService gradeService;
     @Autowired
     private IEXTeacherService teacherService;
+    @Autowired
+    private ISyllabusService syllabusService;
 
 
     /**
@@ -70,6 +72,18 @@ public class BaseResultController {
         list.addAll(admList);
         list.addAll(eduList);
         return list;
+    }
+
+    /**
+     * 获取老师教课班级数量
+     * @param teacherId 老师ID
+     * @return
+     */
+    @RequestMapping(value = "/queryTeacherClassNum",method = RequestMethod.GET)
+    @ResponseBody
+    public int queryTeacherClassNum(@RequestParam Integer teacherId) {
+        Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        return syllabusService.getTeacherClassNum(tnId,teacherId);
     }
 
     /**

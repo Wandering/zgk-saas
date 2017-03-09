@@ -122,4 +122,10 @@ public interface ISyllabusService{
      */
     List<Map<String,Object>> getClassList(Map<String,Object> student,Map<String,Integer> admClassMap,Map<String,Integer> eduClassMap);
 
+    /**
+     * 获取教师教授科目数量
+     * @return
+     */
+    int getTeacherClassNum(int tnId,int teacherId);
+
 }
