@@ -776,7 +776,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         map.put("gradeId", jwScheduleTask.getGrade());
         ClassRooms classRooms = iClassRoomsDAO.queryOne(map, "id", "asc");
 
-        Integer maxRoomNumber = classRooms == null ? 0 : classRooms.getDayNumber() + classRooms.getExecutiveNumber();
+        Integer maxRoomNumber = classRooms == null ? 0 :classRooms.getScheduleNumber()==null?classRooms.getDayNumber() + classRooms.getExecutiveNumber():classRooms.getScheduleNumber();
 
         if (maxRoomNumber > 0) {
             Integer admNum=0;
