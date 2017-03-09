@@ -1,13 +1,12 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.common.exception.BizException;
-import cn.thinkjoy.saas.domain.JwBaseRule;
-import cn.thinkjoy.saas.domain.JwCourseGapRule;
-import cn.thinkjoy.saas.domain.JwTeachDate;
+import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -41,20 +40,38 @@ public class CourseDisSelectController
     @Autowired
     private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
 
+    @Autowired
+    private IJwGradeRuleService jwGradeRuleService;
+
+    @Autowired
+    private IJwScheduleTaskService jwScheduleTaskService;
+
     @RequestMapping(value = "/getRule/{taskId}/{type}/{id}", method = RequestMethod.GET)
     public List<Map<String, String>> getRule(@PathVariable String taskId,
         @PathVariable String type, @PathVariable String id)
     {
+
         Map<String, String> params = new HashMap<>();
         params.put("taskId", taskId);
-        params.put(type + "Id", id);
+        if(!"grade".equals(type)){
+            params.put(type + "Id", id);
+        }
         return getServiceByType(type).queryList(params, "id", "asc");
     }
 
     @RequestMapping(value = "/addOrUpdateRule/{taskId}/{type}", method = RequestMethod.POST)
-    public int addOrUpdateRule(@PathVariable String taskId, @PathVariable String type,
-        @RequestParam(value = "ids", required = true) String ids, JwBaseRule jwBaseRule,@RequestParam(value = "classType", required = false)String classType)
+    public int addOrUpdateRule(@PathVariable String taskId,
+                               @PathVariable String type,
+                               @RequestParam(value = "ids", required = true) String ids,
+                               @RequestParam(value = "jwBaseRule", required = true) JwBaseRule jwBaseRule,
+                               @RequestParam(value = "classType", required = false) String classType)
     {
+
+        if ("grade".equals(type)){
+            JwScheduleTask task = (JwScheduleTask) jwScheduleTaskService.findOne("id",taskId);
+            ids = task.getGrade();
+        }
+
         int result = 0;
         try
         {
@@ -110,6 +127,10 @@ public class CourseDisSelectController
         else if ("teacher".equals(type))
         {
             service = jwTeacherRuleService;
+        }
+        else if ("grade".equals(type))
+        {
+            service = jwGradeRuleService;
         }
         else
         {
