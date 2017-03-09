@@ -112,14 +112,14 @@
                                 <div class="role-tab">
                                     <ul>
                                         <li class="no-before active"><i class="icon-step3-all-yes"></i><i class="icon-step3-all-no"></i>总课表</li>
-                                        <li><i class="icon-step3-classes-yes"></i><i class="icon-step3-classes-no"></i>班级课表</li>
+                                        <li class="class-tab dh"><i class="icon-step3-classes-yes"></i><i class="icon-step3-classes-no"></i>班级课表</li>
                                         <li><i class="icon-step3-teacher-yes"></i><i class="icon-step3-teacher-no"></i>教师课表</li>
                                         <li class="student-tab dh"><i class="icon-step3-std-yes dh"></i><i class="icon-step3-std-no"></i>学生课表</li>
                                         <li class="room-tab dh"><i class="icon-step3-class-yes"></i><i class="icon-step3-class-no"></i>教室课表</li>
                                     </ul>
                                 </div>
                             </div>
-                            
+
                             <div id="control-jsp" class="dh">
                                  <%--总课表--%>
                                 <div class="bottom-page">

@@ -45,6 +45,7 @@ function CourseTable(){
     this.tarPosX = '';
     this.tarPosY = '';
     this.flagClassType = null;
+    this.colorScheduleResultState = '';
 }
 
 CourseTable.prototype = {
@@ -70,8 +71,10 @@ CourseTable.prototype = {
             $('.student-tab,.room-tab').addClass('dh');
             this.courseTableEvent('class');
             this.courseTableEvent('teacher');
+            $('.class-tab').removeClass('dh');
         }else{
             $('.student-tab,.room-tab').removeClass('dh');
+            $('.class-tab').addClass('dh');
         }
 
     },
@@ -145,7 +148,7 @@ CourseTable.prototype = {
         $("#select-teacher").change(function () {
             that.teacherTxt = $(this).children('option:selected').text();
             that.teacherId = $(this).children('option:selected').val();
-            $('.teacher-label').text(that.teacherTxt + "老师");
+            $('.teacher-label').text(that.teacherTxt+ "老师共代"+ that.queryTeacherClassNum(that.teacherId) +"个班的");
             that.getClassRoomTable('teacher', {
                 'course': that.courseTxt,
                 'teacherId': that.teacherId
@@ -434,7 +437,7 @@ CourseTable.prototype = {
                     'course': teacherCourse,
                     'teacherId': selectedV
                 });
-                $('.teacher-label').text(selectedTxt + "老师");
+                $('.teacher-label').text(selectedTxt + "老师共代"+ that.queryTeacherClassNum(selectedV) +"个班的");
             } else {
                 layer.msg(result.msg);
             }
@@ -559,7 +562,7 @@ CourseTable.prototype = {
                 Handlebars.registerHelper("thead", function (res) {
                     console.log(res);
                     var resData = res.split('|');
-                    var str = '<td></td>';
+                    var str = '<td class="center">节次</td>';
                     for (var i = 0; i < resData.length; i++) {
                         str += '<td class="center">' + resData[i] + '</td>';
                     }
@@ -577,12 +580,12 @@ CourseTable.prototype = {
                     var trHtml = '';
                     for (var i = 0; i < itemCount; i++) {
                         trHtml += '<tr>';
-                        trHtml += '<td class="center">' + (i + 1) + '</td>';
+                        trHtml += '<td class="center">第' + (i + 1) + '节</td>';
                         for (var j = 0; j < wkList.length; j++) {
                             if (wkList[j][i] == null || wkList[j][i] == "") {
                                 trHtml += '<td class="center ' + urlType + 'CourseTable" x="' + i + '" y="' + j + '"></td>';
                             } else {
-                                trHtml += '<td class="center ' + urlType + 'CourseTable" x="' + i + '" y="' + j + '">' + wkList[j][i] + '</td>';
+                                trHtml += '<td class="center ' + urlType + 'CourseTable" x="' + i + '" y="' + j + '"><span class="course-table-name">' + wkList[j][i] + '</span></td>';
                             }
                         }
                         trHtml += '</tr>';
@@ -590,6 +593,9 @@ CourseTable.prototype = {
                     return trHtml;
                 });
                 $("#" + urlType + "-tbody-list").html(tbodyTemplate(result));
+                if(urlType == 'teacher'){
+
+                }
             } else {
                 layer.msg(result.msg);
             }
@@ -615,9 +621,9 @@ CourseTable.prototype = {
                     var Num3 = parseInt(wkDate.substr(2, 1));
                     var itemCount = Num1 + Num2 + Num3;
                     var resData = res.teachDate.split('|');
-                    var str = '<td></td>';
+                    var str = '<td class="center">节次</td>';
                     for (var i = 0; i < resData.length; i++) {
-                        str += '<td class="center" colspan="' + itemCount + '">' + resData[i] + '</td>';
+                        str += '<td class="center" colspan="' + itemCount + '">第' + resData[i] + '节</td>';
                     }
                     return str;
                 });
@@ -679,7 +685,7 @@ CourseTable.prototype = {
                 that.posY = $(this).attr('y');
                 var selectedV = $('#select-'+obj).children('option:selected').val();
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style');
-                $(this).attr('flag', true);
+                $(this).attr('flag', true).css('color','#c00').append('<span class="wait-course">待调课</span>');
                 that.queryStatusByCoord(obj,that.posX, that.posY, selectedV);
                 if(obj=='teacher'){
                     that.queryClassByCoord(obj,that.posX, that.posY, selectedV);
@@ -688,17 +694,19 @@ CourseTable.prototype = {
                 that.tarPosX = $(this).attr('x');
                 that.tarPosY = $(this).attr('y');
                 var selectedV = $('#select-'+obj).children('option:selected').val();
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').text('');
+                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').find('.course-table-name').html('');
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
                 that.exchange(obj,that.posX, that.posY, selectedV, that.tarPosX, that.tarPosY);
-                var originalTxt = $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').text();
-                var newsTxt = $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').text();
-                $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').text(newsTxt);
-                $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').text(originalTxt);
+                var originalTxt = $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html();
+                var newsTxt = $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').find('.course-table-name').html();
+                $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.wait-course').remove();
+                $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html(newsTxt);
+                $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').find('.course-table-name').html(originalTxt);
             }else if ($(this).attr('flag')=='true'){
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').text('');
+                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').html('');
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
                 $(this).attr('flag')=='false';
+                $(this).find('.wait-course').remove();
             }
         });
     },
@@ -725,19 +733,31 @@ CourseTable.prototype = {
                         that.items2 = setInterval(function () {
                             that.colorScheduleResult(type);
                         }, 30000);
+                        layer.msg('调课失败!');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable[flag-txt="true"]').find('.course-table-name').html('');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
+                        $('.'+ type +'CourseTable').find('.wait-course').remove();
                         break;
                     case "1":
-                        console.log("调课中");
+                        console.log("调课成功");
                         clearInterval(that.items2);
                         that.scheduleTaskSuccess(type);
                         break;
                     case "-1":
-                        console.log("调课中");
+                        console.log("调课失败(数据异常)");
                         clearInterval(that.items2);
+                        layer.msg('调课失败!');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable[flag-txt="true"]').find('.course-table-name').html('');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
+                        $('.'+ type +'CourseTable').find('.wait-course').remove();
                         break;
                     case "-2":
-                        console.log("调课中");
+                        console.log("调课失败(系统异常)");
                         clearInterval(that.items2);
+                        layer.msg('调课失败!');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable[flag-txt="true"]').find('.course-table-name').html('');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
+                        $('.'+ type +'CourseTable').find('.wait-course').remove();
                         break;
                     default:
                         break;
@@ -834,12 +854,13 @@ CourseTable.prototype = {
                     //console.log(datas[i])
                     // 一天节数
                     for(var j=0;j<datas[i].length;j++){
-                        //console.log(datas[i][j])
+                        console.log(datas[i][j])
                         //$('.teacherCourseTable[x="'+ j +'"][y="'+ i +'"]').text();
                         var defaultDatas = $('.'+ type +'CourseTable[x="'+ j +'"][y="'+ i +'"]').text();
+                        console.log(defaultDatas)
                         //console.log('x='+j +",y="+i +"=="+ defaultDatas);
                         if(defaultDatas==""){
-                            $('.'+ type +'CourseTable[x="'+ j +'"][y="'+ i +'"]').text(datas[i][j]).attr('flag-txt','true');
+                            $('.'+ type +'CourseTable[x="'+ j +'"][y="'+ i +'"]').html('<span class="course-table-name">'+datas[i][j]+'</span>').attr('flag-txt','true');
                         }
                     }
                 }
@@ -847,6 +868,22 @@ CourseTable.prototype = {
         }, function (res) {
             layer.msg(res.msg);
         });
+    },
+    // 获取老师教课班级数量 /baseResult/queryTeacherClassNum.do
+    queryTeacherClassNum: function (teacherId) {
+        var that = this;
+        var teacherClassNum = '';
+        Common.ajaxFun('/baseResult/queryTeacherClassNum.do', 'GET', {
+            'teacherId': teacherId
+        }, function (res) {
+            //console.log(res);
+            if (res.rtnCode == '0000000') {
+                teacherClassNum = res.bizData;
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        },true);
+        return teacherClassNum;
     }
 };
 
