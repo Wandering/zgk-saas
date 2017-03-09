@@ -734,6 +734,9 @@ CourseTable.prototype = {
                             that.colorScheduleResult(type);
                         }, 30000);
                         layer.msg('调课失败!');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable[flag-txt="true"]').text('');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
+                        $('.'+ type +'CourseTable').find('.wait-course').remove();
                         break;
                     case "1":
                         console.log("调课成功");
@@ -752,6 +755,9 @@ CourseTable.prototype = {
                         console.log("调课失败(系统异常)");
                         clearInterval(that.items2);
                         layer.msg('调课失败!');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable[flag-txt="true"]').text('');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
+                        $('.'+ type +'CourseTable').find('.wait-course').remove();
                         break;
                     default:
                         break;
