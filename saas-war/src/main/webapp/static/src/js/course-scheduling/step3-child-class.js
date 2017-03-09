@@ -71,8 +71,10 @@ CourseTable.prototype = {
             $('.student-tab,.room-tab').addClass('dh');
             this.courseTableEvent('class');
             this.courseTableEvent('teacher');
+            $('.class-tab').removeClass('dh');
         }else{
             $('.student-tab,.room-tab').removeClass('dh');
+            $('.class-tab').addClass('dh');
         }
 
     },
@@ -583,7 +585,7 @@ CourseTable.prototype = {
                             if (wkList[j][i] == null || wkList[j][i] == "") {
                                 trHtml += '<td class="center ' + urlType + 'CourseTable" x="' + i + '" y="' + j + '"></td>';
                             } else {
-                                trHtml += '<td class="center ' + urlType + 'CourseTable" x="' + i + '" y="' + j + '">' + wkList[j][i] + '</td>';
+                                trHtml += '<td class="center ' + urlType + 'CourseTable" x="' + i + '" y="' + j + '"><span class="course-table-name">' + wkList[j][i] + '</span></td>';
                             }
                         }
                         trHtml += '</tr>';
@@ -692,13 +694,14 @@ CourseTable.prototype = {
                 that.tarPosX = $(this).attr('x');
                 that.tarPosY = $(this).attr('y');
                 var selectedV = $('#select-'+obj).children('option:selected').val();
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').html('');
+                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').find('.course-table-name').html('');
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
                 that.exchange(obj,that.posX, that.posY, selectedV, that.tarPosX, that.tarPosY);
-                var originalTxt = $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').html().find('.wait-course').remove();
-                var newsTxt = $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').html();
-                $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').html(newsTxt);
-                $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').html(originalTxt);
+                var originalTxt = $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html();
+                var newsTxt = $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').find('.course-table-name').html();
+                $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.wait-course').remove();
+                $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html(newsTxt);
+                $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').find('.course-table-name').html(originalTxt);
             }else if ($(this).attr('flag')=='true'){
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').html('');
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
@@ -716,8 +719,6 @@ CourseTable.prototype = {
         }, function (res) {
             if (res.rtnCode == '0000000') {
                 var state = res.bizData;
-                that.colorScheduleResultState = state;
-
                 /*
                  * 0:调课中
                  1:调课成功
@@ -733,7 +734,7 @@ CourseTable.prototype = {
                             that.colorScheduleResult(type);
                         }, 30000);
                         layer.msg('调课失败!');
-                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable[flag-txt="true"]').text('');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable[flag-txt="true"]').find('.course-table-name').html('');
                         $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
                         $('.'+ type +'CourseTable').find('.wait-course').remove();
                         break;
@@ -746,7 +747,7 @@ CourseTable.prototype = {
                         console.log("调课失败(数据异常)");
                         clearInterval(that.items2);
                         layer.msg('调课失败!');
-                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable[flag-txt="true"]').text('');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable[flag-txt="true"]').find('.course-table-name').html('');
                         $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
                         $('.'+ type +'CourseTable').find('.wait-course').remove();
                         break;
@@ -754,7 +755,7 @@ CourseTable.prototype = {
                         console.log("调课失败(系统异常)");
                         clearInterval(that.items2);
                         layer.msg('调课失败!');
-                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable[flag-txt="true"]').text('');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable[flag-txt="true"]').find('.course-table-name').html('');
                         $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
                         $('.'+ type +'CourseTable').find('.wait-course').remove();
                         break;
@@ -853,12 +854,13 @@ CourseTable.prototype = {
                     //console.log(datas[i])
                     // 一天节数
                     for(var j=0;j<datas[i].length;j++){
-                        //console.log(datas[i][j])
+                        console.log(datas[i][j])
                         //$('.teacherCourseTable[x="'+ j +'"][y="'+ i +'"]').text();
-                        var defaultDatas = $('.'+ type +'CourseTable[x="'+ j +'"][y="'+ i +'"]').html();
+                        var defaultDatas = $('.'+ type +'CourseTable[x="'+ j +'"][y="'+ i +'"]').text();
+                        console.log(defaultDatas)
                         //console.log('x='+j +",y="+i +"=="+ defaultDatas);
                         if(defaultDatas==""){
-                            $('.'+ type +'CourseTable[x="'+ j +'"][y="'+ i +'"]').text(datas[i][j]).attr('flag-txt','true');
+                            $('.'+ type +'CourseTable[x="'+ j +'"][y="'+ i +'"]').html('<span class="course-table-name">'+datas[i][j]+'</span>').attr('flag-txt','true');
                         }
                     }
                 }
