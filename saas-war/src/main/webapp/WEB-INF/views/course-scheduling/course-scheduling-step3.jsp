@@ -151,6 +151,6 @@
 
 <%--<script src="<%=ctx%>/static/src/js/course-scheduling/step3-common.js"></script>--%>
 <%--<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>--%>
-<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class-bck.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>
 </body>
 </html>
