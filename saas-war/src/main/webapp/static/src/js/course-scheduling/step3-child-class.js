@@ -729,19 +729,22 @@ CourseTable.prototype = {
                         that.items2 = setInterval(function () {
                             that.colorScheduleResult(type);
                         }, 30000);
+                        layer.msg('调课失败!');
                         break;
                     case "1":
-                        console.log("调课中");
+                        console.log("调课成功");
                         clearInterval(that.items2);
                         that.scheduleTaskSuccess(type);
                         break;
                     case "-1":
-                        console.log("调课中");
+                        console.log("调课失败(数据异常)");
                         clearInterval(that.items2);
+                        layer.msg('调课失败!');
                         break;
                     case "-2":
-                        console.log("调课中");
+                        console.log("调课失败(系统异常)");
                         clearInterval(that.items2);
+                        layer.msg('调课失败!');
                         break;
                     default:
                         break;
