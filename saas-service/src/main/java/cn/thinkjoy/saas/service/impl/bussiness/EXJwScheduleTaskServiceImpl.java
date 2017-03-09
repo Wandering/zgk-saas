@@ -473,7 +473,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         String path = this.getScheduleTaskPath(taskId, tnId);
 
-        String shCmd = String.format(ReadCmdLine.SHELL_TIMETABLE_ADJUST, path, adjustmentType, jwCourseTable.getClassId(), jwCourseTable.getWeek(), jwCourseTable.getSort());
+        String shCmd = String.format(ReadCmdLine.SHELL_TIMETABLE_ADJUST, path, adjustmentType,(adjustmentType==0?jwCourseTable.getTeacherId():jwCourseTable.getClassId()), jwCourseTable.getWeek(), jwCourseTable.getSort());
 
         Integer r = ReadCmdLine.run(path, shCmd);
 
