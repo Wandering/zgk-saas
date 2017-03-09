@@ -52,16 +52,6 @@ public class SyllabusServiceImpl implements ISyllabusService {
     @Autowired
     private IEXTeantCustomDAO iexTeantCustomDAO;
 
-//    LoadingCache<String, List<JwCourseTableDTO>> jwCourseTableDTOCache = CacheBuilder.newBuilder()
-//            .maximumSize(1000)
-//            .expireAfterWrite(10, TimeUnit.MINUTES)
-//            .build(
-//                    new CacheLoader<String, List<JwCourseTableDTO>>() {
-//                        public List<JwCourseTableDTO> load(String key){
-//
-//                            return createExpensiveGraph(key);
-//                        }
-//                    } );
     /**
      * 获得总课表
      * @param tnId
@@ -404,7 +394,6 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @return
      */
     private List<JwCourseTableDTO> queryList(int tnId,int taskId,boolean hasRoom,Map<String,Object> params){
-
         String teacherTableName;
         String roomTableName = null;
         String admClassTableName = null;
@@ -599,7 +588,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @return
      */
     public CourseResultView genSyllabus(int tnId,int taskId,String type,Map<String, Object> params){
-        return this.genSyllabus(tnId,taskId,type,false,params);
+        return this.genSyllabus(tnId,taskId,type,true,params);
     }
     /**
      * 生成并填充课表内容
@@ -635,7 +624,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
      */
     @Override
     public CourseResultView genSyllabus(int tnId,int taskId,String type,Map<String, Object> params,List<List<String>> lists,Map<String, Object> timeConfigMap){
-        return this.genSyllabus(tnId,taskId,false,type,params,lists,timeConfigMap);
+        return this.genSyllabus(tnId,taskId,true,type,params,lists,timeConfigMap);
     }
 
     /**
@@ -749,4 +738,6 @@ public class SyllabusServiceImpl implements ISyllabusService {
     private static String toLine(JwSyllabus jwSyllabus){
         return new StringBuffer().append(jwSyllabus.getClassId()).append(Constant.COURSE_TABLE_LINE_SPLIT_CLASS).append(jwSyllabus.getInfo()).toString();
     }
+
+
 }
