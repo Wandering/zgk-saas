@@ -237,8 +237,10 @@ CourseTable.prototype = {
                         that.getAllQueryCourse();
                         that.getQueryCourse();
                         that.getQueryClass("select-class");
-                        that.getQueryClass("select-classes");
-                        that.getQueryRoom();
+                        if(this.flagClassType=='2'){
+                            that.getQueryClass("select-classes");
+                            that.getQueryRoom();
+                        }
                         break;
                     case 5:
                         console.log("排课失败2");
@@ -327,8 +329,10 @@ CourseTable.prototype = {
                         that.getAllQueryCourse();
                         that.getQueryCourse();
                         that.getQueryClass("select-class");
-                        that.getQueryClass("select-classes");
-                        that.getQueryRoom();
+                        if(this.flagClassType=='2'){
+                            that.getQueryClass("select-classes");
+                            that.getQueryRoom();
+                        }
                         break;
                     case "-1":
                         console.log("排课失败-1");
