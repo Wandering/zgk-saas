@@ -692,15 +692,15 @@ CourseTable.prototype = {
                 that.tarPosX = $(this).attr('x');
                 that.tarPosY = $(this).attr('y');
                 var selectedV = $('#select-'+obj).children('option:selected').val();
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').text('');
+                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').html('');
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
                 that.exchange(obj,that.posX, that.posY, selectedV, that.tarPosX, that.tarPosY);
-                var originalTxt = $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').text();
-                var newsTxt = $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').text();
-                $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').text(newsTxt);
-                $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').text(originalTxt);
+                var originalTxt = $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').html().find('.wait-course').remove();
+                var newsTxt = $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').html();
+                $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').html(newsTxt);
+                $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').html(originalTxt);
             }else if ($(this).attr('flag')=='true'){
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').text('');
+                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').html('');
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
                 $(this).attr('flag')=='false';
                 $(this).find('.wait-course').remove();
@@ -855,7 +855,7 @@ CourseTable.prototype = {
                     for(var j=0;j<datas[i].length;j++){
                         //console.log(datas[i][j])
                         //$('.teacherCourseTable[x="'+ j +'"][y="'+ i +'"]').text();
-                        var defaultDatas = $('.'+ type +'CourseTable[x="'+ j +'"][y="'+ i +'"]').text();
+                        var defaultDatas = $('.'+ type +'CourseTable[x="'+ j +'"][y="'+ i +'"]').html();
                         //console.log('x='+j +",y="+i +"=="+ defaultDatas);
                         if(defaultDatas==""){
                             $('.'+ type +'CourseTable[x="'+ j +'"][y="'+ i +'"]').text(datas[i][j]).attr('flag-txt','true');
