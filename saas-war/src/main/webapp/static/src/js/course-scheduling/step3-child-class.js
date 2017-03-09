@@ -434,7 +434,7 @@ CourseTable.prototype = {
                     'course': teacherCourse,
                     'teacherId': selectedV
                 });
-                $('.teacher-label').text(selectedTxt + "老师");
+                $('.teacher-label').text(selectedTxt + "老师共代"+ that.queryTeacherClassNum(selectedV) +"个班的");
             } else {
                 layer.msg(result.msg);
             }
@@ -590,6 +590,9 @@ CourseTable.prototype = {
                     return trHtml;
                 });
                 $("#" + urlType + "-tbody-list").html(tbodyTemplate(result));
+                if(urlType == 'teacher'){
+
+                }
             } else {
                 layer.msg(result.msg);
             }
@@ -679,7 +682,7 @@ CourseTable.prototype = {
                 that.posY = $(this).attr('y');
                 var selectedV = $('#select-'+obj).children('option:selected').val();
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style');
-                $(this).attr('flag', true);
+                $(this).attr('flag', true).css('color','#c00').append('<span class="wait-course">待调课</span>');
                 that.queryStatusByCoord(obj,that.posX, that.posY, selectedV);
                 if(obj=='teacher'){
                     that.queryClassByCoord(obj,that.posX, that.posY, selectedV);
@@ -699,6 +702,7 @@ CourseTable.prototype = {
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').text('');
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
                 $(this).attr('flag')=='false';
+                $(this).find('.wait-course').remove();
             }
         });
     },
@@ -847,6 +851,22 @@ CourseTable.prototype = {
         }, function (res) {
             layer.msg(res.msg);
         });
+    },
+    // 获取老师教课班级数量 /baseResult/queryTeacherClassNum.do
+    queryTeacherClassNum: function (teacherId) {
+        var that = this;
+        var teacherClassNum = '';
+        Common.ajaxFun('/baseResult/queryTeacherClassNum.do', 'GET', {
+            'teacherId': teacherId
+        }, function (res) {
+            //console.log(res);
+            if (res.rtnCode == '0000000') {
+                teacherClassNum = res.bizData;
+            }
+        }, function (res) {
+            layer.msg(res.msg);
+        },true);
+        return teacherClassNum;
     }
 };
 
