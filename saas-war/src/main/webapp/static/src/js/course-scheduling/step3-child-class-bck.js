@@ -206,9 +206,11 @@ CourseTable.prototype = {
                         ///////////////////////////////////
                         //$('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
                         //$('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
-                        //ClassRoomTableIns.getAllQueryCourse();
-                        //ClassRoomTableIns.getQueryCourse();
-                        //ClassRoomTableIns.getQueryClass();
+                        //that.getAllQueryCourse();
+                        //that.getQueryCourse();
+                        //that.getQueryClass("select-class");
+                        //that.getQueryClass("select-classes");
+                        //that.getQueryRoom();
                         ///////////////////////////////////
 
                         break;
@@ -247,9 +249,11 @@ CourseTable.prototype = {
                         ///////////////////////////////////
                         //$('.one-key-page,.arranging-course-tips,.btn-one-key,.look-origin-schedule,.scheduling-error,.scheduling-error2').addClass('dh');
                         //$('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
-                        //ClassRoomTableIns.getAllQueryCourse();
-                        //ClassRoomTableIns.getQueryCourse();
-                        //ClassRoomTableIns.getQueryClass();
+                        //that.getAllQueryCourse();
+                        //that.getQueryCourse();
+                        //that.getQueryClass("select-class");
+                        //that.getQueryClass("select-classes");
+                        //that.getQueryRoom();
                         ///////////////////////////////////
 
                         break;
