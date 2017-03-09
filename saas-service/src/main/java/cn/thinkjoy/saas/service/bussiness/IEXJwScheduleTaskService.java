@@ -124,4 +124,6 @@ public interface IEXJwScheduleTaskService {
     public Map<String,Object> updateClassRoom(String classRoomId,int scheduleNumber);
 
     void getCourseResult(int tnId, int taskId);
+
+    List queryRoom(int taskId,int tnId);
 }

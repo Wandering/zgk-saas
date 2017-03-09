@@ -2096,4 +2096,33 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         }
         LOGGER.info("************获取课表 E************");
     }
+    @Override
+    public List queryRoom(int taskId,int tnId){
+        JwScheduleTask jwScheduleTask = iJwScheduleTaskDAO.fetch(taskId);
+        Map<String,Object> param = new HashMap<>();
+        param.put("tnId",tnId);
+        param.put("gradeCode",jwScheduleTask.getGrade());
+        Grade grade = (Grade) gradeService.queryOne(param);
+        Map<Integer,LinkedHashMap<String,Object>> classMap = this.getClassMapByTnIdAndTaskId(tnId,Constant.CLASS_ADM_CODE,grade.getGrade());
+
+        List<Map<String,Object> > rtnList = new ArrayList<>();
+        Map<String,Object> room;
+        List<StringBuffer> buffers = this.getClassRoom(taskId,tnId);
+        buffers.remove(0);
+        for (StringBuffer ss : buffers){
+            room = new HashMap<>();
+            int roomId = Integer.valueOf(ss.toString().replace("\r\n",""));
+            if (roomId>0){
+                Map<String,Object> classObj = classMap.get(roomId);
+                room.put("roomId",classObj.get("id"));
+                room.put("roomName",classObj.get("class_name")+"教室");
+                rtnList.add(room);
+            }else {
+                room.put("roomId",roomId);
+                room.put("roomName","教室"+Math.abs(roomId));
+                rtnList.add(room);
+            }
+        }
+        return rtnList;
+    }
 }
