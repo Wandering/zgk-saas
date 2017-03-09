@@ -145,7 +145,7 @@ CourseTable.prototype = {
         $("#select-teacher").change(function () {
             that.teacherTxt = $(this).children('option:selected').text();
             that.teacherId = $(this).children('option:selected').val();
-            $('.teacher-label').text(that.teacherTxt + "老师");
+            $('.teacher-label').text(that.teacherTxt+ "老师共代"+ that.queryTeacherClassNum(that.teacherId) +"个班的");
             that.getClassRoomTable('teacher', {
                 'course': that.courseTxt,
                 'teacherId': that.teacherId
