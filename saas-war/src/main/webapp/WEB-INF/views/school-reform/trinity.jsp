@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <title>SAAS 三位一体招生</title>
         <%@ include file="./../common/meta.jsp"%>
-        <link rel="stylesheet" href="<%=ctx%>/static/src/css/school-reform/trinity.css" />
+        <link rel="stylesheet" href="<%=ctx%>/static/src/css/school-reform/trinity.css?v=20170309" />
     </head>
     <body>
     <%@ include file="./../common/header.jsp"%>
@@ -122,6 +122,6 @@
     </div>
     <%@ include file="./../common/footer.jsp"%>
     <script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
-    <script src="<%=ctx%>/static/src/js/school-reform/trinity.js"></script>
+    <script src="<%=ctx%>/static/src/js/school-reform/trinity.js?v=20170309"></script>
     </body>
 </html>

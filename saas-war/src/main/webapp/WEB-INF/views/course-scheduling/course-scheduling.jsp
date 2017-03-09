@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>排课任务</title>
     <%@ include file="./../common/meta.jsp"%>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling.css" />
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling.css?v=20170309" />
 </head>
 <body>
 <%@ include file="./../common/header.jsp"%>
@@ -93,7 +93,7 @@
 <%@ include file="./../common/footer.jsp"%>
 <link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/datepicker.css">
 <script src="<%=ctx%>/static/src/lib/assets/js/date-time/bootstrap-datepicker.min.js"></script>
-<script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling.js?v=20170309"></script>
 
 </body>
 </html>

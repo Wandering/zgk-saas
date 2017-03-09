@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 专业信息</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/data-query/specialty-info.css"/>
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/data-query/specialty-info.css?v=20170309"/>
 </head>
 <body>
 <%@ include file="./../common/header.jsp" %>
@@ -200,7 +200,7 @@
 </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp" %>
-<script src="<%=ctx%>/static/src/js/data-query/specialty-info.js"></script>
+<script src="<%=ctx%>/static/src/js/data-query/specialty-info.js?v=20170309"></script>
 
 </body>
 </html>

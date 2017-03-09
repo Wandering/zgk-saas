@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 选课指导</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/school-reform/course-guide.css"/>
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/school-reform/course-guide.css?v=20170309"/>
 </head>
 <body>
 <%@ include file="./../common/header.jsp" %>
@@ -279,6 +279,6 @@
 </div>
 <%@ include file="./../common/footer.jsp" %>
 <script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
-<script src="<%=ctx%>/static/src/js/school-reform/course-guide.js"></script>
+<script src="<%=ctx%>/static/src/js/school-reform/course-guide.js?v=20170309"></script>
 </body>
 </html>

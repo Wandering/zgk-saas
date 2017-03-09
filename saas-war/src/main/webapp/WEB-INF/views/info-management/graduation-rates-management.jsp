@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <title>SAAS 升学率管理</title>
         <%@ include file="./../common/meta.jsp"%>
-        <link rel="stylesheet" href="<%=ctx%>/static/src/css/info-management.css" />
+        <link rel="stylesheet" href="<%=ctx%>/static/src/css/info-management.css?v=20170309" />
     </head>
     <body>
     <%@ include file="./../common/header.jsp"%>
@@ -73,6 +73,6 @@
     </div>
     <%@ include file="./../common/footer.jsp"%>
     <script src="<%=ctx%>/static/src/lib/assets/js/jquery-ui-1.12.1.js"></script>
-    <script src="<%=ctx%>/static/src/js/info-management/graduation-rates-management.js"></script>
+    <script src="<%=ctx%>/static/src/js/info-management/graduation-rates-management.js?v=20170309"></script>
     </body>
 </html>
