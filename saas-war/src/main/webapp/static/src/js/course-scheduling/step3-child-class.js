@@ -560,7 +560,7 @@ CourseTable.prototype = {
                 Handlebars.registerHelper("thead", function (res) {
                     console.log(res);
                     var resData = res.split('|');
-                    var str = '<td></td>';
+                    var str = '<td class="center">节次</td>';
                     for (var i = 0; i < resData.length; i++) {
                         str += '<td class="center">' + resData[i] + '</td>';
                     }
@@ -578,7 +578,7 @@ CourseTable.prototype = {
                     var trHtml = '';
                     for (var i = 0; i < itemCount; i++) {
                         trHtml += '<tr>';
-                        trHtml += '<td class="center">' + (i + 1) + '</td>';
+                        trHtml += '<td class="center">第' + (i + 1) + '节</td>';
                         for (var j = 0; j < wkList.length; j++) {
                             if (wkList[j][i] == null || wkList[j][i] == "") {
                                 trHtml += '<td class="center ' + urlType + 'CourseTable" x="' + i + '" y="' + j + '"></td>';
@@ -619,9 +619,9 @@ CourseTable.prototype = {
                     var Num3 = parseInt(wkDate.substr(2, 1));
                     var itemCount = Num1 + Num2 + Num3;
                     var resData = res.teachDate.split('|');
-                    var str = '<td></td>';
+                    var str = '<td class="center">节次</td>';
                     for (var i = 0; i < resData.length; i++) {
-                        str += '<td class="center" colspan="' + itemCount + '">' + resData[i] + '</td>';
+                        str += '<td class="center" colspan="' + itemCount + '">第' + resData[i] + '节</td>';
                     }
                     return str;
                 });
@@ -679,16 +679,14 @@ CourseTable.prototype = {
         var that = this;
         $('body').on('click', '.'+ obj +'CourseTable', function () {
             if ($(this).attr('flag') == undefined && $(this).text()!="") {
-                if(that.colorScheduleResultState=='1'){
-                    that.posX = $(this).attr('x');
-                    that.posY = $(this).attr('y');
-                    var selectedV = $('#select-'+obj).children('option:selected').val();
-                    $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style');
-                    $(this).attr('flag', true).css('color','#c00').append('<span class="wait-course">待调课</span>');
-                    that.queryStatusByCoord(obj,that.posX, that.posY, selectedV);
-                    if(obj=='teacher'){
-                        that.queryClassByCoord(obj,that.posX, that.posY, selectedV);
-                    }
+                that.posX = $(this).attr('x');
+                that.posY = $(this).attr('y');
+                var selectedV = $('#select-'+obj).children('option:selected').val();
+                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style');
+                $(this).attr('flag', true).css('color','#c00').append('<span class="wait-course">待调课</span>');
+                that.queryStatusByCoord(obj,that.posX, that.posY, selectedV);
+                if(obj=='teacher'){
+                    that.queryClassByCoord(obj,that.posX, that.posY, selectedV);
                 }
             } else if ($(this).attr('flag') == 'false' && $(this).attr('style') != undefined) {
                 that.tarPosX = $(this).attr('x');
@@ -717,7 +715,8 @@ CourseTable.prototype = {
             'tnId': tnId
         }, function (res) {
             if (res.rtnCode == '0000000') {
-                var state = res.bizData;
+                //var state = res.bizData;
+                var state = '-1';
                 that.colorScheduleResultState = state;
 
                 /*
@@ -745,6 +744,9 @@ CourseTable.prototype = {
                         console.log("调课失败(数据异常)");
                         clearInterval(that.items2);
                         layer.msg('调课失败!');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable[flag-txt="true"]').text('');
+                        $('#'+ type +'-tbody-list').find('.'+ type +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
+                        $('.'+ type +'CourseTable').find('.wait-course').remove();
                         break;
                     case "-2":
                         console.log("调课失败(系统异常)");
