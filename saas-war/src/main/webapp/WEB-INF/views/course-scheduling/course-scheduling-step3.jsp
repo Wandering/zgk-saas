@@ -108,7 +108,7 @@
                                 </div>
                             </div>
                             <%--教室课表|教师课表|学生课表|总课表--%>
-                            <div id="role-scheduling-tab" class="">
+                            <div id="role-scheduling-tab" class="dh">
                                 <div class="role-tab">
                                     <ul>
                                         <li class="no-before active"><i class="icon-step3-all-yes"></i><i class="icon-step3-all-no"></i>总课表</li>
@@ -119,7 +119,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div id="control-jsp" class="">
+                            <div id="control-jsp" class="dh">
                                  <%--总课表--%>
                                 <div class="bottom-page">
                                     <%@ include file="../course-scheduling/step3-child-all.jsp"%>
@@ -151,6 +151,6 @@
 
 <%--<script src="<%=ctx%>/static/src/js/course-scheduling/step3-common.js"></script>--%>
 <%--<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>--%>
-<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class-bck.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>
 </body>
 </html>
