@@ -103,10 +103,12 @@ SelectCourse.prototype = {
                     var gradeName = $(this).parent().attr('gradeName');
                     var state = $(this).attr('state');
                     var selCourseLoging = $(this).attr('selCourseLoging');
+                    var selectcoursename = $(this).parent().attr('selectcoursename');
                     Common.cookie.setCookie('gradeName', gradeName);
                     Common.cookie.setCookie('taskId', id);
                     Common.cookie.setCookie('selectCourseState', state);
                     Common.cookie.setCookie('selCourseLoging', selCourseLoging);
+                    Common.cookie.setCookie('selectcoursename', selectcoursename);
                     window.location.href='/select-course-settings';
                 });
                 $('.look-course-result').on('click', function () {
@@ -186,7 +188,7 @@ SelectCourse.prototype = {
                         minV = laydate.now();
                     }
                     var start = {
-                        min: minV
+                        min: laydate.now()
                         ,max: '2099-06-16 23:59:59'
                         ,istoday: false
                         ,choose: function(datas){

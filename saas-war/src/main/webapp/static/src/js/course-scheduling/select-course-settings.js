@@ -1,6 +1,8 @@
 var tnId = Common.cookie.getCookie('tnId');
 var taskId = Common.cookie.getCookie('taskId');
 var selCourseLoging = Common.cookie.getCookie('selCourseLoging');
+var selectcoursename = Common.cookie.getCookie('selectcoursename');
+$('.selectcoursename').text(selectcoursename);
 function SelectCourseSettings() {
     this.init();
 }
@@ -42,14 +44,23 @@ SelectCourseSettings.prototype = {
                         $('.selectCount').text(coursesObj[i].selectCount);
                     } else if (datas[i].type == '1') {  // 非高考
                         var gkCourse = [];
-                        $.each(coursesObj, function (j, k) {
-                            if(coursesObj[j].isSelect==true){
-                                gkCourse.push('<label class="item"> <input type="checkbox" checked="checked" data-id="'+ coursesObj[j].id +'" data-name="'+ coursesObj[j].name +'" />' + coursesObj[j].name + '</label>');
-                                that.selectCount = datas[i].selectCount;
-                            }else{
-                                gkCourse.push('<label class="item"> <input type="checkbox" data-id="'+ coursesObj[j].id +'" data-name="'+ coursesObj[j].name +'" />' + coursesObj[j].name + '</label>');
-                            }
-                        });
+                        if(selCourseLoging=='true'){
+                            $.each(coursesObj, function (j, k) {
+                                if(coursesObj[j].isSelect==true){
+                                    gkCourse.push('<label class="item"> <input type="checkbox" checked="checked" data-id="'+ coursesObj[j].id +'" data-name="'+ coursesObj[j].name +'" />' + coursesObj[j].name + '</label>');
+                                    that.selectCount = datas[i].selectCount;
+                                }
+                            });
+                        }else{
+                            $.each(coursesObj, function (j, k) {
+                                if(coursesObj[j].isSelect==true){
+                                    gkCourse.push('<label class="item"> <input type="checkbox" checked="checked" data-id="'+ coursesObj[j].id +'" data-name="'+ coursesObj[j].name +'" />' + coursesObj[j].name + '</label>');
+                                    that.selectCount = datas[i].selectCount;
+                                }else{
+                                    gkCourse.push('<label class="item"> <input type="checkbox" data-id="'+ coursesObj[j].id +'" data-name="'+ coursesObj[j].name +'" />' + coursesObj[j].name + '</label>');
+                                }
+                            });
+                        }
                         $('.fgk-course-list').html(gkCourse.join(''));
 
                     }

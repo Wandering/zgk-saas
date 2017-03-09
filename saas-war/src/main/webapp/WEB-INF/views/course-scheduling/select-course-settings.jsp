@@ -54,7 +54,7 @@
                             </ul>
                         </div>
                         <div class="settings-box">
-                            <h3 class="title"><span class="line"></span>选课任务名称</h3>
+                            <h3 class="title"><span class="line"></span><span class="selectcoursename">选课任务名称</span></h3>
                             <div class="task-list">
                                 <h4 class="t-h4">高考课程选课设置</h4>
                                 <div class="course-info">学生可选课程：<span class="gk-course-list"></span></div>
