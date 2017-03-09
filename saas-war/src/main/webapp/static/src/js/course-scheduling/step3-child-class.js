@@ -715,8 +715,7 @@ CourseTable.prototype = {
             'tnId': tnId
         }, function (res) {
             if (res.rtnCode == '0000000') {
-                //var state = res.bizData;
-                var state = '-1';
+                var state = res.bizData;
                 that.colorScheduleResultState = state;
 
                 /*
