@@ -45,6 +45,7 @@ function CourseTable(){
     this.tarPosX = '';
     this.tarPosY = '';
     this.flagClassType = null;
+    this.colorScheduleResultState = '';
 }
 
 CourseTable.prototype = {
@@ -678,14 +679,16 @@ CourseTable.prototype = {
         var that = this;
         $('body').on('click', '.'+ obj +'CourseTable', function () {
             if ($(this).attr('flag') == undefined && $(this).text()!="") {
-                that.posX = $(this).attr('x');
-                that.posY = $(this).attr('y');
-                var selectedV = $('#select-'+obj).children('option:selected').val();
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style');
-                $(this).attr('flag', true).css('color','#c00').append('<span class="wait-course">待调课</span>');
-                that.queryStatusByCoord(obj,that.posX, that.posY, selectedV);
-                if(obj=='teacher'){
-                    that.queryClassByCoord(obj,that.posX, that.posY, selectedV);
+                if(that.colorScheduleResultState=='1'){
+                    that.posX = $(this).attr('x');
+                    that.posY = $(this).attr('y');
+                    var selectedV = $('#select-'+obj).children('option:selected').val();
+                    $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style');
+                    $(this).attr('flag', true).css('color','#c00').append('<span class="wait-course">待调课</span>');
+                    that.queryStatusByCoord(obj,that.posX, that.posY, selectedV);
+                    if(obj=='teacher'){
+                        that.queryClassByCoord(obj,that.posX, that.posY, selectedV);
+                    }
                 }
             } else if ($(this).attr('flag') == 'false' && $(this).attr('style') != undefined) {
                 that.tarPosX = $(this).attr('x');
@@ -715,6 +718,8 @@ CourseTable.prototype = {
         }, function (res) {
             if (res.rtnCode == '0000000') {
                 var state = res.bizData;
+                that.colorScheduleResultState = state;
+
                 /*
                  * 0:调课中
                  1:调课成功
