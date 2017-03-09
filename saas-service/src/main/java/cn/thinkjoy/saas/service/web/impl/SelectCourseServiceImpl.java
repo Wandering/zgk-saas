@@ -92,7 +92,7 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         map.put("studentName",studentName);
         map.put("isBinding",1);
         if (iSelectCourseDAO.hasStudent(map)!=1){//没有查找到改学生信息，绑定信息有误，绑定失败
-            resultMap.put("msg","没有查找到改学生信息，绑定信息有误，绑定失败");
+            resultMap.put("msg","绑定信息有误，绑定失败");
             return resultMap;
         }else {
             //【4】进行绑定操作

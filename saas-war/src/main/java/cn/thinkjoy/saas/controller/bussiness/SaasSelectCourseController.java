@@ -2,6 +2,7 @@ package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.common.protocol.Request;
 import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
+import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.gk.pojo.Page;
 import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.SelectCourseSetting;
@@ -58,10 +59,17 @@ public class SaasSelectCourseController {
         paramMap.put("tnId",task.getTnId());
         paramMap.put("grade",task.getGrade());
         paramMap.put("status",0);
-        SelectCourseTask tmpGradeTask = (SelectCourseTask) iSelectCourseTaskService.queryOne(paramMap);
+        paramMap.put("state",0);
+        SelectCourseTask tmpGradeTask = (SelectCourseTask) iSelectCourseTaskService.queryOne(
+                paramMap,
+                "endTime",
+                SqlOrderEnum.DESC
+        );
         // 该年级已经存在未结束的选课任务
-        if(tmpGradeTask != null && task.getStartTime().before(tmpGradeTask.getEndTime())){
-            ExceptionUtil.throwException(ErrorCode.TASK_GRADE_REPEAT);
+        if(tmpGradeTask != null){
+            if(!(task.getStartTime().after(tmpGradeTask.getEndTime()) && tmpGradeTask.getEndTime().before(new Date()))){
+                ExceptionUtil.throwException(ErrorCode.TASK_GRADE_REPEAT);
+            }
         }
 
         paramMap.clear();
