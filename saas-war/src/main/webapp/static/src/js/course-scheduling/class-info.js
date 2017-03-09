@@ -34,6 +34,12 @@ var ClassInfo = {
             layer.msg('可排教室数量输入有误');
             return false;
         }
+        if ($.trim($optionalClass.val())=="") {
+            layer.msg('请输入可排课教室数量');
+            return false;
+        }
+
+
         Common.ajaxFun('/scheduleTask/updateClassRoom.do', 'post', {
             'classRoomId': $optionalClass.attr('classRoomId'),
             'scheduleNumber': $optionalClass.val()
