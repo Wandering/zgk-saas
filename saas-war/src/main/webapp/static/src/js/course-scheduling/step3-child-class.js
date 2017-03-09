@@ -75,6 +75,7 @@ CourseTable.prototype = {
         }else{
             $('.student-tab,.room-tab').removeClass('dh');
             $('.class-tab').addClass('dh');
+            $('#step3-child-teacher .colors-box').remove();
         }
 
     },
