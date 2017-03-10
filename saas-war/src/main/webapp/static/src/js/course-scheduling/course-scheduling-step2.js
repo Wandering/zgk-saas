@@ -147,7 +147,7 @@ ArrangeCourse.prototype = {
     getCompareTableBody: function (type, id, classId) {
         var that = this;
         if (id != undefined) {
-            Common.ajaxFun('/disSelectRule/getRule/' + GLOBAL_PARAMS.taskId + '/' + type + '/' + id + '.do', 'GET', {}, function (res) {
+            Common.ajaxFun('/disSelectRule/getRule/' + GLOBAL_PARAMS.taskId + '/' + type + '/' + id + '.do', 'GET', that.dataParams, function (res) {
                 if (res.rtnCode == "0000000") {
                     var data = res.bizData;
                     if (data.length != 0) {
@@ -275,7 +275,7 @@ ArrangeCourse.prototype = {
                         for (var j = 0; j < $('#no-assign-table .assign-line').eq(i).find('td').length - 1; j++) {
                             var tempNode = $('#no-assign-table .assign-line').eq(i).find('td').eq(j + 1);
                             var tempArr = (weeksData[j] + '').split('');
-                            console.info('weeksData',weeksData[j]);
+                            console.info('weeksData', weeksData[j]);
                             if (tempNode.attr('class') != 'order') {
                                 var id = tempArr[i];
                                 if (tempNode.attr('isgrade') != 0) {
@@ -290,7 +290,6 @@ ArrangeCourse.prototype = {
             }
 
         }
-
 
 
     },
@@ -525,6 +524,7 @@ ArrangeCourse.prototype = {
      * 【空表格未填充数据】
      */
     getTeachTime: function () {
+        var that = this;
         Common.ajaxFun('/teachTime/queryTeachTime.do', 'GET', {
             taskId: GLOBAL_PARAMS.taskId
         }, function (res) {
@@ -535,12 +535,38 @@ ArrangeCourse.prototype = {
                     classesHtml = [];//表内容
                 weekHtml.push('<tr>');
                 weekHtml.push('<th width="135px">&nbsp;</th>');
+
+                //数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========
+                var foo = 0;
+                var fooStr = '';
+                for(var i in data.teachTime.split('')){
+                    foo += parseInt(data.teachTime.split('')[i])
+                }
+                for(var i=0;i<foo;i++){
+                    fooStr += '1'
+                }
+                that.dataParams = {
+                    'mon': fooStr,
+                    'tues': fooStr,
+                    'wed': fooStr,
+                    'thur': fooStr,
+                    'fri': fooStr,
+                    'sut': '',
+                    'sun': '',
+                    'classType': '行政班'
+                }
+
+
+                //数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========
+
+
+
+
                 $.each(weeks, function (i, k) {
                     weekHtml.push('<th style="min-width: 110px">' + k + '</th>');
                 });
                 weekHtml.push('</tr>');
                 $('#no-assign-table thead').html(weekHtml.join(''));
-
                 var classes = parseInt(data.teachTime);
                 var a = parseInt(classes - ((Math.floor(classes / 10)) * 10));//个位
                 var b = parseInt((classes - ((Math.floor(classes / 100)) * 100) - a) / 10);//十位数
@@ -585,7 +611,7 @@ ArrangeCourse.prototype = {
                     });
                     $('#teacher-course').html(courseHtml.join(''));
                 }
-                if($('#teacher-course').val()){
+                if ($('#teacher-course').val()) {
                     var teacherCourse = $('#teacher-course').val().trim();
                     that.getNoArrangeCourseList('teacher', teacherCourse);
                 }
@@ -598,10 +624,10 @@ ArrangeCourse.prototype = {
 
 $(function () {
     // 开发暂时注释
-    var flag = Common.checkInfoIsPerfect(GLOBAL_PARAMS.taskId);
-    if (!flag) {
-        window.location.href = '/course-scheduling-step1';
-    }
+    // var flag = Common.checkInfoIsPerfect(GLOBAL_PARAMS.taskId);
+    // if (!flag) {
+    //     window.location.href = '/course-scheduling-step1';
+    // }
 
     var arrangeCourse = new ArrangeCourse();
 
