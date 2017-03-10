@@ -261,15 +261,13 @@ public class ScheduleTaskController {
         String path = iexJwScheduleTaskService.getScheduleTaskPath(taskId, tnId);
 
 //        String type= iexJwScheduleTaskService.getClsssTypeTagByTaskId(taskId, tnId);
-//
+
 //        String path = FileOperation.getParamsPath(tnId, taskId,type);
 
         File file = new File(path);
 
-        boolean re = FileOperation.removeAllFile(file);
-//
-//        if (!re)
-//            return false;
+        if(file.exists())
+             FileOperation.removeAllFile(file);
 
         boolean initBool = iexJwScheduleTaskService.initParmasFile(taskId, tnId);
 
