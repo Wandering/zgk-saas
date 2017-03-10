@@ -71,7 +71,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
         jwCourseTableDTOs = this.queryList(tnId,taskId,true,params);
 
         if (jwCourseTableDTOs.size() == 0)
-            throw new BizException("error", "当前租户下排课任务" + taskId + "课表为空,请稍后再试");
+            throw new BizException("error", "课表正在解析中...请稍后再试!");
         timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
         rtnMap = treeListByTree(jwCourseTableDTOs);
 
