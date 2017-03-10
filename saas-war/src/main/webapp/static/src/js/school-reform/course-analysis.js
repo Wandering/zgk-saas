@@ -650,8 +650,8 @@ function groupCourseAnalysis(groups, stuNumbers) {
                     color: '#4A4A4A',
                     fontSize: 14
                 },
-                min: Math.min(stuNumbers),
-                max: Math.max(stuNumbers),
+                // min: Math.min(stuNumbers),
+                // max: Math.max(stuNumbers),
                 axisLine: {
                     lineStyle: {
                         color: '#D8D8D8'
