@@ -1,6 +1,7 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.common.exception.BizException;
+import cn.thinkjoy.saas.core.Constant;
 import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
@@ -58,8 +59,12 @@ public class CourseDisSelectController
         if(!"grade".equals(type)){
             params.put(type + "Id", id);
         }
+        if("class".equals(type)){
+            classType = "行政班".equals(classType)?"1":"0";
+            params.put("classType",classType);
+        }
 
-        // 业务需要，当为班级且返回值为空的时候需要特殊处理
+        // 业务需要，当为班级且返回值为空的时候需要初始化数据
         List<Map<String, String>> list = getServiceByType(type).queryList(params, "id", "asc");
         if("class".equals(type) && (list == null || list.size() == 0)){
 
