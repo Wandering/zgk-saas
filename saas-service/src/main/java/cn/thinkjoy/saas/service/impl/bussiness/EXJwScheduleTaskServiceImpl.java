@@ -1159,10 +1159,6 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 Map.Entry element = (Map.Entry) iter.next();
                 Object strKey = element.getKey();
                 Object strObj = element.getValue();
-                if (strKey.equals("class_grade")) {
-                    if (!grade.equals(strObj))
-                        break;
-                }
                 if (strKey.equals("id")) {
                     classId = Integer.valueOf(strObj.toString());
                     break;
