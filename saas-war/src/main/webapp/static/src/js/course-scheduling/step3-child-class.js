@@ -798,7 +798,7 @@ CourseTable.prototype = {
                             //0 白色
                             break;
                         case "1":
-                            colorValue = "#8EC0FA";
+                            colorValue = "#F98F90";
                             //1红色
                             break;
                         case "2":
@@ -806,7 +806,7 @@ CourseTable.prototype = {
                             //2黄色
                             break;
                         case "3":
-                            colorValue = "#F98F90";
+                            colorValue = "#8EC0FA";
                             //3绿色
                             break;
                         default:
