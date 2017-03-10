@@ -776,7 +776,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         map.put("gradeId", jwScheduleTask.getGrade());
         ClassRooms classRooms = iClassRoomsDAO.queryOne(map, "id", "asc");
 
-        Integer maxRoomNumber = classRooms == null ? 0 :classRooms.getScheduleNumber()==null?classRooms.getDayNumber() + classRooms.getExecutiveNumber():classRooms.getScheduleNumber();
+        Integer maxRoomNumber = classRooms == null ? 0 : classRooms.getDayNumber() + classRooms.getExecutiveNumber();
 
         if (maxRoomNumber > 0) {
             Integer admNum=0;
@@ -1255,7 +1255,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 stringBuffer.append(FileOperation.STR_SPLIT);
             }
             String cType=courseManageVo.getCourseType();
-            stringBuffer.append(type=="adm"?ConvertUtil.converCourseType(cType):(Integer.valueOf(cType)==4?0:1));//行政班分文理  教学班 0：行政课 1：走班课程
+            stringBuffer.append(type=="adm"?ConvertUtil.converCourseType(cType):(Integer.valueOf(cType)>0?1:0));//行政班分文理  教学班 0：行政课 1：走班课程
             stringBuffer.append(FileOperation.STR_SPLIT);
 
             Map mergeMap = new HashMap();

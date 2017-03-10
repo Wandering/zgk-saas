@@ -44,7 +44,8 @@ function CourseTable(){
     this.posY = '';
     this.tarPosX = '';
     this.tarPosY = '';
-
+    this.flagClassType = null;
+    this.colorScheduleResultState = '';
 }
 
 CourseTable.prototype = {
