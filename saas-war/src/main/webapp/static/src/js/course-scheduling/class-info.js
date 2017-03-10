@@ -1,3 +1,4 @@
+var taskId = Common.cookie.getCookie('taskId');
 /**
  * 排选课-教室信息
  */
@@ -59,3 +60,15 @@ var ClassInfo = {
 }
 ClassInfo.init();
 
+$(document).on('click', '#rule-settings', function () {
+    var flag = Common.checkInfoIsPerfect(taskId);
+    if (flag) {
+        window.location.href = '/course-scheduling-step2';
+    }
+});
+$(document).on('click', '#auto-assign-course', function () {
+    var flag = Common.checkInfoIsPerfect(taskId);
+    if (flag) {
+        window.location.href = '/course-scheduling-step3';
+    }
+});
