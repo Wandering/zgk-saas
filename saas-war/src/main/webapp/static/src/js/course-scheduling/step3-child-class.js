@@ -44,7 +44,6 @@ function CourseTable(){
     this.posY = '';
     this.tarPosX = '';
     this.tarPosY = '';
-    this.flagClassType = null;
 }
 
 CourseTable.prototype = {
@@ -513,8 +512,8 @@ CourseTable.prototype = {
                 // 2：教学班走读 ，2以外：行政
                 if(res.bizData!='2'){
                     $('.student-tab,.room-tab').addClass('dh');
-                    that.courseTableEvent('class');
-                    that.courseTableEvent('teacher');
+                    //that.courseTableEvent('class');
+                    //that.courseTableEvent('teacher');
                     $('.class-tab').removeClass('dh');
                     $('.loading-date').text('3-10');
                 }else{
