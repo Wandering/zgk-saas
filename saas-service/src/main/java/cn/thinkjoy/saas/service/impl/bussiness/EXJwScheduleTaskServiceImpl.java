@@ -127,6 +127,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
     @Autowired
     IClassRoomsDAO iClassRoomsDAO;
+
+    @Resource
+    IJwGradeRuleDAO iJwGradeRuleDAO;
 //    @Autowired
 //    private
 
@@ -166,13 +169,13 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         String result = FileOperation.readerTxtString(path, FileOperation.SCHEDULE_RESULT + ".txt");
 //
-//        if (result.equals("1")) {
-//            updateScheduleTask(taskId, 4);
-//        } else if (result.equals("-1"))
-//            updateScheduleTask(taskId, 2);
-//        else if (result.equals("0"))
-//            updateScheduleTask(taskId, 3);
-
+        if (result.equals("1")) {
+            updateScheduleTask(taskId, 4);
+        } else if (result.equals("-1"))
+            updateScheduleTask(taskId, 2);//排课失败(规则异常)
+        else if (result.equals("-2"))
+            updateScheduleTask(taskId, 5);//排课失败(系统异常)
+//
         return result;
     }
     /**
@@ -599,7 +602,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         flag = printBuffers(tnId, taskId, teachDataBuffers, FileOperation.COURSE_TIMESLOTS,type);
 
-        List<StringBuffer> gradeNonDisBuffers = getGradeNonDispaching(taskId, 1);//年级不排课
+        List<StringBuffer> gradeNonDisBuffers = getGradeNonDispaching(taskId);//年级不排课
 
         flag = printBuffers(tnId, taskId, gradeNonDisBuffers, FileOperation.GRAD_NON_DISPACHING,type);
 
@@ -677,7 +680,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         result = printBuffers(tnId, taskId, teachDataBuffers, FileOperation.COURSE_TIMESLOTS,type);
 
-        List<StringBuffer> gradeNonDisBuffers = getGradeNonDispaching(taskId, 1);//年级不排课
+        List<StringBuffer> gradeNonDisBuffers = getGradeNonDispaching(taskId);//年级不排课
 
         result = printBuffers(tnId, taskId, gradeNonDisBuffers, FileOperation.GRAD_NON_DISPACHING,type);
 
@@ -776,7 +779,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         map.put("gradeId", jwScheduleTask.getGrade());
         ClassRooms classRooms = iClassRoomsDAO.queryOne(map, "id", "asc");
 
-        Integer maxRoomNumber = classRooms == null ? 0 : classRooms.getDayNumber() + classRooms.getExecutiveNumber();
+        Integer maxRoomNumber = classRooms == null ? 0 :classRooms.getScheduleNumber()==null?classRooms.getDayNumber() + classRooms.getExecutiveNumber():classRooms.getScheduleNumber();
 
         if (maxRoomNumber > 0) {
             Integer admNum=0;
@@ -1162,37 +1165,42 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     /**
      * 年级不排课
      * @param taskId
-     * @param type
      * @return
      */
-    private List<StringBuffer> getGradeNonDispaching(Integer taskId,Integer type) {
+    private List<StringBuffer> getGradeNonDispaching(Integer taskId) {
+
+
+        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
+        if(jwScheduleTask==null)
+            return ObjIsNothing();
+
         Map map = new HashMap();
         map.put("taskId", taskId);
-        map.put("classType", type);
-        List<JwClassRule> jwClassRules = iJwClassRuleDAO.queryList(map, "id", "asc");
+        map.put("gradeId", jwScheduleTask.getGrade());
+        List<JwGradeRule> jwGradeRules = iJwGradeRuleDAO.queryList(map, "id", "asc");
 
         List<StringBuffer> stringBuffers = new ArrayList<>();
         StringBuffer stringBuffer1 = new StringBuffer();
         StringBuffer stringBuffer = new StringBuffer();
-            if(jwClassRules==null||jwClassRules.size()<=0)
+            if(jwGradeRules==null||jwGradeRules.size()<=0)
                 return ObjIsNothing();
 
-        JwClassRule jwClassRule = jwClassRules.get(0);
+        JwGradeRule jwGradeRule = jwGradeRules.get(0);
 
 
-        stringBuffer.append(converGradeNon(jwClassRule.getMon()));
+        stringBuffer.append(converGradeNon(jwGradeRule.getMon()));
         stringBuffer.append(FileOperation.STR_SPLIT);
-        stringBuffer.append(converGradeNon(jwClassRule.getTues()));
+        stringBuffer.append(converGradeNon(jwGradeRule.getTues()));
         stringBuffer.append(FileOperation.STR_SPLIT);
-        stringBuffer.append(converGradeNon(jwClassRule.getWed()));
+        stringBuffer.append(converGradeNon(jwGradeRule.getWed()));
         stringBuffer.append(FileOperation.STR_SPLIT);
-        stringBuffer.append(converGradeNon(jwClassRule.getTues()));
+        stringBuffer.append(converGradeNon(jwGradeRule.getTues()));
         stringBuffer.append(FileOperation.STR_SPLIT);
-        stringBuffer.append(converGradeNon(jwClassRule.getFri()));
+        stringBuffer.append(converGradeNon(jwGradeRule.getFri()));
         stringBuffer.append(FileOperation.STR_SPLIT);
-        stringBuffer.append(converGradeNon(jwClassRule.getSut()));
+        stringBuffer.append(converGradeNon(jwGradeRule.getSut()));
         stringBuffer.append(FileOperation.STR_SPLIT);
-        stringBuffer.append(converGradeNon(jwClassRule.getSun()));
+        stringBuffer.append(converGradeNon(jwGradeRule.getSun()));
         stringBuffer.append(FileOperation.STR_SPLIT);
         stringBuffer.append(FileOperation.LINE_SPLIT);
         stringBuffers.add(stringBuffer);
@@ -1255,7 +1263,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 stringBuffer.append(FileOperation.STR_SPLIT);
             }
             String cType=courseManageVo.getCourseType();
-            stringBuffer.append(type=="adm"?ConvertUtil.converCourseType(cType):(Integer.valueOf(cType)>0?1:0));//行政班分文理  教学班 0：行政课 1：走班课程
+            stringBuffer.append(type=="adm"?ConvertUtil.converCourseType(cType):(Integer.valueOf(cType)==4?0:1));//行政班分文理  教学班 0：行政课 1：走班课程
             stringBuffer.append(FileOperation.STR_SPLIT);
 
             Map mergeMap = new HashMap();
