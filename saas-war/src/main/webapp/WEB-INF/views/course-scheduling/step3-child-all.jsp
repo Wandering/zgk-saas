@@ -10,7 +10,7 @@
 <div id="step3-child-all" class="mt15 role-scheduling-content">
     <div class="scheduling-info">
         <div class="fl">总课表</div>
-        <button class="fr btn btn-warning output-tpl" id="export-all-table"><i class="icon-output-down"></i>导出总课表</button>
+        <button class="fr btn btn-warning output-tpl" id="export-all-table">导出总课表</button>
     </div>
 
     <div class="all-time-date-container">
