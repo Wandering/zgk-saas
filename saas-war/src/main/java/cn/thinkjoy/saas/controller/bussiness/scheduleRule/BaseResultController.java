@@ -247,7 +247,8 @@ public class BaseResultController {
     @ResponseBody
     public Set<Map<String,Object>> queryCourse(@RequestParam Integer taskId) {
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        List<CourseManageDto> courseManageDtos = courseManageService.getCourseByTnId(tnId);
+        JwScheduleTask jwScheduleTask = (JwScheduleTask) jwScheduleTaskService.fetch(taskId);
+        List<CourseManageDto> courseManageDtos = courseManageService.getCourseByTnIdAndGrade(tnId,Integer.valueOf(jwScheduleTask.getGrade()));
         Map<String,Object> map;
         Set<Map<String,Object>> maps = new HashSet<>();
         for (CourseManageDto courseManageDto : courseManageDtos) {
