@@ -419,6 +419,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @return
      */
     private Map<String,Object> treeListByTree(List<JwCourseTableDTO> jwCourseTableDTOs){
+        
         /**变量声明**/
         Map<String,Object> rtnMap = new HashMap<>();
         StringBuilder builder = new StringBuilder();
@@ -708,16 +709,14 @@ public class SyllabusServiceImpl implements ISyllabusService {
             map.put(jwSyllabus.getClassId(),jwSyllabus);
         }
         for (JwCourseTable source : sourceList) {
-            JwCourseTable target = targetList.get(0);
-            JwSyllabus jwSyllabus = map.get(target.getClassId());
-            String info = replace(jwSyllabus.getInfo(),y,source, target);
+            JwSyllabus jwSyllabus = map.get(source.getClassId());
+            String info = replace(jwSyllabus.getInfo(),y,source);
             jwSyllabus.setInfo(info);
             jwSyllabusDAO.update(jwSyllabus);
         }
-        for (JwCourseTable source : targetList) {
-            JwCourseTable target = sourceList.get(0);
+        for (JwCourseTable target : targetList) {
             JwSyllabus jwSyllabus = map.get(target.getClassId());
-            jwSyllabus.setInfo(replace(jwSyllabus.getInfo(),y,source, target));
+            jwSyllabus.setInfo(replace(jwSyllabus.getInfo(),y,target));
             jwSyllabusDAO.update(jwSyllabus);
         }
 //        BufferedWriter bufferedWriter =null;
@@ -728,6 +727,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
             }
             //复写数据
 //            bufferedWriter =  Files.newWriter(new File("/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/admin_course_2.txt"), Charset.defaultCharset());
+//            CharSink charSink = Files.asCharSink(new File("/Users/yangyongping/Desktop/yqhc/zgk-saas/saas-service/src/main/resources/config/2.txt"), Charset.defaultCharset());
             CharSink charSink = Files.asCharSink(new File(iexJwScheduleTaskService.getScheduleTaskPath(taskId, tnId) + Constant.PATH_SCHEDULE_ADM), Charset.defaultCharset());
             charSink.writeLines(list);
         }catch (IOException e) {
@@ -737,10 +737,10 @@ public class SyllabusServiceImpl implements ISyllabusService {
 
         return true;
     }
-    private String replace(String s,int y,JwCourseTable source,JwCourseTable target){
+    private String replace(String s,int y,JwCourseTable source){
         StringBuilder stringBuilder = new StringBuilder();
         String[] strings = s.split(Constant.COURSE_TABLE_LINE_SPLIT_CHAR);
-        strings[source.getWeek()*y+source.getSort()] = target.getCourseId().toString();
+        strings[source.getWeek()*y+source.getSort()] = source.getCourseId().toString();
         for (String ss : strings){
             stringBuilder.append(ss).append(Constant.COURSE_TABLE_LINE_SPLIT_CHAR);
         }
