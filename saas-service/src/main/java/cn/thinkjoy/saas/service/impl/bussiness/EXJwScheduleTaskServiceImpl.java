@@ -169,13 +169,13 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         String result = FileOperation.readerTxtString(path, FileOperation.SCHEDULE_RESULT + ".txt");
 //
-//        if (result.equals("1")) {
-//            updateScheduleTask(taskId, 4);
-//        } else if (result.equals("-1"))
-//            updateScheduleTask(taskId, 2);
-//        else if (result.equals("0"))
-//            updateScheduleTask(taskId, 3);
-
+        if (result.equals("1")) {
+            updateScheduleTask(taskId, 4);
+        } else if (result.equals("-1"))
+            updateScheduleTask(taskId, 2);//排课失败(规则异常)
+        else if (result.equals("-2"))
+            updateScheduleTask(taskId, 5);//排课失败(系统异常)
+//
         return result;
     }
     /**
