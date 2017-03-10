@@ -45,7 +45,6 @@ function CourseTable(){
     this.tarPosX = '';
     this.tarPosY = '';
     this.flagClassType = null;
-    this.colorScheduleResultState = '';
 }
 
 CourseTable.prototype = {
@@ -65,19 +64,7 @@ CourseTable.prototype = {
         this.selectStudentEvent(); // 选择学生
         this.selectRoomEvent(); // 选择教师
         this.queryGradeClassType(); // 获取年级班级类型
-        // 2：教学班走读 ，2以外：行政
-        if(this.flagClassType!='2'){
-            $('.student-tab,.room-tab').addClass('dh');
-            this.courseTableEvent('class');
-            this.courseTableEvent('teacher');
-            $('.class-tab').removeClass('dh');
-            $('.loading-date').text('3-10');
-        }else{
-            $('.student-tab,.room-tab').removeClass('dh');
-            $('.class-tab').addClass('dh');
-            $('#step3-child-teacher .colors-box').remove();
-            $('.loading-date').text('3-20');
-        }
+
 
     },
     // 课表切换
@@ -523,6 +510,19 @@ CourseTable.prototype = {
             //console.log(res);
             if (res.rtnCode == '0000000') {
                 that.flagClassType = res.bizData;
+                // 2：教学班走读 ，2以外：行政
+                if(res.bizData!='2'){
+                    $('.student-tab,.room-tab').addClass('dh');
+                    that.courseTableEvent('class');
+                    that.courseTableEvent('teacher');
+                    $('.class-tab').removeClass('dh');
+                    $('.loading-date').text('3-10');
+                }else{
+                    $('.student-tab,.room-tab').removeClass('dh');
+                    $('.class-tab').addClass('dh');
+                    $('#step3-child-teacher .colors-box').remove();
+                    $('.loading-date').text('3-20');
+                }
             }
         }, function (res) {
             layer.msg(res.msg);
@@ -709,9 +709,14 @@ CourseTable.prototype = {
                 that.exchange(obj,that.posX, that.posY, selectedV, that.tarPosX, that.tarPosY);
                 var originalTxt = $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html();
                 var newsTxt = $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').find('.course-table-name').html();
+                console.log(originalTxt)
+                console.log(newsTxt)
+                if(newsTxt==undefined){
+                    newsTxt="";
+                }
                 $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.wait-course').remove();
                 $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html(newsTxt);
-                $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').find('.course-table-name').html(originalTxt);
+                $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').html('<span class="course-table-name">'+originalTxt+'</span>');
             }else if ($(this).attr('flag')=='true'){
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').html('');
                 $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
@@ -799,15 +804,15 @@ CourseTable.prototype = {
                             //0 白色
                             break;
                         case "1":
-                            colorValue = "#F98F90";
+                            colorValue = "#FCCCCD";
                             //1红色
                             break;
                         case "2":
-                            colorValue = "#F7C572";
+                            colorValue = "#FBE5BF";
                             //2黄色
                             break;
                         case "3":
-                            colorValue = "#8EC0FA";
+                            colorValue = "#CDE3FD";
                             //3绿色
                             break;
                         default:
@@ -898,3 +903,20 @@ CourseTable.prototype = {
 };
 
 new CourseTable();
+
+// 班级
+$(document).on('click', '#export-class-table', function () {
+    window.location.href = '/scheduleTask/class/course/export.do?taskId=' + taskId;
+});
+// 教师
+$(document).on('click', '#export-teacher-table', function () {
+    window.location.href = '/scheduleTask/teacher/course/export.do?taskId=' + taskId;
+});
+// 学生
+$(document).on('click', '#export-student-table', function () {
+    window.location.href = '/scheduleTask/student/course/export.do?taskId=' + taskId;
+});
+// 教室
+$(document).on('click', '#export-room-table', function () {
+    window.location.href = '/scheduleTask/room/course/export.do?taskId=' + taskId;
+});

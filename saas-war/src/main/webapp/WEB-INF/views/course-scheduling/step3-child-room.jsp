@@ -15,7 +15,7 @@
     </div>
     <div class="scheduling-info">
         <div class="fl room-name"><span class="room-label"></span></div>
-        <button class="fr btn btn-warning output-tpl3" id="output-tpl"><i class="icon-output-down"></i>导出所有教室课程表</button>
+        <button class="fr btn btn-warning output-tpl3" id="export-room-table"><i class="icon-output-down"></i>导出所有教室课程表</button>
     </div>
     <table class="table">
         <thead id="room-thead-list">

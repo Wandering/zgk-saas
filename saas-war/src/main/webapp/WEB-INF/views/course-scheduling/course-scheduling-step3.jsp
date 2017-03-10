@@ -46,7 +46,7 @@
                             <script src="/static/src/lib/jquery.table2excel/jquery.table2excel.js"></script>
                             <script>
                                 $(function() {
-                                    $(".output-tpl").click(function(){
+                                    $("#export-all-table").click(function(){
                                         $(".table").table2excel({
                                             exclude: ".noExl",
                                             name: "Excel Document Name",
