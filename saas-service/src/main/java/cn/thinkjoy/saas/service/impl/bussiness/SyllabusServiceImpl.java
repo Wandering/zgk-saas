@@ -71,7 +71,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
         jwCourseTableDTOs = this.queryList(tnId,taskId,true,params);
 
         if (jwCourseTableDTOs.size() == 0)
-            throw new BizException("error", "当前租户下排课任务" + taskId + "课表为空,请稍后再试");
+            throw new BizException("error", "课表正在解析中...请稍后再试!");
         timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
         rtnMap = treeListByTree(jwCourseTableDTOs);
 
@@ -423,12 +423,12 @@ public class SyllabusServiceImpl implements ISyllabusService {
         /**变量声明**/
         Map<String,Object> rtnMap = new HashMap<>();
         StringBuilder builder = new StringBuilder();
-        Map<Integer,Map<String,Object>> treeMap = allCourseTreeByList(jwCourseTableDTOs);
+        Map<String,Map<String,Object>> treeMap = allCourseTreeByList(jwCourseTableDTOs);
         List<List<List<String>>> listArrayList = new ArrayList<>();
 
         List<List<String>> lists;
         List<String> list;
-        Map.Entry<Integer,Map<String,Object>> classEntry;
+        Map.Entry<String,Map<String,Object>> classEntry;
         Map.Entry<Integer,Object> weekEntry;
         Map.Entry<Integer,JwCourseTableDTO> dayEntry;
         JwCourseTableDTO jwCourseTableDTO;
@@ -441,7 +441,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
         String className;
         /**变量声明**/
 
-        Iterator<Map.Entry<Integer,Map<String,Object>>> entryIterator = treeMap.entrySet().iterator();
+        Iterator<Map.Entry<String,Map<String,Object>>> entryIterator = treeMap.entrySet().iterator();
         while (entryIterator.hasNext()){
             lists = new ArrayList<>();
             //班级课表层
@@ -489,22 +489,24 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @param jwCourseTableDTOs
      * @return
      */
-    private Map<Integer,Map<String,Object>> allCourseTreeByList(List<JwCourseTableDTO> jwCourseTableDTOs){
+    private Map<String,Map<String,Object>> allCourseTreeByList(List<JwCourseTableDTO> jwCourseTableDTOs){
 
-        Map<Integer,Map<String,Object>> rtnMap = new LinkedHashMap();
+        Map<String,Map<String,Object>> rtnMap = new LinkedHashMap();
         JwCourseTableDTO jwCourseTableDTO;
         Iterator<JwCourseTableDTO> jwCourseTableIterator = jwCourseTableDTOs.iterator();
+
         while (jwCourseTableIterator.hasNext()){
             jwCourseTableDTO = jwCourseTableIterator.next();
             Integer classId = jwCourseTableDTO.getClassId();
+            String classKey = (classId + "-" +jwCourseTableDTO.getClassType());
             Integer weekId = jwCourseTableDTO.getWeek();
             Integer dayId = jwCourseTableDTO.getSort();
             Map<String,Object> classMap;
             Map<Integer,Object> weekMap;
             Map<Integer,JwCourseTableDTO> dayMap;
             //以班级分类
-            if (rtnMap.containsKey(classId)){
-                classMap  = rtnMap.get(classId);
+            if (rtnMap.containsKey(classKey)){
+                classMap  = rtnMap.get(classKey);
                 weekMap = (Map<Integer,Object>)classMap.get("week");
             }else {
                 classMap  = new LinkedHashMap();
@@ -519,7 +521,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
             }
             dayMap.put(dayId,jwCourseTableDTO);
             weekMap.put(weekId,dayMap);
-            rtnMap.put(classId,classMap);
+            rtnMap.put(classKey,classMap);
 
         }
 

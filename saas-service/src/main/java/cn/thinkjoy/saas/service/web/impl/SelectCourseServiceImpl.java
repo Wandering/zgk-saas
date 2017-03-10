@@ -200,7 +200,7 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         map1.put("tnId",tnId);
         map1.put("grade",grade);
         map1.put("status",0);
-        SelectCourseTask task=iSelectCourseTaskDAO.queryOne(map1, null, null);
+        SelectCourseTask task=iSelectCourseTaskDAO.queryOne(map1, "startTime", "desc");
         if (task==null) {
             //对应租户的对应年级没有任务
             return "-1";

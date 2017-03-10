@@ -551,18 +551,22 @@ ArrangeCourse.prototype = {
                 for(var i=0;i<foo;i++){
                     fooStr += '1'
                 }
+                weeks = ['星期一','星期二','星期三','星期四','星期五','星期六']
+                var fooTag = {
+                    '星期一':'mon',
+                    '星期二':'tues',
+                    '星期三':'wed',
+                    '星期四':'thur',
+                    '星期五':'fri',
+                    '星期六':'sut',
+                    '星期日':'sun'
+                }
                 that.dataParams = {
-                    'mon': fooStr,
-                    'tues': fooStr,
-                    'wed': fooStr,
-                    'thur': fooStr,
-                    'fri': fooStr,
-                    'sut': '',
-                    'sun': '',
                     'classType': '行政班'
                 }
-
-
+                for(var i in weeks){
+                    that.dataParams[fooTag[weeks[i]]] = fooStr
+                }
                 //数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========
 
 
