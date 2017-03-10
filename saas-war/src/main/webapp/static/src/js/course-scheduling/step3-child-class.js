@@ -333,7 +333,7 @@ CourseTable.prototype = {
                         $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
                         that.getAllQueryCourse();
                         that.getQueryCourse();
-                        //console.log("flagClassType="+that.flagClassType)
+                        console.log("flagClassType="+that.flagClassType)
                         // 2 走读, 2以外 行政
                         if(that.flagClassType=='2'){
                             that.getQueryClass("select-classes");
@@ -628,9 +628,9 @@ CourseTable.prototype = {
                     var Num3 = parseInt(wkDate.substr(2, 1));
                     var itemCount = Num1 + Num2 + Num3;
                     var resData = res.teachDate.split('|');
-                    var str = '<td class="center">节次</td>';
+                    var str = '<td class="center"></td>';
                     for (var i = 0; i < resData.length; i++) {
-                        str += '<td class="center" colspan="' + itemCount + '">第' + resData[i] + '节</td>';
+                        str += '<td class="center" colspan="' + itemCount + '">' + resData[i] + '</td>';
                     }
                     return str;
                 });
