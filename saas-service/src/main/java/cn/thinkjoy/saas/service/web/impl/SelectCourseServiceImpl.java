@@ -74,7 +74,8 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         //【1】根据学校code查询tnId
         Tenant tenant=iTenantDAO.findOne("gk_school_id", schoolId, null, null);
         if (tenant==null){//学校没有使用saas
-            resultMap.put("msg","学校没有使用saas");
+            resultMap.put("msg","暂时没有使用智高考教务系统 \n" +
+                    "无法绑定选课哦");
             return resultMap;
         }
         String tnId=tenant.getId().toString();
@@ -91,7 +92,7 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         map.put("studentName",studentName);
         map.put("isBinding",1);
         if (iSelectCourseDAO.hasStudent(map)!=1){//没有查找到改学生信息，绑定信息有误，绑定失败
-            resultMap.put("msg","没有查找到改学生信息，绑定信息有误，绑定失败");
+            resultMap.put("msg","绑定信息有误，绑定失败");
             return resultMap;
         }else {
             //【4】进行绑定操作
@@ -128,10 +129,10 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
             resultMap.put("msg","还未设置选课");
             return resultMap;
         }
-        if (selectCourseTaskList.size()>1){
-            resultMap.put("msg","统一租户同一年级选课出现多个");
-            return resultMap;
-        }
+//        if (selectCourseTaskList.size()>1){
+//            resultMap.put("msg","统一租户同一年级选课出现多个");
+//            return resultMap;
+//        }
         SelectCourseTask selectCourseTask=selectCourseTaskList.get(0);
         //【2】获取选课信息
         Date startDate=selectCourseTask.getStartTime();
@@ -198,6 +199,7 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         Map<String,Object> map1=new HashMap<>();
         map1.put("tnId",tnId);
         map1.put("grade",grade);
+        map1.put("status",0);
         SelectCourseTask task=iSelectCourseTaskDAO.queryOne(map1, null, null);
         if (task==null) {
             //对应租户的对应年级没有任务
@@ -291,8 +293,15 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         map.put("status",0);
         map.put("stuNo",studentNo);
         map.put("majorList",majorListId);
-        map.put("taskId",getTaskId(tnId,gradeCode));
+        String taskId=getTaskId(tnId, gradeCode);
+        map.put("taskId",taskId);
         map.put("type",0);
+        //判断是否已有
+        if (hasSelectCourse(taskId,studentNo)!=null){
+            resultMap.put("result",false);
+            resultMap.put("msg","学生已选课程");
+            return resultMap;
+        }
         iSelectCourseDAO.insertList(map);
         //【2】保存校本课程
         if (StringUtils.isNotBlank(schoolCourse)) {
@@ -428,7 +437,7 @@ public class SelectCourseServiceImpl implements ISelectCourseService{
         // 组装未选课学生集合
         List<BaseStuDto> stuDtos = Lists.newArrayList();
         for(Map map : tenantCustom){
-            if(!selectedStuMap.containsKey(map.get("student_no"))){
+            if(!selectedStuMap.containsKey(map.get("student_no").toString())){
                 BaseStuDto stuDto = new BaseStuDto();
                 stuDto.setClassName(map.get("student_class").toString());
                 stuDto.setStuName(map.get("student_name").toString());

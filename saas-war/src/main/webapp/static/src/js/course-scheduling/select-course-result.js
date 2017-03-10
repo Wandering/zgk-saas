@@ -181,7 +181,7 @@ var AssemblyChooseResult = {
                     },
                     axisLabel: {
                         interval: 0,
-                        rotate: dataJson.groups.length > 6 ? -20 : 0
+                        rotate: dataJson.groups.length > 6 ? -50 : 0
                         //formatter:function(val){
                         //    return val.split("").join("\n");
                         //}
@@ -318,11 +318,11 @@ var SelCourseTypeDetail = {
     pagination: function () {
         var that = this;
         $(".pagination").createPage({
-            pageCount: Math.ceil(that.page.count / that.page.rows),
-            current: Math.ceil(that.page.offset / that.page.rows) + 1,
+            pageCount: Math.ceil(that.page.count / that.page.rows),  //总页数
+            current: that.page.offset+1,
             backFn: function (p) {
                 $(".pagination-bar .current-page").html(p);
-                that.page.offset = (p - 1) * that.page.rows;
+                that.page.offset = p - 1;
                 that.get();
             }
         });
@@ -392,7 +392,8 @@ var SelCourseTypeDetail = {
                 if (d.rtnCode == "0000000") {
                     layer.closeAll();
                     layer.msg('修改成功');
-                    that.get();
+                    window.location.reload();
+                    // that.get();
                 }
             }, function (res) {
                 layer.msg(res.msg);
@@ -435,7 +436,24 @@ var SelCourseTypeDetail = {
         })
         //确实使用本次数据
         $('#confirm-this-data').click(function () {
-            that.useThisData();
+            //确认提交弹层
+            layer.open({
+                title: '<p style="color: #CB171D">提示</p>',
+                area: ['490px', 'auto'],
+                btn: ['取消', '确定'],
+                content: '' +
+                '<div id="confirm-content">' +
+                '<p>确认提交？</p>' +
+                '<span style="color:#999">确认后不可修改</span>' +
+                '</div>',
+                closeBtn: 0,
+                btn1: function () {
+                    layer.closeAll();
+                },
+                btn2: function () {
+                    that.useThisData();
+                }
+            });
         })
         $('#reset-task').click(function () {
             window.location.href = "/select-course";

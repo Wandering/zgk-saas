@@ -67,7 +67,8 @@
                         <div class="rule-content">
                             <div class="tips-procedure">
                                 <div class="procedure-item"><span class="order">1</span>选择课程</div>
-                                <div class="procedure-item"><span class="order">2</span>选择班级</div>
+
+                                <div class="procedure-item"><span class="order">2</span>选择课程</div>
                                 <div class="procedure-item"><span class="order">3</span>合班</div>
                             </div>
                             <div class="choose-course">
@@ -80,7 +81,8 @@
                                 </script>
                             </div>
                             <div class="choose-class">
-                                <div class="title">选择班级：</div>
+
+                                <div class="title">选择课程：</div>
                                 <ul class="choose-class-list" id="choose-class-list">
                                     <%--<li>--%>
                                         <%--<input type="checkbox" id="class1" />--%>
