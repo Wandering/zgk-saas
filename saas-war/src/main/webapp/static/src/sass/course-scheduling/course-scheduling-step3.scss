@@ -240,23 +240,30 @@
   .scheduling-info {
     margin-bottom: 10px;
     overflow: hidden;
+    position: relative;
+    top:0;
+    left:0;
+    min-height:30px;
     .scheduling-name {
       font-size: 14px;
       font-weight: bold;
     }
+
     #output-tpl {
       width: 165px;
       background: #B085B9 !important;
       border-color: #B085B9 !important;
       outline: none;
-      position: relative;
-      top:130px;
+      position: absolute;
+      bottom:0;
+      right:0;
     }
     .icon-output-down {
       display: inline-block !important;
     }
   }
 }
+
 p.tbody-item{
   border-bottom: 1px solid #ccc;
   margin: 0;
