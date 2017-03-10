@@ -25,7 +25,7 @@
                     </script>
                     <ul class="breadcrumb">
                         <li>
-                            <a href="#">首页</a>
+                            首页
                         </li>
                         <li>高考改革</li>
                         <li class="active">选课指导</li>

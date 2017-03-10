@@ -31,7 +31,7 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="/index.html">首页</a>
+                        首页
                     </li>
                     <li>
                         <a href="/student-management">基础信息管理</a>

@@ -31,7 +31,7 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="/index">首页</a>
+                        首页
                     </li>
                     <li>成绩分析</li>
                     <li class="active">班级成绩分析</li>
