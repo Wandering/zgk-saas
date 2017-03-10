@@ -145,7 +145,7 @@ var AssemblyChooseResult = {
                 textStyle: {
                     color: '#4A4A4A',
                     fontWeight: 'normal',
-                    fontSize: 14
+                    fontSize: 12
                 }
             },
             tooltip: {
@@ -169,7 +169,7 @@ var AssemblyChooseResult = {
                     name: '选课组合',
                     nameTextStyle: {
                         color: '#4A4A4A',
-                        fontSize: 12
+                        fontSize: 10
                     },
                     data: dataJson.groups,
                     axisLine: {
@@ -198,10 +198,10 @@ var AssemblyChooseResult = {
                     name: '选课人数',
                     nameTextStyle: {
                         color: '#4A4A4A',
-                        fontSize: 12
+                        fontSize: 10
                     },
-                    min: Math.min(dataJson.stuCount),
-                    max: Math.max(dataJson.stuCount),
+                    // min: Math.min(dataJson.stuCount),
+                    // max: Math.max(dataJson.stuCount),
                     axisLine: {
                         lineStyle: {
                             color: '#D8D8D8'
