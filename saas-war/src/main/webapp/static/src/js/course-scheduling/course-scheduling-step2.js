@@ -35,7 +35,7 @@ ArrangeCourse.prototype = {
     getNoArrangeCourseInfo: function (type, id) {
         var that = this;
         if (id != undefined) {
-            Common.ajaxFun('/disSelectRule/getRule/' + GLOBAL_PARAMS.taskId + '/' + type + '/' + id + '.do', 'GET', {}, function (res) {
+            Common.ajaxFun('/disSelectRule/getRule/' + GLOBAL_PARAMS.taskId + '/' + type + '/' + id + '.do', 'GET', that.dataParams, function (res) {
                 if (res.rtnCode == "0000000") {
                     var data = res.bizData;
                     if (data.length != 0) {
@@ -147,11 +147,13 @@ ArrangeCourse.prototype = {
     getCompareTableBody: function (type, id, classId) {
         var that = this;
         if (id != undefined) {
+            console.log(that.dataParams.classType);
             Common.ajaxFun('/disSelectRule/getRule/' + GLOBAL_PARAMS.taskId + '/' + type + '/' + id + '.do', 'GET', that.dataParams, function (res) {
                 if (res.rtnCode == "0000000") {
                     var data = res.bizData;
                     if (data.length != 0) {
-                        that.compareRenderTableBody(type, res.bizData[0], classId);
+                        console.log("ppp:"+that.dataParams.classType);
+                        that.compareRenderTableBody(type, res.bizData[0], classId,that.dataParams.classType);
                     } else {
                         that.getTeachTime();
                     }
@@ -164,7 +166,7 @@ ArrangeCourse.prototype = {
         }
     },
     //比较渲染table主体
-    compareRenderTableBody: function (type, data, classId) {
+    compareRenderTableBody: function (type, data, classId,classType) {
         var that = this;
         var weeks = [],
             weeksData = [],
@@ -267,7 +269,9 @@ ArrangeCourse.prototype = {
             //年级不排课渲染完了，再渲染班级不排课
             $('#no-assign-table tbody').html(classesHtml.join(''));
             that.getCompareTableBody('class', classId);
+            console.log('classType=='+classType)
         } else {
+
             console.info('班级不排课', data)
             if ($('#no-assign-table .assign-line').length != 0) {
                 if (type == 'class') {
@@ -305,6 +309,7 @@ ArrangeCourse.prototype = {
          * 渲染年级下面的所有班级
          * ===================
          */
+        that.getTeachTime();
         Common.ajaxFun('/disSelectRule/list/' + type + '/' + GLOBAL_PARAMS.taskId, 'GET', paramsObj, function (res) {
             if (res.rtnCode == "0000000") {
                 var data = res.bizData;
@@ -348,6 +353,7 @@ ArrangeCourse.prototype = {
                             if (_this.attr('type') == 'grade') {
                                 that.getNoArrangeCourseInfo('grade', -1);
                             } else {
+                                that.dataParams.classType = $(this).find('a').attr('classType');
                                 that.getCompareTableBody('grade', -1, $(this).find('a').attr('classId'));
                             }
 
