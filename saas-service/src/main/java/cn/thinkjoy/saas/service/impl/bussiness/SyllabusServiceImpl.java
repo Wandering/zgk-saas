@@ -198,7 +198,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
             params = new HashMap<>();
             params.put("classId",objectMap.get("id"));
             params.put("classType",objectMap.get("classType"));
-            courseResultView = this.genSyllabus(tnId,taskId,true,Constant.TABLE_TYPE_CLASS,params,lists,timeConfigMap);
+            courseResultView = this.genSyllabus(tnId,taskId,true,Constant.STUDENT,params,lists,timeConfigMap);
         }
         //根据学生所在班级课表获取组成学生课表
         return courseResultView;
@@ -547,6 +547,16 @@ public class SyllabusServiceImpl implements ISyllabusService {
                         .append(jwCourseTableDTO.getRoomName());;
                 break;
             case Constant.COURSE_TABLE_ALL:
+                rtnStrBf.append(jwCourseTableDTO.getCourseName())
+                        .append(Constant.GEN_COURSE_TABLE_BASE_SPLIT)
+                        .append(Constant.GEN_COURSE_TABLE_WRAP_SPLIT)
+                        .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_S)
+                        .append(jwCourseTableDTO.getTeacherName())
+                        .append(Constant.GEN_COURSE_TABLE_TEACHER_AROUND_E)
+                        .append(Constant.GEN_COURSE_TABLE_WRAP_SPLIT)
+                        .append(jwCourseTableDTO.getRoomName());
+                break;
+            case Constant.STUDENT:
                 rtnStrBf.append(jwCourseTableDTO.getCourseName())
                         .append(Constant.GEN_COURSE_TABLE_BASE_SPLIT)
                         .append(Constant.GEN_COURSE_TABLE_WRAP_SPLIT)
