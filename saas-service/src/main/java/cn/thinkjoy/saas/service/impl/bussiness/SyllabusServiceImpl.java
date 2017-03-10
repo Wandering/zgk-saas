@@ -356,6 +356,8 @@ public class SyllabusServiceImpl implements ISyllabusService {
         params.put("week",coordinate[0]);
         params.put("sort",coordinate[1]);
         //
+        params.put("tnId",tnId);
+        params.put("taskId",taskId);
         List<JwCourseTable> jwCourseTables = jwCourseTableDAO.queryList(params,"id","desc");
         return jwCourseTables;
     }
