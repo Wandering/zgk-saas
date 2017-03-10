@@ -1,3 +1,7 @@
+var selectcoursename = Common.cookie.getCookie('selectcoursename');
+$('.selectcoursename').text(selectcoursename);
+
+
 /**
  * @Time:2017-3-1
  * @By:pdeng
