@@ -810,7 +810,7 @@ public class ScheduleTaskController {
                     LinkedHashMap<String, Object> map = classList.get(i);
                     sheetNames[i] = map.get("class_name").toString();
                     int classId = Integer.valueOf(map.get("id").toString());
-                    CourseResultView courseResultView = syllabusService.getClassSyllabus(tnId,taskId,Constant.CLASS_ADM_CODE,classId);
+                    CourseResultView courseResultView = syllabusService.getClassSyllabus(tnId,taskId,classId,Constant.CLASS_ADM_CODE);
                     courseLists.add(courseResultView.getWeek());
                 }
                 logger.info("***********导出班级课表 E***********");
@@ -834,12 +834,13 @@ public class ScheduleTaskController {
                 Iterator<LinkedHashMap<String,Object>> studentIterator = tenantCustoms.iterator();
                 Map<String,Integer> admClassMap = iexJwScheduleTaskService.getClassMapByTnId(tnId,Constant.CLASS_ADM_CODE,grade);
                 Map<String,Integer> eduClassMap = iexJwScheduleTaskService.getClassMapByTnId(tnId,Constant.CLASS_EDU_CODE,grade);
-
-
+                sheetNames = new String[tenantCustoms.size()];
+                int cc = 0;
                 while (studentIterator.hasNext()) {
 
                     Map<String,Object> studentMap = studentIterator.next();
-                    List<Map<String,Object>> studentClassList = syllabusService.getClassList(studentMap,admClassMap,eduClassMap);
+                    sheetNames[cc] =(String) studentMap.get("student_name");
+                            List<Map<String,Object>> studentClassList = syllabusService.getClassList(studentMap,admClassMap,eduClassMap);
                     CourseResultView courseResultView = syllabusService.getStudentSyllabus(tnId, taskId,courseTimeConfig,studentClassList);
                     courseLists.add(courseResultView.getWeek());
                 }
@@ -862,38 +863,40 @@ public class ScheduleTaskController {
                 break;
         }
         logger.info("===============导出租户课程表 S================");
-        workbook = ExcelUtils.createWorkBook(strings, sheetNames, courseLists);
-        workbook.write(os);
-        byte[] content = os.toByteArray();
-        InputStream is = new ByteArrayInputStream(content);
-        // 设置response参数，可以打开下载页面
-        response.reset();
-        response.setContentType("application/vnd.ms-excel;charset=utf-8");
-        response.setHeader("Content-Disposition", "attachment;filename=" + new String((ExcelUtils.getFileName(type, tnId) + ".xls").getBytes(), "iso-8859-1"));
-        ServletOutputStream out = response.getOutputStream();
-        BufferedInputStream bis = null;
-        BufferedOutputStream bos = null;
-        try {
-            bis = new BufferedInputStream(is);
-            bos = new BufferedOutputStream(out);
-            byte[] buff = new byte[20480];
-            int bytesRead;
-            // Simple read/write loop.
-            while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
-                bos.write(buff, 0, bytesRead);
+        if (sheetNames.length>0) {
+            workbook = ExcelUtils.createWorkBook(strings, sheetNames, courseLists);
+            workbook.write(os);
+            byte[] content = os.toByteArray();
+            InputStream is = new ByteArrayInputStream(content);
+            // 设置response参数，可以打开下载页面
+            response.reset();
+            response.setContentType("application/vnd.ms-excel;charset=utf-8");
+            response.setHeader("Content-Disposition", "attachment;filename=" + new String((ExcelUtils.getFileName(type, tnId) + ".xls").getBytes(), "iso-8859-1"));
+            ServletOutputStream out = response.getOutputStream();
+            BufferedInputStream bis = null;
+            BufferedOutputStream bos = null;
+            try {
+                bis = new BufferedInputStream(is);
+                bos = new BufferedOutputStream(out);
+                byte[] buff = new byte[20480];
+                int bytesRead;
+                // Simple read/write loop.
+                while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+                    bos.write(buff, 0, bytesRead);
+                }
+                logger.info("Excel文件流导出完成");
+            } catch (final IOException e) {
+                logger.info("Excel文件流导出失败![" + e.getMessage() + "]");
+                throw e;
+            } finally {
+                if (bis != null)
+                    bis.close();
+                if (bos != null)
+                    bos.close();
+                if (out != null)
+                    out.close();
+                logger.info("===============导出租户课程表 E================");
             }
-            logger.info("Excel文件流导出完成");
-        } catch (final IOException e) {
-            logger.info("Excel文件流导出失败![" + e.getMessage() + "]");
-            throw e;
-        } finally {
-            if (bis != null)
-                bis.close();
-            if (bos != null)
-                bos.close();
-            if (out != null)
-                out.close();
-            logger.info("===============导出租户课程表 E================");
         }
         return null;
     }

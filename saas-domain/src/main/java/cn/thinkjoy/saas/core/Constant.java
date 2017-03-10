@@ -103,7 +103,7 @@ public class Constant {
     public static final String GEN_COURSE_TABLE_TEACHER_AROUND_S = "(";
     public static final String GEN_COURSE_TABLE_TEACHER_AROUND_E = ")";
     public static final String GEN_COURSE_TABLE_CLASS_SPLIT = "-";
-    public static final String GEN_COURSE_TABLE_WRAP_SPLIT = "<br>";
+    public static final String GEN_COURSE_TABLE_WRAP_SPLIT = "\r\n";
     public static final String COURSE_TABLE_ALL = "all";
     public static final String COURSE_TABLE_DEFAULT_VALUE = "";
     /**课程表生成相关**/
