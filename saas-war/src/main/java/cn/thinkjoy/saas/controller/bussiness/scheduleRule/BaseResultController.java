@@ -50,7 +50,7 @@ public class BaseResultController {
 
 
     /**
-     * 获取教室名称
+     * 获取班级名称
      * @param taskId
      * @return
      */
@@ -61,16 +61,16 @@ public class BaseResultController {
         JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
         //获取行政班班级列表
         List<Map<String,Object>> admList = exiTenantConfigInstanceService.getClassByTnIdAndGrade(tnId, GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())),Constant.CLASS_ADM);
-        List<Map<String,Object>> eduList = exiTenantConfigInstanceService.getClassByTnIdAndGrade(tnId, GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())),Constant.CLASS_EDU);
+//        List<Map<String,Object>> eduList = exiTenantConfigInstanceService.getClassByTnIdAndGrade(tnId, GradeEnum.getName(Integer.valueOf(jwScheduleTask.getGrade())),Constant.CLASS_EDU);
         for (Map<String,Object> map : admList){
             map.put("class_type",Constant.CLASS_ADM_CODE);
         }
-        for (Map<String,Object> map : eduList){
-            map.put("class_type",Constant.CLASS_EDU_CODE);
-        }
+//        for (Map<String,Object> map : eduList){
+//            map.put("class_type",Constant.CLASS_EDU_CODE);
+//        }
         List<Map<String,Object>> list = new ArrayList<>();
         list.addAll(admList);
-        list.addAll(eduList);
+//        list.addAll(eduList);
         return list;
     }
 
@@ -247,7 +247,8 @@ public class BaseResultController {
     @ResponseBody
     public Set<Map<String,Object>> queryCourse(@RequestParam Integer taskId) {
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
-        List<CourseManageDto> courseManageDtos = courseManageService.getCourseByTnId(tnId);
+        JwScheduleTask jwScheduleTask = (JwScheduleTask) jwScheduleTaskService.fetch(taskId);
+        List<CourseManageDto> courseManageDtos = courseManageService.getCourseByTnIdAndGrade(tnId,Integer.valueOf(jwScheduleTask.getGrade()));
         Map<String,Object> map;
         Set<Map<String,Object>> maps = new HashSet<>();
         for (CourseManageDto courseManageDto : courseManageDtos) {

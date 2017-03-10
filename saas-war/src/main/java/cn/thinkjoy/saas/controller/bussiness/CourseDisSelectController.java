@@ -1,12 +1,14 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.common.exception.BizException;
-import cn.thinkjoy.saas.domain.*;
+import cn.thinkjoy.saas.domain.JwBaseRule;
+import cn.thinkjoy.saas.domain.JwCourseGapRule;
+import cn.thinkjoy.saas.domain.JwScheduleTask;
+import cn.thinkjoy.saas.domain.JwTeachDate;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.service.*;
 import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -63,7 +65,7 @@ public class CourseDisSelectController
     public int addOrUpdateRule(@PathVariable String taskId,
                                @PathVariable String type,
                                @RequestParam(value = "ids", required = true) String ids,
-                               @RequestParam(value = "jwBaseRule", required = true) JwBaseRule jwBaseRule,
+                               JwBaseRule jwBaseRule,
                                @RequestParam(value = "classType", required = false) String classType)
     {
 
@@ -159,6 +161,10 @@ public class CourseDisSelectController
         else if ("teacher".equals(type))
         {
             rule.put("teacherId", id);
+        }
+        else if ("grade".equals(type))
+        {
+            rule.put("gradeId", id);
         }
         else
         {
