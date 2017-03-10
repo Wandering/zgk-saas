@@ -353,8 +353,12 @@ $(function () {
 
     //二次迭代保存教师列表 ============
     $('#save-teacher').click(function () {
-        var parentDom = $('#teacher-list tr'), tId, tVal, foo = [];
+        var parentDom = $('#teacher-list tr')
+            , tId
+            , tVal
+            , foo = [];
         for (var i = 0; i < parentDom.length; i++) {
+
             tId = parentDom.eq(i).find('td').eq(5).find('input[type="checkbox"]').attr('tId');
             if (parentDom.eq(i).find('td').eq(5).find('input[type="checkbox"]:checked').val()) {
                 tVal = 1
@@ -364,6 +368,7 @@ $(function () {
             foo.push(tId + '-' + tVal);
         }
         // （0：不排课，1：排课）eg:1-0,2-1,3-1,4-1
+        console.log(foo)
         Common.ajaxFun('/scheduleTask/saveTeacherSchedule.do', 'POST', {
                 "str": foo.join()
             },

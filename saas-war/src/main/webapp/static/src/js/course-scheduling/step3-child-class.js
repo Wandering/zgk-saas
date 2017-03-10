@@ -70,10 +70,12 @@ CourseTable.prototype = {
             this.courseTableEvent('class');
             this.courseTableEvent('teacher');
             $('.class-tab').removeClass('dh');
+            $('.loading-date').text('3-10');
         }else{
             $('.student-tab,.room-tab').removeClass('dh');
             $('.class-tab').addClass('dh');
             $('#step3-child-teacher .colors-box').remove();
+            $('.loading-date').text('3-20');
         }
 
     },
