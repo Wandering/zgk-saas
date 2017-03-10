@@ -127,6 +127,9 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
     @Autowired
     IClassRoomsDAO iClassRoomsDAO;
+
+    @Resource
+    IJwGradeRuleDAO iJwGradeRuleDAO;
 //    @Autowired
 //    private
 
@@ -599,7 +602,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         flag = printBuffers(tnId, taskId, teachDataBuffers, FileOperation.COURSE_TIMESLOTS,type);
 
-        List<StringBuffer> gradeNonDisBuffers = getGradeNonDispaching(taskId, 1);//年级不排课
+        List<StringBuffer> gradeNonDisBuffers = getGradeNonDispaching(taskId);//年级不排课
 
         flag = printBuffers(tnId, taskId, gradeNonDisBuffers, FileOperation.GRAD_NON_DISPACHING,type);
 
@@ -677,7 +680,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
 
         result = printBuffers(tnId, taskId, teachDataBuffers, FileOperation.COURSE_TIMESLOTS,type);
 
-        List<StringBuffer> gradeNonDisBuffers = getGradeNonDispaching(taskId, 1);//年级不排课
+        List<StringBuffer> gradeNonDisBuffers = getGradeNonDispaching(taskId);//年级不排课
 
         result = printBuffers(tnId, taskId, gradeNonDisBuffers, FileOperation.GRAD_NON_DISPACHING,type);
 
@@ -1162,37 +1165,42 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
     /**
      * 年级不排课
      * @param taskId
-     * @param type
      * @return
      */
-    private List<StringBuffer> getGradeNonDispaching(Integer taskId,Integer type) {
+    private List<StringBuffer> getGradeNonDispaching(Integer taskId) {
+
+
+        JwScheduleTask jwScheduleTask = scheduleTaskDAO.fetch(taskId);
+        if(jwScheduleTask==null)
+            return ObjIsNothing();
+
         Map map = new HashMap();
         map.put("taskId", taskId);
-        map.put("classType", type);
-        List<JwClassRule> jwClassRules = iJwClassRuleDAO.queryList(map, "id", "asc");
+        map.put("gradeId", jwScheduleTask.getGrade());
+        List<JwGradeRule> jwGradeRules = iJwGradeRuleDAO.queryList(map, "id", "asc");
 
         List<StringBuffer> stringBuffers = new ArrayList<>();
         StringBuffer stringBuffer1 = new StringBuffer();
         StringBuffer stringBuffer = new StringBuffer();
-            if(jwClassRules==null||jwClassRules.size()<=0)
+            if(jwGradeRules==null||jwGradeRules.size()<=0)
                 return ObjIsNothing();
 
-        JwClassRule jwClassRule = jwClassRules.get(0);
+        JwGradeRule jwGradeRule = jwGradeRules.get(0);
 
 
-        stringBuffer.append(converGradeNon(jwClassRule.getMon()));
+        stringBuffer.append(converGradeNon(jwGradeRule.getMon()));
         stringBuffer.append(FileOperation.STR_SPLIT);
-        stringBuffer.append(converGradeNon(jwClassRule.getTues()));
+        stringBuffer.append(converGradeNon(jwGradeRule.getTues()));
         stringBuffer.append(FileOperation.STR_SPLIT);
-        stringBuffer.append(converGradeNon(jwClassRule.getWed()));
+        stringBuffer.append(converGradeNon(jwGradeRule.getWed()));
         stringBuffer.append(FileOperation.STR_SPLIT);
-        stringBuffer.append(converGradeNon(jwClassRule.getTues()));
+        stringBuffer.append(converGradeNon(jwGradeRule.getTues()));
         stringBuffer.append(FileOperation.STR_SPLIT);
-        stringBuffer.append(converGradeNon(jwClassRule.getFri()));
+        stringBuffer.append(converGradeNon(jwGradeRule.getFri()));
         stringBuffer.append(FileOperation.STR_SPLIT);
-        stringBuffer.append(converGradeNon(jwClassRule.getSut()));
+        stringBuffer.append(converGradeNon(jwGradeRule.getSut()));
         stringBuffer.append(FileOperation.STR_SPLIT);
-        stringBuffer.append(converGradeNon(jwClassRule.getSun()));
+        stringBuffer.append(converGradeNon(jwGradeRule.getSun()));
         stringBuffer.append(FileOperation.STR_SPLIT);
         stringBuffer.append(FileOperation.LINE_SPLIT);
         stringBuffers.add(stringBuffer);

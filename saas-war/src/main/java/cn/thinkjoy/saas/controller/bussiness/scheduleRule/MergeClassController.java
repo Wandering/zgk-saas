@@ -97,6 +97,12 @@ public class MergeClassController {
         }
         String classType=courseManage.getCourseType();
 
+        if (classType.equals("4")){
+            classType="1";
+        } else if (classType.equals("5")){
+            classType="0";
+        }
+
         List<Map<String,Object>> maps = exScheduleBaseInfoService.getClassBaseDtosByCourse(
                 Integer.valueOf(tnId),
                 Integer.valueOf(grade),

@@ -46,7 +46,7 @@
                             <script src="/static/src/lib/jquery.table2excel/jquery.table2excel.js"></script>
                             <script>
                                 $(function() {
-                                    $(".output-tpl").click(function(){
+                                    $("#export-all-table").click(function(){
                                         $(".table").table2excel({
                                             exclude: ".noExl",
                                             name: "Excel Document Name",
@@ -86,7 +86,7 @@
                                             <span class="sr-only">100% Complete</span>
                                         </div>
                                     </div>
-                                    <p>正在努力排课中,预计3-10分钟,请耐心等待哦</p>
+                                    <p>正在努力排课中,预计<span class="loading-date"></span>分钟,请耐心等待哦</p>
                                 </div>
 
                                 <%-- 排出课表 软性规则冲突 --%>

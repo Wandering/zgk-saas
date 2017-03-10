@@ -168,7 +168,7 @@
                                     </div>
                                     <%--table-condensed --%>
                                     <div class="class-assign-time">
-                                        <table id="no-assign-table" class="no-assign-table table-bordered table-hover" cellpadding="0" cellspacing="0">
+                                        <table id="no-assign-table" class="no-assign-table table-bordered" cellpadding="0" cellspacing="0">
                                             <thead>
                                                 <%--<tr>--%>
                                                     <%--<th width="135px"></th>--%>
