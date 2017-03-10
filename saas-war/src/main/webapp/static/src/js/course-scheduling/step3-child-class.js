@@ -44,8 +44,6 @@ function CourseTable(){
     this.posY = '';
     this.tarPosX = '';
     this.tarPosY = '';
-    this.flagClassType = null;
-    this.colorScheduleResultState = '';
 }
 
 CourseTable.prototype = {
@@ -65,18 +63,7 @@ CourseTable.prototype = {
         this.selectStudentEvent(); // 选择学生
         this.selectRoomEvent(); // 选择教师
         this.queryGradeClassType(); // 获取年级班级类型
-        // 2：教学班走读 ，2以外：行政
-        console.log(this.flagClassType)
-        if(this.flagClassType!='2'){
-            $('.student-tab,.room-tab').addClass('dh');
-            this.courseTableEvent('class');
-            this.courseTableEvent('teacher');
-            $('.class-tab').removeClass('dh');
-        }else{
-            $('.student-tab,.room-tab').removeClass('dh');
-            $('.class-tab').addClass('dh');
-            $('#step3-child-teacher .colors-box').remove();
-        }
+
 
     },
     // 课表切换
@@ -92,7 +79,7 @@ CourseTable.prototype = {
     // 防止刷新|hash处理
     hashOperate: function () {
         var that = this;
-        console.log(that.hashArr)
+        //console.log(that.hashArr)
         // 防止刷新|hash处理
         window.onhashchange = function () {
             if (window.location.hash === '') {
@@ -240,10 +227,13 @@ CourseTable.prototype = {
                         $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
                         that.getAllQueryCourse();
                         that.getQueryCourse();
-                        that.getQueryClass("select-class");
-                        if(this.flagClassType=='2'){
+                        //console.log("flagClassType="+that.flagClassType)
+                        // 2 走读, 2以外 行政
+                        if(that.flagClassType=='2'){
                             that.getQueryClass("select-classes");
                             that.getQueryRoom();
+                        }else{
+                            that.getQueryClass("select-class");
                         }
                         break;
                     case 5:
@@ -332,10 +322,13 @@ CourseTable.prototype = {
                         $('#role-scheduling-tab,#control-jsp,.info-modify').removeClass('dh');
                         that.getAllQueryCourse();
                         that.getQueryCourse();
-                        that.getQueryClass("select-class");
-                        if(this.flagClassType=='2'){
+                        console.log("flagClassType="+that.flagClassType)
+                        // 2 走读, 2以外 行政
+                        if(that.flagClassType=='2'){
                             that.getQueryClass("select-classes");
                             that.getQueryRoom();
+                        }else{
+                            that.getQueryClass("select-class");
                         }
                         break;
                     case "-1":
@@ -509,16 +502,31 @@ CourseTable.prototype = {
     // 获取年级班级类型
     queryGradeClassType:function(){
         var that = this;
+        that.flagClassType = '';
         Common.ajaxFun('/baseResult/queryGradeClassType.do', 'GET', {
             'taskId': taskId
         }, function (res) {
             //console.log(res);
             if (res.rtnCode == '0000000') {
                 that.flagClassType = res.bizData;
+                // 2：教学班走读 ，2以外：行政
+                if(res.bizData!='2'){
+                    $('.student-tab,.room-tab').addClass('dh');
+                    //that.courseTableEvent('class');
+                    //that.courseTableEvent('teacher');
+                    $('.class-tab').removeClass('dh');
+                    $('.loading-date').text('3-10');
+                }else{
+                    $('.student-tab,.room-tab').removeClass('dh');
+                    $('.class-tab').addClass('dh');
+                    $('#step3-child-teacher .colors-box').remove();
+                    $('.loading-date').text('3-20');
+                }
             }
         }, function (res) {
             layer.msg(res.msg);
         },true);
+        return that.flagClassType;
     },
     // 拉取学生
     getQueryStudent: function (classId,classType) {
@@ -561,7 +569,7 @@ CourseTable.prototype = {
             if (result.rtnCode == "0000000") {
                 var theadTemplate = Handlebars.compile($("#" + urlType + "-thead-list-template").html());
                 Handlebars.registerHelper("thead", function (res) {
-                    console.log(res);
+                    //console.log(res);
                     var resData = res.split('|');
                     var str = '<td class="center">节次</td>';
                     for (var i = 0; i < resData.length; i++) {
@@ -622,9 +630,9 @@ CourseTable.prototype = {
                     var Num3 = parseInt(wkDate.substr(2, 1));
                     var itemCount = Num1 + Num2 + Num3;
                     var resData = res.teachDate.split('|');
-                    var str = '<td class="center">节次</td>';
+                    var str = '<td class="center"></td>';
                     for (var i = 0; i < resData.length; i++) {
-                        str += '<td class="center" colspan="' + itemCount + '">第' + resData[i] + '节</td>';
+                        str += '<td class="center" colspan="' + itemCount + '">' + resData[i] + '</td>';
                     }
                     return str;
                 });
@@ -678,39 +686,42 @@ CourseTable.prototype = {
         });
     },
     // 遍历坐标
-    courseTableEvent:function(obj){
-        var that = this;
-        $('body').on('click', '.'+ obj +'CourseTable', function () {
-            if ($(this).attr('flag') == undefined && $(this).text()!="") {
-                that.posX = $(this).attr('x');
-                that.posY = $(this).attr('y');
-                var selectedV = $('#select-'+obj).children('option:selected').val();
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style');
-                $(this).attr('flag', true).css('color','#c00').append('<span class="wait-course">待调课</span>');
-                that.queryStatusByCoord(obj,that.posX, that.posY, selectedV);
-                if(obj=='teacher'){
-                    that.queryClassByCoord(obj,that.posX, that.posY, selectedV);
-                }
-            } else if ($(this).attr('flag') == 'false' && $(this).attr('style') != undefined) {
-                that.tarPosX = $(this).attr('x');
-                that.tarPosY = $(this).attr('y');
-                var selectedV = $('#select-'+obj).children('option:selected').val();
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').find('.course-table-name').html('');
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
-                that.exchange(obj,that.posX, that.posY, selectedV, that.tarPosX, that.tarPosY);
-                var originalTxt = $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html();
-                var newsTxt = $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').find('.course-table-name').html();
-                $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.wait-course').remove();
-                $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html(newsTxt);
-                $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').find('.course-table-name').html(originalTxt);
-            }else if ($(this).attr('flag')=='true'){
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').html('');
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
-                $(this).attr('flag')=='false';
-                $(this).find('.wait-course').remove();
-            }
-        });
-    },
+    //courseTableEvent:function(obj){
+    //    var that = this;
+    //    $('body').on('click', '.'+ obj +'CourseTable', function () {
+    //        if ($(this).attr('flag') == undefined && $(this).text()!="") {
+    //            that.posX = $(this).attr('x');
+    //            that.posY = $(this).attr('y');
+    //            var selectedV = $('#select-'+obj).children('option:selected').val();
+    //            $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style');
+    //            $(this).attr('flag', true).css('color','#c00').append('<span class="wait-course">待调课</span>');
+    //            that.queryStatusByCoord(obj,that.posX, that.posY, selectedV);
+    //            if(obj=='teacher'){
+    //                that.queryClassByCoord(obj,that.posX, that.posY, selectedV);
+    //            }
+    //        } else if ($(this).attr('flag') == 'false' && $(this).attr('style') != undefined) {
+    //            that.tarPosX = $(this).attr('x');
+    //            that.tarPosY = $(this).attr('y');
+    //            var selectedV = $('#select-'+obj).children('option:selected').val();
+    //            $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').find('.course-table-name').html('');
+    //            $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
+    //            that.exchange(obj,that.posX, that.posY, selectedV, that.tarPosX, that.tarPosY);
+    //            var originalTxt = $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html();
+    //            var newsTxt = $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').find('.course-table-name').html();
+    //            if(newsTxt==undefined){
+    //                newsTxt="";
+    //            }
+    //            $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.wait-course').remove();
+    //            $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html(newsTxt);
+    //            $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').html('<span class="course-table-name">'+originalTxt+'</span>');
+    //        }else if ($(this).attr('flag')=='true'){
+    //            $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').html('');
+    //            $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
+    //            $(this).attr('flag')=='false';
+    //            $(this).find('.wait-course').remove();
+    //        }
+    //    });
+    //},
     // 行政班调课 根据状态获取可调颜色类型
     colorScheduleResult: function (type) {
         var that = this;
@@ -790,15 +801,15 @@ CourseTable.prototype = {
                             //0 白色
                             break;
                         case "1":
-                            colorValue = "#8EC0FA";
+                            colorValue = "#FCCCCD";
                             //1红色
                             break;
                         case "2":
-                            colorValue = "#F7C572";
+                            colorValue = "#FBE5BF";
                             //2黄色
                             break;
                         case "3":
-                            colorValue = "#F98F90";
+                            colorValue = "#CDE3FD";
                             //3绿色
                             break;
                         default:
@@ -888,4 +899,29 @@ CourseTable.prototype = {
     }
 };
 
-new CourseTable();
+var CourseTableIns = new CourseTable();
+
+// 班级
+$(document).on('click', '#export-class-table', function () {
+    window.location.href = '/scheduleTask/class/course/export.do?taskId=' + taskId;
+});
+// 教师
+$(document).on('click', '#export-teacher-table', function () {
+    window.location.href = '/scheduleTask/teacher/course/export.do?taskId=' + taskId;
+});
+// 学生
+$(document).on('click', '#export-student-table', function () {
+    window.location.href = '/scheduleTask/student/course/export.do?taskId=' + taskId;
+});
+// 教室
+$(document).on('click', '#export-room-table', function () {
+    window.location.href = '/scheduleTask/room/course/export.do?taskId=' + taskId;
+});
+
+// 拉取所有课表
+$("#role-scheduling-tab li").eq(0).click(function () {
+    CourseTableIns.getAllQueryCourse();
+});
+if (window.location.hash == '#all') {
+    CourseTableIns.getAllQueryCourse();
+}

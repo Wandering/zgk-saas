@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 测评服务</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/professional-assessment/professional-assessment.css">
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/professional-assessment/professional-assessment.css?v=20170309">
 </head>
 <body>
 <%@ include file="./../common/header.jsp" %>
@@ -127,7 +127,7 @@
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp" %>
 <script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
-<script src="<%=ctx%>/static/src/js/professional-assessment/evaluation-data-base.js"></script>
-<script src="<%=ctx%>/static/src/js/professional-assessment/professional-assessment.js"></script>
+<script src="<%=ctx%>/static/src/js/professional-assessment/evaluation-data-base.js?v=20170309"></script>
+<script src="<%=ctx%>/static/src/js/professional-assessment/professional-assessment.js?v=20170309"></script>
 </body>
 </html>

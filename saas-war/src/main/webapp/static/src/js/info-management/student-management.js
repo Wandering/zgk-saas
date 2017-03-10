@@ -605,15 +605,15 @@ var CRUDStd = {
         //选考科目所在班级动态获取
         $(document).on('change', '#student_check_major1', function () {
             var classCourse = CRUDStd.GetClassByCourse($(this).val());
-            $('#student_check_major_class1').append(classCourse);
+            $('#student_check_major_class1').html(classCourse);
         })
         $(document).on('change', '#student_check_major2', function () {
             var classCourse = CRUDStd.GetClassByCourse($(this).val());
-            $('#student_check_major_class2').append(classCourse);
+            $('#student_check_major_class2').html(classCourse);
         })
         $(document).on('change', '#student_check_major3', function () {
             var classCourse = CRUDStd.GetClassByCourse($(this).val());
-            $('#student_check_major_class3').append(classCourse);
+            $('#student_check_major_class3').html(classCourse);
         })
 
 

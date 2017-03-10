@@ -403,7 +403,6 @@ p.tbody-item{
     font-size:12px;
   }
 }
-
 .color1,
 .color2,
 .color3{
@@ -417,14 +416,20 @@ p.tbody-item{
   margin-right:8px;
 }
 .color1{
-  background: #8EC0FA;
+  background: #CDE3FD;
 }
 .color2{
-  background: #F7C572;
+  background: #FBE5BF;
 }
 .color3{
-  background: #F98F90;
+  background: #FCCCCD;
 }
+
+
 .wait-course{
   margin-left:10px;
+}
+
+.btn.output-tpl{
+  width:150px;
 }

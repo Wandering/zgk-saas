@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>选课任务</title>
     <%@ include file="./../common/meta.jsp"%>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/select-course.css" />
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/select-course.css?v=20170309" />
 </head>
 <body>
 <%@ include file="./../common/header.jsp"%>
@@ -95,7 +95,7 @@
 <%@ include file="./../common/footer.jsp"%>
 <link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/js/layui/css/layui.css"  media="all">
 <script src="<%=ctx%>/static/src/lib/assets/js/layui/layui.js" charset="utf-8"></script>
-<script src="<%=ctx%>/static/src/js/course-scheduling/select-course.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/select-course.js?v=20170309"></script>
 
 </body>
 </html>

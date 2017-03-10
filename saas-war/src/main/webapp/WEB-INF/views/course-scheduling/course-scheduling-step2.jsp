@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>SaaS排课规则设置</title>
     <%@ include file="./../common/meta.jsp"%>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step2.css" />
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step2.css?v=20170309" />
 </head>
 <body>
 <%@ include file="./../common/header.jsp"%>
@@ -168,7 +168,7 @@
                                     </div>
                                     <%--table-condensed --%>
                                     <div class="class-assign-time">
-                                        <table id="no-assign-table" class="no-assign-table table-bordered table-hover" cellpadding="0" cellspacing="0">
+                                        <table id="no-assign-table" class="no-assign-table table-bordered" cellpadding="0" cellspacing="0">
                                             <thead>
                                                 <%--<tr>--%>
                                                     <%--<th width="135px"></th>--%>
@@ -250,6 +250,6 @@
     </div>
 </div>
 <%@ include file="./../common/footer.jsp"%>
-<script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling-step2.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling-step2.js?v=20170309"></script>
 </body>
 </html>

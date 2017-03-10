@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 自动排课</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step3.css"/>
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step3.css?v=20170309"/>
 </head>
 <body>
 <%@ include file="./../common/header.jsp" %>
@@ -46,7 +46,7 @@
                             <script src="/static/src/lib/jquery.table2excel/jquery.table2excel.js"></script>
                             <script>
                                 $(function() {
-                                    $(".output-tpl").click(function(){
+                                    $("#export-all-table").click(function(){
                                         $(".table").table2excel({
                                             exclude: ".noExl",
                                             name: "Excel Document Name",
@@ -86,7 +86,7 @@
                                             <span class="sr-only">100% Complete</span>
                                         </div>
                                     </div>
-                                    <p>正在努力排课中,预计3-10分钟,请耐心等待哦</p>
+                                    <p>正在努力排课中,预计<span class="loading-date"></span>分钟,请耐心等待哦</p>
                                 </div>
 
                                 <%-- 排出课表 软性规则冲突 --%>
@@ -152,6 +152,6 @@
 
 <%--<script src="<%=ctx%>/static/src/js/course-scheduling/step3-common.js"></script>--%>
 <%--<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>--%>
-<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js?v=20170309"></script>
 </body>
 </html>

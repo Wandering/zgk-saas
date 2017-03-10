@@ -104,6 +104,6 @@
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp"%>
-<script src="<%=ctx%>/static/src/js/base-info/grade-management.js"></script>
+<script src="<%=ctx%>/static/src/js/base-info/grade-management.js?v=20170309"></script>
 </body>
 </html>

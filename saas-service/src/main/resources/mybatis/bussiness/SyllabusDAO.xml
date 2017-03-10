@@ -103,6 +103,6 @@
         <if test="params.roomId">
             and tb.roomId = #{params.roomId}
         </if>
-        ORDER BY classId,week,sort asc
+        ORDER BY classType,classId,week,sort asc
     </select>
 </mapper>

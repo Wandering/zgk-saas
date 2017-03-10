@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 学校成绩分析</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/results-analysis.css">
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/results-analysis.css?v=20170309">
 </head>
 <body>
 <%@ include file="./../common/header.jsp" %>
@@ -207,6 +207,6 @@
 <%@ include file="./../common/footer.jsp" %>
 <script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
 <script src="<%=ctx%>/static/src/lib/jquery.page/jquery.page.js"></script>
-<script src="<%=ctx%>/static/src/js/results-analysis/school-results-analysis.js"></script>
+<script src="<%=ctx%>/static/src/js/results-analysis/school-results-analysis.js?v=20170309"></script>
 </body>
 </html>
