@@ -709,8 +709,6 @@ CourseTable.prototype = {
                 that.exchange(obj,that.posX, that.posY, selectedV, that.tarPosX, that.tarPosY);
                 var originalTxt = $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html();
                 var newsTxt = $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').find('.course-table-name').html();
-                console.log(originalTxt)
-                console.log(newsTxt)
                 if(newsTxt==undefined){
                     newsTxt="";
                 }
@@ -902,7 +900,7 @@ CourseTable.prototype = {
     }
 };
 
-new CourseTable();
+var CourseTableIns = new CourseTable();
 
 // 班级
 $(document).on('click', '#export-class-table', function () {
@@ -920,3 +918,11 @@ $(document).on('click', '#export-student-table', function () {
 $(document).on('click', '#export-room-table', function () {
     window.location.href = '/scheduleTask/room/course/export.do?taskId=' + taskId;
 });
+
+// 拉取所有课表
+$("#role-scheduling-tab li").eq(0).click(function () {
+    CourseTableIns.getAllQueryCourse();
+});
+if (window.location.hash == '#all') {
+    CourseTableIns.getAllQueryCourse();
+}
