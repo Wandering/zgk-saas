@@ -1415,7 +1415,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 String couId = "";
                 int i = 0;
                 for (CourseManageVo courseManageVo : courseManageVos) {
-                    if (courseManageVo.getCourseType().equals("0")) {
+                    if (courseManageVo.getCourseType().equals("4")) {
                         i++;
                         couId += courseManageVo.getCourseId() + FileOperation.CHAR_SPLIT;
                     }
