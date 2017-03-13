@@ -258,13 +258,13 @@ public class ScheduleTaskController {
     @RequestMapping("/reload/trigger")
     public boolean reloadTrigger(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
 
-        String path = iexJwScheduleTaskService.getScheduleTaskPath(taskId, tnId);
+        String rePath = iexJwScheduleTaskService.getScheduleTaskPath(taskId, tnId);
 
 //        String type= iexJwScheduleTaskService.getClsssTypeTagByTaskId(taskId, tnId);
 
 //        String path = FileOperation.getParamsPath(tnId, taskId,type);
 
-        File file = new File(path);
+        File file = new File(rePath);
 
         if(file.exists())
              FileOperation.removeAllFile(file);
@@ -272,6 +272,8 @@ public class ScheduleTaskController {
         boolean initBool = iexJwScheduleTaskService.initParmasFile(taskId, tnId);
 
         if (initBool) {
+            String type= iexJwScheduleTaskService.getClsssTypeTagByTaskId(taskId, tnId);
+            String path = FileOperation.getParamsPath(tnId, taskId,type);
             JwScheduleTask jwScheduleTask = new JwScheduleTask();
             jwScheduleTask.setId(taskId);
             jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
