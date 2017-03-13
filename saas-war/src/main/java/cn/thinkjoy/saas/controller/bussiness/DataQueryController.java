@@ -325,7 +325,7 @@ public class DataQueryController {
     @RequestMapping(value = "getCategoryMajoredList",method = RequestMethod.GET)
     @ResponseBody
     public Object getCategoryMajoredList(@RequestParam(value = "categoryId",required = true)long categoryId){
-        return iMajoredApi.getCategoryMajoredList(categoryId);
+        return iMajoredApi.getCategoryMajoredList(categoryId+"");
     }
 
     /**
@@ -393,7 +393,7 @@ public class DataQueryController {
     @RequestMapping(value = "/getJobOrientation",method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> getJobOrientation(@RequestParam(value = "majoredId",required = true)int majoredId){
-        return iMajoredApi.getJobOrientation(majoredId);
+        return iMajoredApi.getJobOrientation(majoredId+"");
     }
 
     @ApiDesc(value = "获取职业分类", owner = "杨永平")

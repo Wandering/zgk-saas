@@ -32,7 +32,7 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="/index">首页</a>
+                        首页
                     </li>
                     <li>排选课</li>
                     <li class="active">选课结果</li>
@@ -58,7 +58,7 @@
                         <%--选课概况--%>
                         <div class="result-box" id="choose-task-about"></div>
                         <script id="choose-task-about-tpl" type="text/x-handlebars-template">
-                            <h3 class="title"><span class="line"></span>选课任务名称</h3>
+                            <h3 class="title"><span class="line"></span>{{name}}</h3>
                             <p>{{name}}选课已结束，结果如下：</p>
                             <p class="sub-title">选课概况</p>
                             <p>选课开始时间：{{formatTime startTime}}</p>

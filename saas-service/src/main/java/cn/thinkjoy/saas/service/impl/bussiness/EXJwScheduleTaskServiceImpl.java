@@ -1130,30 +1130,35 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
         return courseId;
     }
 
-    private Integer getClassId(Integer tnId,String className,String grade,String type) {
+    public  Integer getClassId(Integer tnId,String className,String grade,String type) {
 
         Integer classId = 0;
 
         String tableName = ParamsUtils.combinationTableName("class_"+type, tnId);
 
 
-        Map map = new HashMap();
-        map.put("tableName", tableName);
-        map.put("searchKey", "class_name");
-        map.put("searchValue", className);
+        List<Map<String,Object>> params = new ArrayList<>();
 
-        List<LinkedHashMap<String, Object>> linkedHashMaps = iexTeantCustomDAO.getTenantCustom(map);
+        Map<String,Object> param = new HashMap<>();
+        param.put("key","class_name");
+        param.put("op","=");
+        param.put("value",className);
+        params.add(param);
 
-        for (int j = 0; j < linkedHashMaps.size(); j++) {
-            LinkedHashMap<String, Object> dataLinkedMap = linkedHashMaps.get(j);
+        Map<String,Object> param1 = new HashMap<>();
+        param1.put("key","class_grade");
+        param1.put("op","=");
+        param1.put("value",grade);
+        params.add(param1);
+
+        List<LinkedHashMap<String, Object>> tenantCustoms = iexTeantCustomDAO.likeTableByParams(tableName,params);
+
+        for (int j = 0; j < tenantCustoms.size(); j++) {
+            LinkedHashMap<String, Object> dataLinkedMap = tenantCustoms.get(j);
             for (Iterator iter = dataLinkedMap.entrySet().iterator(); iter.hasNext(); ) {
                 Map.Entry element = (Map.Entry) iter.next();
                 Object strKey = element.getKey();
                 Object strObj = element.getValue();
-                if (strKey.equals("class_grade")) {
-                    if (!grade.equals(strObj))
-                        break;
-                }
                 if (strKey.equals("id")) {
                     classId = Integer.valueOf(strObj.toString());
                     break;
@@ -1415,7 +1420,7 @@ public class EXJwScheduleTaskServiceImpl implements IEXJwScheduleTaskService {
                 String couId = "";
                 int i = 0;
                 for (CourseManageVo courseManageVo : courseManageVos) {
-                    if (courseManageVo.getCourseType().equals("0")) {
+                    if (courseManageVo.getCourseType().equals("4")) {
                         i++;
                         couId += courseManageVo.getCourseId() + FileOperation.CHAR_SPLIT;
                     }

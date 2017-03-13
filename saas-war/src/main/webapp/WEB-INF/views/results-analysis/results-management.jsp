@@ -32,7 +32,7 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="#">首页</a>
+                        首页
                     </li>
                     <li class="active">学生成绩管理</li>
                 </ul><!-- .breadcrumb -->

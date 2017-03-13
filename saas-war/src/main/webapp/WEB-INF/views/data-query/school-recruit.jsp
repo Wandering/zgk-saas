@@ -32,7 +32,7 @@
                 <ul class="breadcrumb">
                     <ul class="breadcrumb">
                         <li>
-                            <a href="/index.html">首页</a>
+                            首页
                         </li>
                         <li>
                             <a href="/school-admission">数据查询</a>

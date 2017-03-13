@@ -194,6 +194,7 @@
         ${table}
         WHERE
         student_grade LIKE CONCAT('%',#{grade},'%')
+        and student_check_major1 is not null
         GROUP BY
         student_check_major1,student_check_major2,student_check_major3
     </select>

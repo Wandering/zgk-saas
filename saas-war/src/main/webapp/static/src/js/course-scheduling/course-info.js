@@ -79,7 +79,7 @@ CourseInfo.prototype = {
                         return parseInt(index) + 1;
                     });
                     Handlebars.registerHelper("times", function (v) {
-                        if (v=="1" || !v) {
+                        if (!v) {
                             return "-";
                         } else {
                             return (v + "节/周");
