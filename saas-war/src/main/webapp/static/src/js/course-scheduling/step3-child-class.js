@@ -512,8 +512,8 @@ CourseTable.prototype = {
                 // 2：教学班走读 ，2以外：行政
                 if(res.bizData!='2'){
                     $('.student-tab,.room-tab').addClass('dh');
-                    that.courseTableEvent('class');
-                    that.courseTableEvent('teacher');
+                    //that.courseTableEvent('class');
+                    //that.courseTableEvent('teacher');
                     $('.class-tab').removeClass('dh');
                     $('.loading-date').text('3-10');
                 }else{
@@ -686,42 +686,42 @@ CourseTable.prototype = {
         });
     },
     // 遍历坐标
-    courseTableEvent:function(obj){
-        var that = this;
-        $('body').on('click', '.'+ obj +'CourseTable', function () {
-            if ($(this).attr('flag') == undefined && $(this).text()!="") {
-                that.posX = $(this).attr('x');
-                that.posY = $(this).attr('y');
-                var selectedV = $('#select-'+obj).children('option:selected').val();
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style');
-                $(this).attr('flag', true).css('color','#c00').append('<span class="wait-course">待调课</span>');
-                that.queryStatusByCoord(obj,that.posX, that.posY, selectedV);
-                if(obj=='teacher'){
-                    that.queryClassByCoord(obj,that.posX, that.posY, selectedV);
-                }
-            } else if ($(this).attr('flag') == 'false' && $(this).attr('style') != undefined) {
-                that.tarPosX = $(this).attr('x');
-                that.tarPosY = $(this).attr('y');
-                var selectedV = $('#select-'+obj).children('option:selected').val();
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').find('.course-table-name').html('');
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
-                that.exchange(obj,that.posX, that.posY, selectedV, that.tarPosX, that.tarPosY);
-                var originalTxt = $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html();
-                var newsTxt = $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').find('.course-table-name').html();
-                if(newsTxt==undefined){
-                    newsTxt="";
-                }
-                $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.wait-course').remove();
-                $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html(newsTxt);
-                $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').html('<span class="course-table-name">'+originalTxt+'</span>');
-            }else if ($(this).attr('flag')=='true'){
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').html('');
-                $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
-                $(this).attr('flag')=='false';
-                $(this).find('.wait-course').remove();
-            }
-        });
-    },
+    //courseTableEvent:function(obj){
+    //    var that = this;
+    //    $('body').on('click', '.'+ obj +'CourseTable', function () {
+    //        if ($(this).attr('flag') == undefined && $(this).text()!="") {
+    //            that.posX = $(this).attr('x');
+    //            that.posY = $(this).attr('y');
+    //            var selectedV = $('#select-'+obj).children('option:selected').val();
+    //            $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style');
+    //            $(this).attr('flag', true).css('color','#c00').append('<span class="wait-course">待调课</span>');
+    //            that.queryStatusByCoord(obj,that.posX, that.posY, selectedV);
+    //            if(obj=='teacher'){
+    //                that.queryClassByCoord(obj,that.posX, that.posY, selectedV);
+    //            }
+    //        } else if ($(this).attr('flag') == 'false' && $(this).attr('style') != undefined) {
+    //            that.tarPosX = $(this).attr('x');
+    //            that.tarPosY = $(this).attr('y');
+    //            var selectedV = $('#select-'+obj).children('option:selected').val();
+    //            $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').find('.course-table-name').html('');
+    //            $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
+    //            that.exchange(obj,that.posX, that.posY, selectedV, that.tarPosX, that.tarPosY);
+    //            var originalTxt = $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html();
+    //            var newsTxt = $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').find('.course-table-name').html();
+    //            if(newsTxt==undefined){
+    //                newsTxt="";
+    //            }
+    //            $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.wait-course').remove();
+    //            $('.'+ obj +'CourseTable[x="'+ that.posX +'"][y="'+ that.posY +'"]').find('.course-table-name').html(newsTxt);
+    //            $('.'+ obj +'CourseTable[x="'+ that.tarPosX +'"][y="'+ that.tarPosY +'"]').html('<span class="course-table-name">'+originalTxt+'</span>');
+    //        }else if ($(this).attr('flag')=='true'){
+    //            $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable[flag-txt="true"]').html('');
+    //            $('#'+ obj +'-tbody-list').find('.'+ obj +'CourseTable').attr('flag', false).removeAttr('style').removeAttr('flag').removeAttr('flag-txt');
+    //            $(this).attr('flag')=='false';
+    //            $(this).find('.wait-course').remove();
+    //        }
+    //    });
+    //},
     // 行政班调课 根据状态获取可调颜色类型
     colorScheduleResult: function (type) {
         var that = this;
