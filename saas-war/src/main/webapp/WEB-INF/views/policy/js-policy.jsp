@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <title>教务首页</title>
         <%@ include file="../common/meta.jsp"%>
-        <link rel="stylesheet" href="<%=ctx%>/static/src/css/school-reform/policy-interpret.css" />
+        <link rel="stylesheet" href="<%=ctx%>/static/src/css/school-reform/policy-interpret.css?v=20170309" />
     </head>
     <body>
         <%@ include file="../common/header.jsp"%>
@@ -25,7 +25,7 @@
                         </script>
                         <ul class="breadcrumb">
                             <li>
-                                <a href="#">首页</a>
+                                首页
                             </li>
                         </ul>
                     </div>
@@ -97,6 +97,6 @@
             </div>
         </div>
         <%@ include file="../common/footer.jsp"%>
-        <script src="<%=ctx%>/static/src/js/school-reform/policy-interpret.js"></script>
+        <script src="<%=ctx%>/static/src/js/school-reform/policy-interpret.js?v=20170309"></script>
     </body>
 </html>

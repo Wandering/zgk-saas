@@ -478,7 +478,7 @@ $(function () {
             uploadDataHtml.push('<div class="upload-box">');
             uploadDataHtml.push('<span id="uploader-demo">');
             uploadDataHtml.push('<span id="fileList" style="display: none;" class="uploader-list"></span>');
-            uploadDataHtml.push('<button class="btn btn-info btn-import" id="btn-import">导入教师数据Excel</button>');
+            uploadDataHtml.push('<div class="btn btn-info btn-import" id="btn-import">导入教师数据Excel</div>');
             uploadDataHtml.push('</span>');
             uploadDataHtml.push('<a href="javascript: void(0);" id="downloadBtn" class="download-link">请先导出Excel模板，进行填写</a>');
             uploadDataHtml.push('<button class="btn btn-cancel cancel-btn" id="cancel-download-btn">取消</button>');

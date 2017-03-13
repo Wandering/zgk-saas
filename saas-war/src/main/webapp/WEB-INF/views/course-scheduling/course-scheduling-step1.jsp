@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>教学时间</title>
     <%@ include file="./../common/meta.jsp"%>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step1.css" />
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step1.css?v=20170309" />
 </head>
 <body>
 <%@ include file="./../common/header.jsp"%>
@@ -25,7 +25,7 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="#">首页</a>
+                        首页
                     </li>
                     <li>排选课</li>
                     <li class="active">排课任务</li>
@@ -59,6 +59,10 @@
                             </li>
                             <li>
                                 <a href="/teacher-info">教师信息</a>
+                            </li>
+
+                            <li>
+                                <a href="/class-info">教室信息</a>
                             </li>
                         </ul>
                         <div class="base-content">
@@ -135,6 +139,6 @@
     </div>
 </div>
 <%@ include file="./../common/footer.jsp"%>
-<script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling-step1.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/course-scheduling-step1.js?v=20170309"></script>
 </body>
 </html>

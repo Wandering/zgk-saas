@@ -84,7 +84,7 @@ public class ConvertUtil {
             case "星期六":
                 w = 6;
                 break;
-            case "星期天":
+            case "星期日":
                 w = 7;
                 break;
         }

@@ -16,8 +16,8 @@
         </select>
     </div>
     <div class="scheduling-info">
-        <div class="fl"><span class="student-label"></span><span class="classes-label"></span></div>
-        <button class="fr btn btn-warning output-tpl" id="output-tpl"><i class="icon-output-down"></i>导出学生课程表</button>
+        <div class="fl"><span class="classes-label"></span><span class="student-label"></span></div>
+        <button class="fr btn btn-warning output-tpl" id="export-student-table">导出学生课程表</button>
     </div>
     <table class="table">
         <thead id="student-thead-list">

@@ -1,5 +1,7 @@
 package cn.thinkjoy.saas.controller.bussiness.scheduleRule;
 
+import cn.thinkjoy.saas.dao.bussiness.ICourseManageDAO;
+import cn.thinkjoy.saas.domain.bussiness.CourseManage;
 import cn.thinkjoy.saas.dto.MergeClassInfoDto;
 import cn.thinkjoy.saas.enums.ClassTypeEnum;
 import cn.thinkjoy.saas.service.bussiness.IEXScheduleBaseInfoService;
@@ -28,6 +30,9 @@ public class MergeClassController {
 
     @Autowired
     private IEXScheduleBaseInfoService exScheduleBaseInfoService;
+
+    @Autowired
+    private ICourseManageDAO iCourseManageDAO;
 
     @RequestMapping("addMergeInfo")
     @ResponseBody
@@ -58,7 +63,7 @@ public class MergeClassController {
                                            @RequestParam("taskId")String taskId,
                                            @RequestParam("grade")String grade){
         Map<String,Object> resultMap=new HashMap<>();
-        resultMap.put("mergeClassInfoList",iMergeClass.selectMergeInfo(tnId,null,taskId));
+        resultMap.put("mergeClassInfoList",iMergeClass.selectMergeInfo(tnId,null,null,taskId));
         return resultMap;
     }
 
@@ -79,14 +84,32 @@ public class MergeClassController {
                                  @RequestParam("courseId") String courseId,
                                  @RequestParam("courseName") String courseName,
                                  @RequestParam("grade") String grade){
+        Map<String,Object> resultMap = new HashMap<>();
+        //根据tnId,courseId,gradeId查找classType
+        Map<String,Object> condition=new HashMap<>();
+        condition.put("tnId",tnId);
+        condition.put("courseBaseId",courseId);
+        condition.put("gradeId",grade);
+        CourseManage courseManage=iCourseManageDAO.queryOne(condition, null, null);
+        if (courseManage==null){
+            resultMap.put("msg","saas_course_manage中没有找到课程类型");
+            return resultMap;
+        }
+        String classType=courseManage.getCourseType();
+
+        if (classType.equals("4")){
+            classType="1";
+        } else if (classType.equals("5")){
+            classType="0";
+        }
 
         List<Map<String,Object>> maps = exScheduleBaseInfoService.getClassBaseDtosByCourse(
                 Integer.valueOf(tnId),
                 Integer.valueOf(grade),
-                courseName
+                courseName,classType
         );
 
-        List<MergeClassInfoDto> mergeClassInfoDtoList = iMergeClass.selectMergeInfo(tnId,courseId,taskId);
+        List<MergeClassInfoDto> mergeClassInfoDtoList = iMergeClass.selectMergeInfo(tnId,courseId,classType,taskId);
         for (Map map : maps){
             map.put("isMerge","0");
             for (MergeClassInfoDto mergeClassInfoDto:mergeClassInfoDtoList){
@@ -105,7 +128,6 @@ public class MergeClassController {
             }
         }
 
-        Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("classBaseDtoList",maps);
         return resultMap;
     }

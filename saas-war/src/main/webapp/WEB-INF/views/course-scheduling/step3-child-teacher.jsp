@@ -9,15 +9,23 @@
 <%--教师课表--%>
 <div id="step3-child-teacher" class="role-scheduling-content">
     <div class="select-condition">
+
         <select id="select-queryCourse">
             <option value="">请选择科目</option>
         </select>
         <select id="select-teacher">
         </select>
+        <span class="teacher-name"><span class="teacher-label"></span><span class="course-label"></span></span>
     </div>
     <div class="scheduling-info">
-        <div class="fl teacher-name"><span class="teacher-label"></span><span class="course-label"></span></div>
-        <button class="fr btn btn-warning output-tpl2" id="output-tpl"><i class="icon-output-down"></i>导出所有教师课程表</button>
+        <%--<div class="fl colors-box">--%>
+            <%--<p class="colors-info">调课说明：<span class="color1"></span>可调空闲区域&nbsp;&nbsp;&nbsp;&nbsp;<span class="color2"></span>与预设规则冲突&nbsp;&nbsp;&nbsp;&nbsp;<span class="color3"></span>该区域已经设置不排课&nbsp;&nbsp;&nbsp;&nbsp;</p>--%>
+            <%--<p class="colors-tips">温馨提示:</p>--%>
+            <%--<p class="colors-tips"><span class="color1"></span><span class="color2"></span><span class="color3"></span></span>三种颜色下都可以调整课表，白色区域不可以调整课表区域。</p>--%>
+            <%--<p class="colors-tips"><span class="color2"></span>三种颜色下都可以调整课表，白色区域不可以调整课表区域。</p>--%>
+            <%--<p class="colors-tips"><span class="color3"></span>与预设的不排课规则冲突，包括年级不排课、班级不排课、课程不排课、老师不排课</p>--%>
+        <%--</div>--%>
+        <button class="fr btn btn-warning output-tpl" id="export-teacher-table">导出所有教师课程表</button>
     </div>
     <table class="table">
         <thead id="teacher-thead-list">

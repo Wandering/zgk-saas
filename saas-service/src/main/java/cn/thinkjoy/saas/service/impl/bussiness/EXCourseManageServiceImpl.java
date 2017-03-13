@@ -1,10 +1,15 @@
 package cn.thinkjoy.saas.service.impl.bussiness;
 
+import cn.thinkjoy.saas.dao.ISelectCourseTaskDAO;
 import cn.thinkjoy.saas.dao.bussiness.ICourseManageDAO;
 import cn.thinkjoy.saas.dao.bussiness.IEXCourseManageDAO;
+import cn.thinkjoy.saas.domain.SelectCourseTask;
 import cn.thinkjoy.saas.domain.bussiness.CourseManage;
+import cn.thinkjoy.saas.dto.BaseDto;
 import cn.thinkjoy.saas.dto.CourseManageDto;
+import cn.thinkjoy.saas.dto.SelectCourseBaseDto;
 import cn.thinkjoy.saas.service.bussiness.IEXCourseManageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -63,4 +68,5 @@ public class EXCourseManageServiceImpl implements IEXCourseManageService {
         params.put("courseBaseName",subject);
         return iexCourseManageDAO.getCourseByParams(params);
     }
+
 }

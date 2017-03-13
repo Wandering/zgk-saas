@@ -605,15 +605,15 @@ var CRUDStd = {
         //选考科目所在班级动态获取
         $(document).on('change', '#student_check_major1', function () {
             var classCourse = CRUDStd.GetClassByCourse($(this).val());
-            $('#student_check_major_class1').append(classCourse);
+            $('#student_check_major_class1').html(classCourse);
         })
         $(document).on('change', '#student_check_major2', function () {
             var classCourse = CRUDStd.GetClassByCourse($(this).val());
-            $('#student_check_major_class2').append(classCourse);
+            $('#student_check_major_class2').html(classCourse);
         })
         $(document).on('change', '#student_check_major3', function () {
             var classCourse = CRUDStd.GetClassByCourse($(this).val());
-            $('#student_check_major_class3').append(classCourse);
+            $('#student_check_major_class3').html(classCourse);
         })
 
 
@@ -937,8 +937,8 @@ var TplHandler = {
             tpl.push('<div class="upload-box">');
             tpl.push('<span id="uploader-demo">');
             tpl.push('<span id="fileList" class="uploader-list dh"></span>');
-            tpl.push('<button class="btn btn-info btn-import" id="xz-btn-import">'+toggleText+'</button>');
-            tpl.push('<button class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">导入有教学班年级学生数据Excel</button>');
+            tpl.push('<div class="btn btn-info btn-import" id="xz-btn-import">'+toggleText+'</div>');
+            tpl.push('<div class="btn btn-info btn-import' + " " + hideOrShow + '" id="jx-btn-import">导入有教学班年级学生数据Excel</div>');
             tpl.push('</span>');
             tpl.push('<a href="javascript: void(0);" id="student-template-download" class="download-link">请先导出Excel模板，进行填写</a>');
             tpl.push('<button class="btn btn-cancel cancel-btn" id="cancel-download-btn">取消</button>');

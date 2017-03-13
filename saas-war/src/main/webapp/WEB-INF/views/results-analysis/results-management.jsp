@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 学生成绩管理</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/results-analysis.css">
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/results-analysis.css?v=20170309">
 </head>
 <body>
 <%@ include file="./../common/header.jsp" %>
@@ -32,7 +32,7 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="#">首页</a>
+                        首页
                     </li>
                     <li class="active">学生成绩管理</li>
                 </ul><!-- .breadcrumb -->
@@ -259,6 +259,12 @@
     {{/each}}
 </script>
 
+
+
+
+
+
+
 <%@ include file="./../common/footer.jsp" %>
 <script src="<%=ctx%>/static/src/lib/echarts/echarts.js"></script>
 <link rel="stylesheet" href="<%=ctx%>/static/src/lib/assets/css/datepicker.css">
@@ -269,6 +275,6 @@
     var BASE_URL = '<%=ctx%>/static/src/lib/';
     var rootPath = '<%=ctx%>';
 </script>
-<script src="<%=ctx%>/static/src/js/results-analysis/results-management.js"></script>
+<script src="<%=ctx%>/static/src/js/results-analysis/results-management.js?v=20170309"></script>
 </body>
 </html>

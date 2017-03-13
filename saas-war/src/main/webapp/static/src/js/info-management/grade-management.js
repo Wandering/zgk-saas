@@ -31,7 +31,7 @@ GradeManagement.prototype = {
         if (data1.rtnCode == "0000000") {
             var gradeArr = [], yearsTpl = [], gradeTypeDict =[];
             yearsTpl.push('<select><option value="00">请选择入学年份</option>')
-            for (var i = (new Date()).getFullYear(); i > (new Date()).getFullYear() - 4; i--) {
+            for (var i = (new Date()).getFullYear(); i > (new Date()).getFullYear() - 5; i--) {
                 yearsTpl.push('<option value="' + i + '">' + i + '年</option>');
             }
             yearsTpl.push('</select>');

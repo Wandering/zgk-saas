@@ -28,7 +28,7 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="#">首页</a>
+                        首页
                     </li>
                     <li class="active">控制台</li>
                 </ul><!-- .breadcrumb -->
@@ -104,6 +104,6 @@
     </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp"%>
-<script src="<%=ctx%>/static/src/js/base-info/grade-management.js"></script>
+<script src="<%=ctx%>/static/src/js/base-info/grade-management.js?v=20170309"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 学生管理</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/student-management/student-management.css">
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/student-management/student-management.css?v=20170309">
 </head>
 <body>
 <%@ include file="./../common/header.jsp" %>
@@ -31,7 +31,7 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="/index.html">首页</a>
+                        首页
                     </li>
                     <li>
                         <a href="/student-management">基础信息管理</a>
@@ -211,6 +211,6 @@
     var rootPath = '<%=ctx%>';
 </script>
 <script src="<%=ctx%>/static/src/lib/assets/js/jquery-ui-1.12.1.js"></script>
-<script src="<%=ctx%>/static/src/js/info-management/student-management.js"></script>
+<script src="<%=ctx%>/static/src/js/info-management/student-management.js?v=20170309"></script>
 </body>
 </html>

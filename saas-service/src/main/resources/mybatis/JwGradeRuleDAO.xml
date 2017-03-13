@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IJwGradeRuleDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+    <sql id="Base_Column_List">
+        id,
+        mon,
+        tues,
+        wed,
+        thur,
+        fri,
+        sut,
+        sun,
+        gradeId,
+        taskId,
+        createDate
+    </sql>
+    <insert id="insert" parameterType="JwGradeRule">
+        INSERT INTO saas_jw_grade_rule (
+        mon,
+        tues,
+        wed,
+        thur,
+        fri,
+        sut,
+        sun,
+        gradeId,
+        taskId,
+        createDate
+        ) VALUES (
+        #{mon},
+        #{tues},
+        #{wed},
+        #{thur},
+        #{fri},
+        #{sut},
+        #{sun},
+        #{gradeId},
+        #{taskId},
+        #{createDate}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="JwGradeRule">
+        UPDATE saas_jw_grade_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mon!=null">
+                mon = #{mon},
+            </if>
+            <if test="tues!=null">
+                tues = #{tues},
+            </if>
+            <if test="wed!=null">
+                wed = #{wed},
+            </if>
+            <if test="thur!=null">
+                thur = #{thur},
+            </if>
+            <if test="fri!=null">
+                fri = #{fri},
+            </if>
+            <if test="sut!=null">
+                sut = #{sut},
+            </if>
+            <if test="sun!=null">
+                sun = #{sun},
+            </if>
+            <if test="gradeId!=null">
+                gradeId = #{gradeId},
+            </if>
+            <if test="taskId!=null">
+                taskId = #{taskId},
+            </if>
+            <if test="createDate!=null">
+                createDate = #{createDate},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_jw_grade_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.mon!=null">
+                mon = #{map.mon},
+            </if>
+            <if test="map.tues!=null">
+                tues = #{map.tues},
+            </if>
+            <if test="map.wed!=null">
+                wed = #{map.wed},
+            </if>
+            <if test="map.thur!=null">
+                thur = #{map.thur},
+            </if>
+            <if test="map.fri!=null">
+                fri = #{map.fri},
+            </if>
+            <if test="map.sut!=null">
+                sut = #{map.sut},
+            </if>
+            <if test="map.sun!=null">
+                sun = #{map.sun},
+            </if>
+            <if test="map.gradeId!=null">
+                gradeId = #{map.gradeId},
+            </if>
+            <if test="map.taskId!=null">
+                taskId = #{map.taskId},
+            </if>
+            <if test="map.createDate!=null">
+                createDate = #{map.createDate},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_jw_grade_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.mon!=null">
+                mon = #{update.mon},
+            </if>
+            <if test="update.tues!=null">
+                tues = #{update.tues},
+            </if>
+            <if test="update.wed!=null">
+                wed = #{update.wed},
+            </if>
+            <if test="update.thur!=null">
+                thur = #{update.thur},
+            </if>
+            <if test="update.fri!=null">
+                fri = #{update.fri},
+            </if>
+            <if test="update.sut!=null">
+                sut = #{update.sut},
+            </if>
+            <if test="update.sun!=null">
+                sun = #{update.sun},
+            </if>
+            <if test="update.gradeId!=null">
+                gradeId = #{update.gradeId},
+            </if>
+            <if test="update.taskId!=null">
+                taskId = #{update.taskId},
+            </if>
+            <if test="update.createDate!=null">
+                createDate = #{update.createDate},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.mon!=null">
+                AND mon = #{condition.mon}
+            </if>
+            <if test="condition.tues!=null">
+                AND tues = #{condition.tues}
+            </if>
+            <if test="condition.wed!=null">
+                AND wed = #{condition.wed}
+            </if>
+            <if test="condition.thur!=null">
+                AND thur = #{condition.thur}
+            </if>
+            <if test="condition.fri!=null">
+                AND fri = #{condition.fri}
+            </if>
+            <if test="condition.sut!=null">
+                AND sut = #{condition.sut}
+            </if>
+            <if test="condition.sun!=null">
+                AND sun = #{condition.sun}
+            </if>
+            <if test="condition.gradeId!=null">
+                AND gradeId = #{condition.gradeId}
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId = #{condition.taskId}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_jw_grade_rule (
+                mon,
+                tues,
+                wed,
+                thur,
+                fri,
+                sut,
+                sun,
+                gradeId,
+                taskId,
+                createDate
+        ) VALUES (
+                    #{map.mon},
+                    #{map.tues},
+                    #{map.wed},
+                    #{map.thur},
+                    #{map.fri},
+                    #{map.sut},
+                    #{map.sun},
+                    #{map.gradeId},
+                    #{map.taskId},
+                    #{map.createDate}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="JwGradeRule">
+        UPDATE saas_jw_grade_rule
+        <trim prefix="SET" suffixOverrides=",">
+            mon = #{mon},
+            tues = #{tues},
+            wed = #{wed},
+            thur = #{thur},
+            fri = #{fri},
+            sut = #{sut},
+            sun = #{sun},
+            gradeId = #{gradeId},
+            taskId = #{taskId},
+            createDate = #{createDate},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_jw_grade_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_jw_grade_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="mon!=null">
+                AND mon = #{mon}
+            </if>
+            <if test="tues!=null">
+                AND tues = #{tues}
+            </if>
+            <if test="wed!=null">
+                AND wed = #{wed}
+            </if>
+            <if test="thur!=null">
+                AND thur = #{thur}
+            </if>
+            <if test="fri!=null">
+                AND fri = #{fri}
+            </if>
+            <if test="sut!=null">
+                AND sut = #{sut}
+            </if>
+            <if test="sun!=null">
+                AND sun = #{sun}
+            </if>
+            <if test="gradeId!=null">
+                AND gradeId = #{gradeId}
+            </if>
+            <if test="taskId!=null">
+                AND taskId = #{taskId}
+            </if>
+            <if test="createDate!=null">
+                AND createDate = #{createDate}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_jw_grade_rule WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="JwGradeRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_grade_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="JwGradeRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_grade_rule WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="JwGradeRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_grade_rule WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="JwGradeRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_grade_rule
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="JwGradeRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_grade_rule
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.mon!=null">
+                ${condition.groupOp}   mon  ${condition.mon.op}  #{condition.mon.data}
+            </if>
+            <if test="condition.tues!=null">
+                ${condition.groupOp}   tues  ${condition.tues.op}  #{condition.tues.data}
+            </if>
+            <if test="condition.wed!=null">
+                ${condition.groupOp}   wed  ${condition.wed.op}  #{condition.wed.data}
+            </if>
+            <if test="condition.thur!=null">
+                ${condition.groupOp}   thur  ${condition.thur.op}  #{condition.thur.data}
+            </if>
+            <if test="condition.fri!=null">
+                ${condition.groupOp}   fri  ${condition.fri.op}  #{condition.fri.data}
+            </if>
+            <if test="condition.sut!=null">
+                ${condition.groupOp}   sut  ${condition.sut.op}  #{condition.sut.data}
+            </if>
+            <if test="condition.sun!=null">
+                ${condition.groupOp}   sun  ${condition.sun.op}  #{condition.sun.data}
+            </if>
+            <if test="condition.gradeId!=null">
+                ${condition.groupOp}   gradeId  ${condition.gradeId.op}  #{condition.gradeId.data}
+            </if>
+            <if test="condition.taskId!=null">
+                ${condition.groupOp}   taskId  ${condition.taskId.op}  #{condition.taskId.data}
+            </if>
+            <if test="condition.createDate!=null">
+                ${condition.groupOp}   createDate  ${condition.createDate.op}  #{condition.createDate.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="JwGradeRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_grade_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id like CONCAT('%', #{id} , '%')
+            </if>
+            <if test="mon!=null">
+                AND mon like CONCAT('%', #{mon} , '%')
+            </if>
+            <if test="tues!=null">
+                AND tues like CONCAT('%', #{tues} , '%')
+            </if>
+            <if test="wed!=null">
+                AND wed like CONCAT('%', #{wed} , '%')
+            </if>
+            <if test="thur!=null">
+                AND thur like CONCAT('%', #{thur} , '%')
+            </if>
+            <if test="fri!=null">
+                AND fri like CONCAT('%', #{fri} , '%')
+            </if>
+            <if test="sut!=null">
+                AND sut like CONCAT('%', #{sut} , '%')
+            </if>
+            <if test="sun!=null">
+                AND sun like CONCAT('%', #{sun} , '%')
+            </if>
+            <if test="gradeId!=null">
+                AND gradeId like CONCAT('%', #{gradeId} , '%')
+            </if>
+            <if test="taskId!=null">
+                AND taskId like CONCAT('%', #{taskId} , '%')
+            </if>
+            <if test="createDate!=null">
+                AND createDate like CONCAT('%', #{createDate} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="JwGradeRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_grade_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.mon!=null">
+                AND mon = #{condition.mon}
+            </if>
+            <if test="condition.tues!=null">
+                AND tues = #{condition.tues}
+            </if>
+            <if test="condition.wed!=null">
+                AND wed = #{condition.wed}
+            </if>
+            <if test="condition.thur!=null">
+                AND thur = #{condition.thur}
+            </if>
+            <if test="condition.fri!=null">
+                AND fri = #{condition.fri}
+            </if>
+            <if test="condition.sut!=null">
+                AND sut = #{condition.sut}
+            </if>
+            <if test="condition.sun!=null">
+                AND sun = #{condition.sun}
+            </if>
+            <if test="condition.gradeId!=null">
+                AND gradeId = #{condition.gradeId}
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId = #{condition.taskId}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="JwGradeRule">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_jw_grade_rule
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.mon!=null">
+                AND mon = #{condition.mon}
+            </if>
+            <if test="condition.tues!=null">
+                AND tues = #{condition.tues}
+            </if>
+            <if test="condition.wed!=null">
+                AND wed = #{condition.wed}
+            </if>
+            <if test="condition.thur!=null">
+                AND thur = #{condition.thur}
+            </if>
+            <if test="condition.fri!=null">
+                AND fri = #{condition.fri}
+            </if>
+            <if test="condition.sut!=null">
+                AND sut = #{condition.sut}
+            </if>
+            <if test="condition.sun!=null">
+                AND sun = #{condition.sun}
+            </if>
+            <if test="condition.gradeId!=null">
+                AND gradeId = #{condition.gradeId}
+            </if>
+            <if test="condition.taskId!=null">
+                AND taskId = #{condition.taskId}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_jw_grade_rule
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="mon!=null">
+               ${groupOp} mon ${mon.op}  #{mon.data}
+           </if>
+           <if test="tues!=null">
+               ${groupOp} tues ${tues.op}  #{tues.data}
+           </if>
+           <if test="wed!=null">
+               ${groupOp} wed ${wed.op}  #{wed.data}
+           </if>
+           <if test="thur!=null">
+               ${groupOp} thur ${thur.op}  #{thur.data}
+           </if>
+           <if test="fri!=null">
+               ${groupOp} fri ${fri.op}  #{fri.data}
+           </if>
+           <if test="sut!=null">
+               ${groupOp} sut ${sut.op}  #{sut.data}
+           </if>
+           <if test="sun!=null">
+               ${groupOp} sun ${sun.op}  #{sun.data}
+           </if>
+           <if test="gradeId!=null">
+               ${groupOp} gradeId ${gradeId.op}  #{gradeId.data}
+           </if>
+           <if test="taskId!=null">
+               ${groupOp} taskId ${taskId.op}  #{taskId.data}
+           </if>
+           <if test="createDate!=null">
+               ${groupOp} createDate ${createDate.op}  #{createDate.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_jw_grade_rule
+    </select>
+
+</mapper>
+

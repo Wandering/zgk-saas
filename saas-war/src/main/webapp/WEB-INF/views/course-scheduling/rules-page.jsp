@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 自动排课</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step3.css"/>
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step3.css?v=20170309"/>
 </head>
 <body>
 <%@ include file="./../common/header.jsp" %>
@@ -31,7 +31,7 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="#">首页</a>
+                        首页
                     </li>
                     <li>排选课</li>
                     <li class="active">排课结果</li>

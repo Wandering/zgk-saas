@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>SAAS 排课规则设置</title>
     <%@ include file="./../common/meta.jsp"%>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step2.css" />
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step2.css?v=20170309" />
 </head>
 <body>
 <%@ include file="./../common/header.jsp"%>
@@ -25,7 +25,7 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="#">首页</a>
+                        首页
                     </li>
                     <li>排选课</li>
                     <li class="active">排课任务</li>
@@ -67,7 +67,8 @@
                         <div class="rule-content">
                             <div class="tips-procedure">
                                 <div class="procedure-item"><span class="order">1</span>选择课程</div>
-                                <div class="procedure-item"><span class="order">2</span>勾选班级</div>
+
+                                <div class="procedure-item"><span class="order">2</span>选择课程</div>
                                 <div class="procedure-item"><span class="order">3</span>合班</div>
                             </div>
                             <div class="choose-course">
@@ -80,7 +81,8 @@
                                 </script>
                             </div>
                             <div class="choose-class">
-                                <div class="title">勾选班级：</div>
+
+                                <div class="title">选择课程：</div>
                                 <ul class="choose-class-list" id="choose-class-list">
                                     <%--<li>--%>
                                         <%--<input type="checkbox" id="class1" />--%>
@@ -153,6 +155,6 @@
     </div>
 </div>
 <%@ include file="./../common/footer.jsp"%>
-<script src="<%=ctx%>/static/src/js/course-scheduling/class-mixed.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/class-mixed.js?v=20170309"></script>
 </body>
 </html>

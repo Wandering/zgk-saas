@@ -180,18 +180,21 @@
     .active {
       color: $mainColor;
       .icon-step3-class-yes,
+      .icon-step3-classes-yes,
       .icon-step3-std-yes,
       .icon-step3-teacher-yes,
       .icon-step3-all-yes {
         display: inline-block;
       }
       .icon-step3-class-no,
+      .icon-step3-classes-no,
       .icon-step3-std-no,
       .icon-step3-teacher-no,
       .icon-step3-all-no {
         display: none;
       }
     }
+
     li {
       cursor: pointer;
       float: left;
@@ -208,6 +211,7 @@
         margin-right: 5px;
       }
       .icon-step3-class-yes,
+      .icon-step3-classes-yes,
       .icon-step3-std-yes,
       .icon-step3-teacher-yes,
       .icon-step3-all-yes {
@@ -236,23 +240,30 @@
   .scheduling-info {
     margin-bottom: 10px;
     overflow: hidden;
-    height: 28px;
-    line-height: 28px;
+    position: relative;
+    top:0;
+    left:0;
+    min-height:30px;
     .scheduling-name {
       font-size: 14px;
       font-weight: bold;
     }
+
     #output-tpl {
       width: 165px;
       background: #B085B9 !important;
       border-color: #B085B9 !important;
       outline: none;
+      position: absolute;
+      bottom:0;
+      right:0;
     }
     .icon-output-down {
       display: inline-block !important;
     }
   }
 }
+
 p.tbody-item{
   border-bottom: 1px solid #ccc;
   margin: 0;
@@ -381,4 +392,44 @@ p.tbody-item{
 }
 
 
+.colors-box{
+  padding:20px 0 0;
+  .colors-info{
+    font-size:14px;
+    color: #4A4A4A;
+  }
+  .colors-tips{
+    color: #868686;
+    font-size:12px;
+  }
+}
+.color1,
+.color2,
+.color3{
+  width:14px;
+  height:14px;
+  display: inline-block;
+  border-radius: 2px;
+  vertical-align: middle;
+  position: relative;
+  top:-1px;
+  margin-right:8px;
+}
+.color1{
+  background: #CDE3FD;
+}
+.color2{
+  background: #FBE5BF;
+}
+.color3{
+  background: #FCCCCD;
+}
 
+
+.wait-course{
+  margin-left:10px;
+}
+
+.btn.output-tpl{
+  width:150px;
+}

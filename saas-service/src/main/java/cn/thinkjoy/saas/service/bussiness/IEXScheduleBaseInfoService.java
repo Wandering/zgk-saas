@@ -52,7 +52,7 @@ public interface IEXScheduleBaseInfoService {
      * @param course
      * @return
      */
-    List<Map<String,Object>> getClassBaseDtosByCourse(int tnId,int grade,String course);
+    List<Map<String,Object>> getClassBaseDtosByCourse(int tnId,int grade,String course,String classType);
 
     /**
      * 根据关键词搜索教师信息

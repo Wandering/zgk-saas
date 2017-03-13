@@ -31,6 +31,6 @@ window.jQuery || document.write("<script src='<%=ctx%>/static/src/lib/assets/js/
 <script src="<%=ctx%>/static/src/lib/assets/js/bootstrap.min.js"></script>
 <script src="<%=ctx%>/static/src/lib/assets/js/ace.min.js"></script>
 <script src="<%=ctx%>/static/src/lib/handlebars/handlebars-v4.0.5.js"></script>
-<script src="<%=ctx%>/static/src/js/common.js"></script>
+<script src="<%=ctx%>/static/src/js/common.js?v=20170309"></script>
 <script src="<%=ctx%>/static/src/lib/jquery.page/jquery.page.js"></script>
 

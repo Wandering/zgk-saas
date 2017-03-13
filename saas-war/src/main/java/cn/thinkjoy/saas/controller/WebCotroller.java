@@ -351,6 +351,14 @@ public class WebCotroller {
         return new ModelAndView("/course-scheduling/teacher-info");
     }
     /**
+     * teaching-time
+     * 排课任务--基本信息设置--教室信息
+     */
+    @RequestMapping("/class-info")
+    public ModelAndView classInfo() {
+        return new ModelAndView("/course-scheduling/class-info");
+    }
+    /**
      * course-scheduling-step2
      * 排课任务--排课第二步骤，排课规则
      */
@@ -389,6 +397,30 @@ public class WebCotroller {
     @RequestMapping("/course-scheduling-step3")
     public ModelAndView courseSchedulingStep3() {
         return new ModelAndView("/course-scheduling/course-scheduling-step3");
+    }
+    /**
+     * select-course
+     * 选课任务
+     */
+    @RequestMapping("/select-course")
+    public ModelAndView selectCourse() {
+        return new ModelAndView("/course-scheduling/select-course");
+    }
+    /**
+     * select-course-settings
+     * 选课任务设置
+     */
+    @RequestMapping("/select-course-settings")
+    public ModelAndView selectCourseSettings() {
+        return new ModelAndView("/course-scheduling/select-course-settings");
+    }
+    /**
+     * select-course-result
+     * 选课结果
+     */
+    @RequestMapping("/select-course-result")
+    public ModelAndView selectCourseResult() {
+        return new ModelAndView("/course-scheduling/select-course-result");
     }
 
     /**

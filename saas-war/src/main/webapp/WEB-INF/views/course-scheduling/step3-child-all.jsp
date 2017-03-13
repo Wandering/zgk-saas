@@ -10,19 +10,34 @@
 <div id="step3-child-all" class="mt15 role-scheduling-content">
     <div class="scheduling-info">
         <div class="fl">总课表</div>
-        <button class="fr btn btn-warning output-tpl" id="output-tpl"><i class="icon-output-down"></i>导出总课表</button>
+        <button class="fr btn btn-warning output-tpl" id="export-all-table">导出总课表</button>
     </div>
+
     <div class="all-time-date-container">
         <table class="table table-bordered" id="all-timetable">
 
         </table>
-        <table class="table table-bordered">
+        <table class="table table-bordered" id ="all-expert">
             <thead id="all-thead-list"></thead>
             <tbody id="all-tbody-list"></tbody>
         </table>
 
     </div>
-
+    <script>
+        $(function() {
+            $("#export-all-table").click(function(){
+                $("#all-expert").table2excel({
+                    exclude: ".noExl",
+                    name: "Excel Document Name",
+                    filename: "课表",
+                    exclude_img: true,
+                    exclude_links: true,
+                    exclude_inputs: true,
+                    fileext: ".xls"
+                });
+            });
+        });
+    </script>
     <%--<script type="text/x-handlebars-template" id="all-timetable-tpl">--%>
         <%--<thead>--%>
         <%--<tr>--%>

@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>SAAS 角色管理</title>
     <%@ include file="./../common/meta.jsp"%>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/role-management.css">
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/role-management.css?v=20170309">
 </head>
 <body>
 <%@ include file="./../common/header.jsp"%>
@@ -25,7 +25,7 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="#">首页</a>
+                        首页
                     </li>
                     <li>账号信息</li>
                     <li class="active">角色管理</li>
@@ -95,6 +95,6 @@
 <link rel="stylesheet" href="<%=ctx%>/static/src/lib/ztree/zTreeStyle.css">
 <script src="<%=ctx%>/static/src/lib/ztree/jquery.ztree.core.js"></script>
 <script src="<%=ctx%>/static/src/lib/ztree/jquery.ztree.excheck.js"></script>
-<script src="<%=ctx%>/static/src/js/account/role-management.js"></script>
+<script src="<%=ctx%>/static/src/js/account/role-management.js?v=20170309"></script>
 </body>
 </html>

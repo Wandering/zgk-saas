@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.saas.dao.IEnrollingRatioDAO">
+<!--
+insert
+update
+updateNull
+deleteById
+deleteByCondition
+deleteByProperty
+fetch
+findOne
+findList
+findAll
+queryPage
+like
+queryList
+queryOne
+count
+selectMaxId
+updateOrSave
+selectOne
+selectList
+-->
+    <sql id="Base_Column_List">
+        id,
+        tn_id as tnId,
+        stu_3_numbers as stu3numbers,
+        batch_1_enrolls as batch1enrolls,
+        batch_2_enrolls as batch2enrolls,
+        batch_3_enrolls as batch3enrolls,
+        batch_4_enrolls as batch4enrolls,
+        year as year,
+        ratio_order as ratioOrder,
+        create_date as createDate
+    </sql>
+    <insert id="insert" parameterType="EnrollingRatio">
+        INSERT INTO saas_enrolling_ratio (
+        tn_id,
+        stu_3_numbers,
+        batch_1_enrolls,
+        batch_2_enrolls,
+        batch_3_enrolls,
+        batch_4_enrolls,
+        year,
+        ratio_order,
+        create_date
+        ) VALUES (
+        #{tnId},
+        #{stu3numbers},
+        #{batch1enrolls},
+        #{batch2enrolls},
+        #{batch3enrolls},
+        #{batch4enrolls},
+        #{year},
+        #{ratioOrder},
+        #{createDate}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="EnrollingRatio">
+        UPDATE saas_enrolling_ratio
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tnId!=null">
+                tn_id = #{tnId},
+            </if>
+            <if test="stu3numbers!=null">
+                stu_3_numbers = #{stu3numbers},
+            </if>
+            <if test="batch1enrolls!=null">
+                batch_1_enrolls = #{batch1enrolls},
+            </if>
+            <if test="batch2enrolls!=null">
+                batch_2_enrolls = #{batch2enrolls},
+            </if>
+            <if test="batch3enrolls!=null">
+                batch_3_enrolls = #{batch3enrolls},
+            </if>
+            <if test="batch4enrolls!=null">
+                batch_4_enrolls = #{batch4enrolls},
+            </if>
+            <if test="year!=null">
+                year=#{year},
+            </if>
+            <if test="ratioOrder!=null">
+                ratio_order=#{ratioOrder},
+            </if>
+            <if test="createDate!=null">
+                create_date = #{createDate},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateMap">
+        UPDATE saas_enrolling_ratio
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.tnId!=null">
+                tn_id = #{map.tnId},
+            </if>
+            <if test="map.stu3numbers!=null">
+                stu_3_numbers = #{map.stu3numbers},
+            </if>
+            <if test="map.batch1enrolls!=null">
+                batch_1_enrolls = #{map.batch1enrolls},
+            </if>
+            <if test="map.batch2enrolls!=null">
+                batch_2_enrolls = #{map.batch2enrolls},
+            </if>
+            <if test="map.batch3enrolls!=null">
+                batch_3_enrolls = #{map.batch3enrolls},
+            </if>
+            <if test="map.batch4enrolls!=null">
+                batch_4_enrolls = #{map.batch4enrolls},
+            </if>
+            <if test="map.year!=null">
+                year=#{map.year},
+            </if>
+            <if test="map.ratioOrder!=null">
+                ratio_order=#{map.ratioOrder},
+            </if>
+            <if test="map.createDate!=null">
+                create_date = #{map.createDate},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE saas_enrolling_ratio
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.tnId!=null">
+                tn_id = #{update.tnId},
+            </if>
+            <if test="update.stu3numbers!=null">
+                stu_3_numbers = #{update.stu3numbers},
+            </if>
+            <if test="update.batch1enrolls!=null">
+                batch_1_enrolls = #{update.batch1enrolls},
+            </if>
+            <if test="update.batch2enrolls!=null">
+                batch_2_enrolls = #{update.batch2enrolls},
+            </if>
+            <if test="update.batch3enrolls!=null">
+                batch_3_enrolls = #{update.batch3enrolls},
+            </if>
+            <if test="update.batch4enrolls!=null">
+                batch_4_enrolls = #{update.batch4enrolls},
+            </if>
+            <if test="update.year">
+                year=#{update.year},
+            </if>
+            <if test="ratioOrder!=null">
+                ratio_order=#{ratioOrder},
+            </if>
+            <if test="update.createDate!=null">
+                create_date = #{update.createDate},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.stu3numbers!=null">
+                AND stu_3_numbers = #{condition.stu3numbers}
+            </if>
+            <if test="condition.batch1enrolls!=null">
+                AND batch_1_enrolls = #{condition.batch1enrolls}
+            </if>
+            <if test="condition.batch2enrolls!=null">
+                AND batch_2_enrolls = #{condition.batch2enrolls}
+            </if>
+            <if test="condition.batch3enrolls!=null">
+                AND batch_3_enrolls = #{condition.batch3enrolls}
+            </if>
+            <if test="condition.batch4enrolls!=null">
+                AND batch_4_enrolls = #{condition.batch4enrolls}
+            </if>
+            <if test="condition.year">
+                AND year=#{condition.year}
+            </if>
+            <if test="condition.ratioOrder!=null">
+                AND ratio_order=#{condition.ratioOrder}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+        </trim>
+    </update>
+
+    <insert id="insertMap" >
+        INSERT INTO saas_enrolling_ratio (
+                tn_id,
+                stu_3_numbers,
+                batch_1_enrolls,
+                batch_2_enrolls,
+                batch_3_enrolls,
+                batch_4_enrolls,
+                year,
+                ratio_order,
+                create_date
+        ) VALUES (
+                    #{map.tnId},
+                    #{map.stu3numbers},
+                    #{map.batch1enrolls},
+                    #{map.batch2enrolls},
+                    #{map.batch3enrolls},
+                    #{map.batch4enrolls},
+                    #{map.year},
+                    #{map.ratioOrder},
+                    #{map.createDate}
+        )
+    </insert>
+
+
+    <update id="updateNull" parameterType="EnrollingRatio">
+        UPDATE saas_enrolling_ratio
+        <trim prefix="SET" suffixOverrides=",">
+            tn_id = #{tnId},
+            stu_3_numbers = #{stu3numbers},
+            batch_1_enrolls = #{batch1enrolls},
+            batch_2_enrolls = #{batch2enrolls},
+            batch_3_enrolls = #{batch3enrolls},
+            batch_4_enrolls = #{batch4enrolls},
+            year=#{year},
+            ratio_order=#{ratioOrder},
+            create_date = #{createDate},
+        </trim>
+        WHERE
+        id = #{id} 
+    </update>
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM saas_enrolling_ratio
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM saas_enrolling_ratio
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="tnId!=null">
+                AND tn_id = #{tnId}
+            </if>
+            <if test="stu3numbers!=null">
+                AND stu_3_numbers = #{stu3numbers}
+            </if>
+            <if test="batch1enrolls!=null">
+                AND batch_1_enrolls = #{batch1enrolls}
+            </if>
+            <if test="batch2enrolls!=null">
+                AND batch_2_enrolls = #{batch2enrolls}
+            </if>
+            <if test="batch3enrolls!=null">
+                AND batch_3_enrolls = #{batch3enrolls}
+            </if>
+            <if test="batch4enrolls!=null">
+                AND batch_4_enrolls = #{batch4enrolls}
+            </if>
+            <if test="year!=null">
+                AND year=#{year}
+            </if>
+            <if test="ratioOrder!=null">
+                AND ratio_order=#{ratioOrder}
+            </if>
+            <if test="createDate!=null">
+                AND create_date = #{createDate}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM saas_enrolling_ratio WHERE
+        ${property} = #{value}
+    </delete>
+
+    <select id="fetch" parameterType="java.lang.Integer" resultType="EnrollingRatio">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_enrolling_ratio
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="EnrollingRatio">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_enrolling_ratio WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="EnrollingRatio">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_enrolling_ratio WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="EnrollingRatio">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_enrolling_ratio
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="EnrollingRatio">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_enrolling_ratio
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp}   id  ${condition.id.op}  #{condition.id.data}
+            </if>
+            <if test="condition.tnId!=null">
+                ${condition.groupOp}   tn_id  ${condition.tn_id.op}  #{condition.tn_id.data}
+            </if>
+            <if test="condition.stu3numbers!=null">
+                ${condition.groupOp}   stu_3_numbers  ${condition.stu_3_numbers.op}  #{condition.stu_3_numbers.data}
+            </if>
+            <if test="condition.batch1enrolls!=null">
+                ${condition.groupOp}   batch_1_enrolls  ${condition.batch_1_enrolls.op}  #{condition.batch_1_enrolls.data}
+            </if>
+            <if test="condition.batch2enrolls!=null">
+                ${condition.groupOp}   batch_2_enrolls  ${condition.batch_2_enrolls.op}  #{condition.batch_2_enrolls.data}
+            </if>
+            <if test="condition.batch3enrolls!=null">
+                ${condition.groupOp}   batch_3_enrolls  ${condition.batch_3_enrolls.op}  #{condition.batch_3_enrolls.data}
+            </if>
+            <if test="condition.batch4enrolls!=null">
+                ${condition.groupOp}   batch_4_enrolls  ${condition.batch_4_enrolls.op}  #{condition.batch_4_enrolls.data}
+            </if>
+            <if test="condition.year!=null">
+                ${condition.groupOp}   year  ${condition.year.op}  #{condition.year.data}
+            </if>
+            <if test="condition.ratioOrder!=null">
+                ${condition.groupOp}   ratio_order  ${condition.ratioOrder.op}  #{condition.ratioOrder.data}
+            </if>
+            <if test="condition.createDate!=null">
+                ${condition.groupOp}   create_date  ${condition.create_date.op}  #{condition.create_date.data}
+            </if>
+
+
+    </where>
+
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="EnrollingRatio">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_enrolling_ratio
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id like CONCAT('%', #{id} , '%')
+            </if>
+            <if test="tnId!=null">
+                AND tn_id like CONCAT('%', #{tnId} , '%')
+            </if>
+            <if test="stu3numbers!=null">
+                AND stu_3_numbers like CONCAT('%', #{stu3numbers} , '%')
+            </if>
+            <if test="batch1enrolls!=null">
+                AND batch_1_enrolls like CONCAT('%', #{batch1enrolls} , '%')
+            </if>
+            <if test="batch2enrolls!=null">
+                AND batch_2_enrolls like CONCAT('%', #{batch2enrolls} , '%')
+            </if>
+            <if test="batch3enrolls!=null">
+                AND batch_3_enrolls like CONCAT('%', #{batch3enrolls} , '%')
+            </if>
+            <if test="batch4enrolls!=null">
+                AND batch_4_enrolls like CONCAT('%', #{batch4enrolls} , '%')
+            </if>
+            <if test="year!=null">
+                AND year like CONCAT('%', #{year} , '%')
+            </if>
+            <if test="ratioOrder!=null">
+                AND ratio_order like CONCAT('%', #{ratioOrder} , '%')
+            </if>
+            <if test="createDate!=null">
+                AND create_date like CONCAT('%', #{createDate} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="EnrollingRatio">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_enrolling_ratio
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.stu3numbers!=null">
+                AND stu_3_numbers = #{condition.stu3numbers}
+            </if>
+            <if test="condition.batch1enrolls!=null">
+                AND batch_1_enrolls = #{condition.batch1enrolls}
+            </if>
+            <if test="condition.batch2enrolls!=null">
+                AND batch_2_enrolls = #{condition.batch2enrolls}
+            </if>
+            <if test="condition.batch3enrolls!=null">
+                AND batch_3_enrolls = #{condition.batch3enrolls}
+            </if>
+            <if test="condition.batch4enrolls!=null">
+                AND batch_4_enrolls = #{condition.batch4enrolls}
+            </if>
+            <if test="condition.year!=null">
+                AND year = #{condition.year}
+            </if>
+            <if test="condition.ratioOrder!=null">
+                AND ratio_order=#{condition.ratioOrder}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="EnrollingRatio">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM saas_enrolling_ratio
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.tnId!=null">
+                AND tn_id = #{condition.tnId}
+            </if>
+            <if test="condition.stu3numbers!=null">
+                AND stu_3_numbers = #{condition.stu3numbers}
+            </if>
+            <if test="condition.batch1enrolls!=null">
+                AND batch_1_enrolls = #{condition.batch1enrolls}
+            </if>
+            <if test="condition.batch2enrolls!=null">
+                AND batch_2_enrolls = #{condition.batch2enrolls}
+            </if>
+            <if test="condition.batch3enrolls!=null">
+                AND batch_3_enrolls = #{condition.batch3enrolls}
+            </if>
+            <if test="condition.batch4enrolls!=null">
+                AND batch_4_enrolls = #{condition.batch4enrolls}
+            </if>
+            <if test="condition.year!=null">
+                AND year = #{condition.year}
+            </if>
+            <if test="condition.ratioOrder!=null">
+                AND ratio_order=#{condition.ratioOrder}
+            </if>
+            <if test="condition.createDate!=null">
+                AND create_date = #{condition.createDate}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(id) FROM saas_enrolling_ratio
+       <where>
+           <if test="id!=null">
+               ${groupOp} id ${id.op}  #{id.data}
+           </if>
+           <if test="tnId!=null">
+               ${groupOp} tn_id ${tn_id.op}  #{tn_id.data}
+           </if>
+           <if test="stu3numbers!=null">
+               ${groupOp} stu_3_numbers ${stu_3_numbers.op}  #{stu_3_numbers.data}
+           </if>
+           <if test="batch1enrolls!=null">
+               ${groupOp} batch_1_enrolls ${batch_1_enrolls.op}  #{batch_1_enrolls.data}
+           </if>
+           <if test="batch2enrolls!=null">
+               ${groupOp} batch_2_enrolls ${batch_2_enrolls.op}  #{batch_2_enrolls.data}
+           </if>
+           <if test="batch3enrolls!=null">
+               ${groupOp} batch_3_enrolls ${batch_3_enrolls.op}  #{batch_3_enrolls.data}
+           </if>
+           <if test="batch4enrolls!=null">
+               ${groupOp} batch_4_enrolls ${batch_4_enrolls.op}  #{batch_4_enrolls.data}
+           </if>
+           <if test="year!=null">
+               ${groupOp} year ${year.op}  #{year.data}
+           </if>
+           <if test="ratioOrder!=null">
+               ${groupOp} ratio_order ${ratio_order.op}  #{ratio_order.data}
+           </if>
+           <if test="createDate!=null">
+               ${groupOp} create_date ${create_date.op}  #{create_date.data}
+           </if>
+
+       </where>
+    <if test="orderBy!=null">
+        ORDER BY ${orderBy} ${sortBy}
+    </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+        MAX(id)
+        FROM saas_enrolling_ratio
+    </select>
+
+</mapper>
+

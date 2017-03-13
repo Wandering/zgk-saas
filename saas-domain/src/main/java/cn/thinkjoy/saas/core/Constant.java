@@ -46,13 +46,16 @@ public class Constant {
 
     public static final String TIME_INTERVAL = "_";
 
+    public static final String ClASS_INTERVAL = "、";
+
     public static final String STUDENT = "student";
 
     public static final String TABLE_TYPE_TEACHER = "teacher";
 
 
-
     public static final String TABLE_TYPE_CLASS = "class";
+
+    public static final String TABLE_TYPE_ROOM = "room";
 
     public static final String TABLE_TYPE_ALL = "all";
 
@@ -80,17 +83,32 @@ public class Constant {
     public static final Integer DEFULT_CLASS_NUM= 2;
     public static final Integer TASK_SUCCESS = 3;
     public static final String CLASS_ADM = "class_adm";
+    public static final int CLASS_ADM_CODE = 0;
     public static final String CLASS_EDU = "class_edu";
+    public static final int CLASS_EDU_CODE = 1;
     public static final String CREATE_TABLE_TYPE_TEACHER_IDS = "9-26-28-42-59";
     /**课程表redis相关start**/
     public static final String COURSE_TABLE_REDIS_KEY = "course_key_";
     public static final String COURSE_TABLE_REDIS_SPLIT = "_";
     /**课程表redis相关end**/
-
+    /**课程解析相关**/
     public static final java.lang.String COURSE_LINE_TABLE_SPLIT_T = "\t";
     public static final java.lang.String COURSE_TABLE_LINE_SPLIT_CHAR = "  ";
     public static final java.lang.String COURSE_TABLE_LINE_SPLIT_CLASS = "     ";
-    public static final java.lang.String PATH_SCHEDULE = "admin_course_0.txt";
+    public static final java.lang.String PATH_SCHEDULE_ADM = "admin_course_0.txt";
+    public static final java.lang.String PATH_SCHEDULE_EDU = "edu_course_0.txt";
+    /**课程解析相关**/
+    /**课程表生成相关**/
+    public static final String GEN_COURSE_TABLE_BASE_SPLIT = " ";
+    public static final String GEN_COURSE_TABLE_TEACHER_AROUND_S = "(";
+    public static final String GEN_COURSE_TABLE_TEACHER_AROUND_E = ")";
+    public static final String GEN_COURSE_TABLE_CLASS_SPLIT = "-";
+    public static final String GEN_COURSE_TABLE_WRAP_SPLIT = "\r\n";
+    public static final String COURSE_TABLE_ALL = "all";
+    public static final String COURSE_TABLE_DEFAULT_VALUE = "";
+    /**课程表生成相关**/
+
     //redis缓存时间30天
     public static final long SCHEDULE_REDIS_TIME = 1 * 30;
+    public static final Integer COURSE_STATUS_Y = 1;
 }

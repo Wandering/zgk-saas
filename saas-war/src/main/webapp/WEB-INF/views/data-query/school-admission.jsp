@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 院校录取数据</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/data-query/school-admission.css"/>
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/data-query/school-admission.css?v=20170309"/>
 </head>
 <body>
 <%@ include file="./../common/header.jsp" %>
@@ -32,7 +32,7 @@
                 <ul class="breadcrumb">
                     <ul class="breadcrumb">
                         <li>
-                            <a href="/index.html">首页</a>
+                            首页
                         </li>
                         <li>
                             <a href="/school-admission">数据查询</a>
@@ -183,7 +183,7 @@
 </div><!-- /.main-container-inner -->
 </div><!-- /.main-container -->
 <%@ include file="./../common/footer.jsp" %>
-<script src="<%=ctx%>/static/src/js/data-query/school-admission.js"></script>
+<script src="<%=ctx%>/static/src/js/data-query/school-admission.js?v=20170309"></script>
 
 </body>
 </html>

@@ -5,10 +5,7 @@ import cn.thinkjoy.common.restful.apigen.annotation.ApiDesc;
 import cn.thinkjoy.common.utils.SqlOrderEnum;
 import cn.thinkjoy.saas.common.UserContext;
 import cn.thinkjoy.saas.core.Constant;
-import cn.thinkjoy.saas.domain.JwCourse;
-import cn.thinkjoy.saas.domain.JwScheduleTask;
-import cn.thinkjoy.saas.domain.JwTeachDate;
-import cn.thinkjoy.saas.domain.JwTeacher;
+import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
@@ -85,6 +82,12 @@ public class ScheduleTaskController {
 
     @Autowired
     EXITenantConfigInstanceService exiTenantConfigInstanceService;
+
+    @Autowired
+    private ISyllabusService syllabusService;
+
+    @Autowired
+    private EXIGradeService exiGradeService;
     /**
      * 新建排课任务
      * @return
@@ -124,6 +127,107 @@ public class ScheduleTaskController {
         JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
         return jwScheduleTask.getStatus();
     }
+
+    /**
+     *
+     * @param type class:班级 teacher:老师
+     * @param taskId 任务Id
+     * @param id 班级/老师Id
+     * @param source 源坐标 坐标[1,6] 列号(周几),行号(第几节)
+     * @param target 目标坐标(要换到的坐标) 坐标[2,6] 列号(周几),行号(第几节)
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/{type}/exchange")
+    public boolean classExchange(@PathVariable String type,@RequestParam Integer taskId,@RequestParam Integer id,@RequestParam String source,@RequestParam String target){
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        int[] sourceCoord = this.getIntCoord(source);
+        int[] targetCoord = this.getIntCoord(target);
+        switch (type){
+            case Constant.TABLE_TYPE_CLASS:
+                return syllabusService.classExchange(tnId,taskId,id,sourceCoord,targetCoord);
+            case Constant.TABLE_TYPE_TEACHER:
+                return syllabusService.teacherExchange(tnId,taskId,id,sourceCoord,targetCoord);
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * 根据坐标获取调课所需班级课表
+     * @param taskId 任务ID
+     * @param id 老师Id
+     * @param coord 坐标[1,6] 列号(周几),行号(第几节)
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/teacher/queryClassByCoord")
+    public List<List<String>> queryClassByCoord(@RequestParam Integer taskId, @RequestParam Integer id,@RequestParam String coord){
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        Map<String,Object> params;
+        int[] currCoord = this.getIntCoord(coord);
+        CourseResultView courseResultView = null;
+
+        List<List<String>> lists;
+        Map<String, Object> timeConfigMap;
+        int courseCount,dayCount;
+        timeConfigMap = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
+
+        if (timeConfigMap == null)
+            throw new BizException("error", "当前租户下排课任务课时设置为空,请设置后再试");
+
+        dayCount = ((List)timeConfigMap.get("list")).size();
+        courseCount = (int)timeConfigMap.get("count");
+        lists = syllabusService.genDefaultSyllabus(dayCount,courseCount);
+        List<JwCourseTable> jwCourseTables = syllabusService.getSyllabusByCoordinate(tnId,taskId,id,currCoord,Constant.TABLE_TYPE_TEACHER);
+        if (jwCourseTables.size() == 0){
+            throw new BizException("error","请检查坐标是否正确!");
+        }
+
+        for (JwCourseTable jwCourseTable : jwCourseTables){
+            params = new HashMap<>();
+            params.put("classId",jwCourseTable.getClassId());
+            courseResultView = syllabusService.genSyllabus(tnId,taskId,Constant.TABLE_TYPE_TEACHER,params,lists,timeConfigMap);
+        }
+
+        return courseResultView.getWeek();
+    }
+
+
+    /**
+     * 根据坐标获取调课状态
+     * @param type class:班级 teacher:老师
+     * @param taskId 任务ID
+     * @param id 班级/老师Id
+     * @param coord 坐标[1,6] 列号(周几),行号(第几节)
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/{type}/queryStatusByCoord")
+    public boolean queryStatusByCoord(@PathVariable String type, @RequestParam Integer taskId, @RequestParam Integer id,@RequestParam String coord){
+        int adjustmentType;
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        int[] currCoord = this.getIntCoord(coord);
+        switch (type){
+            case Constant.TABLE_TYPE_TEACHER:
+                adjustmentType = 0;
+                break;
+            case Constant.TABLE_TYPE_CLASS:
+                adjustmentType = 1;
+                break;
+            default:
+                adjustmentType = 0;
+                break;
+        }
+        List<JwCourseTable> list = syllabusService.getSyllabusByCoordinate(tnId,taskId,id,currCoord,type);
+        if (list.size() == 0){
+            throw new BizException("error","请检查坐标是否正确!");
+        }
+        JwCourseTable jwCourseTable = list.get(0);
+        iexJwScheduleTaskService.SerializableAdjustmentSchedule(jwCourseTable,adjustmentType);
+        return true;
+    }
+
     /**
      * 一键排课
      * @return
@@ -132,11 +236,12 @@ public class ScheduleTaskController {
     @RequestMapping("/trigger")
     public boolean updateScheduleTaskStatus(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
 
-        boolean initBool = iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+        boolean initBool = iexJwScheduleTaskService.initParmasFile(taskId, tnId);
 
 
         if (initBool) {
-            String path = FileOperation.getParamsPath(tnId, taskId);
+            String type= iexJwScheduleTaskService.getClsssTypeTagByTaskId(taskId, tnId);
+            String path = FileOperation.getParamsPath(tnId, taskId,type);
             JwScheduleTask jwScheduleTask = new JwScheduleTask();
             jwScheduleTask.setId(taskId);
             jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
@@ -153,18 +258,22 @@ public class ScheduleTaskController {
     @RequestMapping("/reload/trigger")
     public boolean reloadTrigger(@RequestParam Integer taskId,@RequestParam Integer tnId) throws IOException {
 
-        String path = FileOperation.getParamsPath(tnId, taskId);
+        String rePath = iexJwScheduleTaskService.getScheduleTaskPath(taskId, tnId);
 
-        File file = new File(path);
+//        String type= iexJwScheduleTaskService.getClsssTypeTagByTaskId(taskId, tnId);
 
-        boolean re = FileOperation.removeAllFile(file);
+//        String path = FileOperation.getParamsPath(tnId, taskId,type);
 
-        if (!re)
-            return false;
+        File file = new File(rePath);
 
-        boolean initBool = iexJwScheduleTaskService.InitParmasFile(taskId, tnId);
+        if(file.exists())
+             FileOperation.removeAllFile(file);
+
+        boolean initBool = iexJwScheduleTaskService.initParmasFile(taskId, tnId);
 
         if (initBool) {
+            String type= iexJwScheduleTaskService.getClsssTypeTagByTaskId(taskId, tnId);
+            String path = FileOperation.getParamsPath(tnId, taskId,type);
             JwScheduleTask jwScheduleTask = new JwScheduleTask();
             jwScheduleTask.setId(taskId);
             jwScheduleTask.setStatus(Constant.TASK_SUCCESS);
@@ -212,6 +321,26 @@ public class ScheduleTaskController {
     public List<String> getNoNScheduleTaskPliableRule(@RequestParam Integer taskId,@RequestParam Integer tnId){
         return  iexJwScheduleTaskService.getNoNScheduleTaskPliableRule(taskId, tnId);
     }
+    /**
+     * 调课结果查询
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/adjustment/schedule/result")
+    public String  adjustmentSchedule(@RequestParam Integer taskId,@RequestParam Integer tnId) {
+        return  iexJwScheduleTaskService.getAdjustmentSchduleResult(taskId,tnId);
+    }
+
+    /**
+     * 调课成功
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/adjustment/success")
+    public List<String> adjustmentScheduleSuccess(@RequestParam Integer taskId,@RequestParam Integer tnId){
+        return iexJwScheduleTaskService.getAdjustmentInfo(taskId,tnId);
+    }
+
     /**
      * 修改排课任务
      * @return
@@ -268,6 +397,7 @@ public class ScheduleTaskController {
         JwScheduleTask jwScheduleTask = (JwScheduleTask) jwScheduleTaskService.queryOne(map);
         return jwScheduleTask==null?new JwScheduleTask():jwScheduleTask;
     }
+
 
     @ResponseBody
     @RequestMapping("/queryGradeInfo")
@@ -568,29 +698,61 @@ public class ScheduleTaskController {
     }
 
     /**
-     * 排课结果
+     *
+     * @param type 类型分为: room:教室 class:班级  student:学生 all:总课表 teacher:总课表
+     * @param taskId
+     * @param param 根据type不同而组合的参数 room:{"roomId":1} class:{"classId":1,"classType":0}(classType:0:行政班,1:教学班)
+     *              student:{"studentNo":1111111} teacher:{"teacherId":1}
      * @return
+     * @throws IOException
+     * @throws ParseException
      */
     @RequestMapping(value = "/{type}/course/result",method = RequestMethod.GET)
     @ResponseBody
     public Map getCourseResult(@PathVariable String type,@RequestParam Integer taskId,String param) throws IOException, ParseException {
         Map<String,Object> paramsMap  = null;
+        CourseResultView courseResultView = null;
+        int teacherId,classId,classType,roomId;
+        long studentNo;
         if (param!=null) {
             try {
                 paramsMap = JSON.parseObject(param);
             } catch (Exception e) {
-                paramsMap = Maps.newHashMap();
+                logger.info("request参数为空");
             }
         }
         Map resultMap = new HashMap();
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         if (Constant.TABLE_TYPE_ALL.equals(type)){
-            resultMap.put("result",iexJwScheduleTaskService.getAllCourseResult(taskId, tnId));
+//            iexJwScheduleTaskService.getAllCourseResult(taskId, tnId);
+            resultMap.put("result",syllabusService.getAllSyllabus(tnId, taskId));
             return resultMap;
         }
-        Map<String, Object> courseTimeConfig = iexJwScheduleTaskService.getCourseTimeConfig(tnId, taskId);
-        CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(type,taskId, tnId,paramsMap,courseTimeConfig);
-
+        switch (type){
+            case Constant.TABLE_TYPE_TEACHER:
+                teacherId = Integer.valueOf(paramsMap.get("teacherId").toString());
+                courseResultView = syllabusService.getTeacherSyllabus(tnId,taskId,teacherId);
+                break;
+            case Constant.TABLE_TYPE_CLASS:
+                try {
+                    classId = Integer.valueOf(paramsMap.get("classId").toString());
+                    classType = Integer.valueOf(paramsMap.get("classType").toString());
+                }catch (Exception e){
+                    throw new BizException("error","参数获取异常!");
+                }
+                courseResultView = syllabusService.getClassSyllabus(tnId,taskId,classId,classType);
+                break;
+            case Constant.STUDENT:
+                studentNo = Long.valueOf(paramsMap.get("studentNo").toString());
+                courseResultView = syllabusService.getStudentSyllabus(tnId,taskId,studentNo);
+                break;
+            case Constant.TABLE_TYPE_ROOM:
+                roomId = Integer.valueOf(paramsMap.get("roomId").toString());
+                courseResultView = syllabusService.getRoomSyllabus(tnId,taskId,roomId);
+                break;
+            default:
+                break;
+        }
 
         resultMap.put("result",courseResultView);
         return resultMap;
@@ -605,8 +767,7 @@ public class ScheduleTaskController {
     public Map getCourseExport(@PathVariable String type, @RequestParam Integer taskId, HttpServletResponse response) throws IOException {
         int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         Map<String, Object> param;
-        Map<String, Object> courseParam;
-        String[] sheetNames;
+        String[] sheetNames = null;
         String[] strings;
         Workbook workbook;
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -633,15 +794,12 @@ public class ScheduleTaskController {
                 sheetNames = new String[list.size()];
                 for (int i = 0; i < list.size(); i++) {
                     LinkedHashMap<String, Object> map = list.get(i);
-                    courseParam = new HashMap<>();
                     sheetNames[i] = map.get("teacher_name").toString();
-                    courseParam.put("teacherId", map.get("id"));
-                    CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(Constant.TABLE_TYPE_TEACHER, taskId, tnId, courseParam,courseTimeConfig);
+                    int teacherId = Integer.valueOf(map.get("id").toString());
+                    CourseResultView courseResultView = syllabusService.getTeacherSyllabus(tnId,taskId,teacherId);
                     courseLists.add(courseResultView.getWeek());
                 }
 
-                workbook = ExcelUtils.createWorkBook(strings, sheetNames, courseLists);
-                workbook.write(os);
                 logger.info("***********导出教师课表 E***********");
                 break;
             case Constant.TABLE_TYPE_CLASS:
@@ -652,51 +810,99 @@ public class ScheduleTaskController {
                 sheetNames = new String[classList.size()];
                 for (int i = 0; i < classList.size(); i++) {
                     LinkedHashMap<String, Object> map = classList.get(i);
-                    courseParam = new HashMap<>();
                     sheetNames[i] = map.get("class_name").toString();
-                    courseParam.put("classId", map.get("id"));
-                    CourseResultView courseResultView = iexJwScheduleTaskService.getCourseResult(Constant.TABLE_TYPE_CLASS, taskId, tnId, courseParam,courseTimeConfig);
+                    int classId = Integer.valueOf(map.get("id").toString());
+                    CourseResultView courseResultView = syllabusService.getClassSyllabus(tnId,taskId,classId,Constant.CLASS_ADM_CODE);
                     courseLists.add(courseResultView.getWeek());
                 }
-                workbook = ExcelUtils.createWorkBook(strings, sheetNames, courseLists);
-                workbook.write(os);
                 logger.info("***********导出班级课表 E***********");
+                break;
+            case Constant.STUDENT:
+                String tableName = ParamsUtils.combinationTableName(Constant.STUDENT, tnId);
+                if (com.alibaba.dubbo.common.utils.StringUtils.isBlank(tableName)) {
+                    return null;
+                }
+                List<Map<String,Object>> params = new ArrayList<>();
+                Set<Integer> gradeCodeSet = new HashSet<>();
+                gradeCodeSet.add(Integer.valueOf(jwScheduleTask.getGrade()));
+                List<Grade> gradeList = exiGradeService.getGradeByTnIdAndGradeCode(tnId,gradeCodeSet);
+                String grade = gradeList.get(0).getGrade();
+                param = new HashMap<>();
+                param.put("key", "student_grade");
+                param.put("op", "=");
+                param.put("value", grade);
+                params.add(param);
+                List<LinkedHashMap<String, Object>> tenantCustoms = exiTenantConfigInstanceService.likeTableByParams(tableName,params);
+                Iterator<LinkedHashMap<String,Object>> studentIterator = tenantCustoms.iterator();
+                Map<String,Integer> admClassMap = iexJwScheduleTaskService.getClassMapByTnId(tnId,Constant.CLASS_ADM_CODE,grade);
+                Map<String,Integer> eduClassMap = iexJwScheduleTaskService.getClassMapByTnId(tnId,Constant.CLASS_EDU_CODE,grade);
+                sheetNames = new String[tenantCustoms.size()];
+                int cc = 0;
+                while (studentIterator.hasNext()) {
+
+                    Map<String,Object> studentMap = studentIterator.next();
+                    sheetNames[cc] =(String) studentMap.get("student_name");
+                            List<Map<String,Object>> studentClassList = syllabusService.getClassList(studentMap,admClassMap,eduClassMap);
+                    CourseResultView courseResultView = syllabusService.getStudentSyllabus(tnId, taskId,courseTimeConfig,studentClassList);
+                    courseLists.add(courseResultView.getWeek());
+                }
+
+                break;
+            case Constant.TABLE_TYPE_ROOM:
+                //教室
+                List<Map<String,Object>> roomList = iexJwScheduleTaskService.queryRoom(taskId,tnId);
+                sheetNames = new String[roomList.size()];
+
+                for (int i = 0 ; i <roomList.size() ; i ++){
+                    Map<String,Object> room = roomList.get(i);
+                    sheetNames[i] = room.get("roomName").toString();
+                    int roomId = Integer.valueOf(room.get("roomId").toString());
+                    CourseResultView courseResultView = syllabusService.getRoomSyllabus(tnId,taskId,roomId);
+                    courseLists.add(courseResultView.getWeek());
+                }
+
+            default:
                 break;
         }
         logger.info("===============导出租户课程表 S================");
-        byte[] content = os.toByteArray();
-        InputStream is = new ByteArrayInputStream(content);
-        // 设置response参数，可以打开下载页面
-        response.reset();
-        response.setContentType("application/vnd.ms-excel;charset=utf-8");
-        response.setHeader("Content-Disposition", "attachment;filename=" + new String((ExcelUtils.getFileName(type, tnId) + ".xls").getBytes(), "iso-8859-1"));
-        ServletOutputStream out = response.getOutputStream();
-        BufferedInputStream bis = null;
-        BufferedOutputStream bos = null;
-        try {
-            bis = new BufferedInputStream(is);
-            bos = new BufferedOutputStream(out);
-            byte[] buff = new byte[20480];
-            int bytesRead;
-            // Simple read/write loop.
-            while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
-                bos.write(buff, 0, bytesRead);
+        if (sheetNames.length>0) {
+            workbook = ExcelUtils.createWorkBook(strings, sheetNames, courseLists);
+            workbook.write(os);
+            byte[] content = os.toByteArray();
+            InputStream is = new ByteArrayInputStream(content);
+            // 设置response参数，可以打开下载页面
+            response.reset();
+            response.setContentType("application/vnd.ms-excel;charset=utf-8");
+            response.setHeader("Content-Disposition", "attachment;filename=" + new String((ExcelUtils.getFileName(type, tnId) + ".xls").getBytes(), "iso-8859-1"));
+            ServletOutputStream out = response.getOutputStream();
+            BufferedInputStream bis = null;
+            BufferedOutputStream bos = null;
+            try {
+                bis = new BufferedInputStream(is);
+                bos = new BufferedOutputStream(out);
+                byte[] buff = new byte[20480];
+                int bytesRead;
+                // Simple read/write loop.
+                while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+                    bos.write(buff, 0, bytesRead);
+                }
+                logger.info("Excel文件流导出完成");
+            } catch (final IOException e) {
+                logger.info("Excel文件流导出失败![" + e.getMessage() + "]");
+                throw e;
+            } finally {
+                if (bis != null)
+                    bis.close();
+                if (bos != null)
+                    bos.close();
+                if (out != null)
+                    out.close();
+                logger.info("===============导出租户课程表 E================");
             }
-            logger.info("Excel文件流导出完成");
-        } catch (final IOException e) {
-            logger.info("Excel文件流导出失败![" + e.getMessage() + "]");
-            throw e;
-        } finally {
-            if (bis != null)
-                bis.close();
-            if (bos != null)
-                bos.close();
-            if (out != null)
-                out.close();
-            logger.info("===============导出租户课程表 E================");
         }
         return null;
     }
+
 
 
     private static String getWeek(int i){
@@ -719,4 +925,33 @@ public class ScheduleTaskController {
                 return null;
         }
     }
+
+    private static int[] getIntCoord(String s){
+        try {
+            return JSON.parseObject(s, int[].class);
+        }catch (Exception e){
+            throw new BizException("error","格式化坐标失败!");
+        }
+    }
+
+    @RequestMapping("getConfigRooms")
+    @ResponseBody
+    public Map<String,Object> getConfigRooms(@RequestParam("taskId")String taskId){
+        return iexJwScheduleTaskService.getConfigRooms(taskId);
+    }
+
+    @RequestMapping(value = "updateClassRoom",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> updateClassRoom(@RequestParam("classRoomId")String classRoomId,@RequestParam("scheduleNumber")int scheduleNumber){
+        return iexJwScheduleTaskService.updateClassRoom(classRoomId,scheduleNumber);
+    }
+
+    @RequestMapping("initTable")
+    @ResponseBody
+    public boolean initTable(int taskId){
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        iexJwScheduleTaskService.getCourseResult(tnId,taskId);
+        return true;
+    }
+
 }

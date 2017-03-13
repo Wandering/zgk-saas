@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>基本规则设置</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step2.css"/>
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step2.css?v=20170309"/>
 </head>
 <body>
 <%@ include file="./../common/header.jsp" %>
@@ -31,7 +31,7 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="#">首页</a>
+                        首页
                     </li>
                     <li>排选课</li>
                     <li class="active">排课任务</li>
@@ -468,6 +468,6 @@
     </div>
 </div>
 <%@ include file="./../common/footer.jsp" %>
-<script src="<%=ctx%>/static/src/js/course-scheduling/base-rule-settings.js"></script>
+<script src="<%=ctx%>/static/src/js/course-scheduling/base-rule-settings.js?v=20170309"></script>
 </body>
 </html>

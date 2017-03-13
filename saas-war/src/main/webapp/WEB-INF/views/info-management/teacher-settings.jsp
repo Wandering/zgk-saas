@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <title>SAAS 角色管理</title>
         <%@ include file="./../common/meta.jsp"%>
-        <link rel="stylesheet" href="<%=ctx%>/static/src/css/teacher-settings.css" />
+        <link rel="stylesheet" href="<%=ctx%>/static/src/css/teacher-settings.css?v=20170309" />
     </head>
     <body>
         <div class="main-content">
@@ -51,6 +51,6 @@
         </script>
         <%@ include file="./../common/footer.jsp"%>
         <script src="<%=ctx%>/static/src/lib/assets/js/jquery-ui-1.12.1.js"></script>
-        <script src="<%=ctx%>/static/src/js/info-management/teacher-settings.js"></script>
+        <script src="<%=ctx%>/static/src/js/info-management/teacher-settings.js?v=20170309"></script>
     </body>
 </html>

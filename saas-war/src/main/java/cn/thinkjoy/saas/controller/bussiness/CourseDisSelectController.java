@@ -1,9 +1,8 @@
 package cn.thinkjoy.saas.controller.bussiness;
 
 import cn.thinkjoy.common.exception.BizException;
-import cn.thinkjoy.saas.domain.JwBaseRule;
-import cn.thinkjoy.saas.domain.JwCourseGapRule;
-import cn.thinkjoy.saas.domain.JwTeachDate;
+import cn.thinkjoy.saas.core.Constant;
+import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.service.*;
@@ -41,24 +40,57 @@ public class CourseDisSelectController
     @Autowired
     private IEXScheduleBaseInfoService iexScheduleBaseInfoService;
 
+    @Autowired
+    private IJwGradeRuleService jwGradeRuleService;
+
+    @Autowired
+    private IJwScheduleTaskService jwScheduleTaskService;
+
     @RequestMapping(value = "/getRule/{taskId}/{type}/{id}", method = RequestMethod.GET)
     public List<Map<String, String>> getRule(@PathVariable String taskId,
-        @PathVariable String type, @PathVariable String id)
+                                             @PathVariable String type,
+                                             @PathVariable String id,
+                                             JwBaseRule jwBaseRule,
+                                             @RequestParam(value = "classType", required = false) String classType)
     {
+
         Map<String, String> params = new HashMap<>();
         params.put("taskId", taskId);
-        params.put(type + "Id", id);
+        if(!"grade".equals(type)){
+            params.put(type + "Id", id);
+        }
+        if("class".equals(type)){
+            classType = "行政班".equals(classType)?"1":"0";
+            params.put("classType",classType);
+        }
+
+        // 业务需要，当为班级且返回值为空的时候需要初始化数据
+        List<Map<String, String>> list = getServiceByType(type).queryList(params, "id", "asc");
+        if("class".equals(type) && (list == null || list.size() == 0)){
+
+            Map<String, String> rule = getDomainByType(taskId, type, id, jwBaseRule,classType);
+            jwClassRuleService.insertMap(rule);
+        }
         return getServiceByType(type).queryList(params, "id", "asc");
     }
 
     @RequestMapping(value = "/addOrUpdateRule/{taskId}/{type}", method = RequestMethod.POST)
-    public int addOrUpdateRule(@PathVariable String taskId, @PathVariable String type,
-        @RequestParam(value = "ids", required = true) String ids, JwBaseRule jwBaseRule)
+    public int addOrUpdateRule(@PathVariable String taskId,
+                               @PathVariable String type,
+                               @RequestParam(value = "ids", required = true) String ids,
+                               JwBaseRule jwBaseRule,
+                               @RequestParam(value = "classType", required = false) String classType)
     {
+
+        if ("grade".equals(type)){
+            JwScheduleTask task = (JwScheduleTask) jwScheduleTaskService.findOne("id",taskId);
+            ids = task.getGrade();
+        }
+
         int result = 0;
         try
         {
-            List<Map<String, String>> ruleList = getRuleList(taskId, type, ids, jwBaseRule);
+            List<Map<String, String>> ruleList = getRuleList(taskId, type, ids, jwBaseRule,classType);
             if (ruleList.size() > 0)
             {
                 for (Map<String, String> map : ruleList)
@@ -84,13 +116,13 @@ public class CourseDisSelectController
         return result;
     }
 
-    private List<Map<String, String>> getRuleList(String taskId, String type, String ids, JwBaseRule jwBaseRule)
+    private List<Map<String, String>> getRuleList(String taskId, String type, String ids, JwBaseRule jwBaseRule,String classType)
     {
         String[] idArray = ids.split(",");
         List<Map<String, String>> ruleList = new ArrayList<>();
         for (String id : idArray)
         {
-            Map<String, String> rule = getDomainByType(taskId, type, id, jwBaseRule);
+            Map<String, String> rule = getDomainByType(taskId, type, id, jwBaseRule,classType);
             ruleList.add(rule);
         }
         return ruleList;
@@ -111,6 +143,10 @@ public class CourseDisSelectController
         {
             service = jwTeacherRuleService;
         }
+        else if ("grade".equals(type))
+        {
+            service = jwGradeRuleService;
+        }
         else
         {
             throw new BizException("1100222", "type参数有误!");
@@ -118,14 +154,18 @@ public class CourseDisSelectController
         return service;
     }
 
-    private Map<String, String> getDomainByType(String taskId, String type, String id, JwBaseRule jwBaseRule)
+    private Map<String, String> getDomainByType(String taskId, String type, String id, JwBaseRule jwBaseRule,String classType)
     {
         Map<String, String> rule = new LinkedHashMap<>();
         if ("class".equals(type))
         {
             rule.put("classId", id);
-            rule.put("classType","1");
-
+            if (classType.equals("行政班"))
+                rule.put("classType","1");
+            else if (classType.equals("教学班"))
+                rule.put("classType","0");
+            else
+                throw new BizException("1100222", "classType参数有误!");
         }
         else if ("course".equals(type))
         {
@@ -134,6 +174,10 @@ public class CourseDisSelectController
         else if ("teacher".equals(type))
         {
             rule.put("teacherId", id);
+        }
+        else if ("grade".equals(type))
+        {
+            rule.put("gradeId", id);
         }
         else
         {

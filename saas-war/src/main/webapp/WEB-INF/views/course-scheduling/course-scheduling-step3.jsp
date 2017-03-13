@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>SAAS 自动排课</title>
     <%@ include file="./../common/meta.jsp" %>
-    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step3.css"/>
+    <link rel="stylesheet" href="<%=ctx%>/static/src/css/course-scheduling/course-scheduling-step3.css?v=20170309"/>
 </head>
 <body>
 <%@ include file="./../common/header.jsp" %>
@@ -31,7 +31,7 @@
                 </script>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="#">首页</a>
+                        首页
                     </li>
                     <li>排选课</li>
                     <li class="active">排课任务</li>
@@ -44,21 +44,7 @@
                             <%@ include file="./../common/footer.jsp" %>
                             <%--<%@ include file="../course-scheduling/step3-common.jsp"%>--%>
                             <script src="/static/src/lib/jquery.table2excel/jquery.table2excel.js"></script>
-                            <script>
-                                $(function() {
-                                    $(".output-tpl").click(function(){
-                                        $(".table").table2excel({
-                                            exclude: ".noExl",
-                                            name: "Excel Document Name",
-                                            filename: "课表",
-                                            exclude_img: true,
-                                            exclude_links: true,
-                                            exclude_inputs: true,
-                                            fileext: ".xls"
-                                        });
-                                    });
-                                });
-                            </script>
+
                             <div class="main-title">
                                 <h3>排课任务</h3>
                             </div>
@@ -86,7 +72,7 @@
                                             <span class="sr-only">100% Complete</span>
                                         </div>
                                     </div>
-                                    <p>正在努力排课中,预计3-10分钟,请耐心等待哦</p>
+                                    <p>正在努力排课中,预计<span class="loading-date"></span>分钟,请耐心等待哦</p>
                                 </div>
 
                                 <%-- 排出课表 软性规则冲突 --%>
@@ -99,45 +85,48 @@
                                 <div class="scheduling-error dh">
                                     <i class="icon-cry-face"></i>
                                     <p>排课失败!,请调整基础规则&nbsp;&nbsp;&nbsp;&nbsp;<span class="retry-scheduling">重新排课</span></p>
-
                                     <ul class="error-box-list"></ul>
                                 </div>
-
                                 <%-- 排课失败2 系统错误 规则提示 --%>
                                 <div class="scheduling-error2 dh">
                                     <i class="icon-cry-face"></i>
                                     <p>排课失败!&nbsp;&nbsp;&nbsp;&nbsp;<span class="retry-scheduling">重新排课</span></p>
                                 </div>
-
                             </div>
                             <%--教室课表|教师课表|学生课表|总课表--%>
                             <div id="role-scheduling-tab" class="dh">
                                 <div class="role-tab">
                                     <ul>
                                         <li class="no-before active"><i class="icon-step3-all-yes"></i><i class="icon-step3-all-no"></i>总课表</li>
-                                        <li><i class="icon-step3-class-yes"></i><i
-                                                class="icon-step3-class-no"></i>班级课表
-                                        </li>
-                                        <li><i class="icon-step3-teacher-yes"></i><i class="icon-step3-teacher-no"></i>教师课表
-                                        </li>
-                                        <%--<li><i class="icon-step3-std-yes dh"></i><i class="icon-step3-std-no"></i>学生课表</li>--%>
-
+                                        <li class="class-tab dh"><i class="icon-step3-classes-yes"></i><i class="icon-step3-classes-no"></i>班级课表</li>
+                                        <li><i class="icon-step3-teacher-yes"></i><i class="icon-step3-teacher-no"></i>教师课表</li>
+                                        <li class="student-tab dh"><i class="icon-step3-std-yes dh"></i><i class="icon-step3-std-no"></i>学生课表</li>
+                                        <li class="room-tab dh"><i class="icon-step3-class-yes"></i><i class="icon-step3-class-no"></i>教室课表</li>
                                     </ul>
                                 </div>
                             </div>
+
                             <div id="control-jsp" class="dh">
+                                 <%--总课表--%>
                                 <div class="bottom-page">
                                     <%@ include file="../course-scheduling/step3-child-all.jsp"%>
                                 </div>
+                                     <%--班级课表--%>
                                 <div class="bottom-page dh">
                                     <%@ include file="../course-scheduling/step3-child-class.jsp"%>
                                 </div>
+                                     <%--教师课表--%>
                                 <div class="bottom-page dh">
                                     <%@ include file="../course-scheduling/step3-child-teacher.jsp"%>
                                 </div>
-                                <%--<div class="bottom-page dh">--%>
-                                    <%--<%@ include file="../course-scheduling/step3-child-student.jsp"%>--%>
-                                <%--</div>--%>
+                                     <%--学生课表--%>
+                                <div class="bottom-page dh">
+                                    <%@ include file="../course-scheduling/step3-child-student.jsp"%>
+                                </div>
+                                     <%--教师课表--%>
+                                 <div class="bottom-page dh">
+                                     <%@ include file="../course-scheduling/step3-child-room.jsp"%>
+                                 </div>
                             </div>
                         </div>
                     </div>
@@ -148,6 +137,7 @@
 </div>
 
 <%--<script src="<%=ctx%>/static/src/js/course-scheduling/step3-common.js"></script>--%>
-<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>
+<%--<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js"></script>--%>
+<script src="<%=ctx%>/static/src/js/course-scheduling/step3-child-class.js?v=20170309"></script>
 </body>
 </html>
