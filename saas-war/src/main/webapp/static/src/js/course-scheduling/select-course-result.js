@@ -201,7 +201,7 @@ var AssemblyChooseResult = {
                         fontSize: 10
                     },
                     // min: Math.min(dataJson.stuCount),
-                    // max: Math.max(dataJson.stuCount),
+                    max: Math.max(Math.max.apply(null,dataJson.stuCount))<5 ? Math.max(Math.max.apply(null,dataJson.stuCount))+6 : Math.max(Math.max.apply(null,dataJson.stuCount)),
                     axisLine: {
                         lineStyle: {
                             color: '#D8D8D8'

@@ -634,6 +634,10 @@ var CRUDStd = {
     //更新
     updateStd: function () {
         var checkboxN = $("#student-table .check-template :checkbox:checked").size();
+        if (checkboxN == 0) {
+            layer.tips('请选择要修改的信息', $('#student-modify'), {time: 1000});
+            return false;
+        }
         if (checkboxN != '1') {
             layer.tips('修改只能选择一项', $('#student-modify'), {time: 1000});
             return false;
@@ -653,6 +657,32 @@ var CRUDStd = {
                 layer.closeAll();
             },
             success: function (html) {
+                //弹层打开后默认调用拉取课程接口
+                var classCourse1,classCourse2,classCourse3;
+                var classCourseV1,classCourseV2,classCourseV3;
+                $.each(rowData, function (i, v) {
+                    if(v.iName == 'student_check_major1'){
+                        classCourse1 = v.value;
+                    }
+                    if(v.iName == 'student_check_major2'){
+                        classCourse2 = v.value;
+                    }
+                    if(v.iName == 'student_check_major3'){
+                        classCourse3 = v.value;
+                    }
+                    //记录选中的值
+                    if(v.iName == 'student_check_major_class1'){
+                        classCourseV1 = v.value;
+                    }
+                    if(v.iName == 'student_check_major_class2'){
+                        classCourseV2 = v.value;
+                    }
+                    if(v.iName == 'student_check_major_class3'){
+                        classCourseV3 = v.value;
+                    }
+
+                })
+
                 $.each(rowData, function (i, v) {
                     if (v.dataType === 'radio') {
                         for (var j = 0; j < $('#' + v.iName).find("[name='form-field-radio']").length; j++) {
@@ -670,9 +700,23 @@ var CRUDStd = {
                         }
                     }
                     $('#' + v.iName).val(v.value);
+
                 });
+                $('#student_check_major_class1').html(CRUDStd.GetClassByCourse(classCourse1));
+                $('#student_check_major_class2').html(CRUDStd.GetClassByCourse(classCourse2));
+                $('#student_check_major_class3').html(CRUDStd.GetClassByCourse(classCourse3));
+
+
+                $('#student_check_major_class1').val(classCourseV1)
+                $('#student_check_major_class2').val(classCourseV2)
+                $('#student_check_major_class3').val(classCourseV3)
+
             }
         });
+
+
+
+
     },
     //删除一行记录
     removeStd: function () {

@@ -6,7 +6,6 @@ var gradeName = Common.cookie.getCookie('gradeName');
 $('.scheduleName').text(scheduleName);
 $('.gradeName').text(gradeName);
 
-
 /**
  * 公用全局变量
  * @type {{taskId: *, cType: number}}
@@ -551,7 +550,6 @@ ArrangeCourse.prototype = {
                 for(var i=0;i<foo;i++){
                     fooStr += '1'
                 }
-                weeks = ['星期一','星期二','星期三','星期四','星期五','星期六']
                 var fooTag = {
                     '星期一':'mon',
                     '星期二':'tues',
@@ -568,8 +566,6 @@ ArrangeCourse.prototype = {
                     that.dataParams[fooTag[weeks[i]]] = fooStr
                 }
                 //数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========//数据组装=========
-
-
 
 
                 $.each(weeks, function (i, k) {
