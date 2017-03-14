@@ -841,7 +841,7 @@ public class ScheduleTaskController {
                 while (studentIterator.hasNext()) {
 
                     Map<String,Object> studentMap = studentIterator.next();
-                    sheetNames[cc] =(String) studentMap.get("student_name");
+                    sheetNames[cc++] =(String) studentMap.get("student_name");
                             List<Map<String,Object>> studentClassList = syllabusService.getClassList(studentMap,admClassMap,eduClassMap);
                     CourseResultView courseResultView = syllabusService.getStudentSyllabus(tnId, taskId,courseTimeConfig,studentClassList);
                     courseLists.add(courseResultView.getWeek());
