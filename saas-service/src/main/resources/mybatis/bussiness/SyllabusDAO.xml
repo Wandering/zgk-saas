@@ -29,34 +29,34 @@
         </if>
         LEFT JOIN saas_course_base_info course on course.id = tb.courseId
         where tb.`status` = 1
-        <if test="params.teacherId">
+        <if test="params.teacherId !=null">
             and tb.teacherId = #{params.teacherId}
         </if>
-        <if test="params.classId">
+        <if test="params.classId !=null">
             and tb.classId = #{params.classId}
         </if>
-        <if test="params.courseId">
+        <if test="params.courseId !=null">
             and tb.courseId = #{params.courseId}
         </if>
-        <if test="params.gradeId">
+        <if test="params.gradeId !=null">
             and tb.gradeId = #{params.gradeId}
         </if>
-        <if test="params.week">
+        <if test="params.week !=null">
             and tb.week = #{params.week}
         </if>
-        <if test="params.sort">
+        <if test="params.sort !=null" >
             and tb.sort = #{params.sort}
         </if>
-        <if test="params.tnId">
+        <if test="params.tnId !=null">
             and tb.tnId = #{params.tnId}
         </if>
-        <if test="params.taskId">
+        <if test="params.taskId !=null">
             and tb.taskId = #{params.taskId}
         </if>
-        <if test="params.classType">
+        <if test="params.classType !=null">
             and tb.classType = #{params.classType}
         </if>
-        <if test="params.roomId">
+        <if test="params.roomId !=null">
             and tb.roomId = #{params.roomId}
         </if>
         UNION ALL
@@ -73,34 +73,34 @@
         LEFT join ${eduClassTableName} eduClass on eduClass.id = tb.classId and tb.classType = 1
         LEFT JOIN saas_course_base_info course on course.id = tb.courseId
         where tb.`status` = 0
-        <if test="params.teacherId">
+        <if test="params.teacherId !=null">
             and tb.teacherId = #{params.teacherId}
         </if>
-        <if test="params.classId">
+        <if test="params.classId !=null">
             and tb.classId = #{params.classId}
         </if>
-        <if test="params.courseId">
+        <if test="params.courseId !=null">
             and tb.courseId = #{params.courseId}
         </if>
-        <if test="params.gradeId">
+        <if test="params.gradeId !=null">
             and tb.gradeId = #{params.gradeId}
         </if>
-        <if test="params.week">
+        <if test="params.week !=null">
             and tb.week = #{params.week}
         </if>
-        <if test="params.sort">
+        <if test="params.sort !=null">
             and tb.sort = #{params.sort}
         </if>
-        <if test="params.tnId">
+        <if test="params.tnId !=null">
             and tb.tnId = #{params.tnId}
         </if>
-        <if test="params.taskId">
+        <if test="params.taskId !=null">
             and tb.taskId = #{params.taskId}
         </if>
-        <if test="params.classType">
+        <if test="params.classType !=null">
             and tb.classType = #{params.classType}
         </if>
-        <if test="params.roomId">
+        <if test="params.roomId !=null">
             and tb.roomId = #{params.roomId}
         </if>
         ORDER BY classType,classId,week,sort asc
