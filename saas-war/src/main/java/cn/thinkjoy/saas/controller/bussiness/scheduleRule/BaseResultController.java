@@ -16,6 +16,7 @@ import cn.thinkjoy.saas.service.common.ParamsUtils;
 import com.google.common.collect.Maps;
 import freemarker.ext.beans.HashAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,7 @@ public class BaseResultController {
     @Autowired
     private IEXTeacherService teacherService;
     @Autowired
+    @Qualifier("SyllabusServiceImpl")
     private ISyllabusService syllabusService;
 
 
@@ -239,9 +241,14 @@ public class BaseResultController {
         }
         return maps;
     }
+
     /**
      * 获取课程信息
+     * @param taskId
      * @return
+     * courseBaseId:课程ID
+     * courseBaseName:课程名称
+     * courseType:课程类型(1:教学班课程,0:行政班课程)
      */
     @RequestMapping(value = "/queryCourse",method = RequestMethod.GET)
     @ResponseBody
@@ -249,15 +256,20 @@ public class BaseResultController {
         Integer tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
         JwScheduleTask jwScheduleTask = (JwScheduleTask) jwScheduleTaskService.fetch(taskId);
         List<CourseManageDto> courseManageDtos = courseManageService.getCourseByTnIdAndGrade(tnId,Integer.valueOf(jwScheduleTask.getGrade()));
+        int  gradeType = exiGradeService.getGradeType(tnId,Integer.valueOf(jwScheduleTask.getGrade()));
         Map<String,Object> map;
         Set<Map<String,Object>> maps = new HashSet<>();
         for (CourseManageDto courseManageDto : courseManageDtos) {
             map = new HashMap<>();
             map.put("courseBaseId",courseManageDto.getCourseBaseId());
             map.put("courseBaseName",courseManageDto.getCourseBaseName());
+            if (gradeType==2 && Constant.COURSE_TEACH.equals(courseManageDto.getCourseType())) {
+                map.put("courseType",Constant.CLASS_EDU_CODE );
+            }else {
+                map.put("courseType",Constant.CLASS_ADM_CODE);
+            }
             maps.add(map);
         }
-
         return maps;
     }
 

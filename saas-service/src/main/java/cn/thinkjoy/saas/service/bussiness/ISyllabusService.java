@@ -10,6 +10,7 @@ package cn.thinkjoy.saas.service.bussiness;
 
 import cn.thinkjoy.saas.domain.JwCourseTable;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
+import cn.thinkjoy.saas.dto.JwCourseTableDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -93,6 +94,7 @@ public interface ISyllabusService{
      * @return
      */
     List<JwCourseTable> getSyllabusByCoordinate(int tnId, int taskId, int id, int[] coordinate, String type);
+    List<JwCourseTable> getSyllabusByCoordinate(int tnId, int taskId, int id, int[] coordinate,int roomId, String type);
 
     /**
      * 生成并填充课表内容
@@ -127,5 +129,7 @@ public interface ISyllabusService{
      * @return
      */
     int getTeacherClassNum(int tnId,int teacherId);
+
+    List<JwCourseTableDTO> queryList(int tnId, int taskId, boolean hasRoom, Map<String,Object> params);
 
 }

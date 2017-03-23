@@ -80,6 +80,7 @@ public class Constant {
     public static final String DEFULT_TEACH_TIME= "430";
     public static final Integer DEFULT_CLASS_TYPE= 1;
     public static final Integer SUBJECT_CLASS_TYPE= 2;
+    public static final String COURSE_TEACH= "5";
     public static final Integer DEFULT_CLASS_NUM= 2;
     public static final Integer TASK_SUCCESS = 3;
     public static final String CLASS_ADM = "class_adm";

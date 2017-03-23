@@ -310,7 +310,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @param targetList
      * @return
      */
-    private boolean updateExchange(List<JwCourseTable> sourceList,List<JwCourseTable> targetList){
+    protected boolean updateExchange(List<JwCourseTable> sourceList,List<JwCourseTable> targetList){
         //缓存二维坐标
         int[] sourceTemp = new int[2];
         sourceTemp[0] = sourceList.get(0).getWeek();
@@ -331,6 +331,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
 
         return true;
     }
+
 
     /**
      * 根据坐标查询课表记录
@@ -355,6 +356,37 @@ public class SyllabusServiceImpl implements ISyllabusService {
         }
         params.put("week",coordinate[0]);
         params.put("sort",coordinate[1]);
+        //
+        params.put("tnId",tnId);
+        params.put("taskId",taskId);
+        List<JwCourseTable> jwCourseTables = jwCourseTableDAO.queryList(params,"id","desc");
+        return jwCourseTables;
+    }
+
+    /**
+     * 根据坐标查询课表记录
+     * @param tnId
+     * @param taskId
+     * @param id
+     * @param coordinate
+     * @param type
+     * @return
+     */
+    @Override
+    public List<JwCourseTable> getSyllabusByCoordinate(int tnId,int taskId,int id,int[] coordinate,int roomId,String type){
+        Map<String, Object> params = new HashMap<>();
+        switch (type){
+            case Constant.TABLE_TYPE_TEACHER:
+                params.put("teacherId", id);
+                break;
+            case Constant.TABLE_TYPE_CLASS:
+                params.put("classId", id);
+            default:
+                break;
+        }
+        params.put("week",coordinate[0]);
+        params.put("sort",coordinate[1]);
+        params.put("roomId",roomId);
         //
         params.put("tnId",tnId);
         params.put("taskId",taskId);
@@ -395,7 +427,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @param params
      * @return
      */
-    private List<JwCourseTableDTO> queryList(int tnId,int taskId,boolean hasRoom,Map<String,Object> params){
+    public List<JwCourseTableDTO> queryList(int tnId,int taskId,boolean hasRoom,Map<String,Object> params){
         String teacherTableName;
         String roomTableName = null;
         String admClassTableName = null;
@@ -419,7 +451,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @return
      */
     private Map<String,Object> treeListByTree(List<JwCourseTableDTO> jwCourseTableDTOs){
-        
+
         /**变量声明**/
         Map<String,Object> rtnMap = new HashMap<>();
         StringBuilder builder = new StringBuilder();
@@ -535,7 +567,7 @@ public class SyllabusServiceImpl implements ISyllabusService {
      * @param jwCourseTableDTO
      * @return
      */
-    private static String genStringByDTO(String type,JwCourseTableDTO jwCourseTableDTO){
+    public static String genStringByDTO(String type,JwCourseTableDTO jwCourseTableDTO){
         StringBuffer rtnStrBf = new StringBuffer();
         if (jwCourseTableDTO.getStatus() == 0) return "";
         switch (type){

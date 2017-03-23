@@ -65,13 +65,18 @@
         (IF(admClass.class_name IS NOT NULL,admClass.class_name,eduClass.class_name)) AS className,
         '' AS courseName
         <if test="roomTableName != null">,
-        '' AS roomName
+            (CASE WHEN tb.roomId>0 THEN CONCAT(room.class_name,'教室')
+            WHEN tb.roomId &lt;0 THEN CONCAT('教室',ABS(tb.roomId))
+            ELSE '' END ) AS roomName
         </if>
         from saas_jw_course_table tb
         LEFT JOIN ${teacherTableName} teacher on teacher.id = tb.teacherId
         LEFT join ${admClassTableName} admClass on admClass.id = tb.classId and tb.classType = 0
         LEFT join ${eduClassTableName} eduClass on eduClass.id = tb.classId and tb.classType = 1
         LEFT JOIN saas_course_base_info course on course.id = tb.courseId
+        <if test="roomTableName != null">
+            LEFT join ${roomTableName} room on room.id = tb.roomId
+        </if>
         where tb.`status` = 0
         <if test="params.teacherId">
             and tb.teacherId = #{params.teacherId}

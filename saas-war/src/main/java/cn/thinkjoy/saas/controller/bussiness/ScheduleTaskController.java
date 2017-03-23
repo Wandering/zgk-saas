@@ -9,6 +9,7 @@ import cn.thinkjoy.saas.domain.*;
 import cn.thinkjoy.saas.domain.bussiness.CourseBaseInfo;
 import cn.thinkjoy.saas.domain.bussiness.CourseResultView;
 import cn.thinkjoy.saas.dto.CourseBaseDto;
+import cn.thinkjoy.saas.dto.JwCourseTableDTO;
 import cn.thinkjoy.saas.dto.JwScheduleTaskDto;
 import cn.thinkjoy.saas.dto.TeacherBaseDto;
 import cn.thinkjoy.saas.enums.ErrorCode;
@@ -21,6 +22,7 @@ import cn.thinkjoy.saas.service.common.ExcelUtils;
 import cn.thinkjoy.saas.service.common.ExceptionUtil;
 import cn.thinkjoy.saas.service.common.FileOperation;
 import cn.thinkjoy.saas.service.common.ParamsUtils;
+import cn.thinkjoy.saas.service.impl.bussiness.SyllabusTeachServiceImpl;
 import com.alibaba.dubbo.common.json.ParseException;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
@@ -30,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,7 +87,12 @@ public class ScheduleTaskController {
     EXITenantConfigInstanceService exiTenantConfigInstanceService;
 
     @Autowired
+    @Qualifier("SyllabusServiceImpl")
     private ISyllabusService syllabusService;
+
+    @Autowired
+    @Qualifier("SyllabusTeachServiceImpl")
+    private ISyllabusService syllabusTeachService;
 
     @Autowired
     private EXIGradeService exiGradeService;
@@ -126,6 +134,82 @@ public class ScheduleTaskController {
     public Integer queryScheduleTaskStatus(@RequestParam Integer taskId){
         JwScheduleTask jwScheduleTask = (JwScheduleTask)jwScheduleTaskService.fetch(taskId);
         return jwScheduleTask.getStatus();
+    }
+
+
+    /**
+     *
+     * @param taskId 任务Id
+     * @param id 老师Id
+     * @param source 源坐标 坐标[1,6] 列号(周几),行号(第几节)
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/teacher/teach/queryCurrTimeCourse")
+    public List<Map<String,Object>> queryCurrTimeCourse(@RequestParam Integer taskId,@RequestParam Integer id,@RequestParam String source){
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        int[] sourceCoord = this.getIntCoord(source);
+        Map<String,Object> map = new HashMap<>();
+        map.put("week",sourceCoord[0]);
+        map.put("sort",sourceCoord[1]);
+        List<JwCourseTableDTO> sourceList = syllabusTeachService.queryList(tnId,taskId,true,map);
+        //保证相同的一定连续
+        Collections.sort(sourceList,new Comparator() {
+                    public int compare(Object a, Object b) {
+                        int one = ((JwCourseTable) a).getRoomId();
+                        int two = ((JwCourseTable) b).getRoomId();
+                        return one - two;
+                    }
+        });
+        Iterator<JwCourseTableDTO> iterator = sourceList.iterator();
+        List<Map<String,Object>> rtnList = new ArrayList<>();
+        int tempNum = 0;
+        Integer tempRoomId = null;
+        while (iterator.hasNext()){
+            Map<String,Object> rtnMap;
+            JwCourseTableDTO jwCourseTableDTO = iterator.next();
+            Integer roomId = jwCourseTableDTO.getRoomId();
+            String roomName = jwCourseTableDTO.getRoomName();
+            if (roomId == 0) continue;
+            String tempContent = SyllabusTeachServiceImpl.genStringByDTO(Constant.TABLE_TYPE_TEACHER,jwCourseTableDTO);
+            if (roomId.equals(tempRoomId)){
+                rtnMap = rtnList.get(tempNum);
+                String content = (String) rtnMap.get("content");
+                StringBuffer buffer = new StringBuffer(content);
+                buffer.append(Constant.GEN_COURSE_TABLE_WRAP_SPLIT).append(tempContent);
+                rtnMap.put("content",buffer.toString());
+            }else {
+                rtnMap = new HashMap<>();
+                String content = tempContent;
+                rtnMap.put("content",content);
+                rtnMap.put("roomId",roomId);
+                rtnMap.put("roomName",roomName);
+                rtnList.add(rtnMap);
+                tempNum++;
+            }
+
+        }
+        return rtnList;
+    }
+
+
+    /**
+     *
+     * @param taskId 任务Id
+     * @param id 班级/老师Id
+     * @param source 源坐标 坐标[1,6] 列号(周几),行号(第几节)
+     * @param targetRoomId 目标教室ID 12/-1/0
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/teacher/teach/exchange")
+    public boolean teachExchange(@RequestParam Integer taskId,@RequestParam Integer id,@RequestParam String source,@RequestParam Integer targetRoomId){
+        int tnId = Integer.valueOf(UserContext.getCurrentUser().getTnId());
+        int[] sourceCoord = this.getIntCoord(source);
+        int[] targetCoord = new int[]{sourceCoord[0],sourceCoord[1],targetRoomId};
+
+        List<JwCourseTable> sourceList = syllabusTeachService.getSyllabusByCoordinate(tnId,taskId,id,sourceCoord,Constant.TABLE_TYPE_TEACHER);
+        return syllabusService.teacherExchange(tnId,taskId,id,sourceCoord,targetCoord);
     }
 
     /**
